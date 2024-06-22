@@ -1,0 +1,9 @@
+services:
+  postgres:
+    container_name: dev_database
+    image: postgres
+    environment:
+      - POSTGRES_USER=prspiguel
+      - POSTGRES_PASSWORD=prspiguel
+    ports:
+      - 5432:5432
