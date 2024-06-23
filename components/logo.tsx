@@ -36,6 +36,7 @@ export const Logo: FC<LogoProps> = async ({
   return (
     <Link href="/" className={cn(" relative", logoSize, className)}>
       <Image src={logotipo} alt="" fill className="object-fill" />
+      <span className="sr-only">Jogabola - Encontre sua malta</span>
     </Link>
   );
 };
