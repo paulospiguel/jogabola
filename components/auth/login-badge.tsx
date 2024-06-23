@@ -9,7 +9,7 @@ import {
 	DropdownMenuSeparator,
 	DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { CircleUser, LogOut } from "lucide-react";
+import { CircleUser, LogOut, UserCircleIcon } from "lucide-react";
 import type { User } from "next-auth";
 import Link from "next/link";
 import { LineMdCogLoop } from "../icons";
@@ -56,7 +56,10 @@ const LoginBadge = ({ user }: Props) => {
 			)}
 			{!user && (
 				<LoginButton>
-					<Button className="rounded-full" variant={"default"}>Entrar</Button>
+					<Button variant={"default"} size="sm" className="flex items-center gap-2">
+						<span>Entrar</span>
+						<UserCircleIcon />
+					</Button>
 				</LoginButton>
 			)}
 		</>

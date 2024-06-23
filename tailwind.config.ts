@@ -71,16 +71,21 @@ const config = {
           "0%,70%,100%": { opacity: "1" },
           "20%,50%": { opacity: "0" },
         },
+        "infinite-scroll": {
+          from: { transform: "translateX(0)" },
+          to: { transform: "translateX(-100%)" },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
         "caret-blink": "caret-blink 1.25s ease-out infinite",
+        "infinite-scroll": "infinite-scroll 25s linear infinite",
       },
-      fontFamily(utils) {
-        return {
-          sans: ["Inter"],
-        };
+      fontFamily: {
+        sans: ["Inter", "sans-serif"],
+        mono: ["monospace"],
+        heading: ["var(--font-concert-one)", "sans-serif"],
       },
     },
   },

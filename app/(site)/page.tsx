@@ -7,6 +7,7 @@ import redBullLogo from "@/assets/partners/redbull.svg";
 import Navbar from "@/components/site/navbar";
 import { RoleSchema } from "@/schemas/roles";
 import { ArrowRight } from "lucide-react";
+import InfiniteHorizontalScroll from "@/components/infinite-scroll";
 
 const Roles = RoleSchema.Values;
 
@@ -96,14 +97,13 @@ export default function Home() {
 							<div className="px-4 mx-auto md:max-w-screen-md lg:max-w-screen-lg lg:px-36">
 								<span className="font-semibold text-gray-400 uppercase">Apoios</span>
 								<div className="flex justify-center md:justify-between gap-2 w-full">
-									<Image src={fieldLogo} className="grayscale object-contain" alt="Fila" width={100} height={100} />
-									<Image src={filaLogo} className="grayscale object-contain" alt="Fila" width={100} height={100} />
-									<Image
-										src={redBullLogo}
-										className="grayscale object-contain"
-										alt="Red Bull"
-										width={100}
-										height={100}
+									<InfiniteHorizontalScroll
+										imageStyles={{
+											width: 100,
+											height: 100,
+											className: "object-contain grayscale hover:grayscale-0 transition-all ease-linear duration-150",
+										}}
+										images={[fieldLogo, filaLogo, redBullLogo]}
 									/>
 								</div>
 							</div>
