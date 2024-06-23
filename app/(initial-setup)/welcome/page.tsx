@@ -3,7 +3,7 @@ import { RoleSchema } from "@/schemas/roles";
 import { ArrowLeftIcon, ArrowRightIcon } from "lucide-react";
 import Link from "next/link";
 
-import z from "zod";
+import type { z } from "zod";
 
 type WelcomeProps = {
 	searchParams: {

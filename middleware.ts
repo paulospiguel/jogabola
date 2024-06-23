@@ -7,29 +7,28 @@ import { createRouteMatchers } from "./lib/route";
 const { auth } = NextAuth(authConfig);
 
 export default auth((req) => {
-  const { isPublicRoute, isProtectedRoute, isApiRoute, isAuthRoute } =
-    createRouteMatchers(configRoutes, req);
-  const { nextUrl } = req;
-  const isLoggedIn = !!req.auth;
-  console.log(`Public: ${isPublicRoute}`);
-  console.log(`Protected: ${isProtectedRoute}`);
-  console.log(`Api: ${isApiRoute}`);
-  console.log(`Auth: ${isAuthRoute}`);
-  if (isProtectedRoute && !isLoggedIn) {
-    const baseUrl = process.env.NEXT_PUBLIC_URL;
-    return NextResponse.redirect(new URL(`${baseUrl}/auth/login`, req.url));
-  }
+	const { isPublicRoute, isProtectedRoute, isApiRoute, isAuthRoute } = createRouteMatchers(configRoutes, req);
+	const { nextUrl } = req;
+	const isLoggedIn = !!req.auth;
+	console.log(`Public: ${isPublicRoute}`);
+	console.log(`Protected: ${isProtectedRoute}`);
+	console.log(`Api: ${isApiRoute}`);
+	console.log(`Auth: ${isAuthRoute}`);
+	if (isProtectedRoute && !isLoggedIn) {
+		const redirectUrl = `/auth/login?redirect=${nextUrl}`;
+		return NextResponse.redirect(new URL(redirectUrl, req.url));
+	}
 
-  // console.log(`Middleware: ${req.nextUrl.pathname}`);
+	// console.log(`Middleware: ${req.nextUrl.pathname}`);
 });
 
 export const config = {
-  /*
-   * Match all request paths except for the ones starting with:
-   * - api (API routes)
-   * - _next/static (static files)
-   * - _next/image (image optimization files)
-   * - favicon.ico (favicon file)
-   */
-  matcher: ["/((?!api|_next/static|_next/image|favicon.ico).*)"],
+	/*
+	 * Match all request paths except for the ones starting with:
+	 * - api (API routes)
+	 * - _next/static (static files)
+	 * - _next/image (image optimization files)
+	 * - favicon.ico (favicon file)
+	 */
+	matcher: ["/((?!api|_next/static|_next/image|favicon.ico).*)"],
 };
