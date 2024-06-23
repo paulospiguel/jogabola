@@ -16,7 +16,8 @@ export default auth((req) => {
   console.log(`Api: ${isApiRoute}`);
   console.log(`Auth: ${isAuthRoute}`);
   if (isProtectedRoute && !isLoggedIn) {
-    return NextResponse.redirect(new URL("/auth/login", req.url));
+    const baseUrl = process.env.NEXT_PUBLIC_URL;
+    return NextResponse.redirect(new URL(`${baseUrl}/auth/login`, req.url));
   }
 
   // console.log(`Middleware: ${req.nextUrl.pathname}`);
