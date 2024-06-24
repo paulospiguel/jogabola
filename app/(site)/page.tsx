@@ -9,6 +9,9 @@ import { RoleSchema } from "@/schemas/roles";
 import { ArrowRight } from "lucide-react";
 import InfiniteHorizontalScroll from "@/components/infinite-scroll";
 
+import footballIcon from "@/assets/icons/football.png";
+import directorIcon from "@/assets/icons/director.png";
+
 const Roles = RoleSchema.Values;
 
 export default function Home() {
@@ -25,20 +28,35 @@ export default function Home() {
 								<Link
 									href={`/welcome?role=${Roles.player}`}
 									className="hover:bg-green-600 hover:text-white ml-2
-									 text-foreground dark:text-white rounded-full px-2
-									 transition-all ease-linear duration-150 py-2"
+									 text-foreground dark:text-white rounded-full px-2 group
+									 transition-all ease-linear duration-150 py-2 flex gap-2 items-center"
 									target="_blank"
 									rel="noreferrer"
 								>
+									<Image
+										className="group-hover:animate-bounce"
+										src={footballIcon}
+										width={24}
+										height={24}
+										alt="Football icon"
+									/>
 									<span className="text-xs bg-primary-600 rounded-full py-1.5 ">Começar minha jornada</span>
 								</Link>
 								<div className="h-6 border-r-2 mx-2" />
 								<Link
 									href={`/welcome?role=${Roles.manager}`}
 									className="flex hover:bg-green-700 hover:text-white
-									 text-foreground dark:text-white rounded-full px-2
-									 transition-all ease-linear duration-150 py-2"
+									 text-foreground dark:text-white rounded-full px-2 group
+									 transition-all ease-linear duration-150 py-2 gap-2 items-center"
 								>
+									<Image
+										className="group-hover:animate-bounce"
+										src={directorIcon}
+										width={28}
+										height={28}
+										alt="Football icon"
+									/>
+
 									<span className="text-sm font-medium">Criar minha equipa</span>
 									<ArrowRight className="w-5 h-5" />
 								</Link>
