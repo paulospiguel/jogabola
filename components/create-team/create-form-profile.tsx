@@ -18,6 +18,7 @@ import { Slider } from "../ui/slider";
 import React from "react";
 import { PreviewLogo } from "../preview-logo";
 import { Trash } from "lucide-react";
+import { LanguageToggle } from "../language-toggle";
 
 const TEAM_TYPES = TeamType.options;
 
@@ -34,8 +35,8 @@ export const FormCreateProfile = () => {
 			location: "",
 			teamTypes: "fut11",
 			language: "pt",
-			radiusPlayerArea: [2, 10],
-			radiusPlayerAge: [18, 35],
+			radiusPlayerArea: [0, 0],
+			radiusPlayerAge: [15, 35],
 		},
 		values: data,
 	});
@@ -67,6 +68,10 @@ export const FormCreateProfile = () => {
 		form.setValue("logo", undefined);
 	};
 
+	const calculateRadius = (value: number[]) => {
+		return value.reduce((acc, curr) => acc + curr, 0);
+	};
+
 	const onSubmit = async (values: z.infer<typeof CreateTeamSchema>) => {
 		console.log("Creating team with data", values);
 	};
@@ -94,14 +99,28 @@ export const FormCreateProfile = () => {
 										</button>
 									)}
 								</div>
-								<div className="space-y-2">
-									<Label htmlFor="teamName">Nome da equipa</Label>
+								<div className="flex items-end space-x-2">
 									<FormField
 										control={form.control}
 										name="teamName"
-										render={({ field }) => <Input placeholder="Equipa de sucesso chama-se..." {...field} />}
+										render={({ field }) => (
+											<FormItem className="flex-1">
+												<Label htmlFor="teamName">Nome da equipa</Label>
+												<Input placeholder="Equipa de sucesso chama-se..." {...field} />
+											</FormItem>
+										)}
+									/>
+									<FormField
+										control={form.control}
+										name="language"
+										render={({ field }) => (
+											<FormItem>
+												<LanguageToggle />
+											</FormItem>
+										)}
 									/>
 								</div>
+
 								<div className="space-y-2">
 									<Label>Bio</Label>
 									<FormField
@@ -141,37 +160,38 @@ export const FormCreateProfile = () => {
 										/>
 									</div>
 								</div>
-								<div className="space-y-2">
-									<Label htmlFor="radiusPlayerArea">
-										Raio de localização <span className="text-xs text-gray-500">(km)</span>
-									</Label>
+								<div className="flex gap-2">
 									<FormField
 										control={form.control}
 										name="radiusPlayerArea"
 										render={({ field }) => (
-											<Slider minStepsBetweenThumbs={2} defaultValue={field.value} onChange={handleRadiusPlayerArea} />
+											<FormItem className="w-full">
+												<Label htmlFor="radiusPlayerArea">
+													Raio de localização{" "}
+													<span className="text-xs text-gray-500">({calculateRadius(field.value)}km)</span>
+												</Label>
+												<Slider step={1} defaultValue={[field.value[1]]} onChange={handleRadiusPlayerArea} />
+											</FormItem>
 										)}
 									/>
-								</div>
-								<div className="space-y-2">
 									<FormField
 										control={form.control}
 										name="radiusPlayerAge"
 										render={({ field }) => {
 											const [min, max] = field.value;
 											return (
-												<>
+												<FormItem className="w-full">
 													<Label htmlFor="radiusPlayerAge">
 														Intervalo de idade <span className="text-xs text-gray-500">({`${min} - ${max}`} anos)</span>
 													</Label>
-
 													<Slider
 														min={15}
 														minStepsBetweenThumbs={1}
 														defaultValue={field.value}
+														trackLength={2}
 														onChange={handleRadiusPlayerAge}
 													/>
-												</>
+												</FormItem>
 											);
 										}}
 									/>

@@ -9,7 +9,6 @@ import { useForm } from "react-hook-form";
 
 import type { z } from "zod";
 
-import { newTeam } from "@/actions/create-team/new-team";
 import { CreateTeamSchema } from "@/schemas/create-team";
 
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
@@ -17,7 +16,7 @@ import { useCreateTeamContext } from "./create-team-context";
 import { useRouter } from "next/navigation";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
 
-export default function CreateTeamForm() {
+export function CreateTeamForm() {
 	const [isPending, startTransition] = useTransition();
 	const { push } = useRouter();
 
@@ -27,7 +26,6 @@ export default function CreateTeamForm() {
 		resolver: zodResolver(CreateTeamSchema),
 		defaultValues: {
 			teamName: "",
-			language: "pt",
 		},
 		values: data,
 	});
@@ -75,29 +73,6 @@ export default function CreateTeamForm() {
 										</FormControl>
 										<FormDescription className="hidden">Nome da equipa.</FormDescription>
 										<FormMessage />
-									</FormItem>
-								)}
-							/>
-							<FormField
-								control={form.control}
-								name="language"
-								render={({ field }) => (
-									<FormItem className="w-1/6">
-										<FormLabel>Idioma</FormLabel>
-										<FormControl>
-											<Select defaultValue={field.value} onValueChange={field.onChange} {...field}>
-												<SelectTrigger>
-													<SelectValue placeholder="Selecione seu idioma" />
-												</SelectTrigger>
-												<SelectContent>
-													{["pt", "en", "es"]?.map((type) => (
-														<SelectItem key={type} value={type}>
-															{type}
-														</SelectItem>
-													))}
-												</SelectContent>
-											</Select>
-										</FormControl>
 									</FormItem>
 								)}
 							/>

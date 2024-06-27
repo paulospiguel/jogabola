@@ -1,4 +1,4 @@
-import CreateTeamForm from "@/components/create-team/create-form";
+import { CreateTeamForm } from "@/components/create-team/create-form";
 
 import managerIcon from "@/assets/icons/director.png";
 import Image from "next/image";
