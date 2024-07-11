@@ -9,35 +9,51 @@ import {
 	DropdownMenuItem,
 	DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { languagesEnum } from "@/schemas/create-team";
+import type { z } from "zod";
+import { cn } from "@/lib/utils";
 
+type LanguageTypes = z.infer<typeof languagesEnum>;
+const LANGUAGES = languagesEnum.options;
 
-const LANGUAGES = ["pt", "en", "es"];
-
-const ICONS_LAGS = {
+const ICONS_LAGS: Record<LanguageTypes, string> = {
 	pt: "🇵🇹",
 	en: "🇺🇸",
 	es: "🇪🇸",
-} as const;
+};
 
-export function LanguageToggle() {
+type LanguageToggleProps = {
+	onChangeValue: (value: LanguageTypes) => void;
+	value: LanguageTypes;
+};
 
-	const setLanguage = (lang: string) => {
+export function LanguageToggle({ onChangeValue, value }: LanguageToggleProps) {
+	const setLanguage = (lang: LanguageTypes) => {
 		document.documentElement.lang = lang;
-	}
+		localStorage.setItem("language", lang);
+		onChangeValue?.(lang);
+	};
 
 	return (
 		<DropdownMenu>
 			<DropdownMenuTrigger asChild>
 				<Button variant="outline" size="icon" className="rounded-full">
-					<Languages className="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
-					<Languages className="absolute h-[1.2rem] w-[1.2rem] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
+					{value ? (
+						ICONS_LAGS[value as LanguageTypes]
+					) : (
+						<Languages className="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
+					)}
 					<span className="sr-only">Toggle language</span>
 				</Button>
 			</DropdownMenuTrigger>
 			<DropdownMenuContent align="end">
 				{LANGUAGES.map((lang) => (
-					<DropdownMenuItem key={lang} onClick={() => setLanguage(lang)}>
-						{ICONS_LAGS[lang as keyof typeof ICONS_LAGS]} {lang}
+					<DropdownMenuItem
+						className={cn({ "bg-gray-200": value === lang })}
+						key={lang}
+						onClick={() => setLanguage(lang)}
+					>
+						{ICONS_LAGS[lang as LanguageTypes]} {lang}
 					</DropdownMenuItem>
 				))}
 			</DropdownMenuContent>

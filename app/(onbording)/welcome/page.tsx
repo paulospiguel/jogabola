@@ -1,6 +1,6 @@
 import { getSearchParams } from "@/lib/utils";
 import { RoleSchema } from "@/schemas/roles";
-import Image, { StaticImageData } from "next/image";
+import Image, { type StaticImageData } from "next/image";
 import { ArrowLeftIcon, ArrowRightIcon } from "lucide-react";
 import Link from "next/link";
 
@@ -9,11 +9,10 @@ import type { z } from "zod";
 import football from "@/assets/icons/football.png";
 import managerIcon from "@/assets/icons/director.png";
 import { Card } from "@/components/ui/card";
+import routes from "@/constants/routes";
 
 type WelcomeProps = {
-	searchParams: {
-		[key: string]: string | null;
-	};
+	searchParams: Record<string, string>;
 };
 
 export const metadata = {
@@ -39,7 +38,7 @@ const showInfo = (role: string) => {
 			description = "Encontre amigos, Jogue competições, veja os resultados e divirta-se.";
 			disclaimer = "Se você não tem uma equipe, não se preocupe, você pode se juntar a uma equipe existente.";
 			buttonText = "Comecar minha jornada";
-			url = "/player/join-team";
+			url = routes.onbording.myJourney;
 			imageHeader = football;
 			break;
 
@@ -48,7 +47,7 @@ const showInfo = (role: string) => {
 			description = "Crie sua equipa e dispute competições, gerencie sua equipe e veja os resultados.";
 			disclaimer = "Se você não tem uma equipe, não se preocupe, você pode se juntar a uma equipe existente.";
 			buttonText = "Criar minha equipa";
-			url = "/manager/create-team";
+			url = routes.onbording.createTeam;
 			imageHeader = managerIcon;
 			break;
 		default:
@@ -91,16 +90,12 @@ export default function Welcome({ searchParams }: WelcomeProps) {
 				{role && (
 					<Link
 						href={url}
-						className="mt-4 justify-center font-bold text-white hover:text-green-600 rounded-full bg-blue-950 flex gap-2 px-3 py-2"
+						className="mt-4 justify-center items-center h-12 font-bold text-white hover:text-green-600 rounded-full bg-blue-950 flex gap-2 px-3 py-2"
 					>
 						<span className="whitespace-nowrap">{buttonText}</span>
 						<ArrowRightIcon className="w-6 h-6" />
 					</Link>
 				)}
-
-				<Link href={"/"} className="mt-4 flex justify-center">
-					<ArrowLeftIcon className="w-6 h-6" /> Voltar
-				</Link>
 			</div>
 		</section>
 	);

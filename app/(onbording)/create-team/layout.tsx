@@ -1,4 +1,4 @@
-import { CreateTeamProvider } from "@/components/create-team/create-team-context";
+import { CreateTeamProvider } from "@/context/create-team-context";
 
 type LayoutProps = {
 	children: React.ReactNode;

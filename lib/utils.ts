@@ -16,7 +16,7 @@ export function generateOTP(numberOfDigits: number) {
 	return OTP;
 }
 
-export const getSearchParams = <T = unknown>(search: string) => {
+export const getSearchParams = <T = unknown>(search: Record<string, string>) => {
 	const searchParams = new URLSearchParams(search);
 	return {
 		get: (key: string) => searchParams.get(key) as T,

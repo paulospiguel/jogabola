@@ -10,7 +10,7 @@ export default function LayoutInitalSetup({ children }: LayoutProps) {
 			<div className="mx-4 mb-2 flex flex-col">
 				<Logo size="large" className="mx-auto" />
 			</div>
-			<div className="w-full max-w-3xl h-[80vh]  overflow-auto">{children}</div>
+			<div className="w-full px-4 max-w-3xl h-[80vh]  overflow-auto">{children}</div>
 		</div>
 	);
 }
