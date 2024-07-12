@@ -9,6 +9,7 @@ declare module "next-auth" {
 		user: {
 			role: UserRole;
 			isTwoFactorEnabled: boolean;
+			isCompleted: boolean;
 			/**
 			 * By default, TypeScript merges new interface properties and overwrites existing ones.
 			 * In this case, the default session user properties will be overwritten,

@@ -6,6 +6,7 @@ export const languagesEnum = z.enum(["pt", "en", "es"]);
 
 export const CreateTeamSchema = z.object({
 	currentStep: z.nativeEnum(Steps).default(Steps.Step1),
+	termsOfUse: z.boolean().default(false),
 	teamName: z.string().min(3).max(50),
 	bio: z.string().optional(),
 	logo: z.string().optional(),

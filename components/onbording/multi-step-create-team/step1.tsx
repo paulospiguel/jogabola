@@ -10,20 +10,17 @@ import { Input } from "@/components/ui/input";
 import { FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { useCreateTeam } from "@/hooks/use-create-team";
 import { Steps } from "@/types/multi-steps";
+import React from "react";
 
-export function Step1() {
-	const { goToStep, setCreateTeam } = useCreateTeam();
-
+export const Step1 = React.forwardRef<HTMLDivElement>((props, ref) => {
 	const form = useFormContext<z.infer<typeof CreateTeamSchema>>();
 
 	const handleNextStep = () => {
-		const values = form.getValues();
 		form.setValue("currentStep", Steps.Step2);
-		setCreateTeam({ ...values, currentStep: Steps.Step2 });
 	};
 
 	return (
-		<>
+		<div ref={ref}>
 			<Image src={managerIcon} alt="Ícone de um diretor de futebol" width={100} height={100} className="mx-auto" />
 
 			<h1 className="text-4xl mb-2 font-bold text-center mt-4">Crie sua equipa</h1>
@@ -63,10 +60,10 @@ export function Step1() {
 						variant={"default"}
 						className="w-full bg-blue-950 hover:bg-blue-950/75"
 					>
-						<span>Avançar</span>
+						Avançar
 					</Button>
 				</div>
 			</form>
-		</>
+		</div>
 	);
-}
+});

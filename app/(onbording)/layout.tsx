@@ -1,16 +1,22 @@
-import { Logo } from "@/components/logo";
+import { auth } from "@/auth";
+import { AppHeader as Header } from "@/components/app-header";
+import { redirect } from "next/navigation";
 
 type LayoutProps = {
 	children: React.ReactNode;
 };
 
-export default function LayoutInitalSetup({ children }: LayoutProps) {
+export default async function LayoutInitalSetup({ children }: LayoutProps) {
+	const session = await auth();
+
+	if (session?.user.isCompleted) {
+		console.log("User is completed");
+	}
+
 	return (
-		<div className="[background:radial-gradient(125%_125%_at_50%_10%,rgb(22,163,74)_25%,#086_100%)] dark:[background:radial-gradient(125%_125%_at_50%_10%,#000_40%,#086_100%)] flex flex-col w-full pb-6 min-h-full items-center justify-center">
-			<div className="mx-4 mb-2 flex flex-col">
-				<Logo size="large" className="mx-auto" />
-			</div>
-			<div className="w-full px-4 max-w-3xl h-[80vh]  overflow-auto">{children}</div>
+		<div className="flex flex-col w-full h-full items-center bg-backgroundPrimary dark:bg-backgroundPrimary-dark">
+			<Header />
+			<div className="w-full px-4 mt-4 max-w-3xl h-[85vh] overflow-auto">{children}</div>
 		</div>
 	);
 }

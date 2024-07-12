@@ -11,6 +11,9 @@ body,
 @layer base {
   :root {
     --background: 0 0% 100%;
+    --background-primary: 147, 84%, 38%;
+    --background-primary-dark: 147, 10%, 5%;
+    --background-foreground: 240, 5%, 95%;
     --foreground: 240 10% 3.9%;
     --card: 0 0% 100%;
     --card-foreground: 240 10% 3.9%;
@@ -59,7 +62,19 @@ body,
   * {
     @apply border-border;
   }
-  body, html {
+
+  body,
+  html {
     @apply bg-background text-foreground;
   }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    @apply font-heading;
+  }
+
 }

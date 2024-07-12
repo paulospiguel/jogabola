@@ -37,7 +37,7 @@ export function LanguageToggle({ onChangeValue, value }: LanguageToggleProps) {
 	return (
 		<DropdownMenu>
 			<DropdownMenuTrigger asChild>
-				<Button variant="outline" size="icon" className="rounded-full">
+				<Button type="button" variant="outline" size="icon" className="rounded-full">
 					{value ? (
 						ICONS_LAGS[value as LanguageTypes]
 					) : (

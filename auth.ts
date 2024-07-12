@@ -56,6 +56,7 @@ export const {
       if (session.user && token.sub) {
         session.user.id = token.sub;
         session.user.isTwoFactorEnabled = token.isTwoFactorEnabled as boolean;
+        session.user.isCompleted = true // token.isCompleted as boolean;
       }
       return {
         ...session,

@@ -2,13 +2,19 @@ import { auth } from "@/auth";
 import { ThemeProvider } from "@/components/providers/theme-provider";
 import type { Metadata } from "next";
 import { SessionProvider } from "next-auth/react";
-import { Concert_One, Inter } from "next/font/google";
+import { Concert_One, Cookie, Inter } from "next/font/google";
 import "./globals.css";
 import { cn } from "@/lib/utils";
+import Cookies from "@/components/cookies";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
+const fontBody = Inter({
+	subsets: ["latin"],
+	display: "swap",
+	variable: "--font-body",
+});
 const consertOne = Concert_One({ subsets: ["latin"], weight: ["400"], variable: "--font-concert-one" });
-const fonts = [consertOne, inter].map((font) => font.variable).join(" ");
+const fonts = [consertOne, inter, fontBody].map((font) => font.variable).join(" ");
 
 export const metadata: Metadata = {
 	title: "JogaBola",
@@ -23,10 +29,11 @@ export default async function RootLayout({
 	const session = await auth();
 	return (
 		<html lang="pt-BR">
-			<body className={cn(fonts)} suppressHydrationWarning>
+			<body className={cn("antialiased", fonts)} suppressHydrationWarning>
 				<SessionProvider session={session}>
 					<ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
 						{children}
+						<Cookies />
 					</ThemeProvider>
 				</SessionProvider>
 			</body>
