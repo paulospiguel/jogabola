@@ -2,10 +2,11 @@ import { auth } from "@/auth";
 import { ThemeProvider } from "@/components/providers/theme-provider";
 import type { Metadata } from "next";
 import { SessionProvider } from "next-auth/react";
-import { Concert_One, Cookie, Inter } from "next/font/google";
+import { Concert_One, Inter } from "next/font/google";
 import "./globals.css";
 import { cn } from "@/lib/utils";
 import Cookies from "@/components/cookies";
+import { Toaster } from "@/components/ui/toaster"
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 const fontBody = Inter({
@@ -34,6 +35,7 @@ export default async function RootLayout({
 					<ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
 						{children}
 						<Cookies />
+						<Toaster />
 					</ThemeProvider>
 				</SessionProvider>
 			</body>

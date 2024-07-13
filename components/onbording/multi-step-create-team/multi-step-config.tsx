@@ -4,12 +4,12 @@ import type { z } from "zod";
 import { Steps, type StepForm } from "@/types/multi-steps";
 import { useCreateTeam } from "@/hooks/use-create-team";
 import { FormProvider } from "react-hook-form";
-import { CreateTeamSchema } from "@/schemas/create-team";
+import { teamSchema } from "@/schemas/create-team";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useFormPersist } from "@/hooks/use-form-persist";
 import { useEffect, useMemo } from "react";
 import { FormField } from "@/components/ui/form";
-import { domAnimation, LazyMotion, m, motion } from "framer-motion";
+import { motion } from "framer-motion";
 
 import { Step1 } from "./step1";
 import { Step2 } from "./step2";
@@ -36,18 +36,19 @@ export const onboardingForm: Record<Steps, StepForm> = {
 };
 
 export function MultiStepCreateTeamConfig() {
-	const { data, goToStep, setCreateTeamData, currentStep, isCompleted } = useCreateTeam();
+	const { data, goToStep, setTeamData, currentStep, isCompleted, keyStorage } = useCreateTeam();
 	const { push } = useRouter();
 
-	const methods = useFormPersist<z.infer<typeof CreateTeamSchema>>({
-		storageKey: "create-team",
-		resolver: zodResolver(CreateTeamSchema),
+	const methods = useFormPersist<z.infer<typeof teamSchema>>({
+		storageKey: keyStorage,
+		storageLocation: sessionStorage,
+		resolver: zodResolver(teamSchema),
 		includeDirtyFields: true,
 		defaultValues: data,
 		callback: (values) => {
-			if (JSON.stringify(data) !== JSON.stringify(values)) {
-				setCreateTeamData(values);
-			}
+			// if (JSON.stringify(data) !== JSON.stringify(values)) {
+			// 	setTeamData(values);
+			// }
 		},
 	});
 

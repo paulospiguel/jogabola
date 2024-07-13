@@ -16,14 +16,17 @@ import { NameSlider, Slider } from "@/components/ui/slider";
 import { PreviewLogo } from "@/components/preview-logo";
 import { LanguageToggle } from "@/components/language-toggle";
 import { useCreateTeam } from "@/hooks/use-create-team";
-import { TeamTypeEnum, type CreateTeamSchema } from "@/schemas/create-team";
+import { teamShapeEnum, type teamSchema } from "@/schemas/create-team";
+import { checkTeamName, createNewTeam } from "@/actions/team";
+import { useToast } from "@/components/ui/use-toast";
 
-const TEAM_TYPES = TeamTypeEnum.options;
+const TEAM_TYPES = teamShapeEnum.options;
 
 export const Step3 = React.forwardRef<HTMLFormElement>((props, ref) => {
 	const [logoImage, setLogoImage] = React.useState<string>();
-	const { data } = useCreateTeam();
-	const form = useFormContext<z.infer<typeof CreateTeamSchema>>();
+	const { keyStorage } = useCreateTeam();
+	const form = useFormContext<z.infer<typeof teamSchema>>();
+	const { toast } = useToast();
 
 	const { push } = useRouter();
 
@@ -42,11 +45,29 @@ export const Step3 = React.forwardRef<HTMLFormElement>((props, ref) => {
 		return value?.reduce((acc, curr) => acc + curr, 0);
 	};
 
-	const onSubmit: SubmitHandler<z.infer<typeof CreateTeamSchema>> = async (values) => {
-		console.log("values", values);
-		console.log("data", data);
-		await new Promise((resolve) => setTimeout(resolve, 2000));
-		push("/manage-team/team");
+	const onSubmit: SubmitHandler<z.infer<typeof teamSchema>> = async (values) => {
+		const response = await createNewTeam(values).catch((error) => {
+			console.log(error.message);
+			toast({
+				title: "Error",
+				description: "Error creating team",
+				variant: "destructive",
+			});
+		});
+
+		if (response?.data?.id) {
+			sessionStorage.removeItem(keyStorage);
+			push("/manage-team/team");
+		}
+	};
+
+	const handelCheckTeamName = async (teamName: string) => {
+		const response = await checkTeamName(teamName);
+		if (response.error) {
+			form.setError("teamName", { message: response.error });
+		} else {
+			form.clearErrors("teamName");
+		}
 	};
 
 	return (
@@ -75,11 +96,20 @@ export const Step3 = React.forwardRef<HTMLFormElement>((props, ref) => {
 								<FormField
 									control={form.control}
 									name="teamName"
-									render={({ field }) => (
-										<FormItem className="flex-1">
-											<Label htmlFor="teamName">Nome da equipa</Label>
-											<Input {...field} placeholder="Equipa de sucesso chama-se..." />
-										</FormItem>
+									render={({ field, fieldState }) => (
+										<>
+											<FormItem className="flex-1">
+												<Label htmlFor="teamName">Nome da equipa</Label>
+												<Input
+													{...field}
+													disabled={!!field.value}
+													isError={!!fieldState.error?.message}
+													placeholder="Equipa de sucesso chama-se..."
+													onBlur={() => handelCheckTeamName(field.value)}
+												/>
+												<FormMessage />
+											</FormItem>
+										</>
 									)}
 								/>
 								<FormField
@@ -111,10 +141,10 @@ export const Step3 = React.forwardRef<HTMLFormElement>((props, ref) => {
 									/>
 								</div>
 								<div className="space-y-2">
-									<Label htmlFor="teamTypes">Formação</Label>
+									<Label htmlFor="teamShape">Formação</Label>
 									<FormField
 										control={form.control}
-										name="teamTypes"
+										name="teamShape"
 										render={({ field }) => (
 											<Select {...field} onValueChange={field.onChange} defaultValue={field.value}>
 												<SelectTrigger>

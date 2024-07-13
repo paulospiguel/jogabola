@@ -20,6 +20,7 @@ import { useSearchParams } from "next/navigation";
 import { Separator } from "../ui/separator";
 import AuthFormMessage from "./auth-form-message";
 import SocialLogin from "./social-login";
+import routes from "@/constants/routes";
 
 export default function LoginForm() {
 	const [isPending, startTransition] = useTransition();
@@ -118,7 +119,14 @@ export default function LoginForm() {
 											<FormLabel>Senha</FormLabel>
 											<FormControl>
 												<div>
-													<Input className="rounded-full" type="password" placeholder="******" required {...field} disabled={isPending} />
+													<Input
+														className="rounded-full"
+														type="password"
+														placeholder="******"
+														required
+														{...field}
+														disabled={isPending}
+													/>
 													<div className="flex items-center">
 														<Link
 															href="/auth/reset-password"
@@ -186,7 +194,7 @@ export default function LoginForm() {
 				{!showOTPForm && (
 					<div className="mt-4 text-center text-sm">
 						Não tem uma conta?{" "}
-						<Link href="/auth/register" className="underline">
+						<Link href={routes.auth.register} className="underline">
 							Cadastre-se
 						</Link>
 					</div>
@@ -194,7 +202,7 @@ export default function LoginForm() {
 				{showOTPForm && (
 					<div className="mt-4 text-center text-sm">
 						Conectar agora?{" "}
-						<Link href="/auth/login" className="underline">
+						<Link href={routes.auth.login} className="underline">
 							Conectar
 						</Link>
 					</div>

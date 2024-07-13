@@ -3,7 +3,7 @@
 import type { z } from "zod";
 import Image from "next/image";
 import { useFormContext } from "react-hook-form";
-import type { CreateTeamSchema } from "@/schemas/create-team";
+import type { teamSchema } from "@/schemas/create-team";
 import gameDay from "@/assets/images/game_day.svg";
 import { Button } from "@/components/ui/button";
 import { FormControl, FormDescription, FormField, FormItem, FormMessage } from "@/components/ui/form";
@@ -14,7 +14,7 @@ import Link from "next/link";
 import React from "react";
 
 export const Step2 = React.forwardRef<HTMLDivElement>((props, ref) => {
-	const form = useFormContext<z.infer<typeof CreateTeamSchema>>();
+	const form = useFormContext<z.infer<typeof teamSchema>>();
 
 	const handleNextStep = () => {
 		form.setValue("currentStep", Steps.Step3);

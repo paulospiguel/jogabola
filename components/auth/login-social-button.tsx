@@ -1,7 +1,9 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
+import { getSearchParams } from "@/lib/utils";
 import { signIn } from "next-auth/react";
+import { redirect, usePathname, useSearchParams } from "next/navigation";
 import type { ReactNode } from "react";
 
 type Props = {
@@ -11,6 +13,10 @@ type Props = {
 };
 
 const LoginSocialButton = ({ children, provider, callbackUrl }: Props) => {
+	const searchParams = useSearchParams();
+	const previousUrl = searchParams.get("redirect");
+	callbackUrl = previousUrl || callbackUrl;
+
 	return (
 		// biome-ignore lint: TODO: Need to implement key stroke shortcuts
 		<Button

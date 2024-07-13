@@ -3,20 +3,29 @@
 import type { z } from "zod";
 import Image from "next/image";
 import { useFormContext } from "react-hook-form";
-import type { CreateTeamSchema } from "@/schemas/create-team";
+import type { teamSchema } from "@/schemas/create-team";
 import managerIcon from "@/assets/icons/director.png";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
-import { useCreateTeam } from "@/hooks/use-create-team";
 import { Steps } from "@/types/multi-steps";
 import React from "react";
+import { checkTeamName } from "@/actions/team";
 
 export const Step1 = React.forwardRef<HTMLDivElement>((props, ref) => {
-	const form = useFormContext<z.infer<typeof CreateTeamSchema>>();
+	const form = useFormContext<z.infer<typeof teamSchema>>();
 
 	const handleNextStep = () => {
 		form.setValue("currentStep", Steps.Step2);
+	};
+
+	const handelCheckTeamName = async (teamName: string) => {
+		const response = await checkTeamName(teamName);
+		if (response.error) {
+			form.setError("teamName", { message: response.error });
+		} else {
+			form.clearErrors("teamName");
+		}
 	};
 
 	return (
@@ -30,38 +39,39 @@ export const Step1 = React.forwardRef<HTMLDivElement>((props, ref) => {
 			</div>
 
 			<form className="w-full">
-				<div className="space-y-4">
-					<div className="flex w-full gap-2">
-						<FormField
-							control={form.control}
-							name="teamName"
-							render={({ field }) => (
-								<FormItem className="flex-1">
-									<FormLabel>Name da equipa</FormLabel>
-									<FormControl>
-										<Input
-											className="rounded-full"
-											autoComplete="off"
-											type="name"
-											placeholder="Nomeie sua equipa com algo único!"
-											required
-											{...field}
-										/>
-									</FormControl>
-									<FormDescription className="hidden">Nome da equipa.</FormDescription>
-									<FormMessage />
-								</FormItem>
-							)}
-						/>
-					</div>
-					<Button
-						type="button"
-						onClick={handleNextStep}
-						variant={"default"}
-						className="w-full bg-blue-950 hover:bg-blue-950/75"
-					>
-						Avançar
-					</Button>
+				<div className="flex w-full gap-2">
+					<FormField
+						control={form.control}
+						name="teamName"
+						render={({ field, fieldState }) => (
+							<FormItem className="flex-1">
+								<FormLabel>Name da equipa</FormLabel>
+								<FormControl>
+									<Input
+										{...field}
+										className="rounded-full"
+										autoComplete="off"
+										type="name"
+										placeholder="Nomeie sua equipa com algo único!"
+										required
+										isError={!!fieldState.error?.message}
+										onBlur={() => handelCheckTeamName(field.value)}
+									/>
+								</FormControl>
+								<FormDescription className="hidden">Nome da equipa.</FormDescription>
+								<FormMessage />
+								<Button
+									type="button"
+									onClick={handleNextStep}
+									variant={"default"}
+									disabled={fieldState.invalid}
+									className="w-full bg-blue-950 hover:bg-blue-950/75"
+								>
+									Avançar
+								</Button>
+							</FormItem>
+						)}
+					/>
 				</div>
 			</form>
 		</div>

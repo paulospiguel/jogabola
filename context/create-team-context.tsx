@@ -1,12 +1,13 @@
 "use client";
 
 import { createContext, use, useContext, useEffect, useState } from "react";
+import { useSession } from "next-auth/react";
 
 import type { z } from "zod";
-import { CreateTeamSchema } from "@/schemas/create-team";
+import { teamSchema } from "@/schemas/create-team";
 import type { Steps } from "@/types/multi-steps";
 
-import teamService from "@/services/team";
+import { getTeamInfo } from "@/actions/team";
 
 type CreateTeamContextValue = {
 	isPending: boolean;
@@ -14,26 +15,29 @@ type CreateTeamContextValue = {
 	success: string;
 	setError: (error: string) => void;
 	setSuccess: (success: string) => void;
-	data: z.infer<typeof CreateTeamSchema>;
-	setCreateTeamData: (value: z.infer<typeof CreateTeamSchema>) => void;
+	data: z.infer<typeof teamSchema>;
+	setTeamData: (value: z.infer<typeof teamSchema>) => void;
 	goToStep: (step: Steps) => void;
 	currentStep: Steps;
 	isCompleted?: boolean;
+	keyStorage: string;
 };
 
 const initialData = {
 	teamName: "",
 	bio: undefined,
 	logo: undefined,
-	...CreateTeamSchema.pick({
-		currentStep: true,
-		location: true,
-		language: true,
-		teamTypes: true,
-		radiusPlayerArea: true,
-		radiusPlayerAge: true,
-	}).parse({}),
-} as z.infer<typeof CreateTeamSchema>;
+	...teamSchema
+		.pick({
+			currentStep: true,
+			location: true,
+			language: true,
+			teamShape: true,
+			radiusPlayerArea: true,
+			radiusPlayerAge: true,
+		})
+		.parse({}),
+} as z.infer<typeof teamSchema>;
 
 const CreateTeamContext = createContext<CreateTeamContextValue | undefined>(undefined);
 
@@ -42,22 +46,27 @@ export const CreateTeamProvider: React.FC<{ children: React.ReactNode }> = ({ ch
 	const [isCompleted, setIsCompleted] = useState(false);
 	const [error, setError] = useState("");
 	const [success, setSuccess] = useState("");
-	const [teamData, setTeamData] = useState<z.infer<typeof CreateTeamSchema>>(initialData);
+	const [teamData, setData] = useState<z.infer<typeof teamSchema>>(initialData);
+	const { data: session } = useSession();
 
-	const setCreateTeamData = (value: z.infer<typeof CreateTeamSchema>) => {
+	const setTeamData = (value: z.infer<typeof teamSchema>) => {
 		setTeamData(value);
 	};
 
 	const goToStep = (step: Steps) => {
-		setTeamData((prevState) => ({ ...prevState, currentStep: step }));
+		setData((prevState) => ({ ...prevState, currentStep: step }));
 	};
 
 	useEffect(() => {
-		teamService.getTeamInfo("").then((data) => {
-			console.log("data", data);
-			//setIsCompleted(data.isCompleted);
-		});
-	}, []);
+		if (session?.user.id) {
+			getTeamInfo(session?.user.id).then((team) => {
+				if (team) {
+					console.log("Team", team);
+					//	setTeamData(team);
+				}
+			});
+		}
+	}, [session]);
 
 	const value = {
 		isPending,
@@ -66,10 +75,11 @@ export const CreateTeamProvider: React.FC<{ children: React.ReactNode }> = ({ ch
 		setError,
 		setSuccess,
 		data: teamData,
-		setCreateTeamData,
+		setTeamData,
 		goToStep,
 		currentStep: teamData?.currentStep,
 		isCompleted,
+		keyStorage: `create-team-${session?.user.id}`,
 	};
 
 	return <CreateTeamContext.Provider value={value}>{children}</CreateTeamContext.Provider>;
