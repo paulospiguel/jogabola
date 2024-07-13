@@ -1,6 +1,6 @@
 import { AppHeader } from "@/components/app-header";
 
-export function FeedManager() {
+export default function FeedManager() {
 	return (
 		<div className="flex flex-col w-full h-full items-center bg-backgroundPrimary dark:bg-backgroundPrimary-dark">
 			<AppHeader />
