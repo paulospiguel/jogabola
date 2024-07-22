@@ -12,7 +12,10 @@ const LogoutButton = ({ children }: Props) => {
 		// biome-ignore lint: reason
 		<div
 			onClick={async () => {
-				await signOut();
+				await signOut({
+					redirect: true,
+					callbackUrl: "/",
+				});
 			}}
 		>
 			{children}

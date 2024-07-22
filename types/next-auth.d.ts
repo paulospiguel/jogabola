@@ -7,7 +7,7 @@ declare module "next-auth" {
 	 */
 	interface Session {
 		user: {
-			role: UserRole;
+			role: UserRole[];
 			isTwoFactorEnabled: boolean;
 			isCompleted: boolean;
 			/**
@@ -25,5 +25,6 @@ declare module "next-auth/jwt" {
 	interface JWT {
 		/** Two Factor Authentication */
 		isTwoFactorEnabled?: boolean;
+		role: UserRole[];
 	}
 }

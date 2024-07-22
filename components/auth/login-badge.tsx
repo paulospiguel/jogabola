@@ -10,18 +10,32 @@ import {
 	DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { CircleUser, LogOut, UserCircleIcon } from "lucide-react";
-import type { User } from "next-auth";
+import type { Session } from "next-auth";
 import Link from "next/link";
+import Image from "next/image";
 import { LineMdCogLoop } from "../icons";
+import soccerPlayer from "@/assets/images/soccer-player.svg";
+import fieldSoccer from "@/assets/images/soccer-field.svg";
+import trophy from "@/assets/images/trophy.svg";
+import calendar from "@/assets/images/calendar.svg";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import LoginButton from "./login-button";
 import LogoutButton from "./logout-button";
+import { RoleValues } from "@/schemas/roles";
+import { useProfile } from "@/context/profile-context";
 
 type Props = {
-	user?: User;
+	user?: Session["user"];
 };
 
 const LoginBadge = ({ user }: Props) => {
+	const { userRoles } = useProfile();
+
+	const isManager = userRoles?.includes(RoleValues.MANAGER);
+	const isPlayer = userRoles?.includes(RoleValues.PLAYER);
+
+	const baseUri = isManager ? "/manager" : isPlayer ? "/player" : "";
+
 	return (
 		<>
 			{user && (
@@ -34,8 +48,41 @@ const LoginBadge = ({ user }: Props) => {
 							</AvatarFallback>
 						</Avatar>
 					</DropdownMenuTrigger>
-					<DropdownMenuContent align="end">
+					<DropdownMenuContent className="w-[300px]" align="end">
 						<DropdownMenuLabel>Minha Conta</DropdownMenuLabel>
+						<DropdownMenuSeparator />
+						{isManager && (
+							<DropdownMenuItem>
+								<Link href={`${baseUri}/teams`} className="flex flex-col flex-1 justify-start items-center">
+									<Image alt="" width={24} src={fieldSoccer} className="mx-auto w-10" />
+									Minhas Equipas
+								</Link>
+							</DropdownMenuItem>
+						)}
+						{isPlayer && (
+							<DropdownMenuItem>
+								<Link href={`${baseUri}/journey`} className="flex flex-col flex-1 justify-start items-center">
+									<Image alt="" width={24} src={soccerPlayer} className="mx-auto w-10" />
+									Minha Jornada
+								</Link>
+							</DropdownMenuItem>
+						)}
+						{(isPlayer || isManager) && (
+							<>
+								<DropdownMenuItem>
+									<Link href={`${baseUri}/competitions`} className="flex flex-col flex-1 justify-start items-center">
+										<Image alt="" width={24} src={calendar} className="mx-auto w-10" />
+										Minhas Competições
+									</Link>
+								</DropdownMenuItem>
+								<DropdownMenuItem>
+									<Link href={`${baseUri}/achievements`} className="flex flex-col flex-1 justify-start items-center">
+										<Image alt="" width={24} src={trophy} className="mx-auto w-10" />
+										Minhas Conquistas
+									</Link>
+								</DropdownMenuItem>
+							</>
+						)}
 						<DropdownMenuSeparator />
 						<DropdownMenuItem>
 							<Link href="/auth/settings" className="flex flex-1 justify-start items-center">

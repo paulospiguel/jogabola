@@ -1,14 +1,14 @@
 import { getSearchParams } from "@/lib/utils";
 import { RoleSchema } from "@/schemas/roles";
 import Image, { type StaticImageData } from "next/image";
-import { ArrowLeftIcon, ArrowRightIcon } from "lucide-react";
+import { ArrowRightIcon } from "lucide-react";
 import Link from "next/link";
 
 import type { z } from "zod";
 
 import football from "@/assets/icons/football.png";
 import managerIcon from "@/assets/icons/director.png";
-import { Card } from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import routes from "@/constants/routes";
 
 type WelcomeProps = {
@@ -33,7 +33,7 @@ const showInfo = (role: string) => {
 	let imageHeader: StaticImageData | null;
 
 	switch (role) {
-		case Role.player:
+		case Role.PLAYER:
 			title = "Encontre sua equipa e jogue seu melhor futebol";
 			description = "Encontre amigos, Jogue competições, veja os resultados e divirta-se.";
 			disclaimer = "Se você não tem uma equipe, não se preocupe, você pode se juntar a uma equipe existente.";
@@ -42,7 +42,7 @@ const showInfo = (role: string) => {
 			imageHeader = football;
 			break;
 
-		case Role.manager:
+		case Role.MANAGER:
 			title = "Pronto para montar seu time dos sonhos?";
 			description = "Crie sua equipa e dispute competições, gerencie sua equipe e veja os resultados.";
 			disclaimer = "Se você não tem uma equipe, não se preocupe, você pode se juntar a uma equipe existente.";
@@ -50,6 +50,7 @@ const showInfo = (role: string) => {
 			url = routes.onbording.createTeam;
 			imageHeader = managerIcon;
 			break;
+
 		default:
 			title = "";
 			description = "";
@@ -66,6 +67,50 @@ const showInfo = (role: string) => {
 export default function Welcome({ searchParams }: WelcomeProps) {
 	const role = getSearchParams<z.infer<typeof RoleSchema>>(searchParams).get("role");
 	const { title, description, buttonText, disclaimer, url, imageHeader } = showInfo(role);
+
+	const hasNotInfo = !title || !description || !disclaimer || !buttonText || !url || !imageHeader;
+
+	if (hasNotInfo) {
+		return (
+			<section className="bg-background mt-4 p-4 rounded-xl shadow-md mx-2">
+				<div className="tracking-wide text-center space-y-2 text-blue-950">
+					<p className="italic text-2xl font-heading">Bem-vindo ao JogaBola</p>
+					<p className="italic">O melhor lugar para encontrar sua malta e jogar a bola.</p>
+					<p className="">Escolha uma opção para começar.</p>
+
+					<div className="grid grid-cols-2 place-content-center gap-4 p-4">
+						<Link href={routes.onbording.myJourney}>
+							<Card className="h-full w-full">
+								<CardHeader>
+									<CardTitle>Encontre uma equipa</CardTitle>
+									<CardDescription>
+										Encontre amigos, Jogue competições, veja os resultados e divirta-se.
+									</CardDescription>
+								</CardHeader>
+								<CardContent>
+									<Image src={football} alt="icon of player" width={120} height={120} className="mx-auto" />
+								</CardContent>
+							</Card>
+						</Link>
+
+						<Link href={routes.onbording.createTeam}>
+							<Card className="h-full w-full">
+								<CardHeader>
+									<CardTitle>Crie sua equipa</CardTitle>
+									<CardDescription>
+										Crie sua equipa e dispute competições, gerencie sua equipe e veja os resultados.
+									</CardDescription>
+								</CardHeader>
+								<CardContent>
+									<Image src={managerIcon} alt="icon of manager" width={120} height={120} className="mx-auto" />
+								</CardContent>
+							</Card>
+						</Link>
+					</div>
+				</div>
+			</section>
+		);
+	}
 
 	return (
 		<section className="bg-background mt-4 p-4 rounded-xl shadow-md mx-2">

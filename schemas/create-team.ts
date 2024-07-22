@@ -8,7 +8,10 @@ export const teamSchema = z.object({
 	id: z.string().optional(),
 	currentStep: z.nativeEnum(Steps).default(Steps.Step1),
 	termsOfUse: z.boolean().default(false),
-	teamName: z.string().min(3).max(50),
+	name: z.string({
+		required_error: "Nome da equipa é obrigatório",
+	}).min(3).max(50),
+	isPublic: z.boolean().default(false),
 	bio: z.string().optional(),
 	logo: z.string().optional(),
 	location: z.string().optional(),
@@ -16,4 +19,12 @@ export const teamSchema = z.object({
 	teamShape: teamShapeEnum.default(teamShapeEnum.options[0]),
 	radiusPlayerArea: z.array(z.number()).default([0, 10]),
 	radiusPlayerAge: z.array(z.number()).default([15, 100]),
+	temaMember: z.array(
+		z.object({
+			userId: z.string(),
+			role: z.string(),
+		})
+	).optional(),
+
+
 });

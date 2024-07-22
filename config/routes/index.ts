@@ -1,6 +1,6 @@
 import type { ConfigRoutes } from "@/types/routes";
 
-const managerRoutes = ["/create-team", "/manager/team", "/manager/feed"];
+const managerRoutes = ["/create-team", "/manager/team", "/manager/teams", "/manager/feed"];
 
 const playerRoutes = [
   "/player/profile",

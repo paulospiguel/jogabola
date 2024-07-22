@@ -16,6 +16,10 @@ generator client {
 enum UserRole {
   DEFAULT
   ADMIN
+  PLAYER
+  COACH
+  MANAGER
+  WATCHER
 }
 
 model User {
@@ -28,15 +32,11 @@ model User {
   password               String?
   isTwoFactorAuthEnabled Boolean   @default(false)
   twoFactorAuthVerified  DateTime?
+  accounts               Account[]
+  team                   Team[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-
-  Account    Account[]
-  Team       Team[]       @relation("team")
-  TeamMember TeamMember[]
-
-  @@map("users")
 }
 
 model Account {
@@ -54,10 +54,9 @@ model Account {
   createdAt         DateTime @default(now())
   updatedAt         DateTime @updatedAt
 
-  User User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user User @relation(fields: [userId], references: [id])
 
   @@id([provider, providerAccountId])
-  @@map("accounts")
 }
 
 model VerificationToken {
@@ -105,41 +104,21 @@ model Team {
   createdAt           DateTime @default(now())
   updatedAt           DateTime @updatedAt
 
-  User       User?        @relation("team", fields: [userId], references: [id])
+  teamMember TeamMember[]
+  user       User?        @relation(fields: [userId], references: [id])
   userId     String?
-  TeamMember TeamMember[]
-
-  @@map("teams")
 }
 
 model TeamMember {
   id        String   @id @default(cuid())
-  role      String
+  role      UserRole @default(DEFAULT)
   teamId    String
   userId    String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  User User @relation(fields: [userId], references: [id])
-  Team Team @relation(fields: [teamId], references: [id])
-
-  @@map("team_members")
+  team Team @relation(fields: [teamId], references: [id])
 }
-
-// model TeamMember {
-//   id     String @id @default(cuid())
-//   role   String
-//   teamId String
-//   userId String
-
-//   team Team @relation(fields: [teamId], references: [id])
-//   user User @relation(fields: [userId], references: [id])
-
-//   createdAt DateTime @default(now())
-//   updatedAt DateTime @updatedAt
-
-//   @@map("team_members")
-// }
 
 // model Player {
 //   id       String  @id @default(cuid())

@@ -9,11 +9,5 @@ type LayoutProps = {
 };
 
 export default async function ManagerCreateTeam({ children }: LayoutProps) {
-	const session = await auth();
-
-	// if (!session) {
-	// 	redirect(routes.auth.login);
-	// }
-
 	return <CreateTeamProvider>{children}</CreateTeamProvider>;
 }

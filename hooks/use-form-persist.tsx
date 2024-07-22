@@ -72,7 +72,6 @@ export function useFormPersist<T extends FieldValues>({
 				values: valuesToPersist,
 				dirtyFields: dirtyFieldsToPersist,
 			});
-
 			storageLocation.setItem(storageKey, dataToPersist);
 			if (callback) {
 				callback(valuesToPersist);

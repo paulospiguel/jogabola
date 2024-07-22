@@ -6,7 +6,8 @@ import { Concert_One, Inter } from "next/font/google";
 import "./globals.css";
 import { cn } from "@/lib/utils";
 import Cookies from "@/components/cookies";
-import { Toaster } from "@/components/ui/toaster"
+import { Toaster } from "@/components/ui/toaster";
+import { ProfileProvider } from "@/context/profile-context";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 const fontBody = Inter({
@@ -32,11 +33,13 @@ export default async function RootLayout({
 		<html lang="pt-BR">
 			<body className={cn("antialiased", fonts)} suppressHydrationWarning>
 				<SessionProvider session={session}>
-					<ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
-						{children}
-						<Cookies />
-						<Toaster />
-					</ThemeProvider>
+					<ProfileProvider>
+						<ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
+							{children}
+							<Cookies />
+							<Toaster />
+						</ThemeProvider>
+					</ProfileProvider>
 				</SessionProvider>
 			</body>
 		</html>

@@ -1,18 +1,11 @@
-import { auth } from "@/auth";
 import { AppHeader as Header } from "@/components/app-header";
-import { redirect } from "next/navigation";
 
 type LayoutProps = {
 	children: React.ReactNode;
+	searchParams: Record<string, string>;
 };
 
-export default async function LayoutInitalSetup({ children }: LayoutProps) {
-	const session = await auth();
-
-	if (session?.user.isCompleted) {
-		console.log("User is completed");
-	}
-
+export default async function LayoutInitalSetup({ children, ...props }: LayoutProps) {
 	return (
 		<div className="flex flex-col w-full h-full items-center bg-backgroundPrimary dark:bg-backgroundPrimary-dark">
 			<Header />

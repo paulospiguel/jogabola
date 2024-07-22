@@ -1,21 +1,22 @@
 "use client";
 
 import type { z } from "zod";
+import { motion } from "framer-motion";
+import { useRouter } from "next/navigation";
+import { FormProvider } from "react-hook-form";
 import { Steps, type StepForm } from "@/types/multi-steps";
 import { useCreateTeam } from "@/hooks/use-create-team";
-import { FormProvider } from "react-hook-form";
+import { cn } from "@/lib/utils";
 import { teamSchema } from "@/schemas/create-team";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useFormPersist } from "@/hooks/use-form-persist";
 import { useEffect, useMemo } from "react";
 import { FormField } from "@/components/ui/form";
-import { motion } from "framer-motion";
-
 import { Step1 } from "./step1";
 import { Step2 } from "./step2";
 import { Step3 } from "./step3";
-import { cn } from "@/lib/utils";
-import { useRouter } from "next/navigation";
+import { useSession } from "next-auth/react";
+//import { useQuery } from "@tanstack/react-query";
 
 export const onboardingForm: Record<Steps, StepForm> = {
 	[Steps.Step1]: {
@@ -37,7 +38,20 @@ export const onboardingForm: Record<Steps, StepForm> = {
 
 export function MultiStepCreateTeamConfig() {
 	const { data, goToStep, setTeamData, currentStep, isCompleted, keyStorage } = useCreateTeam();
+	const { data: session } = useSession();
+	const user = session?.user;
+
 	const { push } = useRouter();
+
+	// const {
+	// 	data: hasTeam,
+	// 	isLoading,
+	// 	isError,
+	// } = useQuery({
+	// 	enabled: !!user?.id,
+	// 	queryFn: async () => user?.id && (await checkUserHasTeam(user?.id)),
+	// 	queryKey: ["checkHasTeam"], //Array according to Documentation
+	// });
 
 	const methods = useFormPersist<z.infer<typeof teamSchema>>({
 		storageKey: keyStorage,
@@ -45,20 +59,18 @@ export function MultiStepCreateTeamConfig() {
 		resolver: zodResolver(teamSchema),
 		includeDirtyFields: true,
 		defaultValues: data,
-		callback: (values) => {
-			// if (JSON.stringify(data) !== JSON.stringify(values)) {
-			// 	setTeamData(values);
-			// }
-		},
 	});
 
 	const storagedCurrentStep = methods?.watch("currentStep");
 
-	useEffect(() => {
-		if (isCompleted) {
-			push("/manage-team/team");
-		}
-	}, [isCompleted, push]);
+	//console.log("Has Team", hasTeam);
+
+	// useEffect(() => {
+	// 	if (hasTeam) {
+	// 		console.log("Has Team", hasTeam);
+	// 		//push("/manage/team");
+	// 	}
+	// }, [currentStep, hasTeam]);
 
 	useEffect(() => {
 		if (storagedCurrentStep !== currentStep) {
@@ -94,11 +106,25 @@ export function MultiStepCreateTeamConfig() {
 				render={({ field }) => (
 					<ul className="flex space-x-2 p-2 justify-center w-full">
 						{Object.keys(onboardingForm).map((step, index) => {
-							const isMatchStep = currentStep === index + 1;
+							const stepIndex = index + 1;
+							const isMatchStep = currentStep === stepIndex;
+							let disabledButton = false;
+
+							const formStep = Steps.Step3 === stepIndex;
+
+							if (formStep && !methods.watch("termsOfUse")) {
+								disabledButton = true;
+							}
+
+							if (!methods.watch("name")) {
+								disabledButton = true;
+							}
+
 							return (
 								<button
 									key={step}
 									type="button"
+									disabled={disabledButton}
 									onClick={() => methods.setValue("currentStep", index + 1)}
 									className={cn("w-8 py-1 rounded-full bg-gray-300", {
 										"bg-gray-400": isMatchStep,

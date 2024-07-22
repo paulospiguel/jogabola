@@ -47,7 +47,6 @@ export const Step3 = React.forwardRef<HTMLFormElement>((props, ref) => {
 
 	const onSubmit: SubmitHandler<z.infer<typeof teamSchema>> = async (values) => {
 		const response = await createNewTeam(values).catch((error) => {
-			console.log(error.message);
 			toast({
 				title: "Error",
 				description: "Error creating team",
@@ -56,17 +55,18 @@ export const Step3 = React.forwardRef<HTMLFormElement>((props, ref) => {
 		});
 
 		if (response?.data?.id) {
+			form.reset();
 			sessionStorage.removeItem(keyStorage);
-			push("/manage-team/team");
+			push("/manage/team");
 		}
 	};
 
 	const handelCheckTeamName = async (teamName: string) => {
 		const response = await checkTeamName(teamName);
 		if (response.error) {
-			form.setError("teamName", { message: response.error });
+			form.setError("name", { message: response.error });
 		} else {
-			form.clearErrors("teamName");
+			form.clearErrors("name");
 		}
 	};
 
@@ -95,7 +95,7 @@ export const Step3 = React.forwardRef<HTMLFormElement>((props, ref) => {
 							<div className="flex items-end space-x-2">
 								<FormField
 									control={form.control}
-									name="teamName"
+									name="name"
 									render={({ field, fieldState }) => (
 										<>
 											<FormItem className="flex-1">

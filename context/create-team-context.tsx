@@ -7,7 +7,8 @@ import type { z } from "zod";
 import { teamSchema } from "@/schemas/create-team";
 import type { Steps } from "@/types/multi-steps";
 
-import { getTeamInfo } from "@/actions/team";
+import { checkUserTeam, getTeamInformation } from "@/actions/team";
+import { useRouter } from "next/navigation";
 
 type CreateTeamContextValue = {
 	isPending: boolean;
@@ -24,7 +25,7 @@ type CreateTeamContextValue = {
 };
 
 const initialData = {
-	teamName: "",
+	name: "",
 	bio: undefined,
 	logo: undefined,
 	...teamSchema
@@ -49,6 +50,8 @@ export const CreateTeamProvider: React.FC<{ children: React.ReactNode }> = ({ ch
 	const [teamData, setData] = useState<z.infer<typeof teamSchema>>(initialData);
 	const { data: session } = useSession();
 
+	const { push } = useRouter();
+
 	const setTeamData = (value: z.infer<typeof teamSchema>) => {
 		setTeamData(value);
 	};
@@ -59,14 +62,14 @@ export const CreateTeamProvider: React.FC<{ children: React.ReactNode }> = ({ ch
 
 	useEffect(() => {
 		if (session?.user.id) {
-			getTeamInfo(session?.user.id).then((team) => {
-				if (team) {
-					console.log("Team", team);
-					//	setTeamData(team);
+			checkUserTeam(session?.user.id).then((hasTeam) => {
+				if (hasTeam) {
+					push("/manager/teams");
+					return;
 				}
 			});
 		}
-	}, [session]);
+	}, [session, push]);
 
 	const value = {
 		isPending,
@@ -79,7 +82,7 @@ export const CreateTeamProvider: React.FC<{ children: React.ReactNode }> = ({ ch
 		goToStep,
 		currentStep: teamData?.currentStep,
 		isCompleted,
-		keyStorage: `create-team-${session?.user.id}`,
+		keyStorage: `jogabolaCreateTeam:${session?.user.id}`,
 	};
 
 	return <CreateTeamContext.Provider value={value}>{children}</CreateTeamContext.Provider>;

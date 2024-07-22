@@ -17,7 +17,6 @@ import AuthCard from "./auth-card";
 import AuthFormMessage from "./auth-form-message";
 
 export default function RegisterForm() {
-	const router = useRouter();
 	const [isPending, startTransition] = useTransition();
 	const [error, setError] = useState<string>("");
 	const [success, setSuccess] = useState<string>("");
@@ -80,7 +79,14 @@ export default function RegisterForm() {
 									<FormItem>
 										<FormLabel>E-mail</FormLabel>
 										<FormControl>
-											<Input className="rounded-full" type="email" placeholder="voce@provedor.com" required {...field} disabled={isPending} />
+											<Input
+												className="rounded-full"
+												type="email"
+												placeholder="voce@provedor.com"
+												required
+												{...field}
+												disabled={isPending}
+											/>
 										</FormControl>
 										<FormDescription className="hidden">Seu e-mail.</FormDescription>
 										<FormMessage />
@@ -94,7 +100,14 @@ export default function RegisterForm() {
 									<FormItem>
 										<FormLabel>Senha</FormLabel>
 										<FormControl>
-											<Input className="rounded-full" type="password" placeholder="******" required {...field} disabled={isPending} />
+											<Input
+												className="rounded-full"
+												type="password"
+												placeholder="******"
+												required
+												{...field}
+												disabled={isPending}
+											/>
 										</FormControl>
 										<FormDescription className="hidden">Seu e-mail.</FormDescription>
 										<FormMessage />

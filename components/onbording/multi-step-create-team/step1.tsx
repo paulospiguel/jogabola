@@ -22,9 +22,9 @@ export const Step1 = React.forwardRef<HTMLDivElement>((props, ref) => {
 	const handelCheckTeamName = async (teamName: string) => {
 		const response = await checkTeamName(teamName);
 		if (response.error) {
-			form.setError("teamName", { message: response.error });
+			form.setError("name", { message: response.error });
 		} else {
-			form.clearErrors("teamName");
+			form.clearErrors("name");
 		}
 	};
 
@@ -42,18 +42,18 @@ export const Step1 = React.forwardRef<HTMLDivElement>((props, ref) => {
 				<div className="flex w-full gap-2">
 					<FormField
 						control={form.control}
-						name="teamName"
+						name="name"
 						render={({ field, fieldState }) => (
 							<FormItem className="flex-1">
 								<FormLabel>Name da equipa</FormLabel>
 								<FormControl>
 									<Input
 										{...field}
+										required
 										className="rounded-full"
 										autoComplete="off"
 										type="name"
 										placeholder="Nomeie sua equipa com algo único!"
-										required
 										isError={!!fieldState.error?.message}
 										onBlur={() => handelCheckTeamName(field.value)}
 									/>
@@ -64,7 +64,7 @@ export const Step1 = React.forwardRef<HTMLDivElement>((props, ref) => {
 									type="button"
 									onClick={handleNextStep}
 									variant={"default"}
-									disabled={fieldState.invalid}
+									disabled={fieldState.invalid || !field.value}
 									className="w-full bg-blue-950 hover:bg-blue-950/75"
 								>
 									Avançar

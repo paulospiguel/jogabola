@@ -1,10 +1,13 @@
-import { PrismaAdapter } from "@auth/prisma-adapter";
 import { UserRole } from "@prisma/client";
 import NextAuth from "next-auth";
 import authConfig from "./auth.config";
-import { prisma } from "./lib/db";
 import { findUserbyEmail } from "./services";
 import { isTwoFactorAutenticationEnabled } from "./services/auth";
+import { getRolesByUser } from "./services/team";
+import { PrismaAdapter } from "@auth/prisma-adapter";
+import { prisma } from "@/lib/db";
+
+
 export const {
   handlers: { GET, POST },
   auth,
@@ -44,9 +47,14 @@ export const {
           const isTwoFactorEnabled = await isTwoFactorAutenticationEnabled(
             user?.id || ""
           );
+
+          const roles = await getRolesByUser(user?.id || "");
+          console.log({ roles });
+          token.role = roles;
           token.isTwoFactorEnabled = isTwoFactorEnabled;
+        } else {
+          token.role = [UserRole.DEFAULT];
         }
-        token.role = UserRole.DEFAULT;
       }
       return token;
     },
@@ -56,7 +64,7 @@ export const {
       if (session.user && token.sub) {
         session.user.id = token.sub;
         session.user.isTwoFactorEnabled = token.isTwoFactorEnabled as boolean;
-        session.user.isCompleted = false // token.isCompleted as boolean;
+        session.user.isCompleted = token.role.length > 0;
       }
       return {
         ...session,

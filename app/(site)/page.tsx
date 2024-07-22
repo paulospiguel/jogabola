@@ -5,14 +5,12 @@ import fieldLogo from "@/assets/partners/field.png";
 import filaLogo from "@/assets/partners/fila.svg";
 import redBullLogo from "@/assets/partners/redbull.svg";
 import Navbar from "@/components/site/navbar";
-import { RoleSchema } from "@/schemas/roles";
+import { RoleValues } from "@/schemas/roles";
 import { ArrowRight } from "lucide-react";
 import InfiniteHorizontalScroll from "@/components/infinite-scroll";
 
 import footballIcon from "@/assets/icons/football.png";
 import directorIcon from "@/assets/icons/director.png";
-
-const Roles = RoleSchema.Values;
 
 export default function Home() {
 	return (
@@ -26,7 +24,7 @@ export default function Home() {
 						<div className="py-8 px-4 mx-auto max-w-screen-xl text-center lg:py-16 lg:px-12">
 							<div className="inline-flex justify-center items-center py-1 px-1 pr-4 mb-7 text-sm text-gray-700 bg-gray-100 rounded-full dark:bg-gray-800 dark:text-white hover:bg-gray-200 dark:hover:bg-gray-700">
 								<Link
-									href={`/welcome?role=${Roles.player}`}
+									href={`/welcome?role=${RoleValues.PLAYER}`}
 									className="hover:bg-green-600 hover:text-white ml-2
 									 text-foreground dark:text-white rounded-full px-2 group
 									 transition-all ease-linear duration-150 py-2 flex gap-2 items-center"
@@ -44,7 +42,7 @@ export default function Home() {
 								</Link>
 								<div className="h-6 border-r-2 mx-2" />
 								<Link
-									href={`/welcome?role=${Roles.manager}`}
+									href={`/welcome?role=${RoleValues.MANAGER}`}
 									className="flex hover:bg-green-700 hover:text-white
 									 text-foreground dark:text-white rounded-full px-2 group
 									 transition-all ease-linear duration-150 py-2 gap-2 items-center"

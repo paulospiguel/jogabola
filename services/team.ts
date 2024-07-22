@@ -1,68 +1,120 @@
-import { teamSchema } from "@/schemas/create-team";
 import type { z } from "zod";
 import { prisma } from "@/lib/db";
 import { auth } from "@/auth";
 
-import { RoleSchema } from "@/schemas/roles";
+import { type Role, RoleSchema } from "@/schemas/roles";
+import { teamSchema } from "@/schemas/create-team";
 
-const teamService = {
-  getTeamInfo: async (teamId: string) => {
-    const team = await prisma.team.findUnique({
-      where: {
-        id: teamId
-      }
-    });
-    return team;
-  },
-
-  createTeam: async (values: z.infer<typeof teamSchema>) => {
-    const { language, teamName, bio, logo, radiusPlayerAge, radiusPlayerArea, teamShape, location } = teamSchema.parse(values);
-    const session = await auth();
-    const ownerId = session?.user.id;
-
-    if (!ownerId) {
-      throw new Error("User not found");
+export const getTeamInfo = async (teamId: string) => {
+  const team = await prisma.team.findFirst({
+    where: {
+      id: teamId
     }
+  });
+  return team;
+}
 
-    const role = RoleSchema.Values.owner;
+export const createTeam = async (values: z.infer<typeof teamSchema>) => {
+  const { language, name, bio, logo, radiusPlayerAge, radiusPlayerArea, teamShape, location } = teamSchema.parse(values);
+  const session = await auth();
+  const ownerId = session?.user.id;
 
-    const team = await prisma.team.create({
-      data: {
-        name: teamName,
-        language,
-        bio,
-        logo,
-        location,
-        maxRadiusPlayerAge: radiusPlayerAge[1],
-        minRadiusPlayerAge: radiusPlayerAge[0],
-        maxRadiusPlayerArea: radiusPlayerArea[1],
-        minRadiusPlayerArea: radiusPlayerArea[0],
-        teamShape,
-        slug: teamName.toLowerCase().replace(" ", "-"),
-        User: {
-          connect: {
-            id: ownerId
-          }
-        },
-        TeamMember: {
-          create: {
-            userId: ownerId,
-            role: role
-          }
+  if (!ownerId) {
+    throw new Error("User not found");
+  }
+
+  const role = RoleSchema.Enum.MANAGER;
+
+  const team = await prisma.team.create({
+    data: {
+      name,
+      language,
+      bio,
+      logo,
+      location,
+      maxRadiusPlayerAge: radiusPlayerAge[1],
+      minRadiusPlayerAge: radiusPlayerAge[0],
+      maxRadiusPlayerArea: radiusPlayerArea[1],
+      minRadiusPlayerArea: radiusPlayerArea[0],
+      teamShape,
+      slug: name.toLowerCase().replace(" ", "-"),
+      user: {
+        connect: {
+          id: ownerId,
+        }
+      },
+      teamMember: {
+        create: {
+          userId: ownerId,
+          role: "MANAGER"
+        }
+      }
+    }
+  });
+  return team;
+}
+
+export const checkTeamByName = async (teamName: string) => {
+  const team = await prisma.team.findFirst({
+    where: {
+      name: teamName
+    }
+  });
+  return team;
+}
+
+export const checkUserHasTeam = async (userId: string) => {
+  try {
+    const team = await prisma.team.count({
+      where: {
+        user: {
+          id: userId
         }
       }
     });
-    return team;
-  },
-
-  checkTeamName: async (teamName: string) => {
-    const team = await prisma.team.findFirst({
-      where: {
-        name: teamName
-      }
-    });
-    return team;
+    return team > 0;
+  } catch (error) {
+    console.error(error);
+    return false;
   }
-};
+}
 
-export default teamService;
+export const getRolesByUser = async (userId: string) => {
+  const roles = await prisma.teamMember.findMany({
+    where: {
+      userId
+    },
+    select: {
+      role: true
+    }
+  });
+  return roles.map((roles) => roles.role) as Role[];
+}
+
+export const getTeamByUser = async (userId: string) => {
+  return prisma.team.findMany({
+    where: {
+      user: {
+        id: userId
+      }
+    },
+    include: {
+      teamMember: {
+        select: {
+          role: true
+        }
+      }
+    }
+  });
+}
+
+export const checkUserMemberTeam = async (userId: string, teamId: string) => {
+  const team = await prisma.teamMember.findFirst({
+    where: {
+      userId,
+      teamId
+    }
+  });
+  return team;
+}
+

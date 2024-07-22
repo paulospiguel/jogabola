@@ -1,8 +1,9 @@
 "use server";
 
 import { teamSchema } from "@/schemas/create-team";
+import { checkTeamByName, checkUserHasTeam, createTeam, getRolesByUser, getTeamByUser, getTeamInfo } from "@/services/team";
+import type { Role } from "@/schemas/roles";
 import type { z } from "zod";
-import teamService from "@/services/team";
 
 export async function createNewTeam(data: z.infer<typeof teamSchema>) {
 	const valid = teamSchema.safeParse(data);
@@ -14,7 +15,6 @@ export async function createNewTeam(data: z.infer<typeof teamSchema>) {
 	}
 
 	try {
-		const { createTeam } = teamService;
 
 		const response = await createTeam(data);
 
@@ -29,8 +29,8 @@ export async function createNewTeam(data: z.infer<typeof teamSchema>) {
 	}
 }
 
-export async function getTeamInfo(teamId: string) {
-	const response = await teamService.getTeamInfo(teamId);
+export async function getTeamInformation(teamId: string) {
+	const response = await getTeamInfo(teamId);
 
 	if (response) {
 		return response;
@@ -43,7 +43,10 @@ export async function getTeamInfo(teamId: string) {
 }
 
 export async function checkTeamName(teamName: string) {
-	const response = await teamService.checkTeamName(teamName);
+	if (!teamName) {
+		return {}
+	}
+	const response = await checkTeamByName(teamName);
 
 	if (response) {
 		return {
@@ -54,4 +57,33 @@ export async function checkTeamName(teamName: string) {
 	return {
 		success: "Nome de time disponível",
 	};
+}
+
+export async function checkUserTeam(userId: string): Promise<boolean> {
+	return await checkUserHasTeam(userId);
+}
+
+export async function getRolesByUserId(userId: string): Promise<Role[]> {
+	const response = await getRolesByUser(userId);
+
+	if (response) {
+		return response
+	}
+
+	return [];
+}
+
+export async function getTeamsByUserId(userId: string): Promise<z.infer<typeof teamSchema>[]> {
+	const response = await getTeamByUser(userId);
+
+	console.log(response[0].teamMember.length);
+	if (response) {
+		return response.map((resp) => ({
+			...resp,
+			radiusPlayerAge: [resp.minRadiusPlayerAge, resp.maxRadiusPlayerAge],
+			radiusPlayerArea: [resp.minRadiusPlayerArea, resp.maxRadiusPlayerArea],
+		}));
+	}
+
+	return [];
 }
