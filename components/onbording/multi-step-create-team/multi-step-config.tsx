@@ -68,7 +68,7 @@ export function MultiStepCreateTeamConfig() {
 	// useEffect(() => {
 	// 	if (hasTeam) {
 	// 		console.log("Has Team", hasTeam);
-	// 		//push("/manage/team");
+	// 		//push("/manager/teams");
 	// 	}
 	// }, [currentStep, hasTeam]);
 

@@ -5,10 +5,17 @@ import { auth } from "@/auth";
 import { type Role, RoleSchema } from "@/schemas/roles";
 import { teamSchema } from "@/schemas/create-team";
 
-export const getTeamInfo = async (teamId: string) => {
+export const getTeamInfo = async (teamId?: string, slug?: string) => {
   const team = await prisma.team.findFirst({
     where: {
-      id: teamId
+      OR: [
+        {
+          id: teamId
+        },
+        {
+          slug
+        }
+      ]
     }
   });
   return team;

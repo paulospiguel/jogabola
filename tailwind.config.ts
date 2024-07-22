@@ -1,5 +1,6 @@
 import type { Config } from "tailwindcss";
 import { fontFamily } from "tailwindcss/defaultTheme";
+import colors from 'tailwindcss/colors';
 
 const config = {
   darkMode: ["class"],
@@ -23,6 +24,8 @@ const config = {
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
+        error: colors.red[500],
+        success: colors.green[500],
         foreground: "hsl(var(--foreground))",
         backgroundPrimary: {
           DEFAULT: "hsl(var(--background-primary))",

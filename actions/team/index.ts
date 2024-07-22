@@ -87,3 +87,15 @@ export async function getTeamsByUserId(userId: string): Promise<z.infer<typeof t
 
 	return [];
 }
+
+export async function getTeamInfoBySlug(slug: string) {
+	const response = await getTeamInfo(undefined, slug);
+
+	if (response) {
+		return response;
+	}
+
+	return {
+		error: "Time não encontrado",
+	};
+}

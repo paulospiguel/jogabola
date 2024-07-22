@@ -15,12 +15,13 @@ type WelcomeProps = {
 	searchParams: Record<string, string>;
 };
 
-export const metadata = {
-	title: "Bem-vindo ao JogaBola",
-	description: "O melhor lugar para encontrar sua malta e jogar uma pelada.",
-	image: "/images/welcome.jpg",
-	url: "https://jogabola.com/welcome",
-};
+export async function generateMetadata({ searchParams }: WelcomeProps) {
+	const role = getSearchParams<z.infer<typeof RoleSchema>>(searchParams).get("role") || "Guest";
+	return {
+		title: `Bem-vindo ${role.toLowerCase()} ao JogaBola`,
+		description: "O melhor lugar para encontrar sua malta e jogar a bola.",
+	};
+}
 
 const Role = RoleSchema.Values;
 

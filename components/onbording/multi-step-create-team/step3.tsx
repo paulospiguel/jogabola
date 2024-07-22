@@ -57,7 +57,7 @@ export const Step3 = React.forwardRef<HTMLFormElement>((props, ref) => {
 		if (response?.data?.id) {
 			form.reset();
 			sessionStorage.removeItem(keyStorage);
-			push("/manage/team");
+			push("/manager/teams");
 		}
 	};
 

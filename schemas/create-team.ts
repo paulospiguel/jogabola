@@ -19,6 +19,7 @@ export const teamSchema = z.object({
 	teamShape: teamShapeEnum.default(teamShapeEnum.options[0]),
 	radiusPlayerArea: z.array(z.number()).default([0, 10]),
 	radiusPlayerAge: z.array(z.number()).default([15, 100]),
+	slug: z.string().optional(),
 	temaMember: z.array(
 		z.object({
 			userId: z.string(),

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -9,7 +9,11 @@ import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, Tabl
 import type { z } from "zod";
 import type { teamSchema } from "@/schemas/create-team";
 import Link from "next/link";
-import { PenIcon, PenSquareIcon, TrashIcon } from "lucide-react";
+import { Globe, GlobeIcon, LockIcon, PenIcon, PenSquareIcon, TrashIcon, TrendingDown, TrendingUp } from "lucide-react";
+import Image from "next/image";
+
+import noLogo from "@/assets/images/no-logo.png";
+import { useRouter } from "next/navigation";
 
 type Team = z.infer<typeof teamSchema>;
 
@@ -20,6 +24,8 @@ type TeamTableProps = {
 export default function TeamTable({ teams }: TeamTableProps) {
 	const [editingTeam, setEditingTeam] = useState<Team | null>(null);
 	const [newTeamName, setNewTeamName] = useState("");
+
+	const { push } = useRouter();
 
 	const handleEditTeam = (team: Team) => {
 		setEditingTeam(team);
@@ -36,6 +42,17 @@ export default function TeamTable({ teams }: TeamTableProps) {
 		// setTeams(teams.map((team) => (team.id === teamId ? { ...team, isPublic: !team.isPublic } : team)))
 	};
 
+	const handleOpenTeam = (teamId: string) => {
+		push(`/manager/teams/${teamId}`);
+	};
+
+	const calculatePerformance = useMemo(() => {
+		return {
+			average: 6.5,
+			increase: true,
+		};
+	}, []);
+
 	return (
 		<div className="overflow-x-auto">
 			<Table>
@@ -44,8 +61,11 @@ export default function TeamTable({ teams }: TeamTableProps) {
 					<TableRow>
 						<TableHead className="w-[100px]">Emblema</TableHead>
 						<TableHead>Nome</TableHead>
-						<TableHead>Performace</TableHead>
 						<TableHead className="">Atletas</TableHead>
+						<TableHead className="">V/E/D</TableHead>
+						<TableHead className="">Competições</TableHead>
+						<TableHead>Performace</TableHead>
+						<TableHead>Status</TableHead>
 						<TableHead className="text-right"> </TableHead>
 					</TableRow>
 				</TableHeader>
@@ -55,46 +75,45 @@ export default function TeamTable({ teams }: TeamTableProps) {
 							<TableCell className="font-medium">
 								<div className="flex items-center">
 									<div className="relative inline-block shrink-0 rounded-2xl me-3">
-										<img
-											src="https://raw.githubusercontent.com/Loopple/loopple-public-assets/main/riva-dashboard-tailwind/img/img-49-new.jpg"
+										<Image
+											src={team?.logo || noLogo}
 											className="w-[50px] h-[50px] inline-block shrink-0 rounded-2xl"
 											alt=""
 										/>
 									</div>
-									<div className="flex flex-col justify-start">
-										<a
-											href="#"
-											className="mb-1 font-semibold transition-colors duration-200 ease-in-out text-lg/normal text-secondary-inverse hover:text-primary"
-										>
-											{" "}
-										</a>
-									</div>
 								</div>
 							</TableCell>
 							<TableCell>{team.name}</TableCell>
+							<TableCell className="">{team.temaMember?.length || 0}</TableCell>
+							<TableCell className="">{"0/0/0"}</TableCell>
+							<TableCell className="">{0}</TableCell>
 							<TableCell>
-								<span className="text-center align-baseline inline-flex px-2 py-1 mr-auto items-center font-semibold text-base/none text-success bg-success-light rounded-lg">
-									<svg
-										xmlns="http://www.w3.org/2000/svg"
-										fill="none"
-										viewBox="0 0 24 24"
-										stroke-width="1.5"
-										stroke="currentColor"
-										className="w-5 h-5 mr-1"
-									>
-										<path
-											stroke-linecap="round"
-											stroke-linejoin="round"
-											d="M2.25 18L9 11.25l4.306 4.307a11.95 11.95 0 015.814-5.519l2.74-1.22m0 0l-5.94-2.28m5.94 2.28l-2.28 5.941"
-										/>
-									</svg>
-									6.5%
+								<span className="text-center align-baseline inline-flex px-2 py-1 mr-auto items-center font-semibold text-base/none bg-success-light rounded-lg">
+									{calculatePerformance.increase ? (
+										<TrendingUp className="w-5 h-5 mr-1 text-success" />
+									) : (
+										<TrendingDown className="w-5 h-5 mr-1 text-error" />
+									)}
+									<span>{calculatePerformance.average}%</span>
 								</span>
 							</TableCell>
-							<TableCell className="">{team.temaMember?.length}</TableCell>
-							<TableCell className="text-right flex gap-2 items-center justify-end">
-								<TrashIcon className="w-5 h-5 text-neutral-400" />
-								<PenSquareIcon className="w-5 h-5 text-neutral-400" />
+							<TableCell className="">
+								{team.isPublic ? (
+									<Badge>
+										<GlobeIcon className="w-4 h-4 mr-1" />
+										Public
+									</Badge>
+								) : (
+									<Badge variant="secondary">
+										<LockIcon className="w-4 h-4 mr-1" />
+										Private
+									</Badge>
+								)}
+							</TableCell>
+							<TableCell className="text-right flex items-center justify-end">
+								<Button onClick={() => handleOpenTeam(String(team.slug))} variant="ghost" className="p-2">
+									<PenSquareIcon className="w-5 h-5 text-neutral-400" />
+								</Button>
 							</TableCell>
 						</TableRow>
 					))}

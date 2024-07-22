@@ -9,7 +9,6 @@ import AuthCard from "./auth-card";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import type { z } from "zod";
 
 import { login } from "@/actions/auth";
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
@@ -21,6 +20,8 @@ import { Separator } from "../ui/separator";
 import AuthFormMessage from "./auth-form-message";
 import SocialLogin from "./social-login";
 import routes from "@/constants/routes";
+
+import type { z } from "zod";
 
 export default function LoginForm() {
 	const [isPending, startTransition] = useTransition();
@@ -188,7 +189,10 @@ export default function LoginForm() {
 					</form>
 				</Form>
 
+				{/* <LoginMobile /> */}
+
 				<Separator />
+
 				<SocialLogin />
 
 				{!showOTPForm && (
