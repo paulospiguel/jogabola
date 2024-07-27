@@ -2,10 +2,9 @@ import { AppHeader as Header } from "@/components/app-header";
 
 type LayoutProps = {
 	children: React.ReactNode;
-	searchParams: Record<string, string>;
 };
 
-export default async function LayoutInitalSetup({ children, ...props }: LayoutProps) {
+export default async function LayoutInitalSetup({ children }: LayoutProps) {
 	return (
 		<div className="flex flex-col w-full h-full items-center bg-backgroundPrimary dark:bg-backgroundPrimary-dark">
 			<Header />

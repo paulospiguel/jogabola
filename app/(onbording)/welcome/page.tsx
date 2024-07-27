@@ -1,4 +1,4 @@
-import { getSearchParams } from "@/lib/utils";
+import { cn, getSearchParams } from "@/lib/utils";
 import { RoleSchema } from "@/schemas/roles";
 import Image, { type StaticImageData } from "next/image";
 import { ArrowRightIcon } from "lucide-react";
@@ -30,6 +30,7 @@ const showInfo = (role: string) => {
 	let description: string;
 	let disclaimer: string;
 	let buttonText: string;
+	let buttonColor: string;
 	let url: string;
 	let imageHeader: StaticImageData | null;
 
@@ -41,6 +42,7 @@ const showInfo = (role: string) => {
 			buttonText = "Comecar minha jornada";
 			url = routes.onbording.myJourney;
 			imageHeader = football;
+			buttonColor = "bg-orange-600 hover:bg-orange-700";
 			break;
 
 		case Role.MANAGER:
@@ -50,6 +52,7 @@ const showInfo = (role: string) => {
 			buttonText = "Criar minha equipa";
 			url = routes.onbording.createTeam;
 			imageHeader = managerIcon;
+			buttonColor = "hover:bg-green-700 bg-green-600";
 			break;
 
 		default:
@@ -58,18 +61,19 @@ const showInfo = (role: string) => {
 			disclaimer = "";
 			buttonText = "";
 			url = "";
+			buttonColor = "bg-blue-950 hover:bg-blue-950/90";
 			imageHeader = null;
 			break;
 	}
 
-	return { title, description, buttonText, disclaimer, url, imageHeader };
+	return { title, description, buttonText, disclaimer, url, imageHeader, buttonColor };
 };
 
 export default function Welcome({ searchParams }: WelcomeProps) {
 	const role = getSearchParams<z.infer<typeof RoleSchema>>(searchParams).get("role");
-	const { title, description, buttonText, disclaimer, url, imageHeader } = showInfo(role);
+	const { title, description, buttonText, disclaimer, url, imageHeader, buttonColor } = showInfo(role);
 
-	const hasNotInfo = !title || !description || !disclaimer || !buttonText || !url || !imageHeader;
+	const hasNotInfo = !title || !description || !disclaimer || !buttonText || !url || !imageHeader || !buttonColor;
 
 	if (hasNotInfo) {
 		return (
@@ -136,7 +140,10 @@ export default function Welcome({ searchParams }: WelcomeProps) {
 				{role && (
 					<Link
 						href={url}
-						className="mt-4 justify-center items-center h-12 font-bold text-white hover:text-green-600 rounded-full bg-blue-950 flex gap-2 px-3 py-2"
+						className={cn(
+							"mt-4 justify-center items-center h-12 font-bold text-white rounded-full flex gap-2 px-3 py-2",
+							buttonColor,
+						)}
 					>
 						<span className="whitespace-nowrap">{buttonText}</span>
 						<ArrowRightIcon className="w-6 h-6" />

@@ -33,6 +33,12 @@ body,
     --input: 240 5.9% 90%;
     --ring: 142.1 76.2% 36.3%;
     --radius: 0.3rem;
+    --player-primary: #f75d1a;
+    --player-primary-hover: #dd5216;
+    --manager-primary: #15803d;
+    --manager-primary-hover: #116931;
+    --color-primary: #30e06f; /*141 74% 56%*/
+    --text-color: #2d2b7d; /*241 49% 33%*/
   }
 
   .dark {

@@ -1,14 +1,17 @@
 "use client";
 
-import { createContext, use, useContext, useEffect, useState } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 
 import type { z } from "zod";
 import { teamSchema } from "@/schemas/create-team";
 import type { Steps } from "@/types/multi-steps";
 
-import { checkUserTeam, getTeamInformation } from "@/actions/team";
+import { checkUserTeam } from "@/actions/team";
 import { useRouter } from "next/navigation";
+
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useFormPersist, type UseFormPersistReturn } from "@/hooks/use-form-persist";
 
 type CreateTeamContextValue = {
 	isPending: boolean;
@@ -22,6 +25,7 @@ type CreateTeamContextValue = {
 	currentStep: Steps;
 	isCompleted?: boolean;
 	keyStorage: string;
+	methods: UseFormPersistReturn<z.infer<typeof teamSchema>>;
 };
 
 const initialData = {
@@ -49,6 +53,20 @@ export const CreateTeamProvider: React.FC<{ children: React.ReactNode }> = ({ ch
 	const [success, setSuccess] = useState("");
 	const [teamData, setData] = useState<z.infer<typeof teamSchema>>(initialData);
 	const { data: session } = useSession();
+	const keyStorage = `jogabolaCreateTeam:${session?.user.id}`;
+
+	const methods = useFormPersist<z.infer<typeof teamSchema>>({
+		storageKey: keyStorage,
+		storageLocation: sessionStorage,
+		resolver: zodResolver(teamSchema),
+		includeDirtyFields: true,
+		defaultValues: teamData,
+		callback(values, isSubmitting, isSubmitted) {
+			if (isSubmitted) {
+				setIsCompleted(isSubmitted);
+			}
+		},
+	});
 
 	const { push } = useRouter();
 
@@ -82,7 +100,8 @@ export const CreateTeamProvider: React.FC<{ children: React.ReactNode }> = ({ ch
 		goToStep,
 		currentStep: teamData?.currentStep,
 		isCompleted,
-		keyStorage: `jogabolaCreateTeam:${session?.user.id}`,
+		keyStorage,
+		methods,
 	};
 
 	return <CreateTeamContext.Provider value={value}>{children}</CreateTeamContext.Provider>;

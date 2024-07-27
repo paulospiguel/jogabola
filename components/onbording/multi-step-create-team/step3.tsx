@@ -102,7 +102,7 @@ export const Step3 = React.forwardRef<HTMLFormElement>((props, ref) => {
 												<Label htmlFor="teamName">Nome da equipa</Label>
 												<Input
 													{...field}
-													disabled={!!field.value}
+													//disabled={!!field.value}
 													isError={!!fieldState.error?.message}
 													placeholder="Equipa de sucesso chama-se..."
 													onBlur={() => handelCheckTeamName(field.value)}
@@ -218,7 +218,7 @@ export const Step3 = React.forwardRef<HTMLFormElement>((props, ref) => {
 							type="submit"
 							data-loading={String(form.formState.isSubmitting)}
 							disabled={form.formState.isSubmitting || !form.formState.isValid}
-							className="w-full dark:text-white"
+							className="w-full dark:text-white cursor-hand"
 						>
 							Criar equipa
 						</Button>

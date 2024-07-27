@@ -2,8 +2,7 @@ import { Suspense } from "react";
 import { getTeamsByUserId } from "@/actions/team";
 import { auth } from "@/auth";
 import TeamTable from "@/components/team-table";
-import Link from "next/link";
-import { PlusCircle } from "lucide-react";
+import AddNewTeam from "@/components/team/add-new-team";
 
 const fetchTeams = async () => {
 	const session = await auth();
@@ -27,13 +26,7 @@ export default async function ManagerTeamsPage() {
 							</span>
 						</h3>
 						<div className="relative flex flex-wrap items-center my-2">
-							<Link
-								href=""
-								className="flex text-[.925rem] font-medium leading-normal text-center align-middle cursor-pointer rounded-2xl transition-colors duration-150 ease-in-out text-light-inverse bg-light-dark border-light shadow-none border-0 py-2 px-5 hover:bg-secondary active:bg-light focus:bg-light"
-							>
-								<PlusCircle className="w-5 h-5 mr-2" />
-								Adicionar nova equipa
-							</Link>
+							<AddNewTeam />
 						</div>
 					</div>
 					<Suspense fallback={<div>Carregando...</div>}>

@@ -8,7 +8,7 @@ import {
 	type DefaultValues,
 } from "react-hook-form";
 
-type UseFormPersistReturn<T extends FieldValues> = UseFormReturn<T>;
+export type UseFormPersistReturn<T extends FieldValues> = UseFormReturn<T>;
 
 type UseFormPersistProps<T extends FieldValues> = {
 	storageKey: string;
@@ -17,7 +17,7 @@ type UseFormPersistProps<T extends FieldValues> = {
 	resolver?: Resolver<T, unknown>;
 	defaultValues?: DefaultValues<T>;
 	values?: T;
-	callback?: (values: T) => void;
+	callback?: (values: T, isSubmitting: boolean, isSubmitted: boolean) => void;
 };
 
 export function useFormPersist<T extends FieldValues>({
@@ -73,18 +73,18 @@ export function useFormPersist<T extends FieldValues>({
 				dirtyFields: dirtyFieldsToPersist,
 			});
 			storageLocation.setItem(storageKey, dataToPersist);
-			if (callback) {
-				callback(valuesToPersist);
-			}
 		}
-	}, [valuesToPersist, dirtyFields, storageKey, storageLocation, callback]);
+	}, [valuesToPersist, dirtyFields, storageKey, storageLocation]);
 
 	// Remove storage on form submission
 	useEffect(() => {
 		if (isSubmitting) {
 			storageLocation.removeItem(storageKey);
+			if (callback) {
+				callback(valuesToPersist, isSubmitting, isSubmitted);
+			}
 		}
-	}, [isSubmitting, storageKey, storageLocation]);
+	}, [isSubmitting, storageKey, storageLocation, valuesToPersist, callback, isSubmitted]);
 
 	return { ...methods };
 }

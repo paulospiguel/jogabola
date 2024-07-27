@@ -7,8 +7,9 @@ import Link from "next/link";
 import { LanguageToggle } from "../language-toggle";
 import { ThemeToggle } from "../theme-toggle";
 
-const Navbar = async () => {
+export default async function Navbar() {
 	const session = await auth();
+
 	return (
 		<header className="w-full flex flex-col gap-2 md:flex-row items-center justify-center space-y-2">
 			<div className="flex items-center gap-2 text-lg font-semibold md:text-base">
@@ -50,6 +51,4 @@ const Navbar = async () => {
 			</div>
 		</header>
 	);
-};
-
-export default Navbar;
+}

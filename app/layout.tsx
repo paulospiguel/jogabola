@@ -1,22 +1,13 @@
+import "./globals.css";
 import { auth } from "@/auth";
-import { ThemeProvider } from "@/components/providers/theme-provider";
 import type { Metadata } from "next";
 import { SessionProvider } from "next-auth/react";
-import { Concert_One, Inter } from "next/font/google";
-import "./globals.css";
 import { cn } from "@/lib/utils";
+import { ThemeProvider } from "@/components/providers/theme-provider";
 import Cookies from "@/components/cookies";
 import { Toaster } from "@/components/ui/toaster";
 import { ProfileProvider } from "@/context/profile-context";
-
-const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
-const fontBody = Inter({
-	subsets: ["latin"],
-	display: "swap",
-	variable: "--font-body",
-});
-const consertOne = Concert_One({ subsets: ["latin"], weight: ["400"], variable: "--font-concert-one" });
-const fonts = [consertOne, inter, fontBody].map((font) => font.variable).join(" ");
+import { fonts } from "./fonts";
 
 export const metadata: Metadata = {
 	title: "JogaBola",

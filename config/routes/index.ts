@@ -1,6 +1,12 @@
 import type { ConfigRoutes } from "@/types/routes";
 
-const managerRoutes = ["/create-team", "/manager/team", "/manager/teams", "/manager/feed"];
+const managerRoutes = [
+  "/create-team",
+  "/manager/team",
+  "/manager/teams",
+  "/manager/feed",
+  "/invite-player"
+];
 
 const playerRoutes = [
   "/player/profile",
@@ -8,6 +14,8 @@ const playerRoutes = [
   "/player/team",
   "/player/join-team",
 ];
+
+const settingsRoutes = ["/profile/auth", "/profile/notifications", "/profile/settings"];
 
 export const configRoutes: ConfigRoutes = {
   publicRoutes: [
@@ -20,5 +28,5 @@ export const configRoutes: ConfigRoutes = {
   ],
   authRoutes: ["/api/auth/signin"],
   apiRoutes: ["/api/protected-api"],
-  protectedRoutes: ["/auth/settings", ...managerRoutes, ...playerRoutes],
+  protectedRoutes: [...managerRoutes, ...playerRoutes, ...settingsRoutes],
 };

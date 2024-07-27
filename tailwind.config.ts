@@ -1,6 +1,7 @@
 import type { Config } from "tailwindcss";
 import { fontFamily } from "tailwindcss/defaultTheme";
 import colors from 'tailwindcss/colors';
+import { vi } from "vitest";
 
 const config = {
   darkMode: ["class"],
@@ -27,6 +28,16 @@ const config = {
         error: colors.red[500],
         success: colors.green[500],
         foreground: "hsl(var(--foreground))",
+        custom: {
+          player: {
+            DEFAULT: "var(--player-primary)",
+            hover: "var(--player-primary-hover)",
+          },
+          manager: {
+            DEFAULT: "var(--manager-primary)",
+            hover: "var(--manager-primary-hover)",
+          },
+        },
         backgroundPrimary: {
           DEFAULT: "hsl(var(--background-primary))",
           foreground: "hsl(var(--background-primary-foreground))",
@@ -87,12 +98,22 @@ const config = {
           from: { transform: "translateX(0)" },
           to: { transform: "translateX(-100%)" },
         },
+        "marquee-x": {
+          from: { transform: "translateX(0)" },
+          to: { transform: "translateX(calc(-100% - var(--gap)))" },
+        },
+        "marquee-y": {
+          from: { transform: "translateY(0)" },
+          to: { transform: "translateY(calc(-100% - var(--gap)))" },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
         "caret-blink": "caret-blink 1.25s ease-out infinite",
         "infinite-scroll": "infinite-scroll 25s linear infinite",
+        "marquee-horizontal": "marquee-x var(--duration) infinite linear",
+        "marquee-vertical": "marquee-y var(--duration) linear infinite",
       },
       fontFamily: {
         sans: ["Inter", "sans-serif"],
@@ -101,6 +122,9 @@ const config = {
         // heading: ['var(--font-heading)', ...fontFamily.sans],
         body: ['var(--font-body)', ...fontFamily.sans]
       },
+    },
+    cursor: {
+      hand: "url('/cursor.png'), default",
     },
   },
   plugins: [require("tailwindcss-animate")],

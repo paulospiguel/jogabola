@@ -85,7 +85,7 @@ const LoginBadge = ({ user }: Props) => {
 						)}
 						<DropdownMenuSeparator />
 						<DropdownMenuItem>
-							<Link href="/auth/settings" className="flex flex-1 justify-start items-center">
+							<Link href="/profile/auth" className="flex flex-1 justify-start items-center">
 								<LineMdCogLoop className="mr-2" />
 								Perfil
 							</Link>

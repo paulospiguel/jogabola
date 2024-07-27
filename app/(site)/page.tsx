@@ -11,6 +11,8 @@ import InfiniteHorizontalScroll from "@/components/infinite-scroll";
 
 import footballIcon from "@/assets/icons/football.png";
 import directorIcon from "@/assets/icons/director.png";
+import Marquee from "@/components/marquee";
+import Profile from "@/components/widget/profile";
 
 export default function Home() {
 	return (
@@ -18,14 +20,14 @@ export default function Home() {
 			<header className="sticky top-0 flex min-h-16 py-4 items-center gap-4 border-b bg-background px-4 md:px-6 z-10">
 				<Navbar />
 			</header>
-			<main className="flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-8">
+			<main className="flex flex-1 flex-col p-4 md:gap-4 md:p-8">
 				<div className="absolute h-screen z-0 inset-0 mt-[100px] md:mt-0 w-full items-center px-5 py-24 [background:radial-gradient(125%_125%_at_50%_10%,#fff_40%,#086_100%)] dark:[background:radial-gradient(125%_125%_at_50%_10%,#000_40%,#086_100%)]">
 					<section className="z-auto">
 						<div className="py-8 px-4 mx-auto max-w-screen-xl text-center lg:py-16 lg:px-12">
 							<div className="inline-flex justify-center items-center py-1 px-1 pr-4 mb-7 text-sm text-gray-700 bg-gray-100 rounded-full dark:bg-gray-800 dark:text-white hover:bg-gray-200 dark:hover:bg-gray-700">
 								<Link
 									href={`/welcome?role=${RoleValues.PLAYER}`}
-									className="hover:bg-green-600 hover:text-white ml-2
+									className="hover:bg-custom-player hover:text-white ml-2
 									 text-foreground dark:text-white rounded-full px-2 group
 									 transition-all ease-linear duration-150 py-2 flex gap-2 items-center"
 									target="_blank"
@@ -38,12 +40,12 @@ export default function Home() {
 										height={24}
 										alt="Football icon"
 									/>
-									<span className="text-xs bg-primary-600 rounded-full py-1.5 ">Começar minha jornada</span>
+									<span className="text-xs bg-primary-600 rounded-full px-2 py-1.5">Começar minha jornada</span>
 								</Link>
 								<div className="h-6 border-r-2 mx-2" />
 								<Link
 									href={`/welcome?role=${RoleValues.MANAGER}`}
-									className="flex hover:bg-green-700 hover:text-white
+									className="flex hover:bg-custom-manager hover:text-white
 									 text-foreground dark:text-white rounded-full px-2 group
 									 transition-all ease-linear duration-150 py-2 gap-2 items-center"
 								>
@@ -55,7 +57,7 @@ export default function Home() {
 										alt="Football icon"
 									/>
 
-									<span className="text-sm font-medium">Criar minha equipa</span>
+									<span className="text-sm font-medium px-2">Criar minha equipa</span>
 									<ArrowRight className="w-5 h-5" />
 								</Link>
 							</div>
@@ -110,19 +112,33 @@ export default function Home() {
 									Assista o vídeo
 								</Link>
 							</div>
-							<div className="px-4 mx-auto md:max-w-screen-md lg:max-w-screen-lg lg:px-36">
-								<span className="font-semibold text-gray-400 uppercase">Apoios</span>
-								<div className="flex justify-center md:justify-between gap-2 w-full">
-									<InfiniteHorizontalScroll
-										imageStyles={{
-											width: 100,
-											height: 100,
-											className: "object-contain grayscale hover:grayscale-0 transition-all ease-linear duration-150",
-										}}
-										images={[fieldLogo, filaLogo, redBullLogo]}
-									/>
-								</div>
-							</div>
+						</div>
+					</section>
+
+					<section className="relative bg-transparent min-w-72 overflow-hidden">
+						<Marquee>
+							{Array.from({ length: 10 }).map((_, index) => (
+								<Profile key={index} />
+							))}
+						</Marquee>
+						<Marquee reverse>
+							{Array.from({ length: 10 }).map((_, index) => (
+								<Profile key={index} />
+							))}
+						</Marquee>
+					</section>
+
+					<section className="px-4 mt-2 mx-auto md:max-w-screen-md text-center lg:max-w-screen-lg lg:px-36">
+						<span className="font-semibold text-gray-400 uppercase">Apoios</span>
+						<div className="flex justify-center md:justify-between gap-2 w-full">
+							<InfiniteHorizontalScroll
+								imageStyles={{
+									width: 100,
+									height: 100,
+									className: "object-contain grayscale hover:grayscale-0 transition-all ease-linear duration-150",
+								}}
+								images={[fieldLogo, filaLogo, redBullLogo]}
+							/>
 						</div>
 					</section>
 				</div>
