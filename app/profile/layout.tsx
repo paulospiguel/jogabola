@@ -1,4 +1,4 @@
-import { AppHeader } from "@/components/app-header";
+import { AppHeader } from "@/components/horizontal-header";
 import NavbarProfile from "../../components/navbar-profile";
 
 export default async function ProfileLayout({ children }: { children: React.ReactNode }) {

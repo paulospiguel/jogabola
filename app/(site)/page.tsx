@@ -12,16 +12,19 @@ import InfiniteHorizontalScroll from "@/components/infinite-scroll";
 import footballIcon from "@/assets/icons/football.png";
 import directorIcon from "@/assets/icons/director.png";
 import Marquee from "@/components/marquee";
-import Profile from "@/components/widget/profile";
+import PlayerBlock from "@/components/widget/player-block";
+import Footer from "@/components/site/footer";
 
 export default function Home() {
 	return (
-		<div className="flex min-h-screen w-full flex-col">
-			<header className="sticky top-0 flex min-h-16 py-4 items-center gap-4 border-b bg-background px-4 md:px-6 z-10">
+		<div className="flex min-h-screen w-full flex-col ">
+			<header className="sticky z-20 top-0 flex min-h-16 py-4 items-center gap-4 border-b bg-background px-4 md:px-6">
 				<Navbar />
 			</header>
-			<main className="flex flex-1 flex-col p-4 md:gap-4 md:p-8">
-				<div className="absolute h-screen z-0 inset-0 mt-[100px] md:mt-0 w-full items-center px-5 py-24 [background:radial-gradient(125%_125%_at_50%_10%,#fff_40%,#086_100%)] dark:[background:radial-gradient(125%_125%_at_50%_10%,#000_40%,#086_100%)]">
+
+			<main className="flex flex-1 flex-col p-4 md:gap-4 md:p-8 relative">
+				<div className="absolute z-0 inset-0 [background:radial-gradient(125%_125%_at_50%_10%,#fff_40%,#086_100%)] dark:[background:radial-gradient(125%_125%_at_50%_10%,#000_40%,#086_100%)]" />
+				<div className="w-full items-center z-10 px-5 py-24 ">
 					<section className="z-auto">
 						<div className="py-8 px-4 mx-auto max-w-screen-xl text-center lg:py-16 lg:px-12">
 							<div className="inline-flex justify-center items-center py-1 px-1 pr-4 mb-7 text-sm text-gray-700 bg-gray-100 rounded-full dark:bg-gray-800 dark:text-white hover:bg-gray-200 dark:hover:bg-gray-700">
@@ -115,18 +118,18 @@ export default function Home() {
 						</div>
 					</section>
 
-					<section className="relative bg-transparent min-w-72 overflow-hidden">
+					{/* <section className="relative bg-transparent min-w-72 overflow-hidden">
 						<Marquee>
 							{Array.from({ length: 10 }).map((_, index) => (
-								<Profile key={index} />
+								<PlayerBlock playerImage="" key={index} />
 							))}
 						</Marquee>
 						<Marquee reverse>
 							{Array.from({ length: 10 }).map((_, index) => (
-								<Profile key={index} />
+								<PlayerBlock playerImage="" key={index} />
 							))}
 						</Marquee>
-					</section>
+					</section> */}
 
 					<section className="px-4 mt-2 mx-auto md:max-w-screen-md text-center lg:max-w-screen-lg lg:px-36">
 						<span className="font-semibold text-gray-400 uppercase">Apoios</span>
@@ -143,6 +146,9 @@ export default function Home() {
 					</section>
 				</div>
 			</main>
+
+			<Footer />
 		</div>
 	);
 }
+//

@@ -1,4 +1,4 @@
-import { AppHeader as Header } from "@/components/app-header";
+import { AppHeader as Header } from "@/components/horizontal-header";
 
 type LayoutProps = {
 	children: React.ReactNode;

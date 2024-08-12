@@ -4,7 +4,7 @@
 
 html,
 body,
-:root {
+#root {
   height: 100%;
 }
 
@@ -38,7 +38,9 @@ body,
     --manager-primary: #15803d;
     --manager-primary-hover: #116931;
     --color-primary: #30e06f; /*141 74% 56%*/
-    --text-color: #2d2b7d; /*241 49% 33%*/
+    --primary-blue: #2d2b7d; /*241 49% 33%*/
+
+    --brand-secondary: hsl(239 100% 18.2%);
   }
 
   .dark {

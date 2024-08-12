@@ -28,7 +28,7 @@ const config = {
         error: colors.red[500],
         success: colors.green[500],
         foreground: "hsl(var(--foreground))",
-        custom: {
+        brand: {
           player: {
             DEFAULT: "var(--player-primary)",
             hover: "var(--player-primary-hover)",
@@ -36,6 +36,10 @@ const config = {
           manager: {
             DEFAULT: "var(--manager-primary)",
             hover: "var(--manager-primary-hover)",
+          },
+          secondary: {
+            DEFAULT: "var(--brand-secondary)",
+            hover: "var(--brand-secondary-hover)",
           },
         },
         backgroundPrimary: {
@@ -50,6 +54,7 @@ const config = {
         primary: {
           DEFAULT: "hsl(var(--primary))",
           foreground: "hsl(var(--primary-foreground))",
+          blue: "var(--primary-blue)",
         },
         secondary: {
           DEFAULT: "hsl(var(--secondary))",
@@ -82,6 +87,10 @@ const config = {
         sm: "calc(var(--radius) - 4px)",
       },
       keyframes: {
+        "bg-position": {
+          "0%": { backgroundPosition: "0% 50%" },
+          "100%": { backgroundPosition: "100% 50%" },
+        },
         "accordion-down": {
           from: { height: "0" },
           to: { height: "var(--radix-accordion-content-height)" },

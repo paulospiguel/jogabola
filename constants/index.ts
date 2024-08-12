@@ -1,0 +1,1 @@
+export const LIMIT_CREATE_TEAM = 3;

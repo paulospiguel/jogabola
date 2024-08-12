@@ -1,4 +1,4 @@
-import { AppHeader } from "@/components/app-header";
+import { AppHeader } from "@/components/horizontal-header";
 
 export default function SettingsManager() {
 	return (

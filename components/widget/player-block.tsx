@@ -1,13 +1,18 @@
+import { Avatar } from "@radix-ui/react-avatar";
 import { Dribbble, Facebook, Linkedin, X } from "lucide-react";
+import AvatarPlayer from "./avatar-player";
 
-export default function Profile() {
+type PlayerBlockProps = {
+	playerImage: string;
+	playerName?: string;
+	countryFlag?: string;
+	score?: number;
+};
+
+const PlayerBlock: React.FC<PlayerBlockProps> = ({ playerName, countryFlag, score, playerImage }) => {
 	return (
 		<div className="group flex h-52 w-52 flex-col items-center justify-center rounded-3xl bg-cyan-200 p-4 shadow-sm transition-all duration-300 hover:shadow-black/25 dark:bg-zinc-800">
-			<img
-				alt=""
-				src="https://sm.ign.com/ign_nordic/cover/a/avatar-gen/avatar-generations_prsz.jpg"
-				className="h-16 w-16 rounded-full duration-300 ease-in-out hover:scale-125"
-			/>
+			<AvatarPlayer playerImage={playerImage} />
 			<div className="mt-2 flex flex-col items-center justify-center">
 				<h3 className="font-sans font-semibold text-foreground">Avatar Aang</h3>
 				<p className="text-sm font-light text-muted-foreground">The last air bender</p>
@@ -28,4 +33,6 @@ export default function Profile() {
 			</div>
 		</div>
 	);
-}
+};
+
+export default PlayerBlock;

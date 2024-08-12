@@ -76,7 +76,6 @@ export async function getRolesByUserId(userId: string): Promise<Role[]> {
 export async function getTeamsByUserId(userId: string): Promise<z.infer<typeof teamSchema>[]> {
 	const response = await getTeamByUser(userId);
 
-	console.log(response[0].teamMember.length);
 	if (response) {
 		return response.map((resp) => ({
 			...resp,

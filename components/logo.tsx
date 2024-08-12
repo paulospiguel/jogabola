@@ -6,8 +6,11 @@ import Link from "next/link";
 
 import logoAnimated from "@/assets/animations/jogabola_animation.gif";
 import logo from "@/assets/logos/jogabola-logo.svg";
+import logoGreen from "@/assets/logos/jogabola-green.svg";
+import logoWhite from "@/assets/logos/jogabola-white.svg";
 
 const sizes = {
+	mini: "w-20 h-20",
 	small: "h-16 w-24",
 	medium: "h-28 w-48",
 	large: "h-36 w-72",
@@ -17,21 +20,42 @@ type LogoProps = {
 	className?: ComponentProps<"div">["className"];
 	size?: keyof typeof sizes;
 	isAnimate?: boolean;
+	color?: "white" | "default" | "green" | "blue";
 };
 
-export const Logo: FC<LogoProps> = async ({ className, isAnimate, size = "medium" }) => {
+const imageColors = {
+	white: logoWhite,
+	green: logoGreen,
+	blue: logo,
+	default: logo,
+};
+
+export const Logo: FC<LogoProps> = async ({ color, className, isAnimate, size = "medium" }) => {
 	const logoSize = sizes[size];
 	let logotipo: StaticImageData;
 
 	if (isAnimate) {
 		logotipo = logoAnimated;
 	} else {
-		logotipo = logo;
+		switch (color) {
+			case "white":
+				logotipo = imageColors.white;
+				break;
+			case "green":
+				logotipo = imageColors.green;
+				break;
+			case "blue":
+				logotipo = imageColors.blue;
+				break;
+			default:
+				logotipo = imageColors.default;
+				break;
+		}
 	}
 
 	return (
-		<Link href="/" className={cn(" relative", logoSize, className)}>
-			<Image src={logotipo} alt="" fill className="object-fill" />
+		<Link href="/" className={cn("flex relative", logoSize, className)}>
+			<Image src={logotipo} alt="" fill className="object-contain" />
 			<span className="sr-only">Jogabola - Encontre sua malta</span>
 		</Link>
 	);
