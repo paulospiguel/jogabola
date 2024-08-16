@@ -53,6 +53,9 @@ importers:
       '@radix-ui/react-switch':
         specifier: ^1.0.3
         version: 1.0.3(@types/react-dom@18.0.0)(@types/react@18.3.3)(react-dom@18.0.0(react@18.0.0))(react@18.0.0)
+      '@radix-ui/react-tabs':
+        specifier: ^1.1.0
+        version: 1.1.0(@types/react-dom@18.0.0)(@types/react@18.3.3)(react-dom@18.0.0(react@18.0.0))(react@18.0.0)
       '@radix-ui/react-toast':
         specifier: ^1.1.5
         version: 1.1.5(@types/react-dom@18.0.0)(@types/react@18.3.3)(react-dom@18.0.0(react@18.0.0))(react@18.0.0)
@@ -125,6 +128,12 @@ importers:
       zod:
         specifier: ^3.23.4
         version: 3.23.4
+      zsa:
+        specifier: ^0.6.0
+        version: 0.6.0(zod@3.23.4)
+      zsa-react:
+        specifier: ^0.2.2
+        version: 0.2.2(react@18.0.0)(zod@3.23.4)
     devDependencies:
       '@biomejs/biome':
         specifier: ^1.7.3
@@ -1410,6 +1419,19 @@ packages:
       '@types/react-dom': '*'
       react: ^16.8 || ^17.0 || ^18.0
       react-dom: ^16.8 || ^17.0 || ^18.0
+    peerDependenciesMeta:
+      '@types/react':
+        optional: true
+      '@types/react-dom':
+        optional: true
+
+  '@radix-ui/react-tabs@1.1.0':
+    resolution: {integrity: sha512-bZgOKB/LtZIij75FSuPzyEti/XBhJH52ExgtdVqjCIh+Nx/FW+LhnbXtbCzIi34ccyMsyOja8T0thCzoHFXNKA==}
+    peerDependencies:
+      '@types/react': '*'
+      '@types/react-dom': '*'
+      react: ^16.8 || ^17.0 || ^18.0 || ^19.0 || ^19.0.0-rc
+      react-dom: ^16.8 || ^17.0 || ^18.0 || ^19.0 || ^19.0.0-rc
     peerDependenciesMeta:
       '@types/react':
         optional: true
@@ -4493,6 +4515,17 @@ packages:
   zod@3.23.4:
     resolution: {integrity: sha512-/AtWOKbBgjzEYYQRNfoGKHObgfAZag6qUJX1VbHo2PRBgS+wfWagEY2mizjfyAPcGesrJOcx/wcl0L9WnVrHFw==}
 
+  zsa-react@0.2.2:
+    resolution: {integrity: sha512-0jUGzIy4PRc8Ur3JS+YBdRyD3rnsErCzNeJOVLhTxPqaKDDQ+JEmIHGYAK354RNpchIlvGVDcuedZXEGL6Nl6Q==}
+    peerDependencies:
+      react: ^18.0.0 || ^19.0.0
+      zod: ^3.23.5
+
+  zsa@0.6.0:
+    resolution: {integrity: sha512-Pq3X4T0dna5s4dIevYOJiRdM3DUHRvEHS2q1AH/bvkPSh640u+9veVj5zmzmbL0A6cpXMYagwKsR4keGOc0jPQ==}
+    peerDependencies:
+      zod: ^3.23.5
+
 snapshots:
 
   '@alloc/quick-lru@5.2.0': {}
@@ -5807,6 +5840,22 @@ snapshots:
       '@radix-ui/react-use-controllable-state': 1.0.1(@types/react@18.3.3)(react@18.0.0)
       '@radix-ui/react-use-previous': 1.0.1(@types/react@18.3.3)(react@18.0.0)
       '@radix-ui/react-use-size': 1.0.1(@types/react@18.3.3)(react@18.0.0)
+      react: 18.0.0
+      react-dom: 18.0.0(react@18.0.0)
+    optionalDependencies:
+      '@types/react': 18.3.3
+      '@types/react-dom': 18.0.0
+
+  '@radix-ui/react-tabs@1.1.0(@types/react-dom@18.0.0)(@types/react@18.3.3)(react-dom@18.0.0(react@18.0.0))(react@18.0.0)':
+    dependencies:
+      '@radix-ui/primitive': 1.1.0
+      '@radix-ui/react-context': 1.1.0(@types/react@18.3.3)(react@18.0.0)
+      '@radix-ui/react-direction': 1.1.0(@types/react@18.3.3)(react@18.0.0)
+      '@radix-ui/react-id': 1.1.0(@types/react@18.3.3)(react@18.0.0)
+      '@radix-ui/react-presence': 1.1.0(@types/react-dom@18.0.0)(@types/react@18.3.3)(react-dom@18.0.0(react@18.0.0))(react@18.0.0)
+      '@radix-ui/react-primitive': 2.0.0(@types/react-dom@18.0.0)(@types/react@18.3.3)(react-dom@18.0.0(react@18.0.0))(react@18.0.0)
+      '@radix-ui/react-roving-focus': 1.1.0(@types/react-dom@18.0.0)(@types/react@18.3.3)(react-dom@18.0.0(react@18.0.0))(react@18.0.0)
+      '@radix-ui/react-use-controllable-state': 1.1.0(@types/react@18.3.3)(react@18.0.0)
       react: 18.0.0
       react-dom: 18.0.0(react@18.0.0)
     optionalDependencies:
@@ -9397,3 +9446,13 @@ snapshots:
   yocto-queue@1.1.1: {}
 
   zod@3.23.4: {}
+
+  zsa-react@0.2.2(react@18.0.0)(zod@3.23.4):
+    dependencies:
+      react: 18.0.0
+      zod: 3.23.4
+      zsa: 0.6.0(zod@3.23.4)
+
+  zsa@0.6.0(zod@3.23.4):
+    dependencies:
+      zod: 3.23.4

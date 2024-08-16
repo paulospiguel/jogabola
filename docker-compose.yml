@@ -1,6 +1,6 @@
 services:
   postgres:
-    container_name: dev_database
+    container_name: jogabola_database
     image: postgres
     environment:
       - POSTGRES_USER=prspiguel

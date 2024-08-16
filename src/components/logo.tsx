@@ -4,9 +4,9 @@ import type { ComponentProps, FC } from "react";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 
-import logoAnimated from "@/assets/animations/jogabola_animation.gif";
-import logo from "@/assets/logos/jogabola-logo.svg";
+import logoAnimated from "@/assets/animations/jogabola-loop.gif";
 import logoGreen from "@/assets/logos/jogabola-green.svg";
+import logo from "@/assets/logos/jogabola-logo.svg";
 import logoWhite from "@/assets/logos/jogabola-white.svg";
 
 const sizes = {
