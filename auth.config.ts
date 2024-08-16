@@ -3,9 +3,9 @@ import type { NextAuthConfig } from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 import Facebook from "next-auth/providers/facebook";
 import Google from "next-auth/providers/google";
-import { UserNotFound } from "./lib/auth";
-import { CredentialsSchema } from "./schemas/auth";
-import { findUserbyEmail } from "./services";
+import { UserNotFound } from "./src/lib/auth";
+import { CredentialsSchema } from "./src/schemas/auth";
+import { findUserbyEmail } from "./src/services";
 
 export default {
   providers: [
