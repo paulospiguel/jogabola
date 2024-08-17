@@ -7,6 +7,7 @@ export const dictionary = {
 		[tabsValues.home]: "Home",
 		[tabsValues.teams]: "Teams",
 		[tabsValues.players]: "Players",
-		[tabsValues.schedule]: "Games",
+		[tabsValues.schedule]: "Schedules",
+		[tabsValues.statistics]: "Statistics",
 	},
 } as const;

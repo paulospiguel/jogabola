@@ -1,11 +1,15 @@
-import { Calendar, PlayerIcon, StadiumIcon, TeamIcon } from "@/components/icons";
+import { Calendar, LineChart, PlayerIcon, StadiumIcon, TeamIcon } from "@/components/icons";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { auth } from "@auth";
 
 import { dictionary } from "@/dictionary";
 import { tabKeysSchema } from "@/schemas/manager";
 import type { z } from "zod";
+
+import HomeTabContent from "./home.tab";
 import PlayersTabContent from "./players.tab";
+import CalendarTabContent from "./schedule.tab";
+import StatisticsTabContent from "./statistics.tab";
 import TeamsTabContent from "./teams.tab";
 
 const tabsValues = tabKeysSchema.Values;
@@ -19,19 +23,23 @@ type TabsItems = {
 const tabs: TabsItems[] = [
 	{
 		label: tabsValues.home,
-		icon: <StadiumIcon className="group-data-[state=active]:fill-white" width={24} height={24} />,
+		icon: <StadiumIcon className="size-6 group-data-[state=active]:fill-white" />,
 	},
 	{
 		label: tabsValues.teams,
-		icon: <TeamIcon className="group-data-[state=active]:fill-white" width={24} height={24} />,
+		icon: <TeamIcon className="size-6 group-data-[state=active]:fill-white" />,
 	},
 	{
 		label: tabsValues.players,
-		icon: <PlayerIcon className="group-data-[state=active]:fill-white" width={24} height={24} />,
+		icon: <PlayerIcon className="size-5 group-data-[state=active]:fill-white" />,
 	},
 	{
 		label: tabsValues.schedule,
 		icon: <Calendar className="size-5 group-data-[state=active]:text-white" />,
+	},
+	{
+		label: tabsValues.statistics,
+		icon: <LineChart className="size-5 group-data-[state=active]:text-white" />,
 	},
 ];
 
@@ -51,8 +59,11 @@ export async function ManagerTabs() {
 						</TabsTrigger>
 					))}
 				</TabsList>
+				<HomeTabContent tabKey={tabsValues.home} session={session} />
 				<TeamsTabContent tabKey={tabsValues.teams} session={session} />
 				<PlayersTabContent tabKey={tabsValues.players} session={session} />
+				<CalendarTabContent tabKey={tabsValues.schedule} session={session} />
+				<StatisticsTabContent tabKey={tabsValues.statistics} session={session} />
 			</Tabs>
 		</>
 	);

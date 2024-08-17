@@ -12,36 +12,32 @@ import { auth } from "../../auth";
 import { fonts } from "./fonts";
 
 export const metadata: Metadata = {
-  title: "JogaBola",
-  description: "O melhor lugar para encontrar sua malta e jogar uma pelada.",
+	title: "JogaBola",
+	description: "O melhor lugar para encontrar sua malta e jogar uma pelada.",
 };
 
 export default async function RootLayout({
-  children,
+	children,
 }: Readonly<{
-  children: React.ReactNode;
+	children: React.ReactNode;
 }>) {
-  const session = await auth();
-  return (
-    <html lang="pt-BR">
-      <body className={cn("antialiased", fonts)} suppressHydrationWarning>
-        <QueryClientProvider>
-          <SessionProvider session={session}>
-            <ProfileProvider>
-              <ThemeProvider
-                attribute="class"
-                defaultTheme="system"
-                enableSystem
-                disableTransitionOnChange
-              >
-                {children}
-                <Cookies />
-                <Toaster />
-              </ThemeProvider>
-            </ProfileProvider>
-          </SessionProvider>
-        </QueryClientProvider>
-      </body>
-    </html>
-  );
+	const session = await auth();
+
+	return (
+		<html lang="pt-BR">
+			<body className={cn("antialiased", fonts)} suppressHydrationWarning>
+				<QueryClientProvider>
+					<SessionProvider session={session}>
+						<ProfileProvider>
+							<ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
+								{children}
+								<Cookies />
+								<Toaster />
+							</ThemeProvider>
+						</ProfileProvider>
+					</SessionProvider>
+				</QueryClientProvider>
+			</body>
+		</html>
+	);
 }
