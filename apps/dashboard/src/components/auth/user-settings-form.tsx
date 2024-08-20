@@ -1,11 +1,14 @@
 "use client";
 
 import { changeSettings } from "@/actions/auth/settings";
-import { changeSettings } from "@/actions/auth/settings";
-import { changeSettings } from "@/actions/auth/settings";
-import { Button } from "@/components/ui/button";
-import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { UserSettingsSchema } from "@/schemas/auth";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { Button } from "@jogabola/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@jogabola/ui/card";
+import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@jogabola/ui/form";
+import { Input } from "@jogabola/ui/input";
+import { Separator } from "@jogabola/ui/separator";
+import { Switch } from "@jogabola/ui/switch";
 import { LoaderIcon, ShieldAlert } from "lucide-react";
 import type { User } from "next-auth";
 import { useSession } from "next-auth/react";
@@ -13,9 +16,6 @@ import Link from "next/link";
 import { useState, useTransition } from "react";
 import { useForm } from "react-hook-form";
 import type { z } from "zod";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "../ui/card";
-import { Separator } from "../ui/separator";
-import { Switch } from "../ui/switch";
 import AuthFormMessage from "./auth-form-message";
 
 interface Props {

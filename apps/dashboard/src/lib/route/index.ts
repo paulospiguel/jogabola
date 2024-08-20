@@ -1,4 +1,4 @@
-import type { ConfigRoutes } from "@/@types/routes";
+import type { ConfigRoutes } from "@/types/routes";
 import type { NextRequest } from "next/server";
 
 /**

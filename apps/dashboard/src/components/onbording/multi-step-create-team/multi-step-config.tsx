@@ -1,9 +1,9 @@
 "use client";
 
-import { type StepForm, Steps } from "@/@types/multi-steps";
-import { FormField } from "@/components/ui/form";
 import { useCreateTeam } from "@/hooks/use-create-team";
+import { type StepForm, Steps } from "@/types/multi-steps";
 import { cn } from "@/utils";
+import { FormField } from "@jogabola/ui/form";
 import { motion } from "framer-motion";
 import { useEffect, useMemo } from "react";
 import { FormProvider } from "react-hook-form";

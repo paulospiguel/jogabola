@@ -1,7 +1,7 @@
 import Loading from "@/components/loading";
-import { TabsContent } from "@/components/ui/tabs";
 import { dictionary } from "@/dictionary";
 import { cn } from "@/utils";
+import { TabsContent } from "@jogabola/ui/tabs";
 import { Suspense } from "react";
 
 const dicitionaryTabs = dictionary.managerTabs;

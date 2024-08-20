@@ -4,7 +4,11 @@ import calendar from "@/assets/images/schedule.png";
 import fieldSoccer from "@/assets/images/soccer-field.svg";
 import soccerPlayer from "@/assets/images/soccer-player.svg";
 import trophy from "@/assets/images/trophy.svg";
-import { Button } from "@/components/ui/button";
+import { useProfile } from "@/context/profile-context";
+import { RoleValues } from "@/schemas/roles";
+import { cn } from "@/utils";
+import { Avatar, AvatarFallback, AvatarImage } from "@jogabola/ui/avatar";
+import { Button } from "@jogabola/ui/button";
 import {
 	DropdownMenu,
 	DropdownMenuContent,
@@ -12,17 +16,12 @@ import {
 	DropdownMenuLabel,
 	DropdownMenuSeparator,
 	DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { useProfile } from "@/context/profile-context";
-import { RoleValuesleValuesleVschemas rolesemas"rolesemas/roles";
-import { cn/ututilsutiutilsutils
+} from "@jogabola/ui/dropdown-menu";
 import { CircleUser, LogOut, UserCircleIcon } from "lucide-react";
 import type { Session } from "next-auth";
 import Image from "next/image";
 import Link from "next/link";
-import { Avatar, AvatarFallback, AvatarImage } from "../../../../../packages/ui/src/components/avatar";
 import { LineMdCogLoop } from "../icons";
-import AvatarPlayer from "../widget/avatar-player";
 import LoginButton from "./login-button";
 import LogoutButton from "./logout-button";
 

@@ -1,4 +1,4 @@
-import { Steps } from "@/@types/multi-steps";
+import { Steps } from "@/types/multi-steps";
 import z from "zod";
 
 export const teamShapeEnum = z.enum(["fut11", "fut7", "fut5"]);

@@ -1,12 +1,12 @@
 "use client";
 
-import { Drawer, DrawerContent, DrawerFooter, DrawerHeader, DrawerTrigger } from "@/components/ui/drawer";
 import { LIMIT_CREATE_TEAM } from "@/constants";
 import { CreateTeamProvider, useCreateTeamContext } from "@/context/create-team-context";
+import { Button } from "@jogabola/ui/button";
+import { Drawer, DrawerContent, DrawerFooter, DrawerHeader, DrawerTrigger } from "@jogabola/ui/drawer";
 import { PlusCircle } from "lucide-react";
 import { useEffect, useMemo } from "react";
 import { MultiStepCreateTeam } from "../onbording";
-import { Button } from "../ui/button";
 
 function AddNewTeamComponent({ disabled = false }) {
 	const { methods, createdTeamCounter } = useCreateTeamContext();

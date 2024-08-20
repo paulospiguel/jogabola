@@ -1,7 +1,7 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
 import { cn } from "@/utils";
+import { Button } from "@jogabola/ui/button";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 

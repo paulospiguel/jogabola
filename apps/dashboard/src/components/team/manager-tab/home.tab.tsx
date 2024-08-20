@@ -7,10 +7,10 @@ import RingChart from "@/components/graphs/ring-chart";
 import PlayerList from "@/components/player-list";
 import { StatCard } from "@/components/stat-card";
 import Ticker from "@/components/ticker";
-import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import NextMeetingCard from "@/components/widget/match-day-card";
 import MonthScoreWidget from "@/components/widget/month-status";
 import ScheduleEventWidget from "@/components/widget/schedule-events";
+import { Card, CardContent, CardFooter } from "@jogabola/ui/card";
 import GameSchedule from "../game-schedule";
 import WrapperLayoutTab from "./wrapper-layout.tab";
 
@@ -52,7 +52,7 @@ export default function HomeTabContent({ tabKey, session }: HomeProps) {
 				/>
 			</div>
 			<div className="gap-2 w-full grid grid-cols-3 justify-stretch">
-				<CardCarousel showControls items={[<GameSchedule />]} />
+				<CardCarousel showControls items={[<GameSchedule key="calendar" />]} />
 
 				<Card className="shadow-md flex flex-col justify-center">
 					<CardContent className="flex justify-center gap-4">

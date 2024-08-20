@@ -1,10 +1,10 @@
 "use client";
 
 import { TrendingUp } from "lucide-react";
-import { LabelList, Pie, PieChart, RadialBar, RadialBarChart } from "recharts";
+import { Pie, PieChart } from "recharts";
 
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { type ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@jogabola/ui/card";
+import { type ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent } from "@jogabola/ui/chart";
 
 const chartData = [
 	{ browser: "wins", visitors: 275, fill: "#fff000" },

@@ -1,6 +1,5 @@
 import type { Config } from "tailwindcss";
 import * as colors from "tailwindcss/colors";
-import { fontFamily } from "tailwindcss/defaultTheme";
 
 export default {
   darkMode: ["class"],
@@ -22,38 +21,6 @@ export default {
         error: colors.red[500],
         success: colors.green[500],
         foreground: "hsl(var(--foreground))",
-        brand: {
-          player: {
-            DEFAULT: "var(--player-primary)",
-            hover: "var(--player-primary-hover)",
-          },
-          manager: {
-            DEFAULT: "var(--manager-primary)",
-            hover: "var(--manager-primary-hover)",
-          },
-          secondary: {
-            DEFAULT: "var(--brand-secondary)",
-            hover: "var(--brand-secondary-hover)",
-          },
-        },
-        backgroundPrimary: {
-          DEFAULT: "hsl(var(--background-primary))",
-          foreground: "hsl(var(--background-primary-foreground))",
-          dark: "hsl(var(--background-primary-dark))",
-        },
-        background: {
-          DEFAULT: "hsl(var(--background))",
-          foreground: "hsl(var(--background-foreground))",
-        },
-        primary: {
-          DEFAULT: "hsl(var(--primary))",
-          foreground: "hsl(var(--primary-foreground))",
-          blue: "var(--primary-blue)",
-        },
-        secondary: {
-          DEFAULT: "hsl(var(--secondary))",
-          foreground: "hsl(var(--secondary-foreground))",
-        },
         destructive: {
           DEFAULT: "hsl(var(--destructive))",
           foreground: "hsl(var(--destructive-foreground))",
@@ -74,13 +41,6 @@ export default {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
-      },
-      fontFamily: {
-        sans: ["Inter", "sans-serif"],
-        mono: ["monospace"],
-        heading: ["var(--font-concert-one)", "sans-serif"],
-        // heading: ['var(--font-heading)', ...fontFamily.sans],
-        body: ['var(--font-body)', ...fontFamily.sans]
       },
       borderRadius: {
         lg: "var(--radius)",

@@ -1,6 +1,6 @@
 import { cn } from "@/utils";
+import { Avatar, AvatarFallback, AvatarImage } from "@jogabola/ui/avatar";
 import { CircleUser } from "lucide-react";
-import { Avatar, AvatarFallback, AvatarImage } from "../../../../../packages/ui/src/components/avatar";
 
 type AvatarPlayerProps = {
 	playerImage: string;

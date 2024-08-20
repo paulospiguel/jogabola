@@ -1,6 +1,6 @@
 import { Calendar, LineChart, PlayerIcon, StadiumIcon, TeamIcon } from "@/components/icons";
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { auth } from "@auth";
+import { Tabs, TabsList, TabsTrigger } from "@jogabola/ui/tabs";
 
 import { dictionary } from "@/dictionary";
 import { tabKeysSchema } from "@/schemas/manager";

@@ -1,20 +1,19 @@
 "use client";
 
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import { Suspense, useMemo, useState } from "react";
 import type { z } from "zod";
 
-import { GlobeIcon, LockIcon, TrendingDown, TrendingUp, Eye as ViewIcon } from "@/components/icons";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import type { teamSchema } from "@/schemas/create-team";
-
 import noLogo from "@/assets/images/no-logo.png";
-import { useRouter } from "next/navigation";
+import { GlobeIcon, LockIcon, TrendingDown, TrendingUp, Eye as ViewIcon } from "@/components/icons";
+import type { teamSchema } from "@/schemas/create-team";
+import { Badge } from "@jogabola/ui/badge";
+import { Button } from "@jogabola/ui/button";
+import { Input } from "@jogabola/ui/input";
+import { ScrollArea } from "@jogabola/ui/scroll-area";
+import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from "@jogabola/ui/table";
 import PlayerList from "../player-list";
-import { ScrollArea } from "../ui/scroll-area";
 
 type Team = z.infer<typeof teamSchema>;
 

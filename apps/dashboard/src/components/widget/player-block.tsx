@@ -1,4 +1,3 @@
-import { Avatar } from "@radix-ui/react-avatar";
 import { Dribbble, Facebook, Linkedin, X } from "lucide-react";
 import AvatarPlayer from "./avatar-player";
 

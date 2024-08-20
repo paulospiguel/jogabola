@@ -1,7 +1,7 @@
 "use client";
 
+import { Calendar } from "@jogabola/ui/calendar";
 import React from "react";
-import { Calendar } from "../ui/calendar";
 
 export default function GameSchedule() {
 	const [date, setDate] = React.useState<Date | undefined>(new Date());
