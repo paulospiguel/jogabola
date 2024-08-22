@@ -1,39 +1,41 @@
 {
-	"name": "jogabola",
-	"version": "1.0.0",
-	"private": true,
-	"workspaces": [
-		"packages/*",
-		"apps/*"
-	],
-	"scripts": {
-		"build": "turbo build",
-		"clean": "git clean -xdf node_modules .turbo",
-		"clean:workspaces": "turbo clean",
-		"dev": "turbo dev --parallel",
-		"test": "turbo test --parallel",
-		"start:dashboard": "turbo start --filter=@repo/dashboard",
-		"start:website": "turbo start --filter=@repo/website",
-		"dev:api": "turbo dev --filter=@repo/api",
-		"dev:dashboard": "turbo dev --filter=@repo/dashboard",
-		"build:dashboard": "turbo build --filter=@repo/dashboard",
-		"dev:website": "turbo dev --filter=@repo/website ",
-		"format": "biome format --write .",
-		"lint": "turbo lint && manypkg check",
-		"typecheck": "turbo typecheck",
-		"preinstall": "npx only-allow pnpm",
-		"ui:add": "pnpm --filter @repo/ui ui:add"
-	},
-	"dependencies": {
-		"@biomejs/biome": "1.8.3",
-		"@manypkg/cli": "^0.21.4",
-		"typescript": "^5.5.4"
-	},
-	"devDependencies": {
-		"turbo": "2.0.14"
-	},
-	"resolutions": {
-		"jackspeak": "2.1.1"
-	},
-	"packageManager": "pnpm@9.7.0"
+  "name": "jogabola",
+  "version": "1.0.0",
+  "private": true,
+  "workspaces": [
+    "packages/*",
+    "apps/*"
+  ],
+  "scripts": {
+    "build": "turbo build",
+    "clean": "git clean -xdf node_modules .turbo",
+    "clean:workspaces": "turbo clean",
+    "dev": "turbo dev --parallel",
+    "test": "turbo test --parallel",
+    "start:dashboard": "turbo start --filter=@repo/dashboard",
+    "db:studio": "turbo db:studio --filter=@repo/db",
+    "db:generate": "turbo db:generate --filter=@repo/db",
+    "start:website": "turbo start --filter=@repo/website",
+    "dev:api": "turbo dev --filter=@repo/api",
+    "dev:dashboard": "turbo dev --filter=@repo/dashboard",
+    "build:dashboard": "turbo build --filter=@repo/dashboard",
+    "dev:website": "turbo dev --filter=@repo/website ",
+    "format": "biome format --write .",
+    "lint": "turbo lint && manypkg check",
+    "typecheck": "turbo typecheck",
+    "preinstall": "npx only-allow pnpm",
+    "ui:add": "pnpm --filter @repo/ui ui:add"
+  },
+  "dependencies": {
+    "@biomejs/biome": "1.8.3",
+    "@manypkg/cli": "^0.21.4",
+    "typescript": "^5.5.4"
+  },
+  "devDependencies": {
+    "turbo": "2.0.14"
+  },
+  "resolutions": {
+    "jackspeak": "2.1.1"
+  },
+  "packageManager": "pnpm@9.7.0"
 }

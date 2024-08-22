@@ -3,10 +3,6 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "clear-db": "prisma migrate reset -f",
-    "push-db": "prisma db push --force-reset --accept-data-loss",
-    "studio": "prisma studio",
-    "postinstall": "prisma generate",
     "biome-lint": "npx @biomejs/biome lint ./",
     "biome-lint-apply": "npx @biomejs/biome lint ./ --apply",
     "biome-format": "npx @biomejs/biome format ./",
@@ -22,12 +18,9 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@repo/ui": "workspace:*",
-    "@repo/utils": "workspace:*",
-    "@date-fns/utc": "^1.2.0",
     "@auth/prisma-adapter": "^2.0.0",
+    "@date-fns/utc": "^1.2.0",
     "@hookform/resolvers": "^3.3.4",
-    "@prisma/client": "^5.18.0",
     "@radix-ui/react-avatar": "^1.0.4",
     "@radix-ui/react-checkbox": "^1.0.4",
     "@radix-ui/react-dialog": "^1.0.5",
@@ -42,6 +35,9 @@
     "@radix-ui/react-switch": "^1.0.3",
     "@radix-ui/react-tabs": "^1.1.0",
     "@radix-ui/react-toast": "^1.1.5",
+    "@repo/db": "workspace:*",
+    "@repo/ui": "workspace:*",
+    "@repo/utils": "workspace:*",
     "@tanstack/react-query": "^5.51.23",
     "@tanstack/react-query-devtools": "^5.51.23",
     "@tanstack/react-store": "^0.5.5",
@@ -54,7 +50,7 @@
     "framer-motion": "^11.3.2",
     "input-otp": "^1.2.4",
     "lucide-react": "^0.376.0",
-    "next": "14.2.3",
+    "next": "^14",
     "next-auth": "^5.0.0-beta.17",
     "next-themes": "^0.3.0",
     "react": "^18",
@@ -72,18 +68,17 @@
     "zsa-react": "^0.2.2"
   },
   "devDependencies": {
-    "@repo/tsconfig": "workspace:*",
-    "@repo/eslint-config": "workspace:*",
     "@next/bundle-analyzer": "14.2.1",
+    "@repo/eslint-config": "workspace:*",
+    "@repo/tsconfig": "workspace:*",
     "@types/bcryptjs": "^2.4.6",
     "@types/node": "^20",
-    "@types/react": "^18.3.3",
+    "@types/react": "^18",
     "@types/react-dom": "^18",
     "@types/uuid": "^9.0.8",
     "eslint": "^8",
-    "eslint-config-next": "14.2.3",
+    "eslint-config-next": "^14",
     "jsdom": "^24.1.0",
-    "prisma": "^5.18.0",
     "typescript": "^5.5.4"
   }
 }

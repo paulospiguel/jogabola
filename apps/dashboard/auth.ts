@@ -1,8 +1,8 @@
-import { UserRole } from "@prisma/client";
 import NextAuth from "next-auth";
 import authConfig from "./auth.config";
 import { PrismaAdapter } from "@auth/prisma-adapter";
 import { prisma } from "@/lib/db";
+import { UserRole } from "@repo/db";
 
 import { isTwoFactorAutenticationEnabled } from "@/services/auth";
 import { findUserbyEmail } from "@/services";
@@ -45,7 +45,7 @@ export const {
         // User is available during sign-in
         if (user.id) {
           const isTwoFactorEnabled = await isTwoFactorAutenticationEnabled(
-            user?.id || ""
+            user?.id || "",
           );
 
           const roles = await getRolesByUser(user?.id || "");

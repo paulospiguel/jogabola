@@ -1,4 +1,4 @@
-import { Fira_Sans, Inter, Concert_One } from "next/font/google";
+import { Fira_Sans, Inter, Concert_One } from "@next/font/google";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 const fontBody = Fira_Sans({

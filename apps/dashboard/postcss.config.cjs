@@ -1,2 +1,2 @@
 // @ts-expect-error - No types for postcss
-module.exports = require("@repo/ui/components/ui/postcss");
+module.exports = require("@repo/ui/postcss.config");

@@ -10,16 +10,9 @@
     "format": "biome --write .",
     "typecheck": "tsc --noEmit"
   },
-  "devDependencies": {
-    "@repo/eslint-config": "workspace:*",
-    "@repo/tsconfig": "workspace:*",
-    "autoprefixer": "^10.4.20",
-    "react": "^18.3.1",
-    "react-dom": "^18.3.1",
-    "typescript": "^5.5.4"
-  },
   "dependencies": {
     "@mui/icons-material": "^5.16.7",
+    "@next/font": "^14.2.6",
     "@radix-ui/react-accordion": "^1.2.0",
     "@radix-ui/react-alert-dialog": "^1.1.1",
     "@radix-ui/react-avatar": "^1.1.0",
@@ -61,11 +54,20 @@
     "tailwindcss-animate": "^1.0.7",
     "vaul": "^0.9.1"
   },
+  "devDependencies": {
+    "@repo/eslint-config": "workspace:*",
+    "@repo/tsconfig": "workspace:*",
+    "@types/node": "^20",
+    "@types/react": "^18",
+    "@types/react-dom": "^18",
+    "autoprefixer": "^10.4.20",
+    "typescript": "^5.5.4"
+  },
   "exports": {
     "./globals.css": "./src/globals.css",
-    "./postcss.config": "./postcss.config.mjs",
+    "./postcss.config": "./postcss.config.js",
     "./tailwind.config": "./tailwind.config.ts",
-    "./lib/*": "./src/lib/*.ts",
+    "./lib": "./src/lib/index.ts",
     "./hooks": "./src/hooks/index.ts",
     "./utils": "./src/utils/index.ts",
     "./components/*": [

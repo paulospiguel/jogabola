@@ -1,6 +1,4 @@
-import baseConfig from "@repo/ui/components/ui/tailwind.config";
-import type { Config } from "tailwindcss";
-import { fontFamily } from "tailwindcss/defaultTheme";
+import baseConfig from "@repo/ui/tailwind.config";
 
 export default {
   content: ["./src/**/*.{ts,tsx}", "../../packages/ui/src/**/*.{ts,tsx}"],
@@ -13,7 +11,7 @@ export default {
         secondary: "var(--brand-secondary)",
         primary: {
           DEFAULT: "var(--color-primary)",
-          dark: "var(--color-primary-dark)"
+          dark: "var(--color-primary-dark)",
         },
         background: {
           DEFAULT: "var(--background)",
@@ -24,10 +22,10 @@ export default {
         sans: ["Inter", "sans-serif"],
         mono: ["monospace"],
         heading: ["var(--font-concert-one)", "sans-serif"],
-        body: ['var(--font-body)', ...fontFamily.sans]
-        // heading: ['var(--font-heading)', ...fontFamily.sans],
+        body: ["var(--font-body)", "sans-serif"],
+        // heading: ['var(--font-heading)'],
       },
-    }
+    },
   },
   plugins: [],
-} satisfies Config;
+};
