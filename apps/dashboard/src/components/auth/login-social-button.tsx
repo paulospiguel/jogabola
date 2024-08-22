@@ -1,6 +1,6 @@
 "use client";
 
-import { Button } from "@jogabola/ui/button";
+import { Button } from "@repo/ui/components/ui/button";
 import { signIn } from "next-auth/react";
 import { useSearchParams } from "next/navigation";
 import type { ReactNode } from "react";

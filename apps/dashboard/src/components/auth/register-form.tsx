@@ -9,9 +9,9 @@ import type { z } from "zod";
 import { register } from "@/actions/auth";
 import { RegisterSchema } from "@/schemas/auth";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Button } from "@jogabola/ui/button";
-import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@jogabola/ui/form";
-import { Input } from "@jogabola/ui/input";
+import { Button } from "@repo/ui/components/ui/button";
+import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@repo/ui/components/ui/form";
+import { Input } from "@repo/ui/components/ui/input";
 import AuthCard from "./auth-card";
 import AuthFormMessage from "./auth-form-message";
 

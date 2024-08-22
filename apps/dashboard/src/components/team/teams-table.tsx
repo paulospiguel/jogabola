@@ -8,11 +8,11 @@ import type { z } from "zod";
 import noLogo from "@/assets/images/no-logo.png";
 import { GlobeIcon, LockIcon, TrendingDown, TrendingUp, Eye as ViewIcon } from "@/components/icons";
 import type { teamSchema } from "@/schemas/create-team";
-import { Badge } from "@jogabola/ui/badge";
-import { Button } from "@jogabola/ui/button";
-import { Input } from "@jogabola/ui/input";
-import { ScrollArea } from "@jogabola/ui/scroll-area";
-import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from "@jogabola/ui/table";
+import { Badge } from "@repo/ui/components/ui/badge";
+import { Button } from "@repo/ui/components/ui/button";
+import { Input } from "@repo/ui/components/ui/input";
+import { ScrollArea } from "@repo/ui/components/ui/scroll-area";
+import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from "@repo/ui/components/ui/table";
 import PlayerList from "../player-list";
 
 type Team = z.infer<typeof teamSchema>;

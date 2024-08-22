@@ -7,9 +7,9 @@ import type * as z from "zod";
 
 import { changePassword } from "@/actions/auth";
 import { NewPasswordSchema } from "@/schemas/auth";
-import { Button } from "@jogabola/ui/button";
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@jogabola/ui/form";
-import { Input } from "@jogabola/ui/input";
+import { Button } from "@repo/ui/components/ui/button";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@repo/ui/components/ui/form";
+import { Input } from "@repo/ui/components/ui/input";
 import { LoaderIcon } from "lucide-react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";

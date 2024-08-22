@@ -1,3 +1,3 @@
 {
-	"extends": "@jogabola/tsconfig/base.json"
+  "extends": "@repo/tsconfig/base.json"
 }

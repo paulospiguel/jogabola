@@ -3,17 +3,17 @@
 import Link from "next/link";
 import { useState, useTransition } from "react";
 
-import { Button } from "@jogabola/ui/button";
-import { Input } from "@jogabola/ui/input";
+import { Button } from "@repo/ui/components/ui/button";
+import { Input } from "@repo/ui/components/ui/input";
 import AuthCard from "./auth-card";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 
 import { login } from "@/actions/auth";
-import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@jogabola/ui/form";
-import { InputOTP, InputOTPGroup, InputOTPSlot } from "@jogabola/ui/input-otp";
-import { Separator } from "@jogabola/ui/separator";
+import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@repo/ui/components/ui/form";
+import { InputOTP, InputOTPGroup, InputOTPSlot } from "@repo/ui/components/ui/input-otp";
+import { Separator } from "@repo/ui/components/ui/separator";
 import { LoaderIcon } from "lucide-react";
 import { useSearchParams } from "next/navigation";
 import AuthFormMessage from "./auth-form-message";

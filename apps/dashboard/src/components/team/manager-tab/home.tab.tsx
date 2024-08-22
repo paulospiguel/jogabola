@@ -10,7 +10,7 @@ import Ticker from "@/components/ticker";
 import NextMeetingCard from "@/components/widget/match-day-card";
 import MonthScoreWidget from "@/components/widget/month-status";
 import ScheduleEventWidget from "@/components/widget/schedule-events";
-import { Card, CardContent, CardFooter } from "@jogabola/ui/card";
+import { Card, CardContent, CardFooter } from "@repo/ui/components/ui/card";
 import GameSchedule from "../game-schedule";
 import WrapperLayoutTab from "./wrapper-layout.tab";
 

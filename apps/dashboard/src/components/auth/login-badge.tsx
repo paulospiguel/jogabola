@@ -7,8 +7,8 @@ import trophy from "@/assets/images/trophy.svg";
 import { useProfile } from "@/context/profile-context";
 import { RoleValues } from "@/schemas/roles";
 import { cn } from "@/utils";
-import { Avatar, AvatarFallback, AvatarImage } from "@jogabola/ui/avatar";
-import { Button } from "@jogabola/ui/button";
+import { Avatar, AvatarFallback, AvatarImage } from "@repo/ui/components/ui/avatar";
+import { Button } from "@repo/ui/components/ui/button";
 import {
 	DropdownMenu,
 	DropdownMenuContent,
@@ -16,7 +16,7 @@ import {
 	DropdownMenuLabel,
 	DropdownMenuSeparator,
 	DropdownMenuTrigger,
-} from "@jogabola/ui/dropdown-menu";
+} from "@repo/ui/components/ui/dropdown-menu";
 import { CircleUser, LogOut, UserCircleIcon } from "lucide-react";
 import type { Session } from "next-auth";
 import Image from "next/image";

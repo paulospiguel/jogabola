@@ -1,9 +1,10 @@
 {
-  "extends": "@jogabola/tsconfig/react-library.json",
+  "extends": "@repo/tsconfig/react-library.json",
   "compilerOptions": {
+    "forceConsistentCasingInFileNames": true,
     "baseUrl": ".",
     "paths": {
-      "@/*": ["./src/*"]
+      "@repo/ui/*": ["./src/*"]
     }
   },
   "include": ["src"],

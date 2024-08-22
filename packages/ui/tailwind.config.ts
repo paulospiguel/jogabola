@@ -3,7 +3,13 @@ import * as colors from "tailwindcss/colors";
 
 export default {
   darkMode: ["class"],
-  content: ["./src/**/*.{ts,tsx}"],
+  content: [
+    "./pages/**/*.{ts,tsx}",
+    "./components/**/*.{ts,tsx}",
+    "./app/**/*.{ts,tsx}",
+    "./src/**/*.{ts,tsx}",
+    "../../packages/ui/src/**/*.{ts,tsx}",
+  ],
   safelist: ["dark", "light"],
   theme: {
     container: {
@@ -95,10 +101,7 @@ export default {
         "marquee-horizontal": "marquee-x var(--duration) infinite linear",
         "marquee-vertical": "marquee-y var(--duration) linear infinite",
         "flip-words": "flip-words 8s infinite",
-      }
-    },
-    cursor: {
-      hand: "url('/cursor.png'), default",
+      },
     },
   },
   plugins: [require("tailwindcss-animate")],

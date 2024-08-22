@@ -1,4 +1,4 @@
-import "@jogabola/ui/globals.css";
+import "@repo/ui/components/ui/globals.css";
 import "@/styles/globals.css";
 
 import type { Metadata } from "next";
@@ -11,7 +11,7 @@ import { ThemeProvider } from "@/providers/theme-provider";
 import { fonts } from "@/styles/fonts";
 import { cn } from "@/utils";
 import { auth } from "@auth";
-import { Toaster } from "@jogabola/ui/toaster";
+import { Toaster } from "@repo/ui/components/ui/toaster";
 
 export const metadata: Metadata = {
 	title: "JogaBola",

@@ -1,5 +1,5 @@
 import { cn } from "@/utils";
-import { Avatar, AvatarFallback, AvatarImage } from "@jogabola/ui/avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "@repo/ui/components/ui/avatar";
 import { CircleUser } from "lucide-react";
 
 type AvatarPlayerProps = {

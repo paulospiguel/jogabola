@@ -9,9 +9,9 @@ import { checkTeamName } from "@/actions/team";
 import managerIcon from "@/assets/icons/director.png";
 import type { teamSchema } from "@/schemas/create-team";
 import { Steps } from "@/types/multi-steps";
-import { Button } from "@jogabola/ui/button";
-import { FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@jogabola/ui/form";
-import { Input } from "@jogabola/ui/input";
+import { Button } from "@repo/ui/components/ui/button";
+import { FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@repo/ui/components/ui/form";
+import { Input } from "@repo/ui/components/ui/input";
 
 export const Step1 = React.forwardRef<HTMLDivElement>((props, ref) => {
 	const form = useFormContext<z.infer<typeof teamSchema>>();

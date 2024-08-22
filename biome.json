@@ -9,7 +9,14 @@
 		"attributePosition": "auto",
 		"indentWidth": 2,
 		"enabled": true,
-		"lineWidth": 120
+		"lineWidth": 120,
+		"ignore": [
+			"node_modules/*",
+			"*.config.*",
+			"*.json",
+			"tsconfig.json",
+			".turbo"
+		]
 	},
 	"linter": {
 		"enabled": true,
@@ -37,6 +44,9 @@
 		}
 	},
 	"files": {
-		"ignore": [".next/**/*", "components/ui/**/*"]
+		"ignore": [
+			".next/**/*",
+			"components/ui/**/*"
+		]
 	}
 }

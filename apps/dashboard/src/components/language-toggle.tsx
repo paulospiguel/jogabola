@@ -5,8 +5,8 @@ import type { z } from "zod";
 
 import { languagesEnum } from "@/schemas/create-team";
 import { cn } from "@/utils";
-import { Button } from "@jogabola/ui/button";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@jogabola/ui/dropdown-menu";
+import { Button } from "@repo/ui/components/ui/button";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@repo/ui/components/ui/dropdown-menu";
 
 type LanguageTypes = z.infer<typeof languagesEnum>;
 const LANGUAGES = languagesEnum.options;

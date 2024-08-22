@@ -1,4 +1,4 @@
-import baseConfig from "@jogabola/ui/tailwind.config";
+import baseConfig from "@repo/ui/components/ui/tailwind.config";
 import type { Config } from "tailwindcss";
 import { fontFamily } from "tailwindcss/defaultTheme";
 

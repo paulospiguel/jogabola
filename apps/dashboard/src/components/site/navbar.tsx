@@ -1,7 +1,7 @@
 import LoginBadge from "@/components/auth/login-badge";
 import { Logo } from "@/components/logo";
 import { auth } from "@auth";
-import { Input } from "@jogabola/ui/input";
+import { Input } from "@repo/ui/components/ui/input";
 import { Search } from "lucide-react";
 import Link from "next/link";
 import { LanguageToggle } from "../language-toggle";

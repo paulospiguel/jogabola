@@ -3,8 +3,8 @@ import facebookIcon from "@/assets/icons/facebook.svg";
 import telegramIcon from "@/assets/icons/telegram.svg";
 import whatsapp from "@/assets/icons/whatsapp.svg";
 import stadium from "@/assets/images/stadium.svg";
-import { Button } from "@jogabola/ui/button";
-import { Input } from "@jogabola/ui/input";
+import { Button } from "@repo/ui/components/ui/button";
+import { Input } from "@repo/ui/components/ui/input";
 import Image from "next/image";
 
 export default function Component() {

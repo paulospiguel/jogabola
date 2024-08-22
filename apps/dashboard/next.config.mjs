@@ -16,7 +16,7 @@ const config = {
       },
     ],
   },
-  transpilePackages: ["@jogabola/ui", "@jogabola/tailwind"],
+  transpilePackages: ["@repo/ui", "@repo/utils"],
   eslint: {
     ignoreDuringBuilds: true,
   },

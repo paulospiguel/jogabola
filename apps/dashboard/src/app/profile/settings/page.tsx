@@ -1,4 +1,4 @@
-import { Card, CardContent, CardHeader } from "@jogabola/ui/card";
+import { Card, CardContent, CardHeader } from "@repo/ui/components/ui/card";
 import { ThemeColorRadios } from "./components/theme-radios";
 
 export default async function ProfileSettings() {

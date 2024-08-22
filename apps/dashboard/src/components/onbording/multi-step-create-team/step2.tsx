@@ -8,9 +8,9 @@ import type { z } from "zod";
 import gameDay from "@/assets/images/game_day.svg";
 import type { teamSchema } from "@/schemas/create-team";
 import { Steps } from "@/types/multi-steps";
-import { Button } from "@jogabola/ui/button";
-import { Checkbox } from "@jogabola/ui/checkbox";
-import { FormControl, FormDescription, FormField, FormItem, FormMessage } from "@jogabola/ui/form";
+import { Button } from "@repo/ui/components/ui/button";
+import { Checkbox } from "@repo/ui/components/ui/checkbox";
+import { FormControl, FormDescription, FormField, FormItem, FormMessage } from "@repo/ui/components/ui/form";
 
 export const Step2 = React.forwardRef<HTMLDivElement>((props, ref) => {
 	const form = useFormContext<z.infer<typeof teamSchema>>();

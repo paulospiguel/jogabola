@@ -12,15 +12,15 @@ import { LanguageToggle } from "@/components/language-toggle";
 import { PreviewLogo } from "@/components/preview-logo";
 import { useCreateTeam } from "@/hooks/use-create-team";
 import { type teamSchema, teamShapeEnum } from "@/schemas/create-team";
-import { Button } from "@jogabola/ui/button";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@jogabola/ui/card";
-import { Form, FormField, FormItem, FormMessage } from "@jogabola/ui/form";
-import { Input } from "@jogabola/ui/input";
-import { Label } from "@jogabola/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@jogabola/ui/select";
-import { NameSlider, Slider } from "@jogabola/ui/slider";
-import { Textarea } from "@jogabola/ui/textarea";
-import { useToast } from "@jogabola/ui/use-toast";
+import { Button } from "@repo/ui/components/ui/button";
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@repo/ui/components/ui/card";
+import { Form, FormField, FormItem, FormMessage } from "@repo/ui/components/ui/form";
+import { Input } from "@repo/ui/components/ui/input";
+import { Label } from "@repo/ui/components/ui/label";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@repo/ui/components/ui/select";
+import { NameSlider, Slider } from "@repo/ui/components/ui/slider";
+import { Textarea } from "@repo/ui/components/ui/textarea";
+import { useToast } from "@repo/ui/components/ui/use-toast";
 
 const TEAM_TYPES = teamShapeEnum.options;
 

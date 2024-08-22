@@ -1,6 +1,6 @@
 import { AlertCircle, CheckCircle } from "lucide-react";
 
-import { Alert, AlertDescription, AlertTitle } from "@jogabola/ui/alert";
+import { Alert, AlertDescription, AlertTitle } from "@repo/ui/components/ui/alert";
 
 interface AuthFormMessageProps {
 	title?: string;

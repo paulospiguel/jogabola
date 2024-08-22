@@ -1,6 +1,6 @@
 {
-  "name": "@jogabola/dashboard",
-  "version": "1.0.0",
+  "name": "@repo/dashboard",
+  "version": "0.0.0",
   "private": true,
   "scripts": {
     "clear-db": "prisma migrate reset -f",
@@ -22,9 +22,9 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
+    "@repo/ui": "workspace:*",
+    "@repo/utils": "workspace:*",
     "@date-fns/utc": "^1.2.0",
-    "@jogabola/ui": "workspace:*",
-    "@jogabola/utils": "workspace:*",
     "@auth/prisma-adapter": "^2.0.0",
     "@hookform/resolvers": "^3.3.4",
     "@prisma/client": "^5.18.0",
@@ -72,7 +72,8 @@
     "zsa-react": "^0.2.2"
   },
   "devDependencies": {
-    "@jogabola/tsconfig": "workspace:*",
+    "@repo/tsconfig": "workspace:*",
+    "@repo/eslint-config": "workspace:*",
     "@next/bundle-analyzer": "14.2.1",
     "@types/bcryptjs": "^2.4.6",
     "@types/node": "^20",

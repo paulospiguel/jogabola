@@ -3,12 +3,12 @@
 import { changeSettings } from "@/actions/auth/settings";
 import { UserSettingsSchema } from "@/schemas/auth";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Button } from "@jogabola/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@jogabola/ui/card";
-import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@jogabola/ui/form";
-import { Input } from "@jogabola/ui/input";
-import { Separator } from "@jogabola/ui/separator";
-import { Switch } from "@jogabola/ui/switch";
+import { Button } from "@repo/ui/components/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@repo/ui/components/ui/card";
+import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@repo/ui/components/ui/form";
+import { Input } from "@repo/ui/components/ui/input";
+import { Separator } from "@repo/ui/components/ui/separator";
+import { Switch } from "@repo/ui/components/ui/switch";
 import { LoaderIcon, ShieldAlert } from "lucide-react";
 import type { User } from "next-auth";
 import { useSession } from "next-auth/react";

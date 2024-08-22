@@ -2,8 +2,8 @@
 
 import { LIMIT_CREATE_TEAM } from "@/constants";
 import { CreateTeamProvider, useCreateTeamContext } from "@/context/create-team-context";
-import { Button } from "@jogabola/ui/button";
-import { Drawer, DrawerContent, DrawerFooter, DrawerHeader, DrawerTrigger } from "@jogabola/ui/drawer";
+import { Button } from "@repo/ui/components/ui/button";
+import { Drawer, DrawerContent, DrawerFooter, DrawerHeader, DrawerTrigger } from "@repo/ui/components/ui/drawer";
 import { PlusCircle } from "lucide-react";
 import { useEffect, useMemo } from "react";
 import { MultiStepCreateTeam } from "../onbording";

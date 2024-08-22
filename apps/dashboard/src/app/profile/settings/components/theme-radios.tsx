@@ -1,7 +1,7 @@
 "use client";
 
-import { Label } from "@jogabola/ui/label";
-import { RadioGroup, RadioGroupItem } from "@jogabola/ui/radio-group";
+import { Label } from "@repo/ui/components/ui/label";
+import { RadioGroup, RadioGroupItem } from "@repo/ui/components/ui/radio-group";
 import { useTheme } from "next-themes";
 
 export const ThemeColorRadios = () => {

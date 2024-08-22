@@ -7,7 +7,7 @@ import football from "@/assets/icons/football.png";
 import routes from "@/constants/routes";
 import { RoleSchema } from "@/schemas/roles";
 import { cn, getSearchParams } from "@/utils";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@jogabola/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@repo/ui/components/ui/card";
 import { ArrowRightIcon } from "lucide-react";
 import Image, { type StaticImageData } from "next/image";
 

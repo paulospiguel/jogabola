@@ -1,7 +1,7 @@
 "use client";
 
 import { cn } from "@/utils";
-import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@jogabola/ui/carousel";
+import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@repo/ui/components/ui/carousel";
 import Autoplay, { type AutoplayOptionsType } from "embla-carousel-autoplay";
 import * as React from "react";
 

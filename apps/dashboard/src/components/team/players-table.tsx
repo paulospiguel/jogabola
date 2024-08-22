@@ -6,13 +6,13 @@ import type { z } from "zod";
 
 import { GlobeIcon, LockIcon, TrendingDown, TrendingUp, Eye as ViewIcon } from "@/components/icons";
 import type { teamSchema } from "@/schemas/create-team";
-import { Badge } from "@jogabola/ui/badge";
-import { Button } from "@jogabola/ui/button";
-import { Input } from "@jogabola/ui/input";
-import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from "@jogabola/ui/table";
+import { Badge } from "@repo/ui/components/ui/badge";
+import { Button } from "@repo/ui/components/ui/button";
+import { Input } from "@repo/ui/components/ui/input";
+import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from "@repo/ui/components/ui/table";
 
 import noLogo from "@/assets/images/no-logo.png";
-import { ScrollArea } from "@jogabola/ui/scroll-area";
+import { ScrollArea } from "@repo/ui/components/ui/scroll-area";
 import { useRouter } from "next/navigation";
 import PlayerList from "../player-list";
 

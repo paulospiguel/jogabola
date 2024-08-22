@@ -1,6 +1,6 @@
 "use client";
 
-import { Calendar } from "@jogabola/ui/calendar";
+import { Calendar } from "@repo/ui/components/ui/calendar";
 import React from "react";
 
 export default function GameSchedule() {
