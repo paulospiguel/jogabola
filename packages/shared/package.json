@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "scripts": {},
   "exports": {
-    "./schemas/*": "./*.ts",
-    "./types/*": "./*.ts"
+    "./schemas/*": "./schemas/*.ts",
+    "./types/*": "./types/*.ts"
   }
 }

@@ -2,18 +2,23 @@
   "name": "@repo/api",
   "version": "0.0.0",
   "private": true,
+  "main": "./index.ts",
+  "types": "./index.ts",
+  "license": "MIT",
   "scripts": {
-    "clean": "git clean -xdf .turbo"
+    "clean": "rm -rf .turbo node_modules",
+    "lint": "biome lint ./src",
+    "format": "biome format ./src ",
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "@repo/db": "workspace:*",
     "@repo/shared": "workspace:*",
-    "zsa": "^0.6.0"
+    "zod": "^3.22.2"
   },
-  "exports": {
-    ".": "./src/index.ts",
-    "./services/*": [
-      "./src/services/*.ts"
-    ]
+  "devDependencies": {
+    "@biomejs/biome": "^1.5.3",
+    "@repo/tsconfig": "workspace:*",
+    "typescript": "^5.3.3"
   }
 }

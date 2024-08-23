@@ -1,11 +1,11 @@
-import { dbClient } from "@repo/db";
-import type { z } from "zod";
+import { db } from "@repo/db";
+import * as z from "zod";
 
-import { teamSchema } from "@repo/shared/shemas/create-team";
-import { type Role, RoleSchema } from "@repo/shared/shemas/roles";
+import { teamSchema } from "@repo/shared/schemas/create-team";
+import { type Role, RoleSchema } from "@repo/shared/schemas/roles";
 
 export const getTeamInfo = async (teamId?: string, slug?: string) => {
-  const team = await dbClient.team.findFirst({
+  const team = await db.team.findFirst({
     where: {
       OR: [
         {
@@ -30,7 +30,7 @@ export const createTeam = async (userId: string, values: z.infer<typeof teamSche
 
   const role = RoleSchema.Enum.MANAGER;
 
-  const team = await dbClient.team.create({
+  const team = await db.team.create({
     data: {
       name,
       language,
@@ -60,7 +60,7 @@ export const createTeam = async (userId: string, values: z.infer<typeof teamSche
 }
 
 export const checkTeamByName = async (teamName: string) => {
-  const team = await dbClient.team.findFirst({
+  const team = await db.team.findFirst({
     where: {
       name: teamName
     }
@@ -70,7 +70,7 @@ export const checkTeamByName = async (teamName: string) => {
 
 export const checkUserHasTeam = async (userId: string) => {
   try {
-    const team = await dbClient.team.count({
+    const team = await db.team.count({
       where: {
         user: {
           id: userId
@@ -85,7 +85,7 @@ export const checkUserHasTeam = async (userId: string) => {
 }
 
 export const getRolesByUser = async (userId: string) => {
-  const roles = await dbClient.teamMember.findMany({
+  const roles = await db.teamMember.findMany({
     where: {
       userId
     },
@@ -97,7 +97,7 @@ export const getRolesByUser = async (userId: string) => {
 }
 
 export const getTeamByUser = async (userId: string) => {
-  return dbClient.team.findMany({
+  return db.team.findMany({
     where: {
       user: {
         id: userId
@@ -114,7 +114,7 @@ export const getTeamByUser = async (userId: string) => {
 }
 
 export const checkUserMemberTeam = async (userId: string, teamId: string) => {
-  const team = await dbClient.teamMember.findFirst({
+  const team = await db.teamMember.findFirst({
     where: {
       userId,
       teamId

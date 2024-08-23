@@ -1,4 +1,4 @@
-import { Card, CardContent, CardHeader } from "@repo/ui/components/ui/card";
+import { Card, CardContent, CardHeader } from "@repo/ui/components/card";
 import { ThemeColorRadios } from "./components/theme-radios";
 
 export default async function ProfileSettings() {

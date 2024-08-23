@@ -70,8 +70,8 @@
     "./hooks": "./src/hooks/index.ts",
     "./utils": "./src/utils/index.ts",
     "./components/*": [
-      "./src/components/*.tsx",
-      "./src/components/*.ts"
+      "./src/components/ui/*.tsx",
+      "./src/components/ui/*.ts"
     ]
   },
   "peerDependencies": {
