@@ -15,6 +15,6 @@
     ".next/types/**/*.ts",
     "tailwind.config.ts",
     "postcss.config.cjs"
-  ],
+, "../../packages/shared/schemas/manager.ts"  ],
   "exclude": ["node_modules"]
 }

@@ -11,16 +11,6 @@ export const RegisterSchema = z.object({
 	email: z.string().email(),
 	password: z.string().min(6),
 });
-// .refine(
-//   (values) => {
-//     console.log(`Values ${JSON.stringify(values)}`);
-//     return values.password === values.matchPassword;
-//   },
-//   {
-//     message: "Passwords must match!",
-//     path: ["confirmPassword"],
-//   }
-// );
 
 export const UserSettingsSchema = z
 	.object({
@@ -50,15 +40,7 @@ export const UserSettingsSchema = z
 			path: ["password"],
 		},
 	);
-// .refine(
-// 	(values) => {
-// 		return values.password && values.newPassword && values.password === values.newPassword;
-// 	},
-// 	{
-// 		message: "Os campos de Senha e Nova senha devem coincidir",
-// 		path: ["password"],
-// 	},
-// );
+
 
 export const ResetPasswordSchema = z.object({
 	email: z.string().email(),

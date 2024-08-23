@@ -1,16 +1,17 @@
-import { prisma } from "@/lib/db";
-import { generateOTP } from "@/utils";
+import { db } from "@repo/db";
+import { generateOTP } from "@repo/utils";
 
 export const findTwoFactorAuthTokenByEmail = async (email: string) => {
-	const token = await prisma.twoFactorToken.findUnique({
+	const token = await db.twoFactorToken.findUnique({
 		where: {
 			email,
 		},
 	});
 	return token;
 };
+
 export const isTwoFactorAutenticationEnabled = async (id: string) => {
-	const user = await prisma.user.findUnique({
+	const user = await db.user.findUnique({
 		where: {
 			id,
 		},
@@ -22,7 +23,7 @@ export const isTwoFactorAutenticationEnabled = async (id: string) => {
 };
 
 export const deleteTwoFactorAuthTokenById = async (id: string) => {
-	const token = await prisma.twoFactorToken.delete({
+	const token = await db.twoFactorToken.delete({
 		where: {
 			id,
 		},
@@ -31,7 +32,7 @@ export const deleteTwoFactorAuthTokenById = async (id: string) => {
 };
 
 export const findTwoFactorAuthTokeByToken = async (token: string) => {
-	const existingToken = await prisma.twoFactorToken.findUnique({
+	const existingToken = await db.twoFactorToken.findUnique({
 		where: {
 			token,
 		},
@@ -48,7 +49,7 @@ export const createTwoFactorAuthToken = async (email: string) => {
 		await deleteTwoFactorAuthTokenById(existingToken.id);
 	}
 
-	const twoFactorAuthToken = await prisma.twoFactorToken.create({
+	const twoFactorAuthToken = await db.twoFactorToken.create({
 		data: {
 			email,
 			token,

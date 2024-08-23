@@ -38,6 +38,7 @@
     "@repo/db": "workspace:*",
     "@repo/ui": "workspace:*",
     "@repo/utils": "workspace:*",
+    "@repo/shared": "workspace:*",
     "@tanstack/react-query": "^5.51.23",
     "@tanstack/react-query-devtools": "^5.51.23",
     "@tanstack/react-store": "^0.5.5",

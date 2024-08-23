@@ -3,8 +3,8 @@ import { auth } from "@auth";
 import { Tabs, TabsList, TabsTrigger } from "@repo/ui/components/ui/tabs";
 
 import { dictionary } from "@/dictionary";
-import { tabKeysSchema } from "@/schemas/manager";
 import type { z } from "zod";
+import { tabKeysSchema } from "../../../../../../packages/shared/schemas/manager";
 
 import HomeTabContent from "./home.tab";
 import PlayersTabContent from "./players.tab";

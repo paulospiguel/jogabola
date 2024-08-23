@@ -1,5 +1,5 @@
 import { db } from "@repo/db";
-import * as z from "zod";
+import type * as z from "zod";
 
 import { teamSchema } from "@repo/shared/schemas/create-team";
 import { type Role, RoleSchema } from "@repo/shared/schemas/roles";
@@ -9,19 +9,20 @@ export const getTeamInfo = async (teamId?: string, slug?: string) => {
     where: {
       OR: [
         {
-          id: teamId
+          id: teamId,
         },
         {
-          slug
-        }
-      ]
-    }
+          slug,
+        },
+      ],
+    },
   });
   return team;
-}
+};
 
 export const createTeam = async (userId: string, values: z.infer<typeof teamSchema>) => {
-  const { language, name, bio, logo, radiusPlayerAge, radiusPlayerArea, teamShape, location } = teamSchema.parse(values);
+  const { language, name, bio, logo, radiusPlayerAge, radiusPlayerArea, teamShape, location } =
+    teamSchema.parse(values);
   const ownerId = userId;
 
   if (!ownerId) {
@@ -46,80 +47,79 @@ export const createTeam = async (userId: string, values: z.infer<typeof teamSche
       user: {
         connect: {
           id: ownerId,
-        }
+        },
       },
       teamMember: {
         create: {
           userId: ownerId,
-          role: "MANAGER"
-        }
-      }
-    }
+          role: "MANAGER",
+        },
+      },
+    },
   });
   return team;
-}
+};
 
 export const checkTeamByName = async (teamName: string) => {
   const team = await db.team.findFirst({
     where: {
-      name: teamName
-    }
+      name: teamName,
+    },
   });
   return team;
-}
+};
 
 export const checkUserHasTeam = async (userId: string) => {
   try {
     const team = await db.team.count({
       where: {
         user: {
-          id: userId
-        }
-      }
+          id: userId,
+        },
+      },
     });
     return team > 0;
   } catch (error) {
     console.error(error);
     return false;
   }
-}
+};
 
 export const getRolesByUser = async (userId: string) => {
   const roles = await db.teamMember.findMany({
     where: {
-      userId
+      userId,
     },
     select: {
-      role: true
-    }
+      role: true,
+    },
   });
   return roles.map((roles) => roles.role) as Role[];
-}
+};
 
 export const getTeamByUser = async (userId: string) => {
   return db.team.findMany({
     where: {
       user: {
-        id: userId
-      }
+        id: userId,
+      },
     },
     include: {
       teamMember: {
         select: {
-          role: true
-        }
-      }
-    }
+          role: true,
+        },
+      },
+    },
   });
-}
+};
 
 export const checkUserMemberTeam = async (userId: string, teamId: string) => {
   const team = await db.teamMember.findFirst({
     where: {
       userId,
-      teamId
-    }
+      teamId,
+    },
   });
   return team;
-}
-
+};

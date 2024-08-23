@@ -1,11 +1,14 @@
-import bcryptjs from "bcryptjs";
 import type { NextAuthConfig } from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 import Facebook from "next-auth/providers/facebook";
 import Google from "next-auth/providers/google";
 import { UserNotFound } from "./src/lib/auth";
-import { CredentialsSchema } from "./src/schemas/auth";
-import { findUserbyEmail } from "./src/services";
+
+import { findUserbyEmail } from "@repo/db/user";
+
+import { CredentialsSchema } from "@repo/shared/schemas";
+
+import bcryptjs from "bcryptjs";
 
 export default {
   providers: [

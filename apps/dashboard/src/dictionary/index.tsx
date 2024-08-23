@@ -1,4 +1,4 @@
-import { tabKeysSchema } from "@/schemas/manager";
+import { tabKeysSchema } from "../../../../packages/shared/schemas/manager";
 
 const tabsValues = tabKeysSchema.Values;
 
