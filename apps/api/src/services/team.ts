@@ -1,12 +1,11 @@
-import { prisma } from "@/lib/db";
-import { auth } from "@auth";
+import { dbClient } from "@repo/db";
 import type { z } from "zod";
 
-import { teamSchema } from "@/schemas/create-team";
-import { type Role, RoleSchema } from "@/schemas/roles";
+import { teamSchema } from "@repo/shared/shemas/create-team";
+import { type Role, RoleSchema } from "@repo/shared/shemas/roles";
 
 export const getTeamInfo = async (teamId?: string, slug?: string) => {
-  const team = await prisma.team.findFirst({
+  const team = await dbClient.team.findFirst({
     where: {
       OR: [
         {
@@ -21,10 +20,9 @@ export const getTeamInfo = async (teamId?: string, slug?: string) => {
   return team;
 }
 
-export const createTeam = async (values: z.infer<typeof teamSchema>) => {
+export const createTeam = async (userId: string, values: z.infer<typeof teamSchema>) => {
   const { language, name, bio, logo, radiusPlayerAge, radiusPlayerArea, teamShape, location } = teamSchema.parse(values);
-  const session = await auth();
-  const ownerId = session?.user.id;
+  const ownerId = userId;
 
   if (!ownerId) {
     throw new Error("User not found");
@@ -32,7 +30,7 @@ export const createTeam = async (values: z.infer<typeof teamSchema>) => {
 
   const role = RoleSchema.Enum.MANAGER;
 
-  const team = await prisma.team.create({
+  const team = await dbClient.team.create({
     data: {
       name,
       language,
@@ -62,7 +60,7 @@ export const createTeam = async (values: z.infer<typeof teamSchema>) => {
 }
 
 export const checkTeamByName = async (teamName: string) => {
-  const team = await prisma.team.findFirst({
+  const team = await dbClient.team.findFirst({
     where: {
       name: teamName
     }
@@ -72,7 +70,7 @@ export const checkTeamByName = async (teamName: string) => {
 
 export const checkUserHasTeam = async (userId: string) => {
   try {
-    const team = await prisma.team.count({
+    const team = await dbClient.team.count({
       where: {
         user: {
           id: userId
@@ -87,7 +85,7 @@ export const checkUserHasTeam = async (userId: string) => {
 }
 
 export const getRolesByUser = async (userId: string) => {
-  const roles = await prisma.teamMember.findMany({
+  const roles = await dbClient.teamMember.findMany({
     where: {
       userId
     },
@@ -99,7 +97,7 @@ export const getRolesByUser = async (userId: string) => {
 }
 
 export const getTeamByUser = async (userId: string) => {
-  return prisma.team.findMany({
+  return dbClient.team.findMany({
     where: {
       user: {
         id: userId
@@ -116,7 +114,7 @@ export const getTeamByUser = async (userId: string) => {
 }
 
 export const checkUserMemberTeam = async (userId: string, teamId: string) => {
-  const team = await prisma.teamMember.findFirst({
+  const team = await dbClient.teamMember.findFirst({
     where: {
       userId,
       teamId

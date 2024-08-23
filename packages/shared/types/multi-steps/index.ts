@@ -4,8 +4,8 @@ export enum Steps {
   Step3 = 3,
 }
 
-export type StepForm = {
+export type StepForm<T = unknown> = {
   label: string;
-  component: React.FC;
+  component: T
   fields: string[];
 };
