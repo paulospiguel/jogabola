@@ -2,7 +2,7 @@
 
 import DonutChart from "@/components/graphs/donut-chart";
 import { textColorSchema } from "@/constants/colors";
-import { cn } from "@/utils";
+import { cn } from "@repo/ui/utils";
 
 type TextColor = keyof typeof textColorSchema;
 

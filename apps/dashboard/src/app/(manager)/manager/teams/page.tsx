@@ -4,7 +4,7 @@ import { ManagerTabs } from "@/components/team/manager-tab";
 export default async function ManagerTeamsPage() {
 	return (
 		<div className="w-full max-w-full px-3 py-4 space-y-4 mx-auto">
-			<div className="relative h-full flex-[1_auto] flex flex-col break-words min-w-0 bg-clip-border rounded-[.95rem] bg-white">
+			<div className="relative h-full flex-[1_auto] flex flex-col break-words min-w-0 bg-clip-border rounded-[.95rem] bg-white dark:bg-slate-800">
 				<div className="relative flex flex-col min-w-0 break-words border shadow-md rounded-2xl  bg-light/30">
 					<div className="px-9 py-3 flex justify-between items-stretch flex-wrap min-h-[70px] bg-transparent">
 						<h3 className="flex flex-col items-start justify-center m-2 ml-0 font-medium text-xl/tight text-dark">

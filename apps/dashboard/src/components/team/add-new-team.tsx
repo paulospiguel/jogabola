@@ -2,8 +2,8 @@
 
 import { LIMIT_CREATE_TEAM } from "@/constants";
 import { CreateTeamProvider, useCreateTeamContext } from "@/context/create-team-context";
-import { Button } from "@repo/ui/components/ui/button";
-import { Drawer, DrawerContent, DrawerFooter, DrawerHeader, DrawerTrigger } from "@repo/ui/components/ui/drawer";
+import { Button } from "@repo/ui/components/button";
+import { Drawer, DrawerContent, DrawerFooter, DrawerHeader, DrawerTrigger } from "@repo/ui/components/drawer";
 import { PlusCircle } from "lucide-react";
 import { useEffect, useMemo } from "react";
 import { MultiStepCreateTeam } from "../onbording";
@@ -33,7 +33,7 @@ function AddNewTeamComponent({ disabled = false }) {
 		<>
 			<Drawer onClose={handleCleanDataOnClone} open={closeDrawer}>
 				<DrawerTrigger>
-					<Button disabled={hasCreateTeam} className="bg-transparent text-gray-700 hover:text-white">
+					<Button variant="outline" disabled={hasCreateTeam} className="">
 						<PlusCircle className="w-5 h-5 mr-2" />
 						Adicionar nova equipa
 					</Button>

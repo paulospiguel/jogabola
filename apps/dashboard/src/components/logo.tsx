@@ -1,7 +1,7 @@
 import Image, { type StaticImageData } from "next/image";
 import type { ComponentProps, FC } from "react";
 
-import { cn } from "@/utils";
+import { cn } from "@repo/ui/utils";
 import Link from "next/link";
 
 import logoAnimated from "@/assets/animations/jogabola-loop.gif";

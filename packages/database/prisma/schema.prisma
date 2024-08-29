@@ -1,9 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
@@ -110,33 +104,28 @@ model Team {
 }
 
 model TeamMember {
-  id        String   @id @default(cuid())
-  role      UserRole @default(DEFAULT)
-  teamId    String
-  userId    String
+  id     String   @id @default(cuid())
+  role   UserRole @default(DEFAULT)
+  teamId String
+  userId String
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  team Team @relation(fields: [teamId], references: [id])
+  team     Team    @relation(fields: [teamId], references: [id])
+  player   Player? @relation(fields: [playerId], references: [id])
+  playerId String?
 }
 
-// model Player {
-//   id       String  @id @default(cuid())
-//   name     String
-//   slug     String  @unique
-//   location String?
-//   language String?
-//   bio      String?
-//   image    String?
-//   age      Int?
+model Player {
+  id         String    @id @default(cuid())
+  name       String
+  bio        String?
+  image      String?
+  location   String?
+  birth_date DateTime?
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
 
-//   createdAt DateTime @default(now())
-//   updatedAt DateTime @updatedAt
-
-//   teamId String
-//   Team   Team   @relation("team", fields: [teamId], references: [id])
-//   userId String
-//   User   User   @relation("player", fields: [userId], references: [id])
-
-//   @@map("players")
-// }
+  teamMember TeamMember[]
+}

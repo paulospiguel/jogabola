@@ -1,100 +1,151 @@
-"use server";
+import { db } from "@repo/db";
 
-import { teamSchema } from "@/schemas/create-team";
-import type { Role } from "@/schemas/roles";
-import { checkTeamByName, checkUserHasTeam, createTeam, getRolesByUser, getTeamByUser, getTeamInfo } from "@/services/team";
-import type { z } from "zod";
+import { type Role, RoleSchema, teamSchema } from "@/schemas";
+import { TeamCreateInput } from "@/types";
+import { authActionClient } from "../safe-action";
+import { z } from "zod";
 
-export async function createNewTeam(data: z.infer<typeof teamSchema>) {
-	const valid = teamSchema.safeParse(data);
+export const getTeamInfo = async (teamId?: string, slug?: string) => {
+  const team = await db.team.findFirst({
+    where: {
+      OR: [
+        {
+          id: teamId,
+        },
+        {
+          slug,
+        },
+      ],
+    },
+  });
+  return team;
+};
 
-	if (!valid.success) {
-		return {
-			error: "Dados inválidos",
-		};
-	}
+export const createTeam = async (userId: string, values: TeamCreateInput) => {
+  const {
+    language,
+    name,
+    bio,
+    logo,
+    radiusPlayerAge,
+    radiusPlayerArea,
+    teamShape,
+    location,
+  } = teamSchema.parse(values);
+  const ownerId = userId;
 
-	try {
+  if (!ownerId) {
+    throw new Error("User not found");
+  }
 
-		const response = await createTeam(data);
+  const role = RoleSchema.Enum.MANAGER;
 
-		if (response?.id) {
-			return {
-				success: "Time criado com sucesso",
-				data: response,
-			};
-		}
-	} catch (error) {
-		throw error as Error;
-	}
-}
+  const team = await db.team.create({
+    data: {
+      name,
+      language,
+      bio,
+      logo,
+      location,
+      maxRadiusPlayerAge: radiusPlayerAge[1],
+      minRadiusPlayerAge: radiusPlayerAge[0],
+      maxRadiusPlayerArea: radiusPlayerArea[1],
+      minRadiusPlayerArea: radiusPlayerArea[0],
+      teamShape,
+      slug: name.toLowerCase().replace(" ", "-"),
+      user: {
+        connect: {
+          id: ownerId,
+        },
+      },
+      teamMember: {
+        create: {
+          userId: ownerId,
+          role: "MANAGER",
+        },
+      },
+    },
+  });
+  return team;
+};
 
-export async function getTeamInformation(teamId: string) {
-	const response = await getTeamInfo(teamId);
+export const checkTeamByName = async (teamName: string) => {
+  const team = await db.team.findFirst({
+    where: {
+      name: teamName,
+    },
+  });
+  return team;
+};
 
-	if (response) {
-		return response;
-	}
+export const checkUserHasTeam = async (userId: string) => {
+  try {
+    const team = await db.team.count({
+      where: {
+        user: {
+          id: userId,
+        },
+      },
+    });
+    return team > 0;
+  } catch (error) {
+    console.error(error);
+    return false;
+  }
+};
 
-	return {
-		error: "Time não encontrado",
-	};
+export const getRolesByUser = async (userId: string) => {
+  const roles = await db.teamMember.findMany({
+    where: {
+      userId,
+    },
+    select: {
+      role: true,
+    },
+  });
+  return roles.map((roles) => roles.role) as Role[];
+};
 
-}
+export const getTeamByUser = async (userId: string) => {
+  try {
+    const data = await db.team.findMany({
+      where: {
+        user: {
+          id: userId,
+        },
+      },
+      include: {
+        teamMember: {
+          select: {
+            role: true,
+          },
+        },
+      },
+    });
 
-export async function checkTeamName(teamName: string) {
-	if (!teamName) {
-		return {}
-	}
-	const response = await checkTeamByName(teamName);
+    return data;
+  } catch (error) {
+    throw new Error("Error getting team by user.");
+  }
+};
 
-	if (response) {
-		return {
-			error: "Nome de time já existe",
-		};
-	}
+export const getTeamsByUserId = authActionClient
+  .schema(z.object({ userId: z.string() }))
+  .action(async ({ parsedInput: { userId } }) => {
+    const response = await db.team.findMany({
+      where: {
+        userId: userId,
+      },
+    });
+    return response;
+  });
 
-	return {
-		success: "Nome de time disponível",
-	};
-}
-
-export async function checkUserTeam(userId: string): Promise<boolean> {
-	return await checkUserHasTeam(userId);
-}
-
-export async function getRolesByUserId(userId: string): Promise<Role[]> {
-	const response = await getRolesByUser(userId);
-
-	if (response) {
-		return response
-	}
-
-	return [];
-}
-
-export async function getTeamsByUserId(userId: string): Promise<z.infer<typeof teamSchema>[]> {
-	const response = await getTeamByUser(userId);
-
-	if (response) {
-		return response.map((resp) => ({
-			...resp,
-			radiusPlayerAge: [resp.minRadiusPlayerAge, resp.maxRadiusPlayerAge],
-			radiusPlayerArea: [resp.minRadiusPlayerArea, resp.maxRadiusPlayerArea],
-		})) as unknown as z.infer<typeof teamSchema>[];
-	}
-
-	return [];
-}
-
-export async function getTeamInfoBySlug(slug: string) {
-	const response = await getTeamInfo(undefined, slug);
-
-	if (response) {
-		return response;
-	}
-
-	return {
-		error: "Time não encontrado",
-	};
-}
+export const checkUserMemberTeam = async (userId: string, teamId: string) => {
+  const team = await db.teamMember.findFirst({
+    where: {
+      userId,
+      teamId,
+    },
+  });
+  return team;
+};

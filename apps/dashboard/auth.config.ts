@@ -4,9 +4,9 @@ import Facebook from "next-auth/providers/facebook";
 import Google from "next-auth/providers/google";
 import { UserNotFound } from "./src/lib/auth";
 
-import { findUserbyEmail } from "@repo/db/user";
+import { findUserbyEmail } from "../../packages/database/src/actions/user";
 
-import { CredentialsSchema } from "@repo/shared/schemas";
+import { CredentialsSchema } from "@/schemas";
 
 import bcryptjs from "bcryptjs";
 

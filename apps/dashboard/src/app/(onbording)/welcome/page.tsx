@@ -1,15 +1,15 @@
+import { ArrowRightIcon } from "lucide-react";
+import Image, { type StaticImageData } from "next/image";
 import Link from "next/link";
-
 import type { z } from "zod";
 
 import managerIcon from "@/assets/icons/director.png";
 import football from "@/assets/icons/football.png";
 import routes from "@/constants/routes";
-import { RoleSchema } from "@/schemas/roles";
-import { cn, getSearchParams } from "@/utils";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@repo/ui/components/ui/card";
-import { ArrowRightIcon } from "lucide-react";
-import Image, { type StaticImageData } from "next/image";
+import { RoleSchema } from "@/schemas";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@repo/ui/components/card";
+import { cn } from "@repo/ui/utils";
+import { getSearchParams } from "@repo/utils";
 
 type WelcomeProps = {
 	searchParams: Record<string, string>;
@@ -129,7 +129,7 @@ export default function Welcome({ searchParams }: WelcomeProps) {
 		<section className="bg-white dark:bg-slate-800 mt-4 p-4 rounded-xl shadow-md mx-2">
 			{imageHeader && (
 				<div className="flex w-full items-center justify-center p-4 gap-2">
-					<Card className="p-2 rounded-2xl border-none shadow-none">
+					<Card className="p-2 rounded-2xl border-none shadow-none bg-transparent">
 						<Image src={imageHeader} alt={`icon of ${role}`} width={120} height={120} className="mx-auto" />
 					</Card>
 				</div>
@@ -139,7 +139,7 @@ export default function Welcome({ searchParams }: WelcomeProps) {
 				<p className="italic text-2xl font-heading">{title}</p>
 				<p className="italic">{description}</p>
 				<p className="">{disclaimer}</p>
-				<p className="mt-4 text-blue-950 text-2xl">
+				<p className="mt-4 text-blue-950 text-2xl dark:text-teal-500">
 					{role ? "Vamos começar?" : <span className="text-base">Volte atrás e escola uma opção para começar.</span>}
 				</p>
 			</div>

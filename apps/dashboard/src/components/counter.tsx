@@ -3,7 +3,7 @@
 import { useInView, useMotionValue, useSpring } from "framer-motion";
 import { useEffect, useRef } from "react";
 
-import { cn } from "@/utils";
+import { cn } from "@repo/ui/utils";
 
 interface CounterProps {
 	/**

@@ -4,9 +4,9 @@ import authConfig from "./auth.config";
 import { PrismaAdapter } from "@auth/prisma-adapter";
 import { db } from "@repo/db";
 import { UserRole } from "@repo/db";
-import { isTwoFactorAutenticationEnabled } from "@repo/db/auth";
-import { getRolesByUser } from "@repo/db/team";
-import { findUserbyEmail } from "@repo/db/user"
+import { isTwoFactorAutenticationEnabled } from "../../packages/database/src/actions/auth";
+import { getRolesByUser } from "../../packages/database/src/actions/team";
+import { findUserbyEmail } from "../../packages/database/src/actions/user"
 
 export const {
   handlers: { GET, POST },

@@ -2,7 +2,7 @@
 
 import { type ReactNode, useEffect, useState } from "react";
 
-import { cn } from "@/utils";
+import { cn } from "@repo/ui/utils";
 
 interface DonutChartProps {
 	size: number;

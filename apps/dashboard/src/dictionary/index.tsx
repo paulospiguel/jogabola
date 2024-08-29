@@ -1,10 +1,10 @@
-import { tabKeysSchema } from "../../../../packages/shared/schemas/manager";
+import { tabKeysSchema } from "@/schemas";
 
 const tabsValues = tabKeysSchema.Values;
 
 export const dictionary = {
 	managerTabs: {
-		[tabsValues.home]: "Home",
+		[tabsValues.fields]: "Fields",
 		[tabsValues.teams]: "Teams",
 		[tabsValues.players]: "Players",
 		[tabsValues.schedule]: "Schedules",

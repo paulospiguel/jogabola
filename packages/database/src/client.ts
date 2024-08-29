@@ -1,11 +1,14 @@
 import { PrismaClient } from "@prisma/client";
 
 declare global {
-  var prisma: PrismaClient | undefined;
+  var db: PrismaClient | undefined;
 }
 
-export const db = global.prisma || new PrismaClient();
+// biome-ignore lint/suspicious/noRedeclare: <explanation>
+export const db: PrismaClient = global.db || new PrismaClient();
 
-if (process.env.NODE_ENV !== "production") global.prisma = prisma;
+if (process.env.NODE_ENV !== "production") {
+  global.db = db;
+}
 
 export * from "@prisma/client";

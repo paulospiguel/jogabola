@@ -11,16 +11,16 @@ import { checkTeamName, createNewTeam } from "@/actions/team";
 import { LanguageToggle } from "@/components/language-toggle";
 import { PreviewLogo } from "@/components/preview-logo";
 import { useCreateTeam } from "@/hooks/use-create-team";
-import { type teamSchema, teamShapeEnum } from "@/schemas/create-team";
-import { Button } from "@repo/ui/components/ui/button";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@repo/ui/components/ui/card";
-import { Form, FormField, FormItem, FormMessage } from "@repo/ui/components/ui/form";
-import { Input } from "@repo/ui/components/ui/input";
-import { Label } from "@repo/ui/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@repo/ui/components/ui/select";
-import { NameSlider, Slider } from "@repo/ui/components/ui/slider";
-import { Textarea } from "@repo/ui/components/ui/textarea";
-import { useToast } from "@repo/ui/components/ui/use-toast";
+import { type teamSchema, teamShapeEnum } from "@/schemas";
+import { Button } from "@repo/ui/components/button";
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@repo/ui/components/card";
+import { Form, FormField, FormItem, FormMessage } from "@repo/ui/components/form";
+import { Input } from "@repo/ui/components/input";
+import { Label } from "@repo/ui/components/label";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@repo/ui/components/select";
+import { NameSlider, Slider } from "@repo/ui/components/slider";
+import { Textarea } from "@repo/ui/components/textarea";
+import { useToast } from "@repo/ui/components/use-toast";
 
 const TEAM_TYPES = teamShapeEnum.options;
 

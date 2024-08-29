@@ -38,6 +38,9 @@
         "$TURBO_DEFAULT$",
         ".env"
       ],
+      "dependsOn": [
+        "^db:generate"
+      ],
       "persistent": true,
       "cache": false
     },

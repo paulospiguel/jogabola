@@ -1,101 +1,61 @@
-"use server";
+import { db } from "@repo/db";
+import { generateOTP } from "@repo/utils";
 
-import { prisma } from "@/lib/db";
-import mail from "@/lib/mail";
-import { findUserbyEmail } from "@/services";
-import { findTwoFactorAuthTokeByToken } from "@/services/auth";
-import type { User } from "@prisma/client";
-
-/**
- * This method sends an e-mail to the user with the 6 digits code to login
- * when Two Factor Authentication is enabled
- * @param {User} user
- * @param {string} token
- * @returns
- */
-/**
- * This method sends an e-mail to the user with the 6 digits code to login
- * when Two Factor Authentication is enabled
- * @param {User} user - The user to send the verification email to.
- * @param {string} token - The verification token.
- * @returns {Promise<{ error?: string, success?: string }>} An object indicating the result of the operation.
- */
-export const sendTwoFactorAuthEmail = async (user: User, token: string) => {
-	const { RESEND_EMAIL_FROM, OTP_SUBJECT } = process.env;
-
-	if (!RESEND_EMAIL_FROM || !OTP_SUBJECT) {
-		return {
-			error: "Configuração de ambiente insuficiente para envio de e-mail.",
-		};
-	}
-
-	const { email } = user;
-	try {
-		const { error } = await mail.emails.send({
-			from: RESEND_EMAIL_FROM,
-			to: email,
-			subject: OTP_SUBJECT,
-			html: `<p>Sue código OTP: ${token}</p>`,
-		});
-
-		if (error)
-			return {
-				error,
-			};
-		return {
-			success: "E-mail enviado com sucesso",
-		};
-	} catch (error) {
-		return { error };
-	}
+export const findTwoFactorAuthTokenByEmail = async (email: string) => {
+	const token = await db.twoFactorToken.findUnique({
+		where: {
+			email,
+		},
+	});
+	return token;
 };
 
-/**
- * This method updates the user's record with the date and time the
- * Two Factor Authentication was verified
- * @param token
- * @returns
- */
-export const verifyTwoFactorToken = async (token: string) => {
-	const existingToken = await findTwoFactorAuthTokeByToken(token);
-	if (!existingToken) {
-		return {
-			error: "Código de verificação não encontrado",
-		};
+export const isTwoFactorAutenticationEnabled = async (id: string) => {
+	const user = await db.user.findUnique({
+		where: {
+			id,
+		},
+		select: {
+			isTwoFactorAuthEnabled: true,
+		},
+	});
+	return user?.isTwoFactorAuthEnabled;
+};
+
+export const deleteTwoFactorAuthTokenById = async (id: string) => {
+	const token = await db.twoFactorToken.delete({
+		where: {
+			id,
+		},
+	});
+	return token;
+};
+
+export const findTwoFactorAuthTokeByToken = async (token: string) => {
+	const existingToken = await db.twoFactorToken.findUnique({
+		where: {
+			token,
+		},
+	});
+	return existingToken;
+};
+
+export const createTwoFactorAuthToken = async (email: string) => {
+	const token = generateOTP(6);
+	const expires = new Date(new Date().getTime() + 2 * 60 * 60 * 1000); //two hours
+
+	const existingToken = await findTwoFactorAuthTokenByEmail(email);
+	if (existingToken) {
+		await deleteTwoFactorAuthTokenById(existingToken.id);
 	}
 
-	const isTokenExpired = new Date(existingToken.expires) < new Date();
-	if (isTokenExpired) {
-		return {
-			error: "Código de verificação expirado",
-		};
-	}
+	const twoFactorAuthToken = await db.twoFactorToken.create({
+		data: {
+			email,
+			token,
+			expires,
+		},
+	});
 
-	const user = await findUserbyEmail(existingToken.email);
-	if (!user) {
-		return {
-			error: "Usuário não encontrado",
-		};
-	}
-
-	try {
-		await prisma.user.update({
-			where: { id: user.id },
-			data: {
-				twoFactorAuthVerified: new Date(),
-			},
-		});
-
-		await prisma.twoFactorToken.delete({
-			where: {
-				id: existingToken.id,
-			},
-		});
-
-		return {
-			success: "Autênticação de dois fatores verificada",
-		};
-	} catch (err) {
-		return { error: "Erro ao verificar o  código de autenticação de 2 fatores" };
-	}
+	return twoFactorAuthToken;
 };

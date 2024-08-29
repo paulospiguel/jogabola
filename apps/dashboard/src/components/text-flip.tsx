@@ -2,16 +2,14 @@
 
 import { useEffect, useMemo, useRef } from "react";
 
-export default function TextFlip() {
-	const words = useMemo(() => ["a", "b", "c"], []);
-
+export default function TextFlip({ title, messages = [] }: { title?: string; messages: string[] }) {
 	const tallestRef = useRef<HTMLDivElement>(null);
 
 	useEffect(() => {
 		if (tallestRef.current) {
 			let maxHeight = 0;
 
-			for (const word of words) {
+			for (const word of messages) {
 				const span = document.createElement("span");
 				span.className = "absolute opacity-0";
 				span.textContent = word;
@@ -26,13 +24,13 @@ export default function TextFlip() {
 
 			tallestRef.current.style.height = `${maxHeight}px`;
 		}
-	}, [words]);
+	}, [messages]);
 
 	return (
 		<div className="box-content flex gap-4 text-sm font-semibold border rounded-xl p-2">
-			<p className="">News: </p>
+			<p className="">{title}</p>
 			<div ref={tallestRef} className="flex flex-col overflow-hidden text-blue-400">
-				{words.map((word, index) => (
+				{messages.map((word, index) => (
 					<span key={index} className="animate-flip-words">
 						{word}
 					</span>

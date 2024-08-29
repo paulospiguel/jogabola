@@ -1,4 +1,4 @@
-import { Card, CardContent, CardHeader } from "@repo/ui/components/ui/card";
+import { Card, CardContent, CardHeader } from "@repo/ui/components/card";
 import { Clock, CloudSun } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";

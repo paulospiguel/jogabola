@@ -5,7 +5,23 @@ import * as React from "react";
 
 import { cn } from "@repo/ui/utils";
 
-const Tabs = TabsPrimitive.Root;
+const Tabs = React.forwardRef<
+	React.ElementRef<typeof TabsPrimitive.Root>,
+	React.ComponentPropsWithoutRef<typeof TabsPrimitive.Root> & { httpState?: boolean }
+>(({ httpState, ...props }, ref) => {
+	
+	const handleOnValueChange = (value: string) => {
+		window.location.hash = value;
+	}
+
+	if (window.location.hash.includes("#")){
+		props.defaultValue = window.location.hash.replace("#", "");
+	}
+
+	return (
+		<TabsPrimitive.Root onValueChange={handleOnValueChange} ref={ref} {...props} />
+	)
+});
 
 const TabsList = React.forwardRef<
 	React.ElementRef<typeof TabsPrimitive.List>,
@@ -20,6 +36,7 @@ const TabsList = React.forwardRef<
 		{...props}
 	/>
 ));
+
 TabsList.displayName = TabsPrimitive.List.displayName;
 
 const TabsTrigger = React.forwardRef<
@@ -35,6 +52,7 @@ const TabsTrigger = React.forwardRef<
 		{...props}
 	/>
 ));
+
 TabsTrigger.displayName = TabsPrimitive.Trigger.displayName;
 
 const TabsContent = React.forwardRef<

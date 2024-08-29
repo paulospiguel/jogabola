@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 
-import { cn } from "@/utils";
+import { cn } from "@repo/ui/utils";
 
 interface BarChartProps {
 	/**

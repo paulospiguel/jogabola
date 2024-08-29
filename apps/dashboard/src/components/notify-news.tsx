@@ -1,5 +1,5 @@
 import TextFlip from "./text-flip";
 
 export default function NotifyNews() {
-	return <TextFlip />;
+	return <TextFlip messages={["aaaaaa", "bbbb", "ccccc"]} />;
 }

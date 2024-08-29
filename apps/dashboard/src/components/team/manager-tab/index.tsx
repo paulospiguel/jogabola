@@ -1,12 +1,12 @@
 import { Calendar, LineChart, PlayerIcon, StadiumIcon, TeamIcon } from "@/components/icons";
 import { auth } from "@auth";
-import { Tabs, TabsList, TabsTrigger } from "@repo/ui/components/ui/tabs";
+import { Tabs, TabsList, TabsTrigger } from "@repo/ui/components/tabs";
 
 import { dictionary } from "@/dictionary";
+import { tabKeysSchema } from "@/schemas";
 import type { z } from "zod";
-import { tabKeysSchema } from "../../../../../../packages/shared/schemas/manager";
 
-import HomeTabContent from "./home.tab";
+import FieldsTabContent from "./fileds.tab";
 import PlayersTabContent from "./players.tab";
 import CalendarTabContent from "./schedule.tab";
 import StatisticsTabContent from "./statistics.tab";
@@ -22,16 +22,16 @@ type TabsItems = {
 
 const tabs: TabsItems[] = [
 	{
-		label: tabsValues.home,
-		icon: <StadiumIcon className="size-6 group-data-[state=active]:fill-white" />,
-	},
-	{
 		label: tabsValues.teams,
 		icon: <TeamIcon className="size-6 group-data-[state=active]:fill-white" />,
 	},
 	{
 		label: tabsValues.players,
 		icon: <PlayerIcon className="size-5 group-data-[state=active]:fill-white" />,
+	},
+	{
+		label: tabsValues.fields,
+		icon: <StadiumIcon className="size-6 group-data-[state=active]:fill-white" />,
 	},
 	{
 		label: tabsValues.schedule,
@@ -48,7 +48,7 @@ export async function ManagerTabs() {
 
 	return (
 		<>
-			<Tabs defaultValue={tabsValues.home} className="w-full">
+			<Tabs httpState defaultValue={tabsValues.statistics} className="w-full">
 				<TabsList className="mx-auto w-full bg-primary h-14">
 					{tabs.map((tab) => (
 						<TabsTrigger key={tab.label} value={tab.label} className="group">
@@ -59,8 +59,8 @@ export async function ManagerTabs() {
 						</TabsTrigger>
 					))}
 				</TabsList>
-				<HomeTabContent tabKey={tabsValues.home} session={session} />
 				<TeamsTabContent tabKey={tabsValues.teams} session={session} />
+				<FieldsTabContent tabKey={tabsValues.fields} session={session} />
 				<PlayersTabContent tabKey={tabsValues.players} session={session} />
 				<CalendarTabContent tabKey={tabsValues.schedule} session={session} />
 				<StatisticsTabContent tabKey={tabsValues.statistics} session={session} />

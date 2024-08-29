@@ -1,7 +1,7 @@
 "use client";
 
-import { cn } from "@/utils";
-import { Button } from "@repo/ui/components/ui/button";
+import { Button } from "@repo/ui/components/button";
+import { cn } from "@repo/ui/utils";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 
@@ -29,8 +29,8 @@ export default function Cookies() {
 		<div
 			className={cn(
 				"fixed z-50 bottom-0 shadow-inner left-0 right-0 bg-card px-4 py-6 sm:px-6 sm:py-8",
+				"transition-all duration-300 ease-in-out bg-white dark:bg-gray-800",
 				{ "opacity-0 invisible z-0": !show },
-				"transition-all duration-300 ease-in-out",
 			)}
 		>
 			<div className="mx-auto max-w-3xl">

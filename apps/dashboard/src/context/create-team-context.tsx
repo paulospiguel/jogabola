@@ -3,8 +3,8 @@
 import { useSession } from "next-auth/react";
 import { createContext, useContext, useEffect, useState } from "react";
 
-import { teamSchema } from "@/schemas/create-team";
-import type { Steps } from "@/types/multi-steps";
+import { teamSchema } from "@/schemas";
+import type { Steps } from "@/types";
 import type { z } from "zod";
 
 import { checkUserTeam } from "@/actions/team";

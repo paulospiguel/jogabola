@@ -1,12 +1,18 @@
 "use client";
 
 import { Languages } from "lucide-react";
+import { useState } from "react";
 import type { z } from "zod";
 
-import { languagesEnum } from "@/schemas/create-team";
-import { cn } from "@/utils";
-import { Button } from "@repo/ui/components/ui/button";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@repo/ui/components/ui/dropdown-menu";
+import { languagesEnum } from "@/schemas";
+import { Button } from "@repo/ui/components/button";
+import {
+	DropdownMenu,
+	DropdownMenuContent,
+	DropdownMenuItem,
+	DropdownMenuTrigger,
+} from "@repo/ui/components/dropdown-menu";
+import { cn } from "@repo/ui/utils";
 
 type LanguageTypes = z.infer<typeof languagesEnum>;
 const LANGUAGES = languagesEnum.options;
@@ -23,9 +29,18 @@ type LanguageToggleProps = {
 };
 
 export function LanguageToggle({ onChangeValue, value }: LanguageToggleProps) {
+	const [languageFlag, setLanguageFlag] = useState(() => {
+		const lang = localStorage?.getItem("jogabola:language");
+		if (lang) {
+			return lang;
+		}
+		return languagesEnum.Enum.en;
+	});
+
 	const setLanguage = (lang: LanguageTypes) => {
 		document.documentElement.lang = lang;
-		localStorage.setItem("language", lang);
+		localStorage?.setItem("jogabola:language", lang);
+		setLanguageFlag(lang);
 		onChangeValue?.(lang);
 	};
 
@@ -33,10 +48,10 @@ export function LanguageToggle({ onChangeValue, value }: LanguageToggleProps) {
 		<DropdownMenu>
 			<DropdownMenuTrigger asChild>
 				<Button type="button" variant="outline" size="icon" className="rounded-full">
-					{value ? (
-						ICONS_LAGS[value as LanguageTypes]
+					{languageFlag ? (
+						ICONS_LAGS[languageFlag as LanguageTypes]
 					) : (
-						<Languages className="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
+						<Languages className="h-[1.2rem] w-[1.2rem] transition-all" />
 					)}
 					<span className="sr-only">Toggle language</span>
 				</Button>

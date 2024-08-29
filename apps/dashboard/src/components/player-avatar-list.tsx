@@ -1,4 +1,4 @@
-import { cn } from "@/utils";
+import { cn } from "@repo/ui/utils";
 
 const fetchData = async () => {
 	const data = [

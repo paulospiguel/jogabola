@@ -5,10 +5,9 @@ import fieldSoccer from "@/assets/images/soccer-field.svg";
 import soccerPlayer from "@/assets/images/soccer-player.svg";
 import trophy from "@/assets/images/trophy.svg";
 import { useProfile } from "@/context/profile-context";
-import { RoleValues } from "@/schemas/roles";
-import { cn } from "@/utils";
-import { Avatar, AvatarFallback, AvatarImage } from "@repo/ui/components/ui/avatar";
-import { Button } from "@repo/ui/components/ui/button";
+import { RoleValues } from "@/schemas";
+import { Avatar, AvatarFallback, AvatarImage } from "@repo/ui/components/avatar";
+import { Button } from "@repo/ui/components/button";
 import {
 	DropdownMenu,
 	DropdownMenuContent,
@@ -16,7 +15,8 @@ import {
 	DropdownMenuLabel,
 	DropdownMenuSeparator,
 	DropdownMenuTrigger,
-} from "@repo/ui/components/ui/dropdown-menu";
+} from "@repo/ui/components/dropdown-menu";
+import { cn } from "@repo/ui/utils";
 import { CircleUser, LogOut, UserCircleIcon } from "lucide-react";
 import type { Session } from "next-auth";
 import Image from "next/image";
@@ -35,11 +35,13 @@ const LoginBadge = ({ user }: Props) => {
 	const isManager = userRoles?.includes(RoleValues.MANAGER);
 	const isPlayer = userRoles?.includes(RoleValues.PLAYER);
 
+	console.log(userRoles);
+
 	const baseUri = isManager ? "/manager" : isPlayer ? "/player" : "";
 
 	const avatarImage = user?.image || "";
 
-	const borderColor = avatarImage ? "bg-yellow-500 dark:bg-yellow-600" : "";
+	const borderColor = avatarImage ? "bg-green-500 dark:bg-green-600" : "";
 	const clipPolygon =
 		avatarImage && user?.id
 			? "[clip-path:polygon(50%_0,_100%_25%,_100%_75%,_50%_100%,_0_75%,_0_25%)] rounded-none"
@@ -51,8 +53,8 @@ const LoginBadge = ({ user }: Props) => {
 				<DropdownMenu>
 					<DropdownMenuTrigger asChild>
 						<Avatar className={cn(borderColor, clipPolygon, "p-0.5 flex items-center justify-center")}>
-							<AvatarImage src={avatarImage} className={cn(clipPolygon, "rounded-none")} />
-							<AvatarFallback className="bg-green-500">
+							<AvatarImage src={avatarImage} className={cn(clipPolygon, "rounded-none shadow-none")} />
+							<AvatarFallback className={borderColor}>
 								<CircleUser className="h-7 w-7" />
 							</AvatarFallback>
 						</Avatar>
@@ -94,7 +96,7 @@ const LoginBadge = ({ user }: Props) => {
 						)}
 						<DropdownMenuSeparator />
 						<DropdownMenuItem>
-							<Link href="/settings/auth" className="flex flex-1 justify-start items-center">
+							<Link href="/profile/settings" className="flex flex-1 justify-start items-center">
 								<LineMdCogLoop className="mr-2" />
 								Perfil
 							</Link>

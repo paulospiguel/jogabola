@@ -1,75 +1,74 @@
 "use client";
 
 import Image from "next/image";
-import { Suspense, useMemo, useState } from "react";
-import type { z } from "zod";
-
-import { GlobeIcon, LockIcon, TrendingDown, TrendingUp, Eye as ViewIcon } from "@/components/icons";
-import type { teamSchema } from "@/schemas/create-team";
-import { Badge } from "@repo/ui/components/ui/badge";
-import { Button } from "@repo/ui/components/ui/button";
-import { Input } from "@repo/ui/components/ui/input";
-import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from "@repo/ui/components/ui/table";
-
+import { Suspense, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { getPlayersByUserId } from "@/actions/player";
 import noLogo from "@/assets/images/no-logo.png";
-import { ScrollArea } from "@repo/ui/components/ui/scroll-area";
-import { useRouter } from "next/navigation";
-import PlayerList from "../player-list";
+import type { Player } from "@/types";
+import { Input } from "@repo/ui/components/input";
+import { ScrollArea } from "@repo/ui/components/scroll-area";
+import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from "@repo/ui/components/table";
+import TeamsList from "../player-avatar-list";
+import { AddNewPlayer } from "./add-new-player";
 
-type Team = z.infer<typeof teamSchema>;
+export default function PlayersTable() {
+	const [editingPlayer, setEditingPlayer] = useState<Player | null>(null);
+	const [newPlayer, setNewPlayer] = useState<Player | null>(null);
 
-type TeamTableProps = {
-	teams: Team[];
-};
+	const { data: players } = useQuery({
+    queryKey: ["player"],
+    queryFn: () =>getPlayersByUserId("")
+  });
 
-export default function PlayersTable({ teams }: TeamTableProps) {
-	const [editingTeam, setEditingTeam] = useState<Team | null>(null);
-	const [newTeamName, setNewTeamName] = useState("");
 
-	const { push } = useRouter();
+	//const { push } = useRouter();
 
-	const handleEditTeam = (team: Team) => {
-		setEditingTeam(team);
-		setNewTeamName(team.name);
-	};
-	const handleSaveTeam = () => {
-		//setTeams(teams.map((team) => (team.id === editingTeam.id ? { ...team, name: newTeamName } : team)))
-		setEditingTeam(null);
-	};
-	const handleDeleteTeam = (teamId: string | undefined) => {
-		//setTeams(teams.filter((team) => team.id !== teamId))
-	};
-	const handleTogglePublic = (teamId: string | undefined) => {
-		// setTeams(teams.map((team) => (team.id === teamId ? { ...team, isPublic: !team.isPublic } : team)))
-	};
+	// const handleEditTeam = (team: Player) => {
+	// 	setEditingTeam(team);
+	// 	setNewTeamName(team.Player);
+	// };
+	// const handleSaveTeam = () => {
+	// 	//setTeams(teams.map((team) => (team.id === editingTeam.id ? { ...team, name: newTeamName } : team)))
+	// 	setEditingTeam(null);
+	// };
+	// const handleDeleteTeam = (teamId: string | undefined) => {
+	// 	//setTeams(teams.filter((team) => team.id !== teamId))
+	// };
+	// const handleTogglePublic = (teamId: string | undefined) => {
+	// 	// setTeams(teams.map((team) => (team.id === teamId ? { ...team, isPublic: !team.isPublic } : team)))
+	// };
 
-	const handleInvite = (teamId: string) => {
-		//push(`/manager/teams/${teamId}/invite`);
-	};
+	// const handleInvite = (teamId: string) => {
+	// 	//push(`/manager/teams/${teamId}/invite`);
+	// };
 
-	const handleOpenTeam = (teamId: string) => {
-		push(`/manager/teams/${teamId}`);
-	};
+	// const handleOpenTeam = (teamId: string) => {
+	// 	push(`/manager/teams/${teamId}`);
+	// };
 
-	const calculatePerformance = useMemo(() => {
-		return {
-			average: 6.5,
-			increase: true,
-		};
-	}, []);
+	// const calculatePerformance = useMemo(() => {
+	// 	return {
+	// 		average: 6.5,
+	// 		increase: true,
+	// 	};
+	// }, []);
 
 	return (
 		<div className="overflow-x-auto">
 			<Table>
-				<TableCaption className="px-4">
-					<Input placeholder="Pesquisar equipa" />
+				<TableCaption className="px-4 space-y-4">
+					<div className="flex justify-end">
+						<AddNewPlayer />
+					</div>
+					<Input placeholder="Pesquisar jogador" />
 				</TableCaption>
 				<ScrollArea className="h-[65vh] w-full">
 					<TableHeader>
 						<TableRow>
-							<TableHead className="w-[100px]">Emblema</TableHead>
-							<TableHead>Nome</TableHead>
-							<TableHead className="">Atletas</TableHead>
+							<TableHead className="w-[100px]">Avatar</TableHead>
+							<TableHead>Name</TableHead>
+							<TableHead className="">Teams</TableHead>
 							<TableHead className="">V/E/D</TableHead>
 							<TableHead className="">Competições</TableHead>
 							<TableHead>Performace</TableHead>
@@ -78,39 +77,42 @@ export default function PlayersTable({ teams }: TeamTableProps) {
 						</TableRow>
 					</TableHeader>
 					<TableBody>
-						{teams.map((team) => (
-							<TableRow key={team?.id}>
+						{players?.map((player) => (
+							<TableRow key={player?.id}>
 								<TableCell className="font-medium">
 									<div className="flex items-center">
 										<div className="relative inline-block shrink-0 rounded-2xl me-3">
 											<Image
-												src={team?.logo || noLogo}
-												className="w-[50px] h-[50px] inline-block shrink-0 rounded-2xl"
-												alt=""
+												width={42}
+												height={42}
+												src={player?.image || noLogo}
+												className="inline-block shrink-0 rounded-2xl"
+												alt={`Avatar of ${player.name}`}
 											/>
 										</div>
 									</div>
 								</TableCell>
-								<TableCell>{team.name}</TableCell>
+								<TableCell>{player.name}</TableCell>
 								<TableCell className="">
 									<Suspense fallback={<div>0</div>}>
-										<PlayerList size="sm" />
+										<TeamsList size="sm" />
 									</Suspense>
 								</TableCell>
 								<TableCell className="">{"0/0/0"}</TableCell>
 								<TableCell className="">{0}</TableCell>
 								<TableCell>
 									<span className="text-center align-baseline inline-flex px-2 py-1 mr-auto items-center font-semibold text-base/none bg-success-light rounded-lg">
-										{calculatePerformance.increase ? (
+										{/* {calculatePerformance.increase ? (
 											<TrendingUp className="w-5 h-5 mr-1 text-success" />
 										) : (
 											<TrendingDown className="w-5 h-5 mr-1 text-error" />
 										)}
 										<span>{calculatePerformance.average}%</span>
+									*/}
 									</span>
 								</TableCell>
 								<TableCell className="">
-									{team.isPublic ? (
+									{/* {team.isPublic ? (
 										<Badge>
 											<GlobeIcon className="w-4 h-4 mr-1" />
 											Public
@@ -120,16 +122,12 @@ export default function PlayersTable({ teams }: TeamTableProps) {
 											<LockIcon className="w-4 h-4 mr-1" />
 											Private
 										</Badge>
-									)}
+									)} */}
 								</TableCell>
 								<TableCell className="text-right flex items-center justify-end">
-									{/* <Button onClick={() => handleEditTeam(team)} variant="ghost" className="p-2">
-										<SendIcon className="w-5 h-5 text-neutral-400" />
-									</Button> */}
-
-									<Button onClick={() => handleOpenTeam(String(team.slug))} variant="ghost" className="p-2">
+									{/* <Button onClick={() => handleOpenTeam(String(team.slug))} variant="ghost" className="p-2">
 										<ViewIcon className="w-5 h-5 text-neutral-400" />
-									</Button>
+									</Button> */}
 								</TableCell>
 							</TableRow>
 						))}

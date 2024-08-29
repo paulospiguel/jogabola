@@ -1,6 +1,6 @@
 "use client";
 
-import { Calendar } from "@repo/ui/components/ui/calendar";
+import { Calendar } from "@repo/ui/components/calendar";
 import React from "react";
 
 export default function GameSchedule() {

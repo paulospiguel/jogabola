@@ -19,5 +19,6 @@
 
   .dark {
     --background: hsl(20 14.3% 4.1%);
+    --text-primary-foreground: hsl(0 0% 100%);
   }
 }

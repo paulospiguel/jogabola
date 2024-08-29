@@ -1,7 +1,6 @@
 import { getTeamsByUserId } from "@/actions/team";
 import { useCreateTeamContext } from "@/context/create-team-context";
 import { teamStore } from "@/store/team.store";
-import { useSuspenseQuery } from "@tanstack/react-query";
 
 export const useCreateTeam = () => {
 	const context = useCreateTeamContext();
@@ -9,15 +8,14 @@ export const useCreateTeam = () => {
 	return { ...context };
 };
 
-export const useGetTeams = (userId: string) => {
-	const responseTeam = useSuspenseQuery({
-		queryKey: ["teams", userId],
-		queryFn: () => getTeamsByUserId(userId),
-	});
+export const useGetTeams = async (userId: string) => {
+	const [responseTeam] = await getTeamsByUserId({ userId });
+
+	console.log({ responseTeam });
 
 	teamStore.setState((state) => ({
 		...state,
-		createdTeamCounter: responseTeam.data.length,
+		createdTeamCounter: responseTeam?.length || 0,
 	}));
 
 	return responseTeam;

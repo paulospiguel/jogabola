@@ -6,7 +6,7 @@ import redBullLogo from "@/assets/partners/redbull.svg";
 import InfiniteHorizontalScroll from "@/components/infinite-scroll";
 import Footer from "@/components/site/footer";
 import Navbar from "@/components/site/navbar";
-import { RoleValues } from "@/schemas/roles";
+import { RoleValues } from "@/schemas";
 import { ArrowRight } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";

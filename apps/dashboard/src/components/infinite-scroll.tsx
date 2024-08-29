@@ -1,4 +1,4 @@
-import { cn } from "@/utils";
+import { cn } from "@repo/ui/utils";
 import Image from "next/image";
 
 type InfiniteHorizontalScrollProps = {

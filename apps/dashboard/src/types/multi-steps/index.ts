@@ -5,7 +5,7 @@ export enum Steps {
 }
 
 export type StepForm<T = unknown> = {
-  label: string;
   component: T
+  label: string;
   fields: string[];
 };

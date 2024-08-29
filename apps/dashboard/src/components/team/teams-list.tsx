@@ -1,12 +1,17 @@
-"use client";
-
-import { useGetTeams } from "@/hooks/use-create-team";
+import { getTeamsByUserId } from "@/actions/team";
 import TeamsTable from "./teams-table";
+import { useAction } from "next-safe-action/hooks";
 
-export const TeamsList = ({ userId }: { userId: string | undefined }) => {
-	if (!userId) return null;
+export const TeamsList = async ({ userId }: { userId: string | undefined }) => {
+  if (!userId) return null;
 
-	const { data } = useGetTeams(userId);
+  const { result: teams } = useAction(getTeamsByUserId, {
+		executeOnMount: {
+			input: {
+				userId
+			}
+		},
+	});
 
-	return <TeamsTable teams={data} />;
+  return <TeamsTable teams={teams?.data!} />;
 };

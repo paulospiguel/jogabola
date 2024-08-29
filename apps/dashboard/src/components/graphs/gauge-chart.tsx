@@ -3,7 +3,7 @@
 import { type ReactNode, useEffect, useState } from "react";
 
 import { textColorSchema } from "@/constants/colors";
-import { cn } from "@/utils";
+import { cn } from "@repo/ui/utils";
 
 type TextColor = keyof typeof textColorSchema;
 

@@ -1,4 +1,4 @@
-import { cn } from "@/utils";
+import { cn } from "@repo/ui/utils";
 
 export function StatCard({ children, className }: { children: React.ReactNode; className?: string }) {
 	return (

@@ -1,4 +1,5 @@
-import { cn } from "@/utils";
+import { cn } from "@repo/ui/utils";
+import Link from "next/link";
 import { Logo } from "../logo";
 
 type FooterProps = {
@@ -7,7 +8,7 @@ type FooterProps = {
 
 export default function Footer({ className }: FooterProps) {
 	return (
-		<footer className={cn("bg-teal-50", className)}>
+		<footer className={cn("bg-teal-50 dark:bg-gray-800", className)}>
 			<div className="relative mx-auto px-4 py-6 sm:px-6 lg:px-8 lg:pt-24">
 				<div className="absolute end-4 top-4 sm:end-6 sm:top-6 lg:end-8 lg:top-8">
 					<a
@@ -17,6 +18,7 @@ export default function Footer({ className }: FooterProps) {
 						<span className="sr-only">Back to top</span>
 
 						<svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+							<title>button up</title>
 							<path
 								fillRule="evenodd"
 								d="M14.707 12.707a1 1 0 01-1.414 0L10 9.414l-3.293 3.293a1 1 0 01-1.414-1.414l4-4a1 1 0 011.414 0l4 4a1 1 0 010 1.414z"
@@ -39,31 +41,31 @@ export default function Footer({ className }: FooterProps) {
 
 					<ul className="mt-12 flex flex-wrap justify-center gap-6 md:gap-8 lg:mt-0 lg:justify-end lg:gap-12">
 						<li>
-							<a className="text-gray-700 transition hover:text-gray-700/75" href="#">
+							<Link className="text-gray-700 dark:text-teal-700 transition hover:text-gray-700/75" href="#">
 								{" "}
 								About{" "}
-							</a>
+							</Link>
 						</li>
 
 						<li>
-							<a className="text-gray-700 transition hover:text-gray-700/75" href="#">
+							<Link className="text-gray-700 dark:text-teal-700 transition hover:text-gray-700/75" href="#">
 								{" "}
 								Services{" "}
-							</a>
+							</Link>
 						</li>
 
 						<li>
-							<a className="text-gray-700 transition hover:text-gray-700/75" href="#">
+							<Link className="text-gray-700 dark:text-teal-700 transition hover:text-gray-700/75" href="#">
 								{" "}
 								Projects{" "}
-							</a>
+							</Link>
 						</li>
 
 						<li>
-							<a className="text-gray-700 transition hover:text-gray-700/75" href="#">
+							<Link className="text-gray-700 dark:text-teal-700 transition hover:text-gray-700/75" href="#">
 								{" "}
 								Blog{" "}
-							</a>
+							</Link>
 						</li>
 					</ul>
 				</div>
@@ -73,7 +75,12 @@ export default function Footer({ className }: FooterProps) {
 
 					<ul className="mt-4 flex justify-center gap-6 sm:mt-0 sm:justify-start">
 						<li>
-							<a href="#" rel="noreferrer" target="_blank" className="text-teal-700 transition hover:text-teal-700/75">
+							<Link
+								href="#"
+								rel="noreferrer"
+								target="_blank"
+								className="text-teal-700 transition hover:text-teal-700/75"
+							>
 								<span className="sr-only">Facebook</span>
 								<svg className="h-6 w-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
 									<path
@@ -82,11 +89,16 @@ export default function Footer({ className }: FooterProps) {
 										clipRule="evenodd"
 									/>
 								</svg>
-							</a>
+							</Link>
 						</li>
 
 						<li>
-							<a href="#" rel="noreferrer" target="_blank" className="text-teal-700 transition hover:text-teal-700/75">
+							<Link
+								href="#"
+								rel="noreferrer"
+								target="_blank"
+								className="text-teal-700 transition hover:text-teal-700/75"
+							>
 								<span className="sr-only">Instagram</span>
 								<svg className="h-6 w-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
 									<path
@@ -95,20 +107,30 @@ export default function Footer({ className }: FooterProps) {
 										clipRule="evenodd"
 									/>
 								</svg>
-							</a>
+							</Link>
 						</li>
 
 						<li>
-							<a href="#" rel="noreferrer" target="_blank" className="text-teal-700 transition hover:text-teal-700/75">
+							<Link
+								href="#"
+								rel="noreferrer"
+								target="_blank"
+								className="text-teal-700 transition hover:text-teal-700/75"
+							>
 								<span className="sr-only">Twitter</span>
 								<svg className="h-6 w-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
 									<path d="M8.29 20.251c7.547 0 11.675-6.253 11.675-11.675 0-.178 0-.355-.012-.53A8.348 8.348 0 0022 5.92a8.19 8.19 0 01-2.357.646 4.118 4.118 0 001.804-2.27 8.224 8.224 0 01-2.605.996 4.107 4.107 0 00-6.993 3.743 11.65 11.65 0 01-8.457-4.287 4.106 4.106 0 001.27 5.477A4.072 4.072 0 012.8 9.713v.052a4.105 4.105 0 003.292 4.022 4.095 4.095 0 01-1.853.07 4.108 4.108 0 003.834 2.85A8.233 8.233 0 012 18.407a11.616 11.616 0 006.29 1.84" />
 								</svg>
-							</a>
+							</Link>
 						</li>
 
 						<li>
-							<a href="#" rel="noreferrer" target="_blank" className="text-teal-700 transition hover:text-teal-700/75">
+							<Link
+								href="#"
+								rel="noreferrer"
+								target="_blank"
+								className="text-teal-700 transition hover:text-teal-700/75"
+							>
 								<span className="sr-only">GitHub</span>
 								<svg className="h-6 w-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
 									<path
@@ -117,11 +139,16 @@ export default function Footer({ className }: FooterProps) {
 										clipRule="evenodd"
 									/>
 								</svg>
-							</a>
+							</Link>
 						</li>
 
 						<li>
-							<a href="#" rel="noreferrer" target="_blank" className="text-teal-700 transition hover:text-teal-700/75">
+							<Link
+								href="#"
+								rel="noreferrer"
+								target="_blank"
+								className="text-teal-700 transition hover:text-teal-700/75"
+							>
 								<span className="sr-only">Dribbble</span>
 								<svg className="h-6 w-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
 									<path
@@ -130,7 +157,7 @@ export default function Footer({ className }: FooterProps) {
 										clipRule="evenodd"
 									/>
 								</svg>
-							</a>
+							</Link>
 						</li>
 					</ul>
 				</div>

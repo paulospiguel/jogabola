@@ -1,6 +1,6 @@
 "use client";
 
-import { cn } from "@/utils";
+import { cn } from "@repo/ui/utils";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 

@@ -1,9 +1,9 @@
 "use client";
 
 import { useCreateTeam } from "@/hooks/use-create-team";
-import { type StepForm, Steps } from "@/types/multi-steps";
-import { cn } from "@/utils";
-import { FormField } from "@repo/ui/components/ui/form";
+import { type StepForm, Steps } from "@/types";
+import { FormField } from "@repo/ui/components/form";
+import { cn } from "@repo/ui/utils";
 import { motion } from "framer-motion";
 import { useEffect, useMemo } from "react";
 import { FormProvider } from "react-hook-form";
@@ -11,7 +11,7 @@ import { Step1 } from "./step1";
 import { Step2 } from "./step2";
 import { Step3 } from "./step3";
 
-export const onboardingForm: Record<Steps, StepForm> = {
+export const onboardingForm = {
 	[Steps.Step1]: {
 		label: "Defina o nome da equipa",
 		component: Step1,
@@ -27,7 +27,7 @@ export const onboardingForm: Record<Steps, StepForm> = {
 		component: Step3,
 		fields: [],
 	},
-};
+} satisfies Record<Steps, StepForm>;
 
 export function MultiStepCreateTeamConfig({ isAddTeam = false }) {
 	const { goToStep, currentStep, methods } = useCreateTeam();
@@ -41,8 +41,9 @@ export function MultiStepCreateTeamConfig({ isAddTeam = false }) {
 	}, [storagedCurrentStep, currentStep, goToStep]);
 
 	const Step = useMemo(() => {
-		document.title = document.title.concat(` - ${onboardingForm[currentStep]?.label}`);
-		return onboardingForm[currentStep]?.component;
+		const step = onboardingForm[currentStep];
+		document.title = document.title.concat(` - ${step?.label}`);
+		return step?.component;
 	}, [currentStep]);
 
 	if (!Step) {
@@ -50,7 +51,8 @@ export function MultiStepCreateTeamConfig({ isAddTeam = false }) {
 	}
 
 	const MotionStep = useMemo(() => {
-		let RenderStep = motion(Step);
+		// biome-ignore lint/suspicious/noExplicitAny: <explanation>
+		let RenderStep = motion<any>(Step);
 
 		if (isAddTeam) {
 			RenderStep = motion(Step3);
