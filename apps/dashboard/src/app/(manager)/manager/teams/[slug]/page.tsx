@@ -1,7 +1,4 @@
-import { getTeamInfoBySlug }amInfoBySactionsoteamns teamns/team";
-import NavTabsnentsnav-componentsnav-tabs
-import { Home } from "lucide-react";
-import Image from "next/image";
+import { getTeamInfo } from "@/actions";
 
 type TeamManagerPageProps = {
 	params: {
@@ -10,7 +7,7 @@ type TeamManagerPageProps = {
 };
 
 const fetchTeamInfo = async (teamId: string) => {
-	const response = await getTeamInfoBySlug(teamId);
+	const response = await getTeamInfo(teamId);
 	return response;
 };
 

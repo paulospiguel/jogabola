@@ -1,9 +1,9 @@
 import { db } from "@repo/db";
 
 import { type Role, RoleSchema, teamSchema } from "@/schemas";
-import { TeamCreateInput } from "@/types";
-import { authActionClient } from "../safe-action";
+import type { TeamCreateInput } from "@/types";
 import { z } from "zod";
+import { authActionClient } from "../safe-action";
 
 export const getTeamInfo = async (teamId?: string, slug?: string) => {
   const team = await db.team.findFirst({
@@ -22,16 +22,8 @@ export const getTeamInfo = async (teamId?: string, slug?: string) => {
 };
 
 export const createTeam = async (userId: string, values: TeamCreateInput) => {
-  const {
-    language,
-    name,
-    bio,
-    logo,
-    radiusPlayerAge,
-    radiusPlayerArea,
-    teamShape,
-    location,
-  } = teamSchema.parse(values);
+  const { language, name, bio, logo, radiusPlayerAge, radiusPlayerArea, teamShape, location } =
+    teamSchema.parse(values);
   const ownerId = userId;
 
   if (!ownerId) {
