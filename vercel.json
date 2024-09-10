@@ -3,5 +3,9 @@
   "public": false,
   "github": {
     "enabled": false
+  },
+  "settings": {
+    "buildCommand": "turbo run build",
+    "installCommand": "pnpm install"
   }
 }
