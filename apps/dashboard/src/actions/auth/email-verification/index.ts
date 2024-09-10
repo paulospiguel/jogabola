@@ -1,49 +1,94 @@
-import { db } from "@repo/db";
-import { v4 as uuid } from "uuid";
+"use server";
 
-export const findVerificationTokenbyEmail = async (email: string) => {
-	const token = await db.verificationToken.findUnique({
-		where: {
-			email,
-		},
-	});
-	return token;
-};
-
-export const findVerificationTokenbyToken = async (token: string) => {
-	const existingToken = await db.verificationToken.findUnique({
-		where: {
-			token,
-		},
-	});
-	return existingToken;
-};
-
-export const deleteVerificationTokenbyId = async (id: string) => {
-	const token = await db.verificationToken.delete({
-		where: {
-			id,
-		},
-	});
-	return token;
-};
-
-export const createVerificationToken = async (email: string) => {
-	const token = uuid();
-	const expires = new Date(new Date().getTime() + 2 * 60 * 60 * 1000); //two hours
-
-	const existingToken = await findVerificationTokenbyEmail(email);
-	if (existingToken) {
-		await deleteVerificationTokenbyId(existingToken.id);
+import { prisma } from "@/lib/db";
+import mail from "@/lib/mail";
+import { findUserbyEmail } from "@/services";
+import { findVerificationTokenbyToken } from "@/services/auth";
+import type { User } from "@prisma/client";
+/**
+ * This method uses Resend to send an email to the user to verify
+ * the ownership of the email by the user.
+ *
+ * @param {User} user - The user to send the verification email to.
+ * @param {string} token - The verification token.
+ * @returns {Promise<{ error?: string, success?: string }>} An object indicating the result of the operation.
+ */
+export const sendAccountVerificationEmail = async (user: User, token: string) => {
+	const { RESEND_EMAIL_FROM, VERIFICATION_SUBJECT, NEXT_PUBLIC_URL, VERIFICATION_URL } = process.env;
+	if (!RESEND_EMAIL_FROM || !VERIFICATION_SUBJECT || !NEXT_PUBLIC_URL || !VERIFICATION_URL) {
+		return {
+			error: "Configuração de ambiente insuficiente para envio de e-mail.",
+		};
 	}
 
-	const verificationToken = await db.verificationToken.create({
-		data: {
-			email,
-			token,
-			expires,
-		},
-	});
+	const verificationUrl = `${NEXT_PUBLIC_URL}${VERIFICATION_URL}?token=${token}`;
+	const { email } = user;
+	try {
+		const { data, error } = await mail.emails.send({
+			from: RESEND_EMAIL_FROM,
+			to: email,
+			subject: VERIFICATION_SUBJECT,
+			html: `<p>Clique <a href="${verificationUrl}">aqui</a> para confirmar seu e-mail.</p>`,
+		});
 
-	return verificationToken;
+		if (error)
+			return {
+				error,
+			};
+		return {
+			success: "E-mail enviado com sucesso",
+		};
+	} catch (error) {
+		return { error };
+	}
+};
+
+/**
+ * This method updates the user's record with the date the email was verified.
+ *
+ * @param {string} token - The verification token.
+ * @returns {Promise<{ error?: string, success?: string }>} An object indicating the result of the operation.
+ */
+export const verifyToken = async (token: string) => {
+	const existingToken = await findVerificationTokenbyToken(token);
+	if (!existingToken) {
+		return {
+			error: "Código de verificação não encontrado",
+		};
+	}
+
+	const isTokenExpired = new Date(existingToken.expires) < new Date();
+	if (isTokenExpired) {
+		return {
+			error: "Código de verificação expirado",
+		};
+	}
+
+	const user = await findUserbyEmail(existingToken.email);
+	if (!user) {
+		return {
+			error: "Usuário não encontrado",
+		};
+	}
+
+	try {
+		await prisma.user.update({
+			where: { id: user.id },
+			data: {
+				emailVerified: new Date(),
+			},
+		});
+
+		await prisma.verificationToken.delete({
+			where: {
+				id: existingToken.id,
+			},
+		});
+
+		return {
+			success: "E-mail verificado",
+		};
+	} catch (err) {
+		return { error: "Erro ao atualizar verificação de e-mail" };
+	}
 };

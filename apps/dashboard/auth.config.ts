@@ -4,7 +4,7 @@ import Facebook from "next-auth/providers/facebook";
 import Google from "next-auth/providers/google";
 import { UserNotFound } from "./src/lib/auth";
 
-import { findUserbyEmail } from "../../packages/database/src/actions/user";
+import { findUserbyEmail } from "@/actions/user";
 
 import { CredentialsSchema } from "@/schemas";
 

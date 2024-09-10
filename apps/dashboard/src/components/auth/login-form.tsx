@@ -22,7 +22,7 @@ import {
 } from "@repo/ui/components/form";
 import { InputOTP, InputOTPGroup, InputOTPSlot } from "@repo/ui/components/input-otp";
 import { Separator } from "@repo/ui/components/separator";
-import { LoaderIcon } from "lucide-react";
+import { LoaderIcon } from "@repo/ui/icons";
 import { useSearchParams } from "next/navigation";
 import AuthFormMessage from "./auth-form-message";
 import SocialLogin from "./social-login";

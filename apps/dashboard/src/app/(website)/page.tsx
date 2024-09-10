@@ -7,7 +7,7 @@ import InfiniteHorizontalScroll from "@/components/infinite-scroll";
 import Footer from "@/components/site/footer";
 import Navbar from "@/components/site/navbar";
 import { RoleValues } from "@/schemas";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight } from "@repo/ui/icons";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -27,8 +27,8 @@ export default function Home() {
 								<Link
 									href={`/welcome?role=${RoleValues.PLAYER}`}
 									className="ml-2
-									 text-foreground dark:text-white rounded-full px-2 group
-									 transition-all ease-linear duration-150 py-2 flex gap-2 items-center"
+								 text-foreground dark:text-white rounded-full px-2 group
+								 transition-all ease-linear duration-150 py-2 flex gap-2 items-center"
 									target="_blank"
 									rel="noreferrer"
 								>
@@ -45,8 +45,8 @@ export default function Home() {
 								<Link
 									href={`/welcome?role=${RoleValues.MANAGER}`}
 									className="flex hover:font-bold
-									 text-foreground dark:text-white rounded-full px-2 group
-									 transition-all ease-linear duration-150 py-2 gap-2 items-center"
+								 text-foreground dark:text-white rounded-full px-2 group
+								 transition-all ease-linear duration-150 py-2 gap-2 items-center"
 								>
 									<Image
 										className="group-hover:animate-bounce"

@@ -1,5 +1,5 @@
 "use client";
-import { getRolesByUserId } from "@/actions/team";
+import { getRolesByUser } from "@/actions/team";
 import type { Role } from "@/schemas";
 import { useSession } from "next-auth/react";
 import { type PropsWithChildren, createContext, useContext, useEffect, useMemo, useState } from "react";
@@ -21,7 +21,7 @@ export const ProfileProvider: React.FC<PropsWithChildren> = ({ children }) => {
 
 	useEffect(() => {
 		if (userId) {
-			getRolesByUserId(userId).then((roles) => {
+			getRolesByUser(userId).then((roles) => {
 				setRoles(roles);
 			});
 		}

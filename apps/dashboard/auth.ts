@@ -1,12 +1,12 @@
 import NextAuth from "next-auth";
 import authConfig from "./auth.config";
 
+import { isTwoFactorAutenticationEnabled } from "@/actions/auth";
+import { getRolesByUser } from "@/actions/team";
+import { findUserbyEmail } from "@/actions/user"
 import { PrismaAdapter } from "@auth/prisma-adapter";
 import { db } from "@repo/db";
 import { UserRole } from "@repo/db";
-import { isTwoFactorAutenticationEnabled } from "../../packages/database/src/actions/auth";
-import { getRolesByUser } from "../../packages/database/src/actions/team";
-import { findUserbyEmail } from "../../packages/database/src/actions/user"
 
 export const {
   handlers: { GET, POST },

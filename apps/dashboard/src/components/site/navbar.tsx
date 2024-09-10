@@ -11,13 +11,13 @@ export default async function Navbar() {
 	const session = await auth();
 
 	return (
-		<header className="w-full flex flex-col gap-2 md:flex-row items-center justify-center space-y-2">
+		<header className="w-full flex flex-col gap-4 md:flex-row items-center justify-center space-y-2">
 			<div className="flex items-center gap-2 text-lg font-semibold md:text-base">
 				<Logo isAnimate size="small" />
 			</div>
 			<nav className="hidden flex-col gap-6 text-lg w-full font-medium md:flex md:flex-row md:items-center md:gap-5 md:text-sm lg:gap-6">
 				<Link href="#" className="text-foreground transition-colors hover:text-foreground">
-					HOME
+					Home
 				</Link>
 				<Link href="#" className="text-muted-foreground transition-colors hover:text-foreground">
 					Preços
@@ -39,12 +39,12 @@ export default async function Navbar() {
 						<Input
 							type="search"
 							placeholder="Pesquisa..."
-							className="pl-8 sm:w-[300px] md:w-[200px] lg:w-[300px] rounded-full"
+							className="pl-8 sm:w-[300px] md:w-[200px] lg:w-full rounded-full"
 						/>
 					</div>
 				</form>
 				<div className="flex gap-2">
-					<LoginBadge user={session?.user} />
+					{/* <LoginBadge user={session?.user} /> */}
 					<ThemeToggle />
 					<LanguageToggle />
 				</div>

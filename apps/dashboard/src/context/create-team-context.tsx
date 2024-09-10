@@ -7,7 +7,7 @@ import { teamSchema } from "@/schemas";
 import type { Steps } from "@/types";
 import type { z } from "zod";
 
-import { checkUserTeam } from "@/actions/team";
+import { checkUserHasTeam } from "@/actions/team";
 import { useRouter } from "next/navigation";
 
 import { type UseFormPersistReturn, useFormPersist } from "@/hooks/use-form-persist";
@@ -55,9 +55,8 @@ export const CreateTeamProvider: React.FC<{ children: React.ReactNode }> = ({ ch
 	const [error, setError] = useState("");
 	const [success, setSuccess] = useState("");
 	const [teamData, setData] = useState<z.infer<typeof teamSchema>>(initialData);
-	const [counterTeam, setCounterTeam] = useState(0);
 	const { data: session } = useSession();
-	const keyStorage = `jogabolaCreateTeam:${session?.user.id}`;
+	const keyStorage = `jogabolaCreateTeam:${session?.user?.id}`;
 
 	const { createdTeamCounter } = useStore(teamStore);
 
@@ -85,8 +84,8 @@ export const CreateTeamProvider: React.FC<{ children: React.ReactNode }> = ({ ch
 	};
 
 	useEffect(() => {
-		if (session?.user.id) {
-			checkUserTeam(session?.user.id).then((hasTeam) => {
+		if (session?.user?.id) {
+			checkUserHasTeam(session?.user?.id).then((hasTeam) => {
 				if (hasTeam) {
 					push("/manager/teams");
 					return;
