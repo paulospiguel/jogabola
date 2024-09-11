@@ -5,7 +5,7 @@ import React from "react";
 import { useFormContext } from "react-hook-form";
 import type { z } from "zod";
 
-import { checkTeamName } from "@/actions/team";
+import { checkTeamByName } from "@/actions/team";
 import managerIcon from "@/assets/icons/director.png";
 import type { teamSchema } from "@/schemas";
 import { Steps } from "@/types";
@@ -21,9 +21,9 @@ export const Step1 = React.forwardRef<HTMLDivElement>((props, ref) => {
 	};
 
 	const handelCheckTeamName = async (teamName: string) => {
-		const response = await checkTeamName(teamName);
-		if (response.error) {
-			form.setError("name", { message: response.error });
+		const response = await checkTeamByName({ teamName });
+		if (response?.validationErrors) {
+			form.setError("name", { message: response.serverError });
 		} else {
 			form.clearErrors("name");
 		}

@@ -1,3 +1,4 @@
+import { auth } from "@auth";
 import { db } from "@repo/db";
 
 export const findUserbyEmail = async (email: string) => {
@@ -28,4 +29,16 @@ export const findUserbyId = async (userId: string) => {
 export const getUsers = async () => {
 	const users = await db.user.findMany();
 	return users;
+};
+
+export const getUser = async () => {
+	const session = await auth();
+
+	const user = await db.user.findUnique({
+		where: {
+			id: session?.user?.id,
+		},
+	});
+
+	return user;
 };

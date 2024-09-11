@@ -1,4 +1,4 @@
-import { ArrowRightIcon } from "lucide-react";
+import { ArrowRightIcon } from "@repo/ui/icons";
 import Image, { type StaticImageData } from "next/image";
 import Link from "next/link";
 import type { z } from "zod";

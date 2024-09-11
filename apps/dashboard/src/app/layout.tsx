@@ -1,17 +1,15 @@
 import "@repo/ui/globals.css";
 import "@/styles/globals.css";
 
+import { auth } from "@auth";
+import { cn } from "@repo/ui/utils";
 import type { Metadata } from "next";
 import { SessionProvider } from "next-auth/react";
-
-import Cookies from "@/components/cookies";
-import { ProfileProvider } from "@/context/profile-context";
-import QueryClientProvider from "@/providers/query-client-provider";
-import { ThemeProvider } from "@/providers/theme-provider";
-import { auth } from "@auth";
-import { Toaster } from "@repo/ui/components/toaster";
-import { cn } from "@repo/ui/utils";
 import { fonts } from "../styles/fonts";
+import { Providers } from "./providers";
+
+export const preferredRegion = ["fra1", "sfo1", "iad1"];
+export const maxDuration = 60;
 
 export const metadata: Metadata = {
 	title: "JogaBola",
@@ -20,25 +18,18 @@ export const metadata: Metadata = {
 
 export default async function RootLayout({
 	children,
+	params: { locale },
 }: Readonly<{
 	children: React.ReactNode;
+	params: { locale: string };
 }>) {
 	const session = await auth();
-
 	return (
-		<html lang="pt">
+		<html lang={locale}>
 			<body className={cn("antialiased", fonts)} suppressHydrationWarning>
-				<QueryClientProvider>
-					<SessionProvider session={session}>
-						<ProfileProvider>
-							<ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
-								{children}
-								<Cookies />
-								<Toaster />
-							</ThemeProvider>
-						</ProfileProvider>
-					</SessionProvider>
-				</QueryClientProvider>
+				<SessionProvider session={session}>
+					<Providers locale={locale}>{children}</Providers>
+				</SessionProvider>
 			</body>
 		</html>
 	);

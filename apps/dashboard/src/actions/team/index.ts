@@ -1,7 +1,7 @@
 import { db } from "@repo/db";
 
 import { type Role, RoleSchema, teamSchema } from "@/schemas";
-import type { TeamCreateInput } from "@/types";
+import { redirect } from "next/navigation";
 import { z } from "zod";
 import { authActionClient } from "../safe-action";
 
@@ -21,54 +21,77 @@ export const getTeamInfo = async (teamId?: string, slug?: string) => {
   return team;
 };
 
-export const createTeam = async (userId: string, values: TeamCreateInput) => {
-  const { language, name, bio, logo, radiusPlayerAge, radiusPlayerArea, teamShape, location } =
-    teamSchema.parse(values);
-  const ownerId = userId;
+export const createTeamAction = authActionClient
+  .metadata({
+    name: "create-team",
+    // track: {
+    //   event: LogEvents.CreateTeam.name,
+    //   channel: LogEvents.CreateTeam.channel,
+    // },
+  })
+  .schema(
+    z.object({
+      userId: z.string().optional(),
+      values: teamSchema,
+      redirectTo: z.string().optional(),
+    })
+  ).action(async ({ ctx, parsedInput: { userId, values, redirectTo } }) => {
+    const { language, name, bio, logo, radiusPlayerAge, radiusPlayerArea, teamShape, location } =
+      teamSchema.parse(values);
 
-  if (!ownerId) {
-    throw new Error("User not found");
-  }
 
-  const role = RoleSchema.Enum.MANAGER;
+    const ownerId = userId || ctx.user?.id;
 
-  const team = await db.team.create({
-    data: {
-      name,
-      language,
-      bio,
-      logo,
-      location,
-      maxRadiusPlayerAge: radiusPlayerAge[1],
-      minRadiusPlayerAge: radiusPlayerAge[0],
-      maxRadiusPlayerArea: radiusPlayerArea[1],
-      minRadiusPlayerArea: radiusPlayerArea[0],
-      teamShape,
-      slug: name.toLowerCase().replace(" ", "-"),
-      user: {
-        connect: {
-          id: ownerId,
+    if (!ownerId) {
+      throw new Error("User not found");
+    }
+
+    const role = RoleSchema.Enum.MANAGER;
+
+    const team = await db.team.create({
+      data: {
+        name,
+        language,
+        bio,
+        logo,
+        location,
+        maxRadiusPlayerAge: radiusPlayerAge[1],
+        minRadiusPlayerAge: radiusPlayerAge[0],
+        maxRadiusPlayerArea: radiusPlayerArea[1],
+        minRadiusPlayerArea: radiusPlayerArea[0],
+        teamShape,
+        slug: name.toLowerCase().replace(" ", "-"),
+        user: {
+          connect: {
+            id: ownerId,
+          },
+        },
+        teamMember: {
+          create: {
+            userId: ownerId,
+            role: "MANAGER",
+          },
         },
       },
-      teamMember: {
-        create: {
-          userId: ownerId,
-          role: "MANAGER",
-        },
-      },
-    },
-  });
-  return team;
-};
+    });
 
-export const checkTeamByName = async (teamName: string) => {
-  const team = await db.team.findFirst({
-    where: {
-      name: teamName,
-    },
+    if (redirectTo) {
+      redirect(redirectTo);
+    }
+
+    return team;
   });
-  return team;
-};
+
+export const checkTeamByName = authActionClient
+  .schema(z.object({ teamName: z.string() }))
+  .action(async ({ parsedInput: { teamName } }) => {
+    const team = await db.team.findFirst({
+      where: {
+        name: teamName,
+      },
+    });
+    return team;
+  });
 
 export const checkUserHasTeam = async (userId: string) => {
   try {

@@ -10,10 +10,12 @@ export default auth((req) => {
 	const { isPublicRoute, isProtectedRoute, isApiRoute, isAuthRoute } = createRouteMatchers(configRoutes, req);
 	const { nextUrl } = req;
 	const isLoggedIn = !!req.auth;
+
 	console.log(`Public: ${isPublicRoute}`);
 	console.log(`Protected: ${isProtectedRoute}`);
 	console.log(`Api: ${isApiRoute}`);
 	console.log(`Auth: ${isAuthRoute}`);
+
 	if (isProtectedRoute && !isLoggedIn) {
 		const redirectUrl = `/auth/login?redirect=${nextUrl}`;
 		return NextResponse.redirect(new URL(redirectUrl, req.url));

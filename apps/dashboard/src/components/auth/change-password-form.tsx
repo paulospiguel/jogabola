@@ -10,7 +10,7 @@ import { NewPasswordSchema } from "@/schemas/auth";
 import { Button } from "@repo/ui/components/button";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@repo/ui/components/form";
 import { Input } from "@repo/ui/components/input";
-import { LoaderIcon } from "lucide-react";
+import { LoaderIcon } from "@repo/ui/icons";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import AuthCard from "./auth-card";

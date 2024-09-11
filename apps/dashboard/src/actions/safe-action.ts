@@ -1,8 +1,10 @@
-import { z } from "zod";
 import {
   DEFAULT_SERVER_ERROR_MESSAGE,
   createSafeActionClient,
 } from "next-safe-action";
+import { z } from "zod";
+import { getUser } from "./user";
+// import { headers } from "next/headers";
 
 export const actionClient = createSafeActionClient({
   handleReturnedServerError(e) {
@@ -49,51 +51,55 @@ export const authActionClient = actionClientWithMeta.use(
 
     return result;
   }
-);
-// .use(async ({ next, metadata }) => {
-//   const ip = headers().get("x-forwarded-for");
+).use(async ({ next, metadata }) => {
+  // const ip = headers().get("x-forwarded-for");
 
-//   const { success, remaining } = await ratelimit.limit(
-//     `${ip}-${metadata.name}`,
-//   );
+  // const { success, remaining } = await ratelimit.limit(
+  //   `${ip}-${metadata.name}`,
+  // );
 
-//   if (!success) {
-//     throw new Error("Too many requests");
-//   }
+  // if (!success) {
+  //   throw new Error("Too many requests");
+  // }
 
-//   return next({
-//     ctx: {
-//       ratelimit: {
-//         remaining,
-//       },
-//     },
-//   });
-// })
-// .use(async ({ next, metadata }) => {
-//   const user = await getUser();
-//   const supabase = createClient();
+  return next({
+    //   ctx: {
+    //     ratelimit: {
+    //       remaining,
+    //     },
+    //   },
+  });
+}).use(async ({ next, metadata }) => {
+  const user = await getUser();
+  // const supabase = createClient();
 
-//   if (!user?.data) {
-//     throw new Error("Unauthorized");
-//   }
+  if (!user) {
+    throw new Error("Unauthorized");
+  }
 
-//   if (metadata) {
-//     const analytics = await setupAnalytics({
-//       userId: user.data.id,
-//       fullName: user.data.full_name,
-//     });
+  if (metadata) {
+    // const analytics = await setupAnalytics({
+    //   userId: user.id,
+    //   fullName: user.name,
+    // });
 
-//     if (metadata.track) {
-//       analytics.track(metadata.track);
-//     }
-//   }
+    // if (metadata.track) {
+    //   analytics.track(metadata.track);
+    // }
+  }
 
-//   return Sentry.withServerActionInstrumentation(metadata.name, async () => {
-//     return next({
-//       ctx: {
-//         supabase,
-//         user: user.data,
-//       },
-//     });
-//   });
-// });
+  return next({
+    ctx: {
+      user,
+    },
+  });
+
+  // return Sentry.withServerActionInstrumentation(metadata.name, async () => {
+  //   return next({
+  //     ctx: {
+  //       supabase,
+  //       user: user.data,
+  //     },
+  //   });
+  // });
+});

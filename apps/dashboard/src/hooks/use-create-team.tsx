@@ -9,13 +9,13 @@ export const useCreateTeam = () => {
 };
 
 export const useGetTeams = async (userId: string) => {
-	const [responseTeam] = await getTeamsByUserId({ userId });
+	const responseTeam = await getTeamsByUserId({ userId });
 
 	console.log({ responseTeam });
 
 	teamStore.setState((state) => ({
 		...state,
-		createdTeamCounter: responseTeam?.length || 0,
+		createdTeamCounter: responseTeam?.data?.length || 0,
 	}));
 
 	return responseTeam;

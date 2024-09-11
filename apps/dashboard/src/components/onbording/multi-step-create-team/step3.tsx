@@ -1,13 +1,11 @@
 "use client";
 
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { Trash } from "lucide-react";
-import { useRouter } from "next/navigation";
-import React from "react";
+import { useAction } from "next-safe-action/hooks";
+import React, { useMemo } from "react";
 import { type SubmitHandler, useFormContext } from "react-hook-form";
 import type { z } from "zod";
 
-import { checkTeamName, createNewTeam } from "@/actions/team";
+import { checkTeamByName, createTeamAction } from "@/actions/team";
 import { LanguageToggle } from "@/components/language-toggle";
 import { PreviewLogo } from "@/components/preview-logo";
 import { useCreateTeam } from "@/hooks/use-create-team";
@@ -21,6 +19,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { NameSlider, Slider } from "@repo/ui/components/slider";
 import { Textarea } from "@repo/ui/components/textarea";
 import { useToast } from "@repo/ui/components/use-toast";
+import { Trash } from "@repo/ui/icons";
 
 const TEAM_TYPES = teamShapeEnum.options;
 
@@ -34,8 +33,6 @@ export const Step3 = React.forwardRef<HTMLFormElement, Step3Props>(({ isMultiSte
 	const [logoImage, setLogoImage] = React.useState<string>();
 	const form = useFormContext<Team>();
 	const { toast } = useToast();
-	const { push } = useRouter();
-	const client = useQueryClient();
 	const { keyStorage } = useCreateTeam();
 
 	const handleLogoChange = (image: string) => {
@@ -53,19 +50,7 @@ export const Step3 = React.forwardRef<HTMLFormElement, Step3Props>(({ isMultiSte
 		return value?.reduce((acc, curr) => acc + curr, 0);
 	};
 
-	const createTeamMutation = useMutation({
-		mutationFn: createNewTeam,
-		onSuccess: (response, variable, context) => {
-			client.invalidateQueries({
-				queryKey: ["teams"],
-			});
-
-			if (isMultiStep) {
-				form.reset();
-				sessionStorage.removeItem(keyStorage);
-				push("/manager/teams");
-			}
-		},
+	const createTeam = useAction(createTeamAction, {
 		onError: () => {
 			console.log("ERROR:", "createTeam");
 			toast({
@@ -76,14 +61,24 @@ export const Step3 = React.forwardRef<HTMLFormElement, Step3Props>(({ isMultiSte
 		},
 	});
 
+	const redirectTo = useMemo(() => {
+		if (isMultiStep) {
+			form.reset();
+			sessionStorage.removeItem(keyStorage);
+			return "/manager/teams";
+		}
+
+		return "/teams/invite";
+	}, [isMultiStep, form, keyStorage]);
+
 	const onSubmit: SubmitHandler<z.infer<typeof teamSchema>> = async (values) => {
-		await createTeamMutation.mutateAsync(values);
+		createTeam.execute({ values, redirectTo: redirectTo });
 	};
 
 	const handelCheckTeamName = async (teamName: string) => {
-		const response = await checkTeamName(teamName);
-		if (response.error) {
-			form.setError("name", { message: response.error });
+		const response = await checkTeamByName({ teamName });
+		if (response?.validationErrors) {
+			form.setError("name", { message: "Team name already exists!" });
 		} else {
 			form.clearErrors("name");
 		}
