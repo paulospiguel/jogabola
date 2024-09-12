@@ -62,7 +62,7 @@ export const CreateTeamProvider: React.FC<{ children: React.ReactNode }> = ({ ch
 
 	const methods = useFormPersist<z.infer<typeof teamSchema>>({
 		storageKey: keyStorage,
-		storageLocation: sessionStorage,
+		storageLocation: window?.sessionStorage,
 		resolver: zodResolver(teamSchema),
 		includeDirtyFields: true,
 		defaultValues: teamData,

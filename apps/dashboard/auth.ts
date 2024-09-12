@@ -9,11 +9,11 @@ import { PrismaAdapter } from "@auth/prisma-adapter";
 import { UserRole } from "@repo/db";
 
 export const {
-  handlers: { GET, POST },
-  auth,
-  signIn,
-  signOut,
-  unstable_update: update,
+	handlers: { GET, POST },
+	auth,
+	signIn,
+	signOut,
+	unstable_update: update,
 } = NextAuth({
   ...authConfig,
   adapter: PrismaAdapter(dbClient),
