@@ -1,9 +1,9 @@
 import NextAuth from "next-auth";
 import authConfig from "./auth.config";
 
-import { isTwoFactorAutenticationEnabled } from "@/actions/auth";
 import { getRolesByUser } from "@/actions/team";
 import { findUserbyEmail } from "@/actions/user"
+import { isTwoFactorAutenticationEnabled } from "@/services/auth";
 import { PrismaAdapter } from "@auth/prisma-adapter";
 import { db } from "@repo/db";
 import { UserRole } from "@repo/db";
