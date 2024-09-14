@@ -39,6 +39,7 @@ export default function LoginForm() {
 	const searchParams = useSearchParams();
 	const callbackError =
 		searchParams.get("error") === "OAuthAccountNotLinked" ? "E-mail em uso com provedor diferente" : undefined;
+
 	const form = useForm<z.infer<typeof CredentialsSchema>>({
 		resolver: zodResolver(CredentialsSchema),
 		defaultValues: {
@@ -95,7 +96,7 @@ export default function LoginForm() {
 	return (
 		<AuthCard title="Conecte-se" description="Seja bem-vindo novamente">
 			<div className="space-y-4">
-				<Form {...form}>
+				{/* <Form {...form}>
 					<form onSubmit={form.handleSubmit(onSubmit)}>
 						{!showOTPForm && (
 							<div className="space-y-4">
@@ -195,7 +196,7 @@ export default function LoginForm() {
 							</div>
 						)}
 					</form>
-				</Form>
+				</Form> */}
 
 				{/* <LoginMobile /> */}
 

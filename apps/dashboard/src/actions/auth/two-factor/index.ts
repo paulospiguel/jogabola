@@ -1,10 +1,10 @@
 "use server";
 
-import { prisma } from "@/lib/db";
 import mail from "@/lib/mail";
 import { findUserbyEmail } from "@/services";
 import { findTwoFactorAuthTokeByToken } from "@/services/auth";
 import type { User } from "@prisma/client";
+import { db } from "@repo/db";
 
 /**
  * This method sends an e-mail to the user with the 6 digits code to login
@@ -79,14 +79,14 @@ export const verifyTwoFactorToken = async (token: string) => {
 	}
 
 	try {
-		await prisma.user.update({
+		await db.user.update({
 			where: { id: user.id },
 			data: {
 				twoFactorAuthVerified: new Date(),
 			},
 		});
 
-		await prisma.twoFactorToken.delete({
+		await db.twoFactorToken.delete({
 			where: {
 				id: existingToken.id,
 			},

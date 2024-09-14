@@ -26,7 +26,7 @@ export function Providers({ locale, children }: ProviderProps) {
 	return (
 		<QueryClientProvider>
 			<ProfileProvider>
-				<ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
+				<ThemeProvider attribute="class" defaultTheme="light" enableSystem disableTransitionOnChange>
 					{children}
 					<Cookies />
 					<Toaster />

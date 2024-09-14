@@ -1,10 +1,10 @@
 "use server";
 
-import { prisma } from "@/lib/db";
 import { RegisterSchema } from "@/schemas/auth";
 import { createVerificationToken } from "@/services/auth";
 import { UserRole } from "@prisma/client";
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
+import { db } from "@repo/db";
 import bcryptjs from "bcryptjs";
 import type { z } from "zod";
 import { sendAccountVerificationEmail } from "../email-verification";
@@ -26,7 +26,7 @@ export const register = async (user: z.infer<typeof RegisterSchema>) => {
   try {
     const { name, email, password } = user;
     const hashedPassword = await bcryptjs.hash(password, 10);
-    const createdUser = await prisma.user.create({
+    const createdUser = await db.user.create({
       data: {
         name,
         email,

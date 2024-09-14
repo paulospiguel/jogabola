@@ -1,10 +1,10 @@
 "use server";
 
 import { useCurrentUser } from "@/hooks/use-current-user";
-import { prisma } from "@/lib/db";
 import { UserSettingsSchema } from "@/schemas/auth";
 import { findUserbyEmail, findUserbyId } from "@/services";
 import { auth, update } from "@auth";
+import { db } from "@repo/db";
 import bcryptjs from "bcryptjs";
 import type { z } from "zod";
 
@@ -52,7 +52,7 @@ export const changeSettings = async (settings: z.infer<typeof UserSettingsSchema
   settings.email = undefined;
   // settings.isTwoFactorEnabled = undefined;
   try {
-    const updatedUser = await prisma.user.update({
+    const updatedUser = await db.user.update({
       data: {
         ...settings,
       },

@@ -10,7 +10,7 @@ export default {
     "./src/**/*.{ts,tsx}",
     "../../packages/ui/src/**/*.{ts,tsx}",
   ],
-  safelist: ["dark", "light"],
+  safelist: ["light", "dark"],
   theme: {
     container: {
       center: true,

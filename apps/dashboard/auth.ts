@@ -3,9 +3,9 @@ import authConfig from "./auth.config";
 
 import { getRolesByUser } from "@/actions/team";
 import { findUserbyEmail } from "@/actions/user"
+import { prisma as dbClient } from "@/lib/db";
 import { isTwoFactorAutenticationEnabled } from "@/services/auth";
 import { PrismaAdapter } from "@auth/prisma-adapter";
-import { db } from "@repo/db";
 import { UserRole } from "@repo/db";
 
 export const {
@@ -15,12 +15,14 @@ export const {
   signOut,
   unstable_update: update,
 } = NextAuth({
-  adapter: PrismaAdapter(db),
+  ...authConfig,
+  adapter: PrismaAdapter(dbClient),
   session: {
     strategy: "jwt",
   },
   pages: {
     signIn: "/auth/login",
+    error: '/auth/error',
   },
   callbacks: {
     async signIn({ user, email, account, profile }) {
@@ -49,7 +51,6 @@ export const {
           );
 
           const roles = await getRolesByUser(user?.id || "");
-          console.log({ roles });
           token.role = roles;
           token.isTwoFactorEnabled = isTwoFactorEnabled;
         } else {
@@ -75,5 +76,4 @@ export const {
       };
     },
   },
-  ...authConfig,
 });

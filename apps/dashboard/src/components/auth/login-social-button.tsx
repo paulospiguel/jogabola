@@ -6,7 +6,7 @@ import { useSearchParams } from "next/navigation";
 import type { ReactNode } from "react";
 
 type Props = {
-	provider: "google" | "facebook";
+	provider: "google" | "facebook" | "twitter" | "discord" | "telegram" | "apple";
 	callbackUrl?: string;
 	children?: ReactNode;
 };
@@ -16,14 +16,17 @@ const LoginSocialButton = ({ children, provider, callbackUrl }: Props) => {
 	const previousUrl = searchParams.get("redirect");
 	callbackUrl = previousUrl || callbackUrl;
 
+	const handleLogin = async () => {
+		await signIn(provider, { callbackUrl });
+	};
+
 	return (
-		// biome-ignore lint: TODO: Need to implement key stroke shortcuts
 		<Button
 			variant={"outline"}
 			size={"default"}
-			onClick={async () => {
-				signIn(provider, { redirect: true, callbackUrl });
-			}}
+			className="border-none p-2"
+			onClick={handleLogin}
+			aria-label={`Sign in with ${provider}`}
 		>
 			{children}
 		</Button>

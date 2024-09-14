@@ -1,6 +1,6 @@
 "use client";
 
-import { Languages } from "lucide-react";
+import { Languages } from "@repo/ui/icons";
 import { useState } from "react";
 import type { z } from "zod";
 
@@ -30,7 +30,8 @@ type LanguageToggleProps = {
 
 export function LanguageToggle({ onChangeValue, value }: LanguageToggleProps) {
 	const [languageFlag, setLanguageFlag] = useState(() => {
-		const lang = localStorage?.getItem("jogabola:language");
+		const lang =
+			typeof window !== "undefined" && window.localStorage ? window.localStorage.getItem("jogabola:language") : null;
 		if (lang) {
 			return lang;
 		}

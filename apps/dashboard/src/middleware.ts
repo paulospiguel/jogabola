@@ -8,7 +8,6 @@ export default async function middleware(req: NextRequest) {
 	const session = await auth();
 	const isLoggedIn = !!session;
 	const { nextUrl } = req;
-	console.log(session);
 
 	const { isProtectedRoute, isPublicRoute, isApiRoute, isAuthRoute } = createRouteMatchers(configRoutes, req);
 
@@ -17,14 +16,13 @@ export default async function middleware(req: NextRequest) {
 	console.log(`Api: ${isApiRoute}`);
 	console.log(`Auth: ${isAuthRoute}`);
 
-
 	if (isProtectedRoute && !isLoggedIn) {
-		const redirectUrl = `/auth/login?redirect=${nextUrl}`;
+		const url = new URL(nextUrl.toString());
+		const redirectUrl = `/auth/login?redirect=${decodeURIComponent(url.toString())}`;
 		return NextResponse.redirect(new URL(redirectUrl, req.url));
 	}
 
 	return NextResponse.next();
-
 }
 
 export const config = {

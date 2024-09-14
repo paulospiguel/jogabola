@@ -1,3 +1,5 @@
+"use client";
+
 import Image, { type StaticImageData } from "next/image";
 import type { ComponentProps, FC } from "react";
 
@@ -30,7 +32,7 @@ const imageColors = {
 	default: logo,
 };
 
-export const Logo: FC<LogoProps> = async ({ color, className, isAnimate, size = "medium" }) => {
+export const Logo: FC<LogoProps> = ({ color, className, isAnimate, size = "medium" }) => {
 	const logoSize = sizes[size];
 	let logotipo: StaticImageData;
 

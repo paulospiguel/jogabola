@@ -1,4 +1,4 @@
-import { AlertCircle, CheckCircle } from "lucide-react";
+import { AlertCircle, CheckCircle } from "@repo/ui/icons";
 
 import { Alert, AlertDescription, AlertTitle } from "@repo/ui/components/alert";
 

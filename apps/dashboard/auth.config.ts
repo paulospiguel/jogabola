@@ -1,14 +1,17 @@
 import type { NextAuthConfig } from "next-auth";
+import Apple from "next-auth/providers/apple";
 import Credentials from "next-auth/providers/credentials";
+import Discord from "next-auth/providers/discord";
 import Facebook from "next-auth/providers/facebook";
 import Google from "next-auth/providers/google";
-import { UserNotFound } from "./src/lib/auth";
+import Twitter from "next-auth/providers/twitter";
 
 import { findUserbyEmail } from "@/actions/user";
-
 import { CredentialsSchema } from "@/schemas";
+import { UserNotFound } from "./src/lib/auth";
 
 import bcryptjs from "bcryptjs";
+
 
 export default {
   providers: [
@@ -30,5 +33,8 @@ export default {
     }),
     Google,
     Facebook,
+    Discord,
+    Twitter,
+    Apple
   ],
 } satisfies NextAuthConfig;
