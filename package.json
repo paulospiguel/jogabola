@@ -14,6 +14,8 @@
     "db:studio": "turbo db:studio --filter=@repo/db",
     "db:push": "turbo db:push --filter=@repo/db",
     "db:generate": "turbo db:generate --filter=@repo/db",
+    "db:clear": "turbo db:clear --filter=@repo/db",
+    "db:migration": "turbo db:migration --filter=@repo/db",
     "start:website": "turbo start --filter=@repo/website",
     "dev:website": "turbo dev --filter=@repo/website ",
     "start:dashboard": "turbo start --filter=@repo/dashboard",

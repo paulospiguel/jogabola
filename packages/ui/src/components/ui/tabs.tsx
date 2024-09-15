@@ -14,7 +14,7 @@ const Tabs = React.forwardRef<
 		window.location.hash = value;
 	}
 
-	if (window.location.hash.includes("#")){
+	if (!!window && window.location.hash.includes("#")){
 		props.defaultValue = window.location.hash.replace("#", "");
 	}
 

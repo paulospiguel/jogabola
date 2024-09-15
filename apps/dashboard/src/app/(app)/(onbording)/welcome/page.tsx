@@ -10,6 +10,8 @@ import { RoleSchema } from "@/schemas";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@repo/ui/components/card";
 import { cn } from "@repo/ui/utils";
 import { getSearchParams } from "@repo/utils";
+import { getUser as getUserAction } from "@/actions";
+import { redirect } from "next/navigation";
 
 type WelcomeProps = {
 	searchParams: Record<string, string>;
@@ -77,15 +79,25 @@ const showInfo = (role: string) => {
 	};
 };
 
-export default function Welcome({ searchParams }: WelcomeProps) {
+export default async function Welcome({ searchParams }: WelcomeProps) {
 	const role = getSearchParams<z.infer<typeof RoleSchema>>(searchParams).get("role");
 	const { title, description, buttonText, disclaimer, url, imageHeader, buttonColor } = showInfo(role);
 
 	const hasNotInfo = !title || !description || !disclaimer || !buttonText || !url || !imageHeader || !buttonColor;
 
+	const { user: userInfo, roles } = (await getUserAction()) || {};
+
+	if (roles?.includes(Role.MANAGER) && userInfo) {
+		return redirect(routes.onbording.createTeam);
+	}
+
+	if (roles?.includes(Role.PLAYER) && userInfo) {
+		return redirect(routes.onbording.myJourney);
+	}
+
 	if (hasNotInfo) {
 		return (
-			<section className="mt-4 p-4 rounded-xl shadow-md mx-2">
+			<section className="mt-4 p-4 rounded-xl shadow-md mx-2 bg-white">
 				<div className="tracking-wide text-center space-y-2 text-blue-950">
 					<p className="italic text-2xl font-heading">Bem-vindo ao JogaBola</p>
 					<p className="italic">O melhor lugar para encontrar sua malta e jogar a bola.</p>
@@ -93,7 +105,7 @@ export default function Welcome({ searchParams }: WelcomeProps) {
 
 					<div className="grid grid-cols-2 place-content-center gap-4 p-4">
 						<Link href={routes.onbording.myJourney}>
-							<Card className="h-full w-full">
+							<Card className="h-full w-full bg-white hover:bg-slate-100">
 								<CardHeader>
 									<CardTitle>Encontre uma equipa</CardTitle>
 									<CardDescription>
@@ -107,7 +119,7 @@ export default function Welcome({ searchParams }: WelcomeProps) {
 						</Link>
 
 						<Link href={routes.onbording.createTeam}>
-							<Card className="h-full w-full">
+							<Card className="h-full w-full bg-white hover:bg-slate-100">
 								<CardHeader>
 									<CardTitle>Crie sua equipa</CardTitle>
 									<CardDescription>

@@ -55,7 +55,7 @@ export function MultiStepCreateTeamConfig({ isAddTeam = false }) {
 		let RenderStep = motion<any>(Step);
 
 		if (isAddTeam) {
-			RenderStep = motion(Step3);
+			RenderStep = motion<any>(Step3);
 		}
 
 		return (
@@ -108,7 +108,7 @@ export function MultiStepCreateTeamConfig({ isAddTeam = false }) {
 					)
 				}
 			/>
-			{MotionStep}
+			<section className="h-[85vh] overflow-auto pb-2">{MotionStep}</section>
 		</FormProvider>
 	);
 }

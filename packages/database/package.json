@@ -5,6 +5,7 @@
     "db:generate": "prisma generate",
     "db:push": "prisma db push --skip-generate",
     "db:clear": "prisma migrate reset -f",
+    "db:migration": "prisma migrate dev --create-only",
     "db:studio": "prisma studio"
   },
   "dependencies": {

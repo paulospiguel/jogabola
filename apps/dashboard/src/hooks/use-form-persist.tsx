@@ -55,6 +55,10 @@ export function useFormPersist<T extends FieldValues>({
 				});
 			}
 		}
+
+		return () => {
+			storageLocation.removeItem(storageKey);
+		};
 	}, [storageKey, storageLocation, includeDirtyFields, setValue, isSubmitted]);
 
 	// Persist values and dirty fields to storage

@@ -1,3 +1,3 @@
 import { z } from "zod";
 
-export const tabKeysSchema = z.enum(["teams", "fields", "players", "schedule", "statistics"]);
+export const tabKeysSchema = z.enum(["myteams", "fields", "players", "schedule", "statistics"]);

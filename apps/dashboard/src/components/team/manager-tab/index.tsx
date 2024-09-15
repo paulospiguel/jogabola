@@ -1,6 +1,6 @@
-import { Calendar, LineChart, PlayerIcon, StadiumIcon, TeamIcon } from "@/components/icons";
-import { auth } from "@auth";
+import { PlayerIcon, StadiumIcon, TeamIcon } from "@/components/icons";
 import { Tabs, TabsList, TabsTrigger } from "@repo/ui/components/tabs";
+import { auth } from "@auth";
 
 import { dictionary } from "@/dictionary";
 import { tabKeysSchema } from "@/schemas";
@@ -11,6 +11,7 @@ import PlayersTabContent from "./players.tab";
 import CalendarTabContent from "./schedule.tab";
 import StatisticsTabContent from "./statistics.tab";
 import TeamsTabContent from "./teams.tab";
+import { Calendar, LineChart } from "@repo/ui/icons";
 
 const tabsValues = tabKeysSchema.Values;
 const dicitionaryTabs = dictionary.managerTabs;
@@ -22,7 +23,7 @@ type TabsItems = {
 
 const tabs: TabsItems[] = [
 	{
-		label: tabsValues.teams,
+		label: tabsValues.myteams,
 		icon: <TeamIcon className="size-6 group-data-[state=active]:fill-white" />,
 	},
 	{
@@ -48,7 +49,7 @@ export async function ManagerTabs() {
 
 	return (
 		<>
-			<Tabs httpState defaultValue={tabsValues.statistics} className="w-full">
+			<Tabs httpState className="w-full" defaultValue={tabsValues.myteams}>
 				<TabsList className="mx-auto w-full bg-primary h-14">
 					{tabs.map((tab) => (
 						<TabsTrigger key={tab.label} value={tab.label} className="group">
@@ -59,7 +60,7 @@ export async function ManagerTabs() {
 						</TabsTrigger>
 					))}
 				</TabsList>
-				<TeamsTabContent tabKey={tabsValues.teams} session={session} />
+				<TeamsTabContent tabKey={tabsValues.myteams} session={session} />
 				<FieldsTabContent tabKey={tabsValues.fields} session={session} />
 				<PlayersTabContent tabKey={tabsValues.players} session={session} />
 				<CalendarTabContent tabKey={tabsValues.schedule} session={session} />

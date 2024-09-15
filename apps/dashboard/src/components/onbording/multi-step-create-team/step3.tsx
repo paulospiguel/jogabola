@@ -1,7 +1,7 @@
 "use client";
 
 import { useAction } from "next-safe-action/hooks";
-import React, { useMemo } from "react";
+import React, { useEffect, useMemo } from "react";
 import { type SubmitHandler, useFormContext } from "react-hook-form";
 import type { z } from "zod";
 
@@ -12,7 +12,7 @@ import { useCreateTeam } from "@/hooks/use-create-team";
 import { type teamSchema, teamShapeEnum } from "@/schemas";
 import { Button } from "@repo/ui/components/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@repo/ui/components/card";
-import { Form, FormField, FormItem, FormMessage } from "@repo/ui/components/form";
+import { Form, FormDescription, FormField, FormItem, FormMessage } from "@repo/ui/components/form";
 import { Input } from "@repo/ui/components/input";
 import { Label } from "@repo/ui/components/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@repo/ui/components/select";
@@ -20,6 +20,7 @@ import { NameSlider, Slider } from "@repo/ui/components/slider";
 import { Textarea } from "@repo/ui/components/textarea";
 import { useToast } from "@repo/ui/components/use-toast";
 import { Trash } from "@repo/ui/icons";
+import { Switch } from "@repo/ui/components/switch";
 
 const TEAM_TYPES = teamShapeEnum.options;
 
@@ -50,27 +51,6 @@ export const Step3 = React.forwardRef<HTMLFormElement, Step3Props>(({ isMultiSte
 		return value?.reduce((acc, curr) => acc + curr, 0);
 	};
 
-	const createTeam = useAction(createTeamAction, {
-		onError: () => {
-			console.log("ERROR:", "createTeam");
-			toast({
-				title: "Error",
-				description: "Error creating team",
-				variant: "destructive",
-			});
-		},
-	});
-
-	const redirectTo = useMemo(() => {
-		if (isMultiStep) {
-			form.reset();
-			sessionStorage.removeItem(keyStorage);
-			return "/manager/teams";
-		}
-
-		return "/teams/invite";
-	}, [isMultiStep, form, keyStorage]);
-
 	const onSubmit: SubmitHandler<z.infer<typeof teamSchema>> = async (values) => {
 		createTeam.execute({ values, redirectTo: redirectTo });
 	};
@@ -84,27 +64,104 @@ export const Step3 = React.forwardRef<HTMLFormElement, Step3Props>(({ isMultiSte
 		}
 	};
 
+	const createTeam = useAction(createTeamAction, {
+		onError: (error) => {
+			console.error("createTeam:", error);
+			toast({
+				title: "Error",
+				description: "Error creating team",
+				variant: "destructive",
+			});
+		},
+	});
+
+	const redirectTo = useMemo(() => {
+		let redirectTo = "/manager/teams";
+
+		if (isMultiStep) {
+			form.reset();
+			sessionStorage.removeItem(keyStorage);
+
+			redirectTo = "/manager/teams";
+		}
+
+		return redirectTo;
+	}, [isMultiStep, form, keyStorage]);
+
 	return (
 		<Form {...form}>
 			<form ref={ref} onSubmit={form.handleSubmit(onSubmit)}>
-				<Card>
+				<Card className="bg-white">
 					<CardHeader>
 						<CardTitle>Create Your Team</CardTitle>
 						<CardDescription>Fill out the form to build your dream team.</CardDescription>
 					</CardHeader>
 					<CardContent>
 						<div className="grid gap-4">
-							<div className="space-y-2 relative">
-								<FormField
-									control={form.control}
-									name="logo"
-									render={({ field }) => <PreviewLogo {...field} updateImage={handleLogoChange} image={logoImage} />}
-								/>
-								{logoImage && (
-									<button type="button" onClick={removeLogo}>
-										<Trash className="w-6 h-6 text-gray-500 absolute right-2 top-2" />
-									</button>
-								)}
+							<div className="flex gap-3">
+								<div className="flex-1 space-y-4">
+									<div className="flex flex-col items-start ">
+										<FormField
+											control={form.control}
+											name="isPublic"
+											render={({ field, fieldState }) => (
+												<>
+													<FormItem className="flex-1">
+														<div className="flex items-center space-x-2">
+															<Switch
+																id="isPublic"
+																defaultChecked
+																onCheckedChange={field.onChange}
+																checked={field.value}
+															/>
+															<Label htmlFor="isPublic">Public</Label>
+														</div>
+														<FormDescription>Public teams can be searched by everyone.</FormDescription>
+													</FormItem>
+												</>
+											)}
+										/>
+									</div>
+
+									<div className="flex flex-col items-start">
+										<FormField
+											control={form.control}
+											rules={{
+												required: "Email is required",
+											}}
+											name="email"
+											render={({ field, fieldState }) => (
+												<>
+													<FormItem className="flex-1">
+														<div className="flex items-center space-x-2">
+															<Label htmlFor="email">Email</Label>
+															<Input id="email" placeholder="Email" {...field} />
+															<FormMessage>{fieldState.error?.message}</FormMessage>
+														</div>
+														<FormDescription>Email to send team invite and receive notifications.</FormDescription>
+													</FormItem>
+												</>
+											)}
+										/>
+									</div>
+								</div>
+
+								<div className="w-[12rem] h-[12rem] space-y-2 flex justify-center items-center relative border rounded-lg ">
+									<FormField
+										control={form.control}
+										name="logo"
+										render={({ field }) => (
+											<>
+												<PreviewLogo updateImage={handleLogoChange} image={logoImage} />
+											</>
+										)}
+									/>
+									{logoImage && (
+										<Button className="absolute right-1 top-1" variant="ghost" type="button" onClick={removeLogo}>
+											<Trash className="w-6 h-6 text-gray-500" />
+										</Button>
+									)}
+								</div>
 							</div>
 							<div className="flex items-end space-x-2">
 								<FormField
@@ -181,7 +238,7 @@ export const Step3 = React.forwardRef<HTMLFormElement, Step3Props>(({ isMultiSte
 									control={form.control}
 									name="radiusPlayerArea"
 									render={({ field }) => {
-										const values = field?.value || [];
+										const [min, max] = field?.value || [];
 										return (
 											<FormItem className="w-full">
 												<Label htmlFor="radiusPlayerArea">
@@ -191,9 +248,9 @@ export const Step3 = React.forwardRef<HTMLFormElement, Step3Props>(({ isMultiSte
 												<Slider
 													showFirstTrack={false}
 													step={1}
-													defaultValue={values}
+													defaultValue={field?.value}
 													onValueChange={(value) => {
-														value[NameSlider.MIN] = 0;
+														value[NameSlider.MIN] = 1;
 														field.onChange(value);
 													}}
 												/>

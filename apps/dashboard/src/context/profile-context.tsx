@@ -1,7 +1,9 @@
 "use client";
 import { getRolesByUser } from "@/actions/team";
 import type { Role } from "@/schemas";
+import { teamStore } from "@/store/team.store";
 import { useSession } from "next-auth/react";
+import { useAction } from "next-safe-action/hooks";
 import { type PropsWithChildren, createContext, useContext, useEffect, useMemo, useState } from "react";
 
 export type ProfileContextType = {
@@ -19,13 +21,14 @@ export const ProfileProvider: React.FC<PropsWithChildren> = ({ children }) => {
 	const userId = session?.user?.id;
 	//const roles = session?.user.role as Role[];
 
-	useEffect(() => {
-		if (userId) {
-			getRolesByUser(userId).then((roles) => {
-				setRoles(roles);
-			});
-		}
-	}, [userId]);
+	useAction(getRolesByUser, {
+		executeOnMount: {
+			input: { userId: userId || "" },
+		},
+		onSuccess: (data) => {
+			setRoles(data?.data || []);
+		},
+	});
 
 	const values = useMemo(() => ({ username, setUsername, userRoles }), [username, userRoles]);
 

@@ -17,7 +17,7 @@ import {
 	DropdownMenuTrigger,
 } from "@repo/ui/components/dropdown-menu";
 import { cn } from "@repo/ui/utils";
-import { CircleUser, LogOut, UserCircleIcon } from "lucide-react";
+import { CircleUser, LogOut, UserCircleIcon } from "@repo/ui/icons";
 import type { Session } from "next-auth";
 import Image from "next/image";
 import Link from "next/link";
@@ -34,8 +34,6 @@ const LoginBadge = ({ user }: Props) => {
 
 	const isManager = userRoles?.includes(RoleValues.MANAGER);
 	const isPlayer = userRoles?.includes(RoleValues.PLAYER);
-
-	console.log(userRoles);
 
 	const baseUri = isManager ? "/manager" : isPlayer ? "/player" : "";
 

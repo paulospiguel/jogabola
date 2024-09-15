@@ -4,8 +4,8 @@ import Notifications from "./notifications";
 
 export function AppHeader() {
 	return (
-		<header className="sticky px-6 w-full">
-			<div className="bg-white dark:bg-slate-800 shadow-md flex min-h-[40px] px-4 w-full my-4 rounded-full justify-between items-center">
+		<header className="sticky px-6 flex items-center justify-center w-full bg-transparent h-[10rem]">
+			<div className="bg-white dark:bg-slate-800 shadow-md flex px-4 h-[60px] w-full rounded-full justify-between items-center">
 				<Logo size="mini" />
 				<div className="flex gap-2">
 					<Notifications />

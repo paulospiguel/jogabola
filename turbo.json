@@ -53,6 +53,12 @@
     "db:studio": {
       "cache": false
     },
+    "db:migration": {
+      "cache": false
+    },
+    "db:clear": {
+      "cache": false
+    },
     "format": {},
     "lint": {
       "dependsOn": [

@@ -3,10 +3,18 @@
 import { LIMIT_CREATE_TEAM } from "@/constants";
 import { CreateTeamProvider, useCreateTeamContext } from "@/context/create-team-context";
 import { Button } from "@repo/ui/components/button";
-import { Drawer, DrawerContent, DrawerFooter, DrawerHeader, DrawerTrigger } from "@repo/ui/components/drawer";
-import { PlusCircle } from "lucide-react";
+import {
+	Drawer,
+	DrawerClose,
+	DrawerContent,
+	DrawerFooter,
+	DrawerHeader,
+	DrawerTrigger,
+} from "@repo/ui/components/drawer";
+import { PlusCircle, X } from "@repo/ui/icons";
 import { useEffect, useMemo } from "react";
 import { MultiStepCreateTeam } from "../onbording";
+import { useAction } from "next-safe-action/hooks";
 
 function AddNewTeamComponent({ disabled = false }) {
 	const { methods, createdTeamCounter } = useCreateTeamContext();
@@ -22,9 +30,9 @@ function AddNewTeamComponent({ disabled = false }) {
 	}, [methods.formState.isSubmitted]);
 
 	const handleCleanDataOnClone = () => {
-		setTimeout(() => {
-			methods.reset();
-		}, 5000);
+		//setTimeout(() => {
+		methods.reset();
+		//}, 5000);
 	};
 
 	const hasCreateTeam = createdTeamCounter >= LIMIT_CREATE_TEAM;
@@ -43,9 +51,9 @@ function AddNewTeamComponent({ disabled = false }) {
 				</p>
 				<DrawerContent>
 					<DrawerHeader className="relative">
-						{/* <DrawerClose className="absolute right-2 top-0">
+						<DrawerClose className="absolute right-2 top-0">
 							<X className="w-5 h-5" />
-						</DrawerClose> */}
+						</DrawerClose>
 					</DrawerHeader>
 
 					<MultiStepCreateTeam isAddTeam />

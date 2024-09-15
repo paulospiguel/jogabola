@@ -1,6 +1,5 @@
 import { auth } from "@auth";
 import { db } from "@repo/db";
-import type { TelegramUserData } from "@telegram-auth/server";
 
 export const findUserbyEmail = async (email: string) => {
 	const user = await db.user.findUnique({
@@ -39,31 +38,31 @@ export const getUser = async () => {
 		where: {
 			id: session?.user?.id,
 		},
-	});
-
-	return user;
-};
-
-export const createUserOrUpdate = async (user: TelegramUserData) => {
-	if (!user.id) return;
-
-	if (user.is_bot) {
-		throw new Error("This user is a bot. They cannot be registered.");
-	}
-
-	return db.user.upsert({
-		where: {
-			id: user.id.toString(),
-		},
-		create: {
-			id: user.id.toString(),
-			name: user.first_name,
-			image: user.photo_url,
-			email: "",
-		},
-		update: {
-			name: user.first_name,
-			image: user.photo_url,
+		select: {
+			id: true,
+			name: true,
+			email: true,
+			isTwoFactorAuthEnabled: true,
+			role: true,
+			image: true,
+			emailVerified: true,
+			team: {
+				select: {
+					id: true,
+					teamMember: {
+						select: {
+							role: true,
+						},
+					},
+				},
+			},
 		},
 	});
+
+	const roles = user?.team.flatMap((team) => team.teamMember.map((member) => member.role));
+
+	return {
+		user,
+		roles,
+	};
 };

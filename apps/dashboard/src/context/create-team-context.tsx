@@ -14,6 +14,8 @@ import { type UseFormPersistReturn, useFormPersist } from "@/hooks/use-form-pers
 import { teamStore } from "@/store/team.store";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useStore } from "@tanstack/react-store";
+import { useForm } from "react-hook-form";
+import { useAction } from "next-safe-action/hooks";
 
 type CreateTeamContextValue = {
 	isPending: boolean;
@@ -43,6 +45,7 @@ const initialData = {
 			teamShape: true,
 			radiusPlayerArea: true,
 			radiusPlayerAge: true,
+			isPublic: true,
 		})
 		.parse({}),
 } as z.infer<typeof teamSchema>;
@@ -54,45 +57,53 @@ export const CreateTeamProvider: React.FC<{ children: React.ReactNode }> = ({ ch
 	const [isCompleted, setIsCompleted] = useState(false);
 	const [error, setError] = useState("");
 	const [success, setSuccess] = useState("");
-	const [teamData, setData] = useState<z.infer<typeof teamSchema>>(initialData);
+	const [teamData, setCurrentTeamData] = useState<z.infer<typeof teamSchema>>(initialData);
+
 	const { data: session } = useSession();
 	const keyStorage = `jogabolaCreateTeam:${session?.user?.id}`;
 
 	const { createdTeamCounter } = useStore(teamStore);
 
-	const methods = useFormPersist<z.infer<typeof teamSchema>>({
-		storageKey: keyStorage,
-		storageLocation: window?.sessionStorage,
-		resolver: zodResolver(teamSchema),
-		includeDirtyFields: true,
+	// const methods = useFormPersist<z.infer<typeof teamSchema>>({
+	// 	storageKey: keyStorage,
+	// 	storageLocation: window ? window?.sessionStorage : undefined,
+	// 	resolver: zodResolver(teamSchema),
+	// 	includeDirtyFields: true,
+	// 	defaultValues: teamData,
+	// 	callback(values, isSubmitting, isSubmitted) {
+	// 		if (isSubmitted) {
+	// 			setIsCompleted(isSubmitted);
+	// 		}
+	// 	},
+	// });
+
+	const methods = useForm<z.infer<typeof teamSchema>>({
 		defaultValues: teamData,
-		callback(values, isSubmitting, isSubmitted) {
-			if (isSubmitted) {
-				setIsCompleted(isSubmitted);
-			}
-		},
 	});
 
 	const { push } = useRouter();
 
 	const setTeamData = (value: z.infer<typeof teamSchema>) => {
-		setTeamData(value);
+		setCurrentTeamData(value);
 	};
 
 	const goToStep = (step: Steps) => {
-		setData((prevState) => ({ ...prevState, currentStep: step }));
+		setCurrentTeamData((prevState) => ({ ...prevState, currentStep: step }));
 	};
 
-	useEffect(() => {
-		if (session?.user?.id) {
-			checkUserHasTeam(session?.user?.id).then((hasTeam) => {
-				if (hasTeam) {
-					push("/manager/teams");
-					return;
-				}
-			});
-		}
-	}, [session, push]);
+	useAction(checkUserHasTeam, {
+		executeOnMount: {
+			input: {
+				userId: session?.user?.id as string,
+			},
+		},
+		onSuccess: (rolesTeam) => {
+			if (rolesTeam) {
+				push("/manager/teams");
+				return;
+			}
+		},
+	});
 
 	const value: CreateTeamContextValue = {
 		isPending,

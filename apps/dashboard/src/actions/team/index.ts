@@ -6,6 +6,7 @@ import { type Role, RoleSchema, teamSchema } from "@/schemas";
 import { redirect } from "next/navigation";
 import { z } from "zod";
 import { authActionClient } from "../safe-action";
+import { getUser } from "../user";
 
 export const getTeamInfo = async (teamId?: string, slug?: string) => {
 	const team = await db.team.findFirst({
@@ -33,16 +34,17 @@ export const createTeamAction = authActionClient
 	})
 	.schema(
 		z.object({
-			userId: z.string().optional(),
 			values: teamSchema,
 			redirectTo: z.string().optional(),
 		}),
 	)
-	.action(async ({ ctx, parsedInput: { userId, values, redirectTo } }) => {
-		const { language, name, bio, logo, radiusPlayerAge, radiusPlayerArea, teamShape, location } =
+	.action(async ({ ctx, parsedInput: { values, redirectTo } }) => {
+		const { language, name, bio, logo, radiusPlayerAge, radiusPlayerArea, teamShape, location, isPublic, email } =
 			teamSchema.parse(values);
 
-		const ownerId = userId || ctx.user?.id;
+		const { user } = (await getUser()) || {};
+
+		const ownerId = user?.id;
 
 		if (!ownerId) {
 			throw new Error("User not found");
@@ -54,6 +56,8 @@ export const createTeamAction = authActionClient
 			data: {
 				name,
 				language,
+				email,
+				isPublic,
 				bio,
 				logo,
 				location,
@@ -71,7 +75,7 @@ export const createTeamAction = authActionClient
 				teamMember: {
 					create: {
 						userId: ownerId,
-						role: "MANAGER",
+						role: role,
 					},
 				},
 			},
@@ -86,6 +90,9 @@ export const createTeamAction = authActionClient
 
 export const checkTeamByName = authActionClient
 	.schema(z.object({ teamName: z.string() }))
+	.metadata({
+		name: "check-team-by-name",
+	})
 	.action(async ({ parsedInput: { teamName } }) => {
 		const team = await db.team.findFirst({
 			where: {
@@ -95,33 +102,43 @@ export const checkTeamByName = authActionClient
 		return team;
 	});
 
-export const checkUserHasTeam = async (userId: string) => {
-	try {
-		const team = await db.team.count({
-			where: {
-				user: {
-					id: userId,
+export const checkUserHasTeam = authActionClient
+	.schema(z.object({ userId: z.string() }))
+	.metadata({
+		name: "check-user-has-team",
+	})
+	.action(async ({ parsedInput: { userId } }) => {
+		try {
+			const team = await db.team.count({
+				where: {
+					user: {
+						id: userId,
+					},
 				},
+			});
+			return team > 0;
+		} catch (error) {
+			console.error(error);
+			return false;
+		}
+	});
+
+export const getRolesByUser = authActionClient
+	.schema(z.object({ userId: z.string() }))
+	.metadata({
+		name: "get-roles-by-user-id",
+	})
+	.action(async ({ parsedInput: { userId } }) => {
+		const roles = await db.teamMember.findMany({
+			where: {
+				userId,
+			},
+			select: {
+				role: true,
 			},
 		});
-		return team > 0;
-	} catch (error) {
-		console.error(error);
-		return false;
-	}
-};
-
-export const getRolesByUser = async (userId: string) => {
-	const roles = await db.teamMember.findMany({
-		where: {
-			userId,
-		},
-		select: {
-			role: true,
-		},
+		return roles.map((roles) => roles.role) as Role[];
 	});
-	return roles.map((roles) => roles.role) as Role[];
-};
 
 export const getTeamByUser = async (userId: string) => {
 	try {
@@ -148,6 +165,9 @@ export const getTeamByUser = async (userId: string) => {
 
 export const getTeamsByUserId = authActionClient
 	.schema(z.object({ userId: z.string() }))
+	.metadata({
+		name: "get-teams-by-user-id",
+	})
 	.action(async ({ parsedInput: { userId } }) => {
 		const response = await db.team.findMany({
 			where: {

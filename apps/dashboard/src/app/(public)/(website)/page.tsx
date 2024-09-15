@@ -16,6 +16,13 @@ export default function Home() {
 		<div className="flex min-h-screen w-full flex-col">
 			<header className="sticky z-20 top-0 flex min-h-16 py-4 items-center gap-4 border-b bg-background px-4 md:px-6">
 				<Navbar />
+
+				<Link
+					className="bg-primary shadow-md hover:brightness-110 whitespace-nowrap text-white rounded-full px-4 py-2"
+					href="/welcome"
+				>
+					Launch App
+				</Link>
 			</header>
 
 			<main className="flex flex-1 flex-col p-4 md:gap-4 md:p-8 relative">
@@ -93,7 +100,7 @@ export default function Home() {
 									</svg>
 								</Link>
 								<Link
-									href="https://youtu.be/3GlLKGmLYL8"
+									href="https://youtu.be/B4UDYHG1Kag"
 									className="inline-flex justify-center items-center py-3 px-5 text-base font-medium text-center text-gray-900 rounded-lg border border-gray-300 hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 dark:text-white dark:border-gray-700 dark:hover:bg-gray-700 dark:focus:ring-gray-800"
 									target="_blank"
 									rel="noreferrer"

@@ -12,7 +12,6 @@ import { UserNotFound } from "./src/lib/auth";
 
 import bcryptjs from "bcryptjs";
 
-
 export default {
   providers: [
     Credentials({
