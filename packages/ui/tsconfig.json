@@ -1,12 +1,12 @@
 {
   "extends": "@repo/tsconfig/react-library.json",
   "compilerOptions": {
-    "forceConsistentCasingInFileNames": true,
-    "baseUrl": ".",
+    "outDir": "dist",
+    "rootDir": ".",
     "paths": {
-      "@repo/ui/*": ["./src/*"]
+      "@/*": ["./src/*"]
     }
   },
   "include": ["src"],
-  "exclude": ["node_modules"]
+  "exclude": ["node_modules", "dist"]
 }

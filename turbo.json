@@ -3,6 +3,10 @@
   "globalDependencies": [
     "**/.env"
   ],
+  "globalEnv": [
+    "NODE_ENV",
+    "NEXT_PUBLIC_*"
+  ],
   "ui": "stream",
   "tasks": {
     "topo": {

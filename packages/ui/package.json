@@ -5,7 +5,7 @@
   "sideEffects": false,
   "scripts": {
     "clean": "git clean -xdf .turbo node_modules",
-    "ui:add": "pnpm dlx shadcn-ui@latest add",
+    "ui:add": "npx shadcn@latest add",
     "lint": "biome check .",
     "format": "biome --write .",
     "typecheck": "tsc --noEmit"
@@ -40,37 +40,39 @@
     "clsx": "^2.1.1",
     "cmdk": "0.2.1",
     "date-fns": "^3.6.0",
-    "embla-carousel-react": "^8.2.0",
+    "dialog": "^0.3.1",
+    "embla-carousel-react": "^8.3.0",
     "input-otp": "^1.2.4",
     "jsonfile": "^6.1.0",
     "lucide-react": "^0.427.0",
-    "postcss": "^8.4.41",
+    "postcss": "^8.4.47",
     "react-day-picker": "8.10.1",
     "react-hook-form": "^7.53.0",
     "react-icons": "^5.3.0",
-    "react-number-format": "^5.4.0",
+    "react-number-format": "^5.4.2",
     "storybook-dark-mode": "^4.0.2",
     "tailwind-merge": "2.4.0",
-    "tailwindcss": "^3.4.10",
+    "tailwindcss": "^3.4.12",
     "tailwindcss-animate": "^1.0.7",
-    "vaul": "^0.9.1"
+    "vaul": "^0.9.3"
   },
   "devDependencies": {
     "@repo/eslint-config": "workspace:*",
     "@repo/tsconfig": "workspace:*",
-    "@types/node": "^20.16.1",
-    "@types/react": "^18.3.4",
+    "@types/node": "^20.16.5",
+    "@types/react": "^18.3.7",
     "@types/react-dom": "^18.3.0",
     "autoprefixer": "^10.4.20",
-    "typescript": "^5.5.4"
+    "typescript": "^5.6.2"
   },
   "exports": {
     "./globals.css": "./src/globals.css",
     "./postcss.config": "./postcss.config.js",
     "./tailwind.config": "./tailwind.config.ts",
     "./lib": "./src/lib/index.ts",
+    "./lib/*": "./src/lib/*.ts",
     "./hooks": "./src/hooks/index.ts",
-    "./utils": "./src/utils/index.ts",
+    "./utils": "./src/lib/utils.ts",
     "./icons": "./src/icons/index.ts",
     "./icons/*": "./src/icons/*",
     "./components/*": [

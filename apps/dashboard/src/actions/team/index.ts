@@ -8,21 +8,20 @@ import { z } from "zod";
 import { authActionClient } from "../safe-action";
 import { getUser } from "../user";
 
-export const getTeamInfo = async (teamId?: string, slug?: string) => {
-	const team = await db.team.findFirst({
-		where: {
-			OR: [
-				{
-					id: teamId,
-				},
-				{
-					slug,
-				},
-			],
-		},
+export const getTeamInfo = authActionClient
+	.schema(z.object({ teamId: z.string().optional(), teamSlug: z.string().optional() }))
+	.metadata({
+		name: "get-team-info",
+	})
+	.action(async ({ parsedInput: { teamId, teamSlug } }) => {
+		const team = await db.team.findUnique({
+			where: {
+				id: teamId,
+				slug: teamSlug,
+			},
+		});
+		return team;
 	});
-	return team;
-};
 
 export const createTeamAction = authActionClient
 	.metadata({
