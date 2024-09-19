@@ -1,8 +1,6 @@
-import { DEFAULT_SERVER_ERROR_MESSAGE, createSafeActionClient, type InferCtx } from "next-safe-action";
+import { DEFAULT_SERVER_ERROR_MESSAGE, type InferCtx, createSafeActionClient } from "next-safe-action";
 import { z } from "zod";
 import { getUser } from "./user";
-// import { cookies } from "next/headers";
-// import { headers } from "next/headers";
 
 export const actionClient = createSafeActionClient({
 	handleServerError(e) {

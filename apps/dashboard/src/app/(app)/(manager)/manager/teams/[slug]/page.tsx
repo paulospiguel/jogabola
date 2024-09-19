@@ -1,18 +1,8 @@
 "use client";
 
-import { useState } from "react";
-import { Button } from "@repo/ui/components/button";
-import { Input } from "@repo/ui/components/input";
-import { Label } from "@repo/ui/components/label";
-import {
-	Dialog,
-	DialogContent,
-	DialogDescription,
-	DialogFooter,
-	DialogHeader,
-	DialogTitle,
-	DialogTrigger,
-} from "@repo/ui/components/dialog";
+import { getTeamInfo } from "@/actions";
+import Counter from "@/components/counter";
+import NotificationCenter from "@/components/notification-center";
 import {
 	AlertDialog,
 	AlertDialogAction,
@@ -24,14 +14,27 @@ import {
 	AlertDialogTitle,
 	AlertDialogTrigger,
 } from "@repo/ui/components/alert-dialog";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@repo/ui/components/tabs";
 import { Avatar, AvatarFallback, AvatarImage } from "@repo/ui/components/avatar";
-import { Progress } from "@repo/ui/components/progress";
-import { Trophy, UserPlus, Pencil, Trash2, Star, Calendar, MapPin, Users, Award, Table } from "@repo/ui/icons";
+import { Button } from "@repo/ui/components/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@repo/ui/components/card";
+import {
+	Dialog,
+	DialogContent,
+	DialogDescription,
+	DialogFooter,
+	DialogHeader,
+	DialogTitle,
+	DialogTrigger,
+} from "@repo/ui/components/dialog";
+import { Input } from "@repo/ui/components/input";
+import { Label } from "@repo/ui/components/label";
+import { Progress } from "@repo/ui/components/progress";
 import { TableBody, TableCell, TableHead, TableHeader, TableRow } from "@repo/ui/components/table";
-import { getTeamInfo } from "@/actions";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@repo/ui/components/tabs";
+import { Award, Calendar, MapPin, Pencil, Star, Table, Trash2, Trophy, UserPlus, Users } from "@repo/ui/icons";
 import { useAction } from "next-safe-action/hooks";
+import { useState } from "react";
+import InviteModal from "./components/invite-modal";
 
 // Mock data (replace with actual data fetching in a real application)
 const initialTeamData = {
@@ -168,11 +171,12 @@ export default function TeamInfoPage({ params }: { params: { slug: string } }) {
 				</CardHeader>
 				<CardContent>
 					<Tabs defaultValue="overview" className="w-full">
-						<TabsList className="grid w-full grid-cols-4 bg-primary">
+						<TabsList className="grid w-full grid-cols-5 bg-primary">
 							<TabsTrigger value="overview">Overview</TabsTrigger>
 							<TabsTrigger value="players">Players</TabsTrigger>
 							<TabsTrigger value="achievements">Achievements</TabsTrigger>
 							<TabsTrigger value="fixtures">Fixtures</TabsTrigger>
+							<TabsTrigger value="notifications">Notifications</TabsTrigger>
 						</TabsList>
 						<TabsContent value="overview" className="space-y-4">
 							<div className="grid grid-cols-2 gap-4 mt-4">
@@ -197,7 +201,7 @@ export default function TeamInfoPage({ params }: { params: { slug: string } }) {
 									</div>
 									<div className="flex items-center justify-between">
 										<span>Matches Played:</span>
-										<span className="font-bold">{teamData.played}</span>
+										<Counter className="text-md" targetValue={teamData.played} />
 									</div>
 									<div className="flex items-center justify-between">
 										<span>Goal Difference:</span>
@@ -304,6 +308,9 @@ export default function TeamInfoPage({ params }: { params: { slug: string } }) {
 								</TableBody>
 							</Table>
 						</TabsContent>
+						<TabsContent value="notifications">
+							<NotificationCenter className="max-w-full border-none" />
+						</TabsContent>
 					</Tabs>
 				</CardContent>
 				<CardFooter className="flex justify-between">
@@ -316,59 +323,18 @@ export default function TeamInfoPage({ params }: { params: { slug: string } }) {
 								Edit Team
 							</Button>
 						)}
-						<Dialog>
-							<DialogTrigger asChild>
+						<InviteModal
+							team={{
+								id: teamInfo?.id,
+								name: teamInfo?.name,
+							}}
+							triggerComponent={
 								<Button variant="outline">
 									<UserPlus className="mr-2 h-4 w-4" />
 									Invite Player
 								</Button>
-							</DialogTrigger>
-							<DialogContent>
-								<DialogHeader>
-									<DialogTitle>Invite New Player</DialogTitle>
-									<DialogDescription>Enter the details of the new player below.</DialogDescription>
-								</DialogHeader>
-								<div className="grid gap-4 py-4">
-									<div className="grid grid-cols-4 items-center gap-4">
-										<Label htmlFor="name" className="text-right">
-											Name
-										</Label>
-										<Input
-											id="name"
-											value={newPlayerName}
-											onChange={(e) => setNewPlayerName(e.target.value)}
-											className="col-span-3"
-										/>
-									</div>
-									<div className="grid grid-cols-4 items-center gap-4">
-										<Label htmlFor="position" className="text-right">
-											Position
-										</Label>
-										<Input
-											id="position"
-											value={newPlayerPosition}
-											onChange={(e) => setNewPlayerPosition(e.target.value)}
-											className="col-span-3"
-										/>
-									</div>
-									<div className="grid grid-cols-4 items-center gap-4">
-										<Label htmlFor="number" className="text-right">
-											Number
-										</Label>
-										<Input
-											id="number"
-											type="number"
-											value={newPlayerNumber}
-											onChange={(e) => setNewPlayerNumber(e.target.value)}
-											className="col-span-3"
-										/>
-									</div>
-								</div>
-								<DialogFooter>
-									<Button onClick={handleInvitePlayer}>Invite Player</Button>
-								</DialogFooter>
-							</DialogContent>
-						</Dialog>
+							}
+						/>
 					</div>
 					<AlertDialog>
 						<AlertDialogTrigger asChild>

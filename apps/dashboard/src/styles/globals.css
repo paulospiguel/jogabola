@@ -15,10 +15,12 @@
     --color-primary: hsl(151, 100%, 32%);
     --primary-blue: hsl(241, 49%, 33%);
     --brand-secondary: hsl(239 100% 18.2%);
+    --color-primary-foreground: hsl(0, 0%, 100%);
   }
 
   .dark {
     --background: hsl(20 14.3% 4.1%);
     --text-primary-foreground: hsl(0 0% 100%);
+    --color-primary-foreground: hsl(0, 3%, 76%);
   }
 }

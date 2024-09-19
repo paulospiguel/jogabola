@@ -11,6 +11,7 @@ export default {
         secondary: "var(--brand-secondary)",
         primary: {
           DEFAULT: "var(--color-primary)",
+          foreground: "var(--color-primary-foreground)",
           dark: "var(--color-primary-dark)",
         },
         background: {

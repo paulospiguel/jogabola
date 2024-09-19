@@ -53,7 +53,7 @@ export const getUser = async () => {
 			team: {
 				select: {
 					id: true,
-					teamMember: {
+					teamMembers: {
 						select: {
 							role: true,
 						},
@@ -63,7 +63,7 @@ export const getUser = async () => {
 		},
 	});
 
-	const roles = user?.team.flatMap((team) => team.teamMember.map((member) => member.role));
+	const roles = user?.team.flatMap((team) => team.teamMembers.map((member) => member.role));
 
 	return {
 		user,

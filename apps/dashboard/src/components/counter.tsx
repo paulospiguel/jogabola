@@ -48,7 +48,7 @@ export default function Counter({
 	direction = "up",
 	delay = 0,
 	className,
-	suffix,
+	suffix = "",
 }: CounterProps) {
 	const ref = useRef<HTMLSpanElement>(null);
 	const isGoingUp = direction === "up";

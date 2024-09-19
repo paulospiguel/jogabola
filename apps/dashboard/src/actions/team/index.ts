@@ -71,7 +71,7 @@ export const createTeamAction = authActionClient
 						id: ownerId,
 					},
 				},
-				teamMember: {
+				teamMembers: {
 					create: {
 						userId: ownerId,
 						role: role,
@@ -148,7 +148,7 @@ export const getTeamByUser = async (userId: string) => {
 				},
 			},
 			include: {
-				teamMember: {
+				teamMembers: {
 					select: {
 						role: true,
 					},
