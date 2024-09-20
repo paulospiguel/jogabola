@@ -49,7 +49,7 @@ export default function InviteModal({ triggerComponent, team }: InviteModalProps
 					</div>
 				</div>
 				<DialogFooter>
-					<Button onClick={handleInvitePlayer}>Invite Player</Button>
+					<Button onClick={handleInvitePlayer}>Sent invite</Button>
 				</DialogFooter>
 			</DialogContent>
 		</Dialog>

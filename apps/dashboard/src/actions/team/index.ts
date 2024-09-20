@@ -1,13 +1,14 @@
 "use server";
 
-import { db } from "@repo/db";
+import { db, type Prisma } from "@repo/db";
 
-import { RoleSchema, RoleValues, teamSchema } from "@/schemas";
+import { RoleValues, teamSchema } from "@/schemas";
 import type { SessionRoles } from "@/types/roles";
 import { redirect } from "next/navigation";
 import { z } from "zod";
 import { authActionClient } from "../safe-action";
 import { getUser } from "../user";
+import { isDate } from "@repo/utils";
 
 export const getTeamInfo = authActionClient
 	.schema(z.object({ teamId: z.string().optional(), teamSlug: z.string().optional() }))
@@ -197,3 +198,25 @@ export const checkUserMemberTeam = async (userId: string, teamId: string) => {
 	});
 	return team;
 };
+
+export const saveTeamInfo = authActionClient
+	.schema(z.object({ teamId: z.string(), input: z.object({ key: z.string(), value: z.string() }) }))
+	.metadata({
+		name: "save-team-info",
+	})
+	.action(async ({ parsedInput: { teamId, input } }) => {
+		const saveDate: Prisma.TeamUpdateInput = {
+			[input.key]: input.value,
+		};
+
+		const team = await db.team.update({
+			where: {
+				id: teamId,
+			},
+			data: saveDate,
+		});
+
+		console.log({ team });
+
+		return team;
+	});

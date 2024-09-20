@@ -114,19 +114,19 @@ model Team {
   maxRadiusPlayerAge  Int?
   isPublic            Boolean      @default(true)
   isVerified          Boolean      @default(false)
-  createdAt           DateTime     @default(now())
-  updatedAt           DateTime     @updatedAt
   cups                Cup[]
   teamMembers         TeamMember[]
   user                User?        @relation(fields: [userId], references: [id])
   userId              String?
+  createdAt           DateTime     @default(now())
+  updatedAt           DateTime     @updatedAt
 
   // Relation for home team matches
   homeMatches Match[] @relation("HomeTeam")
 
   // Relation for away team matches
   awayMatches    Match[]          @relation("AwayTeam")
-  TeamStatistics TeamStatistics[]
+  teamStatistics TeamStatistics[]
 }
 
 model TeamMember {

@@ -1,6 +1,6 @@
 "use client";
 
-import { getTeamInfo } from "@/actions";
+import { getTeamInfo, saveTeamInfo } from "@/actions";
 import Counter from "@/components/counter";
 import NotificationCenter from "@/components/notification-center";
 import {
@@ -15,26 +15,40 @@ import {
 	AlertDialogTrigger,
 } from "@repo/ui/components/alert-dialog";
 import { Avatar, AvatarFallback, AvatarImage } from "@repo/ui/components/avatar";
-import { Button } from "@repo/ui/components/button";
+
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@repo/ui/components/card";
-import {
-	Dialog,
-	DialogContent,
-	DialogDescription,
-	DialogFooter,
-	DialogHeader,
-	DialogTitle,
-	DialogTrigger,
-} from "@repo/ui/components/dialog";
+
 import { Input } from "@repo/ui/components/input";
 import { Label } from "@repo/ui/components/label";
 import { Progress } from "@repo/ui/components/progress";
 import { TableBody, TableCell, TableHead, TableHeader, TableRow } from "@repo/ui/components/table";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@repo/ui/components/tabs";
-import { Award, Calendar, MapPin, Pencil, Star, Table, Trash2, Trophy, UserPlus, Users } from "@repo/ui/icons";
-import { useAction } from "next-safe-action/hooks";
+import {
+	Award,
+	Calendar,
+	Edit3,
+	MapPin,
+	MoreHorizontal,
+	Pencil,
+	Star,
+	Table,
+	Trash2,
+	Trophy,
+	UserPlus,
+	Users,
+} from "@repo/ui/icons";
+import { useAction, useOptimisticAction } from "next-safe-action/hooks";
+import {
+	DropdownMenu,
+	DropdownMenuContent,
+	DropdownMenuItem,
+	DropdownMenuTrigger,
+} from "@repo/ui/components/dropdown-menu";
 import { useState } from "react";
 import InviteModal from "./components/invite-modal";
+import { Button } from "@repo/ui/components/button";
+import type { Team } from "@/types";
+import EditableInput from "./components/editable-input";
 
 // Mock data (replace with actual data fetching in a real application)
 const initialTeamData = {
@@ -107,6 +121,7 @@ export default function TeamInfoPage({ params }: { params: { slug: string } }) {
 	const [newPlayerName, setNewPlayerName] = useState("");
 	const [newPlayerPosition, setNewPlayerPosition] = useState("");
 	const [newPlayerNumber, setNewPlayerNumber] = useState("");
+	const [showDeleteDialog, setShowDeleteDialog] = useState(false);
 
 	const { result } = useAction(getTeamInfo, {
 		executeOnMount: {
@@ -116,7 +131,8 @@ export default function TeamInfoPage({ params }: { params: { slug: string } }) {
 		},
 	});
 
-	const teamInfo = result?.data;
+	const teamInfo = result?.data || ({} as Team);
+	console.log({ teamInfo });
 
 	const handleEditTeam = () => {
 		setEditMode(true);
@@ -129,7 +145,9 @@ export default function TeamInfoPage({ params }: { params: { slug: string } }) {
 
 	const handleDeleteTeam = () => {
 		// In a real application, you would delete the team from the backend here
-		alert("Team deleted successfully!");
+		setShowDeleteDialog(true);
+
+		//	alert("Team deleted successfully!");
 	};
 
 	const handleInvitePlayer = () => {
@@ -156,18 +174,55 @@ export default function TeamInfoPage({ params }: { params: { slug: string } }) {
 		}
 	};
 
+	// const handleDeletePlayer = (playerId: number) => {
+	// 	setTeamData({
+	// 		...teamData,
+	// 		players: teamData.players.filter((player) => player.id !== playerId),
+	// 	});
+	// };
+
+	const handleSaveInfo = async (key: string, value: string) => {
+		await saveTeamInfo({
+			teamId: teamInfo.id,
+			input: {
+				key,
+				value,
+			},
+		});
+	};
+
 	return (
 		<div className="container mx-auto p-6 space-y-8">
 			<Card className="w-full">
-				<CardHeader className="flex flex-row items-center space-x-4 pb-2">
-					<Avatar className="h-20 w-20">
-						<AvatarImage src={teamInfo?.logo || ""} alt={teamInfo?.name} />
-						<AvatarFallback>{teamInfo?.name.slice(0, 2)?.toUpperCase()}</AvatarFallback>
-					</Avatar>
-					<div>
-						<CardTitle className="text-3xl font-bold">{teamInfo?.name}</CardTitle>
-						<CardDescription className="text-xl">{teamInfo?.location}</CardDescription>
+				<CardHeader className="flex flex-row items-center justify-between">
+					<div className="flex flex-row items-center space-x-4 pb-2">
+						<Avatar className="h-20 w-20">
+							<AvatarImage src={teamInfo?.logo || ""} alt={teamInfo?.name} />
+							<AvatarFallback>{teamInfo?.name?.slice(0, 2)?.toUpperCase()}</AvatarFallback>
+						</Avatar>
+						<div>
+							<CardTitle className="text-3xl font-bold">{teamInfo?.name}</CardTitle>
+							<CardDescription className="text-xl">{teamInfo?.location}</CardDescription>
+						</div>
 					</div>
+					<DropdownMenu>
+						<DropdownMenuTrigger asChild>
+							<Button variant="outline" size="icon" className="rounded-full">
+								<MoreHorizontal className="h-5 w-5" />
+								<span className="sr-only">Open menu</span>
+							</Button>
+						</DropdownMenuTrigger>
+						<DropdownMenuContent align="end">
+							<DropdownMenuItem onClick={handleEditTeam}>
+								<Pencil className="mr-2 h-4 w-4" />
+								Edit Team
+							</DropdownMenuItem>
+							<DropdownMenuItem className="text-red-500" onClick={handleDeleteTeam}>
+								<Trash2 className="mr-2 h-4 w-4" />
+								Delete Team
+							</DropdownMenuItem>
+						</DropdownMenuContent>
+					</DropdownMenu>
 				</CardHeader>
 				<CardContent>
 					<Tabs defaultValue="overview" className="w-full">
@@ -183,27 +238,46 @@ export default function TeamInfoPage({ params }: { params: { slug: string } }) {
 								<div className="space-y-2">
 									<div className="flex items-center space-x-2">
 										<Calendar className="h-5 w-5 text-muted-foreground" />
-										<span>Founded: {teamInfo?.founded?.toDateString()}</span>
+										<div className="flex items-center space-x-2">
+											<Label className="mr-1">Founded Date:</Label>
+											<EditableInput
+												type="date"
+												initialValue={teamInfo?.founded?.toDateString()}
+												onSave={(value) => handleSaveInfo("founded", value)}
+											/>
+										</div>
 									</div>
 									<div className="flex items-center space-x-2">
 										<MapPin className="h-5 w-5 text-muted-foreground" />
-										<span>Home Ground: {teamData.homeGround}</span>
+										<div className="flex items-center space-x-2">
+											<Label className="mr-1">Home Ground:</Label>
+											<EditableInput
+												initialValue={teamInfo?.homeGround || ""}
+												onSave={(value) => handleSaveInfo("homeGround", value)}
+											/>
+										</div>
 									</div>
 									<div className="flex items-center space-x-2">
 										<Users className="h-5 w-5 text-muted-foreground" />
-										<span>Manager: {teamData.manager}</span>
+										<div className="flex items-center space-x-2">
+											<Label className="mr-1">Manager:</Label>
+											<EditableInput
+												initialValue={teamInfo?.manager || ""}
+												onSave={(value) => handleSaveInfo("manager", value)}
+											/>
+										</div>
 									</div>
 								</div>
 								<div className="space-y-2">
-									<div className="flex items-center justify-between">
-										<span>League Position:</span>
+									<div className="flex items-center justify-start space-x-2">
+										<span>Rank Position:</span>
 										<span className="font-bold">{teamData.position}rd</span>
 									</div>
-									<div className="flex items-center justify-between">
+									<div className="flex items-center justify-start space-x-2">
 										<span>Matches Played:</span>
 										<Counter className="text-md" targetValue={teamData.played} />
 									</div>
-									<div className="flex items-center justify-between">
+									<div className="flex items-center justify-start space-x-2">
 										<span>Goal Difference:</span>
 										<span className="font-bold">{teamData.goalsFor - teamData.goalsAgainst}</span>
 									</div>
@@ -314,51 +388,24 @@ export default function TeamInfoPage({ params }: { params: { slug: string } }) {
 					</Tabs>
 				</CardContent>
 				<CardFooter className="flex justify-between">
-					<div className="space-x-2">
-						{editMode ? (
-							<Button onClick={handleSaveTeam}>Save Changes</Button>
-						) : (
-							<Button onClick={handleEditTeam}>
-								<Pencil className="mr-2 h-4 w-4" />
-								Edit Team
-							</Button>
-						)}
-						<InviteModal
-							team={{
-								id: teamInfo?.id,
-								name: teamInfo?.name,
-							}}
-							triggerComponent={
-								<Button variant="outline">
-									<UserPlus className="mr-2 h-4 w-4" />
-									Invite Player
-								</Button>
-							}
-						/>
-					</div>
-					<AlertDialog>
-						<AlertDialogTrigger asChild>
-							<Button variant="destructive">
-								<Trash2 className="mr-2 h-4 w-4" />
-								Delete Team
-							</Button>
-						</AlertDialogTrigger>
-						<AlertDialogContent>
-							<AlertDialogHeader>
-								<AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
-								<AlertDialogDescription>
-									This action cannot be undone. This will permanently delete your team and remove all data from our
-									servers.
-								</AlertDialogDescription>
-							</AlertDialogHeader>
-							<AlertDialogFooter>
-								<AlertDialogCancel>Cancel</AlertDialogCancel>
-								<AlertDialogAction onClick={handleDeleteTeam}>Delete Team</AlertDialogAction>
-							</AlertDialogFooter>
-						</AlertDialogContent>
-					</AlertDialog>
+					<InviteModal triggerComponent={<Button>Invite Player</Button>} team={teamInfo} />
 				</CardFooter>
 			</Card>
+
+			<AlertDialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
+				<AlertDialogContent>
+					<AlertDialogHeader>
+						<AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+						<AlertDialogDescription>
+							This action cannot be undone. This will permanently delete your team and remove all data from our servers.
+						</AlertDialogDescription>
+					</AlertDialogHeader>
+					<AlertDialogFooter>
+						<AlertDialogCancel>Cancel</AlertDialogCancel>
+						<AlertDialogAction onClick={handleDeleteTeam}>Delete Team</AlertDialogAction>
+					</AlertDialogFooter>
+				</AlertDialogContent>
+			</AlertDialog>
 		</div>
 	);
 }

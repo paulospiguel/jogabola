@@ -44,7 +44,9 @@ export const authActionClient = actionClientWithMeta.use(async ({ next, clientIn
 
 	// console.log({ session });
 
-	const { user } = await getUser();
+	const { data } = (await getUser()) || {};
+
+	const user = data?.user;
 
 	if (!user?.id) {
 		throw new Error("User is not valid!");
