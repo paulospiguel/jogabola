@@ -3,14 +3,14 @@ import Image, { type StaticImageData } from "next/image";
 import Link from "next/link";
 import type { z } from "zod";
 
+import { getUser as getUserAction } from "@/actions";
 import managerIcon from "@/assets/icons/director.png";
 import football from "@/assets/icons/football.png";
 import routes from "@/constants/routes";
-import { RoleSchema } from "@/schemas";
+import { type RoleSchema, RoleValues } from "@/schemas";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@repo/ui/components/card";
 import { cn } from "@repo/ui/utils";
 import { getSearchParams } from "@repo/utils";
-import { getUser as getUserAction } from "@/actions";
 import { redirect } from "next/navigation";
 
 type WelcomeProps = {
@@ -25,7 +25,7 @@ export async function generateMetadata({ searchParams }: WelcomeProps) {
 	};
 }
 
-const Role = RoleSchema.Values;
+const Role = RoleValues;
 
 const showInfo = (role: string) => {
 	let title: string;
@@ -85,7 +85,10 @@ export default async function Welcome({ searchParams }: WelcomeProps) {
 
 	const hasNotInfo = !title || !description || !disclaimer || !buttonText || !url || !imageHeader || !buttonColor;
 
-	const { user: userInfo, roles } = (await getUserAction()) || {};
+	const { data } = (await getUserAction()) || {};
+
+	const userInfo = data?.user;
+	const roles = data?.roles;
 
 	if (roles?.includes(Role.MANAGER) && userInfo) {
 		return redirect(routes.onbording.createTeam);

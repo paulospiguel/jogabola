@@ -1,7 +1,5 @@
-import * as z from "zod";
+import { userRoles } from "@/types/roles";
 
-export const RoleSchema = z.enum(["MANAGER", "PLAYER", "COACH", "WATCHER", "USER"]);
+export const RoleSchema = userRoles;
 
-export type Role = z.infer<typeof RoleSchema>;
-
-export const RoleValues = RoleSchema.Values;
+export const RoleValues = RoleSchema.enum;

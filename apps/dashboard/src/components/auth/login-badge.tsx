@@ -16,8 +16,8 @@ import {
 	DropdownMenuSeparator,
 	DropdownMenuTrigger,
 } from "@repo/ui/components/dropdown-menu";
-import { cn } from "@repo/ui/utils";
 import { CircleUser, LogOut, UserCircleIcon } from "@repo/ui/icons";
+import { cn } from "@repo/ui/utils";
 import type { Session } from "next-auth";
 import Image from "next/image";
 import Link from "next/link";
@@ -30,16 +30,16 @@ type Props = {
 };
 
 const LoginBadge = ({ user }: Props) => {
-	const { userRoles } = useProfile();
+	const { userRoles, isLoggedIn } = useProfile();
 
-	const isManager = userRoles?.includes(RoleValues.MANAGER);
-	const isPlayer = userRoles?.includes(RoleValues.PLAYER);
+	const { isMANAGER, isPLAYER } = userRoles;
 
-	const baseUri = isManager ? "/manager" : isPlayer ? "/player" : "";
+	const baseUri = isMANAGER ? "/manager" : isPLAYER ? "/player" : "";
 
 	const avatarImage = user?.image || "";
 
 	const borderColor = avatarImage ? "bg-green-500 dark:bg-green-600" : "";
+
 	const clipPolygon =
 		avatarImage && user?.id
 			? "[clip-path:polygon(50%_0,_100%_25%,_100%_75%,_50%_100%,_0_75%,_0_25%)] rounded-none"
@@ -47,7 +47,7 @@ const LoginBadge = ({ user }: Props) => {
 
 	return (
 		<>
-			{user && (
+			{isLoggedIn && (
 				<DropdownMenu>
 					<DropdownMenuTrigger asChild>
 						<Avatar className={cn(borderColor, clipPolygon, "p-0.5 flex items-center justify-center")}>
@@ -60,7 +60,7 @@ const LoginBadge = ({ user }: Props) => {
 					<DropdownMenuContent className="w-[300px]" align="end">
 						<DropdownMenuLabel>Minha Conta</DropdownMenuLabel>
 						<DropdownMenuSeparator />
-						{isManager && (
+						{isMANAGER && (
 							<DropdownMenuItem>
 								<Link href={`${baseUri}/teams`} className="flex flex-col flex-1 justify-start items-center">
 									<Image alt="" width={24} src={fieldSoccer} className="mx-auto w-10" />
@@ -68,7 +68,7 @@ const LoginBadge = ({ user }: Props) => {
 								</Link>
 							</DropdownMenuItem>
 						)}
-						{isPlayer && (
+						{isPLAYER && (
 							<DropdownMenuItem>
 								<Link href={`${baseUri}/journey`} className="flex flex-col flex-1 justify-start items-center">
 									<Image alt="" width={24} src={soccerPlayer} className="mx-auto w-10" />
@@ -76,7 +76,7 @@ const LoginBadge = ({ user }: Props) => {
 								</Link>
 							</DropdownMenuItem>
 						)}
-						{(isPlayer || isManager) && (
+						{(isPLAYER || isMANAGER) && (
 							<>
 								<DropdownMenuItem>
 									<Link href={`${baseUri}/competitions`} className="flex flex-col flex-1 justify-start items-center">
@@ -110,7 +110,7 @@ const LoginBadge = ({ user }: Props) => {
 					</DropdownMenuContent>
 				</DropdownMenu>
 			)}
-			{!user && (
+			{!isLoggedIn && (
 				<LoginButton>
 					<Button variant={"default"} size="sm" className="flex items-center gap-2">
 						<span>Entrar</span>

@@ -1,38 +1,45 @@
 "use client";
 import { getRolesByUser } from "@/actions/team";
-import type { Role } from "@/schemas";
-import { teamStore } from "@/store/team.store";
+import type { SessionRoles } from "@/types/roles";
 import { useSession } from "next-auth/react";
 import { useAction } from "next-safe-action/hooks";
-import { type PropsWithChildren, createContext, useContext, useEffect, useMemo, useState } from "react";
+import { type PropsWithChildren, createContext, useContext, useMemo, useState } from "react";
 
 export type ProfileContextType = {
-	username: string;
-	setUsername: (username: string) => void;
-	userRoles: Role[];
+	userName: string;
+	isLoggedIn: boolean;
+	userRoles: SessionRoles;
 };
 
 const ProfileContext = createContext<ProfileContextType | undefined>(undefined);
 
 export const ProfileProvider: React.FC<PropsWithChildren> = ({ children }) => {
-	const [username, setUsername] = useState("");
-	const [userRoles, setRoles] = useState<Role[]>([]);
+	const [userRoles, setRoles] = useState<SessionRoles>({});
+
 	const { data: session } = useSession();
-	const userId = session?.user?.id;
-	//const roles = session?.user.role as Role[];
+	const userId = session?.user?.id || "";
+	const userName = session?.user?.name || "";
 
 	useAction(getRolesByUser, {
 		executeOnMount: {
-			input: { userId: userId || "" },
+			input: { userId },
 		},
-		onSuccess: (data) => {
-			setRoles(data?.data || []);
+		onSuccess: ({ data }) => {
+			console.log({ data });
+
+			if (!data) {
+				return;
+			}
+
+			setRoles(data);
 		},
 	});
 
-	const values = useMemo(() => ({ username, setUsername, userRoles }), [username, userRoles]);
-
-	return <ProfileContext.Provider value={values}>{children}</ProfileContext.Provider>;
+	return (
+		<ProfileContext.Provider value={{ isLoggedIn: !!session?.user, userName, userRoles }}>
+			{children}
+		</ProfileContext.Provider>
+	);
 };
 
 export const useProfile = () => {

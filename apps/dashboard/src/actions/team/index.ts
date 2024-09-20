@@ -2,7 +2,8 @@
 
 import { db } from "@repo/db";
 
-import { type Role, RoleSchema, teamSchema } from "@/schemas";
+import { RoleSchema, RoleValues, teamSchema } from "@/schemas";
+import type { SessionRoles } from "@/types/roles";
 import { redirect } from "next/navigation";
 import { z } from "zod";
 import { authActionClient } from "../safe-action";
@@ -41,15 +42,15 @@ export const createTeamAction = authActionClient
 		const { language, name, bio, logo, radiusPlayerAge, radiusPlayerArea, teamShape, location, isPublic, email } =
 			teamSchema.parse(values);
 
-		const { user } = (await getUser()) || {};
+		const { data } = (await getUser()) || {};
 
-		const ownerId = user?.id;
+		const ownerId = data?.user?.id;
 
 		if (!ownerId) {
 			throw new Error("User not found");
 		}
 
-		const role = RoleSchema.Enum.MANAGER;
+		const role = RoleValues.MANAGER;
 
 		const team = await db.team.create({
 			data: {
@@ -136,7 +137,18 @@ export const getRolesByUser = authActionClient
 				role: true,
 			},
 		});
-		return roles.map((roles) => roles.role) as Role[];
+
+		const sessionRoles: Record<string, boolean> = {};
+
+		for (const role of roles) {
+			const roleName = role.role;
+
+			if (!roleName) return;
+
+			sessionRoles[`is${roleName}`] = roleName?.includes(RoleValues[roleName as keyof typeof RoleValues]);
+		}
+
+		return sessionRoles as SessionRoles;
 	});
 
 export const getTeamByUser = async (userId: string) => {

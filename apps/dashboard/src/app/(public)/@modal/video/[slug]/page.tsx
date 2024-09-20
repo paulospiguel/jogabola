@@ -86,7 +86,7 @@ export default function ModalPage({ params: { slug = "" } }) {
 					<DialogTitle>{slug}</DialogTitle>
 					<DialogDescription>{""}</DialogDescription>
 				</DialogHeader>
-				{videos["v3"]}
+				{videos.v3}
 				<DialogFooter>{""}</DialogFooter>
 			</DialogContent>
 		</Dialog>

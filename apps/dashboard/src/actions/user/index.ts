@@ -1,5 +1,6 @@
 import { auth } from "@auth";
 import { db } from "@repo/db";
+import { actionClient } from "../safe-action";
 
 export const findUserbyEmail = async (email: string) => {
 	const user = await db.user.findUnique({
@@ -31,7 +32,7 @@ export const getUsers = async () => {
 	return users;
 };
 
-export const getUser = async () => {
+export const getUser = actionClient.action(async () => {
 	const session = await auth();
 
 	if (!session?.user?.id) {
@@ -69,4 +70,4 @@ export const getUser = async () => {
 		user,
 		roles,
 	};
-};
+});
