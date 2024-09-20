@@ -34,8 +34,8 @@ export default function Home() {
 								<Link
 									href={`/welcome?role=${RoleValues.PLAYER}`}
 									className="ml-2
-								 text-foreground dark:text-white rounded-full px-2 group
-								 transition-all ease-linear duration-150 py-2 flex gap-2 items-center"
+text-foreground dark:text-white rounded-full px-2 group
+transition-all ease-linear duration-150 py-2 flex gap-2 items-center"
 									target="_blank"
 									rel="noreferrer"
 								>
@@ -52,8 +52,8 @@ export default function Home() {
 								<Link
 									href={`/welcome?role=${RoleValues.MANAGER}`}
 									className="flex hover:font-bold
-								 text-foreground dark:text-white rounded-full px-2 group
-								 transition-all ease-linear duration-150 py-2 gap-2 items-center"
+text-foreground dark:text-white rounded-full px-2 group
+transition-all ease-linear duration-150 py-2 gap-2 items-center"
 								>
 									<Image
 										className="group-hover:animate-bounce"
@@ -99,11 +99,10 @@ export default function Home() {
 										/>
 									</svg>
 								</Link>
+
 								<Link
-									href="https://youtu.be/B4UDYHG1Kag"
+									href="/video/B4UDYHG1Kag"
 									className="inline-flex justify-center items-center py-3 px-5 text-base font-medium text-center text-gray-900 rounded-lg border border-gray-300 hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 dark:text-white dark:border-gray-700 dark:hover:bg-gray-700 dark:focus:ring-gray-800"
-									target="_blank"
-									rel="noreferrer"
 								>
 									<svg
 										className="mr-2 -ml-1 w-5 h-5"
