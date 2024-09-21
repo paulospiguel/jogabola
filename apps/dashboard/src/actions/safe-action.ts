@@ -5,6 +5,8 @@ import { getUser } from "./user";
 export const actionClient = createSafeActionClient({
 	handleServerError(e) {
 		if (e instanceof Error) {
+			console.log(e);
+
 			return e.message;
 		}
 

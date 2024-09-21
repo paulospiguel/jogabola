@@ -12,32 +12,17 @@ import {
 	AlertDialogFooter,
 	AlertDialogHeader,
 	AlertDialogTitle,
-	AlertDialogTrigger,
 } from "@repo/ui/components/alert-dialog";
 import { Avatar, AvatarFallback, AvatarImage } from "@repo/ui/components/avatar";
 
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@repo/ui/components/card";
 
-import { Input } from "@repo/ui/components/input";
 import { Label } from "@repo/ui/components/label";
 import { Progress } from "@repo/ui/components/progress";
 import { TableBody, TableCell, TableHead, TableHeader, TableRow } from "@repo/ui/components/table";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@repo/ui/components/tabs";
-import {
-	Award,
-	Calendar,
-	Edit3,
-	MapPin,
-	MoreHorizontal,
-	Pencil,
-	Star,
-	Table,
-	Trash2,
-	Trophy,
-	UserPlus,
-	Users,
-} from "@repo/ui/icons";
-import { useAction, useOptimisticAction } from "next-safe-action/hooks";
+import { ArrowLeft, Calendar, MapPin, MoreHorizontal, Table, Trash2, Trophy, Users } from "@repo/ui/icons";
+import { useAction } from "next-safe-action/hooks";
 import {
 	DropdownMenu,
 	DropdownMenuContent,
@@ -49,6 +34,10 @@ import InviteModal from "./components/invite-modal";
 import { Button } from "@repo/ui/components/button";
 import type { Team } from "@/types";
 import EditableInput from "./components/editable-input";
+import { useRouter } from "next/navigation";
+import { format } from "date-fns";
+import pt from "date-fns/locale/pt";
+import { formatDate } from "@/utils";
 
 // Mock data (replace with actual data fetching in a real application)
 const initialTeamData = {
@@ -117,11 +106,12 @@ const initialTeamData = {
 
 export default function TeamInfoPage({ params }: { params: { slug: string } }) {
 	const [teamData, setTeamData] = useState(initialTeamData);
-	const [editMode, setEditMode] = useState(false);
 	const [newPlayerName, setNewPlayerName] = useState("");
 	const [newPlayerPosition, setNewPlayerPosition] = useState("");
 	const [newPlayerNumber, setNewPlayerNumber] = useState("");
 	const [showDeleteDialog, setShowDeleteDialog] = useState(false);
+
+	const router = useRouter();
 
 	const { result } = useAction(getTeamInfo, {
 		executeOnMount: {
@@ -134,14 +124,10 @@ export default function TeamInfoPage({ params }: { params: { slug: string } }) {
 	const teamInfo = result?.data || ({} as Team);
 	console.log({ teamInfo });
 
-	const handleEditTeam = () => {
-		setEditMode(true);
-	};
-
-	const handleSaveTeam = () => {
-		setEditMode(false);
-		// In a real application, you would save the changes to the backend here
-	};
+	// const handleSaveTeam = () => {
+	// 	setEditMode(false);
+	// 	// In a real application, you would save the changes to the backend here
+	// };
 
 	const handleDeleteTeam = () => {
 		// In a real application, you would delete the team from the backend here
@@ -193,6 +179,11 @@ export default function TeamInfoPage({ params }: { params: { slug: string } }) {
 
 	return (
 		<div className="container mx-auto p-6 space-y-8">
+			<h1 className="text-3xl font-bold">Team Info</h1>
+			<Button variant="outline" className="w-min" onClick={router.back}>
+				<ArrowLeft className="h-5 w-5" /> Back to Teams
+				<span className="sr-only">Back to teams list</span>
+			</Button>
 			<Card className="w-full">
 				<CardHeader className="flex flex-row items-center justify-between">
 					<div className="flex flex-row items-center space-x-4 pb-2">
@@ -213,10 +204,10 @@ export default function TeamInfoPage({ params }: { params: { slug: string } }) {
 							</Button>
 						</DropdownMenuTrigger>
 						<DropdownMenuContent align="end">
-							<DropdownMenuItem onClick={handleEditTeam}>
+							{/* <DropdownMenuItem onClick={handleEditTeam}>
 								<Pencil className="mr-2 h-4 w-4" />
 								Edit Team
-							</DropdownMenuItem>
+							</DropdownMenuItem> */}
 							<DropdownMenuItem className="text-red-500" onClick={handleDeleteTeam}>
 								<Trash2 className="mr-2 h-4 w-4" />
 								Delete Team
@@ -242,7 +233,7 @@ export default function TeamInfoPage({ params }: { params: { slug: string } }) {
 											<Label className="mr-1">Founded Date:</Label>
 											<EditableInput
 												type="date"
-												initialValue={teamInfo?.founded?.toDateString()}
+												initialValue={teamInfo?.founded ? formatDate(teamInfo?.founded) : ""}
 												onSave={(value) => handleSaveInfo("founded", value)}
 											/>
 										</div>

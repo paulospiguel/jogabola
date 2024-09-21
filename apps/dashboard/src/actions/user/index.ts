@@ -1,5 +1,6 @@
 import { auth } from "@auth";
 import { db } from "@repo/db";
+import type { SessionRoles } from "@/types/roles";
 import { actionClient } from "../safe-action";
 
 export const findUserbyEmail = async (email: string) => {
@@ -64,7 +65,14 @@ export const getUser = actionClient.action(async () => {
 		},
 	});
 
-	const roles = user?.team.flatMap((team) => team.teamMembers.map((member) => member.role));
+	const roles: SessionRoles = {};
+
+	user?.team.flatMap((team) =>
+		team.teamMembers.map((member) => {
+			if (!member.role) return;
+			roles[`is${member.role}`] = true;
+		}),
+	);
 
 	return {
 		user,

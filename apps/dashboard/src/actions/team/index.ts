@@ -8,7 +8,6 @@ import { redirect } from "next/navigation";
 import { z } from "zod";
 import { authActionClient } from "../safe-action";
 import { getUser } from "../user";
-import { isDate } from "@repo/utils";
 
 export const getTeamInfo = authActionClient
 	.schema(z.object({ teamId: z.string().optional(), teamSlug: z.string().optional() }))
@@ -104,10 +103,10 @@ export const checkTeamByName = authActionClient
 	});
 
 export const checkUserHasTeam = authActionClient
-	.schema(z.object({ userId: z.string() }))
 	.metadata({
 		name: "check-user-has-team",
 	})
+	.schema(z.object({ userId: z.string() }))
 	.action(async ({ parsedInput: { userId } }) => {
 		try {
 			const team = await db.team.count({
@@ -213,7 +212,10 @@ export const saveTeamInfo = authActionClient
 			where: {
 				id: teamId,
 			},
-			data: saveDate,
+			data: {
+				...saveDate,
+				founded: input.key === "founded" ? new Date(input.value) : undefined,
+			},
 		});
 
 		console.log({ team });

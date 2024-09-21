@@ -8,13 +8,14 @@
     "strict": true
   },
   "include": [
+    "svgr.d.ts",
     "next-env.d.ts",
     "next.config.js",
     "**/*.ts",
     "**/*.tsx",
     ".next/types/**/*.ts",
     "tailwind.config.ts",
-    "postcss.config.cjs",
+    "postcss.config.cjs"
   ],
   "exclude": ["node_modules"]
 }

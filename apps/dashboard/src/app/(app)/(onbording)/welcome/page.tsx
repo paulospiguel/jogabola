@@ -12,6 +12,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@repo
 import { cn } from "@repo/ui/utils";
 import { getSearchParams } from "@repo/utils";
 import { redirect } from "next/navigation";
+import { ErrorsServerActionResponse } from "@/components/errors-server-actions";
 
 type WelcomeProps = {
 	searchParams: Record<string, string>;
@@ -85,20 +86,20 @@ export default async function Welcome({ searchParams }: WelcomeProps) {
 
 	const hasNotInfo = !title || !description || !disclaimer || !buttonText || !url || !imageHeader || !buttonColor;
 
-	const { data } = (await getUserAction()) || {};
+	const { data, serverError } = (await getUserAction()) || {};
 
 	const userInfo = data?.user;
 	const roles = data?.roles;
 
-	if (roles?.includes(Role.MANAGER) && userInfo) {
-		return redirect(routes.onbording.createTeam);
+	if (userInfo && roles?.isMANAGER) {
+		return redirect(routes.manager.teams);
 	}
 
-	if (roles?.includes(Role.PLAYER) && userInfo) {
-		return redirect(routes.onbording.myJourney);
+	if (userInfo && roles?.isPLAYER) {
+		return redirect(routes.player.journey);
 	}
 
-	if (hasNotInfo) {
+	const renderNoInfo = () => {
 		return (
 			<section className="mt-4 p-4 rounded-xl shadow-md mx-2 bg-white">
 				<div className="tracking-wide text-center space-y-2 text-blue-950">
@@ -138,41 +139,54 @@ export default async function Welcome({ searchParams }: WelcomeProps) {
 				</div>
 			</section>
 		);
-	}
+	};
+
+	const renderWithInfo = () => {
+		return (
+			<section className="bg-white dark:bg-slate-800 mt-4 p-4 rounded-xl shadow-md mx-2">
+				{imageHeader && (
+					<div className="flex w-full items-center justify-center p-4 gap-2">
+						<Card className="p-2 rounded-2xl border-none shadow-none bg-transparent">
+							<Image src={imageHeader} alt={`icon of ${role}`} width={120} height={120} className="mx-auto" />
+						</Card>
+					</div>
+				)}
+
+				<div className="tracking-wide text-center space-y-2 text-blue-950 dark:text-slate-200">
+					<p className="italic text-2xl font-heading">{title}</p>
+					<p className="italic">{description}</p>
+					<p className="">{disclaimer}</p>
+					<p className="mt-4 text-blue-950 text-2xl dark:text-teal-500">
+						{role ? "Vamos começar?" : <span className="text-base">Volte atrás e escola uma opção para começar.</span>}
+					</p>
+				</div>
+
+				<div>
+					{role && (
+						<Link
+							href={url}
+							className={cn(
+								"mt-4 justify-center items-center h-12 font-bold text-white rounded-full flex gap-2 px-3 py-2",
+								buttonColor,
+							)}
+						>
+							<span className="whitespace-nowrap">{buttonText}</span>
+							<ArrowRightIcon className="w-6 h-6" />
+						</Link>
+					)}
+				</div>
+			</section>
+		);
+	};
 
 	return (
-		<section className="bg-white dark:bg-slate-800 mt-4 p-4 rounded-xl shadow-md mx-2">
-			{imageHeader && (
-				<div className="flex w-full items-center justify-center p-4 gap-2">
-					<Card className="p-2 rounded-2xl border-none shadow-none bg-transparent">
-						<Image src={imageHeader} alt={`icon of ${role}`} width={120} height={120} className="mx-auto" />
-					</Card>
-				</div>
-			)}
-
-			<div className="tracking-wide text-center space-y-2 text-blue-950 dark:text-slate-200">
-				<p className="italic text-2xl font-heading">{title}</p>
-				<p className="italic">{description}</p>
-				<p className="">{disclaimer}</p>
-				<p className="mt-4 text-blue-950 text-2xl dark:text-teal-500">
-					{role ? "Vamos começar?" : <span className="text-base">Volte atrás e escola uma opção para começar.</span>}
-				</p>
-			</div>
-
-			<div>
-				{role && (
-					<Link
-						href={url}
-						className={cn(
-							"mt-4 justify-center items-center h-12 font-bold text-white rounded-full flex gap-2 px-3 py-2",
-							buttonColor,
-						)}
-					>
-						<span className="whitespace-nowrap">{buttonText}</span>
-						<ArrowRightIcon className="w-6 h-6" />
-					</Link>
-				)}
-			</div>
-		</section>
+		<>
+			{hasNotInfo ? renderNoInfo() : renderWithInfo()}
+			<ErrorsServerActionResponse
+				errors={{
+					serverError,
+				}}
+			/>
+		</>
 	);
 }
