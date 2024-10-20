@@ -17,11 +17,9 @@ import { Avatar, AvatarFallback, AvatarImage } from "@repo/ui/components/avatar"
 
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@repo/ui/components/card";
 
-import { Label } from "@repo/ui/components/label";
-import { Progress } from "@repo/ui/components/progress";
 import { TableBody, TableCell, TableHead, TableHeader, TableRow } from "@repo/ui/components/table";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@repo/ui/components/tabs";
-import { ArrowLeft, Calendar, MapPin, MoreHorizontal, Table, Trash2, Trophy, Users } from "@repo/ui/icons";
+import { ArrowLeft, MoreHorizontal, Table, Trash2, Trophy, Users } from "@repo/ui/icons";
 import { useAction } from "next-safe-action/hooks";
 import {
 	DropdownMenu,
@@ -33,11 +31,11 @@ import { useState } from "react";
 import InviteModal from "./components/invite-modal";
 import { Button } from "@repo/ui/components/button";
 import type { Team } from "@/types";
-import EditableInput from "./components/editable-input";
 import { useRouter } from "next/navigation";
-import { format } from "date-fns";
-import pt from "date-fns/locale/pt";
-import { formatDate } from "@/utils";
+import { OverviewTabContent } from "./components/tabs-team/overview.tab";
+import { PlayersTabContent } from "./components/tabs-team/players.tab";
+import { AchievementsTabContent } from "./components/tabs-team/achievements.tab";
+import routes from "@/constants/routes";
 
 // Mock data (replace with actual data fetching in a real application)
 const initialTeamData = {
@@ -167,20 +165,14 @@ export default function TeamInfoPage({ params }: { params: { slug: string } }) {
 	// 	});
 	// };
 
-	const handleSaveInfo = async (key: string, value: string) => {
-		await saveTeamInfo({
-			teamId: teamInfo.id,
-			input: {
-				key,
-				value,
-			},
-		});
+	const backToTeams = () => {
+		router.push(routes.manager.teams);
 	};
 
 	return (
 		<div className="container mx-auto p-6 space-y-8">
 			<h1 className="text-3xl font-bold">Team Info</h1>
-			<Button variant="outline" className="w-min" onClick={router.back}>
+			<Button variant="outline" className="w-min" onClick={backToTeams}>
 				<ArrowLeft className="h-5 w-5" /> Back to Teams
 				<span className="sr-only">Back to teams list</span>
 			</Button>
@@ -217,162 +209,21 @@ export default function TeamInfoPage({ params }: { params: { slug: string } }) {
 				</CardHeader>
 				<CardContent>
 					<Tabs defaultValue="overview" className="w-full">
-						<TabsList className="grid w-full grid-cols-5 bg-primary">
+						<TabsList className="grid w-full grid-cols-3 bg-primary">
 							<TabsTrigger value="overview">Overview</TabsTrigger>
 							<TabsTrigger value="players">Players</TabsTrigger>
-							<TabsTrigger value="achievements">Achievements</TabsTrigger>
-							<TabsTrigger value="fixtures">Fixtures</TabsTrigger>
+							{/* <TabsTrigger value="achievements">Achievements</TabsTrigger> */}
 							<TabsTrigger value="notifications">Notifications</TabsTrigger>
 						</TabsList>
 						<TabsContent value="overview" className="space-y-4">
-							<div className="grid grid-cols-2 gap-4 mt-4">
-								<div className="space-y-2">
-									<div className="flex items-center space-x-2">
-										<Calendar className="h-5 w-5 text-muted-foreground" />
-										<div className="flex items-center space-x-2">
-											<Label className="mr-1">Founded Date:</Label>
-											<EditableInput
-												type="date"
-												initialValue={teamInfo?.founded ? formatDate(teamInfo?.founded) : ""}
-												onSave={(value) => handleSaveInfo("founded", value)}
-											/>
-										</div>
-									</div>
-									<div className="flex items-center space-x-2">
-										<MapPin className="h-5 w-5 text-muted-foreground" />
-										<div className="flex items-center space-x-2">
-											<Label className="mr-1">Home Ground:</Label>
-											<EditableInput
-												initialValue={teamInfo?.homeGround || ""}
-												onSave={(value) => handleSaveInfo("homeGround", value)}
-											/>
-										</div>
-									</div>
-									<div className="flex items-center space-x-2">
-										<Users className="h-5 w-5 text-muted-foreground" />
-										<div className="flex items-center space-x-2">
-											<Label className="mr-1">Manager:</Label>
-											<EditableInput
-												initialValue={teamInfo?.manager || ""}
-												onSave={(value) => handleSaveInfo("manager", value)}
-											/>
-										</div>
-									</div>
-								</div>
-								<div className="space-y-2">
-									<div className="flex items-center justify-start space-x-2">
-										<span>Rank Position:</span>
-										<span className="font-bold">{teamData.position}rd</span>
-									</div>
-									<div className="flex items-center justify-start space-x-2">
-										<span>Matches Played:</span>
-										<Counter className="text-md" targetValue={teamData.played} />
-									</div>
-									<div className="flex items-center justify-start space-x-2">
-										<span>Goal Difference:</span>
-										<span className="font-bold">{teamData.goalsFor - teamData.goalsAgainst}</span>
-									</div>
-								</div>
-							</div>
-							<div className="mt-6">
-								<h3 className="text-lg font-semibold mb-2">Season Performance</h3>
-								<div className="space-y-2">
-									<div className="flex items-center">
-										<span className="w-20">Won:</span>
-										<Progress value={(teamData.won / teamData.played) * 100} className="flex-1" />
-										<span className="ml-2 w-10 text-right">{teamData.won}</span>
-									</div>
-									<div className="flex items-center">
-										<span className="w-20">Drawn:</span>
-										<Progress value={(teamData.drawn / teamData.played) * 100} className="flex-1" />
-										<span className="ml-2 w-10 text-right">{teamData.drawn}</span>
-									</div>
-									<div className="flex items-center">
-										<span className="w-20">Lost:</span>
-										<Progress value={(teamData.lost / teamData.played) * 100} className="flex-1" />
-										<span className="ml-2 w-10 text-right">{teamData.lost}</span>
-									</div>
-								</div>
-							</div>
+							<OverviewTabContent team={teamInfo} />
 						</TabsContent>
 						<TabsContent value="players">
-							<Table>
-								<TableHeader>
-									<TableRow>
-										<TableHead>Player</TableHead>
-										<TableHead>Position</TableHead>
-										<TableHead>Number</TableHead>
-										<TableHead>Nationality</TableHead>
-										<TableHead>Age</TableHead>
-										<TableHead>Appearances</TableHead>
-										<TableHead>Goals</TableHead>
-										<TableHead>Assists</TableHead>
-									</TableRow>
-								</TableHeader>
-								<TableBody>
-									{teamData.players.map((player) => (
-										<TableRow key={player.id}>
-											<TableCell className="font-medium">
-												<div className="flex items-center space-x-2">
-													<Avatar className="h-8 w-8">
-														<AvatarImage src={player.image} alt={player.name} />
-														<AvatarFallback>{player.name.slice(0, 2)}</AvatarFallback>
-													</Avatar>
-													<span>{player.name}</span>
-												</div>
-											</TableCell>
-											<TableCell>{player.position}</TableCell>
-											<TableCell>{player.number}</TableCell>
-											<TableCell>{player.nationality}</TableCell>
-											<TableCell>{player.age}</TableCell>
-											<TableCell>{player.appearances}</TableCell>
-											<TableCell>{player.goals}</TableCell>
-											<TableCell>{player.assists}</TableCell>
-										</TableRow>
-									))}
-								</TableBody>
-							</Table>
+							<PlayersTabContent team={teamInfo} />
 						</TabsContent>
-						<TabsContent value="achievements">
-							<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-4">
-								{teamData.cups.map((cup, index) => (
-									<Card key={index}>
-										<CardHeader className="flex flex-row items-center space-x-4 pb-2">
-											<Avatar>
-												<AvatarImage src={cup.image} alt={cup.name} />
-												<AvatarFallback>
-													<Trophy />
-												</AvatarFallback>
-											</Avatar>
-											<div>
-												<CardTitle>{cup.name}</CardTitle>
-												<CardDescription>{cup.year}</CardDescription>
-											</div>
-										</CardHeader>
-									</Card>
-								))}
-							</div>
-						</TabsContent>
-						<TabsContent value="fixtures">
-							<Table>
-								<TableHeader>
-									<TableRow>
-										<TableHead>Date</TableHead>
-										<TableHead>Opponent</TableHead>
-										<TableHead>Venue</TableHead>
-									</TableRow>
-								</TableHeader>
-								<TableBody>
-									{teamData.upcomingMatches.map((match, index) => (
-										<TableRow key={index}>
-											<TableCell>{match.date}</TableCell>
-											<TableCell>{match.opponent}</TableCell>
-											<TableCell>{match.venue}</TableCell>
-										</TableRow>
-									))}
-								</TableBody>
-							</Table>
-						</TabsContent>
+						{/* <TabsContent value="achievements">
+							<AchievementsTabContent team={teamInfo} />
+						</TabsContent> */}
 						<TabsContent value="notifications">
 							<NotificationCenter className="max-w-full border-none" />
 						</TabsContent>

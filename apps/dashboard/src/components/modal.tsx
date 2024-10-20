@@ -42,13 +42,12 @@ export const Modal: FC<ModalProps> = forwardRef(
 				<Dialog open={isOpen} onOpenChange={setIsOpen}>
 					<DialogTrigger asChild>{triggerComponent}</DialogTrigger>
 					<DialogContent className={widthSize[size]}>
-						{title ||
-							(description && (
-								<DialogHeader>
-									<DialogTitle>{title}</DialogTitle>
-									<DialogDescription>{description}</DialogDescription>
-								</DialogHeader>
-							))}
+						{(title || description) && (
+							<DialogHeader>
+								<DialogTitle className="text-lg font-semibold">{title}</DialogTitle>
+								<DialogDescription>{description}</DialogDescription>
+							</DialogHeader>
+						)}
 						{content}
 						{footer && <DialogFooter>{footer}</DialogFooter>}
 					</DialogContent>

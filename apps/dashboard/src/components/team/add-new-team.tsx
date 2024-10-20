@@ -41,9 +41,9 @@ function AddNewTeamComponent({ disabled = false }) {
 		<>
 			<Drawer onClose={handleCleanDataOnClone} open={closeDrawer}>
 				<DrawerTrigger>
-					<Button variant="outline" disabled={hasCreateTeam} className="">
+					<Button variant="outline" disabled={hasCreateTeam} className="hover:bg-primary hover:text-white">
 						<PlusCircle className="w-5 h-5 mr-2" />
-						Adicionar nova equipa
+						Add new team
 					</Button>
 				</DrawerTrigger>
 				<p className="ml-2">

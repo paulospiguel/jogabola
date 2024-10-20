@@ -5,14 +5,14 @@ import WrapperLayoutTab from "./wrapper-layout.tab";
 import { Button } from "@repo/ui/components/button";
 import { PlusIcon } from "@repo/ui/icons";
 import { Modal } from "@/components/modal";
-import AddNewEvent from "../add-event";
+import AddNewCompetition from "../add-competition";
 
-interface EventsTabProps {
+interface CompetitionsTabProps {
 	tabKey: string;
 	session: Session | null;
 }
 
-export default function EventsTabContent({ tabKey }: EventsTabProps) {
+export default function CompetitionsTabContent({ tabKey }: CompetitionsTabProps) {
 	return (
 		<WrapperLayoutTab tabKey={tabKey}>
 			<div className="flex flex-wrap items-center justify-center md:justify-end">
@@ -21,10 +21,10 @@ export default function EventsTabContent({ tabKey }: EventsTabProps) {
 					triggerComponent={
 						<Button className="w-min mb-4">
 							<PlusIcon className="size-5 mr-2" />
-							Add new event
+							Add new competition
 						</Button>
 					}
-					content={<AddNewEvent />}
+					content={<AddNewCompetition />}
 					title=""
 					description=""
 				/>

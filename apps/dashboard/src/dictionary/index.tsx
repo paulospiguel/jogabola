@@ -11,5 +11,6 @@ export const dictionary = {
 		[tabsValues.statistics]: "Statistics",
 		[tabsValues.events]: "Events",
 		[tabsValues.matches]: "Matches",
+		[tabsValues.competitions]: "Competitions",
 	},
 } as const;

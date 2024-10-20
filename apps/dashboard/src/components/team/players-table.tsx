@@ -17,10 +17,9 @@ export default function PlayersTable() {
 	const [newPlayer, setNewPlayer] = useState<Player | null>(null);
 
 	const { data: players } = useQuery({
-    queryKey: ["player"],
-    queryFn: () =>getPlayersByUserId("")
-  });
-
+		queryKey: ["player"],
+		queryFn: () => getPlayersByUserId(""),
+	});
 
 	//const { push } = useRouter();
 
