@@ -1,4 +1,3 @@
-import { getPlayerByUser } from "@/actions/player/players.action";
 import type { Session } from "next-auth";
 import PlayersTable from "../players-table";
 import WrapperLayoutTab from "./wrapper-layout.tab";
