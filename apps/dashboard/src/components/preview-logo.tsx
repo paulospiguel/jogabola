@@ -1,6 +1,6 @@
 //import Image from "next/image";
 import { Input } from "@repo/ui/components/input";
-import { ImageUp } from "lucide-react";
+import { ImageUp } from "@repo/ui/icons";
 
 type PreviewLogoProps = React.InputHTMLAttributes<HTMLInputElement> & {
 	image: string | undefined;

@@ -6,7 +6,7 @@ import { type SubmitHandler, useFormContext } from "react-hook-form";
 import type { z } from "zod";
 
 import { checkTeamByName, createTeamAction } from "@/actions/team";
-import { LanguageToggle } from "@/components/language-toggle";
+import { LanguageToggle } from "@/components/language-selector";
 import { PreviewLogo } from "@/components/preview-logo";
 import { useCreateTeam } from "@/hooks/use-create-team";
 import { type teamSchema, teamShapeEnum } from "@/schemas";

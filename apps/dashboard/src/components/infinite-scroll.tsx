@@ -1,5 +1,8 @@
+"use client";
+
 import { cn } from "@repo/ui/utils";
 import Image from "next/image";
+import { v4 as uuidv4 } from "uuid";
 
 type InfiniteHorizontalScrollProps = {
 	images: string[];
@@ -32,9 +35,9 @@ const InfiniteHorizontalScroll: React.FC<InfiniteHorizontalScrollProps> = ({ ima
 					x-ref="logos"
 					className="flex items-center justify-center md:justify-start [&_li]:mx-8 [&_img]:max-w-none animate-infinite-scroll"
 				>
-					{images?.map((srcImage, i) => {
+					{images?.map((srcImage) => {
 						return (
-							<li key={srcImage + 1} className={cn("flex items-center justify-center", className)}>
+							<li key={uuidv4()} className={cn("flex items-center justify-center", className)}>
 								<Image src={srcImage} alt="Picture of the author" height={height} width={width} />
 							</li>
 						);
@@ -44,9 +47,9 @@ const InfiniteHorizontalScroll: React.FC<InfiniteHorizontalScrollProps> = ({ ima
 					x-ref="logos"
 					className="flex items-center justify-center md:justify-start [&_li]:mx-8 [&_img]:max-w-none animate-infinite-scroll"
 				>
-					{images.map((srcImage, i) => {
+					{images.map((srcImage) => {
 						return (
-							<li key={srcImage + 1} className={cn("flex items-center justify-center", className)}>
+							<li key={uuidv4()} className={cn("flex items-center justify-center", className)}>
 								<Image src={srcImage} alt="Picture of the author" height={height} width={width} />
 							</li>
 						);

@@ -10,7 +10,7 @@ import type { z } from "zod";
 import { checkUserHasTeam } from "@/actions/team";
 import { useRouter } from "next/navigation";
 
-import { type UseFormPersistReturn, useFormPersist } from "@/hooks/use-form-persist";
+import type { UseFormPersistReturn } from "@/hooks/use-form-persist";
 import { teamStore } from "@/store/team.store";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useStore } from "@tanstack/react-store";

@@ -31,6 +31,30 @@ enum CupStatus {
   Cancelled
 }
 
+enum PlayerPosition {
+  GOALKEEPER // Goleiro
+  CENTER_BACK // Zagueiro Central
+  RIGHT_BACK // Lateral Direito
+  LEFT_BACK // Lateral Esquerdo
+  SWEEPER // Líbero
+  DEFENSIVE_MID // Volante
+  CENTRAL_MID // Meio-Campista Central
+  ATTACKING_MID // Meio-Campista Ofensivo
+  RIGHT_MIDFIELDER // Meio-Campista Lateral Direito
+  LEFT_MIDFIELDER // Meio-Campista Lateral Esquerdo
+  RIGHT_WINGER // Ponta Direita
+  LEFT_WINGER // Ponta Esquerda
+  SECOND_STRIKER // Segundo Atacante
+  STRIKER // Centroavante
+}
+
+enum NotificationPriority {
+  LOW
+  MEDIUM
+  HIGH
+  URGENT
+}
+
 model User {
   id                     String    @id @default(cuid())
   name                   String?
@@ -127,6 +151,7 @@ model Team {
   // Relation for away team matches
   awayMatches    Match[]          @relation("AwayTeam")
   teamStatistics TeamStatistics[]
+  notification   Notification[]
 }
 
 model TeamMember {
@@ -144,14 +169,15 @@ model TeamMember {
 }
 
 model Player {
-  id         String    @id @default(cuid())
+  id         String         @id @default(cuid())
   name       String
   bio        String?
   image      String?
   location   String?
   birth_date DateTime?
-  createdAt  DateTime  @default(now())
-  updatedAt  DateTime  @updatedAt
+  position   PlayerPosition
+  createdAt  DateTime       @default(now())
+  updatedAt  DateTime       @updatedAt
 
   teamMembers TeamMember[]
 }
@@ -202,4 +228,16 @@ model TeamStatistics {
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+model Notification {
+  id        String               @id @default(cuid())
+  title     String
+  message   String
+  priority  NotificationPriority
+  sent      Boolean              @default(false)
+  teamId    String
+  team      Team                 @relation(fields: [teamId], references: [id])
+  createdAt DateTime             @default(now())
+  updatedAt DateTime             @updatedAt
 }

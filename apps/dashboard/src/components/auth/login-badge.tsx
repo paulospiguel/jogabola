@@ -112,7 +112,7 @@ const LoginBadge = ({ user }: Props) => {
 			)}
 			{!isLoggedIn && (
 				<LoginButton>
-					<Button variant={"default"} size="sm" className="flex items-center gap-2">
+					<Button variant="default" size="sm" className="flex items-center gap-2 rounded-full">
 						<span>Entrar</span>
 						<UserCircleIcon />
 					</Button>

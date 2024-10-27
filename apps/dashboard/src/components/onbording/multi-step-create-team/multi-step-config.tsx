@@ -2,11 +2,10 @@
 
 import { useCreateTeam } from "@/hooks/use-create-team";
 import { type StepForm, Steps } from "@/types";
-import { FormField } from "@repo/ui/components/form";
+import { Form, FormField } from "@repo/ui/components/form";
 import { cn } from "@repo/ui/utils";
 import { motion } from "framer-motion";
-import { useEffect, useMemo } from "react";
-import { FormProvider } from "react-hook-form";
+import { useEffect, useMemo, useState } from "react";
 import { Step1 } from "./step1";
 import { Step2 } from "./step2";
 import { Step3 } from "./step3";
@@ -30,9 +29,8 @@ export const onboardingForm = {
 } satisfies Record<Steps, StepForm>;
 
 export function MultiStepCreateTeamConfig({ isAddTeam = false }) {
-	const { goToStep, currentStep, methods } = useCreateTeam();
-
-	const storagedCurrentStep = methods?.watch("currentStep");
+	const { goToStep, currentStep, methods: form } = useCreateTeam();
+	const storagedCurrentStep = form?.watch("currentStep");
 
 	useEffect(() => {
 		if (storagedCurrentStep !== currentStep) {
@@ -68,9 +66,9 @@ export function MultiStepCreateTeamConfig({ isAddTeam = false }) {
 	}, [Step, isAddTeam]);
 
 	return (
-		<FormProvider {...methods}>
+		<Form {...form}>
 			<FormField
-				control={methods.control}
+				control={form.control}
 				name="currentStep"
 				render={({ field }) =>
 					!isAddTeam ? (
@@ -82,11 +80,11 @@ export function MultiStepCreateTeamConfig({ isAddTeam = false }) {
 
 								const formStep = Steps.Step3 === stepIndex;
 
-								if (formStep && !methods.watch("termsOfUse")) {
+								if (formStep && !form.watch("termsOfUse")) {
 									disabledButton = true;
 								}
 
-								if (!methods.watch("name")) {
+								if (!form.watch("name")) {
 									disabledButton = true;
 								}
 
@@ -95,7 +93,7 @@ export function MultiStepCreateTeamConfig({ isAddTeam = false }) {
 										key={step}
 										type="button"
 										disabled={disabledButton}
-										onClick={() => methods.setValue("currentStep", index + 1)}
+										onClick={() => form.setValue("currentStep", index + 1)}
 										className={cn("w-8 py-1 rounded-full bg-gray-300", {
 											"bg-gray-400": isMatchStep,
 										})}
@@ -109,6 +107,6 @@ export function MultiStepCreateTeamConfig({ isAddTeam = false }) {
 				}
 			/>
 			<section className="h-[85vh] overflow-auto pb-2">{MotionStep}</section>
-		</FormProvider>
+		</Form>
 	);
 }

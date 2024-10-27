@@ -19,7 +19,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 
 import { TableBody, TableCell, TableHead, TableHeader, TableRow } from "@repo/ui/components/table";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@repo/ui/components/tabs";
-import { ArrowLeft, MoreHorizontal, Table, Trash2, Trophy, Users } from "@repo/ui/icons";
+import { ArrowLeft, Info, MoreHorizontal, Table, Trash2, Trophy, Users } from "@repo/ui/icons";
 import { useAction } from "next-safe-action/hooks";
 import {
 	DropdownMenu,
@@ -36,6 +36,8 @@ import { OverviewTabContent } from "./components/tabs-team/overview.tab";
 import { PlayersTabContent } from "./components/tabs-team/players.tab";
 import { AchievementsTabContent } from "./components/tabs-team/achievements.tab";
 import routes from "@/constants/routes";
+import { ShoesSoccer, PlayerIcon, StadiumIcon } from "@/components/icons";
+import { cn } from "@repo/ui/lib/cn";
 
 // Mock data (replace with actual data fetching in a real application)
 const initialTeamData = {
@@ -120,7 +122,14 @@ export default function TeamInfoPage({ params }: { params: { slug: string } }) {
 	});
 
 	const teamInfo = result?.data || ({} as Team);
-	console.log({ teamInfo });
+
+	const optionsTabs = [
+		{ value: "overview", label: "Overview", icon: StadiumIcon },
+		{ value: "players", label: "Players", icon: PlayerIcon },
+		{ value: "cups", label: "Cups", icon: Trophy },
+		{ value: "matches", label: "Matches", icon: ShoesSoccer },
+		{ value: "notifications", label: "Notifications", icon: Info },
+	];
 
 	// const handleSaveTeam = () => {
 	// 	setEditMode(false);
@@ -209,11 +218,12 @@ export default function TeamInfoPage({ params }: { params: { slug: string } }) {
 				</CardHeader>
 				<CardContent>
 					<Tabs defaultValue="overview" className="w-full">
-						<TabsList className="grid w-full grid-cols-3 bg-primary">
-							<TabsTrigger value="overview">Overview</TabsTrigger>
-							<TabsTrigger value="players">Players</TabsTrigger>
-							{/* <TabsTrigger value="achievements">Achievements</TabsTrigger> */}
-							<TabsTrigger value="notifications">Notifications</TabsTrigger>
+						<TabsList className={cn("grid w-full bg-primary", `grid-cols-${optionsTabs.length}`)}>
+							{optionsTabs.map(({ icon: TabIcon, ...tab }) => (
+								<TabsTrigger key={tab.value} value={tab.value}>
+									{TabIcon && <TabIcon className="mr-2 h-5 w-5" />} {tab.label}
+								</TabsTrigger>
+							))}
 						</TabsList>
 						<TabsContent value="overview" className="space-y-4">
 							<OverviewTabContent team={teamInfo} />

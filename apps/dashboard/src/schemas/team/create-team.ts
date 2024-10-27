@@ -9,11 +9,10 @@ export const teamSchema = z.object({
 	currentStep: z.nativeEnum(Steps).default(Steps.Step1),
 	termsOfUse: z.boolean().default(false),
 	name: z
-		.string({
-			required_error: "Nome da equipa é obrigatório",
-		})
-		.min(3)
-		.max(50),
+		.string()
+		.min(3, { message: "Nome muito curto!" })
+		.regex(/^[a-zA-Z0-9\s]+$/, { message: "O nome não deve conter caracteres especiais" })
+		.max(50, { message: "O nome deve ter no máximo 50 caracteres" }),
 	isPublic: z.boolean().default(true),
 	email: z.string().email(),
 	bio: z.string().optional(),

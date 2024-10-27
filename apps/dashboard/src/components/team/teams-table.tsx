@@ -10,9 +10,9 @@ import { Button } from "@repo/ui/components/button";
 import { Input } from "@repo/ui/components/input";
 import { ScrollArea } from "@repo/ui/components/scroll-area";
 import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from "@repo/ui/components/table";
-import PlayerList from "../player-avatar-list";
 import type { Team } from "@/types";
 import { teamStore } from "@/store/team.store";
+import PlayerAvatarList from "../player-avatar-list";
 
 type TeamTableProps = {
 	teams: Team[];
@@ -21,7 +21,6 @@ type TeamTableProps = {
 export default function TeamsTable({ teams }: TeamTableProps) {
 	const [editingTeam, setEditingTeam] = useState<Team | null>(null);
 	const [newTeamName, setNewTeamName] = useState("");
-
 	const { push } = useRouter();
 
 	const handleEditTeam = (team: Team) => {
@@ -94,7 +93,7 @@ export default function TeamsTable({ teams }: TeamTableProps) {
 								<TableCell>{team.name}</TableCell>
 								<TableCell className="">
 									<Suspense fallback={<div>0</div>}>
-										<PlayerList size="sm" />
+										<PlayerAvatarList players={team?.teamMembers} size="sm" />
 									</Suspense>
 								</TableCell>
 								<TableCell className="">{"0/0/0"}</TableCell>

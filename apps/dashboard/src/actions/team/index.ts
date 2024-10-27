@@ -184,6 +184,13 @@ export const getTeamsByUserId = authActionClient
 			where: {
 				userId: userId,
 			},
+			include: {
+				teamMembers: {
+					where: {
+						role: "PLAYER",
+					},
+				},
+			},
 		});
 		return response;
 	});

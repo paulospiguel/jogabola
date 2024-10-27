@@ -73,9 +73,11 @@ export async function ManagerTabs() {
 		}, */
 	]?.sort((a, b) => (a?.order || 0) - (b?.order || 0));
 
+	const defaultTab = tabs.find((tab) => !tab.isDisabled)?.label;
+
 	return (
 		<>
-			<Tabs httpState className="w-full" defaultValue={tabsValues.events}>
+			<Tabs httpState className="w-full" defaultValue={defaultTab}>
 				<TabsList className="mx-auto w-full bg-primary h-14">
 					{tabs?.map((tab) => (
 						<TabsTrigger disabled={tab?.isDisabled} key={tab.label} value={tab.label} className="group">

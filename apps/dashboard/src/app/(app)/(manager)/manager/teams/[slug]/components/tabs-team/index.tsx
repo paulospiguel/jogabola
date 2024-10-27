@@ -85,6 +85,19 @@ export const TabsTeam = ({ team }: { team: Team }) => {
 	const [newPlayerPosition, setNewPlayerPosition] = useState("");
 	const [newPlayerNumber, setNewPlayerNumber] = useState("");
 
+	const optionsTabs = [
+		{ value: "info", label: "Info" },
+		{ value: "players", label: "Players" },
+		{ value: "cups", label: "Cups" },
+		{ value: "matches", label: "Matches" },
+	];
+
+	// <TabsTrigger value="overview">Overview</TabsTrigger>
+	// 			<TabsTrigger value="players">Players</TabsTrigger>
+	// 			<TabsTrigger value="achievements">Achievements</TabsTrigger>
+	// 			<TabsTrigger value="fixtures">Fixtures</TabsTrigger>
+	// 			<TabsTrigger value="notifications">Notifications</TabsTrigger>
+
 	const handleInvitePlayer = () => {
 		if (newPlayerName && newPlayerPosition && newPlayerNumber) {
 			const newPlayer = {
@@ -129,11 +142,11 @@ export const TabsTeam = ({ team }: { team: Team }) => {
 	return (
 		<Tabs defaultValue="overview" className="w-full">
 			<TabsList className="grid w-full grid-cols-5 bg-primary">
-				<TabsTrigger value="overview">Overview</TabsTrigger>
-				<TabsTrigger value="players">Players</TabsTrigger>
-				<TabsTrigger value="achievements">Achievements</TabsTrigger>
-				<TabsTrigger value="fixtures">Fixtures</TabsTrigger>
-				<TabsTrigger value="notifications">Notifications</TabsTrigger>
+				{optionsTabs.map((tab) => (
+					<TabsTrigger key={tab.value} value={tab.value} className="w-full">
+						{tab.label}
+					</TabsTrigger>
+				))}
 			</TabsList>
 			<TabsContent value="overview" className="space-y-4 px-4">
 				<HeaderTitle

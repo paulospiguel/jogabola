@@ -23,12 +23,7 @@ const config = {
   typescript: {
     ignoreBuildErrors: true,
   },
-  experimental: {
-    instrumentationHook: process.env.NODE_ENV === "production",
-    outputFileTracingExcludes: {
-      "*": ["node_modules/canvas*"],
-    },
-  },
+  experimental: {},
   async headers() {
     return [
       {

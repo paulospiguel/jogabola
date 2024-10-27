@@ -33,11 +33,15 @@ export const getUsers = async () => {
 	return users;
 };
 
-export const getUser = actionClient.action(async () => {
+export const getUser = async () => {
 	const session = await auth();
 
 	if (!session?.user?.id) {
-		return null;
+		return {
+			user: null,
+			roles: {},
+			canCreateTeam: false,
+		};
 	}
 
 	const user = await db.user.findUnique({
@@ -77,5 +81,6 @@ export const getUser = actionClient.action(async () => {
 	return {
 		user,
 		roles,
+		canCreateTeam: user?.role === "ADMIN" || user?.role === "MANAGER",
 	};
-});
+};

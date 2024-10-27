@@ -20,17 +20,23 @@ const widthSize = {
 
 type ModalProps = {
 	triggerComponent: React.ReactNode;
-	content: React.ReactNode;
+	content?: React.ReactNode;
 	title: string;
 	description?: string;
 	footer?: ComponentProps<typeof DialogFooter>["children"];
 	size?: keyof typeof widthSize;
+	children?: React.ReactNode;
 };
 
-export const Modal: FC<ModalProps> = forwardRef(
-	({ size = "medium", triggerComponent, content, title, description, footer }, ref) => {
+export type ModalRef = {
+	open: () => void;
+	close: () => void;
+} | null;
+
+export const Modal = forwardRef<ModalRef, ModalProps>(
+	({ size = "medium", triggerComponent, content, title, description, footer, children }, ref) => {
 		const [isOpen, setIsOpen] = useState(false);
-		const modalRef = useRef<HTMLDivElement>(null);
+		const modalRef = useRef<ModalRef>(null);
 
 		useImperativeHandle(ref, () => ({
 			open: () => setIsOpen(true),
@@ -48,6 +54,7 @@ export const Modal: FC<ModalProps> = forwardRef(
 								<DialogDescription>{description}</DialogDescription>
 							</DialogHeader>
 						)}
+						{children}
 						{content}
 						{footer && <DialogFooter>{footer}</DialogFooter>}
 					</DialogContent>

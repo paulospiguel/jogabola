@@ -1,27 +1,25 @@
 import { ArrowRightIcon } from "@repo/ui/icons";
 import Image, { type StaticImageData } from "next/image";
 import Link from "next/link";
-import type { z } from "zod";
 
 import { getUser as getUserAction } from "@/actions";
 import managerIcon from "@/assets/icons/director.png";
 import football from "@/assets/icons/football.png";
 import routes from "@/constants/routes";
-import { type RoleSchema, RoleValues } from "@/schemas";
+import { RoleValues } from "@/schemas";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@repo/ui/components/card";
 import { cn } from "@repo/ui/utils";
-import { getSearchParams } from "@repo/utils";
 import { redirect } from "next/navigation";
 import { ErrorsServerActionResponse } from "@/components/errors-server-actions";
 
 type WelcomeProps = {
-	searchParams: Record<string, string>;
+	searchParams: Promise<{ [key: string]: string | undefined }>;
 };
 
 export async function generateMetadata({ searchParams }: WelcomeProps) {
-	const role = getSearchParams<z.infer<typeof RoleSchema>>(searchParams).get("role") || "Guest";
+	const { role = "Guest" } = await searchParams; //getSearchParams<z.infer<typeof RoleSchema>>(searchParams).get("role") || "Guest";
 	return {
-		title: `Bem-vindo ${role.toLowerCase()} ao JogaBola`,
+		title: `Bem-vindo ${role} ao JogaBola`,
 		description: "O melhor lugar para encontrar sua malta e jogar a bola.",
 	};
 }
@@ -80,16 +78,14 @@ const showInfo = (role: string) => {
 	};
 };
 
-export default async function Welcome({ searchParams }: WelcomeProps) {
-	const role = getSearchParams<z.infer<typeof RoleSchema>>(searchParams).get("role");
+export default async function WelcomePage({ searchParams }: WelcomeProps) {
+	const { role = "Guest" } = await searchParams;
+
 	const { title, description, buttonText, disclaimer, url, imageHeader, buttonColor } = showInfo(role);
 
 	const hasNotInfo = !title || !description || !disclaimer || !buttonText || !url || !imageHeader || !buttonColor;
 
-	const { data, serverError } = (await getUserAction()) || {};
-
-	const userInfo = data?.user;
-	const roles = data?.roles;
+	const { user: userInfo, roles } = (await getUserAction()) || {};
 
 	if (userInfo && roles?.isMANAGER) {
 		return redirect(routes.manager.teams);
@@ -182,11 +178,11 @@ export default async function Welcome({ searchParams }: WelcomeProps) {
 	return (
 		<>
 			{hasNotInfo ? renderNoInfo() : renderWithInfo()}
-			<ErrorsServerActionResponse
+			{/* <ErrorsServerActionResponse
 				errors={{
 					serverError,
 				}}
-			/>
+			/> */}
 		</>
 	);
 }

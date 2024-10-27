@@ -11,7 +11,7 @@ import { ArrowRight, VideoIcon, Videotape } from "@repo/ui/icons";
 import Image from "next/image";
 import Link from "next/link";
 
-export default function Home() {
+export default async function Home() {
 	return (
 		<div className="flex min-h-screen w-full flex-col">
 			<header className="sticky z-20 top-0 flex min-h-16 py-4 items-center gap-4 border-b bg-background px-4 md:px-6">
@@ -34,8 +34,8 @@ export default function Home() {
 								<Link
 									href={`/welcome?role=${RoleValues.PLAYER}`}
 									className="ml-2
-text-foreground dark:text-white rounded-full px-2 group
-transition-all ease-linear duration-150 py-2 flex gap-2 items-center"
+									text-foreground dark:text-white rounded-full px-2 group
+									transition-all ease-linear duration-150 py-2 flex gap-2 items-center"
 									target="_blank"
 									rel="noreferrer"
 								>
@@ -52,8 +52,8 @@ transition-all ease-linear duration-150 py-2 flex gap-2 items-center"
 								<Link
 									href={`/welcome?role=${RoleValues.MANAGER}`}
 									className="flex hover:font-bold
-text-foreground dark:text-white rounded-full px-2 group
-transition-all ease-linear duration-150 py-2 gap-2 items-center"
+									text-foreground dark:text-white rounded-full px-2 group
+									transition-all ease-linear duration-150 py-2 gap-2 items-center"
 								>
 									<Image
 										className="group-hover:animate-bounce"
@@ -97,19 +97,6 @@ transition-all ease-linear duration-150 py-2 gap-2 items-center"
 							</div>
 						</div>
 					</section>
-
-					{/* <section className="relative bg-transparent min-w-72 overflow-hidden">
-						<Marquee>
-							{Array.from({ length: 10 }).map((_, index) => (
-								<PlayerBlock playerImage="" key={index} />
-							))}
-						</Marquee>
-						<Marquee reverse>
-							{Array.from({ length: 10 }).map((_, index) => (
-								<PlayerBlock playerImage="" key={index} />
-							))}
-						</Marquee>
-					</section> */}
 
 					<section className="px-4 mt-2 mx-auto md:max-w-screen-md text-center lg:max-w-screen-lg lg:px-36">
 						<span className="font-semibold text-gray-400 uppercase">Apoios</span>
