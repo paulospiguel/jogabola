@@ -11,6 +11,9 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@repo
 import { cn } from "@repo/ui/utils";
 import { redirect } from "next/navigation";
 import { ErrorsServerActionResponse } from "@/components/errors-server-actions";
+import { getTranslations } from "next-intl/server";
+
+const defaultImage = "/assets/images/soccer-field.svg";
 
 type WelcomeProps = {
 	searchParams: Promise<{ [key: string]: string | undefined }>;
@@ -26,60 +29,61 @@ export async function generateMetadata({ searchParams }: WelcomeProps) {
 
 const Role = RoleValues;
 
-const showInfo = (role: string) => {
-	let title: string;
-	let description: string;
-	let disclaimer: string;
-	let buttonText: string;
-	let buttonColor: string;
-	let url: string;
-	let imageHeader: StaticImageData | null;
-
-	switch (role) {
-		case Role.PLAYER:
-			title = "Encontre sua equipa e jogue seu melhor futebol";
-			description = "Encontre amigos, Jogue competições, veja os resultados e divirta-se.";
-			disclaimer = "Se você não tem uma equipe, não se preocupe, você pode se juntar a uma equipe existente.";
-			buttonText = "Comecar minha jornada";
-			url = routes.onbording.myJourney;
-			imageHeader = football;
-			buttonColor = "bg-orange-600 hover:bg-orange-700";
-			break;
-
-		case Role.MANAGER:
-			title = "Pronto para montar seu time dos sonhos?";
-			description = "Crie sua equipa e dispute competições, gerencie sua equipe e veja os resultados.";
-			disclaimer = "Se você não tem uma equipe, não se preocupe, você pode se juntar a uma equipe existente.";
-			buttonText = "Criar minha equipa";
-			url = routes.onbording.createTeam;
-			imageHeader = managerIcon;
-			buttonColor = "hover:bg-green-700 bg-green-600";
-			break;
-
-		default:
-			title = "";
-			description = "";
-			disclaimer = "";
-			buttonText = "";
-			url = "";
-			buttonColor = "bg-blue-950 hover:bg-blue-950/90";
-			imageHeader = null;
-			break;
-	}
-
-	return {
-		title,
-		description,
-		buttonText,
-		disclaimer,
-		url,
-		imageHeader,
-		buttonColor,
-	};
-};
-
 export default async function WelcomePage({ searchParams }: WelcomeProps) {
+	const t = await getTranslations("onbording");
 	const { role = "Guest" } = await searchParams;
+
+	const showInfo = (role: string) => {
+		let title: string;
+		let description: string;
+		let disclaimer: string;
+		let buttonText: string;
+		let buttonColor: string;
+		let url: string;
+		let imageHeader: StaticImageData | null;
+
+		switch (role) {
+			case Role.PLAYER:
+				title = t("myJourney.title");
+				description = t("myJourney.description");
+				disclaimer = t("myJourney.disclaimer");
+				buttonText = t("myJourney.actionButton");
+				url = routes.onbording.myJourney;
+				imageHeader = football;
+				buttonColor = "bg-orange-600 hover:bg-orange-700";
+				break;
+
+			case Role.MANAGER:
+				title = t("createTeam.title");
+				description = t("createTeam.description");
+				disclaimer = t("createTeam.disclaimer");
+				buttonText = t("createTeam.actionButton");
+				url = routes.onbording.createTeam;
+				imageHeader = managerIcon;
+				buttonColor = "hover:bg-green-700 bg-green-600";
+				break;
+
+			default:
+				title = "";
+				description = "";
+				disclaimer = "";
+				buttonText = "";
+				url = "";
+				buttonColor = "bg-blue-950 hover:bg-blue-950/90";
+				imageHeader = null;
+				break;
+		}
+
+		return {
+			title,
+			description,
+			buttonText,
+			disclaimer,
+			url,
+			imageHeader,
+			buttonColor,
+		};
+	};
 
 	const { title, description, buttonText, disclaimer, url, imageHeader, buttonColor } = showInfo(role);
 
@@ -104,33 +108,25 @@ export default async function WelcomePage({ searchParams }: WelcomeProps) {
 					<p className="">Escolha uma opção para começar.</p>
 
 					<div className="grid grid-cols-2 place-content-center gap-4 p-4">
-						<Link href={routes.onbording.myJourney}>
-							<Card className="h-full w-full bg-white hover:bg-slate-100">
-								<CardHeader>
-									<CardTitle>Encontre uma equipa</CardTitle>
-									<CardDescription>
-										Encontre amigos, Jogue competições, veja os resultados e divirta-se.
-									</CardDescription>
-								</CardHeader>
-								<CardContent>
-									<Image src={football} alt="icon of player" width={120} height={120} className="mx-auto" />
-								</CardContent>
-							</Card>
-						</Link>
-
-						<Link href={routes.onbording.createTeam}>
-							<Card className="h-full w-full bg-white hover:bg-slate-100">
-								<CardHeader>
-									<CardTitle>Crie sua equipa</CardTitle>
-									<CardDescription>
-										Crie sua equipa e dispute competições, gerencie sua equipe e veja os resultados.
-									</CardDescription>
-								</CardHeader>
-								<CardContent>
-									<Image src={managerIcon} alt="icon of manager" width={120} height={120} className="mx-auto" />
-								</CardContent>
-							</Card>
-						</Link>
+						{[Role.PLAYER, Role.MANAGER].map((role) => (
+							<Link key={role} href={showInfo(role).url} className="group">
+								<Card className="h-full w-full bg-white border-2 group-hover:bg-primary hover:text-white  hover:border-secondary">
+									<CardHeader>
+										<CardTitle>{showInfo(role).title}</CardTitle>
+										<CardDescription className="group-hover:text-white">{t("createTeam.description")}</CardDescription>
+									</CardHeader>
+									<CardContent>
+										<Image
+											src={showInfo(role).imageHeader || defaultImage}
+											alt={`icon of ${role}`}
+											width={120}
+											height={120}
+											className="mx-auto"
+										/>
+									</CardContent>
+								</Card>
+							</Link>
+						))}
 					</div>
 				</div>
 			</section>

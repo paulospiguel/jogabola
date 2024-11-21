@@ -1,0 +1,14 @@
+{
+  "homePage": {
+    "title": "Estás listo para construir tu equipo de sueños?"
+  },
+  "locales": {
+    "placeholder": "Seleccione un idioma",
+    "en": "Ingles",
+    "pt": "Português",
+    "es": "Espanol"
+  },
+  "aboutPage": {
+    "title": "Acerca de"
+  }
+}

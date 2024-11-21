@@ -13,10 +13,12 @@ import { FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessa
 import { Input } from "@repo/ui/components/input";
 import { Label } from "@repo/ui/components/label";
 import { useCreateTeam } from "@/context/create-team-context";
+import { useTranslations } from "next-intl";
 
 type TeamTypes = keyof z.infer<typeof teamSchema>;
 
 export const Step1 = React.forwardRef<HTMLDivElement>((props, ref) => {
+	const t = useTranslations("onbording");
 	const [typingTimeout, setTypingTimeout] = useState<NodeJS.Timeout | null>(null);
 	const {
 		goToStep,
@@ -87,10 +89,10 @@ export const Step1 = React.forwardRef<HTMLDivElement>((props, ref) => {
 		<div ref={ref}>
 			<Image src={managerIcon} alt="Ícone de um diretor de futebol" width={100} height={100} className="mx-auto" />
 
-			<h1 className="text-4xl mb-2 font-bold text-center mt-4">Crie sua equipa</h1>
-			<div className="space-y-2 text-center">
-				<p className="italic">Crie sua equipa e dispute competições, gerencie sua equipe e veja os resultados.</p>
-				<p className="">Vamos dar o nome a próxima equipa campeã:</p>
+			<h1 className="text-4xl mb-2 font-bold text-center mt-4">{t("createTeam.title")}</h1>
+			<div className="space-y-1 text-center">
+				<p className="italic">{t("createTeam.description")}</p>
+				<p className="text-sm text-white">{t("createTeam.disclaimer")}</p>
 			</div>
 
 			<div className="flex w-full gap-2 px-2">
@@ -120,7 +122,7 @@ export const Step1 = React.forwardRef<HTMLDivElement>((props, ref) => {
 								disabled={getField("name").isDisabledButton}
 								className="w-full bg-blue-950 hover:bg-blue-950/75"
 							>
-								Avançar
+								{t("createTeam.nextButton")}
 							</Button>
 						</FormItem>
 					)}

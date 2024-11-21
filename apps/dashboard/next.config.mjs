@@ -1,11 +1,14 @@
 import bundleAnalyzer from "@next/bundle-analyzer";
+import createNextIntlPlugin from "next-intl/plugin";
+
+const withNextIntl = createNextIntlPlugin();
 
 const withBundleAnalyzer = bundleAnalyzer({
   enabled: process.env.ANALYZE === "true",
 });
 
 /** @type {import("next").NextConfig} */
-const config = {
+const nextConfig = {
   poweredByHeader: false,
   reactStrictMode: true,
   images: {
@@ -24,10 +27,6 @@ const config = {
     ignoreBuildErrors: true,
   },
   experimental: {},
-  i18n: {
-    locales: ["en", "pt", "es"],
-    defaultLocale: "pt",
-  },
 
   async headers() {
     return [
@@ -44,4 +43,4 @@ const config = {
   },
 };
 
-export default withBundleAnalyzer(config);
+export default withBundleAnalyzer(withNextIntl(nextConfig));

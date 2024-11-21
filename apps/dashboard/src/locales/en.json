@@ -1,0 +1,32 @@
+{
+  "homePage": {
+    "title": "You're ready to build your dream team?"
+  },
+  "locales": {
+    "placeholder": "Select language",
+    "en": "English",
+    "pt": "Portuguese",
+    "es": "Spanish"
+  },
+  "aboutPage": {
+    "title": "About"
+  },
+  "onbording": {
+    "title": "Onboarding",
+    "step1": "Step 1",
+    "step2": "Step 2",
+    "step3": "Step 3",
+    "welcome": {
+      "title": "Welcome",
+      "text": "Welcome to the dashboard. Here you can create your team and start managing your data."
+    },
+    "createTeam": {
+      "title": "Create Your Team",
+      "text": "Fill out the form to build your dream team."
+    },
+    "createJouney": {
+      "title": "Create Your Jouney",
+      "text": "Fill out the form to build your dream jouney."
+    }
+  }
+}

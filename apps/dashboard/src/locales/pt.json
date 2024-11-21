@@ -1,0 +1,39 @@
+{
+  "homePage": {
+    "title": "Pronto para montar seu time dos sonhos?"
+  },
+  "locales": {
+    "placeholder": "Selecione um idioma",
+    "en": "Inglês",
+    "pt": "Português",
+    "es": "Espanhol"
+  },
+  "aboutPage": {
+    "title": "Sobre"
+  },
+  "onbording": {
+    "title": "Inicialização",
+    "welcome": {
+      "title": "Bem-vindo",
+      "text": "Bem-vindo ao ${appName}. Aqui vocês pode criar sua equipa ou iniciar uma jornada como jogador."
+    },
+    "createTeam": {
+      "title": "Criar sua equipa",
+      "description": "Crie suas equipas, dispute competições, gerencie atletas e obtenha resultados espectaculares.",
+      "disclaimer": "Se você não tem uma equipe, não se preocupe, você pode se juntar a uma equipe existente.",
+      "actionButton": "Criar minha equipe",
+      "step1": "Passo 1 - Defina o nome da equipa",
+      "step2": "Passo 2 - Aceite os Termos de Uso",
+      "step3": "Passo 3 - Defina as informações da equipa"
+    },
+    "myJourney": {
+      "title": "Iniciar minha jornada",
+      "description": "Inicie sua jornada como jogador, encontre equipas, faça amigos e participe de ligas lendárias.",
+      "disclaimer": "Se você nao tem uma equipa, nao se preocupe, você pode se juntar a uma equipa existente e disputar competições.",
+      "actionButton": "Criar minha jornada",
+      "step1": "Passo 1 - Defina meu nome de jogador",
+      "step2": "Passo 2 - Aceite os Termos de Uso",
+      "step3": "Passo 3 - Preencha minhas abilidades"
+    }
+  }
+}

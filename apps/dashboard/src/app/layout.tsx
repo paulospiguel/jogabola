@@ -1,37 +1,42 @@
 import "@repo/ui/globals.css";
 import "@/styles/globals.css";
+import { fonts } from "../styles/fonts";
 
 import { auth } from "@auth";
 import { cn } from "@repo/ui/utils";
 import type { Metadata } from "next";
 import { SessionProvider } from "next-auth/react";
-import { fonts } from "../styles/fonts";
+import { NextIntlClientProvider } from "next-intl";
+import { getMessages } from "next-intl/server";
+import { getUserLocale } from "@/services/locale";
 import { Providers } from "./providers";
 
 export const preferredRegion = ["fra1", "sfo1", "iad1"];
 export const maxDuration = 60;
 
 export const metadata: Metadata = {
-	title: "JogaBola",
-	description: "O melhor lugar para encontrar sua malta e jogar uma pelada.",
+  title: "JogaBola",
+  description: "O melhor lugar para encontrar sua malta e jogar uma pelada.",
 };
 
 export default async function RootLayout({
-	children,
-	params: { locale },
+  children,
 }: Readonly<{
-	children: React.ReactNode;
-	params: { locale: string };
+  children: React.ReactNode;
 }>) {
-	const session = await auth();
-	return (
-		<html lang={locale}>
-			<body className={cn("antialiased", fonts)} suppressHydrationWarning>
-				<SessionProvider session={session}>
-					<Providers locale={locale}>{children}</Providers>
-				</SessionProvider>
-				{children}
-			</body>
-		</html>
-	);
+  const session = await auth();
+  const dictionary = await getMessages();
+  const locale = await getUserLocale();
+
+  return (
+    <html lang={locale}>
+      <body className={cn("antialiased", fonts)} suppressHydrationWarning>
+        <NextIntlClientProvider messages={dictionary}>
+          <SessionProvider session={session}>
+            <Providers>{children}</Providers>
+          </SessionProvider>
+        </NextIntlClientProvider>
+      </body>
+    </html>
+  );
 }

@@ -2,8 +2,9 @@ services:
   postgres:
     container_name: jogabola_database
     image: postgres
+    restart: always
     environment:
-      - POSTGRES_USER=prspiguel
-      - POSTGRES_PASSWORD=prspiguel
+      - POSTGRES_USER=jogabola
+      - POSTGRES_PASSWORD=jogabola
     ports:
       - 5432:5432

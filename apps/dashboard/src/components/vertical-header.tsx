@@ -1,6 +1,8 @@
+import Link from "next/link";
 import { Logo } from "./logo";
 import { Navbar } from "./navbar";
 import Notifications from "./notifications";
+import { CogIcon } from "./icons";
 
 export default function VerticalHeader() {
 	return (
@@ -11,8 +13,11 @@ export default function VerticalHeader() {
 				</div>
 
 				<div className="flex flex-col gap-2 items-center">
-					<Notifications />
 					<Navbar />
+					<Notifications />
+					<Link href="/profile/settings">
+						<CogIcon className="size-8 text-green-600" />
+					</Link>
 				</div>
 			</div>
 		</header>
