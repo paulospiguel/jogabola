@@ -19,7 +19,7 @@ export default async function ManagerTeamsPage() {
 
 			<section>{/* <NotifyNews /> */}</section>
 
-			<section className="flex-1">{/* <ManagerTabs /> */}</section>
+			<section className="flex-1">{<ManagerTabs />}</section>
 		</div>
 	);
 }

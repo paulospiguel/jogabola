@@ -78,27 +78,32 @@ export async function ManagerTabs() {
 	return (
 		<>
 			<Tabs httpState className="w-full" defaultValue={defaultTab}>
-				<TabsList className="mx-auto w-full bg-primary h-14">
+				<TabsList className="mx-auto w-full bg-primary h-14 ">
 					{tabs?.map((tab) => (
-						<TabsTrigger disabled={tab?.isDisabled} key={tab.label} value={tab.label} className="group">
+						<TabsTrigger
+							disabled={tab?.isDisabled}
+							key={tab.label}
+							value={tab.label}
+							className="group border data-[state=inactive]:border-transparent"
+						>
 							<div className="space-x-2 flex items-center group-data-[state=inactive]:opacity-70">
 								{tab.icon && <span>{tab.icon}</span>}
 								<span>{dicitionaryTabs[tab.label]}</span>
 								{tab.isPremium && tab.isDisabled && (
-									<CrownIcon className="size-5 group-data-[state=active]:fill-white" />
+									<CrownIcon className="size-3 group-data-[state=active]:fill-white" />
 								)}
 							</div>
 						</TabsTrigger>
 					))}
 				</TabsList>
 				<TeamsTabContent tabKey={tabsValues.myteams} session={session} />
-				<FieldsTabContent tabKey={tabsValues.fields} session={session} />
+				{/*<FieldsTabContent tabKey={tabsValues.fields} session={session} />
 				<PlayersTabContent tabKey={tabsValues.players} session={session} />
 				<CalendarTabContent tabKey={tabsValues.schedule} session={session} />
 				<StatisticsTabContent tabKey={tabsValues.statistics} session={session} />
 				<EventsTabContent tabKey={tabsValues.events} session={session} />
 				<CompetitionsTabContent tabKey={tabsValues.competitions} session={session} />
-				<MatchesTabContent tabKey={tabsValues.matches} session={session} />
+				<MatchesTabContent tabKey={tabsValues.matches} session={session} /> */}
 			</Tabs>
 		</>
 	);

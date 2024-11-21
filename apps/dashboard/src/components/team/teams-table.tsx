@@ -4,7 +4,7 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { Suspense, useEffect, useMemo, useState } from "react";
 import noLogo from "@/assets/images/no-logo.png";
-import { GlobeIcon, LockIcon, TrendingDown, TrendingUp, Eye as ViewIcon } from "@repo/ui/icons";
+import { Edit, GlobeIcon, LockIcon, Trash, TrendingDown, TrendingUp, Eye as ViewIcon } from "@repo/ui/icons";
 import { Badge } from "@repo/ui/components/badge";
 import { Button } from "@repo/ui/components/button";
 import { Input } from "@repo/ui/components/input";
@@ -59,82 +59,36 @@ export default function TeamsTable({ teams }: TeamTableProps) {
 
 	return (
 		<div className="overflow-x-auto">
-			<Table>
-				<TableCaption className="px-4">
-					<Input placeholder="Pesquisar equipa" />
-				</TableCaption>
-				<ScrollArea className="h-[65vh] w-full">
-					<TableHeader>
-						<TableRow>
-							<TableHead className="w-[100px]">Emblema</TableHead>
-							<TableHead>Nome</TableHead>
-							<TableHead className="">Atletas</TableHead>
-							<TableHead className="">V/E/D</TableHead>
-							<TableHead className="">Competições</TableHead>
-							<TableHead>Performace</TableHead>
-							<TableHead>Status</TableHead>
-							<TableHead className="text-right"> </TableHead>
-						</TableRow>
-					</TableHeader>
-					<TableBody>
-						{teams?.map((team) => (
-							<TableRow key={team?.id}>
-								<TableCell className="font-medium">
-									<div className="flex items-center">
-										<div className="relative inline-block shrink-0 rounded-2xl me-3">
-											<Image
-												src={team?.logo || noLogo}
-												className="w-[50px] h-[50px] inline-block shrink-0 rounded-2xl"
-												alt=""
-											/>
-										</div>
-									</div>
-								</TableCell>
-								<TableCell>{team.name}</TableCell>
-								<TableCell className="">
-									<Suspense fallback={<div>0</div>}>
-										<PlayerAvatarList players={team?.teamMembers} size="sm" />
-									</Suspense>
-								</TableCell>
-								<TableCell className="">{"0/0/0"}</TableCell>
-								<TableCell className="">{0}</TableCell>
-								<TableCell>
-									<span className="text-center align-baseline inline-flex px-2 py-1 mr-auto items-center font-semibold text-base/none bg-success-light rounded-lg">
-										{calculatePerformance.increase ? (
-											<TrendingUp className="w-5 h-5 mr-1 text-success" />
-										) : (
-											<TrendingDown className="w-5 h-5 mr-1 text-error" />
-										)}
-										<span>{calculatePerformance.average}%</span>
-									</span>
-								</TableCell>
-								<TableCell className="">
-									{team.isPublic ? (
-										<Badge>
-											<GlobeIcon className="w-4 h-4 mr-1" />
-											Public
-										</Badge>
-									) : (
-										<Badge variant="secondary">
-											<LockIcon className="w-4 h-4 mr-1" />
-											Private
-										</Badge>
-									)}
-								</TableCell>
-								<TableCell className="text-right flex items-center justify-end">
-									{/* <Button onClick={() => handleEditTeam(team)} variant="ghost" className="p-2">
-										<SendIcon className="w-5 h-5 text-neutral-400" />
-									</Button> */}
+			{teams?.map((team) => (
+				<div
+					key={team?.id}
+					className="shadow-sm rounded-2xl p-2 bg-white mb-2 gap-2 grid grid-cols-12 place-content-stretch transition-colors hover:bg-slate-300"
+				>
+					<div className=" flex items-center">
+						<Image className="object-cover rounded-xl" src={team?.logo || noLogo} alt="" width={58} height={58} />
+					</div>
 
-									<Button onClick={() => handleOpenTeam(String(team.slug))} variant="ghost" className="p-2">
-										<ViewIcon className="w-5 h-5 text-neutral-400" />
-									</Button>
-								</TableCell>
-							</TableRow>
-						))}
-					</TableBody>
-				</ScrollArea>
-			</Table>
+					<div className=" flex items-center"> {team?.name}</div>
+					<div className=" flex items-center"> {"0/0/0"}</div>
+					<div className=" flex items-center"> {team?.name}</div>
+					<div className=" flex items-center"> {team?.name}</div>
+					<div className=" flex items-center"> {team?.name}</div>
+					<div className=" flex items-center"> {team?.name}</div>
+					<div className=" flex items-center"> {team?.name}</div>
+					<div className=" flex items-center"> {team?.name}</div>
+					<div className=" flex items-center"> {team?.name}</div>
+					<div className=" flex items-center"> {team?.name}</div>
+
+					<div className="border-l-2 flex items-center justify-end">
+						<Button variant="ghost" onClick={() => handleOpenTeam(team?.id || "")}>
+							<Edit className="w-5 h-5" />
+						</Button>
+						<Button variant="ghost" className="">
+							<Trash className="w-5 h-5" />
+						</Button>
+					</div>
+				</div>
+			))}
 		</div>
 	);
 }
