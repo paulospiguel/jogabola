@@ -1,75 +1,98 @@
-import { DEFAULT_SERVER_ERROR_MESSAGE, type InferCtx, createSafeActionClient } from "next-safe-action";
+import {
+  DEFAULT_SERVER_ERROR_MESSAGE,
+  type InferCtx,
+  createSafeActionClient,
+} from "next-safe-action";
 import { z } from "zod";
-import { getUser } from "./user";
+import { auth } from "@auth";
+import { UserRole } from "@repo/db";
+
+export const ctxSchema = z
+  .object({
+    userId: z.string(),
+    roles: z.array(z.nativeEnum(UserRole)),
+    teamId: z.string().optional(),
+    canCreateTeam: z.boolean().optional(),
+  })
+  .optional();
+
+export type SafeCtx = {
+  userId: string;
+  teamId?: string;
+  canCreateTeam?: boolean;
+};
 
 export const actionClient = createSafeActionClient({
-	handleServerError(e) {
-		if (e instanceof Error) {
-			console.log(e);
+  handleServerError(e) {
+    if (e instanceof Error) {
+      console.log(e);
 
-			return e.message;
-		}
+      return e.message;
+    }
 
-		return DEFAULT_SERVER_ERROR_MESSAGE;
-	},
+    return DEFAULT_SERVER_ERROR_MESSAGE;
+  },
 });
 
 export const actionClientWithMeta = createSafeActionClient({
-	handleServerError(e) {
-		if (e instanceof Error) {
-			return e.message;
-		}
+  handleServerError(e) {
+    if (e instanceof Error) {
+      return e.message;
+    }
 
-		return DEFAULT_SERVER_ERROR_MESSAGE;
-	},
-	defineMetadataSchema() {
-		return z.object({
-			name: z.string(),
-			track: z
-				.object({
-					event: z.string(),
-					channel: z.string(),
-				})
-				.optional(),
-		});
-	},
+    return DEFAULT_SERVER_ERROR_MESSAGE;
+  },
+  defineMetadataSchema() {
+    return z.object({
+      name: z.string(),
+      // track: z
+      //   .object({
+      //     event: z.string(),
+      //     channel: z.string(),
+      //   })
+      //   .optional(),
+    });
+  },
 });
 
-export const authActionClient = actionClientWithMeta.use(async ({ next, clientInput, metadata }) => {
-	const result = await next<InferCtx<{ userId: string }>>({ ctx: undefined });
-	// const session = await auth();
-	// //const session = cookies().get("session")?.value;
+export const authActionClient = actionClientWithMeta.use(
+  async ({ next, clientInput, metadata }) => {
+    const result = await next<InferCtx<z.infer<typeof ctxSchema>>>({
+      ctx: undefined,
+    });
+    const session = await auth();
+    const user = session?.user;
 
-	// if (!session) {
-	// 	throw new Error("Session not found!");
-	// }
+    // //const session = cookies().get("session")?.value;
 
-	// console.log({ session });
+    // if (!session) {
+    // 	throw new Error("Session not found!");
+    // }
 
-	const { data } = (await getUser()) || {};
+    // console.log({ session });
 
-	const user = data?.user;
+    //const { user, canCreateTeam } = (await getUser()) || {};
 
-	if (!user?.id) {
-		throw new Error("User is not valid!");
-	}
+    if (!user?.id) {
+      throw new Error("Logged user is not valid!");
+    }
 
-	// if (process.env.NODE_ENV === "development") {
-	// 	// logger("Input ->", clientInput);
-	// 	// logger("Result ->", result.data);
-	// 	// logger("Metadata ->", metadata);
+    // if (process.env.NODE_ENV === "development") {
+    // 	// logger("Input ->", clientInput);
+    // 	// logger("Result ->", result.data);
+    // 	// logger("Metadata ->", metadata);
 
-	// 	return result;
-	// }
+    // 	return result;
+    // }
 
-	return {
-		...result,
-		ctx: {
-			...result.ctx,
-			userId: user.id,
-		},
-	};
-});
+    return next({
+      ctx: {
+        ...result.ctx,
+        userId: user?.id,
+      },
+    });
+  }
+);
 // .use(async ({ next, metadata }) => {
 // 	// const ip = headers().get("x-forwarded-for");
 

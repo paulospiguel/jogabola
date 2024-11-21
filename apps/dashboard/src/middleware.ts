@@ -1,8 +1,15 @@
 import { createRouteMatchers } from "@/lib/route";
+import { createI18nMiddleware } from "next-international/middleware";
 import { configRoutes } from "@/settings/routes";
 import { type NextRequest, NextResponse } from "next/server";
 
+const I18nMiddleware = createI18nMiddleware({
+	locales: languages,
+	defaultLocale: languages[0] || "en",
+});
+
 import { auth } from "@auth";
+import { languages } from "./locales/client";
 
 export default async function middleware(req: NextRequest) {
 	const session = await auth();
@@ -22,7 +29,7 @@ export default async function middleware(req: NextRequest) {
 		return NextResponse.redirect(new URL(redirectUrl, req.url));
 	}
 
-	return NextResponse.next();
+	return I18nMiddleware(req);
 }
 
 export const config = {

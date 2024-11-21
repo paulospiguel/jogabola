@@ -1,14 +1,15 @@
 "use client";
 
-import { useCreateTeam } from "@/hooks/use-create-team";
 import { type StepForm, Steps } from "@/types";
 import { Form, FormField } from "@repo/ui/components/form";
 import { cn } from "@repo/ui/utils";
 import { motion } from "framer-motion";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo } from "react";
 import { Step1 } from "./step1";
 import { Step2 } from "./step2";
 import { Step3 } from "./step3";
+import { useCreateTeam } from "@/context/create-team-context";
+import { FormProvider } from "react-hook-form";
 
 export const onboardingForm = {
 	[Steps.Step1]: {
@@ -66,47 +67,49 @@ export function MultiStepCreateTeamConfig({ isAddTeam = false }) {
 	}, [Step, isAddTeam]);
 
 	return (
-		<Form {...form}>
-			<FormField
-				control={form.control}
-				name="currentStep"
-				render={({ field }) =>
-					!isAddTeam ? (
-						<ul className="flex space-x-2 p-2 justify-center w-full">
-							{Object.keys(onboardingForm).map((step, index) => {
-								const stepIndex = index + 1;
-								const isMatchStep = currentStep === stepIndex;
-								let disabledButton = false;
+		<FormProvider {...form}>
+			<Form {...form}>
+				<FormField
+					control={form.control}
+					name="currentStep"
+					render={({ field }) =>
+						!isAddTeam ? (
+							<ul className="flex space-x-2 p-2 justify-center w-full">
+								{Object.keys(onboardingForm).map((step, index) => {
+									const stepIndex = index + 1;
+									const isMatchStep = currentStep === stepIndex;
+									let disabledButton = false;
 
-								const formStep = Steps.Step3 === stepIndex;
+									const formStep = Steps.Step3 === stepIndex;
 
-								if (formStep && !form.watch("termsOfUse")) {
-									disabledButton = true;
-								}
+									if (formStep && !form.watch("termsOfUse")) {
+										disabledButton = true;
+									}
 
-								if (!form.watch("name")) {
-									disabledButton = true;
-								}
+									if (!form.watch("name")) {
+										disabledButton = true;
+									}
 
-								return (
-									<button
-										key={step}
-										type="button"
-										disabled={disabledButton}
-										onClick={() => form.setValue("currentStep", index + 1)}
-										className={cn("w-8 py-1 rounded-full bg-gray-300", {
-											"bg-gray-400": isMatchStep,
-										})}
-									/>
-								);
-							})}
-						</ul>
-					) : (
-						<></>
-					)
-				}
-			/>
-			<section className="h-[85vh] overflow-auto pb-2">{MotionStep}</section>
-		</Form>
+									return (
+										<button
+											key={step}
+											type="button"
+											disabled={disabledButton}
+											onClick={() => form.setValue("currentStep", index + 1)}
+											className={cn("w-8 py-1 rounded-full bg-gray-300", {
+												"bg-gray-400": isMatchStep,
+											})}
+										/>
+									);
+								})}
+							</ul>
+						) : (
+							<></>
+						)
+					}
+				/>
+				<section className="h-[85vh] overflow-auto pb-2">{MotionStep}</section>
+			</Form>
+		</FormProvider>
 	);
 }

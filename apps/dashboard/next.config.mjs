@@ -24,6 +24,11 @@ const config = {
     ignoreBuildErrors: true,
   },
   experimental: {},
+  i18n: {
+    locales: ["en", "pt", "es"],
+    defaultLocale: "pt",
+  },
+
   async headers() {
     return [
       {

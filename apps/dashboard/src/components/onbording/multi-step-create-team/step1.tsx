@@ -2,7 +2,6 @@
 
 import Image from "next/image";
 import React, { type KeyboardEvent, useState } from "react";
-import { useForm } from "react-hook-form";
 import { z } from "zod";
 
 import { checkTeamByName } from "@/actions/team";
@@ -10,20 +9,19 @@ import managerIcon from "@/assets/icons/director.png";
 import { teamSchema } from "@/schemas";
 import { Steps } from "@/types";
 import { Button } from "@repo/ui/components/button";
-import { FormControl, FormDescription, FormItem, FormLabel, FormMessage } from "@repo/ui/components/form";
+import { FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@repo/ui/components/form";
 import { Input } from "@repo/ui/components/input";
-import { zodResolver } from "@hookform/resolvers/zod";
+import { Label } from "@repo/ui/components/label";
+import { useCreateTeam } from "@/context/create-team-context";
 
 type TeamTypes = keyof z.infer<typeof teamSchema>;
 
 export const Step1 = React.forwardRef<HTMLDivElement>((props, ref) => {
-	const { register, getValues, handleSubmit, formState, getFieldState, setValue, clearErrors, setError } = useForm<
-		z.infer<typeof teamSchema>
-	>({
-		resolver: zodResolver(teamSchema),
-	});
-
 	const [typingTimeout, setTypingTimeout] = useState<NodeJS.Timeout | null>(null);
+	const {
+		goToStep,
+		methods: { setError, clearErrors, getValues, formState, getFieldState, setValue, ...form },
+	} = useCreateTeam();
 
 	const handleNextStep = () => {
 		try {
@@ -33,7 +31,7 @@ export const Step1 = React.forwardRef<HTMLDivElement>((props, ref) => {
 				})
 				.parse(getValues());
 
-			setValue("currentStep", Steps.Step2);
+			goToStep(Steps.Step2);
 		} catch (error) {
 			if (error instanceof z.ZodError) {
 				// biome-ignore lint/complexity/noForEach: <explanation>
@@ -78,7 +76,7 @@ export const Step1 = React.forwardRef<HTMLDivElement>((props, ref) => {
 		}
 
 		const newTimeout = setTimeout(() => {
-			const teamName = getValues("name")?.trim();
+			const teamName = getField("name")?.value.trim();
 			handelCheckTeamName(teamName);
 		}, 300);
 
@@ -95,36 +93,39 @@ export const Step1 = React.forwardRef<HTMLDivElement>((props, ref) => {
 				<p className="">Vamos dar o nome a próxima equipa campeã:</p>
 			</div>
 
-			<form className="mx-2">
-				<div className="flex w-full gap-2">
-					<FormItem className="flex-1">
-						<FormLabel>Nome da equipa</FormLabel>
-						<FormControl>
-							<Input
-								{...register("name")}
-								required
-								className="rounded-full"
-								autoComplete="off"
-								type="name"
-								placeholder="Nomeie sua equipa com algo único!"
-								isError={!!getField("name").state.error?.message}
-								onKeyDown={handleOnKeyDown}
-							/>
-						</FormControl>
-						<FormDescription className="hidden">Nome da equipa.</FormDescription>
-						<FormMessage>{getField("name").state.error?.message}</FormMessage>
-						<Button
-							type="button"
-							onClick={handleNextStep}
-							variant={"default"}
-							disabled={getField("name").isDisabledButton}
-							className="w-full bg-blue-950 hover:bg-blue-950/75"
-						>
-							Avançar
-						</Button>
-					</FormItem>
-				</div>
-			</form>
+			<div className="flex w-full gap-2 px-2">
+				<FormField
+					control={form.control}
+					name="name"
+					render={({ field }) => (
+						<FormItem className="flex-1">
+							<Label>Nome da equipa</Label>
+							<FormControl>
+								<Input
+									{...field}
+									required
+									className="rounded-full"
+									autoComplete="off"
+									placeholder="Nomeie sua equipa com algo único!"
+									isError={!!getField("name").state.error?.message}
+									onKeyDown={handleOnKeyDown}
+								/>
+							</FormControl>
+							<FormDescription className="hidden">Nome da equipa.</FormDescription>
+							<FormMessage>{getField("name").state.error?.message}</FormMessage>
+							<Button
+								type="button"
+								onClick={handleNextStep}
+								variant={"default"}
+								disabled={getField("name").isDisabledButton}
+								className="w-full bg-blue-950 hover:bg-blue-950/75"
+							>
+								Avançar
+							</Button>
+						</FormItem>
+					)}
+				/>
+			</div>
 		</div>
 	);
 });

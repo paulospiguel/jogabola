@@ -24,8 +24,8 @@ export default {
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
-        error: colors.red[500],
-        success: colors.green[500],
+        error: "hsl(var(--error))",
+        success: "hsl(var(--success))",
         foreground: "hsl(var(--foreground))",
         destructive: {
           DEFAULT: "hsl(var(--destructive))",

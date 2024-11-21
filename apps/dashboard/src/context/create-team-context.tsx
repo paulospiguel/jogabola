@@ -1,7 +1,13 @@
 "use client";
 
 import { useSession } from "next-auth/react";
-import { createContext, useContext, useEffect, useState } from "react";
+import {
+  createContext,
+  PropsWithChildren,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
 
 import { teamSchema } from "@/schemas";
 import type { Steps } from "@/types";
@@ -16,119 +22,159 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useStore } from "@tanstack/react-store";
 import { useForm } from "react-hook-form";
 import { useAction } from "next-safe-action/hooks";
+import { Props } from "recharts/types/container/Surface";
+import { log } from "console";
 
 type CreateTeamContextValue = {
-	isPending: boolean;
-	error: string;
-	success: string;
-	setError: (error: string) => void;
-	setSuccess: (success: string) => void;
-	data: z.infer<typeof teamSchema>;
-	setTeamData: (value: z.infer<typeof teamSchema>) => void;
-	goToStep: (step: Steps) => void;
-	currentStep: Steps;
-	isCompleted?: boolean;
-	keyStorage: string;
-	methods: UseFormPersistReturn<z.infer<typeof teamSchema>>;
-	createdTeamCounter: number;
+  isPending: boolean;
+  error: string;
+  success: string;
+  setError: (error: string) => void;
+  setSuccess: (success: string) => void;
+  data: z.infer<typeof teamSchema>;
+  setTeamData: (value: z.infer<typeof teamSchema>) => void;
+  goToStep: (step: Steps) => void;
+  currentStep: Steps;
+  isCompleted?: boolean;
+  STORAGE_KEY: string;
+  methods: UseFormPersistReturn<z.infer<typeof teamSchema>>;
+  createdTeamCounter: number;
+  isClient: boolean;
 };
 
 const initialData = {
-	name: "",
-	bio: undefined,
-	logo: undefined,
-	...teamSchema
-		.pick({
-			currentStep: true,
-			location: true,
-			language: true,
-			teamShape: true,
-			radiusPlayerArea: true,
-			radiusPlayerAge: true,
-			isPublic: true,
-		})
-		.parse({}),
+  name: "",
+  bio: undefined,
+  logo: undefined,
+  ...teamSchema
+    .pick({
+      currentStep: true,
+      location: true,
+      language: true,
+      teamShape: true,
+      radiusPlayerArea: true,
+      radiusPlayerAge: true,
+      isPublic: true,
+    })
+    .parse({}),
 } as z.infer<typeof teamSchema>;
 
-const CreateTeamContext = createContext<CreateTeamContextValue | undefined>(undefined);
+const CreateTeamContext = createContext<CreateTeamContextValue | undefined>(
+  undefined
+);
 
-export const CreateTeamProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-	const [isPending, setIsPending] = useState(false);
-	const [isCompleted, setIsCompleted] = useState(false);
-	const [error, setError] = useState("");
-	const [success, setSuccess] = useState("");
-	const [teamData, setCurrentTeamData] = useState<z.infer<typeof teamSchema>>(initialData);
+type CreateTeamProviderProps = PropsWithChildren<{}>;
 
-	const { data: session } = useSession();
-	const keyStorage = `jogabolaCreateTeam:${session?.user?.id}`;
+export const CreateTeamProvider: React.FC<CreateTeamProviderProps> = ({
+  children,
+}) => {
+  const { data: session } = useSession();
+  const STORAGE_KEY = `jogabolaCreateTeam:${session?.user?.id}`;
+  const [isPending, setIsPending] = useState(false);
+  const [isClient, setIsClient] = useState(false);
+  const [isCompleted, setIsCompleted] = useState(false);
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
+  const [teamData, setCurrentTeamData] =
+    useState<z.infer<typeof teamSchema>>(initialData);
 
-	const { createdTeamCounter } = useStore(teamStore);
+  const { createdTeamCounter } = useStore(teamStore);
 
-	// const methods = useFormPersist<z.infer<typeof teamSchema>>({
-	// 	storageKey: keyStorage,
-	// 	storageLocation: window ? window?.sessionStorage : undefined,
-	// 	resolver: zodResolver(teamSchema),
-	// 	includeDirtyFields: true,
-	// 	defaultValues: teamData,
-	// 	callback(values, isSubmitting, isSubmitted) {
-	// 		if (isSubmitted) {
-	// 			setIsCompleted(isSubmitted);
-	// 		}
-	// 	},
-	// });
+  // const methods = useFormPersist<z.infer<typeof teamSchema>>({
+  // 	storageKey: keyStorage,
+  // 	storageLocation: window ? window?.sessionStorage : undefined,
+  // 	resolver: zodResolver(teamSchema),
+  // 	includeDirtyFields: true,
+  // 	defaultValues: teamData,
+  // 	callback(values, isSubmitting, isSubmitted) {
+  // 		if (isSubmitted) {
+  // 			setIsCompleted(isSubmitted);
+  // 		}
+  // 	},
+  // });
 
-	const methods = useForm<z.infer<typeof teamSchema>>({
-		defaultValues: teamData,
-	});
+  const methods = useForm<z.infer<typeof teamSchema>>({
+    resolver: zodResolver(teamSchema),
+    defaultValues: teamData,
+  });
 
-	const { push } = useRouter();
+  const { push } = useRouter();
 
-	const setTeamData = (value: z.infer<typeof teamSchema>) => {
-		setCurrentTeamData(value);
-	};
+  const setTeamData = (value: z.infer<typeof teamSchema>) => {
+    setCurrentTeamData(value);
+  };
 
-	const goToStep = (step: Steps) => {
-		setCurrentTeamData((prevState) => ({ ...prevState, currentStep: step }));
-	};
+  const goToStep = (step: Steps) => {
+    methods.setValue("currentStep", step);
+    setCurrentTeamData((prevState) => ({ ...prevState, currentStep: step }));
+  };
 
-	useAction(checkUserHasTeam, {
-		executeOnMount: {
-			input: {
-				userId: session?.user?.id as string,
-			},
-		},
-		onSuccess: (rolesTeam) => {
-			if (rolesTeam) {
-				push("/manager/teams");
-				return;
-			}
-		},
-	});
+  useAction(checkUserHasTeam, {
+    executeOnMount: {
+      input: {
+        userId: session?.user?.id as string,
+      },
+    },
+    onSuccess: ({ data: hasRolesTeam }) => {
+      if (hasRolesTeam) {
+        console.log({ hasRolesTeam });
 
-	const value: CreateTeamContextValue = {
-		isPending,
-		error,
-		success,
-		setError,
-		setSuccess,
-		data: teamData,
-		setTeamData,
-		goToStep,
-		currentStep: teamData?.currentStep,
-		isCompleted,
-		keyStorage,
-		methods,
-		createdTeamCounter,
-	};
+        // push("/manager/teams");
+        return;
+      }
+    },
+  });
 
-	return <CreateTeamContext.Provider value={value}>{children}</CreateTeamContext.Provider>;
+  useEffect(() => {
+    setIsClient(true);
+    const storedData = sessionStorage.getItem(STORAGE_KEY);
+    if (storedData) {
+      const parsedData = JSON.parse(storedData);
+      setCurrentTeamData(parsedData);
+      methods.reset(parsedData);
+    }
+  }, [methods]);
+
+  useEffect(() => {
+    const subscription = methods.watch((value) => {
+      if (isClient) {
+        sessionStorage.setItem(STORAGE_KEY, JSON.stringify(value));
+      }
+    });
+    return () => subscription.unsubscribe();
+  }, [methods, isClient]);
+
+  const value: CreateTeamContextValue = {
+    isPending,
+    error,
+    success,
+    setError,
+    setSuccess,
+    data: teamData,
+    setTeamData,
+    goToStep,
+    currentStep: teamData?.currentStep,
+    isCompleted,
+    STORAGE_KEY,
+    methods,
+    createdTeamCounter,
+    isClient,
+  };
+
+  return (
+    <CreateTeamContext.Provider value={value}>
+      {children}
+    </CreateTeamContext.Provider>
+  );
 };
 
-export const useCreateTeamContext = () => {
-	const context = useContext(CreateTeamContext);
+export const useCreateTeam = () => {
+  const context = useContext(CreateTeamContext);
 
-	if (!context) {
-		throw new Error("useCreateTeamContext must be used within a CreateTeamProvider");
-	}
-	return context;
+  if (!context) {
+    throw new Error(
+      "useCreateTeamContext must be used within a CreateTeamProvider"
+    );
+  }
+  return context;
 };

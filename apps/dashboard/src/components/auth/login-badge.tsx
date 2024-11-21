@@ -24,6 +24,7 @@ import Link from "next/link";
 import { LineMdCogLoop } from "../icons";
 import LoginButton from "./login-button";
 import LogoutButton from "./logout-button";
+import AvatarPoligon from "../avatar-poligon";
 
 type Props = {
 	user?: Session["user"];
@@ -40,22 +41,16 @@ const LoginBadge = ({ user }: Props) => {
 
 	const borderColor = avatarImage ? "bg-green-500 dark:bg-green-600" : "";
 
-	const clipPolygon =
-		avatarImage && user?.id
-			? "[clip-path:polygon(50%_0,_100%_25%,_100%_75%,_50%_100%,_0_75%,_0_25%)] rounded-none"
-			: "rounded-full";
-
 	return (
 		<>
 			{isLoggedIn && (
 				<DropdownMenu>
 					<DropdownMenuTrigger asChild>
-						<Avatar className={cn(borderColor, clipPolygon, "p-0.5 flex items-center justify-center")}>
-							<AvatarImage src={avatarImage} className={cn(clipPolygon, "rounded-none shadow-none")} />
-							<AvatarFallback className={borderColor}>
-								<CircleUser className="h-7 w-7" />
-							</AvatarFallback>
-						</Avatar>
+						<AvatarPoligon
+							borderColor={borderColor}
+							avatarImage={"https://github.com/paulospiguel.png"}
+							label={user?.name || ""}
+						/>
 					</DropdownMenuTrigger>
 					<DropdownMenuContent className="w-[300px]" align="end">
 						<DropdownMenuLabel>Minha Conta</DropdownMenuLabel>

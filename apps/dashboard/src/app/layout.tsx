@@ -30,6 +30,7 @@ export default async function RootLayout({
 				<SessionProvider session={session}>
 					<Providers locale={locale}>{children}</Providers>
 				</SessionProvider>
+				{children}
 			</body>
 		</html>
 	);

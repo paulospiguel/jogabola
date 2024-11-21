@@ -18,6 +18,7 @@
     --accent-foreground: 240 5.9% 10%;
     --destructive: 346.8 77.2% 49.8%;
     --destructive-foreground: 0 0% 98%;
+    --success: 142.1 76.2% 36.3%;
     --border: 240 5.9% 90%;
     --input: 240 5.9% 90%;
     --ring: 142.1 76.2% 36.3%;
@@ -57,7 +58,7 @@
     --chart-5: 340 75% 55%;
   }
 }
- 
+
 @layer base {
   * {
     @apply border-border;
@@ -68,7 +69,9 @@
     @apply bg-background text-foreground;
   }
 
-  html, body, #root {
+  html,
+  body,
+  #root {
     height: 100%;
   }
 
@@ -82,11 +85,11 @@
   }
 }
 
- .scrollbar-hide::-webkit-scrollbar {
+.scrollbar-hide::-webkit-scrollbar {
   display: none;
 }
 
- .scrollbar-hide {
+.scrollbar-hide {
   -ms-overflow-style: none;
   scrollbar-width: none;
 }
@@ -146,7 +149,7 @@
   z-index: 10;
 }
 
-.loading-wrapper[data-visible='false'] {
+.loading-wrapper[data-visible="false"] {
   transform-origin: center;
   animation: fade-out 0.2s ease forwards;
 }
@@ -256,21 +259,21 @@
   overflow: hidden;
   display: inline-block;
   vertical-align: bottom;
-  -webkit-animation: ellipsis steps(4,end) 900ms infinite;      
-  animation: ellipsis steps(4,end) 900ms infinite;
+  -webkit-animation: ellipsis steps(4, end) 900ms infinite;
+  animation: ellipsis steps(4, end) 900ms infinite;
   content: "\2026"; /* ascii code for the ellipsis character */
   width: 0px;
 }
 
 @keyframes ellipsis {
   to {
-    width: 1.25em;    
+    width: 1.25em;
   }
 }
 
 @-webkit-keyframes ellipsis {
   to {
-    width: 1.25em;    
+    width: 1.25em;
   }
 }
 

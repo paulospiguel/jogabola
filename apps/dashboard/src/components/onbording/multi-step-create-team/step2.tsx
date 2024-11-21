@@ -2,21 +2,19 @@
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
-import { useFormContext } from "react-hook-form";
-import type { z } from "zod";
 
 import gameDay from "@/assets/images/game_day.svg";
-import type { teamSchema } from "@/schemas";
 import { Steps } from "@/types";
 import { Button } from "@repo/ui/components/button";
 import { Checkbox } from "@repo/ui/components/checkbox";
 import { FormControl, FormDescription, FormField, FormItem, FormMessage } from "@repo/ui/components/form";
+import { useCreateTeam } from "@/context/create-team-context";
 
 export const Step2 = React.forwardRef<HTMLDivElement>((props, ref) => {
-	const form = useFormContext<z.infer<typeof teamSchema>>();
+	const { methods: form, goToStep } = useCreateTeam();
 
 	const handleNextStep = () => {
-		form.setValue("currentStep", Steps.Step3);
+		goToStep(Steps.Step3);
 	};
 
 	const isDisabled = form.watch("termsOfUse");
