@@ -28,8 +28,25 @@ import {
 	Delete,
 	Trash2,
 	Save,
+	SendToBack,
+	SendHorizonal,
+	FolderSync,
+	FileSymlinkIcon,
+	Repeat,
+	Repeat2,
+	Copy,
+	Info,
+	Edit2,
+	Camera,
 } from "@repo/ui/icons";
 import { Avatar, AvatarFallback, AvatarImage } from "@repo/ui/components/avatar";
+import { SubmitHandler, useForm } from "react-hook-form";
+import { FormField } from "@repo/ui/components/form";
+import { z } from "zod";
+import { cn } from "@repo/ui/lib/cn";
+import Image from "next/image";
+
+import noImage from "@/assets/images/JOGABOLA-shield.svg";
 
 // Simulated data and functions
 const hasEditPermission = true; // In a real app, this would be determined by the user's role
@@ -42,8 +59,20 @@ const initialTeamData = {
 };
 
 const initialStaff = [
-	{ id: 1, name: "João Silva", role: "Treinador Principal", invited: false },
-	{ id: 2, name: "Maria Santos", role: "Fisioterapeuta", invited: true },
+	{
+		id: 1,
+		name: "João Silva",
+		role: "Treinador Principal",
+		email: "WQGxH@example.com",
+		invited: false,
+	},
+	{
+		id: 2,
+		name: "Maria Santos",
+		role: "Fisioterapeuta",
+		email: "V5vCf@example.com",
+		invited: true,
+	},
 ];
 
 const initialPlayers = [
@@ -82,6 +111,12 @@ const initialBanners = [
 	{ id: 2, image: "/banner2.jpg", title: "Promoção de Ingressos" },
 ];
 
+const addStaffSchema = z.object({
+	name: z.string(),
+	role: z.string(),
+	email: z.string().email(),
+});
+
 export default function EquipeFutebol() {
 	const [teamData, setTeamData] = useState(initialTeamData);
 	const [staff, setStaff] = useState(initialStaff);
@@ -94,9 +129,25 @@ export default function EquipeFutebol() {
 	const [selectedGame, setSelectedGame] = useState(null);
 	const [selectedPlayers, setSelectedPlayers] = useState([]);
 	const [isShowAddStaff, setIsShowAddStaff] = useState(false);
+	const [sendingInvitations, setSendingInvitations] = useState<number[]>([]);
+	const [openShareModal, setOpenShareModal] = useState<string | number | null>(null);
 
-	const addStaffMember = (name: string, role: string) => {
-		setStaff([...staff, { id: Date.now(), name, role, invited: true }]);
+	const {
+		register,
+		handleSubmit,
+		control,
+		reset,
+		formState: { errors },
+	} = useForm<z.infer<typeof addStaffSchema>>({
+		defaultValues: {
+			name: "",
+			email: "",
+			role: "",
+		},
+	});
+
+	const addStaffMember = (name: string, role: string, email: string) => {
+		setStaff([...staff, { id: Date.now(), name, role, email, invited: true }]);
 	};
 
 	const addPlayer = (name: string, position: string, number: number, nationality: string) => {
@@ -164,9 +215,23 @@ export default function EquipeFutebol() {
 		console.log(`Sharing convocation on ${platform}`);
 	};
 
-	const handleAddStaff = () => {
-		addStaffMember("Novo Membro", "Função");
+	const handleAddStaff = (formData: z.infer<typeof addStaffSchema>) => {
+		addStaffMember(formData.name, formData.role, formData.email);
+		reset();
 		setIsShowAddStaff(false);
+	};
+
+	const removeMember = (id: number) => {
+		setStaff(staff.filter((member) => member.id !== id));
+	};
+
+	const sendInvitation = (id: number, action?: "send" | "retry") => {
+		const member = { ...staff.find((member) => member.id === id) };
+		setSendingInvitations([...sendingInvitations, id]);
+		setTimeout(() => {
+			setSendingInvitations(sendingInvitations.filter((id) => id !== member.id));
+			setStaff(staff.map((member) => (member.id === id ? { ...member, invited: action === "send" } : member)));
+		}, 1000);
 	};
 
 	return (
@@ -210,10 +275,20 @@ export default function EquipeFutebol() {
 				<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
 					<header className="mb-8 text-center">
 						<div className="flex items-center gap-4">
-							<Avatar className="w-32 h-32 border-4 border-yellow-500">
-								<AvatarImage src={teamData.image} alt={teamData.name} />
-								<AvatarFallback className="uppercase text-5xl">{teamData.name.slice(0, 2)}</AvatarFallback>
-							</Avatar>
+							<div className="relative">
+								<Image
+									src={teamData.image || noImage}
+									alt={teamData.name}
+									className="w-32 h-32"
+									width={200}
+									height={200}
+								/>
+
+								<Button variant="ghost" className="absolute hover:bg-gray-50/35 right-0 left-0 bottom-0">
+									<Camera className="h-6 w-6 text-gray-600" />
+								</Button>
+							</div>
+
 							<div className="text-left">
 								<h1 className="text-4xl font-sans text-green-800 mb-2">{teamData.name}</h1>
 								<p className="text-gray-600 max-w-md mx-auto">{teamData.bio}</p>
@@ -252,16 +327,15 @@ export default function EquipeFutebol() {
 						</Card>
 					</div>
 				</div>
-				<Tabs defaultValue="jogadores" className="w-full mx-auto">
-					<TabsList className="grid w-full grid-cols-7 bg-primary rounded-lg p-1 mb-6">
+				<Tabs defaultValue="team" className="w-full mx-auto">
+					<TabsList className="grid w-full grid-cols-6 bg-primary rounded-lg p-1 mb-6">
 						{[
-							{ value: "equipe", icon: Trophy, label: "Equipe" },
-							{ value: "competicoes", icon: Award, label: "Competições" },
-							{ value: "jogadores", icon: Users, label: "Jogadores" },
-							{ value: "estatisticas", icon: BarChart2, label: "Estatísticas" },
-							{ value: "calendario", icon: CalendarDays, label: "Calendário" },
-							{ value: "noticias", icon: Newspaper, label: "Notícias" },
-							{ value: "financeiro", icon: DollarSign, label: "Financeiro" },
+							{ value: "team", icon: Trophy, label: "Equipe" },
+							{ value: "competitions", icon: Award, label: "Competições" },
+							{ value: "players", icon: Users, label: "Jogadores" },
+							{ value: "statistics", icon: BarChart2, label: "Estatísticas" },
+							{ value: "schedule", icon: CalendarDays, label: "Calendário" },
+							{ value: "news", icon: Newspaper, label: "Notícias" },
 						].map(({ value, icon: Icon, label }) => (
 							<TabsTrigger
 								key={value}
@@ -274,7 +348,7 @@ export default function EquipeFutebol() {
 						))}
 					</TabsList>
 
-					<TabsContent value="jogadores">
+					<TabsContent value="players">
 						<Card>
 							<CardHeader className="flex flex-row items-center justify-between">
 								<CardTitle className="text-2xl font-sans flex items-center">
@@ -317,7 +391,7 @@ export default function EquipeFutebol() {
 						</Card>
 					</TabsContent>
 
-					<TabsContent value="estatisticas">
+					<TabsContent value="statistics">
 						<Card>
 							<CardHeader>
 								<CardTitle className="text-2xl font-sans flex items-center">
@@ -346,7 +420,7 @@ export default function EquipeFutebol() {
 						</Card>
 					</TabsContent>
 
-					<TabsContent value="calendario">
+					<TabsContent value="schedule">
 						<Card>
 							<CardHeader className="flex flex-row items-center justify-between">
 								<CardTitle className="text-2xl font-sans flex items-center">
@@ -366,7 +440,10 @@ export default function EquipeFutebol() {
 							<CardContent>
 								<ul className="space-y-4">
 									{events.map((evento) => (
-										<li key={evento.id} className="bg-gray-50 p-4 rounded-lg flex items-center">
+										<li
+											key={evento.id}
+											className="bg-white dark:bg-slate-800 rounded-xl p-4 shadow-md flex items-center"
+										>
 											<div className="mr-4 text-center">
 												<p className="text-lg font-sans">{new Date(evento.date).toLocaleDateString()}</p>
 												<p className="text-sm text-gray-600">{evento.time}</p>
@@ -379,11 +456,33 @@ export default function EquipeFutebol() {
 													{evento.location}
 												</p>
 											</div>
-											{evento.type === "Jogo" && (
-												<Button variant="outline" size="sm">
-													Comprar Ingressos
-												</Button>
-											)}
+											<div className="space-x-2">
+												{evento.type === "Jogo" && (
+													<Button variant="outline" size="sm">
+														<Info className="h-4 w-4 mr-1" /> Ver Detalhes
+													</Button>
+												)}
+												{hasEditPermission && (
+													<>
+														<Button
+															variant="outline"
+															size="sm"
+															className="ml-auto"
+															onClick={() => console.log(evento.id)}
+														>
+															<Edit2 className="h-4 w-4 mr-1" /> Editar
+														</Button>
+														<Button
+															variant="outline"
+															size="sm"
+															className="ml-auto"
+															onClick={() => console.log(evento.id)}
+														>
+															<Trash2 className="h-4 w-4 mr-1" /> Apagar
+														</Button>
+													</>
+												)}
+											</div>
 										</li>
 									))}
 								</ul>
@@ -391,7 +490,7 @@ export default function EquipeFutebol() {
 						</Card>
 					</TabsContent>
 
-					<TabsContent value="noticias">
+					<TabsContent value="news">
 						<Card>
 							<CardHeader>
 								<CardTitle className="text-2xl font-sans flex items-center">
@@ -432,7 +531,7 @@ export default function EquipeFutebol() {
 						</Card>
 					</TabsContent>
 
-					<TabsContent value="equipe">
+					<TabsContent value="team">
 						<Card>
 							<CardHeader>
 								<CardTitle className="text-2xl font-sans flex items-center">
@@ -480,14 +579,49 @@ export default function EquipeFutebol() {
 													<p className="text-sm text-gray-600">{member.role}</p>
 												</div>
 												{member.invited && (
-													<Button variant="outline" size="sm" onClick={() => toggleInvite(member.id, "staff")}>
-														<Send className="h-4 w-4 mr-1" /> Convidar
+													<Button variant="outline" size="sm" onClick={() => sendInvitation(member.id)}>
+														<Send
+															className={cn("h-4 w-4 mr-1", {
+																"animate-pulse": sendingInvitations.includes(member.id),
+															})}
+														/>{" "}
+														Convidar
 													</Button>
 												)}
 												{!member.invited && (
-													<Button variant="outline" size="sm" onClick={() => toggleInvite(member.id, "staff")}>
-														<Trash2 className="h-4 w-4 mr-1" />
-													</Button>
+													<div className="flex items-center gap-1">
+														<Button
+															disabled={!hasEditPermission}
+															variant="outline"
+															size="sm"
+															onClick={() => setOpenShareModal(member.id)}
+														>
+															<Share2 className={cn("h-4 w-4 mr-1")} />
+														</Button>
+														<Button
+															disabled={!hasEditPermission}
+															variant="outline"
+															size="sm"
+															onClick={() => sendInvitation(member.id)}
+														>
+															<Repeat2
+																className={cn("h-4 w-4 mr-1", {
+																	"animate-spin": sendingInvitations.includes(member.id),
+																})}
+															/>
+														</Button>
+														<Button
+															disabled={!hasEditPermission}
+															variant="outline"
+															size="sm"
+															onClick={() =>
+																confirm(`Tem certeza que deseja remover o membro ${member.name}?`) &&
+																removeMember(member.id)
+															}
+														>
+															<Trash2 className="h-4 w-4 mr-1" />
+														</Button>
+													</div>
 												)}
 											</li>
 										))}
@@ -497,22 +631,7 @@ export default function EquipeFutebol() {
 						</Card>
 					</TabsContent>
 
-					<TabsContent value="financeiro">
-						<Card>
-							<CardHeader>
-								<CardTitle className="text-2xl font-sans flex items-center">
-									<DollarSign className="mr-2 h-6 w-6 text-primary" />
-									Financeiro
-								</CardTitle>
-							</CardHeader>
-							<CardContent>
-								<p>Informações financeiras do clube (acesso restrito)</p>
-								{/* Adicione aqui as informações financeiras do clube */}
-							</CardContent>
-						</Card>
-					</TabsContent>
-
-					<TabsContent value="competicoes">
+					<TabsContent value="competitions">
 						<Card>
 							<CardHeader className="flex flex-row items-center justify-between">
 								<CardTitle className="text-2xl font-sans flex items-center">
@@ -528,16 +647,34 @@ export default function EquipeFutebol() {
 							<CardContent>
 								<ul className="space-y-4">
 									{competitions.map((competition) => (
-										<li key={competition.id} className="bg-gray-50 p-4 rounded-lg">
-											<h3 className="font-semibold text-lg">{competition.name}</h3>
-											{competition.position && <p>Posição atual: {competition.position}º</p>}
-											{competition.points && <p>Pontos: {competition.points}</p>}
-											{competition.stage && <p>Fase atual: {competition.stage}</p>}
+										<li key={competition.id} className="bg-gray-50 p-4 rounded-lg border flex gap-4">
+											<div>
+												<Image
+													className="object-cover"
+													src={competition?.image || noImage}
+													alt={competition?.name}
+													width={60}
+													height={60}
+												/>
+											</div>
+											<div>
+												<h3 className="font-semibold text-lg">{competition.name}</h3>
+												{competition.position && <p>Posição atual: {competition.position}º</p>}
+												{competition.points && <p>Pontos: {competition.points}</p>}
+												{competition.stage && <p>Fase atual: {competition.stage}</p>}
+											</div>
 										</li>
 									))}
 								</ul>
 							</CardContent>
 						</Card>
+						<Button
+							onClick={openConvocationModal}
+							className="fixed bottom-4 right-4 bg-primary text-white rounded-full shadow-lg flex items-center justify-center p-4 hover:bg-green-700 transition-colors duration-200"
+						>
+							<Users className="h-6 w-6 mr-2" />
+							Fazer Convocatória
+						</Button>
 					</TabsContent>
 				</Tabs>
 			</div>
@@ -609,130 +746,153 @@ export default function EquipeFutebol() {
 					<DialogHeader>
 						<DialogTitle>Adicionar Staff</DialogTitle>
 					</DialogHeader>
-					<div className="grid gap-4 py-4">
-						<div className="grid grid-cols-4 items-center gap-4">
-							<Label htmlFor="name" className="text-right">
-								Name
-							</Label>
-							<Input
-								placeholder="Name"
-								id="name"
-								className="col-span-3"
-								onChange={(e) => console.log(e.target.value)}
-							/>
-						</div>
-						<div className="grid grid-cols-4 items-center gap-4">
-							<Label htmlFor="email" className="text-right">
-								Email
-							</Label>
-							<Input
-								placeholder="Email"
-								id="email"
-								name="email"
-								type="email"
-								className="col-span-3"
-								onChange={(e) => console.log(e.target.value)}
-							/>
-						</div>
+					<form onSubmit={handleSubmit(handleAddStaff)}>
+						<div className="grid gap-4 py-4">
+							<div className="grid grid-cols-4 items-center gap-4">
+								<Label htmlFor="name" className="text-right">
+									Name
+								</Label>
+								<Input {...register("name")} placeholder="Name" id="name" className="col-span-3" />
+							</div>
+							<div className="grid grid-cols-4 items-center gap-4">
+								<Label htmlFor="email" className="text-right">
+									Email
+								</Label>
+								<Input {...register("email")} placeholder="Email" id="email" type="email" className="col-span-3" />
+							</div>
 
-						<div className="grid grid-cols-4 items-center gap-4">
-							<Label htmlFor="function" className="text-right">
-								Função
-							</Label>
-							<Select onValueChange={(e) => console.log(e)}>
-								<SelectTrigger className="w-[280px]">
-									<SelectValue placeholder="Selecione a função" />
-								</SelectTrigger>
-								<SelectContent>
-									{[
-										{
-											label: "Presidente",
-											value: "presidente",
-										},
-										{
-											label: "Treinador Principal",
-											value: "treinador_principal",
-										},
-										{
-											label: "Treinador Adjunto",
-											value: "treinador_adjunto",
-										},
-										{
-											label: "Preparador Físico",
-											value: "preparador_fisico",
-										},
-										{
-											label: "Treinador de Guarda-Redes",
-											value: "treinador_guarda_redes",
-										},
-										{
-											label: "Médico da Equipa",
-											value: "medico_equipa",
-										},
-										{
-											label: "Fisioterapeuta",
-											value: "fisioterapeuta",
-										},
-										{
-											label: "Nutricionista",
-											value: "nutricionista",
-										},
-										{
-											label: "Analista de Desempenho",
-											value: "analista_desempenho",
-										},
-										{
-											label: "Scout/Olheiro",
-											value: "scout",
-										},
-										{
-											label: "Diretor de Futebol",
-											value: "diretor_futebol",
-										},
-										{
-											label: "Psicólogo Desportivo",
-											value: "psicologo_desportivo",
-										},
-										{
-											label: "Massagista",
-											value: "massagista",
-										},
-										{
-											label: "Gerente de Equipamentos",
-											value: "gerente_equipamentos",
-										},
-										{
-											label: "Supervisor Técnico",
-											value: "supervisor_tecnico",
-										},
-										{
-											label: "Preparador de Performance",
-											value: "preparador_performance",
-										},
-									].map((item) => (
-										<SelectItem key={item.value} value={item.value}>
-											{item.label}
-										</SelectItem>
-									))}
-								</SelectContent>
-							</Select>
+							<div className="grid grid-cols-4 items-center gap-4">
+								<Label htmlFor="role" className="text-right">
+									Função
+								</Label>
+
+								<FormField
+									control={control}
+									name="role"
+									render={({ field }) => (
+										<Select onValueChange={field.onChange} defaultValue={field.value}>
+											<SelectTrigger className="w-[280px]">
+												<SelectValue placeholder="Selecione a função" />
+											</SelectTrigger>
+											<SelectContent>
+												{[
+													{
+														label: "Presidente",
+														value: "presidente",
+													},
+													{
+														label: "Treinador Principal",
+														value: "treinador_principal",
+													},
+													{
+														label: "Treinador Adjunto",
+														value: "treinador_adjunto",
+													},
+													{
+														label: "Preparador Físico",
+														value: "preparador_fisico",
+													},
+													{
+														label: "Treinador de Guarda-Redes",
+														value: "treinador_guarda_redes",
+													},
+													{
+														label: "Médico da Equipa",
+														value: "medico_equipa",
+													},
+													{
+														label: "Fisioterapeuta",
+														value: "fisioterapeuta",
+													},
+													{
+														label: "Nutricionista",
+														value: "nutricionista",
+													},
+													{
+														label: "Analista de Desempenho",
+														value: "analista_desempenho",
+													},
+													{
+														label: "Scout/Olheiro",
+														value: "scout",
+													},
+													{
+														label: "Diretor de Futebol",
+														value: "diretor_futebol",
+													},
+													{
+														label: "Psicólogo Desportivo",
+														value: "psicologo_desportivo",
+													},
+													{
+														label: "Massagista",
+														value: "massagista",
+													},
+													{
+														label: "Gerente de Equipamentos",
+														value: "gerente_equipamentos",
+													},
+													{
+														label: "Supervisor Técnico",
+														value: "supervisor_tecnico",
+													},
+													{
+														label: "Preparador de Performance",
+														value: "preparador_performance",
+													},
+												].map((item) => (
+													<SelectItem key={item.value} value={item.value}>
+														{item.label}
+													</SelectItem>
+												))}
+											</SelectContent>
+										</Select>
+									)}
+								/>
+							</div>
 						</div>
-					</div>
-					<div className="flex justify-end">
-						<Button onClick={handleAddStaff}>
-							<Save className="h-4 w-4 mr-1" /> Salvar
-						</Button>
-					</div>
+						<div className="flex justify-end">
+							<Button>
+								<Save className="h-4 w-4 mr-1" /> Salvar
+							</Button>
+						</div>
+					</form>
 				</DialogContent>
 			</Dialog>
 
-			<Button
-				onClick={openConvocationModal}
-				className="fixed bottom-4 right-4 bg-primary text-white rounded-full shadow-lg flex items-center justify-center p-4 hover:bg-green-700 transition-colors duration-200"
-			>
-				<Users className="h-6 w-6 mr-2" />
-				Fazer Convocatória
-			</Button>
+			<Dialog open={!!openShareModal} onOpenChange={() => setOpenShareModal(null)}>
+				<DialogContent className="sm:max-w-[425px]">
+					<DialogHeader>
+						<DialogTitle>Compartilhar</DialogTitle>
+					</DialogHeader>
+
+					<div className="grid gap-4 py-4">
+						<div className="items-center space-y-1">
+							<Label htmlFor="link" className="text-right">
+								Link
+							</Label>
+							<div className="flex gap-2 w-full">
+								<Input
+									id="link"
+									value={`https://futebolclube.com/manager/teams/${openShareModal}`}
+									className="flex-1 w-full"
+									readOnly
+								/>
+								<Button
+									variant="link"
+									onClick={() => {
+										navigator.clipboard.writeText(`https://futebolclube.com/manager/teams/${openShareModal}`);
+										setOpenShareModal(null);
+									}}
+									className=""
+								>
+									<Copy className="h-6 w-6" />
+								</Button>
+							</div>
+						</div>
+					</div>
+				</DialogContent>
+			</Dialog>
 		</div>
 	);
 }
