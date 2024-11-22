@@ -1,6 +1,8 @@
 {
   "homePage": {
-    "title": "Pronto para montar seu time dos sonhos?"
+    "title": "Pronto para montar seu time dos sonhos?",
+    "description": "O melhor lugar para encontrar sua bola e jogar a bola.",
+    "getStarted": "Comece agora"
   },
   "locales": {
     "placeholder": "Selecione um idioma",

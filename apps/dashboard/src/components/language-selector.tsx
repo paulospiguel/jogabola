@@ -22,7 +22,7 @@ const LANGUAGES = {
 	},
 } as const;
 
-export default function LanguageSelector() {
+export default function LanguageSelector({ onlyIcon = false }: { onlyIcon?: boolean }) {
 	const t = useTranslations();
 	const locale = useLocale();
 	const [isPending, startTransition] = useTransition();
@@ -44,7 +44,7 @@ export default function LanguageSelector() {
 				{locales.map((lang) => (
 					<SelectItem key={lang} value={lang} className="space-x-2">
 						<span className="mr-1">{LANGUAGES[lang].icon}</span>
-						<span>{t(LANGUAGES[lang].name)}</span>
+						{!onlyIcon && <span>{t(LANGUAGES[lang].name)}</span>}
 					</SelectItem>
 				))}
 			</SelectContent>
