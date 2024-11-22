@@ -1,20 +1,25 @@
-import type { Player, TeamMember } from "@repo/db";
-import { cn } from "@repo/ui/utils";
+"use client";
+
+import type { Player } from "@repo/db";
+import { useTranslations } from "next-intl";
 import Link from "next/link";
 
 type PlayerAvatarListProps = {
 	size?: "sm" | "md" | "lg";
 	className?: string;
 	count?: number;
-	players?: TeamMember[];
+	players?: Player[];
+	showOnlyCount?: boolean;
 };
 
-export default async function PlayerAvatarList({
+export default function PlayerAvatarList({
 	size = "md",
+	showOnlyCount = false,
 	className,
 	count = 4,
 	players = [],
 }: PlayerAvatarListProps) {
+	const t = useTranslations("player");
 	const sizes: Record<"sm" | "md" | "lg", string> = {
 		lg: "m-3 size-6",
 		md: "m-2 size-12",
@@ -28,9 +33,13 @@ export default async function PlayerAvatarList({
 	if (players.length === 0) {
 		return (
 			<Link className="text-sm text-primary" href="/feed?type=players">
-				invite player
+				{t("addPlayer")}
 			</Link>
 		);
+	}
+
+	if (showOnlyCount) {
+		return <div className="text-sm text-primary">{players.length}</div>;
 	}
 
 	return <pre>{JSON.stringify(players, null, 2)}</pre>;

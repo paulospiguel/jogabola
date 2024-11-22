@@ -21,7 +21,7 @@ export default async function WrapperLayoutTab({ children, tabKey, className }: 
 			<div className="flex flex-wrap items-center justify-center md:justify-end my-2">{/* <AddNewPlayer /> */}</div>
 
 			<Suspense fallback={<Loading />}>
-				<section className="bg-slate-50 py-4 px-2 dark:bg-slate-800 rounded-xl">{children}</section>
+				<section className="py-4 px-2 dark:bg-slate-800 rounded-xl">{children}</section>
 			</Suspense>
 		</TabsContent>
 	);

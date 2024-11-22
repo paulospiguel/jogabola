@@ -1,263 +1,738 @@
 "use client";
 
-import { getTeamInfo, saveTeamInfo } from "@/actions";
-import Counter from "@/components/counter";
-import NotificationCenter from "@/components/notification-center";
+import { useState } from "react";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@repo/ui/components/tabs";
+import { Card, CardContent, CardHeader, CardTitle } from "@repo/ui/components/card";
+import { Button } from "@repo/ui/components/button";
+import { Input } from "@repo/ui/components/input";
+import { Label } from "@repo/ui/components/label";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@repo/ui/components/dialog";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@repo/ui/components/select";
 import {
-	AlertDialog,
-	AlertDialogAction,
-	AlertDialogCancel,
-	AlertDialogContent,
-	AlertDialogDescription,
-	AlertDialogFooter,
-	AlertDialogHeader,
-	AlertDialogTitle,
-} from "@repo/ui/components/alert-dialog";
+	CalendarDays,
+	MapPin,
+	Trophy,
+	Users,
+	Activity,
+	BarChart2,
+	Newspaper,
+	ChevronRight,
+	ChevronLeft,
+	Plus,
+	Edit,
+	Send,
+	DollarSign,
+	Award,
+	Share2,
+	Check,
+	Delete,
+	Trash2,
+	Save,
+} from "@repo/ui/icons";
 import { Avatar, AvatarFallback, AvatarImage } from "@repo/ui/components/avatar";
 
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@repo/ui/components/card";
-
-import { TableBody, TableCell, TableHead, TableHeader, TableRow } from "@repo/ui/components/table";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@repo/ui/components/tabs";
-import { ArrowLeft, Info, MoreHorizontal, Table, Trash2, Trophy, Users } from "@repo/ui/icons";
-import { useAction } from "next-safe-action/hooks";
-import {
-	DropdownMenu,
-	DropdownMenuContent,
-	DropdownMenuItem,
-	DropdownMenuTrigger,
-} from "@repo/ui/components/dropdown-menu";
-import { useState } from "react";
-import InviteModal from "./components/invite-modal";
-import { Button } from "@repo/ui/components/button";
-import type { Team } from "@/types";
-import { useRouter } from "next/navigation";
-import { OverviewTabContent } from "./components/tabs-team/overview.tab";
-import { PlayersTabContent } from "./components/tabs-team/players.tab";
-import { AchievementsTabContent } from "./components/tabs-team/achievements.tab";
-import routes from "@/constants/routes";
-import { ShoesSoccer, PlayerIcon, StadiumIcon } from "@/components/icons";
-import { cn } from "@repo/ui/lib/cn";
-
-// Mock data (replace with actual data fetching in a real application)
+// Simulated data and functions
+const hasEditPermission = true; // In a real app, this would be determined by the user's role
 const initialTeamData = {
-	name: "Thunderbolts FC",
-	founded: "2010",
-	homeGround: "Thunder Stadium",
-	logo: "/placeholder.svg?height=100&width=100",
-	manager: "Alex Ferguson",
-	league: "Premier League",
-	position: 3,
-	played: 38,
-	won: 25,
-	drawn: 8,
-	lost: 5,
-	goalsFor: 80,
-	goalsAgainst: 35,
-	players: [
-		{
-			id: 1,
-			name: "John Doe",
-			position: "Forward",
-			number: 10,
-			nationality: "England",
-			age: 28,
-			appearances: 36,
-			goals: 22,
-			assists: 15,
-			image: "/placeholder.svg?height=40&width=40",
-		},
-		{
-			id: 2,
-			name: "Jane Smith",
-			position: "Midfielder",
-			number: 8,
-			nationality: "Spain",
-			age: 26,
-			appearances: 34,
-			goals: 7,
-			assists: 20,
-			image: "/placeholder.svg?height=40&width=40",
-		},
-		{
-			id: 3,
-			name: "Mike Johnson",
-			position: "Defender",
-			number: 4,
-			nationality: "Italy",
-			age: 29,
-			appearances: 38,
-			goals: 2,
-			assists: 3,
-			image: "/placeholder.svg?height=40&width=40",
-		},
-	],
-	cups: [
-		{ name: "FA Cup", year: 2022, image: "/placeholder.svg?height=40&width=40" },
-		{ name: "League Cup", year: 2023, image: "/placeholder.svg?height=40&width=40" },
-		{ name: "Community Shield", year: 2023, image: "/placeholder.svg?height=40&width=40" },
-	],
-	upcomingMatches: [
-		{ opponent: "City Rovers", date: "2023-08-15", venue: "Home" },
-		{ opponent: "United FC", date: "2023-08-22", venue: "Away" },
-		{ opponent: "Athletico", date: "2023-08-29", venue: "Home" },
-	],
+	name: "Estrelas do Futebol FC",
+	foundedYear: 1950,
+	homeStadium: "Estádio Municipal",
+	league: "Liga Principal",
+	bio: "Um clube com tradição e paixão pelo futebol, formando estrelas desde 1950.",
 };
 
-export default function TeamInfoPage({ params }: { params: { slug: string } }) {
+const initialStaff = [
+	{ id: 1, name: "João Silva", role: "Treinador Principal", invited: false },
+	{ id: 2, name: "Maria Santos", role: "Fisioterapeuta", invited: true },
+];
+
+const initialPlayers = [
+	{ id: 1, name: "Carlos Silva", position: "Atacante", number: 10, nationality: "🇧🇷", invited: false },
+	{ id: 2, name: "João Oliveira", position: "Meio-campo", number: 8, nationality: "🇵🇹", invited: false },
+	{ id: 3, name: "Pedro Santos", position: "Defensor", number: 4, nationality: "🇧🇷", invited: true },
+	{ id: 4, name: "André Gomes", position: "Goleiro", number: 1, nationality: "🇦🇷", invited: false },
+];
+
+const initialEvents = [
+	{
+		id: 1,
+		type: "Jogo",
+		title: "Estrelas do Futebol FC vs Rivais Unidos",
+		date: "2024-06-15",
+		time: "20:00",
+		location: "Estádio Municipal",
+	},
+	{
+		id: 2,
+		type: "Treino",
+		title: "Treino Tático",
+		date: "2024-06-10",
+		time: "09:00",
+		location: "Centro de Treinamento",
+	},
+];
+
+const initialCompetitions = [
+	{ id: 1, name: "Liga Principal", position: 3, points: 45 },
+	{ id: 2, name: "Copa Nacional", stage: "Quartas de Final" },
+];
+
+const initialBanners = [
+	{ id: 1, image: "/banner1.jpg", title: "Novo Patrocinador" },
+	{ id: 2, image: "/banner2.jpg", title: "Promoção de Ingressos" },
+];
+
+export default function EquipeFutebol() {
 	const [teamData, setTeamData] = useState(initialTeamData);
-	const [newPlayerName, setNewPlayerName] = useState("");
-	const [newPlayerPosition, setNewPlayerPosition] = useState("");
-	const [newPlayerNumber, setNewPlayerNumber] = useState("");
-	const [showDeleteDialog, setShowDeleteDialog] = useState(false);
+	const [staff, setStaff] = useState(initialStaff);
+	const [players, setPlayers] = useState(initialPlayers);
+	const [events, setEvents] = useState(initialEvents);
+	const [competitions, setCompetitions] = useState(initialCompetitions);
+	const [banners, setBanners] = useState(initialBanners);
+	const [currentEventIndex, setCurrentEventIndex] = useState(0);
+	const [isConvocationModalOpen, setIsConvocationModalOpen] = useState(false);
+	const [selectedGame, setSelectedGame] = useState(null);
+	const [selectedPlayers, setSelectedPlayers] = useState([]);
+	const [isShowAddStaff, setIsShowAddStaff] = useState(false);
 
-	const router = useRouter();
-
-	const { result } = useAction(getTeamInfo, {
-		executeOnMount: {
-			input: {
-				teamSlug: params.slug,
-			},
-		},
-	});
-
-	const teamInfo = result?.data || ({} as Team);
-
-	const optionsTabs = [
-		{ value: "overview", label: "Overview", icon: StadiumIcon },
-		{ value: "players", label: "Players", icon: PlayerIcon },
-		{ value: "cups", label: "Cups", icon: Trophy },
-		{ value: "matches", label: "Matches", icon: ShoesSoccer },
-		{ value: "notifications", label: "Notifications", icon: Info },
-	];
-
-	// const handleSaveTeam = () => {
-	// 	setEditMode(false);
-	// 	// In a real application, you would save the changes to the backend here
-	// };
-
-	const handleDeleteTeam = () => {
-		// In a real application, you would delete the team from the backend here
-		setShowDeleteDialog(true);
-
-		//	alert("Team deleted successfully!");
+	const addStaffMember = (name: string, role: string) => {
+		setStaff([...staff, { id: Date.now(), name, role, invited: true }]);
 	};
 
-	const handleInvitePlayer = () => {
-		if (newPlayerName && newPlayerPosition && newPlayerNumber) {
-			const newPlayer = {
-				id: teamData.players.length + 1,
-				name: newPlayerName,
-				position: newPlayerPosition,
-				number: Number.parseInt(newPlayerNumber),
-				nationality: "Unknown",
-				age: 25,
-				appearances: 0,
-				goals: 0,
-				assists: 0,
-				image: "/placeholder.svg?height=40&width=40",
-			};
-			setTeamData({
-				...teamData,
-				players: [...teamData.players, newPlayer],
-			});
-			setNewPlayerName("");
-			setNewPlayerPosition("");
-			setNewPlayerNumber("");
+	const addPlayer = (name: string, position: string, number: number, nationality: string) => {
+		setPlayers([...players, { id: Date.now(), name, position, number, nationality, invited: true }]);
+	};
+
+	const addEvent = (type: string, title: string, date: string, time: string, location: string) => {
+		setEvents([...events, { id: Date.now(), type, title, date, time, location }]);
+	};
+
+	const addCompetition = (name: string, position: number, points: number) => {
+		setCompetitions([...competitions, { id: Date.now(), name, position, points }]);
+	};
+
+	const addBanner = (image: string, title: string) => {
+		setBanners([...banners, { id: Date.now(), image, title }]);
+	};
+
+	const toggleInvite = (id: number, type: "staff" | "player") => {
+		if (type === "staff") {
+			setStaff(staff.map((member) => (member.id === id ? { ...member, invited: !member.invited } : member)));
+		} else {
+			setPlayers(players.map((player) => (player.id === id ? { ...player, invited: !player.invited } : player)));
 		}
 	};
 
-	// const handleDeletePlayer = (playerId: number) => {
-	// 	setTeamData({
-	// 		...teamData,
-	// 		players: teamData.players.filter((player) => player.id !== playerId),
-	// 	});
-	// };
+	const nextEvent = () => {
+		setCurrentEventIndex((prevIndex) => (prevIndex + 1) % events.length);
+	};
 
-	const backToTeams = () => {
-		router.push(routes.manager.teams);
+	const prevEvent = () => {
+		setCurrentEventIndex((prevIndex) => (prevIndex - 1 + events.length) % events.length);
+	};
+
+	const openConvocationModal = () => {
+		setIsConvocationModalOpen(true);
+	};
+
+	const closeConvocationModal = () => {
+		setIsConvocationModalOpen(false);
+		setSelectedGame(null);
+		setSelectedPlayers([]);
+	};
+
+	const handleGameSelection = (gameId) => {
+		setSelectedGame(events.find((event) => event.id === gameId));
+	};
+
+	const handlePlayerSelection = (playerId) => {
+		setSelectedPlayers((prevSelected) =>
+			prevSelected.includes(playerId) ? prevSelected.filter((id) => id !== playerId) : [...prevSelected, playerId],
+		);
+	};
+
+	const saveConvocation = () => {
+		console.log("Convocation saved:", { game: selectedGame, players: selectedPlayers });
+		closeConvocationModal();
+	};
+
+	const exportConvocation = (format) => {
+		console.log(`Exporting convocation as ${format}`);
+	};
+
+	const shareConvocation = (platform) => {
+		console.log(`Sharing convocation on ${platform}`);
+	};
+
+	const handleAddStaff = () => {
+		addStaffMember("Novo Membro", "Função");
+		setIsShowAddStaff(false);
 	};
 
 	return (
-		<div className="container mx-auto p-6 space-y-8">
-			<h1 className="text-3xl font-bold">Team Info</h1>
-			<Button variant="outline" className="w-min" onClick={backToTeams}>
-				<ArrowLeft className="h-5 w-5" /> Back to Teams
-				<span className="sr-only">Back to teams list</span>
-			</Button>
-			<Card className="w-full">
-				<CardHeader className="flex flex-row items-center justify-between">
-					<div className="flex flex-row items-center space-x-4 pb-2">
-						<Avatar className="h-20 w-20">
-							<AvatarImage src={teamInfo?.logo || ""} alt={teamInfo?.name} />
-							<AvatarFallback>{teamInfo?.name?.slice(0, 2)?.toUpperCase()}</AvatarFallback>
-						</Avatar>
-						<div>
-							<CardTitle className="text-3xl font-bold">{teamInfo?.name}</CardTitle>
-							<CardDescription className="text-xl">{teamInfo?.location}</CardDescription>
+		<div className="min-h-screen bg-slate-50 p-4 rounded-xl m-6 text-gray-800 shadow-lg relative">
+			{/* <section className="absolute top-0 left-0 w-full h-16 bg-primary">
+				<div className="bg-primary text-white py-2 px-4 text-sm font-medium">
+					<p className="animate-marquee whitespace-nowrap">
+						Última hora: João Silva marca hat-trick na vitória por 3-0 contra o FC Rival! 🎉 | Novo patrocinador
+						anunciado para a próxima temporada 💼 | Ingressos para o próximo jogo já estão à venda online! 🎟️
+					</p>
+				</div>
+
+				<div className="relative bg-gray-200 h-48 mb-8">
+					<div className="absolute inset-0 flex items-center justify-between px-4">
+						<button className="bg-white rounded-full p-2 shadow-md">
+							<ChevronLeft className="h-6 w-6 text-primary" />
+						</button>
+						<button className="bg-white rounded-full p-2 shadow-md">
+							<ChevronRight className="h-6 w-6 text-primary" />
+						</button>
+					</div>
+					<div className="absolute inset-0 flex items-center justify-center">
+						{banners.length > 0 ? (
+							<img src={banners[0].image} alt={banners[0].title} className="w-full h-full object-cover" />
+						) : (
+							<p className="text-2xl font-sans text-gray-400">Espaço para Slide de Banners</p>
+						)}
+					</div>
+					{hasEditPermission && (
+						<Button
+							onClick={() => addBanner("/new-banner.jpg", "Novo Banner")}
+							className="absolute bottom-2 right-2 bg-primary text-white"
+						>
+							<Plus className="h-4 w-4 mr-2" /> Adicionar Banner
+						</Button>
+					)}
+				</div>
+			</section> */}
+
+			<div className="container mx-auto px-4">
+				<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+					<header className="mb-8 text-center">
+						<div className="flex items-center gap-4">
+							<Avatar className="w-32 h-32 border-4 border-yellow-500">
+								<AvatarImage src={teamData.image} alt={teamData.name} />
+								<AvatarFallback className="uppercase text-5xl">{teamData.name.slice(0, 2)}</AvatarFallback>
+							</Avatar>
+							<div className="text-left">
+								<h1 className="text-4xl font-sans text-green-800 mb-2">{teamData.name}</h1>
+								<p className="text-gray-600 max-w-md mx-auto">{teamData.bio}</p>
+							</div>
+						</div>
+					</header>
+
+					<div className="flex flex-col md:flex-row justify-between items-start mb-8">
+						<Card className="w-full bg-white shadow-md rounded-lg overflow-hidden mb-4 md:mb-0 md:mr-4">
+							<CardHeader className="bg-primary py-2">
+								<CardTitle className="text-lg font-semibold text-white flex items-center justify-center">
+									<CalendarDays className="mr-2 h-5 w-5" />
+									Próximos Eventos
+								</CardTitle>
+							</CardHeader>
+							<CardContent className="p-4">
+								<div className="flex justify-between items-center mb-4">
+									<Button onClick={prevEvent} variant="outline" size="sm">
+										<ChevronLeft className="h-4 w-4" />
+									</Button>
+									<Button onClick={nextEvent} variant="outline" size="sm">
+										<ChevronRight className="h-4 w-4" />
+									</Button>
+								</div>
+								{events[currentEventIndex] && (
+									<div>
+										<p className="font-semibold">{events[currentEventIndex].title}</p>
+										<p className="text-sm text-gray-600">{events[currentEventIndex].type}</p>
+										<p className="text-sm">
+											{new Date(events[currentEventIndex].date).toLocaleDateString()} - {events[currentEventIndex].time}
+										</p>
+										<p className="text-sm text-gray-600">{events[currentEventIndex].location}</p>
+									</div>
+								)}
+							</CardContent>
+						</Card>
+					</div>
+				</div>
+				<Tabs defaultValue="jogadores" className="w-full mx-auto">
+					<TabsList className="grid w-full grid-cols-7 bg-primary rounded-lg p-1 mb-6">
+						{[
+							{ value: "equipe", icon: Trophy, label: "Equipe" },
+							{ value: "competicoes", icon: Award, label: "Competições" },
+							{ value: "jogadores", icon: Users, label: "Jogadores" },
+							{ value: "estatisticas", icon: BarChart2, label: "Estatísticas" },
+							{ value: "calendario", icon: CalendarDays, label: "Calendário" },
+							{ value: "noticias", icon: Newspaper, label: "Notícias" },
+							{ value: "financeiro", icon: DollarSign, label: "Financeiro" },
+						].map(({ value, icon: Icon, label }) => (
+							<TabsTrigger
+								key={value}
+								value={value}
+								className="rounded-xl text-sm font-medium transition-all data-[state=active]:bg-white data-[state=active]:text-primary data-[state=active]:shadow"
+							>
+								<Icon className="h-4 w-4 mr-2" />
+								{label}
+							</TabsTrigger>
+						))}
+					</TabsList>
+
+					<TabsContent value="jogadores">
+						<Card>
+							<CardHeader className="flex flex-row items-center justify-between">
+								<CardTitle className="text-2xl font-sans flex items-center">
+									<Users className="mr-2 h-6 w-6 text-primary" />
+									Elenco
+								</CardTitle>
+								{hasEditPermission && (
+									<Button onClick={() => addPlayer("Novo Jogador", "Posição", 0, "🏴")}>
+										<Plus className="h-4 w-4 mr-2" /> Adicionar Jogador
+									</Button>
+								)}
+							</CardHeader>
+							<CardContent>
+								<ul className="grid grid-cols-1 md:grid-cols-2 gap-4">
+									{players.map((jogador) => (
+										<li key={jogador.id} className="flex items-center bg-gray-50 p-3 rounded-lg">
+											<div className="w-12 h-12 bg-primary rounded-full flex items-center justify-center text-white font-sans mr-4">
+												{jogador.number}
+											</div>
+											<div>
+												<p className="font-semibold">
+													{jogador.name} {jogador.nationality}
+												</p>
+												<p className="text-sm text-gray-600">{jogador.position}</p>
+											</div>
+											{jogador.invited && (
+												<Button
+													variant="outline"
+													size="sm"
+													onClick={() => toggleInvite(jogador.id, "player")}
+													className="ml-auto"
+												>
+													<Send className="h-4 w-4 mr-1" /> Convidar
+												</Button>
+											)}
+										</li>
+									))}
+								</ul>
+							</CardContent>
+						</Card>
+					</TabsContent>
+
+					<TabsContent value="estatisticas">
+						<Card>
+							<CardHeader>
+								<CardTitle className="text-2xl font-sans flex items-center">
+									<BarChart2 className="mr-2 h-6 w-6 text-primary" />
+									Estatísticas da Temporada
+								</CardTitle>
+							</CardHeader>
+							<CardContent>
+								<div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+									{[
+										{ label: "Jogos", value: 20, icon: Activity },
+										{ label: "Vitórias", value: 12, icon: Trophy },
+										{ label: "Empates", value: 5, icon: Activity },
+										{ label: "Derrotas", value: 3, icon: Activity },
+										{ label: "Gols marcados", value: 35, icon: Trophy },
+										{ label: "Gols sofridos", value: 18, icon: Activity },
+									].map(({ label, value, icon: Icon }, index) => (
+										<div key={index} className="bg-gray-50 p-4 rounded-lg text-center">
+											<Icon className="h-8 w-8 mx-auto mb-2 text-primary" />
+											<p className="text-2xl font-sans">{value}</p>
+											<p className="text-sm text-gray-600">{label}</p>
+										</div>
+									))}
+								</div>
+							</CardContent>
+						</Card>
+					</TabsContent>
+
+					<TabsContent value="calendario">
+						<Card>
+							<CardHeader className="flex flex-row items-center justify-between">
+								<CardTitle className="text-2xl font-sans flex items-center">
+									<CalendarDays className="mr-2 h-6 w-6 text-primary" />
+									Calendário de Eventos
+								</CardTitle>
+								{hasEditPermission && (
+									<Button
+										onClick={() =>
+											addEvent("Evento", "Novo Evento", new Date().toISOString().split("T")[0], "00:00", "Local")
+										}
+									>
+										<Plus className="h-4 w-4 mr-2" /> Adicionar Evento
+									</Button>
+								)}
+							</CardHeader>
+							<CardContent>
+								<ul className="space-y-4">
+									{events.map((evento) => (
+										<li key={evento.id} className="bg-gray-50 p-4 rounded-lg flex items-center">
+											<div className="mr-4 text-center">
+												<p className="text-lg font-sans">{new Date(evento.date).toLocaleDateString()}</p>
+												<p className="text-sm text-gray-600">{evento.time}</p>
+											</div>
+											<div className="flex-grow">
+												<p className="font-semibold">{evento.title}</p>
+												<p className="text-sm text-gray-600">{evento.type}</p>
+												<p className="text-sm text-gray-600 flex items-center">
+													<MapPin className="h-4 w-4 mr-1" />
+													{evento.location}
+												</p>
+											</div>
+											{evento.type === "Jogo" && (
+												<Button variant="outline" size="sm">
+													Comprar Ingressos
+												</Button>
+											)}
+										</li>
+									))}
+								</ul>
+							</CardContent>
+						</Card>
+					</TabsContent>
+
+					<TabsContent value="noticias">
+						<Card>
+							<CardHeader>
+								<CardTitle className="text-2xl font-sans flex items-center">
+									<Newspaper className="mr-2 h-6 w-6 text-primary" />
+									Últimas Notícias
+								</CardTitle>
+							</CardHeader>
+							<CardContent>
+								<ul className="space-y-6">
+									{[
+										{
+											title: "Novo Reforço Chega ao Time",
+											content: "O atacante internacional Lucas Mendes se junta ao elenco para a próxima temporada.",
+											date: "10/06/2024",
+										},
+										{
+											title: "Vitória Impressionante no Clássico",
+											content: "Estrelas do Futebol FC vence rival por 3x0 em jogo emocionante.",
+											date: "05/06/2024",
+										},
+										{
+											title: "Renovação de Contrato",
+											content: "Capitão da equipe, Carlos Silva, renova contrato por mais 3 anos.",
+											date: "01/06/2024",
+										},
+									].map((noticia, index) => (
+										<li key={index} className="bg-gray-50 p-4 rounded-lg">
+											<h3 className="text-xl font-semibold mb-2 text-green-700">{noticia.title}</h3>
+											<p className="text-gray-600 mb-2">{noticia.content}</p>
+											<p className="text-sm text-gray-500 flex items-center">
+												<CalendarDays className="h-4 w-4 mr-1" />
+												{noticia.date}
+											</p>
+										</li>
+									))}
+								</ul>
+							</CardContent>
+						</Card>
+					</TabsContent>
+
+					<TabsContent value="equipe">
+						<Card>
+							<CardHeader>
+								<CardTitle className="text-2xl font-sans flex items-center">
+									<Trophy className="mr-2 h-6 w-6 text-primary" />
+									Dados da Equipe
+								</CardTitle>
+							</CardHeader>
+							<CardContent>
+								<div className="space-y-4">
+									{Object.entries(teamData).map(([key, value]) => (
+										<div key={key} className="flex items-center justify-between">
+											<Label htmlFor={key} className="font-medium">
+												{key.charAt(0).toUpperCase() + key.slice(1)}
+											</Label>
+											<div className="flex items-center">
+												<Input
+													id={key}
+													value={value}
+													onChange={(e) => setTeamData({ ...teamData, [key]: e.target.value })}
+													className="w-64"
+													disabled={!hasEditPermission}
+												/>
+												{hasEditPermission && (
+													<Button variant="ghost" size="icon" className="ml-2">
+														<Edit className="h-4 w-4" />
+													</Button>
+												)}
+											</div>
+										</div>
+									))}
+								</div>
+
+								<div className="mt-8">
+									<h3 className="text-xl font-semibold mb-4">Comissão Técnica</h3>
+									{hasEditPermission && (
+										<Button onClick={() => setIsShowAddStaff(true)} className="mb-4">
+											<Plus className="h-4 w-4 mr-2" /> Adicionar Membro
+										</Button>
+									)}
+									<ul className="space-y-4">
+										{staff.map((member) => (
+											<li key={member.id} className="flex items-center justify-between bg-gray-50 p-1 rounded-lg">
+												<div>
+													<p className="font-semibold">{member.name}</p>
+													<p className="text-sm text-gray-600">{member.role}</p>
+												</div>
+												{member.invited && (
+													<Button variant="outline" size="sm" onClick={() => toggleInvite(member.id, "staff")}>
+														<Send className="h-4 w-4 mr-1" /> Convidar
+													</Button>
+												)}
+												{!member.invited && (
+													<Button variant="outline" size="sm" onClick={() => toggleInvite(member.id, "staff")}>
+														<Trash2 className="h-4 w-4 mr-1" />
+													</Button>
+												)}
+											</li>
+										))}
+									</ul>
+								</div>
+							</CardContent>
+						</Card>
+					</TabsContent>
+
+					<TabsContent value="financeiro">
+						<Card>
+							<CardHeader>
+								<CardTitle className="text-2xl font-sans flex items-center">
+									<DollarSign className="mr-2 h-6 w-6 text-primary" />
+									Financeiro
+								</CardTitle>
+							</CardHeader>
+							<CardContent>
+								<p>Informações financeiras do clube (acesso restrito)</p>
+								{/* Adicione aqui as informações financeiras do clube */}
+							</CardContent>
+						</Card>
+					</TabsContent>
+
+					<TabsContent value="competicoes">
+						<Card>
+							<CardHeader className="flex flex-row items-center justify-between">
+								<CardTitle className="text-2xl font-sans flex items-center">
+									<Award className="mr-2 h-6 w-6 text-primary" />
+									Competições
+								</CardTitle>
+								{hasEditPermission && (
+									<Button onClick={() => addCompetition("Nova Competição", 0, 0)}>
+										<Plus className="h-4 w-4 mr-2" /> Adicionar Competição
+									</Button>
+								)}
+							</CardHeader>
+							<CardContent>
+								<ul className="space-y-4">
+									{competitions.map((competition) => (
+										<li key={competition.id} className="bg-gray-50 p-4 rounded-lg">
+											<h3 className="font-semibold text-lg">{competition.name}</h3>
+											{competition.position && <p>Posição atual: {competition.position}º</p>}
+											{competition.points && <p>Pontos: {competition.points}</p>}
+											{competition.stage && <p>Fase atual: {competition.stage}</p>}
+										</li>
+									))}
+								</ul>
+							</CardContent>
+						</Card>
+					</TabsContent>
+				</Tabs>
+			</div>
+
+			<Dialog open={isConvocationModalOpen} onOpenChange={setIsConvocationModalOpen}>
+				<DialogContent className="sm:max-w-[425px]">
+					<DialogHeader>
+						<DialogTitle>Fazer Convocatória</DialogTitle>
+					</DialogHeader>
+					<div className="grid gap-4 py-4">
+						<div className="grid grid-cols-4 items-center gap-4">
+							<Label htmlFor="game" className="text-right">
+								Jogo
+							</Label>
+							<Select onValueChange={handleGameSelection}>
+								<SelectTrigger className="w-[280px]">
+									<SelectValue placeholder="Selecione o jogo" />
+								</SelectTrigger>
+								<SelectContent>
+									{events
+										.filter((event) => event.type === "Jogo")
+										.map((game) => (
+											<SelectItem key={game.id} value={game.id.toString()}>
+												{game.title}
+											</SelectItem>
+										))}
+								</SelectContent>
+							</Select>
+						</div>
+						<div className="grid grid-cols-4 items-center gap-4">
+							<Label htmlFor="players" className="text-right">
+								Jogadores
+							</Label>
+							<div className="col-span-3">
+								{players.map((player) => (
+									<div key={player.id} className="flex items-center">
+										<input
+											type="checkbox"
+											id={`player-${player.id}`}
+											checked={selectedPlayers.includes(player.id)}
+											onChange={() => handlePlayerSelection(player.id)}
+											className="mr-2"
+										/>
+										<Label htmlFor={`player-${player.id}`}>{player.name}</Label>
+									</div>
+								))}
+							</div>
 						</div>
 					</div>
-					<DropdownMenu>
-						<DropdownMenuTrigger asChild>
-							<Button variant="outline" size="icon" className="rounded-full">
-								<MoreHorizontal className="h-5 w-5" />
-								<span className="sr-only">Open menu</span>
+					<div className="flex justify-between">
+						<Button onClick={saveConvocation}>Salvar Convocatória</Button>
+						<div>
+							<Button onClick={() => exportConvocation("image")} className="mr-2">
+								Exportar Imagem
 							</Button>
-						</DropdownMenuTrigger>
-						<DropdownMenuContent align="end">
-							{/* <DropdownMenuItem onClick={handleEditTeam}>
-								<Pencil className="mr-2 h-4 w-4" />
-								Edit Team
-							</DropdownMenuItem> */}
-							<DropdownMenuItem className="text-red-500" onClick={handleDeleteTeam}>
-								<Trash2 className="mr-2 h-4 w-4" />
-								Delete Team
-							</DropdownMenuItem>
-						</DropdownMenuContent>
-					</DropdownMenu>
-				</CardHeader>
-				<CardContent>
-					<Tabs defaultValue="overview" className="w-full">
-						<TabsList className={cn("grid w-full bg-primary", `grid-cols-${optionsTabs.length}`)}>
-							{optionsTabs.map(({ icon: TabIcon, ...tab }) => (
-								<TabsTrigger key={tab.value} value={tab.value}>
-									{TabIcon && <TabIcon className="mr-2 h-5 w-5" />} {tab.label}
-								</TabsTrigger>
-							))}
-						</TabsList>
-						<TabsContent value="overview" className="space-y-4">
-							<OverviewTabContent team={teamInfo} />
-						</TabsContent>
-						<TabsContent value="players">
-							<PlayersTabContent team={teamInfo} />
-						</TabsContent>
-						{/* <TabsContent value="achievements">
-							<AchievementsTabContent team={teamInfo} />
-						</TabsContent> */}
-						<TabsContent value="notifications">
-							<NotificationCenter className="max-w-full border-none" />
-						</TabsContent>
-					</Tabs>
-				</CardContent>
-				<CardFooter className="flex justify-between">
-					<InviteModal triggerComponent={<Button>Invite Player</Button>} team={teamInfo} />
-				</CardFooter>
-			</Card>
+							<Button onClick={() => exportConvocation("pdf")} className="mr-2">
+								Exportar PDF
+							</Button>
+							<Button onClick={() => shareConvocation("social")}>
+								<Share2 className="h-4 w-4 mr-1" /> Compartilhar
+							</Button>
+						</div>
+					</div>
+				</DialogContent>
+			</Dialog>
 
-			<AlertDialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
-				<AlertDialogContent>
-					<AlertDialogHeader>
-						<AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
-						<AlertDialogDescription>
-							This action cannot be undone. This will permanently delete your team and remove all data from our servers.
-						</AlertDialogDescription>
-					</AlertDialogHeader>
-					<AlertDialogFooter>
-						<AlertDialogCancel>Cancel</AlertDialogCancel>
-						<AlertDialogAction onClick={handleDeleteTeam}>Delete Team</AlertDialogAction>
-					</AlertDialogFooter>
-				</AlertDialogContent>
-			</AlertDialog>
+			<Dialog open={isShowAddStaff} onOpenChange={() => setIsShowAddStaff(!isShowAddStaff)}>
+				<DialogContent className="sm:max-w-[425px]">
+					<DialogHeader>
+						<DialogTitle>Adicionar Staff</DialogTitle>
+					</DialogHeader>
+					<div className="grid gap-4 py-4">
+						<div className="grid grid-cols-4 items-center gap-4">
+							<Label htmlFor="name" className="text-right">
+								Name
+							</Label>
+							<Input
+								placeholder="Name"
+								id="name"
+								className="col-span-3"
+								onChange={(e) => console.log(e.target.value)}
+							/>
+						</div>
+						<div className="grid grid-cols-4 items-center gap-4">
+							<Label htmlFor="email" className="text-right">
+								Email
+							</Label>
+							<Input
+								placeholder="Email"
+								id="email"
+								name="email"
+								type="email"
+								className="col-span-3"
+								onChange={(e) => console.log(e.target.value)}
+							/>
+						</div>
+
+						<div className="grid grid-cols-4 items-center gap-4">
+							<Label htmlFor="function" className="text-right">
+								Função
+							</Label>
+							<Select onValueChange={(e) => console.log(e)}>
+								<SelectTrigger className="w-[280px]">
+									<SelectValue placeholder="Selecione a função" />
+								</SelectTrigger>
+								<SelectContent>
+									{[
+										{
+											label: "Presidente",
+											value: "presidente",
+										},
+										{
+											label: "Treinador Principal",
+											value: "treinador_principal",
+										},
+										{
+											label: "Treinador Adjunto",
+											value: "treinador_adjunto",
+										},
+										{
+											label: "Preparador Físico",
+											value: "preparador_fisico",
+										},
+										{
+											label: "Treinador de Guarda-Redes",
+											value: "treinador_guarda_redes",
+										},
+										{
+											label: "Médico da Equipa",
+											value: "medico_equipa",
+										},
+										{
+											label: "Fisioterapeuta",
+											value: "fisioterapeuta",
+										},
+										{
+											label: "Nutricionista",
+											value: "nutricionista",
+										},
+										{
+											label: "Analista de Desempenho",
+											value: "analista_desempenho",
+										},
+										{
+											label: "Scout/Olheiro",
+											value: "scout",
+										},
+										{
+											label: "Diretor de Futebol",
+											value: "diretor_futebol",
+										},
+										{
+											label: "Psicólogo Desportivo",
+											value: "psicologo_desportivo",
+										},
+										{
+											label: "Massagista",
+											value: "massagista",
+										},
+										{
+											label: "Gerente de Equipamentos",
+											value: "gerente_equipamentos",
+										},
+										{
+											label: "Supervisor Técnico",
+											value: "supervisor_tecnico",
+										},
+										{
+											label: "Preparador de Performance",
+											value: "preparador_performance",
+										},
+									].map((item) => (
+										<SelectItem key={item.value} value={item.value}>
+											{item.label}
+										</SelectItem>
+									))}
+								</SelectContent>
+							</Select>
+						</div>
+					</div>
+					<div className="flex justify-end">
+						<Button onClick={handleAddStaff}>
+							<Save className="h-4 w-4 mr-1" /> Salvar
+						</Button>
+					</div>
+				</DialogContent>
+			</Dialog>
+
+			<Button
+				onClick={openConvocationModal}
+				className="fixed bottom-4 right-4 bg-primary text-white rounded-full shadow-lg flex items-center justify-center p-4 hover:bg-green-700 transition-colors duration-200"
+			>
+				<Users className="h-6 w-6 mr-2" />
+				Fazer Convocatória
+			</Button>
 		</div>
 	);
 }

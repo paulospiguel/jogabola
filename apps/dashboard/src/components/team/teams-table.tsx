@@ -4,24 +4,59 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { Suspense, useEffect, useMemo, useState } from "react";
 import noLogo from "@/assets/images/no-logo.png";
-import { Edit, GlobeIcon, LockIcon, Trash, TrendingDown, TrendingUp, Eye as ViewIcon } from "@repo/ui/icons";
+import {
+	Edit,
+	GlobeIcon,
+	LayoutPanelTop,
+	LockIcon,
+	MessageSquare,
+	PanelBottom,
+	PanelLeft,
+	Trash,
+	TrendingDown,
+	TrendingUp,
+	Eye as ViewIcon,
+} from "@repo/ui/icons";
 import { Badge } from "@repo/ui/components/badge";
 import { Button } from "@repo/ui/components/button";
 import { Input } from "@repo/ui/components/input";
 import { ScrollArea } from "@repo/ui/components/scroll-area";
-import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from "@repo/ui/components/table";
-import type { Team } from "@/types";
+//import type { Team } from "@/types";
 import { teamStore } from "@/store/team.store";
 import PlayerAvatarList from "../player-avatar-list";
+import { useTranslations } from "next-intl";
+import type { Player } from "@repo/db";
+
+export interface TeamStats {
+	wins: number;
+	losses: number;
+	draws: number;
+	goalsFor: number;
+	goalsAgainst: number;
+}
+
+export interface Team {
+	rank: number;
+	id: string;
+	logo: string;
+	name: string;
+	city: string;
+	coach: string;
+	stats: TeamStats;
+	performance: number;
+	players: number;
+}
 
 type TeamTableProps = {
-	teams: Team[];
+	teamsList: Team[];
 };
 
-export default function TeamsTable({ teams }: TeamTableProps) {
+export default function TeamsTable({ teamsList }: TeamTableProps) {
 	const [editingTeam, setEditingTeam] = useState<Team | null>(null);
 	const [newTeamName, setNewTeamName] = useState("");
 	const { push } = useRouter();
+
+	const t = useTranslations("global");
 
 	const handleEditTeam = (team: Team) => {
 		setEditingTeam(team);
@@ -46,49 +81,133 @@ export default function TeamsTable({ teams }: TeamTableProps) {
 		push(`/manager/teams/${teamId}`);
 	};
 
-	const calculatePerformance = useMemo(() => {
+	const calculatePerformance = (performance: number) => {
+		if (!performance) {
+			return {
+				average: performance,
+				increase: false,
+				component: null,
+				suffix: null,
+			};
+		}
+
+		if (performance < 6.5) {
+			return {
+				average: performance,
+				increase: false,
+				component: <TrendingDown className="text-red-500" />,
+				suffix: "Bad",
+			};
+		}
+
 		return {
-			average: 6.5,
+			average: performance,
 			increase: true,
+			component: <TrendingUp className="text-green-500" />,
+			suffix: "Good",
 		};
-	}, []);
+	};
+
+	const renderPerformance = (performance: number) => {
+		const { average, increase, component, suffix } = calculatePerformance(performance);
+		return (
+			<div className="flex items-center gap-1">
+				{component}
+				<span className="text-slate-500">{average || "N/A"}</span>
+				{suffix && <span className="text-slate-500">{suffix}</span>}
+			</div>
+		);
+	};
+
+	const renderPlayers = (players: Player[]) => {
+		return <PlayerAvatarList showOnlyCount players={players} />;
+	};
+
+	const renderSeason = (stats: {
+		wins: number;
+		losses: number;
+		draws: number;
+		goalsFor: number;
+		goalsAgainst: number;
+	}) => {
+		return (
+			<div className="flex items-center gap-1">
+				<span className="text-slate-500">{stats.wins || 0}</span>
+				<div className="w-1 h-1 rounded-full bg-slate-500" />
+				<span className="text-slate-500">{stats.losses || 0}</span>
+				<div className="w-1 h-1 rounded-full bg-slate-500" />
+				<span className="text-slate-500">{stats.draws || 0}</span>
+			</div>
+		);
+	};
+
+	const renderLogo = (logo: string) => {
+		return (
+			<Image
+				src={logo || noLogo}
+				alt="team logo"
+				width={40}
+				height={40}
+				className="w-10 h-10 rounded-full object-cover"
+			/>
+		);
+	};
 
 	useEffect(() => {
-		teamStore.setState((state) => ({ ...state, createdTeamCounter: teams?.length || 0 }));
-	}, [teams]);
+		teamStore.setState((state) => ({ ...state, createdTeamCounter: teamsList?.length || 0 }));
+	}, [teamsList]);
 
 	return (
 		<div className="overflow-x-auto">
-			{teams?.map((team) => (
-				<div
-					key={team?.id}
-					className="shadow-sm rounded-2xl p-2 bg-white mb-2 gap-2 grid grid-cols-12 place-content-stretch transition-colors hover:bg-slate-300"
-				>
-					<div className=" flex items-center">
-						<Image className="object-cover rounded-xl" src={team?.logo || noLogo} alt="" width={58} height={58} />
-					</div>
-
-					<div className=" flex items-center"> {team?.name}</div>
-					<div className=" flex items-center"> {"0/0/0"}</div>
-					<div className=" flex items-center"> {team?.name}</div>
-					<div className=" flex items-center"> {team?.name}</div>
-					<div className=" flex items-center"> {team?.name}</div>
-					<div className=" flex items-center"> {team?.name}</div>
-					<div className=" flex items-center"> {team?.name}</div>
-					<div className=" flex items-center"> {team?.name}</div>
-					<div className=" flex items-center"> {team?.name}</div>
-					<div className=" flex items-center"> {team?.name}</div>
-
-					<div className="border-l-2 flex items-center justify-end">
-						<Button variant="ghost" onClick={() => handleOpenTeam(team?.id || "")}>
-							<Edit className="w-5 h-5" />
-						</Button>
-						<Button variant="ghost" className="">
-							<Trash className="w-5 h-5" />
-						</Button>
-					</div>
-				</div>
-			))}
+			<table className="table-auto w-full bg-slate-50 dark:bg-slate-800">
+				{/* Table header */}
+				<thead className="text-[13px] text-slate-500/70">
+					<tr>
+						{["#", "logo", "teamName", "city", "season", "players", "performance", "actions"].map((header, index) => (
+							<th
+								key={index}
+								className="px-5 py-2 first:pl-3 last:pr-3 bg-slate-100 first:rounded-l last:rounded-r last:pl-5 last:sticky last:right-0"
+							>
+								<div className="font-medium text-left">{t(header)}</div>
+							</th>
+						))}
+					</tr>
+				</thead>
+				{/* Table body */}
+				<tbody className="text-sm font-medium">
+					{teamsList.map((team, index) => (
+						<tr key={index}>
+							<td className="px-5 py-3 border-b border-slate-200 first:pl-3 last:pr-3 last:pl-5 last:bg-gradient-to-r last:from-transparent last:to-white last:sticky last:right-0">
+								<div className="text-slate-500">{team.rank}</div>
+							</td>
+							<td className="px-5 py-3 border-b border-slate-200 first:pl-3 last:pr-3 last:pl-5 last:bg-gradient-to-r last:from-transparent last:to-white last:sticky last:right-0">
+								{renderLogo(team?.logo)}
+							</td>
+							<td className="px-5 py-3 border-b border-slate-200 first:pl-3 last:pr-3 last:pl-5 last:bg-gradient-to-r last:from-transparent last:to-white last:sticky last:right-0">
+								<div className="text-slate-900">{team.name}</div>
+							</td>
+							<td className="px-5 py-3 border-b border-slate-200 first:pl-3 last:pr-3 last:pl-5 last:bg-gradient-to-r last:from-transparent last:to-white last:sticky last:right-0">
+								<div className="text-slate-500">{team.city}</div>
+							</td>
+							<td className="px-5 py-3 border-b border-slate-200 first:pl-3 last:pr-3 last:pl-5 last:bg-gradient-to-r last:from-transparent last:to-white last:sticky last:right-0">
+								<div className="text-slate-900">{renderSeason(team.stats)}</div>
+							</td>
+							<td className="px-5 py-3 border-b border-slate-200 first:pl-3 last:pr-3 last:pl-5 last:bg-gradient-to-r last:from-transparent last:to-white last:sticky last:right-0">
+								<div className="text-slate-900">{renderPlayers(Array.from({ length: team.players }))}</div>
+							</td>
+							<td className="px-5 py-3 border-b border-slate-200 first:pl-3 last:pr-3 last:pl-5 last:bg-gradient-to-r last:from-transparent last:to-white last:sticky last:right-0">
+								<div className="text-slate-900">{renderPerformance(team.performance)}</div>
+							</td>
+							<td className="px-5 py-3 border-b border-slate-200 first:pl-3 last:pr-3 last:pl-5 last:bg-gradient-to-r last:from-transparent last:to-white last:sticky last:right-0">
+								<Button onClick={() => handleOpenTeam(team?.slug || team?.id)} className="hover:bg-green-600/75">
+									<LayoutPanelTop className="w-4 h-4 mr-1" />
+									{t("manage")}
+								</Button>
+							</td>
+						</tr>
+					))}
+				</tbody>
+			</table>
 		</div>
 	);
 }
