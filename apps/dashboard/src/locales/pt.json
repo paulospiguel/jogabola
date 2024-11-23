@@ -29,9 +29,27 @@
     "editTeam": "Editar equipa",
     "deleteTeam": "Eliminar equipa",
     "teamName": "Nome da equipa",
-    "teamDescription": "Descrição da equipa"
+    "teamDescription": "Descrição da equipa",
+    "name": "Nome",
+    "city": "Cidade",
+    "season": "Temporada",
+    "foundedYear": "Ano de fundação",
+    "homeStadium": "Estádio",
+    "league": "Liga",
+    "bio": "Bio",
+    "language": "Idioma",
+    "teamShape": "Forma da equipa",
+    "teamColor": "Cor da equipa",
+    "contact": "Contacto",
+    "address": "Morada",
+    "phone": "Telefone",
+    "email": "Email",
+    "website": "Website",
+    "social": "Redes sociais"
   },
+
   "global": {
+    "to-invite": "Convitar",
     "error": "Erro",
     "success": "Sucesso",
     "loading": "Carregando",
@@ -107,5 +125,41 @@
       "step2": "Passo 2 - Aceite os Termos de Uso",
       "step3": "Passo 3 - Preencha minhas abilidades"
     }
+  },
+  "roles": {
+    "president": "Presidente",
+    "vice-president": "Vice-Presidente",
+    "director": "Diretor/Diretora",
+    "secretary": "Secretário/Secretaria",
+    "performance-analyst": "Analista de Desempenho",
+    "manager": "Gerente",
+    "coach": "Treinador/Treinadora",
+    "admin": "Administrador",
+    "owner": "Proprietario",
+    "guest": "Visitante",
+    "assistant": "Assistente",
+    "assistent-coach": "Assistente Treinador",
+    "assistant-manager": "Assistente Gerente",
+    "manager-coach": "Cordenador",
+    "assistant-manager-coach": "Assistente Cordenador",
+    "techinal-analyst": "Analista Tecnico",
+    "watcher": "Olheiro",
+    "observer": "Observador",
+    "financial-analyst": "Analista Financeiro",
+    "trainer": "Treinador",
+    "physical-trainer": "Treinador Fisico",
+    "goalkeeper-trainer": "Treinador de Goleiro",
+    "physiotherapist": "Fisioterapeuta",
+    "doctor": "Médico"
+  },
+  "tabs": {
+    "team-info": "Informações da Equipa",
+    "teams": "Equipas",
+    "events": "Eventos",
+    "schedule": "Calendário",
+    "stats": "Estatísticas",
+    "players": "Jogadores",
+    "season": "Epoca",
+    "news": "Notícias"
   }
 }

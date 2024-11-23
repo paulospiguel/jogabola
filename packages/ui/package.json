@@ -77,7 +77,6 @@
     "./lib/*": "./src/lib/*.ts",
     "./hooks": "./src/hooks/index.ts",
     "./hooks/*": [
-      "./src/hooks/*.tsx",
       "./src/hooks/*.ts"
     ],
     "./utils": "./src/lib/utils.ts",

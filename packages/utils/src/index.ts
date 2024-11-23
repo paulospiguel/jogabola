@@ -1,4 +1,5 @@
 export { isDate } from "date-fns";
+import cn from "@repo/ui/lib/cn";
 
 export enum FileType {
 	Pdf = "application/pdf",
@@ -56,3 +57,5 @@ export const getSearchParams = <T = unknown>(search: Record<string, string>) => 
 		get: (key: string) => searchParams.get(key) as T,
 	};
 };
+
+export { cn };

@@ -1,5 +1,5 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@repo/ui/components/avatar";
-import { cn } from "@repo/ui/lib/cn";
+import { cn } from "@repo/utils";
 
 export default function AvatarPoligon({
 	className,

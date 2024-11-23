@@ -5,8 +5,6 @@ import fieldSoccer from "@/assets/images/soccer-field.svg";
 import soccerPlayer from "@/assets/images/soccer-player.svg";
 import trophy from "@/assets/images/trophy.svg";
 import { useProfile } from "@/context/profile-context";
-import { RoleValues } from "@/schemas";
-import { Avatar, AvatarFallback, AvatarImage } from "@repo/ui/components/avatar";
 import { Button } from "@repo/ui/components/button";
 import {
 	DropdownMenu,
@@ -16,8 +14,7 @@ import {
 	DropdownMenuSeparator,
 	DropdownMenuTrigger,
 } from "@repo/ui/components/dropdown-menu";
-import { CircleUser, LogOut, UserCircleIcon } from "@repo/ui/icons";
-import { cn } from "@repo/ui/utils";
+import { LogOut, UserCircleIcon } from "@repo/ui/icons";
 import type { Session } from "next-auth";
 import Image from "next/image";
 import Link from "next/link";
@@ -34,11 +31,8 @@ const LoginBadge = ({ user }: Props) => {
 	const { userRoles, isLoggedIn } = useProfile();
 
 	const { isMANAGER, isPLAYER } = userRoles;
-
 	const baseUri = isMANAGER ? "/manager" : isPLAYER ? "/player" : "";
-
 	const avatarImage = user?.image || "";
-
 	const borderColor = avatarImage ? "bg-green-500 dark:bg-green-600" : "";
 
 	return (
