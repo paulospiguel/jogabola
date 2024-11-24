@@ -33,7 +33,7 @@
     "name": "Nome",
     "city": "Cidade",
     "season": "Temporada",
-    "foundedYear": "Ano de fundação",
+    "foundedDate": "Data de fundação",
     "homeStadium": "Estádio",
     "league": "Liga",
     "bio": "Bio",
@@ -47,7 +47,6 @@
     "website": "Website",
     "social": "Redes sociais"
   },
-
   "global": {
     "to-invite": "Convitar",
     "error": "Erro",
@@ -99,7 +98,10 @@
     "back": "Voltar",
     "next": "Proximo",
     "finish": "Finalizar",
-    "manage": "Gerenciar"
+    "manage": "Gerenciar",
+    "label": "Etiqueta",
+    "value": "Valor",
+    "add": "Adicionar"
   },
   "onbording": {
     "title": "Inicialização",
@@ -160,6 +162,45 @@
     "stats": "Estatísticas",
     "players": "Jogadores",
     "season": "Epoca",
-    "news": "Notícias"
+    "news": "Notícias",
+    "competitions": {
+      "competitionName": "Nome da competição",
+      "title": "Competicões",
+      "description": "Participe de competições e torne-se um grande jogador",
+      "createCompetition": "Criar competição",
+      "joinCompetition": "Participar de competição",
+      "addCompetition": "Adicionar competição",
+      "makeConvocation": "Fazer Convocar",
+      "makeInvitation": "Fazer Convite",
+      "editCompetition": "Editar competição",
+      "deleteCompetition": "Eliminar competição",
+      "editConvocation": "Editar convocação",
+      "type": "Tipo",
+      "additionalInfo": "Informação adicional",
+      "startDate": "Data de inicio",
+      "endDate": "Data de fim",
+      "modality": "Modalidade",
+      "league": "Liga",
+      "cup": "Copa",
+      "championship": "Campeonato",
+      "season": "Temporada",
+      "phase": "Fase",
+      "fut11": "Fut 11",
+      "fut7": "Fut 7",
+      "fut5": "Fut 5",
+      "stage": "Fase",
+      "group": "Grupo",
+      "fished": "Finalizado",
+      "finals": "Finais",
+      "quarter-finals": "Quartas de Final",
+      "semi-finals": "Semi-Finais",
+      "third-place": "Terceiro lugar",
+      "fourth-place": "Quarto lugar",
+      "match": "Partida",
+      "points": "Pontos",
+      "rank": "Classificação",
+      "position": "Posição",
+      "ongoing": "Em andamento"
+    }
   }
 }

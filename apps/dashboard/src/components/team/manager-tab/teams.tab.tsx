@@ -20,7 +20,7 @@ import ShareDialog from "../share-link-dialog";
 
 const initialTeamData = {
 	name: "Estrelas do Futebol FC",
-	foundedYear: 1950,
+	foundedDate: "1950-01-01",
 	homeStadium: "Estádio Municipal",
 	phone: "+351 123 456 789",
 	bio: "Um clube com tradição e paixão pelo futebol, formando estrelas desde 1950.",

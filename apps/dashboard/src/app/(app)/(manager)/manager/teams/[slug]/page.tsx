@@ -1,11 +1,12 @@
-import TeamCard from "@/components/team/team-info-card";
-import PlayersList from "@/components/team/players-list";
+import { Suspense } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@repo/ui/components/tabs";
 import { Award, BarChart2, CalendarDays, Newspaper, Trophy, Users } from "@repo/ui/icons";
-import TeamTab from "@/components/team/manager-tab/teams.tab";
 import { auth } from "@auth";
 import { getTranslations } from "next-intl/server";
-import { Suspense } from "react";
+import PlayersList from "@/components/team/players-list";
+import TeamCard from "@/components/team/team-info-card";
+import TeamTab from "@/components/team/manager-tab/teams.tab";
+import CompetitionsTab from "@/components/team/manager-tab/competitions.tab";
 
 const teamData = {
 	name: "Estrelas do Futebol FC",
@@ -27,7 +28,7 @@ const tabsList = [
 
 const tabsContent = {
 	teams: TeamTab,
-	season: () => <div>season</div>,
+	season: CompetitionsTab,
 	players: PlayersList,
 	stats: () => <div>stats</div>,
 	events: () => <div>events</div>,
