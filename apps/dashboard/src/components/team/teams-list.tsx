@@ -1,38 +1,7 @@
 import { getTeamsByUserId } from "@/actions/team";
 import TeamsTable, { type Team } from "./teams-table";
 
-const teamsData = [
-	{
-		rank: 1,
-		name: "FC Example",
-		city: "Example City",
-		coach: "John Doe",
-		stats: {
-			wins: 20,
-			losses: 5,
-			draws: 10,
-			goalsFor: 50,
-			goalsAgainst: 30,
-		},
-		performance: 3.5,
-		players: 22,
-	},
-	{
-		rank: 2,
-		name: "United Stars",
-		city: "Starville",
-		stats: {
-			wins: 15,
-			losses: 8,
-			draws: 7,
-			goalsFor: 40,
-			goalsAgainst: 25,
-		},
-		coach: "Jane Smith",
-		performance: 7.8,
-		players: 18,
-	},
-];
+import noImage from "@/assets/images/JOGABOLA-shield.svg";
 
 const transformData = async (userId: string): Promise<Team[]> => {
 	const response = await getTeamsByUserId({ userId });
@@ -40,7 +9,7 @@ const transformData = async (userId: string): Promise<Team[]> => {
 	const teams = response?.data?.map((team) => ({
 		rank: team?.rank,
 		id: team?.id,
-		logo: team?.logo,
+		logo: team?.logo || noImage,
 		name: team?.name,
 		city: team?.location,
 		coach: team?.manager,

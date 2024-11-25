@@ -26,6 +26,15 @@ export default {
         body: ["var(--font-body)", "sans-serif"],
         // heading: ['var(--font-heading)'],
       },
+      animation: {
+        "trail": "trail var(--duration) linear infinite",
+      },
+      keyframes: {
+        "trail": {
+          "0%": { "--angle": "0deg" },
+          "100%": { "--angle": "360deg" },
+        },
+      },
     },
   },
   plugins: [],

@@ -1,23 +1,21 @@
-import { PlayerIcon, ShoesSoccer, StadiumIcon, TeamIcon } from "@/components/icons";
+import { PlayerIcon, ShoesSoccer, StadiumIcon, MultiShield2 as MultiShield } from "@/components/icons";
 import { Tabs, TabsList, TabsTrigger } from "@repo/ui/components/tabs";
 import { auth } from "@auth";
 import type { z } from "zod";
-
-import { dictionary } from "@/dictionary";
 import { tabKeysSchema } from "@/schemas";
-import { Calendar, CrownIcon, Trophy } from "@repo/ui/icons";
-
-import FieldsTabContent from "./fileds.tab";
-import PlayersTabContent from "./players.tab";
-import CalendarTabContent from "./schedule.tab";
-import StatisticsTabContent from "./statistics.tab";
+import { Calendar, CrownIcon, ShieldEllipsisIcon, Trophy } from "@repo/ui/icons";
 import TeamsTabContent from "./teams.tab";
-import EventsTabContent from "./events.tab";
-import MatchesTabContent from "./matches.tab";
-import CompetitionsTabContent from "./competitions.tab";
+import { getTranslations } from "next-intl/server";
+
+// import FieldsTabContent from "./fileds.tab";
+// import PlayersTabContent from "./players.tab";
+// import CalendarTabContent from "./schedule.tab";
+// import StatisticsTabContent from "./statistics.tab";
+// import EventsTabContent from "./events.tab";
+// import MatchesTabContent from "./matches.tab";
+// import CompetitionsTabContent from "./competitions.tab";
 
 const tabsValues = tabKeysSchema.Values;
-const dicitionaryTabs = dictionary.managerTabs;
 
 type TabsItems = {
 	label: z.infer<typeof tabKeysSchema>;
@@ -29,24 +27,23 @@ type TabsItems = {
 
 export async function ManagerTabs() {
 	const session = await auth();
+	const t = await getTranslations();
 
 	const tabs: TabsItems[] = [
 		{
-			order: 3,
-			label: tabsValues.myteams,
-			icon: <TeamIcon className="size-6 group-data-[state=active]:fill-white" />,
+			order: 1,
+			label: tabsValues.myTeams,
+			icon: <MultiShield className="size-5 group-data-[state=active]:text-white stroke-red-500" />,
 		},
-		// {
-		// 	order: 2,
-		// 	label: tabsValues.players,
-		// 	icon: <PlayerIcon className="size-5 group-data-[state=active]:fill-white" />,
-		// },
 		{
 			order: 4,
 			label: tabsValues.matches,
 			icon: <ShoesSoccer className="size-6 group-data-[state=active]:fill-white" />,
+			isPremium: true,
+			isDisabled: true,
 		},
 		{
+			order: 2,
 			label: tabsValues.events,
 			icon: <Calendar className="size-5 group-data-[state=active]:text-white" />,
 			isDisabled: true,
@@ -54,7 +51,7 @@ export async function ManagerTabs() {
 		},
 		{
 			order: 5,
-			label: tabsValues.competitions,
+			label: tabsValues.myCompetitions,
 			icon: <Trophy className="size-5 group-data-[state=active]:text-white" />,
 			isPremium: true,
 			isDisabled: true,
@@ -86,17 +83,17 @@ export async function ManagerTabs() {
 							value={tab.label}
 							className="group border data-[state=inactive]:border-transparent"
 						>
-							<div className="space-x-2 flex items-center group-data-[state=inactive]:opacity-70">
-								{tab.icon && <span>{tab.icon}</span>}
-								<span>{dicitionaryTabs[tab.label]}</span>
+							<div className="flex items-center group-data-[state=inactive]:opacity-70">
+								{tab.icon && <span className="mr-2">{tab.icon}</span>}
+								<span>{t(`tabs.${tab.label}`)}</span>
 								{tab.isPremium && tab.isDisabled && (
-									<CrownIcon className="size-3 group-data-[state=active]:fill-white" />
+									<CrownIcon className="size-3 ml-1 group-data-[state=active]:fill-white" />
 								)}
 							</div>
 						</TabsTrigger>
 					))}
 				</TabsList>
-				<TeamsTabContent tabKey={tabsValues.myteams} session={session} />
+				<TeamsTabContent tabKey={tabsValues.myTeams} session={session} />
 				{/*<FieldsTabContent tabKey={tabsValues.fields} session={session} />
 				<PlayersTabContent tabKey={tabsValues.players} session={session} />
 				<CalendarTabContent tabKey={tabsValues.schedule} session={session} />

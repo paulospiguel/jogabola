@@ -1,8 +1,8 @@
-import { cn } from "@repo/ui/lib/cn";
 import { Logo } from "./logo";
 import { Navbar } from "./navbar";
 import Notifications from "./notifications";
 import LanguageSelector from "./language-selector";
+import { cn } from "@repo/utils";
 
 type HeaderProps = {
 	className?: string;

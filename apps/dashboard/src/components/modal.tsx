@@ -9,7 +9,7 @@ import {
 	DialogTitle,
 	DialogTrigger,
 } from "@repo/ui/components/dialog";
-import { type ComponentProps, type FC, forwardRef, useImperativeHandle, useRef, useState } from "react";
+import { type ComponentProps, forwardRef, useImperativeHandle, useRef, useState } from "react";
 
 const widthSize = {
 	small: "max-w-sm",

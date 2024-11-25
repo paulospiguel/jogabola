@@ -14,9 +14,9 @@ export default function VerticalHeader() {
 
 				<div className="flex flex-col gap-2 items-center">
 					<Navbar />
-					<Notifications />
-					<Link href="/profile/settings">
-						<CogIcon className="size-8 text-green-600" />
+					<Notifications className="transition-all duration-300 hover:scale-110" />
+					<Link href="/profile/settings" className="group">
+						<CogIcon className="size-5 text-green-600 transition-all group-hover:rotate-90" />
 					</Link>
 				</div>
 			</div>

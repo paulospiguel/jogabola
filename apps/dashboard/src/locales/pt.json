@@ -21,9 +21,43 @@
     "playerName": "Nome do jogador",
     "playerDescription": "Descrição do jogador",
     "playerRole": "Cargo do jogador",
-    "playerTeam": "Equipa do jogador"
+    "playerTeam": "Equipa do jogador",
+    "forward": "Avançado",
+    "midfielder": "Médio",
+    "defensiveMidfielder": "Defensor Médio",
+    "defense": "Defensor",
+    "goalkeeper": "Guarda-Redes",
+    "centerBack": "Defensor Central",
+    "rightBack": "Defensor Direito",
+    "leftBack": "Defensor Esquerdo",
+    "striker": "Atacante",
+    "city": "Cidade",
+    "birthDate": "Data de nascimento",
+    "birthYear": "Ano de nascimento",
+    "age": "Idade",
+    "nationality": "Nacionalidade",
+    "tshirtNumber": "Número da camisola",
+    "position": "Posição",
+    "email": "Email",
+    "phone": "Telefone",
+    "unknown": "Desconhecido"
+  },
+  "nationalities": {
+    "placeholder": "Selecione uma nacionalidade",
+    "portugal": "Português",
+    "brazil": "Brasileiro",
+    "angola": "Angolano",
+    "capeVerde": "Cabo-Verdiano",
+    "guineaBissau": "Guineense",
+    "mozambique": "Moçambicano",
+    "india": "Indiano",
+    "nepal": "Nepalês",
+    "ukraine": "Ucraniano",
+    "china": "Chinês"
   },
   "team": {
+    "teamMembers": "Membros da equipa",
+    "addTeamMember": "Adicionar membro da equipa",
     "invitePlayer": "Convitar jogador",
     "addPlayer": "Adicionar jogador",
     "editTeam": "Editar equipa",
@@ -48,11 +82,12 @@
     "social": "Redes sociais"
   },
   "global": {
-    "to-invite": "Convitar",
+    "#": "#",
+    "toInvite": "Convitar",
+    "addPlayer": "Adicionar jogador",
     "error": "Erro",
     "success": "Sucesso",
     "loading": "Carregando",
-    "#": "#",
     "name": "Nome",
     "city": "Cidade",
     "season": "Temporada",
@@ -154,15 +189,36 @@
     "physiotherapist": "Fisioterapeuta",
     "doctor": "Médico"
   },
+  "players": {
+    "name": "Nome",
+    "description": "Descrição",
+    "role": "Posição",
+    "team": "Equipa",
+    "player": "Jogador",
+    "players": "Jogadores",
+    "teamPlayers": "Jogadores da equipa",
+    "teamPlayersStats": "Estatísticas dos jogadores da equipa",
+    "playerStats": "Estatísticas do jogador",
+    "playerJouneysStats": "Estatísticas das jornadas do jogador",
+    "playerMatchesStats": "Estatísticas das partidas do jogador"
+  },
   "tabs": {
     "team-info": "Informações da Equipa",
     "teams": "Equipas",
+    "myTeams": "Minhas Equipas",
+    "myCompetitions": "Competições",
+    "matches": "Partidas",
+    "myMatches": "Minhas Partidas",
+    "team": "Equipa",
+    "myTeam": "Minha Equipa",
     "events": "Eventos",
     "schedule": "Calendário",
     "stats": "Estatísticas",
     "players": "Jogadores",
     "season": "Epoca",
     "news": "Notícias",
+    "squad": "Elenco",
+    "fillInTheFieldsBelowToAddAPlayerToTheSquad": "Preencha os campos abaixo para adicionar um jogador ao elenco",
     "competitions": {
       "competitionName": "Nome da competição",
       "title": "Competicões",
@@ -202,5 +258,13 @@
       "position": "Posição",
       "ongoing": "Em andamento"
     }
+  },
+  "errors": {
+    "nameMustHaveAtLeastFiveCharacters": "O nome deve ter pelo menos {count} caracteres.",
+    "minimumAgeIsSixteen": "A idade mínima é de {count} anos.",
+    "tshirtNumberMustBeANumber": "O número da camisa deve ser um número.",
+    "invalidNumber": "Número inválido.",
+    "invalidEmail": "Email inválido.",
+    "invalidAge": "Idade inválida."
   }
 }

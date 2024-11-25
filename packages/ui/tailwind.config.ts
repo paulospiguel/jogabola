@@ -92,6 +92,10 @@ export default {
           "85%": { transform: "translateY(-412%)" },
           "100%": { transform: "translateY(-400%)" },
         },
+        "trail": {
+          "0%": { "--angle": "0deg" },
+          "100%": { "--angle": "360deg" },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
@@ -101,6 +105,7 @@ export default {
         "marquee-horizontal": "marquee-x var(--duration) infinite linear",
         "marquee-vertical": "marquee-y var(--duration) linear infinite",
         "flip-words": "flip-words 8s infinite",
+        "trail": "trail var(--duration) linear infinite",
       },
     },
   },

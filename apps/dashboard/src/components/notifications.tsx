@@ -1,9 +1,16 @@
-import { Bell } from "lucide-react";
+import { Bell } from "@repo/ui/icons";
+import { cn } from "@repo/utils";
 
-export default function Notifications() {
+type NotificationsProps = {
+	className?: string;
+};
+
+export default function Notifications({ className }: NotificationsProps) {
 	return (
-		<div className="flex items-center justify-center">
-			<Bell size={28} className="text-green-600" />
-		</div>
+		<>
+			<button type="button" className={cn("flex items-center justify-center", className)}>
+				<Bell className="text-green-600 size-5" />
+			</button>
+		</>
 	);
 }

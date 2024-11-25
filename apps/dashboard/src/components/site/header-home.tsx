@@ -2,10 +2,11 @@ import { Logo } from "@/components/logo";
 import Link from "next/link";
 import LanguageSelector from "../language-selector";
 import { ThemeToggle } from "../theme-toggle";
-import { InputSearch } from "../input-search";
-import { Disc, Instagram } from "@repo/ui/icons";
+import { Instagram } from "@repo/ui/icons";
 import { DiscordIcon, XTwitter } from "../icons";
 import { useTranslations } from "next-intl";
+import AnimatedBorderTrail from "../animated-border-trail";
+import { Button } from "@repo/ui/components/button";
 
 export default function HeaderHome() {
 	const t = useTranslations();
@@ -43,12 +44,13 @@ export default function HeaderHome() {
 					{/* <LoginBadge user={session?.user} /> */}
 					<ThemeToggle />
 					<LanguageSelector />
-					<Link
-						className="bg-primary shadow-md hover:brightness-110 whitespace-nowrap text-white rounded-full px-4 py-2"
-						href="/welcome"
-					>
-						{t("homePage.getStarted")}
-					</Link>
+					<AnimatedBorderTrail className="rounded-full" contentClassName="rounded-full transparent" trailColor="purple">
+						<Link href="/welcome">
+							<Button className="bg-primary hover:text-secondary transition-all ease-linear duration-150 shadow-md hover:brightness-110 whitespace-nowrap text-white rounded-full px-4 py-2">
+								{t("homePage.getStarted")}
+							</Button>
+						</Link>
+					</AnimatedBorderTrail>
 				</div>
 			</div>
 		</header>

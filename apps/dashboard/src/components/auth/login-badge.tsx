@@ -27,13 +27,19 @@ type Props = {
 	user?: Session["user"];
 };
 
+const rolesBorderColor = {
+	MANAGER: "bg-yellow-500 dark:bg-yellow-600 hover:border-yellow-900",
+	PLAYER: "bg-green-500 dark:bg-green-600 hover:border-green-500",
+	GUEST: "bg-blue-500 dark:bg-blue-600 hover:border-blue-500",
+};
+
 const LoginBadge = ({ user }: Props) => {
 	const { userRoles, isLoggedIn } = useProfile();
 
 	const { isMANAGER, isPLAYER } = userRoles;
 	const baseUri = isMANAGER ? "/manager" : isPLAYER ? "/player" : "";
 	const avatarImage = user?.image || "";
-	const borderColor = avatarImage ? "bg-green-500 dark:bg-green-600" : "";
+	const borderColor = avatarImage ? rolesBorderColor[isMANAGER ? "MANAGER" : isPLAYER ? "PLAYER" : "GUEST"] : "";
 
 	return (
 		<>
@@ -41,6 +47,7 @@ const LoginBadge = ({ user }: Props) => {
 				<DropdownMenu>
 					<DropdownMenuTrigger asChild>
 						<AvatarPoligon
+							className="hover:scale-110 transition-all duration-300 ease-in-out"
 							borderColor={borderColor}
 							avatarImage={"https://github.com/paulospiguel.png"}
 							label={user?.name || ""}

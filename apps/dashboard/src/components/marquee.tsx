@@ -30,6 +30,12 @@ interface MarqueeProps extends React.HTMLAttributes<HTMLDivElement> {
 	 * @default true
 	 */
 	applyMask?: boolean;
+
+	/**
+	 * The speed of the marquee animation.
+	 * @default 10
+	 */
+	speed?: number;
 }
 
 export default function Marquee({
@@ -39,14 +45,17 @@ export default function Marquee({
 	pauseOnHover = false,
 	reverse = false,
 	className,
+	speed = 10,
 	applyMask = true,
 	...props
 }: MarqueeProps) {
 	return (
 		<div
 			{...props}
+			data-duration={speed}
+			style={{ "--duration": `${speed}s` }}
 			className={cn(
-				"group relative flex h-full w-full p-2 [--duration:10s] [--gap:12px] [gap:var(--gap)]",
+				"group relative flex h-full w-full p-2 [--gap:12px] [gap:var(--gap)]",
 				{
 					"flex-col": vertical,
 					"flex-row": !vertical,
