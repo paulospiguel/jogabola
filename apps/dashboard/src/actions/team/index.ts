@@ -1,7 +1,7 @@
 "use server";
 
 import { db, UserRole, type Prisma } from "@repo/db";
-import { RoleValues, teamSchema } from "@/schemas";
+import { type RoleSchema, RoleValues, teamSchema } from "@/schemas";
 import type { SessionRoles } from "@/types/roles";
 import { redirect } from "next/navigation";
 import { z } from "zod";
@@ -13,22 +13,65 @@ export const getTeamInfo = authActionClient
 	.metadata({
 		name: "get-team-info",
 	})
-	.action(async ({ parsedInput }) => {
-		console.log(parsedInput);
-
+	.action(async ({ parsedInput, ctx }) => {
 		const team = await db.team.findFirst({
 			where: {
-				OR: [
-					{
-						id: parsedInput.teamId,
+				OR: [{ id: parsedInput.teamId }, { slug: parsedInput.teamSlug }],
+			},
+			include: {
+				teamMembers: {
+					select: {
+						userId: true,
+						role: true,
 					},
-					{
-						slug: parsedInput.teamSlug,
-					},
-				],
+				},
 			},
 		});
-		return team;
+
+		if (!team) {
+			throw new Error("Team not found");
+		}
+
+		const member = team.teamMembers.find((member) => member.userId === ctx.userId);
+		const isMember = !!member;
+		const allowedRoles = [RoleValues.MANAGER, RoleValues.ADMIN] as z.infer<typeof RoleSchema>[];
+		const memberRole = member?.role;
+		const hasEditPermission = isMember && !!memberRole && allowedRoles.includes(memberRole);
+
+		const { teamMembers, ...teamWithoutMembers } = team;
+
+		const membersAsync = teamMembers.map(async (member) => {
+			const user = await db.user.findFirst({
+				where: {
+					id: member.userId,
+				},
+				select: {
+					id: true,
+					name: true,
+					email: true,
+					emailVerified: true,
+					image: true,
+				},
+			});
+
+			if (user) {
+				return {
+					...user,
+					role: member.role,
+				};
+			}
+
+			return null;
+		});
+
+		const members = await Promise.all(membersAsync);
+
+		return {
+			isMember,
+			hasEditPermission,
+			...teamWithoutMembers,
+			members,
+		};
 	});
 
 const managerMiddleware = createMiddleware<{
