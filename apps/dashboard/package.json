@@ -3,19 +3,14 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "biome-lint": "npx @biomejs/biome lint ./",
-    "biome-lint-apply": "npx @biomejs/biome lint ./ --apply",
-    "biome-format": "npx @biomejs/biome format ./",
-    "biome-format-apply": "npx @biomejs/biome format ./ --write",
-    "biome-check": "npx @biomejs/biome check ./",
-    "biome-check-apply": "npx @biomejs/biome check ./ --apply",
     "build": "next build",
     "clean": "git clean -xdf .next .turbo node_modules",
     "dev": "next dev -p 3001",
     "lint": "next lint",
-    "format": "biome format --write .",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
     "start": "next start",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc -b"
   },
   "dependencies": {
     "@auth/prisma-adapter": "^2.7.3",
@@ -54,10 +49,9 @@
     "input-otp": "^1.4.1",
     "next": "^15.0.2",
     "next-auth": "5.0.0-beta.25",
-    "next-international": "^1.3.1",
+    "next-intl": "^3.25.1",
     "next-safe-action": "^7.9.9",
     "next-themes": "^0.3.0",
-    "next-intl": "^3.25.1",
     "react": "^18.3.1",
     "react-day-picker": "8.10.1",
     "react-dom": "^18.3.1",
@@ -73,6 +67,7 @@
   "devDependencies": {
     "@next/bundle-analyzer": "14.2.1",
     "@repo/eslint-config": "workspace:*",
+    "@repo/prettier-config": "workspace:*",
     "@repo/tsconfig": "workspace:*",
     "@types/bcryptjs": "^2.4.6",
     "@types/node": "^20.17.6",
@@ -80,6 +75,8 @@
     "@types/react-dom": "^18.3.1",
     "@types/react-i18next": "^8.1.0",
     "eslint-config-next": "^14.2.17",
-    "jsdom": "^24.1.3"
+    "jsdom": "^24.1.3",
+    "prettier": "^3.4.2",
+    "prettier-plugin-tailwindcss": "^0.6.9"
   }
 }

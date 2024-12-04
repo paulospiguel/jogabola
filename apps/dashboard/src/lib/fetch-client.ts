@@ -3,7 +3,10 @@
 import { getCookies } from "cookies-next";
 import { signOut } from "next-auth/react";
 
-export const fetchClient = async (input: string | Request | URL, options?: RequestInit) => {
+export const fetchClient = async (
+  input: string | Request | URL,
+  options?: RequestInit,
+) => {
   const jwt = getCookies("jwt");
 
   const res = await fetch(input, {
@@ -19,4 +22,4 @@ export const fetchClient = async (input: string | Request | URL, options?: Reque
   }
 
   return res;
-}
+};

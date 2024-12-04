@@ -15,28 +15,28 @@ export const preferredRegion = ["fra1", "sfo1", "iad1"];
 export const maxDuration = 60;
 
 export const metadata: Metadata = {
-	title: "JogaBola",
-	description: "O melhor lugar para encontrar sua malta e jogar uma pelada.",
+  title: "JogaBola",
+  description: "O melhor lugar para encontrar sua malta e jogar uma pelada.",
 };
 
 export default async function RootLayout({
-	children,
+  children,
 }: Readonly<{
-	children: React.ReactNode;
+  children: React.ReactNode;
 }>) {
-	const session = await auth();
-	const dictionary = await getMessages();
-	const locale = await getUserLocale();
+  const session = await auth();
+  const dictionary = await getMessages();
+  const locale = await getUserLocale();
 
-	return (
-		<html lang={locale}>
-			<body className={cn("antialiased", fonts)} suppressHydrationWarning>
-				<NextIntlClientProvider messages={dictionary}>
-					<SessionProvider session={session}>
-						<Providers>{children}</Providers>
-					</SessionProvider>
-				</NextIntlClientProvider>
-			</body>
-		</html>
-	);
+  return (
+    <html lang={locale}>
+      <body className={cn("antialiased", fonts)} suppressHydrationWarning>
+        <NextIntlClientProvider messages={dictionary}>
+          <SessionProvider session={session}>
+            <Providers>{children}</Providers>
+          </SessionProvider>
+        </NextIntlClientProvider>
+      </body>
+    </html>
+  );
 }

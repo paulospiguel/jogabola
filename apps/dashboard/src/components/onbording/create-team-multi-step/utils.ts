@@ -8,7 +8,7 @@ export const onCheckTeamName = async (teamName: string) => {
   const errors = new Set<string>();
 
   if (validationErrors?.teamName?._errors) {
-    validationErrors.teamName._errors.forEach((error) => errors.add(error));
+    validationErrors.teamName._errors.forEach(error => errors.add(error));
   }
 
   if (serverError?.length) {
@@ -16,7 +16,7 @@ export const onCheckTeamName = async (teamName: string) => {
   }
 
   if (bindArgsValidationErrors?.length) {
-    bindArgsValidationErrors.forEach((error) => errors.add(error));
+    bindArgsValidationErrors.forEach(error => errors.add(error));
   }
 
   if (errors.size) {

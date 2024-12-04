@@ -19,7 +19,7 @@ export default async function middleware(req: NextRequest) {
   if (isProtectedRoute && !isLoggedIn) {
     const url = new URL(nextUrl.toString());
     const redirectUrl = `/auth/login?redirect=${decodeURIComponent(
-      url.toString()
+      url.toString(),
     )}`;
     return NextResponse.redirect(new URL(redirectUrl, req.url));
   }

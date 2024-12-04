@@ -5,7 +5,7 @@ import type { PlayerCreateInput } from "@/types";
 
 export const createNewPlayer = async (inputs: PlayerCreateInput) => {
   const newPlayer = await db.player.create({
-    data: inputs
+    data: inputs,
   });
 
   return newPlayer.id;
@@ -15,4 +15,4 @@ export const getPlayersByUserId = async (userId: string) => {
   const players = await db.player.findMany();
 
   return players;
-}
+};

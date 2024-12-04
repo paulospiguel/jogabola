@@ -106,7 +106,7 @@ const AddPlayerSchema = z.object({
     .max(99)
     .optional(),
   position: z.enum(positions).optional(),
-  nationality: z.enum(nationalities.map((n) => n.value)).optional(),
+  nationality: z.enum(nationalities.map(n => n.value)).optional(),
   invited: z.boolean().default(false).optional(),
   email: z.string().email("invalidEmail"),
   phone: z.string().optional(),
@@ -142,9 +142,9 @@ const PlayerList = ({ hasEditPermission }: { hasEditPermission: boolean }) => {
 
   const toggleInvite = (id: number) => {
     setPlayers(
-      players.map((player) =>
-        player.id === id ? { ...player, invited: !player.invited } : player
-      )
+      players.map(player =>
+        player.id === id ? { ...player, invited: !player.invited } : player,
+      ),
     );
   };
 
@@ -153,18 +153,18 @@ const PlayerList = ({ hasEditPermission }: { hasEditPermission: boolean }) => {
   return (
     <>
       {/* Players List */}
-      <div className="w-full bg-white shadow-md rounded-lg overflow-hidden mb-4">
+      <div className="mb-4 w-full overflow-hidden rounded-lg bg-white shadow-md">
         <div className="bg-primary py-2 text-center text-lg font-semibold text-white">
           {t("tabs.squad")}
         </div>
         <div className="p-4">
-          <ul className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {players.map((player) => (
+          <ul className="grid grid-cols-1 gap-4 md:grid-cols-2">
+            {players.map(player => (
               <li
                 key={player.id}
-                className="flex items-center bg-gray-50 p-3 rounded-lg"
+                className="flex items-center rounded-lg bg-gray-50 p-3"
               >
-                <div className="w-12 h-12 bg-primary uppercase rounded-full flex items-center justify-center text-white font-bold mr-4">
+                <div className="mr-4 flex h-12 w-12 items-center justify-center rounded-full bg-primary font-bold uppercase text-white">
                   {player.number || player.name.slice(0, 2)}
                 </div>
                 <div>
@@ -186,7 +186,7 @@ const PlayerList = ({ hasEditPermission }: { hasEditPermission: boolean }) => {
                     </Button>
                   )}
                   <Button variant="link" size="sm">
-                    <MessageSquareShare className="size-6 mr-2" />
+                    <MessageSquareShare className="mr-2 size-6" />
                   </Button>
                 </div>
               </li>
@@ -198,8 +198,8 @@ const PlayerList = ({ hasEditPermission }: { hasEditPermission: boolean }) => {
       {/* Add Player Sheet */}
       {hasEditPermission && (
         <Sheet>
-          <SheetTrigger className="absolute bottom-2 right-2 hover:brightness-110 shadow-md bg-primary flex items-center py-2 px-4 rounded-full text-white hover:bg-primary/80">
-            <Plus className="h-4 w-4 mr-2" /> {t("global.addPlayer")}
+          <SheetTrigger className="hover:bg-primary/80 absolute bottom-2 right-2 flex items-center rounded-full bg-primary px-4 py-2 text-white shadow-md hover:brightness-110">
+            <Plus className="mr-2 h-4 w-4" /> {t("global.addPlayer")}
           </SheetTrigger>
           <SheetContent side="bottom">
             <SheetHeader>
@@ -213,7 +213,7 @@ const PlayerList = ({ hasEditPermission }: { hasEditPermission: boolean }) => {
               className="grid gap-4 py-4"
             >
               <div className="grid grid-cols-4 gap-4">
-                <div className="space-y-2 col-span-2">
+                <div className="col-span-2 space-y-2">
                   <Label>{t("player.playerName")}</Label>
                   <Input
                     {...register("name")}
@@ -221,14 +221,14 @@ const PlayerList = ({ hasEditPermission }: { hasEditPermission: boolean }) => {
                     className="border px-3 py-2"
                   />
                   {errors.name && (
-                    <p className="text-red-500 text-sm">
+                    <p className="text-sm text-red-500">
                       {t(`errors.${errors?.name?.message}`, {
                         count: MIN_NAME,
                       })}
                     </p>
                   )}
                 </div>
-                <div className="space-y-2 col-span-1">
+                <div className="col-span-1 space-y-2">
                   <Label>{t("player.age")}</Label>
                   <Input
                     type="number"
@@ -238,22 +238,22 @@ const PlayerList = ({ hasEditPermission }: { hasEditPermission: boolean }) => {
                     className="border px-3 py-2"
                   />
                   {errors.age && (
-                    <p className="text-red-500 text-sm">
+                    <p className="text-sm text-red-500">
                       {t(`errors.${errors?.age?.message}`)}
                     </p>
                   )}
                 </div>
-                <div className="space-y-2 col-span-1">
+                <div className="col-span-1 space-y-2">
                   <Label>{t("player.nationality")}</Label>
                   <Select
                     {...register("nationality")}
-                    onValueChange={(value) => setValue("nationality", value)}
+                    onValueChange={value => setValue("nationality", value)}
                   >
                     <SelectTrigger className="border px-3 py-2">
                       <SelectValue placeholder={t("player.nationality")} />
                     </SelectTrigger>
                     <SelectContent>
-                      {nationalities.map((nation) => (
+                      {nationalities.map(nation => (
                         <SelectItem key={nation.value} value={nation.value}>
                           {nation.value} {t(`nationalities.${nation.label}`)}
                         </SelectItem>
@@ -263,7 +263,7 @@ const PlayerList = ({ hasEditPermission }: { hasEditPermission: boolean }) => {
                 </div>
               </div>
               <div className="grid grid-cols-3 gap-4">
-                <div className="space-y-2 col-span-2">
+                <div className="col-span-2 space-y-2">
                   <Label>{t("player.email")}</Label>
                   <Input
                     {...register("email")}
@@ -272,7 +272,7 @@ const PlayerList = ({ hasEditPermission }: { hasEditPermission: boolean }) => {
                     className="border px-3 py-2"
                   />
                   {errors.email && (
-                    <p className="text-red-500 text-sm">
+                    <p className="text-sm text-red-500">
                       {t(`errors.${errors?.email?.message}`)}
                     </p>
                   )}
@@ -286,7 +286,7 @@ const PlayerList = ({ hasEditPermission }: { hasEditPermission: boolean }) => {
                     className="border px-3 py-2"
                   />
                   {errors.phone && (
-                    <p className="text-red-500 text-sm">
+                    <p className="text-sm text-red-500">
                       {t(`errors.${errors?.phone?.message}`)}
                     </p>
                   )}
@@ -303,7 +303,7 @@ const PlayerList = ({ hasEditPermission }: { hasEditPermission: boolean }) => {
                     className="border px-3 py-2"
                   />
                   {errors.tshirtNumber && (
-                    <p className="text-red-500 text-sm">
+                    <p className="text-sm text-red-500">
                       {t(`errors.${errors?.tshirtNumber?.message}`)}
                     </p>
                   )}
@@ -312,13 +312,13 @@ const PlayerList = ({ hasEditPermission }: { hasEditPermission: boolean }) => {
                   <Label>{t("player.position")}</Label>
                   <Select
                     {...register("position")}
-                    onValueChange={(value) => setValue("position", value)}
+                    onValueChange={value => setValue("position", value)}
                   >
                     <SelectTrigger className="border px-3 py-2">
                       <SelectValue placeholder={t("player.position")} />
                     </SelectTrigger>
                     <SelectContent>
-                      {positions.map((position) => (
+                      {positions.map(position => (
                         <SelectItem key={position} value={position}>
                           {t(`player.${position}`)}
                         </SelectItem>

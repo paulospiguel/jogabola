@@ -8,13 +8,14 @@ import { db } from "@repo/db";
 import bcryptjs from "bcryptjs";
 import type { z } from "zod";
 
-
 /**
  * This method saves the user's new settings
  * @param {z.infer<typeof UserSettingsSchema>} user - The new user data.
  * @returns {Promise<{error?: string, success?: string}>} The result of the settings change request.
  */
-export const changeSettings = async (settings: z.infer<typeof UserSettingsSchema>) => {
+export const changeSettings = async (
+  settings: z.infer<typeof UserSettingsSchema>,
+) => {
   const validData = UserSettingsSchema.safeParse(settings);
   if (!validData.success) {
     return {

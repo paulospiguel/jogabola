@@ -31,7 +31,7 @@ export const teamSchema = z.object({
       z.object({
         userId: z.string(),
         role: z.string(),
-      })
+      }),
     )
     .optional(),
 });

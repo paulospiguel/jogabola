@@ -18,5 +18,5 @@ const firaSans = Fira_Sans({
 });
 
 export const fonts = [consertOne, inter, fontBody, firaSans]
-  .map((font) => font.variable)
+  .map(font => font.variable)
   .join(" ");

@@ -27,10 +27,10 @@ export default {
         // heading: ['var(--font-heading)'],
       },
       animation: {
-        "trail": "trail var(--duration) linear infinite",
+        trail: "trail var(--duration) linear infinite",
       },
       keyframes: {
-        "trail": {
+        trail: {
           "0%": { "--angle": "0deg" },
           "100%": { "--angle": "360deg" },
         },

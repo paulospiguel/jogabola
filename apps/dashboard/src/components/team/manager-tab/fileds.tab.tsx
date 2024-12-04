@@ -15,18 +15,18 @@ import GameSchedule from "../game-schedule";
 import WrapperLayoutTab from "./wrapper-layout.tab";
 
 interface HomeProps {
-	tabKey: string;
-	session: Session | null;
+  tabKey: string;
+  session: Session | null;
 }
 
 import teamA from "../../../../public/temp/barreiro.jpg";
 import teamB from "../../../../public/temp/bolacacem.jpg";
 
 export default function FiledsTabContent({ tabKey, session }: HomeProps) {
-	return (
-		<WrapperLayoutTab tabKey={tabKey} className="space-y-4">
-			<div className="grid grid-cols-3 gap-2">
-				{/* <StatCard>
+  return (
+    <WrapperLayoutTab tabKey={tabKey} className="space-y-4">
+      <div className="grid grid-cols-3 gap-2">
+        {/* <StatCard>
 					<div className="font-bold text-yellow-700">Highly rated</div>
 					<div className="mt-auto flex justify-end">
 						<div className="text-4xl font-black text-black/60 md:text-7xl">
@@ -41,7 +41,7 @@ export default function FiledsTabContent({ tabKey, session }: HomeProps) {
 					<PlayerList size="sm" className="py-0 self-end" />
 				</StatCard> */}
 
-				{/* <CardCarousel
+        {/* <CardCarousel
 					showControls
 					classNameControls="absolute mx-auto inset-x-0 bottom-3"
 					items={[
@@ -50,8 +50,8 @@ export default function FiledsTabContent({ tabKey, session }: HomeProps) {
 						<MonthScoreWidget key="monthScore" items={undefined} />,
 					]}
 				/> */}
-			</div>
-			{/* <div className="gap-2 w-full grid grid-cols-3 justify-stretch">
+      </div>
+      {/* <div className="gap-2 w-full grid grid-cols-3 justify-stretch">
 				<CardCarousel showControls items={[<GameSchedule key="calendar" />]} />
 
 				<Card className="shadow-md flex flex-col justify-center">
@@ -108,6 +108,6 @@ export default function FiledsTabContent({ tabKey, session }: HomeProps) {
 					<CardFooter className="items-center justify-center">Performance</CardFooter>
 				</Card>
 			</div> */}
-		</WrapperLayoutTab>
-	);
+    </WrapperLayoutTab>
+  );
 }

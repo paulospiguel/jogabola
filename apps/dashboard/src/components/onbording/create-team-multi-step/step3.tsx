@@ -79,7 +79,7 @@ export const TeamInfo = React.forwardRef<HTMLDivElement, TeamInfoProps>(
     };
 
     const createTeam = useAction(createTeamAction, {
-      onError: (error) => {
+      onError: error => {
         console.error("createTeam:", error);
         toast({
           title: "Error",
@@ -102,10 +102,10 @@ export const TeamInfo = React.forwardRef<HTMLDivElement, TeamInfoProps>(
 
     return (
       <div ref={ref}>
-        <div className="grid gap-4 mt-6">
+        <div className="mt-6 grid gap-4">
           <div className="flex gap-3">
             <div className="flex-1 space-y-4">
-              <div className="flex flex-col items-start ">
+              <div className="flex flex-col items-start">
                 <FormField
                   control={control}
                   name="isPublic"
@@ -153,7 +153,7 @@ export const TeamInfo = React.forwardRef<HTMLDivElement, TeamInfoProps>(
               </div>
             </div>
 
-            <div className="w-[12rem] h-[12rem] space-y-2 flex justify-center items-center relative border rounded-lg ">
+            <div className="relative flex h-[12rem] w-[12rem] items-center justify-center space-y-2 rounded-lg border">
               <FormField
                 control={control}
                 name="logo"
@@ -173,7 +173,7 @@ export const TeamInfo = React.forwardRef<HTMLDivElement, TeamInfoProps>(
                   type="button"
                   onClick={removeLogo}
                 >
-                  <Trash className="w-5 h-5 text-gray-500" />
+                  <Trash className="h-5 w-5 text-gray-500" />
                 </Button>
               )}
             </div>
@@ -191,7 +191,7 @@ export const TeamInfo = React.forwardRef<HTMLDivElement, TeamInfoProps>(
                       <Input
                         {...field}
                         disabled={!!field.value && !isEditName && !isMultiStep}
-                        className="pr-40 z-10"
+                        className="z-10 pr-40"
                         isError={!!fieldState.error?.message}
                         placeholder="Equipa de sucesso chama-se..."
                         onBlur={() => handleCheckTeamName(field.value)}
@@ -199,15 +199,15 @@ export const TeamInfo = React.forwardRef<HTMLDivElement, TeamInfoProps>(
 
                       <button
                         type="button"
-                        className="absolute z-50 inset-y-0 right-0 flex items-center pr-3 group"
+                        className="group absolute inset-y-0 right-0 z-50 flex items-center pr-3"
                         onClick={() => {
                           setIsEditName(!isEditName);
                         }}
                       >
                         {isEditName ? (
-                          <Check className="w-5 h-5 group-hover:text-green-500" />
+                          <Check className="h-5 w-5 group-hover:text-green-500" />
                         ) : (
-                          <Edit className="w-5 h-5 group-hover:text-gray-500" />
+                          <Edit className="h-5 w-5 group-hover:text-gray-500" />
                         )}
                       </button>
                     </div>
@@ -267,7 +267,7 @@ export const TeamInfo = React.forwardRef<HTMLDivElement, TeamInfoProps>(
                       <SelectValue placeholder="Select" />
                     </SelectTrigger>
                     <SelectContent>
-                      {TEAM_TYPES?.map((type) => (
+                      {TEAM_TYPES?.map(type => (
                         <SelectItem key={type} value={type}>
                           {type}
                         </SelectItem>
@@ -296,7 +296,7 @@ export const TeamInfo = React.forwardRef<HTMLDivElement, TeamInfoProps>(
                       showFirstTrack={false}
                       step={1}
                       defaultValue={field?.value}
-                      onValueChange={(value) => {
+                      onValueChange={value => {
                         value[NameSlider.MIN] = 1;
                         field.onChange(value);
                       }}
@@ -323,7 +323,7 @@ export const TeamInfo = React.forwardRef<HTMLDivElement, TeamInfoProps>(
                       minStepsBetweenThumbs={1}
                       defaultValue={field?.value}
                       showFirstTrack={true}
-                      onValueChange={(value) => {
+                      onValueChange={value => {
                         field.onChange(value);
                       }}
                     />
@@ -337,5 +337,5 @@ export const TeamInfo = React.forwardRef<HTMLDivElement, TeamInfoProps>(
         <FormMessage />
       </div>
     );
-  }
+  },
 );

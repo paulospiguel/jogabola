@@ -5,7 +5,7 @@ const managerRoutes = [
   "/manager/team",
   "/manager/teams",
   "/manager/feed",
-  "/invite-player"
+  "/invite-player",
 ];
 
 const playerRoutes = [
@@ -15,7 +15,11 @@ const playerRoutes = [
   "/player/join-team",
 ];
 
-const settingsRoutes = ["/profile/auth", "/profile/notifications", "/profile/settings"];
+const settingsRoutes = [
+  "/profile/auth",
+  "/profile/notifications",
+  "/profile/settings",
+];
 
 export const configRoutes: ConfigRoutes = {
   publicRoutes: [

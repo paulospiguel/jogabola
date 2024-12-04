@@ -38,7 +38,7 @@ export const AggreeTerms = React.forwardRef<HTMLDivElement, AggreeTermsProps>(
         <div className="mx-auto space-x-4 space-y-6 text-xs">
           <div className="space-y-2 text-center">
             <h2 className="text-xl font-bold">Aceite os Termos de Uso</h2>
-            <p className="text-slate-500 text-xs">
+            <p className="text-xs text-slate-500">
               Antes de prosseguir, você precisa aceitar nossos Termos de Uso.
             </p>
           </div>
@@ -57,7 +57,7 @@ export const AggreeTerms = React.forwardRef<HTMLDivElement, AggreeTermsProps>(
                 <div className="grid gap-1.5 leading-none">
                   <Label
                     htmlFor="notifications"
-                    className="font-medium text-xs italic leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                    className="text-xs font-medium italic leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                   >
                     Aceito receber notificações
                   </Label>
@@ -86,7 +86,7 @@ export const AggreeTerms = React.forwardRef<HTMLDivElement, AggreeTermsProps>(
                   <div className="grid gap-1.5 leading-none">
                     <Label
                       htmlFor="termsOfUse"
-                      className="text-xs italic font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                      className="text-xs font-medium italic leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                     >
                       Eu aceito os Termos de Uso
                     </Label>
@@ -106,5 +106,5 @@ export const AggreeTerms = React.forwardRef<HTMLDivElement, AggreeTermsProps>(
         </div>
       </div>
     );
-  }
+  },
 );

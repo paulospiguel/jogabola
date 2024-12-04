@@ -12,15 +12,19 @@ import { useForm } from "react-hook-form";
 
 import { login, loginByMagicLink } from "@/actions/auth";
 import {
-	Form,
-	FormControl,
-	FormDescription,
-	FormField,
-	FormItem,
-	FormLabel,
-	FormMessage,
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
 } from "@repo/ui/components/form";
-import { InputOTP, InputOTPGroup, InputOTPSlot } from "@repo/ui/components/input-otp";
+import {
+  InputOTP,
+  InputOTPGroup,
+  InputOTPSlot,
+} from "@repo/ui/components/input-otp";
 import { Separator } from "@repo/ui/components/separator";
 import { LoaderIcon } from "@repo/ui/icons";
 import { useSearchParams } from "next/navigation";
@@ -33,90 +37,92 @@ import type { z } from "zod";
 import { Modal, type ModalRef } from "../modal";
 
 export default function LoginForm() {
-	const [isPending, startTransition] = useTransition();
-	const [error, setError] = useState<string>("");
-	const [success, setSuccess] = useState<string>("");
-	const [showOTPForm, setShowOTP] = useState<boolean>(false);
-	const [isShowLoginForm, setShowLoginForm] = useState<boolean>(false);
-	const [magicMailToSend, setMagicMailToSend] = useState<string>("");
+  const [isPending, startTransition] = useTransition();
+  const [error, setError] = useState<string>("");
+  const [success, setSuccess] = useState<string>("");
+  const [showOTPForm, setShowOTP] = useState<boolean>(false);
+  const [isShowLoginForm, setShowLoginForm] = useState<boolean>(false);
+  const [magicMailToSend, setMagicMailToSend] = useState<string>("");
 
-	const searchParams = useSearchParams();
-	const callbackError =
-		searchParams.get("error") === "OAuthAccountNotLinked" ? "E-mail em uso com provedor diferente" : undefined;
+  const searchParams = useSearchParams();
+  const callbackError =
+    searchParams.get("error") === "OAuthAccountNotLinked"
+      ? "E-mail em uso com provedor diferente"
+      : undefined;
 
-	const modalRef = useRef<ModalRef>(null);
+  const modalRef = useRef<ModalRef>(null);
 
-	const form = useForm<z.infer<typeof CredentialsSchema>>({
-		resolver: zodResolver(CredentialsSchema),
-		defaultValues: {
-			email: "",
-			password: "",
-		},
-	});
+  const form = useForm<z.infer<typeof CredentialsSchema>>({
+    resolver: zodResolver(CredentialsSchema),
+    defaultValues: {
+      email: "",
+      password: "",
+    },
+  });
 
-	const onSubmit = async (values: z.infer<typeof CredentialsSchema>) => {
-		startTransition(async () => {
-			try {
-				const resp = await login(values);
+  const onSubmit = async (values: z.infer<typeof CredentialsSchema>) => {
+    startTransition(async () => {
+      try {
+        const resp = await login(values);
 
-				if (!resp) {
-					setError("Resposta inválida do servidor");
-					setSuccess("");
-					form.reset();
-					return;
-				}
+        if (!resp) {
+          setError("Resposta inválida do servidor");
+          setSuccess("");
+          form.reset();
+          return;
+        }
 
-				const { error, success, data } = resp;
+        const { error, success, data } = resp;
 
-				if (data?.twoFactorAuthEnabled) {
-					setShowOTP(true);
-					if (resp.error) {
-						setError(resp.error);
-						setSuccess("");
-						return;
-					}
-					return;
-				}
+        if (data?.twoFactorAuthEnabled) {
+          setShowOTP(true);
+          if (resp.error) {
+            setError(resp.error);
+            setSuccess("");
+            return;
+          }
+          return;
+        }
 
-				if (error) {
-					setError(resp.error);
-					setSuccess("");
-					form.reset();
-					return;
-				}
-				if (success) {
-					setSuccess(resp.success);
-					setError("");
-					return;
-				}
+        if (error) {
+          setError(resp.error);
+          setSuccess("");
+          form.reset();
+          return;
+        }
+        if (success) {
+          setSuccess(resp.success);
+          setError("");
+          return;
+        }
 
-				form.reset();
-			} catch (err) {
-				setError("Algo deu errado");
-				setSuccess("");
-				form.reset();
-			}
-		});
-	};
+        form.reset();
+      } catch (err) {
+        setError("Algo deu errado");
+        setSuccess("");
+        form.reset();
+      }
+    });
+  };
 
-	const handleGetMagicLink = async (formData: FormData) => {
-		const email = formData.get("email");
-		console.log(formData.get("email"));
+  const handleGetMagicLink = async (formData: FormData) => {
+    const email = formData.get("email");
+    console.log(formData.get("email"));
 
-		if (!email) {
-			return;
-		}
+    if (!email) {
+      return;
+    }
 
-		await loginByMagicLink(email as string);
+    await loginByMagicLink(email as string);
 
-		//modalRef.current?.close();
-	};
+    //modalRef.current?.close();
+  };
 
-	return (
-		<>
-			<AuthCard title="Conecte-se" description="Seja bem-vindo">
-				<div className="space-y-4">
-					{/* {isShowLoginForm && (
+  return (
+    <>
+      <AuthCard title="Conecte-se" description="Seja bem-vindo">
+        <div className="space-y-4">
+          {/* {isShowLoginForm && (
 						<Form {...form}>
 							<form onSubmit={form.handleSubmit(onSubmit)}>
 								{!showOTPForm && (
@@ -220,13 +226,13 @@ export default function LoginForm() {
 						</Form>
 					)} */}
 
-					{/* <LoginMobile /> */}
+          {/* <LoginMobile /> */}
 
-					<Separator />
+          <Separator />
 
-					<SocialLogin />
+          <SocialLogin />
 
-					{/* {!showOTPForm && (
+          {/* {!showOTPForm && (
 						<div className="mt-4 text-center text-sm">
 							Não tem uma conta?{" "}
 							{isShowLoginForm && (
@@ -262,8 +268,8 @@ export default function LoginForm() {
 							</Link>
 						</div>
 					)} */}
-				</div>
-			</AuthCard>
-		</>
-	);
+        </div>
+      </AuthCard>
+    </>
+  );
 }

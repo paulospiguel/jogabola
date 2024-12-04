@@ -110,7 +110,7 @@ export default function TeamTab({ session, hasEditPermission }: TeamsTab) {
   const [isShowAddStaff, setIsShowAddStaff] = useState(false);
   const [sendingInvitations, setSendingInvitations] = useState<number[]>([]);
   const [openShareModal, setOpenShareModal] = useState<string | number | null>(
-    null
+    null,
   );
 
   const t = useTranslations();
@@ -140,29 +140,25 @@ export default function TeamTab({ session, hasEditPermission }: TeamsTab) {
   };
 
   const sendInvitation = (id: number, action?: "send" | "retry" | "undo") => {
-    const member = { ...staff.find((member) => member.id === id) };
+    const member = { ...staff.find(member => member.id === id) };
     setSendingInvitations([...sendingInvitations, id]);
 
     if (action === "undo") {
-      setSendingInvitations(
-        sendingInvitations.filter((id) => id !== member.id)
-      );
+      setSendingInvitations(sendingInvitations.filter(id => id !== member.id));
       setStaff(
-        staff.map((member) =>
-          member.id === id ? { ...member, invited: true } : member
-        )
+        staff.map(member =>
+          member.id === id ? { ...member, invited: true } : member,
+        ),
       );
       return;
     }
 
-    new Promise((resolve) => setTimeout(resolve, 3000)).then(() => {
-      setSendingInvitations(
-        sendingInvitations.filter((id) => id !== member.id)
-      );
+    new Promise(resolve => setTimeout(resolve, 3000)).then(() => {
+      setSendingInvitations(sendingInvitations.filter(id => id !== member.id));
       setStaff(
-        staff.map((member) =>
-          member.id === id ? { ...member, invited: action === "send" } : member
-        )
+        staff.map(member =>
+          member.id === id ? { ...member, invited: action === "send" } : member,
+        ),
       );
       toast({
         title: "Invitation sent",
@@ -170,7 +166,7 @@ export default function TeamTab({ session, hasEditPermission }: TeamsTab) {
         action: (
           <ToastAction
             onClick={() => sendInvitation(id, "undo")}
-            className="text-primary rounded-lg"
+            className="rounded-lg text-primary"
             altText="Cancel invitation"
           >
             Undo
@@ -181,7 +177,7 @@ export default function TeamTab({ session, hasEditPermission }: TeamsTab) {
   };
 
   const removeMember = (id: number) => {
-    setStaff(staff.filter((member) => member.id !== id));
+    setStaff(staff.filter(member => member.id !== id));
   };
 
   const formatShareLink = (id: string | number) => {
@@ -195,7 +191,7 @@ export default function TeamTab({ session, hasEditPermission }: TeamsTab) {
     <>
       <Card>
         <CardHeader>
-          <CardTitle className="text-2xl font-sans flex items-center">
+          <CardTitle className="flex items-center font-sans text-2xl">
             <Trophy className="mr-2 h-6 w-6 text-primary" />
             {t("tabs.team-info")}
           </CardTitle>
@@ -211,7 +207,7 @@ export default function TeamTab({ session, hasEditPermission }: TeamsTab) {
                   <Input
                     id={key}
                     value={value}
-                    onChange={(e) =>
+                    onChange={e =>
                       setTeamData({ ...teamData, [key]: e.target.value })
                     }
                     className="w-64"
@@ -228,9 +224,9 @@ export default function TeamTab({ session, hasEditPermission }: TeamsTab) {
           </div>
 
           {/* STAFF SECTION */}
-          <div className="mt-8 ">
+          <div className="mt-8">
             <div className="flex justify-between">
-              <h3 className="text-xl font-semibold mb-4">
+              <h3 className="mb-4 text-xl font-semibold">
                 {t("team.teamMembers")}
               </h3>
               {hasEditPermission && (
@@ -238,15 +234,15 @@ export default function TeamTab({ session, hasEditPermission }: TeamsTab) {
                   onClick={() => setIsShowAddStaff(true)}
                   className="mb-4 hover:brightness-105"
                 >
-                  <Plus className="h-4 w-4 mr-2" /> {t("team.addTeamMember")}
+                  <Plus className="mr-2 h-4 w-4" /> {t("team.addTeamMember")}
                 </Button>
               )}
             </div>
-            <ul className="space-y-4 w-full h-48 overflow-auto touch-auto">
-              {staff.map((member) => (
+            <ul className="h-48 w-full touch-auto space-y-4 overflow-auto">
+              {staff.map(member => (
                 <li
                   key={member.id}
-                  className="flex items-center justify-between bg-gray-50 p-2 rounded-lg"
+                  className="flex items-center justify-between rounded-lg bg-gray-50 p-2"
                 >
                   <div>
                     <p className="font-semibold">{member.name}</p>
@@ -262,9 +258,9 @@ export default function TeamTab({ session, hasEditPermission }: TeamsTab) {
                         onClick={() => sendInvitation(member.id)}
                       >
                         <Send
-                          className={cn("h-4 w-4 mr-1", {
+                          className={cn("mr-1 h-4 w-4", {
                             "animate-pulse": sendingInvitations.includes(
-                              member.id
+                              member.id,
                             ),
                           })}
                         />{" "}
@@ -279,7 +275,7 @@ export default function TeamTab({ session, hasEditPermission }: TeamsTab) {
                           size="sm"
                           onClick={() => setOpenShareModal(member.id)}
                         >
-                          <Share2 className={cn("h-4 w-4 mr-1")} />
+                          <Share2 className={cn("mr-1 h-4 w-4")} />
                         </Button>
                         <Button
                           disabled={!hasEditPermission}
@@ -288,9 +284,9 @@ export default function TeamTab({ session, hasEditPermission }: TeamsTab) {
                           onClick={() => sendInvitation(member.id)}
                         >
                           <Repeat2
-                            className={cn("h-4 w-4 mr-1", {
+                            className={cn("mr-1 h-4 w-4", {
                               "animate-spin": sendingInvitations.includes(
-                                member.id
+                                member.id,
                               ),
                             })}
                           />
@@ -303,11 +299,11 @@ export default function TeamTab({ session, hasEditPermission }: TeamsTab) {
                       size="sm"
                       onClick={() =>
                         confirm(
-                          `Tem certeza que deseja remover o membro ${member.name}?`
+                          `Tem certeza que deseja remover o membro ${member.name}?`,
                         ) && removeMember(member.id)
                       }
                     >
-                      <Trash2 className="h-4 w-4 mr-1" />
+                      <Trash2 className="mr-1 h-4 w-4" />
                     </Button>
                   </div>
                 </li>
@@ -369,7 +365,7 @@ export default function TeamTab({ session, hasEditPermission }: TeamsTab) {
                         <SelectValue placeholder="Selecione a função" />
                       </SelectTrigger>
                       <SelectContent>
-                        {roles.map((item) => (
+                        {roles.map(item => (
                           <SelectItem key={item} value={item}>
                             {t(`roles.${item}`)}
                           </SelectItem>
@@ -382,7 +378,7 @@ export default function TeamTab({ session, hasEditPermission }: TeamsTab) {
             </div>
             <div className="flex justify-end">
               <Button>
-                <Save className="h-4 w-4 mr-1" /> Salvar
+                <Save className="mr-1 h-4 w-4" /> Salvar
               </Button>
             </div>
           </form>

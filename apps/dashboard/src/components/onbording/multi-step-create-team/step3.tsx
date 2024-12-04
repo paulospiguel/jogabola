@@ -71,9 +71,9 @@ export const Step3 = React.forwardRef<HTMLFormElement, Step3Props>(
       return value?.reduce((acc, curr) => acc + curr, 0);
     };
 
-    const onSubmit: SubmitHandler<z.infer<typeof teamSchema>> = async (
-      values
-    ) => {
+    const onSubmit: SubmitHandler<
+      z.infer<typeof teamSchema>
+    > = async values => {
       createTeam.execute({ values, redirectTo: redirectTo });
     };
 
@@ -87,7 +87,7 @@ export const Step3 = React.forwardRef<HTMLFormElement, Step3Props>(
     };
 
     const createTeam = useAction(createTeamAction, {
-      onError: (error) => {
+      onError: error => {
         console.error("createTeam:", error);
         toast({
           title: "Error",
@@ -124,7 +124,7 @@ export const Step3 = React.forwardRef<HTMLFormElement, Step3Props>(
               <div className="grid gap-4">
                 <div className="flex gap-3">
                   <div className="flex-1 space-y-4">
-                    <div className="flex flex-col items-start ">
+                    <div className="flex flex-col items-start">
                       <FormField
                         control={form.control}
                         name="isPublic"
@@ -181,7 +181,7 @@ export const Step3 = React.forwardRef<HTMLFormElement, Step3Props>(
                     </div>
                   </div>
 
-                  <div className="w-[12rem] h-[12rem] space-y-2 flex justify-center items-center relative border rounded-lg ">
+                  <div className="relative flex h-[12rem] w-[12rem] items-center justify-center space-y-2 rounded-lg border">
                     <FormField
                       control={form.control}
                       name="logo"
@@ -201,7 +201,7 @@ export const Step3 = React.forwardRef<HTMLFormElement, Step3Props>(
                         type="button"
                         onClick={removeLogo}
                       >
-                        <Trash className="w-6 h-6 text-gray-500" />
+                        <Trash className="h-6 w-6 text-gray-500" />
                       </Button>
                     )}
                   </div>
@@ -279,7 +279,7 @@ export const Step3 = React.forwardRef<HTMLFormElement, Step3Props>(
                             <SelectValue placeholder="Select" />
                           </SelectTrigger>
                           <SelectContent>
-                            {TEAM_TYPES?.map((type) => (
+                            {TEAM_TYPES?.map(type => (
                               <SelectItem key={type} value={type}>
                                 {type}
                               </SelectItem>
@@ -308,7 +308,7 @@ export const Step3 = React.forwardRef<HTMLFormElement, Step3Props>(
                             showFirstTrack={false}
                             step={1}
                             defaultValue={field?.value}
-                            onValueChange={(value) => {
+                            onValueChange={value => {
                               value[NameSlider.MIN] = 1;
                               field.onChange(value);
                             }}
@@ -335,7 +335,7 @@ export const Step3 = React.forwardRef<HTMLFormElement, Step3Props>(
                             minStepsBetweenThumbs={1}
                             defaultValue={field?.value}
                             showFirstTrack={true}
-                            onValueChange={(value) => {
+                            onValueChange={value => {
                               field.onChange(value);
                             }}
                           />
@@ -353,7 +353,7 @@ export const Step3 = React.forwardRef<HTMLFormElement, Step3Props>(
                 disabled={
                   form.formState.isSubmitting || !form.formState.isValid
                 }
-                className="w-full dark:text-white cursor-hand"
+                className="cursor-hand w-full dark:text-white"
               >
                 Criar equipa
               </Button>
@@ -363,5 +363,5 @@ export const Step3 = React.forwardRef<HTMLFormElement, Step3Props>(
         <FormMessage />
       </Form>
     );
-  }
+  },
 );

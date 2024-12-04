@@ -2,9 +2,9 @@ import { AppHeader } from "@/components/horizontal-header";
 
 export default function FeedManager() {
   return (
-    <div className="flex flex-col w-full h-full items-center bg-backgroundPrimary dark:bg-backgroundPrimary-dark">
+    <div className="bg-backgroundPrimary dark:bg-backgroundPrimary-dark flex h-full w-full flex-col items-center">
       <AppHeader />
-      <div className="w-full px-4 mt-4 max-w-3xl h-[85vh] overflow-auto">
+      <div className="mt-4 h-[85vh] w-full max-w-3xl overflow-auto px-4">
         PLAYER FEED
       </div>
     </div>

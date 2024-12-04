@@ -34,6 +34,6 @@ export default {
     Facebook,
     Discord,
     Twitter,
-    Apple
+    Apple,
   ],
 } satisfies NextAuthConfig;

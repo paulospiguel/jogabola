@@ -1,45 +1,41 @@
 {
-  "name": "jogabola",
-  "private": true,
-  "workspaces": [
-    "packages/*",
-    "apps/*"
-  ],
-  "scripts": {
-    "build": "turbo build",
-    "clean": "git clean -xdf node_modules .turbo",
-    "clean:workspaces": "turbo clean",
-    "dev": "turbo dev --parallel",
-    "test": "turbo test --parallel",
-    "db:studio": "turbo db:studio --filter=@repo/db",
-    "db:push": "turbo db:push --filter=@repo/db",
-    "db:generate": "turbo db:generate --filter=@repo/db",
-    "db:clear": "turbo db:clear --filter=@repo/db",
-    "db:migration": "turbo db:migration --filter=@repo/db",
-    "start:website": "turbo start --filter=@repo/website",
-    "dev:website": "turbo dev --filter=@repo/website ",
-    "start:dashboard": "turbo start --filter=@repo/dashboard",
-    "dev:dashboard": "turbo dev --filter=@repo/dashboard",
-    "build:dashboard": "turbo build --filter=@repo/dashboard",
-    "format": "biome format --write .",
-    "lint": "turbo lint && manypkg check",
-    "typecheck": "turbo typecheck",
-    "ui:add": "pnpm --filter @repo/ui ui:add"
-  },
-  "dependencies": {
-    "zod": "^3.23.8"
-  },
-  "devDependencies": {
-    "@biomejs/biome": "1.8.3",
-    "@manypkg/cli": "^0.21.4",
-    "@repo/eslint-config": "workspace:*",
-    "@repo/tsconfig": "workspace:*",
-    "@types/uuid": "^10.0.0",
-    "eslint": "^9.9.0",
-    "turbo": "^2.3.2"
-  },
-  "packageManager": "pnpm@9.1.3",
-  "engines": {
-    "node": ">=18"
-  }
+	"name": "jogabola",
+	"private": true,
+	"workspaces": ["packages/*", "apps/*"],
+	"scripts": {
+		"build": "turbo build",
+		"clean": "git clean -xdf node_modules .turbo",
+		"clean:workspaces": "turbo clean",
+		"dev": "turbo dev --parallel",
+		"test": "turbo test --parallel",
+		"db:studio": "turbo db:studio --filter=@repo/db",
+		"db:push": "turbo db:push --filter=@repo/db",
+		"db:generate": "turbo db:generate --filter=@repo/db",
+		"db:clear": "turbo db:clear --filter=@repo/db",
+		"db:migration": "turbo db:migration --filter=@repo/db",
+		"start:website": "turbo start --filter=@repo/website",
+		"dev:website": "turbo dev --filter=@repo/website ",
+		"start:dashboard": "turbo start --filter=@repo/dashboard",
+		"dev:dashboard": "turbo dev --filter=@repo/dashboard",
+		"build:dashboard": "turbo build --filter=@repo/dashboard",
+		"format": "turbo format --filter=@repo/*",
+		"lint": "turbo lint && manypkg check",
+		"typecheck": "turbo typecheck",
+		"ui:add": "pnpm --filter @repo/ui ui:add"
+	},
+	"dependencies": {
+		"zod": "^3.23.8"
+	},
+	"devDependencies": {
+		"@manypkg/cli": "^0.21.4",
+		"@repo/eslint-config": "workspace:*",
+		"@repo/tsconfig": "workspace:*",
+		"@types/uuid": "^10.0.0",
+		"eslint": "^9.9.0",
+		"turbo": "^2.3.2"
+	},
+	"packageManager": "pnpm@9.1.3",
+	"engines": {
+		"node": ">=18"
+	}
 }

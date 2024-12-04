@@ -60,7 +60,7 @@ const initialData = {
 } as z.infer<typeof teamSchema>;
 
 const CreateTeamContext = createContext<CreateTeamContextValue | undefined>(
-  undefined
+  undefined,
 );
 
 type CreateTeamProviderProps = PropsWithChildren<{}>;
@@ -106,7 +106,7 @@ export const CreateTeamProvider: React.FC<CreateTeamProviderProps> = ({
 
   const goToStep = (step: Steps) => {
     methods.setValue("currentStep", step);
-    setCurrentTeamData((prevState) => ({ ...prevState, currentStep: step }));
+    setCurrentTeamData(prevState => ({ ...prevState, currentStep: step }));
   };
 
   useAction(checkUserHasTeam, {
@@ -136,7 +136,7 @@ export const CreateTeamProvider: React.FC<CreateTeamProviderProps> = ({
   }, [methods]);
 
   useEffect(() => {
-    const subscription = methods.watch((value) => {
+    const subscription = methods.watch(value => {
       if (isClient) {
         sessionStorage.setItem(STORAGE_KEY, JSON.stringify(value));
       }
@@ -173,7 +173,7 @@ export const useCreateTeam = () => {
 
   if (!context) {
     throw new Error(
-      "useCreateTeamContext must be used within a CreateTeamProvider"
+      "useCreateTeamContext must be used within a CreateTeamProvider",
     );
   }
   return context;

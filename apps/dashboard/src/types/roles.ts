@@ -5,7 +5,6 @@ export const userRoles = z.nativeEnum(Role);
 
 export type UserRole = z.infer<typeof userRoles>;
 
-
 export type SessionRoles = {
   isADMIN?: boolean;
   isUSER?: boolean;
@@ -13,4 +12,4 @@ export type SessionRoles = {
   isCOACH?: boolean;
   isMANAGER?: boolean;
   isWATCHER?: boolean;
-}
+};

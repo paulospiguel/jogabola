@@ -34,7 +34,7 @@ type TeamNameProps = {
 
 export function TeamName({ control }: TeamNameProps) {
   const [typingTimeout, setTypingTimeout] = useState<NodeJS.Timeout | null>(
-    null
+    null,
   );
   const {
     methods: { setError, clearErrors, getValues, getFieldState },
