@@ -8,8 +8,8 @@ type LayoutProps = {
 export default async function LayoutManageTeam({ children }: LayoutProps) {
   return (
     <div className="flex h-full w-full items-center">
-      <VerticalHeader />
-      <div className="h-full w-full overflow-auto px-4">{children}</div>
+      <VerticalHeader className="hidden md:block" />
+      <div className="h-full w-full overflow-auto px-1 md:px-4">{children}</div>
       <PushNotifications notifications={[]} />
     </div>
   );

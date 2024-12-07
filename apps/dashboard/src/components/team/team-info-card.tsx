@@ -1,13 +1,8 @@
 import Image from "next/image";
 import { Button } from "@repo/ui/components/button";
-import {
-  CalendarDays,
-  Camera,
-  ChevronLeft,
-  ChevronRight,
-} from "@repo/ui/icons";
+import { Camera } from "@repo/ui/icons";
 import noImage from "@/assets/images/JOGABOLA-shield.svg";
-import EventCard from "./events-card";
+import EventCard from "./events";
 import { Suspense } from "react";
 import Marquee from "../marquee";
 
@@ -21,9 +16,9 @@ interface TeamCardProps {
   teamData: {
     name: string;
     bio: string;
-    image?: string;
+    image: string;
   };
-  hasEditPermission: boolean;
+  hasEditPermission?: boolean;
 }
 
 const TeamCard: React.FC<TeamCardProps> = ({ teamData, hasEditPermission }) => {
@@ -39,8 +34,8 @@ const TeamCard: React.FC<TeamCardProps> = ({ teamData, hasEditPermission }) => {
           ))}
         </Marquee>
       </div>
-      <div className="flex items-center justify-between p-2">
-        <div className="flex items-center gap-4">
+      <div className="gap-4 md:grid md:grid-cols-6">
+        <div className="flex flex-col items-center gap-4 md:col-span-4 md:flex-row">
           <div className="relative">
             <Image
               src={teamData.image || noImage}
@@ -60,18 +55,16 @@ const TeamCard: React.FC<TeamCardProps> = ({ teamData, hasEditPermission }) => {
             )}
           </div>
 
-          <div className="text-left">
-            <h1 className="mb-2 font-sans text-4xl text-green-800">
+          <div className="text-center md:text-left">
+            <h1 className="mb-2 text-wrap font-sans text-4xl text-green-800">
               {teamData.name}
             </h1>
             <p className="mx-auto max-w-md text-gray-600">{teamData.bio}</p>
           </div>
         </div>
 
-        <div className="w-full md:w-1/3">
-          <Suspense fallback={<div>Loading...</div>}>
-            <EventCard />
-          </Suspense>
+        <div className="relative w-full md:col-span-2">
+          <EventCard className="md:absolute" />
         </div>
       </div>
     </>

@@ -54,7 +54,7 @@ type TeamPageProps = {
   params: Promise<{ slug: string }>;
 };
 
-const TeamPage: React.FC<TeamPageProps> = async ({ params }) => {
+const TeamPage = async ({ params }: TeamPageProps) => {
   const { slug } = await params;
   const t = await getTranslations();
   const session = await auth();
@@ -65,14 +65,22 @@ const TeamPage: React.FC<TeamPageProps> = async ({ params }) => {
 
   const hasEditPermission = teamData?.data?.hasEditPermission;
 
+  console.log({ teamData });
+
   return (
-    <div className="container mx-auto px-4">
-      <pre>{JSON.stringify(teamData, null, 2)}</pre>
-      {/* <header className="text-center">
-        <TeamCard teamData={teamData} hasEditPermission={hasEditPermission} />
+    <div className="container mx-auto px-0 md:px-4">
+      <header className="text-center">
+        <TeamCard
+          teamData={{
+            bio: teamData?.data?.bio || "",
+            image: teamData?.data?.logo || "",
+            name: teamData?.data?.name || "",
+          }}
+          hasEditPermission={hasEditPermission}
+        />
       </header>
 
-      <Tabs defaultValue={tabsList[0].tab} className="w-full mx-auto">
+      {/*<Tabs defaultValue={tabsList[0].tab} className="w-full mx-auto">
         <TabsList
           className={cn(
             "grid w-full bg-primary rounded-lg p-1 mb-6, grid-cols-10",

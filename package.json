@@ -1,7 +1,10 @@
 {
 	"name": "jogabola",
 	"private": true,
-	"workspaces": ["packages/*", "apps/*"],
+	"workspaces": [
+		"packages/*",
+		"apps/*"
+	],
 	"scripts": {
 		"build": "turbo build",
 		"clean": "git clean -xdf node_modules .turbo",
@@ -31,8 +34,8 @@
 		"@repo/eslint-config": "workspace:*",
 		"@repo/tsconfig": "workspace:*",
 		"@types/uuid": "^10.0.0",
-		"eslint": "^9.9.0",
-		"turbo": "^2.3.2"
+		"eslint": "^9.16.0",
+		"turbo": "^2.3.3"
 	},
 	"packageManager": "pnpm@9.1.3",
 	"engines": {

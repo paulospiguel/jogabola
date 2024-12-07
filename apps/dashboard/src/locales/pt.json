@@ -13,6 +13,14 @@
   "aboutPage": {
     "title": "Sobre"
   },
+  "events": {
+    "title": "Eventos",
+    "subtitle": "Eventos",
+    "types": {
+      "game": "Partida de Futebol",
+      "training": "Treino de Futebol"
+    }
+  },
   "player": {
     "invitePlayer": "Convitar jogador",
     "addPlayer": "Adicionar jogador",
