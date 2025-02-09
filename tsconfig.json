@@ -1,3 +1,51 @@
 {
-    "extends": "@repo/tsconfig/base.json"
+  "$schema": "https://json.schemastore.org/tsconfig",
+  "display": "Default",
+  "compilerOptions": {
+    "esModuleInterop": true,
+    "incremental": false,
+    "isolatedModules": true,
+    "lib": [
+      "es2022",
+      "DOM",
+      "DOM.Iterable"
+    ],
+    "module": "NodeNext",
+    "moduleDetection": "force",
+    "moduleResolution": "NodeNext",
+    "noUncheckedIndexedAccess": true,
+    "resolveJsonModule": true,
+    "skipLibCheck": true,
+    "strict": true,
+    "target": "ES2022",
+    "paths": {
+      "@/*": [
+        "./src/*"
+      ],
+      "@auth": [
+        "./auth"
+      ]
+    },
+    "allowJs": true,
+    "noEmit": true,
+    "jsx": "preserve",
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ]
+  },
+  "include": [
+    "svgr.d.ts",
+    "types/next-env.d.ts",
+    "next.config.js",
+    "**/*.ts",
+    "**/*.tsx",
+    ".next/types/**/*.ts",
+    "tailwind.config.mjs",
+    "postcss.config.cjs"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
 }
