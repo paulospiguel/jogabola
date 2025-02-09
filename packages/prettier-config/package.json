@@ -6,8 +6,8 @@
 		"clean": "git clean -xdf .turbo node_modules"
 	},
 	"devDependencies": {
-		"prettier": "^3.4.2",
-		"prettier-plugin-tailwindcss": "^0.6.9"
+		"prettier": "^3.5.0",
+		"prettier-plugin-tailwindcss": "^0.6.11"
 	},
 	"keywords": [],
 	"author": "",
