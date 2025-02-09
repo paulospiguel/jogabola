@@ -1,0 +1,21 @@
+{
+  "name": "@repo/db",
+  "version": "0.0.0",
+  "scripts": {
+    "db:generate": "prisma generate",
+    "db:push": "prisma db push --skip-generate",
+    "db:clear": "prisma migrate reset -f",
+    "db:migration": "prisma migrate dev --create-only",
+    "db:studio": "prisma studio"
+  },
+  "dependencies": {
+    "@prisma/client": "^5.22.0"
+  },
+  "devDependencies": {
+    "@repo/utils": "workspace:*",
+    "prisma": "^5.22.0"
+  },
+  "exports": {
+    ".": "./src/index.ts"
+  }
+}

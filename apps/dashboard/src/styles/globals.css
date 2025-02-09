@@ -1,0 +1,31 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: hsl(0 0% 100%);
+    --background-primary: hsl(151, 100%, 32%);
+    --background-primary-dark: hsl(147, 10%, 5%);
+    --player-primary: hsl(18, 93%, 54%);
+    --player-primary-hover: hsl(18, 82%, 48%);
+    --manager-primary: #15803d;
+    --manager-primary-hover: hsl(142, 72%, 24%);
+    --color-primary: hsl(151, 100%, 32%);
+    --primary-blue: hsl(241, 49%, 33%);
+    --brand-secondary: hsl(239 100% 18.2%);
+    --color-primary-foreground: hsl(0, 0%, 100%);
+  }
+
+  .dark {
+    --background: hsl(20 14.3% 4.1%);
+    --text-primary-foreground: hsl(0 0% 100%);
+    --color-primary-foreground: hsl(0, 3%, 76%);
+  }
+}
+
+@property --angle {
+  syntax: "<angle>";
+  initial-value: 0deg;
+  inherits: false;
+}

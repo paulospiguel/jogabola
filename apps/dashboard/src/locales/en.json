@@ -1,0 +1,111 @@
+{
+  "homePage": {
+    "title": "Ready to build your dream team?",
+    "description": "The best place to find your ball and play the ball.",
+    "getStarted": "Start now"
+  },
+  "locales": {
+    "placeholder": "Select a language",
+    "en": "English",
+    "pt": "Portuguese",
+    "es": "Spanish"
+  },
+  "aboutPage": {
+    "title": "About"
+  },
+  "player": {
+    "invitePlayer": "Invite player",
+    "addPlayer": "Add player",
+    "editPlayer": "Edit player",
+    "deletePlayer": "Delete player",
+    "playerName": "Player's name",
+    "playerDescription": "Player description",
+    "playerRole": "Player's position",
+    "playerTeam": "Player's team"
+  },
+  "team": {
+    "invitePlayer": "Invite player",
+    "addPlayer": "Add player",
+    "editTeam": "Edit team",
+    "deleteTeam": "Delete team",
+    "teamName": "Team name",
+    "teamDescription": "Team description"
+  },
+  "global": {
+    "error": "Error",
+    "success": "Success",
+    "loading": "Loading",
+    "#": "#",
+    "name": "Name",
+    "city": "City",
+    "season": "Season",
+    "date": "Date",
+    "performance": "Performance",
+    "actions": "Actions",
+    "title": "Title",
+    "logo": "Then",
+    "description": "Description",
+    "email": "Email",
+    "password": "Password",
+    "confirmPassword": "Confirm your password",
+    "team": "Team",
+    "player": "Player",
+    "role": "Position",
+    "teamName": "Team name",
+    "teamDescription": "Team description",
+    "playerName": "Player's name",
+    "playerDescription": "Player description",
+    "playerRole": "Player's position",
+    "playerTeam": "Player's team",
+    "teamPlayers": "Team players",
+    "teamJouneys": "Team days",
+    "teamMatches": "Team departures",
+    "teamPlayersStats": "Team player statistics",
+    "teamMatchesStats": "Team match statistics",
+    "teamJouneysStats": "Team matchday statistics",
+    "playerJouneys": "Player journeys",
+    "playerMatches": "Player matches",
+    "players": "Players",
+    "playerJouneysStats": "Player matchday statistics",
+    "playerMatchesStats": "Player's match statistics",
+    "playerStats": "Player statistics",
+    "teamStats": "Team statistics",
+    "edit": "Edit",
+    "delete": "Delete",
+    "create": "Create",
+    "join": "Joining",
+    "accept": "Accept",
+    "decline": "Refuse",
+    "cancel": "Cancel",
+    "save": "Save",
+    "back": "Back",
+    "next": "Next",
+    "finish": "Finish",
+    "manage": "Manage"
+  },
+  "onbording": {
+    "title": "Initialization",
+    "welcome": {
+      "title": "Welcome",
+      "text": "Welcome to ${appName}. Here you can create your team or start a journey as a player."
+    },
+    "createTeam": {
+      "title": "Create your team",
+      "description": "Create your teams, compete in competitions, manage athletes and achieve spectacular results.",
+      "disclaimer": "If you don't have a team, don't worry, you can join an existing team.",
+      "actionButton": "Create my team",
+      "step1": "Step 1 - Define the team name",
+      "step2": "Step 2 - Accept the Terms of Use",
+      "step3": "Step 3 - Define team information"
+    },
+    "myJourney": {
+      "title": "Starting my journey",
+      "description": "Start your journey as a player, find teams, make friends and take part in legendary leagues.",
+      "disclaimer": "If you don't have a team, don't worry, you can join an existing team and compete in competitions.",
+      "actionButton": "Creating my journey",
+      "step1": "Step 1 - Define my player name",
+      "step2": "Step 2 - Accept the Terms of Use",
+      "step3": "Step 3 - Fill in my skills"
+    }
+  }
+}
