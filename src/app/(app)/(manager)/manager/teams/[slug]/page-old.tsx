@@ -476,7 +476,7 @@ export default function EquipeFutebol() {
               <TabsTrigger
                 key={value}
                 value={value}
-                className="rounded-xl text-sm font-medium transition-all data-[state=active]:bg-white data-[state=active]:text-primary data-[state=active]:shadow"
+                className="rounded-xl text-sm font-medium transition-all data-[state=active]:bg-white data-[state=active]:text-primary data-[state=active]:shadow-sm"
               >
                 <Icon className="mr-2 h-4 w-4" />
                 {label}
@@ -604,7 +604,7 @@ export default function EquipeFutebol() {
                         </p>
                         <p className="text-sm text-gray-600">{evento.time}</p>
                       </div>
-                      <div className="flex-grow">
+                      <div className="grow">
                         <p className="font-semibold">{evento.title}</p>
                         <p className="text-sm text-gray-600">{evento.type}</p>
                         <p className="flex items-center text-sm text-gray-600">

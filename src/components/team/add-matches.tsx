@@ -160,7 +160,7 @@ export default function Component() {
                 value={newTeamName}
                 onChange={e => setNewTeamName(e.target.value)}
                 placeholder="Enter new team name"
-                className="flex-grow"
+                className="grow"
               />
               <Button onClick={handleAddNewTeam} size="sm">
                 <Save className="h-4 w-4" />
@@ -174,7 +174,7 @@ export default function Component() {
                   setMatchDetails({ ...matchDetails, opponent: value })
                 }
               >
-                <SelectTrigger className="flex-grow">
+                <SelectTrigger className="grow">
                   <SelectValue placeholder="Select opponent team" />
                 </SelectTrigger>
                 <SelectContent>

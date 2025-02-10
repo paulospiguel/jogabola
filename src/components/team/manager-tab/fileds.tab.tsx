@@ -36,7 +36,7 @@ export default function FiledsTabContent({ tabKey, session }: HomeProps) {
 					</div>
 				</StatCard>
 
-				<StatCard className="flex flex-col flex-grow justify-between">
+				<StatCard className="flex flex-col grow justify-between">
 					<Counter className="text-yellow-700 text-2xl" targetValue={179} suffix=" Players" />
 					<PlayerList size="sm" className="py-0 self-end" />
 				</StatCard> */}

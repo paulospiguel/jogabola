@@ -15,7 +15,7 @@ const PlayerBlock: React.FC<PlayerBlockProps> = ({
   playerImage,
 }) => {
   return (
-    <div className="group flex h-52 w-52 flex-col items-center justify-center rounded-3xl bg-cyan-200 p-4 shadow-sm transition-all duration-300 hover:shadow-black/25 dark:bg-zinc-800">
+    <div className="group flex h-52 w-52 flex-col items-center justify-center rounded-3xl bg-cyan-200 p-4 shadow-xs transition-all duration-300 hover:shadow-black/25 dark:bg-zinc-800">
       <AvatarPlayer playerImage={playerImage} />
       <div className="mt-2 flex flex-col items-center justify-center">
         <h3 className="font-sans font-semibold text-foreground">Avatar Aang</h3>

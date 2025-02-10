@@ -2,7 +2,7 @@ import {
   Avatar,
   AvatarFallback,
   AvatarImage,
-} from "@repo/ui/components/avatar";
+} from "@/components/ui/avatar";
 import { cn } from "@/utils";
 import { CircleUser }from "@/components/icons";
 

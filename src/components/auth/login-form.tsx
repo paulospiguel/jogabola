@@ -26,7 +26,7 @@ import {
   InputOTPSlot,
 } from "@/components/ui/input-otp";
 import { Separator } from "@/components/ui/separator";
-import { LoaderIcon } 
+import { LuLoader as LoaderIcon } from "@/components/icons";
 import { useSearchParams } from "next/navigation";
 import AuthFormMessage from "./auth-form-message";
 import SocialLogin from "./social-login";

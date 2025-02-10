@@ -190,32 +190,32 @@ export default function TeamsTable({ teamsList }: TeamTableProps) {
         <tbody className="text-sm font-medium">
           {teamsList.map((team, index) => (
             <tr key={index}>
-              <td className="border-b border-slate-200 px-5 py-3 first:pl-3 last:sticky last:right-0 last:bg-gradient-to-r last:from-transparent last:to-white last:pl-5 last:pr-3">
+              <td className="border-b border-slate-200 px-5 py-3 first:pl-3 last:sticky last:right-0 last:bg-linear-to-r last:from-transparent last:to-white last:pl-5 last:pr-3">
                 <div className="text-slate-500">{team.rank}</div>
               </td>
-              <td className="border-b border-slate-200 px-5 py-3 first:pl-3 last:sticky last:right-0 last:bg-gradient-to-r last:from-transparent last:to-white last:pl-5 last:pr-3">
+              <td className="border-b border-slate-200 px-5 py-3 first:pl-3 last:sticky last:right-0 last:bg-linear-to-r last:from-transparent last:to-white last:pl-5 last:pr-3">
                 {renderLogo(team?.logo)}
               </td>
-              <td className="border-b border-slate-200 px-5 py-3 first:pl-3 last:sticky last:right-0 last:bg-gradient-to-r last:from-transparent last:to-white last:pl-5 last:pr-3">
+              <td className="border-b border-slate-200 px-5 py-3 first:pl-3 last:sticky last:right-0 last:bg-linear-to-r last:from-transparent last:to-white last:pl-5 last:pr-3">
                 <div className="text-slate-900">{team.name}</div>
               </td>
-              <td className="border-b border-slate-200 px-5 py-3 first:pl-3 last:sticky last:right-0 last:bg-gradient-to-r last:from-transparent last:to-white last:pl-5 last:pr-3">
+              <td className="border-b border-slate-200 px-5 py-3 first:pl-3 last:sticky last:right-0 last:bg-linear-to-r last:from-transparent last:to-white last:pl-5 last:pr-3">
                 <div className="text-slate-500">{team.city}</div>
               </td>
-              <td className="border-b border-slate-200 px-5 py-3 first:pl-3 last:sticky last:right-0 last:bg-gradient-to-r last:from-transparent last:to-white last:pl-5 last:pr-3">
+              <td className="border-b border-slate-200 px-5 py-3 first:pl-3 last:sticky last:right-0 last:bg-linear-to-r last:from-transparent last:to-white last:pl-5 last:pr-3">
                 <div className="text-slate-900">{renderSeason(team.stats)}</div>
               </td>
-              <td className="border-b border-slate-200 px-5 py-3 first:pl-3 last:sticky last:right-0 last:bg-gradient-to-r last:from-transparent last:to-white last:pl-5 last:pr-3">
+              <td className="border-b border-slate-200 px-5 py-3 first:pl-3 last:sticky last:right-0 last:bg-linear-to-r last:from-transparent last:to-white last:pl-5 last:pr-3">
                 <div className="text-slate-900">
                   {renderPlayers(Array.from({ length: team.players }))}
                 </div>
               </td>
-              <td className="border-b border-slate-200 px-5 py-3 first:pl-3 last:sticky last:right-0 last:bg-gradient-to-r last:from-transparent last:to-white last:pl-5 last:pr-3">
+              <td className="border-b border-slate-200 px-5 py-3 first:pl-3 last:sticky last:right-0 last:bg-linear-to-r last:from-transparent last:to-white last:pl-5 last:pr-3">
                 <div className="text-slate-900">
                   {renderPerformance(team.performance)}
                 </div>
               </td>
-              <td className="border-b border-slate-200 px-5 py-3 first:pl-3 last:sticky last:right-0 last:bg-gradient-to-r last:from-transparent last:to-white last:pl-5 last:pr-3">
+              <td className="border-b border-slate-200 px-5 py-3 first:pl-3 last:sticky last:right-0 last:bg-linear-to-r last:from-transparent last:to-white last:pl-5 last:pr-3">
                 <Button
                   onClick={() => handleOpenTeam(team?.slug || team?.id)}
                   className="hover:bg-green-600/75"

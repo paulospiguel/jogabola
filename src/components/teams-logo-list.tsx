@@ -68,7 +68,7 @@ export default async function PlayerList({
           className="group relative z-0 -ml-4 flex scale-100 items-center transition-all duration-200 ease-in-out hover:z-10 hover:scale-110"
         >
           <div className="relative overflow-hidden rounded-full bg-white">
-            <div className="bg-size animate-bg-position pointer-events-none absolute h-full w-full from-violet-500 from-30% via-cyan-400 via-50% to-pink-500 to-80% bg-[length:300%_auto] opacity-15 group-hover:bg-gradient-to-r" />
+            <div className="bg-size animate-bg-position pointer-events-none absolute h-full w-full from-violet-500 from-30% via-cyan-400 via-50% to-pink-500 to-80% bg-[length:300%_auto] opacity-15 group-hover:bg-linear-to-r" />
             <div className="z-1 blur-lg" />
             <img
               src={item.image}

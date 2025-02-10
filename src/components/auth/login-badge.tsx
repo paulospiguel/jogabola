@@ -14,7 +14,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { LogOut, UserCircleIcon } 
+import { LuLogOut as LogOut, LuCircleUser as UserCircleIcon }  from "@/components/icons";
 import type { Session } from "next-auth";
 import Image from "next/image";
 import Link from "next/link";

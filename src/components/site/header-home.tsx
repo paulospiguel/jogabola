@@ -17,31 +17,31 @@ export default function HeaderHome() {
       <nav className="hidden w-full flex-col gap-6 text-lg font-medium md:flex md:flex-row md:items-center md:gap-5 md:text-sm lg:gap-6">
         <Link
           href="#"
-          className="text-foreground transition-colors hover:text-foreground"
+          className="text-foreground hover:text-foreground transition-colors"
         >
           Home
         </Link>
         <Link
           href="#"
-          className="text-muted-foreground transition-colors hover:text-foreground"
+          className="text-muted-foreground hover:text-foreground transition-colors"
         >
           Preços
         </Link>
         <Link
           href="#"
-          className="text-muted-foreground transition-colors hover:text-foreground"
+          className="text-muted-foreground hover:text-foreground transition-colors"
         >
           Como funciona
         </Link>
         <Link
           href="#"
-          className="text-muted-foreground transition-colors hover:text-foreground"
+          className="text-muted-foreground hover:text-foreground transition-colors"
         >
           Buscar um time
         </Link>
         <Link
           href="#"
-          className="text-muted-foreground transition-colors hover:text-foreground"
+          className="text-muted-foreground hover:text-foreground transition-colors"
         >
           Competições
         </Link>
@@ -64,7 +64,7 @@ export default function HeaderHome() {
             trailColor="purple"
           >
             <Link href="/welcome">
-              <Button className="whitespace-nowrap rounded-full bg-primary px-4 py-2 text-white shadow-md transition-all duration-150 ease-linear hover:text-secondary hover:brightness-110">
+              <Button className="bg-primary hover:text-secondary rounded-full px-4 py-2 whitespace-nowrap text-white shadow-md transition-all duration-150 ease-linear hover:brightness-110">
                 {t("homePage.getStarted")}
               </Button>
             </Link>

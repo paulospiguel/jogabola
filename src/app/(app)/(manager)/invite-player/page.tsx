@@ -36,7 +36,7 @@ export default function Component() {
             type="text"
             value="https://miro.com/welcome/QmpvM2N"
             readOnly
-            className="flex-grow"
+            className="grow"
           />
           <Button className="ml-2">Copiar</Button>
         </div>

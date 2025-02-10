@@ -1,5 +1,5 @@
 import Loading from "@/components/loading";
-import { TabsContent } from "@repo/ui/components/tabs";
+import { TabsContent } from "@/components/ui/tabs";
 import { cn } from "@/utils";
 import { useTranslations } from "next-intl";
 import { Suspense } from "react";

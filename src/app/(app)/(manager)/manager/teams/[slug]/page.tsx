@@ -100,7 +100,7 @@ const TeamPage = async ({ params }: TeamPageProps) => {
               key={tab}
               value={tab}
               disabled={isDisabled}
-              className="rounded-xl text-sm font-medium transition-all data-[state=active]:bg-white data-[state=active]:text-primary data-[state=active]:shadow"
+              className="rounded-xl text-sm font-medium transition-all data-[state=active]:bg-white data-[state=active]:text-primary data-[state=active]:shadow-sm"
             >
               <Icon className="h-4 w-4 mr-2" />
               {t(`tabs.${tab}`)}

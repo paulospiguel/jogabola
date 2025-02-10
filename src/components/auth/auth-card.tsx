@@ -6,16 +6,22 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Logo } from "../logo";
+import * as React from "react"
+
 
 interface AuthCardProps {
   title?: string;
   description?: string;
-  children: React.ReactNode;
+  children?: React.ReactNode;
 }
 
-const AuthCard = ({ title, description, children }: AuthCardProps) => {
+const AuthCard: React.FC<AuthCardProps> = ({
+  title,
+  description,
+  children,
+}) => {
   return (
-    <Card className="mx-auto min-w-[680px] max-w-sm shadow-md">
+    <Card className="mx-auto max-w-sm min-w-[680px] shadow-md">
       <CardHeader className="text-center">
         <Logo className="mx-auto" />
         {title && <CardTitle className="text-2xl">{title}</CardTitle>}

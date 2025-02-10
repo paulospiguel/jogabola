@@ -10,7 +10,7 @@ type NextMeetingCardProps = {
 
 export default function MetchDayCard({ teamA, teamB }: NextMeetingCardProps) {
   return (
-    <Card className="w-full flex-grow">
+    <Card className="w-full grow">
       <CardHeader className="p-4 text-center">
         <div className="flex flex-col items-center justify-between">
           <h1 className="self-start text-xl">Next Metting</h1>

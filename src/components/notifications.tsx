@@ -1,4 +1,4 @@
-import { Bell } 
+import { LuBell as Bell } from "@/components/icons";
 import { cn } from "@/utils";
 
 type NotificationsProps = {

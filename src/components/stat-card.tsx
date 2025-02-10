@@ -10,7 +10,7 @@ export function StatCard({
   return (
     <div
       className={cn(
-        "relative w-full flex-grow overflow-hidden rounded-2xl border p-4 shadow-md",
+        "relative w-full grow overflow-hidden rounded-2xl border p-4 shadow-md",
         className,
       )}
     >

@@ -1,7 +1,7 @@
 "use client";
 
 import Image, { type StaticImageData } from "next/image";
-import type { ComponentProps, FC } from "react";
+
 
 import { cn } from "@/utils";
 import Link from "next/link";
@@ -10,6 +10,7 @@ import logoAnimated from "@/assets/animations/jogabola-loop.gif";
 import logoGreen from "@/assets/logos/jogabola-green.svg";
 import logo from "@/assets/logos/jogabola-logo.svg";
 import logoWhite from "@/assets/logos/jogabola-white.svg";
+import React, { ComponentProps } from "react";
 
 const sizes = {
   mini: "w-20 h-20",
@@ -32,7 +33,7 @@ const imageColors = {
   default: logo,
 };
 
-export const Logo: FC<LogoProps> = ({
+export const Logo: React.FC<LogoProps> = ({
   color,
   className,
   isAnimate,

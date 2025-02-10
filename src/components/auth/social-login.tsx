@@ -1,7 +1,7 @@
 import Image from "next/image";
 import LoginSocialButton from "./login-social-button";
 
-import { GoogleIcon } 
+import { GoogleIcon }  from "@/components/icons";
 import apple from "@/components/icons/apple.svg";
 import discord from "@/components/icons/discord.svg";
 // import telegram from "@/components/icons/telegram.svg";

@@ -30,7 +30,7 @@ export default function CupStatusWidget() {
 
   return (
     <div className="relative flex h-80 w-72 overflow-hidden rounded-3xl text-black">
-      <div className="relative w-32 items-center justify-evenly overflow-hidden bg-gradient-to-b from-blue-100 to-blue-300">
+      <div className="relative w-32 items-center justify-evenly overflow-hidden bg-linear-to-b from-blue-100 to-blue-300">
         <div className="full absolute bottom-0 left-full flex h-20 w-80 origin-bottom-left -rotate-90 items-center justify-center gap-3 bg-gray-100">
           <div className="text-lg font-semibold tracking-widest text-teal-700">
             Lisboa League
@@ -42,7 +42,7 @@ export default function CupStatusWidget() {
           />
         </div>
       </div>
-      <div className="relative h-full w-80 bg-gradient-to-b from-blue-100 to-teal-100 p-4 text-sm">
+      <div className="relative h-full w-80 bg-linear-to-b from-blue-100 to-teal-100 p-4 text-sm">
         {/* The background should match the container's background */}
         <div className="absolute -left-2 -top-2 z-10 h-4 w-4 rounded-full bg-white dark:bg-zinc-800" />
         <div className="flex justify-around pb-2">

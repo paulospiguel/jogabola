@@ -1,6 +1,6 @@
 "use client";
-import { Button } from "@repo/ui/components/button";
-import { Calendar } from "@repo/ui/components/calendar";
+import { Button } from "@/components/ui/button";
+import { Calendar } from "@/components/ui/calendar";
 import {
   Card,
   CardContent,
@@ -8,7 +8,7 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "@repo/ui/components/card";
+} from "@/components/ui/card";
 import {
   Dialog,
   DialogContent,
@@ -17,30 +17,30 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@repo/ui/components/dialog";
-import { Input } from "@repo/ui/components/input";
-import { Label } from "@repo/ui/components/label";
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from "@repo/ui/components/popover";
+} from "@/components/ui/popover";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@repo/ui/components/select";
-import { Textarea } from "@repo/ui/components/textarea";
+} from "@/components/ui/select";
+import { Textarea } from "@/components/ui/textarea";
 import {
-  Bell,
-  Calendar as CalendarIcon,
-  File,
-  Image,
-  Plus,
-  Trash2,
-} 
+  LuBell as Bell,
+  LuCalendar as CalendarIcon,
+  LuFile as File,
+  LuImage as Image,
+  LuPlus as Plus,
+  LuTrash2 as Trash,
+}  from "@/components/icons";
 import { cn } from "@/utils";
 import { format } from "date-fns";
 import { useState } from "react";

@@ -1,6 +1,6 @@
 export default function LoadingPage() {
   return (
-    <div className="flex h-screen flex-col items-center justify-center bg-gradient-to-r from-[#00a650] to-[#00c851]">
+    <div className="flex h-screen flex-col items-center justify-center bg-linear-to-r from-[#00a650] to-[#00c851]">
       <div className="flex items-center space-x-4">
         <div className="animate-spin">
           <ClubIcon className="h-12 w-12 fill-white" />

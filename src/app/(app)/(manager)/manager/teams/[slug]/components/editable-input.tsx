@@ -43,11 +43,11 @@ export default function EditableInput({
           type={type}
           value={value}
           onChange={e => setValue(e.target.value)}
-          className="h-8 flex-grow border"
+          className="h-8 grow border"
           autoFocus
         />
       ) : (
-        <span className="flex-grow">{value || "N/A"}</span>
+        <span className="grow">{value || "N/A"}</span>
       )}
       <Button
         variant="ghost"

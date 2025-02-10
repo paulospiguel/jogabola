@@ -1,7 +1,6 @@
-import { ArrowRightIcon } 
+import {LuArrowRight as ArrowRightIcon }  from "@/components/icons";
 import Image, { type StaticImageData } from "next/image";
 import Link from "next/link";
-
 import { getUser as getUserAction } from "@/actions";
 import managerIcon from "@/assets/icons/director.png";
 import football from "@/assets/icons/football.png";
@@ -13,7 +12,7 @@ import {
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@repo/ui/components/card";
+} from "@/components/ui/card";
 import { cn } from "@/utils";
 import { redirect } from "next/navigation";
 import { ErrorsServerActionResponse } from "@/components/errors-server-actions";

@@ -3,19 +3,19 @@
 import React, { useState, useCallback } from "react";
 import { Check, ChevronsUpDown } 
 import { cn } from "@/utils";
-import { Button } from "@repo/ui/components/button";
+import { Button } from "@/components/ui/button";
 import {
   Command,
   CommandEmpty,
   CommandGroup,
   CommandInput,
   CommandItem,
-} from "@repo/ui/components/command";
+} from "@/components/ui/command";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from "@repo/ui/components/popover";
+} from "@/components/ui/popover";
 
 interface Player {
   id: string;

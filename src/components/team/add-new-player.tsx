@@ -3,7 +3,7 @@
 import { format } from "date-fns";
 import { useState } from "react";
 
-import { Button } from "@repo/ui/components/button";
+import { Button } from "@/components/ui/button";
 import {
   Drawer,
   DrawerClose,
@@ -11,7 +11,7 @@ import {
   DrawerFooter,
   DrawerHeader,
   DrawerTrigger,
-} from "@repo/ui/components/drawer";
+} from "@/components/ui/drawer";
 import {
   Form,
   FormControl,
@@ -20,19 +20,19 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@repo/ui/components/form";
-import { Input } from "@repo/ui/components/input";
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from "@repo/ui/components/popover";
+} from "@/components/ui/popover";
 import { CalendarIcon, PlusCircle, X }from "@/components/icons";
 
 import { useServerActionMutation } from "@/hooks/server-action-hooks";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { PlayerCreateInput } from "@/types";
-import { Calendar } from "@repo/ui/components/calendar";
+import { Calendar } from "@/components/ui/calendar";
 import { cn } from "@/utils";
 import { useForm } from "react-hook-form";
 import type { z } from "zod";

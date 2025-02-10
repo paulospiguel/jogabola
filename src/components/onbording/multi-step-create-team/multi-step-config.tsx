@@ -1,7 +1,7 @@
 "use client";
 
 import { type StepForm, Steps } from "@/types";
-import { Form, FormField } from "@repo/ui/components/form";
+import { Form, FormField } from "@/components/ui/form";
 import { cn } from "@/utils";
 import { motion } from "framer-motion";
 import { useEffect, useMemo } from "react";

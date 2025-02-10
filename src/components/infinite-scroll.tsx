@@ -36,7 +36,7 @@ const InfiniteHorizontalScroll: React.FC<InfiniteHorizontalScrollProps> = ({
       >
         <ul
           x-ref="logos"
-          className="flex animate-infinite-scroll items-center justify-center md:justify-start [&_img]:max-w-none [&_li]:mx-8"
+          className="animate-infinite-scroll flex items-center justify-center md:justify-start [&_img]:max-w-none [&_li]:mx-8"
         >
           {images?.map(srcImage => {
             return (
@@ -56,7 +56,7 @@ const InfiniteHorizontalScroll: React.FC<InfiniteHorizontalScrollProps> = ({
         </ul>
         <ul
           x-ref="logos"
-          className="flex animate-infinite-scroll items-center justify-center md:justify-start [&_img]:max-w-none [&_li]:mx-8"
+          className="animate-infinite-scroll flex items-center justify-center md:justify-start [&_img]:max-w-none [&_li]:mx-8"
         >
           {images.map(srcImage => {
             return (

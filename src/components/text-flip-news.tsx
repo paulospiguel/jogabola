@@ -30,8 +30,8 @@ export default function TextFlipNews({ newsItems }: TextFlipNewsProps) {
 
   return (
     <div className="flex items-center space-x-2 overflow-hidden rounded-xl bg-gray-700 p-2 text-primary">
-      <ArrowUpDown className="h-4 w-4 flex-shrink-0" />
-      <div className="relative h-6 flex-grow overflow-hidden">
+      <ArrowUpDown className="h-4 w-4 shrink-0" />
+      <div className="relative h-6 grow overflow-hidden">
         {newsItems.map((item, index) => (
           <div
             key={item.id}

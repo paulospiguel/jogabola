@@ -54,7 +54,7 @@ export const AddOccasionalPlayer = ({
               value={player?.position}
               onValueChange={value => setPlayer({ ...player, position: value })}
             >
-              <SelectTrigger className="flex-grow">
+              <SelectTrigger className="grow">
                 <SelectValue placeholder="Select Position" />
               </SelectTrigger>
               <SelectContent>
