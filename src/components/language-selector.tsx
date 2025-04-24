@@ -26,6 +26,10 @@ const LANGUAGES = {
     icon: "🇪🇸",
     name: "locales.es",
   },
+  fr: {
+    icon: "🇫🇷",
+    name: "locales.fr",
+  },
 } as const;
 
 export default function LanguageSelector({

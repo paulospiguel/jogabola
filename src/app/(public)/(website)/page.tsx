@@ -12,6 +12,7 @@ import { LuArrowRight as ArrowRight, VideoIcon } from "@/components/icons";
 import { getTranslations } from "next-intl/server";
 import Image from "next/image";
 import Link from "next/link";
+import jBTube from "@/assets/icons/jogabola-tube.svg"
 
 export default async function Home() {
   const t = await getTranslations();
@@ -41,7 +42,7 @@ export default async function Home() {
                     alt="Football icon"
                   />
                   <span className="rounded-full px-2 py-1.5 text-xs">
-                    Começar minha jornada
+                    {t("homePage.startMyJourney")}
                   </span>
                 </Link>
                 <div className="mx-2 h-6 border-r-2" />
@@ -58,7 +59,7 @@ export default async function Home() {
                   />
 
                   <span className="px-2 text-sm font-medium">
-                    Criar minha equipa
+                    {t("homePage.createMyTeams")}
                   </span>
                   <ArrowRight size={16} />
                 </Link>
@@ -70,8 +71,7 @@ export default async function Home() {
                 </span>
               </h1>
               <p className="mb-8 text-lg font-normal text-gray-500 sm:px-16 lg:text-xl xl:px-48 dark:text-gray-400">
-                Crie sua equipa e dispute competições, gerencie sua equipe e
-                veja os resultados.
+                {t("homePage.description")}
               </p>
               <div className="mb-8 flex flex-col space-y-4 sm:flex-row sm:justify-center sm:space-y-0 sm:space-x-4 lg:mb-16">
                 <Link
@@ -80,7 +80,7 @@ export default async function Home() {
                   target="_blank"
                   rel="noreferrer"
                 >
-                  Saiba mais
+                  {t("common.knowMore")}
                   <ArrowRight size={16} />
                 </Link>
 
@@ -88,8 +88,8 @@ export default async function Home() {
                   href="/video/B4UDYHG1Kag"
                   className="inline-flex items-center justify-center rounded-lg border border-gray-300 px-5 py-3 text-center text-base font-medium text-gray-900 hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 dark:border-gray-700 dark:text-white dark:hover:bg-gray-700 dark:focus:ring-gray-800"
                 >
-                  <VideoIcon className="mr-2 h-5 w-5" />
-                  <span>Assista o vídeo</span>
+                  <Image src={jBTube} width={24} height={24} alt="JBTube" />
+                  <span className="ml-2">{t("homePage.watchVideo")}</span>
                 </Link>
               </div>
             </div>
