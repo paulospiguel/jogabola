@@ -6,11 +6,12 @@ import { DiscordIcon, XTwitter, Instagram, LuInstagram, LuDisc, LuTwitter } from
 import { useTranslations } from "next-intl";
 import AnimatedBorderTrail from "./animated-border-trail";
 import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 
-export default function HeaderHome() {
+export default function HeaderHome({ className }: { className?: string }) {
   const t = useTranslations();
   return (
-    <header className="dark:transparent flex w-full flex-col items-center justify-center gap-4 space-y-2 md:flex-row">
+    <header className={cn("dark:transparent flex w-full flex-col items-center justify-center gap-4 space-y-2 md:flex-row", className)}>
       <div className="flex items-center gap-2 text-lg font-semibold md:text-base">
         <Logo isAnimate size="small" />
       </div>
@@ -51,7 +52,7 @@ export default function HeaderHome() {
           >
             <Link href="/welcome">
               <Button className="bg-primary dark:bg-teal-700 hover:text-secondary rounded-full px-4 py-2 whitespace-nowrap text-white shadow-md transition-all duration-150 ease-linear hover:brightness-110">
-                {t("homePage.getStarted")}
+                {t("homePage.startMyJourney")}
               </Button>
             </Link>
           </AnimatedBorderTrail>
