@@ -19,14 +19,13 @@ const nextConfig: NextConfig = {
       },
     ],
   },
-  transpilePackages: ["@repo/ui", "@repo/utils"],
   eslint: {
     ignoreDuringBuilds: true,
   },
   typescript: {
     ignoreBuildErrors: true,
   },
-  experimental: {},
+  turbopack: {},
 
   async headers() {
     return [

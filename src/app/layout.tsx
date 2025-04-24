@@ -4,11 +4,9 @@ import { fonts } from "../styles/fonts";
 import type { Metadata } from "next";
 import { NextIntlClientProvider } from "next-intl";
 import { getMessages } from "next-intl/server";
-import { SessionProvider } from "next-auth/react";
-import { auth } from "@auth";
 import { cn } from "@/utils";
 import { getUserLocale } from "@/services/locale";
-import { Providers } from "./providers";
+import { Providers } from "@/providers";
 
 export const preferredRegion = ["fra1", "sfo1", "iad1"];
 export const maxDuration = 60;
@@ -23,7 +21,6 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const session = await auth();
   const dictionary = await getMessages();
   const locale = await getUserLocale();
 
@@ -31,9 +28,7 @@ export default async function RootLayout({
     <html lang={locale}>
       <body className={cn("antialiased", fonts)} suppressHydrationWarning>
         <NextIntlClientProvider messages={dictionary}>
-          <SessionProvider session={session}>
-            <Providers>{children}</Providers>
-          </SessionProvider>
+          <Providers>{children}</Providers>
         </NextIntlClientProvider>
       </body>
     </html>

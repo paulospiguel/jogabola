@@ -5,8 +5,8 @@ import fieldLogo from "@/assets/partners/field.png";
 import filaLogo from "@/assets/partners/fila.svg";
 import redBullLogo from "@/assets/partners/redbull.svg";
 import InfiniteHorizontalScroll from "@/components/infinite-scroll";
-import Footer from "@/components/site/footer";
-import HeaderHome from "@/components/site/header-home";
+import Footer from "@/components/footer";
+import HeaderHome from "@/components/header";
 import { RoleValues } from "@/schemas";
 import { LuArrowRight as ArrowRight, VideoIcon } from "@/components/icons";
 import { getTranslations } from "next-intl/server";
@@ -17,7 +17,7 @@ export default async function Home() {
   const t = await getTranslations();
   return (
     <div className="flex min-h-screen w-full flex-col">
-      <header className="bg-background sticky top-0 z-20 flex min-h-16 items-center gap-4 border-b px-4 py-4 md:px-6">
+      <header className="bg-background dark:bg-black sticky top-0 z-20 flex min-h-16 items-center gap-4 border-b dark:border-zinc-800 px-4 py-4 md:px-6">
         <HeaderHome />
       </header>
 

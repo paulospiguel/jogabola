@@ -1,6 +1,6 @@
 "use client";
 
-import { ArrowUpDown } 
+import { ArrowUpDown } from "lucide-react";
 import { useEffect, useState } from "react";
 
 interface NewsItem {
@@ -35,13 +35,12 @@ export default function TextFlipNews({ newsItems }: TextFlipNewsProps) {
         {newsItems.map((item, index) => (
           <div
             key={item.id}
-            className={`absolute w-full transition-all duration-1000 ${
-              index === currentIndex
+            className={`absolute w-full transition-all duration-1000 ${index === currentIndex
                 ? "top-0 opacity-100"
                 : index < currentIndex
                   ? "-top-full opacity-0"
                   : "top-full opacity-0"
-            } ${isFlipping ? "pointer-events-none" : ""}`}
+              } ${isFlipping ? "pointer-events-none" : ""}`}
             style={{
               transform: isFlipping ? "rotateX(90deg)" : "rotateX(0deg)",
               transformOrigin: "center center",

@@ -9,7 +9,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { LuGlobe as Globe }  from "@/components/icons";
+import { LuGlobe as Globe } from "@/components/icons";
 import { useLocale, useTranslations } from "next-intl";
 import { useTransition } from "react";
 
@@ -50,7 +50,7 @@ export default function LanguageSelector({
       defaultValue={locale}
       onValueChange={onLanguageChange}
     >
-      <SelectTrigger className="w-[180px]">
+      <SelectTrigger className="w-[180px] dark:border-teal-700 dark:bg-zinc-800 dark:text-teal-700">
         {isPending ? (
           <Globe className="size-6 animate-spin" />
         ) : (
@@ -58,7 +58,7 @@ export default function LanguageSelector({
         )}
         <SelectValue placeholder={t("locales.placeholder")} />
       </SelectTrigger>
-      <SelectContent>
+      <SelectContent className="dark:bg-zinc-800 dark:text-white">
         {locales.map(lang => (
           <SelectItem key={lang} value={lang} className="space-x-2">
             <span className="mr-1">{LANGUAGES[lang].icon}</span>

@@ -107,5 +107,27 @@
       "step2": "Step 2 - Accept the Terms of Use",
       "step3": "Step 3 - Fill in my skills"
     }
+  },
+  "common": {
+    "accept": "Accept",
+    "decline": "Decline",
+    "confirm": "Confirm",
+    "cancel": "Cancel",
+    "save": "Save",
+    "back": "Back",
+    "next": "Next",
+    "finish": "Finish"
+  },
+  "footer": {
+    "termsAndConditions": "Terms and Conditions",
+    "privacyPolicy": "Privacy Policy",
+    "contact": "Contact",
+    "faq": "FAQ"
+  },
+  "header": {
+    "home": "Home",
+    "about": "About us",
+    "howItWorks": "How it works",
+    "plans": "Plans"
   }
 }

@@ -53,7 +53,7 @@ export const Modal = forwardRef<ModalRef, ModalProps>(
     ref,
   ) => {
     const [isOpen, setIsOpen] = useState(false);
-    const modalRef = useRef<ModalRef>(null);
+    const modalRef = useRef<any>(null);
 
     useImperativeHandle(ref, () => ({
       open: () => setIsOpen(true),
