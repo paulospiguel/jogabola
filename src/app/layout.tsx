@@ -8,6 +8,7 @@ import { cn } from "@/utils";
 import { getUserLocale } from "@/services/locale";
 import { Providers } from "@/providers";
 
+
 export const preferredRegion = ["fra1", "sfo1", "iad1"];
 export const maxDuration = 60;
 
