@@ -9,8 +9,8 @@
     "cancel": "Annuler",
     "city": "Ville",
     "confirm": "Confirmer",
-    "copyright": "Copyright &copy; {{year}}. All rights reserved.",
     "confirmPassword": "Confirmez votre mot de passe",
+    "copyright": "Droits d'auteur ©{year}. Tous droits réservés.",
     "create": "creer",
     "date": "Date",
     "decline": "Décliner",
@@ -40,6 +40,7 @@
     "playerStats": "Statistiques des joueurs",
     "playerTeam": "L'équipe du joueur",
     "players": "joueurs",
+    "rights": "Tous droits réservés",
     "role": "Position",
     "save": "Enregistrez",
     "season": "Saison",
@@ -56,6 +57,11 @@
     "teamStats": "Statistiques de l'équipe",
     "title": "titre"
   },
+  "company": {
+    "description": "Trouvez votre équipe idéale ou créez la vôtre, gérez vos athlètes et participez à des ligues légendaires !",
+    "legalName": "Fondation JogaBola LLC",
+    "slogan": "Le meilleur endroit pour trouver votre équipe et jouer au football."
+  },
   "footer": {
     "contact": "Contact",
     "faq": "FAQ",
@@ -71,6 +77,7 @@
   "homePage": {
     "createMyTeams": "Créer mes équipes",
     "description": "Formez votre équipe, défiez vos amis et partez à la conquête de la gloire sur le terrain.\nLe terrain vous appelle. La victoire vous attend !",
+    "sponsors": "Sponsors",
     "startMyJourney": "Commencez mon voyage",
     "title": "Êtes-vous prêt à constituer l'équipe de vos rêves ?",
     "watchVideo": "Regardez la vidéo"
@@ -81,5 +88,9 @@
     "fr": "Français",
     "placeholder": "Sélectionner une langue",
     "pt": "Portugais"
+  },
+  "meta": {
+    "description": "Le meilleur endroit pour trouver votre équipe et jouer au football.",
+    "title": "Joga-Bola"
   }
 }

@@ -58,9 +58,9 @@
     "title": "Title"
   },
   "company": {
-    "slogan": "The best place to find your crew and play soccer.",
+    "description": "Find your ideal team or create your own, manage your athletes and participate in legendary leagues!",
     "legalName": "JogaBola Foundation LLC",
-    "description": "Find your ideal team or create your own, manage your athletes and participate in legendary leagues!"
+    "slogan": "The best place to find your crew and play soccer."
   },
   "footer": {
     "contact": "Contact",
@@ -77,10 +77,10 @@
   "homePage": {
     "createMyTeams": "Create my teams",
     "description": "Build your team, challenge your friends, and conquer glory on the pitch.\nThe field is calling. Victory awaits you!",
+    "sponsors": "Sponsors",
     "startMyJourney": "Start my journey",
     "title": "Ready to build your dream team?",
-    "watchVideo": "Watch video",
-    "sponsors": "Sponsors"
+    "watchVideo": "Watch video"
   },
   "locales": {
     "en": "English",
@@ -90,7 +90,7 @@
     "pt": "Portuguese"
   },
   "meta": {
-    "title": "JogaBola",
-    "description": "The best place to find your crew and play soccer."
+    "description": "The best place to find your crew and play soccer.",
+    "title": "JogaBola"
   }
 }

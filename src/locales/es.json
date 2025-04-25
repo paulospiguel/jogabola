@@ -10,7 +10,7 @@
     "city": "Ciudad",
     "confirm": "Confirme",
     "confirmPassword": "Confirma tu contraseña",
-    "copyright": "Copyright &copy; {{year}}. All rights reserved.",
+    "copyright": "Derechos de autor ©{year}. Todos los derechos reservados.",
     "create": "Crear",
     "date": "Fecha",
     "decline": "Declinación",
@@ -40,6 +40,7 @@
     "playerStats": "Estadísticas de jugadores",
     "playerTeam": "Equipo del jugador",
     "players": "jugadores",
+    "rights": "Todos los derechos reservados",
     "role": "Posición",
     "save": "GUARDAR",
     "season": "Temporada",
@@ -56,6 +57,11 @@
     "teamStats": "Estadísticas del equipo",
     "title": "título"
   },
+  "company": {
+    "description": "¡Encuentra tu equipo ideal o crea el tuyo propio, gestiona a tus atletas y participa en ligas legendarias!",
+    "legalName": "Fundación JogaBola LLC",
+    "slogan": "El mejor lugar para encontrar a tu equipo y jugar al fútbol."
+  },
   "footer": {
     "contact": "Contacto",
     "faq": "PREGUNTAS MÁS FRECUENTES",
@@ -71,6 +77,7 @@
   "homePage": {
     "createMyTeams": "Crear mis equipos",
     "description": "Forma tu equipo, desafía a tus amigos y conquista la gloria en el campo.\nEl campo llama. ¡La victoria te espera!",
+    "sponsors": "Sponsors",
     "startMyJourney": "Comenzar mi viaje",
     "title": "¿Estás listo para crear el equipo de tus sueños?",
     "watchVideo": "Ver vídeo"
@@ -81,5 +88,9 @@
     "fr": "Francés",
     "placeholder": "Selecciona un idioma",
     "pt": "Portugués"
+  },
+  "meta": {
+    "description": "El mejor lugar para encontrar a tu equipo y jugar al fútbol.",
+    "title": "Joga Bola"
   }
 }
