@@ -65,8 +65,16 @@ export const Logo: React.FC<LogoProps> = ({
 
   return (
     <Link href="/" className={cn("relative flex", logoSize, className)}>
-      <Image src={logotipo} alt="" fill className="object-contain" />
-      <span className="sr-only">{COMPANY.NAME} - {t(TRANSLATION_KEYS.COMPANY.SLOGAN)}</span>
+      <Image
+        unoptimized
+        src={logotipo}
+        alt=""
+        fill
+        className="object-contain"
+      />
+      <span className="sr-only">
+        {COMPANY.NAME} - {t(TRANSLATION_KEYS.COMPANY.SLOGAN)}
+      </span>
     </Link>
   );
 };

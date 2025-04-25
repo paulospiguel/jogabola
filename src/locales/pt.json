@@ -9,6 +9,7 @@
     "cancel": "Cancel",
     "city": "Cidade",
     "confirm": "Confirme",
+    "close": "Close",
     "confirmPassword": "Confirme a password",
     "copyright": "Direitos autorais ©{year}. Todos os direitos reservados.",
     "create": "Criar",
@@ -61,6 +62,20 @@
     "description": "Encontre sua equipe ideal ou crie a sua própria, gerencie seus atletas e participe de ligas lendárias!",
     "legalName": "Fundação JogaBola LLC",
     "slogan": "O melhor lugar para encontrar sua equipe e jogar futebol."
+  },
+  "contact": {
+    "title": "Contact",
+    "subtitle": "Get in touch with us",
+    "name_required": "Name is required",
+    "email_invalid": "Invalid email",
+    "email": "Email",
+    "message": "Message",
+    "name": "Name",
+    "phone": "Phone",
+    "send": "Send",
+    "subject": "Subject",
+    "send_error": "Error sending message",
+    "message_required": "Message is required"
   },
   "footer": {
     "contact": "Contato",

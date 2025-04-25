@@ -78,6 +78,11 @@
   --animate-infinite-scroll: infinite-scroll 25s linear infinite;
   --animate-trail: trail 10s linear infinite;
 
+  --font-display: "Concert One", "sans-serif";
+  --font-heading: "Bebas Neue", "sans-serif";
+  --font-body: "Inter", "sans-serif";
+  --font-mono: "Fira Sans", "sans-serif";
+
   @keyframes fade-in-scale {
     0% {
       opacity: 0;

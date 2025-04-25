@@ -5,6 +5,7 @@ import { ArrowLeft, ArrowRight } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 
 import { useEffect, useState } from "react";
+import { Text } from "./Text";
 
 type GallerySource = {
   quote: string;
@@ -120,9 +121,9 @@ export const AnimatedGallery = ({
               ease: "easeInOut",
             }}
           >
-            <h3 className="text-2xl font-bold text-black dark:text-white">
+            <Text variant="h1" className="font-heading tracking-wide">
               {gallerySources[active].name}
-            </h3>
+            </Text>
             <p className="text-sm text-gray-500 dark:text-neutral-500">
               {gallerySources[active].designation}
             </p>

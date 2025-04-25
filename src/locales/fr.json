@@ -9,6 +9,7 @@
     "cancel": "Annuler",
     "city": "Ville",
     "confirm": "Confirmer",
+    "close": "Close",
     "confirmPassword": "Confirmez votre mot de passe",
     "copyright": "Droits d'auteur ©{year}. Tous droits réservés.",
     "create": "creer",
@@ -56,6 +57,20 @@
     "teamPlayersStats": "Statistiques des joueurs de l'équipe",
     "teamStats": "Statistiques de l'équipe",
     "title": "titre"
+  },
+  "contact": {
+    "title": "Contact",
+    "subtitle": "Get in touch with us",
+    "name_required": "Name is required",
+    "email_invalid": "Invalid email",
+    "email": "Email",
+    "message": "Message",
+    "name": "Name",
+    "phone": "Phone",
+    "send": "Send",
+    "subject": "Subject",
+    "send_error": "Error sending message",
+    "message_required": "Message is required"
   },
   "company": {
     "description": "Trouvez votre équipe idéale ou créez la vôtre, gérez vos athlètes et participez à des ligues légendaires !",

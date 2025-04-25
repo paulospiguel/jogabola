@@ -4,18 +4,22 @@ import {
   Dialog,
   DialogContent,
   DialogDescription,
-  DialogFooter,
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
 import { useRouter } from "next/navigation";
-import { useMemo } from "react";
+import { use, useMemo } from "react";
 import { COMPANY } from "@/constants/app";
-import { useTranslations } from "next-intl";
 
-export default function ModalPage({ params: { slug = "" } }) {
+interface ModalPageProps {
+  params: Promise<{ slug: string }>;
+}
+
+export default function ModalPage({ params }: ModalPageProps) {
   const router = useRouter();
-  const t = useTranslations();
+  // const t = useTranslations();
+
+  const slug = use(params).slug;
 
   const videos = useMemo(() => {
     return {
@@ -24,7 +28,7 @@ export default function ModalPage({ params: { slug = "" } }) {
           <svg
             viewBox="0 0 285 80"
             preserveAspectRatio="xMidYMid slice"
-            className="absolute left-0 top-0 h-full w-full"
+            className="absolute top-0 left-0 h-full w-full"
           >
             <title>{COMPANY.NAME}</title>
             <defs>
@@ -108,13 +112,13 @@ export default function ModalPage({ params: { slug = "" } }) {
       open={true}
       onOpenChange={handleClose}
     >
-      <DialogContent className="max-w-full md:max-w-[50vw]">
+      <DialogContent className="max-w-full border-teal-600 bg-black md:max-w-[50vw]">
         <DialogHeader>
           <DialogTitle>{slug}</DialogTitle>
           <DialogDescription>{""}</DialogDescription>
         </DialogHeader>
         {videos.v3}
-        <DialogFooter>{""}</DialogFooter>
+        {/* <DialogFooter>{t("common.close")}</DialogFooter> */}
       </DialogContent>
     </Dialog>
   );

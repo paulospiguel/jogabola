@@ -11,6 +11,7 @@
     "confirm": "Confirm",
     "confirmPassword": "Confirm your password",
     "copyright": "Copyright © {year}. All rights reserved.",
+    "close": "Close",
     "create": "Create",
     "date": "Date",
     "decline": "Decline",
@@ -109,5 +110,19 @@
       "name": "JogaBola",
       "designation": "The best place to find your team and play soccer."
     }
+  },
+  "contact": {
+    "title": "Contact",
+    "subtitle": "Get in touch with us",
+    "name_required": "Name is required",
+    "email_invalid": "Invalid email",
+    "email": "Email",
+    "message": "Message",
+    "name": "Name",
+    "phone": "Phone",
+    "send": "Send",
+    "subject": "Subject",
+    "send_error": "Error sending message",
+    "message_required": "Message is required"
   }
 }
