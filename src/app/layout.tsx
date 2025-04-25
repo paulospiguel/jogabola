@@ -3,18 +3,22 @@ import { fonts } from "../styles/fonts";
 
 import type { Metadata } from "next";
 import { NextIntlClientProvider } from "next-intl";
-import { getMessages } from "next-intl/server";
+import { getMessages, getTranslations } from "next-intl/server";
 import { cn } from "@/utils";
 import { getUserLocale } from "@/services/locale";
 import { Providers } from "@/providers";
+import { COMPANY, TRANSLATION_KEYS } from "@/constants/app";
 
 
 export const preferredRegion = ["fra1", "sfo1", "iad1"];
 export const maxDuration = 60;
 
+// Solução para metadados estáticos multilíngues
+// Em uma implementação completa, seria necessário usar o middleware
+// ou route handlers para definir os metadados dinamicamente por idioma
 export const metadata: Metadata = {
-  title: "JogaBola",
-  description: "O melhor lugar para encontrar sua malta e jogar uma pelada.",
+  title: COMPANY.NAME,
+  description: COMPANY.SLOGAN,
 };
 
 export default async function RootLayout({

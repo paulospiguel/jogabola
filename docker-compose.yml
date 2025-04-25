@@ -1,10 +1,10 @@
 services:
   postgres:
-    container_name: jogabola_database
+    container_name: ${DB_CONTAINER_NAME:-jogabola_database}
     image: postgres
     restart: always
     environment:
-      - POSTGRES_USER=jogabola
-      - POSTGRES_PASSWORD=jogabola
+      - POSTGRES_USER=${DB_USER:-jogabola}
+      - POSTGRES_PASSWORD=${DB_PASSWORD:-jogabola}
     ports:
       - 5432:5432

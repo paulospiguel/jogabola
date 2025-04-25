@@ -10,6 +10,7 @@
     "city": "City",
     "confirm": "Confirm",
     "confirmPassword": "Confirm your password",
+    "copyright": "Copyright © {year}. All rights reserved.",
     "create": "Create",
     "date": "Date",
     "decline": "Decline",
@@ -39,6 +40,7 @@
     "playerStats": "Player statistics",
     "playerTeam": "Player's team",
     "players": "Players",
+    "rights": "All rights reserved",
     "role": "Position",
     "save": "Save",
     "season": "Season",
@@ -54,6 +56,11 @@
     "teamPlayersStats": "Team player statistics",
     "teamStats": "Team statistics",
     "title": "Title"
+  },
+  "company": {
+    "slogan": "The best place to find your crew and play soccer.",
+    "legalName": "JogaBola Foundation LLC",
+    "description": "Find your ideal team or create your own, manage your athletes and participate in legendary leagues!"
   },
   "footer": {
     "contact": "Contact",
@@ -72,7 +79,8 @@
     "description": "Build your team, challenge your friends, and conquer glory on the pitch.\nThe field is calling. Victory awaits you!",
     "startMyJourney": "Start my journey",
     "title": "Ready to build your dream team?",
-    "watchVideo": "Watch video"
+    "watchVideo": "Watch video",
+    "sponsors": "Sponsors"
   },
   "locales": {
     "en": "English",
@@ -80,5 +88,9 @@
     "fr": "French",
     "placeholder": "Select a language",
     "pt": "Portuguese"
+  },
+  "meta": {
+    "title": "JogaBola",
+    "description": "The best place to find your crew and play soccer."
   }
 }

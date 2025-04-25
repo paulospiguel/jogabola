@@ -1,10 +1,11 @@
 "use client";
 
 import Image, { type StaticImageData } from "next/image";
-
-
 import { cn } from "@/utils";
 import Link from "next/link";
+import { COMPANY } from "@/constants/app";
+import { useTranslations } from "next-intl";
+import { TRANSLATION_KEYS } from "@/constants/app";
 
 import logoAnimated from "@/assets/animations/jogabola-loop.gif";
 import logoGreen from "@/assets/logos/jogabola-green.svg";
@@ -39,6 +40,7 @@ export const Logo: React.FC<LogoProps> = ({
   isAnimate,
   size = "medium",
 }) => {
+  const t = useTranslations();
   const logoSize = sizes[size];
   let logotipo: StaticImageData;
 
@@ -64,7 +66,7 @@ export const Logo: React.FC<LogoProps> = ({
   return (
     <Link href="/" className={cn("relative flex", logoSize, className)}>
       <Image src={logotipo} alt="" fill className="object-contain" />
-      <span className="sr-only">Jogabola - Encontre sua malta</span>
+      <span className="sr-only">{COMPANY.NAME} - {t(TRANSLATION_KEYS.COMPANY.SLOGAN)}</span>
     </Link>
   );
 };

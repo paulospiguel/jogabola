@@ -3,6 +3,7 @@ import Link from "next/link";
 import { Logo } from "./logo";
 import { DiscordIcon, Instagram, XTwitter } from "./icons";
 import { getTranslations } from "next-intl/server";
+import { COMPANY, TRANSLATION_KEYS } from "@/constants/app";
 
 type FooterProps = {
   className?: string;
@@ -10,6 +11,7 @@ type FooterProps = {
 
 export default async function Footer({ className }: FooterProps) {
   const t = await getTranslations();
+  const currentYear = new Date().getFullYear();
 
   return (
     <footer className={cn("bg-teal-50 dark:bg-gray-800", className)}>
@@ -44,8 +46,7 @@ export default async function Footer({ className }: FooterProps) {
             </div>
 
             <p className="mx-auto mt-6 max-w-md text-center leading-relaxed text-gray-500 lg:text-left">
-              Encontre sua equipe ideal ou crie seu próprio time, gerencie seus
-              atletas e participe de ligas lendárias!
+              {t(TRANSLATION_KEYS.COMPANY.DESCRIPTION)}
             </p>
           </div>
 
@@ -90,22 +91,22 @@ export default async function Footer({ className }: FooterProps) {
 
         <div className="mt-3 border-t border-gray-200 pt-4 sm:flex sm:items-center sm:justify-between">
           <p className="text-center text-sm text-gray-500 sm:text-left">
-            Copyright &copy; 2024. All rights reserved.
+            {`Copyright © ${currentYear}. ${t("common.rights")}`}
           </p>
 
           <ul className="mt-4 flex justify-center gap-6 sm:mt-0 sm:justify-start">
             <li>
-              <Link href="https://instagram.com/jogabolafun" target="_blank">
+              <Link href={COMPANY.SOCIAL.INSTAGRAM} target="_blank">
                 <Instagram className="h-6 w-6 dark:text-teal-700" />
               </Link>
             </li>
             <li>
-              <Link href="https://discord.com/jogabolafun" target="_blank">
+              <Link href={COMPANY.SOCIAL.DISCORD} target="_blank">
                 <DiscordIcon className="h-6 w-6 dark:text-teal-700 " />
               </Link>
             </li>
             <li>
-              <Link href="https://x.com/jogabolafun" target="_blank">
+              <Link href={COMPANY.SOCIAL.TWITTER} target="_blank">
                 <XTwitter className="h-6 w-6 dark:text-teal-700 " />
               </Link>
             </li>

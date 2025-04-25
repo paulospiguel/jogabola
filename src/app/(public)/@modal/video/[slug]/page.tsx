@@ -10,9 +10,12 @@ import {
 } from "@/components/ui/dialog";
 import { useRouter } from "next/navigation";
 import { useMemo } from "react";
+import { COMPANY } from "@/constants/app";
+import { useTranslations } from "next-intl";
 
 export default function ModalPage({ params: { slug = "" } }) {
   const router = useRouter();
+  const t = useTranslations();
 
   const videos = useMemo(() => {
     return {
@@ -23,7 +26,7 @@ export default function ModalPage({ params: { slug = "" } }) {
             preserveAspectRatio="xMidYMid slice"
             className="absolute left-0 top-0 h-full w-full"
           >
-            <title>JogaBola</title>
+            <title>{COMPANY.NAME}</title>
             <defs>
               <mask id="mask" x="0" y="0" width={"100%"} height={"100%"}>
                 <rect
@@ -40,7 +43,7 @@ export default function ModalPage({ params: { slug = "" } }) {
                   textAnchor="middle"
                   className="font-bold italic underline"
                 >
-                  JOGABOLA
+                  {COMPANY.NAME.toUpperCase()}
                 </text>
               </mask>
             </defs>
@@ -85,7 +88,7 @@ export default function ModalPage({ params: { slug = "" } }) {
       v3: (
         <iframe
           className="rounded-3xl"
-          title="JogaBola"
+          title={COMPANY.NAME}
           width="100%"
           height="418"
           src={`https://www.youtube.com/embed/${slug}?autoplay=1&mute=1`}

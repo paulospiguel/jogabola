@@ -10,6 +10,7 @@
     "city": "Cidade",
     "confirm": "Confirme",
     "confirmPassword": "Confirme a password",
+    "copyright": "Copyright © {year}. Todos os direitos reservados.",
     "create": "Criar",
     "date": "Data",
     "decline": "Recusar",
@@ -39,6 +40,7 @@
     "playerStats": "Estatísticas do jogador",
     "playerTeam": "Equipa do jogador",
     "players": "Jogadores",
+    "rights": "Todos os direitos reservados",
     "role": "Posição",
     "save": "Guardar",
     "season": "Temporada",
@@ -54,6 +56,11 @@
     "teamPlayersStats": "Estatísticas dos jogadores da equipe",
     "teamStats": "Estatísticas da equipa",
     "title": "Título"
+  },
+  "company": {
+    "slogan": "O melhor lugar para encontrar sua malta e jogar uma pelada.",
+    "legalName": "JogaBola Fundation Ltda.",
+    "description": "Encontre sua equipe ideal ou crie seu próprio time, gerencie seus atletas e participe de ligas lendárias!"
   },
   "footer": {
     "contact": "Contato",
@@ -72,7 +79,8 @@
     "description": "Monte a tua equipa, desafia os teus amigos e conquista a glória nos relvados. O campo chama-te. A vitória espera por ti!",
     "startMyJourney": "Iniciar Minha Jornada",
     "title": "Pronto para montar sua equipe dos sonhos?",
-    "watchVideo": "Assista ao vídeo"
+    "watchVideo": "Assista ao vídeo",
+    "sponsors": "Apoios"
   },
   "locales": {
     "en": "Inglês",
@@ -80,5 +88,9 @@
     "fr": "Francês",
     "placeholder": "Selecione um idioma",
     "pt": "Portuguese"
+  },
+  "meta": {
+    "title": "JogaBola",
+    "description": "O melhor lugar para encontrar sua malta e jogar uma pelada."
   }
 }

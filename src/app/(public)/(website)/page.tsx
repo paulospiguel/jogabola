@@ -12,7 +12,8 @@ import { LuArrowRight as ArrowRight, VideoIcon } from "@/components/icons";
 import { getTranslations } from "next-intl/server";
 import Image from "next/image";
 import Link from "next/link";
-import jBTube from "@/assets/icons/jogabola-tube.svg"
+import jBTube from "@/assets/icons/jogabola-tube.svg";
+import { COMPANY } from "@/constants/app";
 
 export default async function Home() {
   const t = await getTranslations();
@@ -88,7 +89,7 @@ export default async function Home() {
                   href="/video/B4UDYHG1Kag"
                   className="inline-flex items-center justify-center rounded-lg border border-gray-300 px-5 py-3 text-center text-base font-medium text-gray-900 hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 dark:border-gray-700 dark:text-white dark:hover:bg-gray-700 dark:focus:ring-gray-800"
                 >
-                  <Image src={jBTube} width={24} height={24} alt="JBTube" />
+                  <Image src={jBTube} width={24} height={24} alt={`${COMPANY.NAME} Tube`} />
                   <span className="ml-2">{t("homePage.watchVideo")}</span>
                 </Link>
               </div>
@@ -97,7 +98,7 @@ export default async function Home() {
 
           <section className="mx-auto mt-2 px-4 text-center md:max-w-(--breakpoint-md) lg:max-w-(--breakpoint-lg) lg:px-36">
             <span className="font-semibold text-gray-400 uppercase">
-              Apoios
+              {t("homePage.sponsors")}
             </span>
             <div className="flex w-full justify-center gap-2 md:justify-between">
               <InfiniteHorizontalScroll
