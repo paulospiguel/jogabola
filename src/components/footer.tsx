@@ -54,7 +54,7 @@ export default async function Footer({ className }: FooterProps) {
             <li>
               <Link
                 className="text-gray-700 transition hover:text-gray-700/75 dark:text-teal-700"
-                href="#"
+                href="/contact"
               >
                 {t("footer.contact")}
               </Link>
@@ -91,7 +91,7 @@ export default async function Footer({ className }: FooterProps) {
 
         <div className="mt-3 border-t border-gray-200 pt-4 sm:flex sm:items-center sm:justify-between">
           <p className="text-center text-sm text-gray-500 sm:text-left">
-            {`Copyright © ${currentYear}. ${t("common.rights")}`}
+            {`Copyright © ${currentYear}. | ${COMPANY.LEGAL_NAME} - ${t("common.rights")}`}
           </p>
 
           <ul className="mt-4 flex justify-center gap-6 sm:mt-0 sm:justify-start">
@@ -102,12 +102,12 @@ export default async function Footer({ className }: FooterProps) {
             </li>
             <li>
               <Link href={COMPANY.SOCIAL.DISCORD} target="_blank">
-                <DiscordIcon className="h-6 w-6 dark:text-teal-700 " />
+                <DiscordIcon className="h-6 w-6 dark:text-teal-700" />
               </Link>
             </li>
             <li>
               <Link href={COMPANY.SOCIAL.TWITTER} target="_blank">
-                <XTwitter className="h-6 w-6 dark:text-teal-700 " />
+                <XTwitter className="h-6 w-6 dark:text-teal-700" />
               </Link>
             </li>
           </ul>

@@ -80,7 +80,12 @@
     "sponsors": "Sponsors",
     "startMyJourney": "Start my journey",
     "title": "Ready to build your dream team?",
-    "watchVideo": "Watch video"
+    "watchVideo": "Watch video",
+    "downloadAppTitle": "Download the app and take control of your journey!",
+    "downloadAppDescription": "Get the full Jogabola experience on your phone. Available for iOS and Android.",
+    "downloadOnAppStore": "Download on the App Store",
+    "downloadOnGooglePlay": "Download on Google Play",
+    "appMockupAlt": "Jogabola app mockup"
   },
   "locales": {
     "en": "English",
@@ -92,5 +97,17 @@
   "meta": {
     "description": "The best place to find your crew and play soccer.",
     "title": "JogaBola"
+  },
+  "store": {
+    "screen1": {
+      "quote": "The best place to find your team and play soccer.",
+      "name": "JogaBola",
+      "designation": "The best place to find your team and play soccer."
+    },
+    "screen2": {
+      "quote": "The best place to find your team and play soccer.",
+      "name": "JogaBola",
+      "designation": "The best place to find your team and play soccer."
+    }
   }
 }

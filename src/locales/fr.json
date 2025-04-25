@@ -80,7 +80,12 @@
     "sponsors": "Sponsors",
     "startMyJourney": "Commencez mon voyage",
     "title": "Êtes-vous prêt à constituer l'équipe de vos rêves ?",
-    "watchVideo": "Regardez la vidéo"
+    "watchVideo": "Regardez la vidéo",
+    "downloadAppTitle": "Téléchargez l'app et jouez où vous voulez !",
+    "downloadAppDescription": "Profitez de l'expérience complète Jogabola sur votre mobile. Disponible sur iOS et Android.",
+    "downloadOnAppStore": "Télécharger sur l'App Store",
+    "downloadOnGooglePlay": "Télécharger sur Google Play",
+    "appMockupAlt": "Mockup de l'application Jogabola"
   },
   "locales": {
     "en": "Anglais",
@@ -92,5 +97,17 @@
   "meta": {
     "description": "Le meilleur endroit pour trouver votre équipe et jouer au football.",
     "title": "Joga-Bola"
+  },
+  "store": {
+    "screen1": {
+      "quote": "The best place to find your team and play soccer.",
+      "name": "JogaBola",
+      "designation": "The best place to find your team and play soccer."
+    },
+    "screen2": {
+      "quote": "The best place to find your team and play soccer.",
+      "name": "JogaBola",
+      "designation": "The best place to find your team and play soccer."
+    }
   }
 }

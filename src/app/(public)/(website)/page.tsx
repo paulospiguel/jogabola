@@ -8,18 +8,39 @@ import InfiniteHorizontalScroll from "@/components/infinite-scroll";
 import Footer from "@/components/footer";
 import HeaderHome from "@/components/header";
 import { RoleValues } from "@/schemas";
-import { LuArrowRight as ArrowRight, VideoIcon } from "@/components/icons";
+import {
+  AppleStore,
+  LuArrowRight as ArrowRight,
+  GooglePlay,
+} from "@/components/icons";
 import { getTranslations } from "next-intl/server";
 import Image from "next/image";
 import Link from "next/link";
 import jBTube from "@/assets/icons/jogabola-tube.svg";
 import { COMPANY } from "@/constants/app";
+import { AnimatedGallery } from "@/components/ui/animated-gallery";
 
 export default async function Home() {
   const t = await getTranslations();
+
+  const mobileScreen = [
+    {
+      quote: t("store.screen1.quote"),
+      name: t("store.screen1.name"),
+      designation: t("store.screen1.designation"),
+      src: "/assets/store/screen1.png",
+    },
+    {
+      quote: t("store.screen2.quote"),
+      name: t("store.screen2.name"),
+      designation: t("store.screen2.designation"),
+      src: "/assets/store/screen2.png",
+    },
+  ];
+
   return (
     <div className="flex min-h-screen w-full flex-col">
-      <header className="bg-background dark:bg-black sticky top-0 z-20 flex min-h-16 items-center gap-4 border-b dark:border-zinc-800 px-4 py-4 md:px-6">
+      <header className="bg-background sticky top-0 z-20 flex min-h-16 items-center gap-4 border-b px-4 py-4 md:px-6 dark:border-zinc-800 dark:bg-black">
         <HeaderHome />
       </header>
 
@@ -89,7 +110,12 @@ export default async function Home() {
                   href="/video/B4UDYHG1Kag"
                   className="inline-flex items-center justify-center rounded-lg border border-gray-300 px-5 py-3 text-center text-base font-medium text-gray-900 hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 dark:border-gray-700 dark:text-white dark:hover:bg-gray-700 dark:focus:ring-gray-800"
                 >
-                  <Image src={jBTube} width={24} height={24} alt={`${COMPANY.NAME} Tube`} />
+                  <Image
+                    src={jBTube}
+                    width={24}
+                    height={24}
+                    alt={`${COMPANY.NAME} Tube`}
+                  />
                   <span className="ml-2">{t("homePage.watchVideo")}</span>
                 </Link>
               </div>
@@ -110,6 +136,41 @@ export default async function Home() {
                 }}
                 images={[fieldLogo, filaLogo, redBullLogo]}
               />
+            </div>
+          </section>
+
+          {/* Seção de Download do App */}
+          <section className="mx-auto mt-2 flex flex-col items-center justify-center gap-6 rounded-2xl">
+            <h2 className="-mb-4 text-3xl font-bold text-gray-900 dark:text-white">
+              {t("homePage.downloadAppTitle")}
+            </h2>
+            <p className="mb-4 max-w-2xl text-center text-gray-600 dark:text-gray-300">
+              {t("homePage.downloadAppDescription")}
+            </p>
+            <div className="flex flex-col items-center gap-4 sm:flex-row">
+              <a
+                href="https://apps.apple.com/app/id000000000" // Substitua pelo link real
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label={t("homePage.downloadOnAppStore")}
+                tabIndex={0}
+                className="focus:ring-primary-500 rounded-lg focus:ring-2 focus:outline-none"
+              >
+                <AppleStore className="h-12 w-auto dark:invert" />
+              </a>
+              <a
+                href="https://play.google.com/store/apps/details?id=com.jogabola" // Substitua pelo link real
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label={t("homePage.downloadOnGooglePlay")}
+                tabIndex={0}
+                className="focus:ring-primary-500 rounded-lg focus:ring-2 focus:outline-none"
+              >
+                <GooglePlay className="h-12 w-auto dark:invert" />
+              </a>
+            </div>
+            <div className="mt-6 w-full rounded-4xl bg-white/35 p-6 dark:bg-zinc-800/35">
+              <AnimatedGallery view="mobile" gallerySources={mobileScreen} />
             </div>
           </section>
         </div>
