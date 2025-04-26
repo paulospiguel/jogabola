@@ -70,7 +70,13 @@
     "send": "Send",
     "subject": "Subject",
     "send_error": "Error sending message",
-    "message_required": "Message is required"
+    "message_required": "Message is required",
+    "send_success": "Message sent successfully",
+    "suggestion": "Suggestion",
+    "complaint": "Complaint",
+    "question": "Question",
+    "other": "Other",
+    "bug": "Bug"
   },
   "company": {
     "description": "¡Encuentra tu equipo ideal o crea el tuyo propio, gestiona a tus atletas y participa en ligas legendarias!",

@@ -123,6 +123,12 @@
     "send": "Send",
     "subject": "Subject",
     "send_error": "Error sending message",
-    "message_required": "Message is required"
+    "message_required": "Message is required",
+    "send_success": "Message sent successfully",
+    "suggestion": "Suggestion",
+    "complaint": "Complaint",
+    "question": "Question",
+    "bug": "Bug",
+    "other": "Other"
   }
 }

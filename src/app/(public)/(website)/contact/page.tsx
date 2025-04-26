@@ -3,7 +3,7 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { useTranslations, useLocale } from "next-intl";
+import { useTranslations } from "next-intl";
 import { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -11,14 +11,34 @@ import { Button } from "@/components/ui/button";
 import { Text } from "@/components/ui/Text";
 import Loading from "@/components/loading";
 import { Send } from "lucide-react";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectValue,
+} from "@/components/ui/select";
+import { SelectTrigger } from "@radix-ui/react-select";
+import { LuBook, LuBug, LuClock, LuHand, LuMailQuestion } from "react-icons/lu";
+import { sendEmail } from "@/actions/sendEmail";
 
+let subjects = [
+  { value: "suggestion", label: "Suggestion", icon: LuBook },
+  { value: "bug", label: "Bug", icon: LuBug },
+  { value: "question", label: "Question", icon: LuMailQuestion },
+  { value: "other", label: "Other", icon: LuHand },
+];
+
+// Definição local do schema para validação no cliente
 const contactSchema = z.object({
   name: z.string().min(2, "contact.name_required"),
   email: z.string().email("contact.email_invalid"),
-  message: z.string().min(10, "contact.message_required"),
+  message: z.string().min(3, "contact.message_required"),
+  subject: z.string().optional().default(subjects[0].value),
 });
 
-interface ContactFormValues extends z.infer<typeof contactSchema> {}
+type ContactFormValues = z.infer<typeof contactSchema>;
 
 export default function ContactPage() {
   const [loading, setLoading] = useState(false);
@@ -26,6 +46,18 @@ export default function ContactPage() {
   const [error, setError] = useState<string | null>(null);
 
   const t = useTranslations();
+
+  subjects.forEach(subject => {
+    if (subject.value === "suggestion") {
+      subject.label = t("contact.suggestion");
+    } else if (subject.value === "bug") {
+      subject.label = t("contact.bug");
+    } else if (subject.value === "question") {
+      subject.label = t("contact.question");
+    } else if (subject.value === "other") {
+      subject.label = t("contact.other");
+    }
+  });
 
   const {
     register,
@@ -41,17 +73,17 @@ export default function ContactPage() {
     setError(null);
     setSuccess(false);
     try {
-      const response = await fetch("/api/contact", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data),
-      });
-      if (!response.ok) {
-        throw new Error(t("contact.send_error"));
+      // Usando a rota de API em vez de Server Action
+      const response = await sendEmail(data);
+
+      if (!response.success) {
+        throw new Error(response.error?.message || t("contact.send_error"));
       }
+
       setSuccess(true);
       reset();
     } catch (err: any) {
+      console.error("Erro ao enviar email:", err);
       setError(err.message || t("contact.send_error"));
     } finally {
       setLoading(false);
@@ -68,6 +100,29 @@ export default function ContactPage() {
       </Text>
       <form onSubmit={handleSubmit(handleFormSubmit)}>
         <div className="space-y-4">
+          <Select {...register("subject")} defaultValue={subjects[0].value}>
+            <SelectTrigger
+              tabIndex={0}
+              aria-label={t("contact.subject")}
+              className="h-10 w-full rounded-3xl border-2 data-[state=open]:border-teal-600 md:w-[180px]"
+            >
+              <SelectValue placeholder={t("contact.subject")} />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectGroup>
+                <SelectLabel>{t("contact.subject")}</SelectLabel>
+                {subjects.map(subject => (
+                  <SelectItem key={subject.value} value={subject.value}>
+                    <li className="flex items-center px-2">
+                      <subject.icon className="mr-1 h-4 w-4" />
+                      <span>{subject.label}</span>
+                    </li>
+                  </SelectItem>
+                ))}
+              </SelectGroup>
+            </SelectContent>
+          </Select>
+
           <Input
             {...register("name")}
             placeholder={t("contact.name")}
@@ -103,7 +158,7 @@ export default function ContactPage() {
             type="submit"
             disabled={loading}
             aria-label={t("contact.send")}
-            className="float-right min-w-[120px]"
+            className="float-right w-full md:min-w-[120px]"
           >
             {loading ? (
               <Loading size="small" />
