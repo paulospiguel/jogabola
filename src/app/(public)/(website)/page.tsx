@@ -17,6 +17,8 @@ import Link from "next/link";
 import jBTube from "@/assets/icons/jogabola-tube.svg";
 import { COMPANY } from "@/constants/app";
 import { AnimatedGallery } from "@/components/ui/animated-gallery";
+import CountDownTimer from "@/components/count-down";
+import { Text } from "@/components/ui/Text";
 
 export default async function Home() {
   const t = await getTranslations();
@@ -38,7 +40,7 @@ export default async function Home() {
 
   return (
     <main className="relative flex flex-1 flex-col p-4 md:gap-4 md:p-8">
-      <div className="absolute inset-0 z-0 [background:radial-gradient(125%_125%_at_50%_10%,#fff_40%,#086_100%)] dark:[background:radial-gradient(125%_125%_at_50%_10%,#000_40%,#086_100%)]" />
+      <div className="absolute inset-0 z-0 [background:radial-gradient(125%_125%_at_50%_0%,#fff_40%,#086_100%)] dark:[background:radial-gradient(125%_125%_at_50%_0%,#000_40%,#086_100%)]" />{" "}
       <div className="z-10 w-full items-center px-5 py-24">
         <section className="z-auto">
           <div className="mx-auto max-w-(--breakpoint-xl) px-4 py-8 text-center lg:px-12 lg:py-16">
@@ -132,11 +134,15 @@ export default async function Home() {
           </div>
         </section>
 
-        {/* Seção de Download do App */}
         <section className="mx-auto mt-2 flex flex-col items-center justify-center gap-6 rounded-2xl">
-          <h2 className="-mb-4 text-3xl font-bold text-gray-900 dark:text-white">
+          <CountDownTimer />
+        </section>
+
+        {/* Download App */}
+        <section className="mx-auto mt-2 flex flex-col items-center justify-center gap-6 rounded-2xl">
+          <Text variant="h2" color="gradient" className="-mb-6">
             {t("homePage.downloadAppTitle")}
-          </h2>
+          </Text>
           <p className="mb-4 max-w-2xl text-center text-gray-600 dark:text-gray-300">
             {t("homePage.downloadAppDescription")}
           </p>

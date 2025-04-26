@@ -72,6 +72,24 @@
       }
     }
   },
+  "countDown": {
+    "title": "Tempo restante",
+    "subtitle": "Estamos em contagem reversa para o lançamento do nosso incrível app.",
+    "days": "Dias",
+    "months": "Meses",
+    "years": "Anos",
+    "weeks": "Semanas",
+    "hours": "Horas",
+    "minutes": "Minutos",
+    "seconds": "Segundos",
+    "day": "Dia",
+    "month": "Mês",
+    "year": "Ano",
+    "week": "Semana",
+    "hour": "Hora",
+    "minute": "Minuto",
+    "second": "Segundo"
+  },
   "common": {
     "accept": "Aceitar",
     "actions": "Ações",
@@ -191,14 +209,14 @@
   },
   "store": {
     "screen1": {
-      "quote": "The best place to find your team and play soccer.",
+      "designation": "O melhor lugar para encontrar sua equipe e jogar futebol.",
       "name": "JogaBola",
-      "designation": "The best place to find your team and play soccer."
+      "quote": "O melhor lugar para encontrar sua equipe e jogar futebol.\n\nOrganize partidas, forme equipas e encontre campos disponíveis de maneira rápida e intuitiva.\n\nDescubra novas amizades, desafie outros times e viva a paixão pelo futebol onde quiser."
     },
     "screen2": {
-      "quote": "The best place to find your team and play soccer.",
+      "designation": "O melhor lugar para encontrar sua equipe e jogar futebol.",
       "name": "JogaBola",
-      "designation": "The best place to find your team and play soccer."
+      "quote": "O melhor lugar para encontrar sua equipe e jogar futebol.\n\nOrganize partidas, forme equipas e encontre campos disponíveis de maneira rápida e intuitiva.\n\nDescubra novas amizades, desafie outros times e viva a paixão pelo futebol onde quiser."
     }
   }
 }

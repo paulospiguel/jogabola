@@ -72,6 +72,24 @@
   "aboutPage": {
     "title": "Acerca de"
   },
+  "countDown": {
+    "title": "Time left",
+    "subtitle": "We're working hard to launch our incredible app.",
+    "days": "Days",
+    "months": "Months",
+    "years": "Years",
+    "weeks": "Weeks",
+    "hours": "Hours",
+    "minutes": "Minutes",
+    "seconds": "Seconds",
+    "day": "Day",
+    "month": "Month",
+    "year": "Year",
+    "week": "Week",
+    "hour": "Hour",
+    "minute": "Minute",
+    "second": "Second"
+  },
   "common": {
     "accept": "Aceptar",
     "actions": "Acciones",

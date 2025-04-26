@@ -6,8 +6,8 @@ const variantsText = cva("max-w-prose text-slate-700 dark:text-slate-300", {
     variant: {
       p: "text-base leading-7 [&:not(:first-child)]:mt-6",
       label: "text-sm font-medium leading-none",
-      h1: "scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl font-heading",
-      h2: "scroll-m-20 font-heading border-b border-b-slate-200 pb-2 text-3xl font-semibold tracking-tight transition-colors first:mt-0 dark:border-b-slate-800 dark:text-slate-300 sm:text-4xl",
+      h1: "scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl font-heading border-b border-b-slate-200",
+      h2: "scroll-m-20 font-heading pb-2 text-3xl font-semibold tracking-tight transition-colors first:mt-0 dark:border-b-slate-800 dark:text-slate-300 sm:text-4xl",
       h3: "scroll-m-20 text-2xl font-semibold tracking-tight",
       h4: "scroll-m-20 text-xl font-semibold tracking-tight",
       lead: "text-xl text-slate-600 dark:text-slate-400 sm:text-center sm:text-2xl",
@@ -43,6 +43,8 @@ const colors = {
   red: "text-red-600",
   blue: "text-blue-600",
   yellow: "text-yellow-600",
+  gradient:
+    "bg-clip-text text-transparent bg-gradient-to-r from-teal-600 to-lime-600",
 };
 
 type TextVariants = VariantProps<typeof variantsText>;
@@ -64,10 +66,10 @@ export const Text = ({
   fontWeight = "normal",
   color,
 }: TextProps & TextVariants) => {
+  className = cn(colors[color || "black"], className);
   return (
     <p
       className={cn(
-        colors[color || "primary"],
         variantsText({ variant, className }),
         fontSizes[fontSize],
         fontWeight,

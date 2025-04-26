@@ -21,6 +21,24 @@
     "contact": "Contactez-nous",
     "follow_us": "Suivez-nous sur les Réseaux Sociaux"
   },
+  "countDown": {
+    "title": "Time left",
+    "subtitle": "We're working hard to launch our incredible app.",
+    "days": "Days",
+    "months": "Months",
+    "years": "Years",
+    "weeks": "Weeks",
+    "hours": "Hours",
+    "minutes": "Minutes",
+    "seconds": "Seconds",
+    "day": "Day",
+    "month": "Month",
+    "year": "Year",
+    "week": "Week",
+    "hour": "Hour",
+    "minute": "Minute",
+    "second": "Second"
+  },
   "business": {
     "name": "Jogabola",
     "slogan": "Le meilleur endroit pour trouver votre équipe et jouer au football.",

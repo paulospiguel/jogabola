@@ -49,12 +49,13 @@ export const AnimatedGallery = ({
     return Math.floor(Math.random() * 21) - 10;
   };
   return (
-    <div className="mx-auto max-w-sm px-4 py-20 font-sans antialiased md:max-w-4xl md:px-8 lg:px-12">
-      <div className="relative grid grid-cols-1 gap-20 md:grid-cols-2">
+    <div className="mx-auto max-w-sm px-4 py-6 font-sans antialiased md:max-w-4xl md:px-8 md:py-20 lg:px-12">
+      <div className="relative grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-20">
         <div
           className={cn(
             "relative h-80 w-full",
-            view === "mobile" && "h-[630px] w-[320px]",
+            view === "mobile" &&
+              "h-[480px] w-[220px] md:h-[630px] md:w-[320px]",
           )}
         >
           <AnimatePresence>
@@ -101,8 +102,9 @@ export const AnimatedGallery = ({
             ))}
           </AnimatePresence>
         </div>
-        <div className="flex flex-col justify-between py-4">
+        <div className="flex flex-col justify-between gap-6 py-4 md:gap-0">
           <motion.div
+            className="order-2 md:order-1"
             key={active}
             initial={{
               y: 20,
@@ -121,7 +123,11 @@ export const AnimatedGallery = ({
               ease: "easeInOut",
             }}
           >
-            <Text variant="h1" className="font-heading tracking-wide">
+            <Text
+              variant="h1"
+              color="gradient"
+              className="font-heading tracking-wide"
+            >
               {gallerySources[active].name}
             </Text>
             <p className="text-sm text-gray-500 dark:text-neutral-500">
@@ -153,7 +159,7 @@ export const AnimatedGallery = ({
               ))}
             </motion.p>
           </motion.div>
-          <div className="flex gap-4 pt-12 md:pt-0">
+          <div className="order-1 flex gap-4 pt-0 md:order-2 md:pt-12">
             <button
               onClick={handlePrev}
               className="group/button flex h-7 w-7 items-center justify-center rounded-full bg-gray-100 dark:bg-neutral-800"
