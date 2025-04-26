@@ -40,8 +40,9 @@ export default function AnimatedBorderTrail({
       )}
     >
       <div
-        className="absolute inset-0 h-full w-full animate-trail"
+        className="animate-trail absolute inset-0 h-full w-full"
         style={{
+          //@ts-expect-error
           "--duration": duration ?? "10s",
           "--angle": "0deg",
           background: `conic-gradient(from var(--angle) at 50% 50%, transparent ${100 - sizes[trailSize]}%, ${trailColor})`,

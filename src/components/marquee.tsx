@@ -53,9 +53,10 @@ export default function Marquee({
     <div
       {...props}
       data-duration={speed}
+      // @ts-expect-error
       style={{ "--duration": `${speed}s` }}
       className={cn(
-        "group relative flex h-full w-full p-2 [--gap:12px] [gap:var(--gap)]",
+        "group relative flex h-full w-full [gap:var(--gap)] p-2 [--gap:12px]",
         {
           "flex-col": vertical,
           "flex-row": !vertical,

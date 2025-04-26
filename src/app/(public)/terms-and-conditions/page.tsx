@@ -12,15 +12,17 @@ export const metadata = {
 };
 
 // Schema de validação
-const SearchParamsSchema = z.object({
-  modal: z.string().optional(),
-  lang: z.string().optional(),
-});
+const SearchParamsSchema = z
+  .object({
+    modal: z.string().optional(),
+    lang: z.string().optional(),
+  })
+  .optional();
 
 type SearchParams = z.infer<typeof SearchParamsSchema>;
 
 interface PageProps {
-  searchParams?: Record<string, string | string[] | undefined>;
+  searchParams?: Promise<SearchParams>;
 }
 
 export default async function TermsAndConditionsPage({
@@ -31,12 +33,11 @@ export default async function TermsAndConditionsPage({
   const params = validatedParams.success
     ? validatedParams.data
     : { modal: undefined, lang: undefined };
-  const isModal = params.modal === "true";
-  const lang = params.lang || locale || "pt";
+
+  const isModal = params?.modal === "true";
+  const lang = params?.lang || locale || "pt";
 
   const markdownPath = `${lang}/terms-and-conditions.md`;
-
-  console.log(markdownPath);
 
   const fetchMarkdown = async () => {
     const { data, error } = await supabase.storage

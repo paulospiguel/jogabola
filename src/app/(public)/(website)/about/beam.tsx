@@ -7,14 +7,14 @@ import { AnimatedBeam, Circle } from "@/components/animated-beam";
 import * as Icons from "lucide-react";
 
 export default function Beam() {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const div1Ref = useRef<HTMLDivElement>(null);
-  const div2Ref = useRef<HTMLDivElement>(null);
-  const div3Ref = useRef<HTMLDivElement>(null);
-  const div4Ref = useRef<HTMLDivElement>(null);
-  const div5Ref = useRef<HTMLDivElement>(null);
-  const div6Ref = useRef<HTMLDivElement>(null);
-  const div7Ref = useRef<HTMLDivElement>(null);
+  const containerRef = useRef<HTMLDivElement>({} as HTMLDivElement);
+  const div1Ref = useRef<HTMLDivElement>({} as HTMLDivElement);
+  const div2Ref = useRef<HTMLDivElement>({} as HTMLDivElement);
+  const div3Ref = useRef<HTMLDivElement>({} as HTMLDivElement);
+  const div4Ref = useRef<HTMLDivElement>({} as HTMLDivElement);
+  const div5Ref = useRef<HTMLDivElement>({} as HTMLDivElement);
+  const div6Ref = useRef<HTMLDivElement>({} as HTMLDivElement);
+  const div7Ref = useRef<HTMLDivElement>({} as HTMLDivElement);
 
   return (
     <div

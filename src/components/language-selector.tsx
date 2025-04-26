@@ -12,6 +12,14 @@ import {
 import { LuGlobe as Globe } from "@/components/icons";
 import { useLocale, useTranslations } from "next-intl";
 import { useTransition } from "react";
+import { z } from "zod";
+
+const languageSchema = z.object({
+  icon: z.string(),
+  name: z.string(),
+});
+
+type Language = z.infer<typeof languageSchema>;
 
 const LANGUAGES = {
   en: {
@@ -30,7 +38,7 @@ const LANGUAGES = {
     icon: "🇫🇷",
     name: "locales.fr",
   },
-} as const;
+} as Record<Locale, Language>;
 
 export default function LanguageSelector({
   onlyIcon = false,
