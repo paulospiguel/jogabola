@@ -2,6 +2,76 @@
   "aboutPage": {
     "title": "Acerca de"
   },
+  "about": {
+    "title": "Sobre o Jogabola",
+    "mission": "Nossa Missão",
+    "vision": "Nossa Visão",
+    "values": "Nossos Valores",
+    "mission_vision_values": "Missão, Visão e Valores",
+    "benefits": "Benefícios",
+    "team": "Nossa Equipe",
+    "history": "Nossa História",
+    "history_text": "O Jogabola foi fundado em {year} com o objetivo de transformar a maneira como as pessoas organizam e participam de jogos de futebol. Desde então, temos trabalhado incansavelmente para tornar o futebol mais acessível a todos.",
+    "history_operating": "Em operação há {years} anos",
+    "statistics": "Nossos Números",
+    "statistics_users": "Usuários",
+    "statistics_fields": "Campos",
+    "statistics_games": "Jogos",
+    "statistics_cities": "Cidades",
+    "contact": "Entre em Contato",
+    "follow_us": "Siga-nos nas Redes Sociais"
+  },
+  "business": {
+    "name": "Jogabola",
+    "slogan": "O melhor lugar para encontrar sua equipe e jogar futebol.",
+    "shortDescription": "A plataforma que conecta amantes do futebol com campos esportivos próximos.",
+    "longDescription": "O Jogabola nasceu da paixão pelo futebol e da dificuldade em organizar partidas entre amigos. Nossa plataforma conecta jogadores apaixonados com campos disponíveis, simplificando o processo de reserva e ajudando a formar novas comunidades esportivas.",
+    "mission": "Democratizar o acesso ao futebol, conectando jogadores e campos de forma simples e intuitiva.",
+    "vision": "Ser a principal plataforma de conexão entre jogadores e campos de futebol no Brasil.",
+    "values": {
+      "passion": {
+        "title": "Paixão pelo Esporte",
+        "description": "Acreditamos no poder do futebol para unir pessoas e comunidades."
+      },
+      "accessibility": {
+        "title": "Acessibilidade",
+        "description": "Trabalhamos para tornar o futebol acessível a todos, independente do nível de habilidade."
+      },
+      "community": {
+        "title": "Comunidade",
+        "description": "Fomentamos a criação de novas amizades e comunidades através do esporte."
+      },
+      "innovation": {
+        "title": "Inovação",
+        "description": "Buscamos constantemente novas formas de melhorar a experiência dos nossos usuários."
+      }
+    },
+    "benefits": {
+      "findNearby": {
+        "title": "Encontre jogos próximos",
+        "description": "Localize campos e partidas perto de você com apenas alguns cliques."
+      },
+      "reserveFields": {
+        "title": "Reserve campos",
+        "description": "Faça reservas de campos de forma rápida e segura, sem complicações."
+      },
+      "joinTournaments": {
+        "title": "Participe de torneios",
+        "description": "Inscreva-se em torneios locais e mostre suas habilidades."
+      },
+      "connectPlayers": {
+        "title": "Conecte-se com jogadores",
+        "description": "Conheça outros entusiastas do futebol e amplie sua rede de contatos."
+      }
+    },
+    "team": {
+      "paulo": {
+        "name": "Paulo Spiguel",
+        "role": "Fundador & Desenvolvedor",
+        "bio": "Apaixonado por tecnologia e futebol, Paulo combina suas duas paixões para criar soluções inovadoras."
+      }
+    }
+  },
   "common": {
     "accept": "Aceitar",
     "actions": "Ações",

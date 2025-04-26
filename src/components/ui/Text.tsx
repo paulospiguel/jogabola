@@ -4,6 +4,7 @@ import { cva, type VariantProps } from "class-variance-authority";
 const variantsText = cva("max-w-prose text-slate-700 dark:text-slate-300", {
   variants: {
     variant: {
+      p: "text-base leading-7 [&:not(:first-child)]:mt-6",
       label: "text-sm font-medium leading-none",
       h1: "scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl font-heading",
       h2: "scroll-m-20 font-heading border-b border-b-slate-200 pb-2 text-3xl font-semibold tracking-tight transition-colors first:mt-0 dark:border-b-slate-800 dark:text-slate-300 sm:text-4xl",
@@ -57,7 +58,7 @@ type TextProps = {
 
 export const Text = ({
   children,
-  variant,
+  variant = "p",
   className,
   fontSize = "md",
   fontWeight = "normal",
@@ -66,10 +67,10 @@ export const Text = ({
   return (
     <p
       className={cn(
+        colors[color || "primary"],
         variantsText({ variant, className }),
         fontSizes[fontSize],
         fontWeight,
-        colors[color || "primary"],
       )}
     >
       {children}

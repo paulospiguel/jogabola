@@ -64,7 +64,7 @@ export default function HeaderHome({ className }: { className?: string }) {
               {t("header.howItWorks")}
             </Link>
             <Link
-              href="#about"
+              href="/about"
               className="text-muted-foreground hover:text-foreground transition-colors dark:hover:text-teal-700"
             >
               {t("header.about")}

@@ -3,7 +3,7 @@
 import { Resend } from "resend";
 import { z } from "zod";
 
-const resend = new Resend(process.env.NEXT_PUBLIC_RESEND_API_KEY);
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 // Definir o schema dentro da função para evitar exportá-lo diretamente
 const contactSchema = z.object({
@@ -21,8 +21,7 @@ export async function sendEmail(input: ContactFormValues) {
     const { email, message, name, subject } = contactSchema.parse(input);
 
     const result = await resend.emails.send({
-      from:
-        process.env.NEXT_PUBLIC_RESEND_EMAIL_FROM || "no-reply@jogabola.fun",
+      from: process.env.RESEND_EMAIL_FROM || "no-reply@jogabola.fun",
       to: [email],
       subject: `${name} - ${subject || "Contact"}`,
       html: message,
