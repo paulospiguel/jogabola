@@ -20,20 +20,17 @@ const SearchParamsSchema = z.object({
 type SearchParams = z.infer<typeof SearchParamsSchema>;
 
 interface PageProps {
-  searchParams: SearchParams;
+  searchParams?: Record<string, string | string[] | undefined>;
 }
 
 export default async function TermsAndConditionsPage({
   searchParams,
 }: PageProps) {
-  const validatedParams = SearchParamsSchema.safeParse(searchParams);
-
+  const validatedParams = SearchParamsSchema.safeParse(searchParams ?? {});
   const locale = await getUserLocale();
-
   const params = validatedParams.success
     ? validatedParams.data
     : { modal: undefined, lang: undefined };
-
   const isModal = params.modal === "true";
   const lang = params.lang || locale || "pt";
 
@@ -62,7 +59,6 @@ export default async function TermsAndConditionsPage({
     <div className="flex min-h-screen flex-col gap-5">
       <HeaderHome className={isModal ? "hidden" : ""} />
       <div className="prose mx-auto max-w-3xl p-4">
-        {/**@ts-expect-error */}
         <ReactMarkdown>{markdown}</ReactMarkdown>
       </div>
       <Footer className={isModal ? "hidden" : ""} />
