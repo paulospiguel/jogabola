@@ -1,10 +1,9 @@
-
 import Footer from "@/components/footer";
 import HeaderHome from "@/components/header";
 import { getUserLocale } from "@/services/locale";
 import { supabase } from "@/services/supabase";
 import ReactMarkdown from "react-markdown";
-import { z } from 'zod';
+import { z } from "zod";
 
 // metadata
 export const metadata = {
@@ -15,7 +14,7 @@ export const metadata = {
 // Schema de validação
 const SearchParamsSchema = z.object({
   modal: z.string().optional(),
-  lang: z.string().optional()
+  lang: z.string().optional(),
 });
 
 type SearchParams = z.infer<typeof SearchParamsSchema>;
@@ -24,7 +23,9 @@ interface PageProps {
   searchParams: SearchParams;
 }
 
-export default async function TermsAndConditionsPage({ searchParams }: PageProps) {
+export default async function TermsAndConditionsPage({
+  searchParams,
+}: PageProps) {
   const validatedParams = SearchParamsSchema.safeParse(searchParams);
 
   const locale = await getUserLocale();
@@ -34,7 +35,7 @@ export default async function TermsAndConditionsPage({ searchParams }: PageProps
     : { modal: undefined, lang: undefined };
 
   const isModal = params.modal === "true";
-  const lang = (params.lang || locale || "pt");
+  const lang = params.lang || locale || "pt";
 
   const markdownPath = `${lang}/terms-and-conditions.md`;
 
@@ -55,13 +56,13 @@ export default async function TermsAndConditionsPage({ searchParams }: PageProps
     return text;
   };
 
-  const markdown = await fetchMarkdown() || "";
+  const markdown = (await fetchMarkdown()) || "";
 
   return (
     <div className="flex min-h-screen flex-col gap-5">
       <HeaderHome className={isModal ? "hidden" : ""} />
-      <div className="prose mx-auto p-4 max-w-3xl">
-        {/**@ts-ignore */}
+      <div className="prose mx-auto max-w-3xl p-4">
+        {/**@ts-expect-error */}
         <ReactMarkdown>{markdown}</ReactMarkdown>
       </div>
       <Footer className={isModal ? "hidden" : ""} />

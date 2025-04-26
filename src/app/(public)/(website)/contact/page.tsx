@@ -20,10 +20,10 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { SelectTrigger } from "@radix-ui/react-select";
-import { LuBook, LuBug, LuClock, LuHand, LuMailQuestion } from "react-icons/lu";
+import { LuBook, LuBug, LuHand, LuMailQuestion } from "react-icons/lu";
 import { sendEmail } from "@/actions/sendEmail";
 
-let subjects = [
+const subjects = [
   { value: "suggestion", label: "Suggestion", icon: LuBook },
   { value: "bug", label: "Bug", icon: LuBug },
   { value: "question", label: "Question", icon: LuMailQuestion },
@@ -77,7 +77,7 @@ export default function ContactPage() {
       const response = await sendEmail(data);
 
       if (!response.success) {
-        throw new Error(response.error?.message || t("contact.send_error"));
+        throw new Error(String(response.error || t("contact.send_error")));
       }
 
       setSuccess(true);

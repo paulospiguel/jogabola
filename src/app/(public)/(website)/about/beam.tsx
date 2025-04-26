@@ -1,7 +1,6 @@
 "use client";
 
-import { cn } from "@/lib/utils";
-import React, { forwardRef, useRef } from "react";
+import React, { useRef } from "react";
 
 import { AnimatedBeam, Circle } from "@/components/animated-beam";
 

@@ -4,14 +4,8 @@ import { motion } from "framer-motion";
 import { useTranslations } from "next-intl";
 import { infoBusiness } from "@/constants/infoBusiness";
 import { Text } from "@/components/ui/Text";
-import { LuCalendarClock, LuMail, LuPhone } from "react-icons/lu";
-import {
-  FaFacebook,
-  FaInstagram,
-  FaLinkedin,
-  FaTwitter,
-  FaYoutube,
-} from "react-icons/fa";
+import { LuCalendarClock, LuMail } from "react-icons/lu";
+import { FaInstagram, FaLinkedin, FaYoutube } from "react-icons/fa";
 import Image from "next/image";
 import Beam from "./beam";
 import { BackgroundBeamsWithCollision } from "@/components/background-beams-with-collision";

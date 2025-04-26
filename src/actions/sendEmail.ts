@@ -32,11 +32,20 @@ export async function sendEmail(input: ContactFormValues) {
       error: result.error,
       data: result.data,
     };
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("Erro ao enviar email:", error);
+    let errorMessage = "Erro desconhecido ao enviar email";
+    if (
+      error &&
+      typeof error === "object" &&
+      "message" in error &&
+      typeof (error as { message?: unknown }).message === "string"
+    ) {
+      errorMessage = (error as { message: string }).message;
+    }
     return {
       success: false,
-      error: error.message || "Erro desconhecido ao enviar email",
+      error: errorMessage,
       data: null,
     };
   }
