@@ -33,7 +33,7 @@ export default function Header() {
 
   return (
     <header className="bg-trasparent flex w-full items-center justify-between px-4 py-2">
-      {/* Container arredondado */}
+      {/* Header */}
       <div className="dark:bg-blue-850 flex w-full items-center justify-between rounded-full border bg-white px-6 py-2 shadow-md dark:border-gray-700">
         {/* Left side: Logo + Menu */}
         <div className="flex items-center space-x-6">
@@ -41,6 +41,8 @@ export default function Header() {
           <div className="flex items-center space-x-2">
             <Logo size="small" isAnimate />
           </div>
+
+          <Navbar className="hidden md:flex" />
         </div>
 
         <div className="flex items-center space-x-4">
@@ -48,8 +50,6 @@ export default function Header() {
           <div className="hidden items-center gap-2 rounded-full bg-transparent px-3 py-1 text-sm text-blue-900 md:visible md:flex">
             <LanguageSelector />
           </div>
-
-          <Navbar className="hidden md:flex" />
 
           {/* Launch Button */}
           <Link
