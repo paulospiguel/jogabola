@@ -181,7 +181,9 @@
     "about": "Sobre nós",
     "home": "Home",
     "howItWorks": "Como funciona",
-    "plans": "Planos"
+    "plans": "Planos",
+    "new": "Novo",
+    "launchJourney": "Iniciar jornada"
   },
   "homePage": {
     "createMyTeams": "Criar equipa",

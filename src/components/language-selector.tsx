@@ -62,7 +62,7 @@ export default function LanguageSelector({
       defaultValue={locale}
       onValueChange={onLanguageChange}
     >
-      <SelectTrigger className="w-[180px] dark:border-teal-700 dark:bg-zinc-800 dark:text-teal-700">
+      <SelectTrigger className="bg-dark dark:bg-blue-850 w-[180px] dark:border-teal-700 dark:text-teal-700">
         {isPending ? (
           <Globe className="size-6 animate-spin" />
         ) : (

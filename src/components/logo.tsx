@@ -68,7 +68,7 @@ export const Logo: React.FC<LogoProps> = ({
       <Image
         unoptimized
         src={logotipo}
-        alt=""
+        alt="Logo Jogabola"
         fill
         className="object-contain"
       />

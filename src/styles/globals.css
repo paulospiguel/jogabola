@@ -5,7 +5,7 @@
 @custom-variant dark (&:is(.dark *));
 
 .dark {
-  --background: oklch(0.145 0 0);
+  --background: var(--color-blue-850);
   --foreground: oklch(0.985 0 0);
   --card: oklch(0.205 0 0);
   --card-foreground: oklch(0.985 0 0);
@@ -40,6 +40,7 @@
 }
 
 :root {
+  --background: hsl(0, 0%, 100%);
   --background-primary: hsl(151, 100%, 32%);
   --background-primary-dark: hsl(147, 10%, 5%);
   --player-primary: hsl(18, 93%, 54%);
@@ -86,7 +87,15 @@
 
 @theme {
   --color-background: var(--background);
+  --color-background-dark: var(--color-blue-850);
   --color-foreground: var(--foreground);
+  --color-black: #0b0d17;
+  --color-blue: #72d0ff;
+  --color-yellow: #f2b824;
+  --color-green: #00ff00;
+  --color-blue-900: #1a1c2c;
+  --color-blue-800: #282854;
+  --color-blue-850: #18193b;
 
   --animate-fade-in-scale: fade-in-scale 0.3s ease-out;
   --animate-marquee-horizontal: marquee-x 0.5s infinite linear;
@@ -206,6 +215,10 @@
   }
   body {
     @apply bg-background text-foreground;
+  }
+  .dark body {
+    background-color: var(--color-background-dark);
+    color: var(--color-white);
   }
 }
 

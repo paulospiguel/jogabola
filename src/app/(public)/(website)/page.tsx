@@ -39,9 +39,8 @@ export default async function Home() {
   ];
 
   return (
-    <main className="relative flex flex-1 flex-col p-4 md:gap-4 md:p-8">
-      <div className="absolute inset-0 z-0 [background:radial-gradient(125%_125%_at_50%_0%,#fff_40%,#086_100%)] dark:[background:radial-gradient(125%_125%_at_50%_0%,#000_40%,#086_100%)]" />{" "}
-      <div className="z-10 w-full items-center px-5 py-24">
+    <main className="dark:from-blue-850 relative flex flex-1 flex-col bg-linear-to-b/srgb from-white to-teal-600 p-4 md:gap-4 md:p-8 dark:to-teal-600">
+      <div className="z-10 w-full items-center px-5 py-5">
         <section className="z-auto">
           <div className="mx-auto max-w-(--breakpoint-xl) px-4 py-8 text-center lg:px-12 lg:py-16">
             <div className="mb-7 inline-flex items-center justify-center rounded-full bg-gray-100 px-1 py-1 pr-4 text-sm text-gray-700 hover:bg-gray-200 dark:bg-gray-800 dark:text-white dark:hover:bg-gray-700">
@@ -82,8 +81,8 @@ export default async function Home() {
               </Link>
             </div>
 
-            <h1 className="mb-4 text-4xl leading-none font-extrabold tracking-tight text-gray-900 md:text-5xl lg:text-6xl dark:text-white">
-              <span className="from-primary bg-linear-to-r to-gray-600 bg-clip-text text-transparent dark:to-white">
+            <h1 className="mb-4 text-4xl leading-none font-extrabold tracking-tight text-blue-800 md:text-5xl lg:text-6xl dark:text-white">
+              <span className="from-primary bg-linear-to-r to-teal-600 bg-clip-text text-transparent dark:to-white">
                 {t("homePage.title")}
               </span>
             </h1>

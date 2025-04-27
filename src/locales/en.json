@@ -161,7 +161,9 @@
     "about": "About us",
     "home": "Home",
     "howItWorks": "How it works",
-    "plans": "Plans"
+    "plans": "Plans",
+    "new": "New",
+    "launchJourney": "Launch journey"
   },
   "homePage": {
     "createMyTeams": "Create my teams",

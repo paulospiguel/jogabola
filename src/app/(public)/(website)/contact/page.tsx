@@ -158,7 +158,7 @@ export default function ContactPage() {
             type="submit"
             disabled={loading}
             aria-label={t("contact.send")}
-            className="float-right w-full md:min-w-[120px]"
+            className="float-right w-full rounded-4xl md:min-w-[120px] dark:bg-teal-800"
           >
             {loading ? (
               <Loading size="small" />
