@@ -23,7 +23,6 @@ import { useTranslations } from "next-intl";
 import Link from "next/link";
 import LanguageSelector from "./language-selector";
 import { ThemeToggle } from "./theme-toggle";
-import { Divider } from "./ui/divider";
 import { cn } from "@/lib/utils";
 
 export default function Header() {

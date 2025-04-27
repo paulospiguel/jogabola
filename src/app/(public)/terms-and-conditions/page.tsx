@@ -58,7 +58,7 @@ export default async function TermsAndConditionsPage({
 
   return (
     <div className="flex min-h-screen flex-col gap-5">
-      <HeaderHome className={isModal ? "hidden" : ""} />
+      <HeaderHome />
       <div className="prose mx-auto max-w-3xl p-4">
         <ReactMarkdown>{markdown}</ReactMarkdown>
       </div>
