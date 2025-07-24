@@ -14,383 +14,193 @@ export type Database = {
   }
   public: {
     Tables: {
-      event_attendance: {
+      countdowns: {
         Row: {
-          event_id: number
-          id: number
-          response_time: string | null
-          status: string
-          user_id: number
+          end_date: string | null
+          id: string
+          is_active: boolean
+          launch_date: string
+          slug: string
         }
         Insert: {
-          event_id: number
-          id?: number
-          response_time?: string | null
-          status: string
-          user_id: number
+          end_date?: string | null
+          id?: string
+          is_active?: boolean
+          launch_date: string
+          slug: string
         }
         Update: {
-          event_id?: number
-          id?: number
-          response_time?: string | null
-          status?: string
-          user_id?: number
+          end_date?: string | null
+          id?: string
+          is_active?: boolean
+          launch_date?: string
+          slug?: string
         }
         Relationships: []
       }
-      events: {
+      invitations: {
         Row: {
           created_at: string | null
-          description: string | null
-          end_time: string
-          id: number
-          opponent_team_id: number | null
-          start_time: string
-          team_id: number
-          title: string
-          type: string
-          venue_id: number | null
-        }
-        Insert: {
-          created_at?: string | null
-          description?: string | null
-          end_time: string
-          id?: number
-          opponent_team_id?: number | null
-          start_time: string
-          team_id: number
-          title: string
-          type: string
-          venue_id?: number | null
-        }
-        Update: {
-          created_at?: string | null
-          description?: string | null
-          end_time?: string
-          id?: number
-          opponent_team_id?: number | null
-          start_time?: string
-          team_id?: number
-          title?: string
-          type?: string
-          venue_id?: number | null
-        }
-        Relationships: []
-      }
-      match_results: {
-        Row: {
-          away_score: number | null
-          event_id: number
-          home_score: number | null
-          id: number
-          status: string | null
-        }
-        Insert: {
-          away_score?: number | null
-          event_id: number
-          home_score?: number | null
-          id?: number
-          status?: string | null
-        }
-        Update: {
-          away_score?: number | null
-          event_id?: number
-          home_score?: number | null
-          id?: number
-          status?: string | null
-        }
-        Relationships: []
-      }
-      messages: {
-        Row: {
-          content: string
-          created_at: string | null
-          id: number
-          is_read: boolean | null
-          recipient_id: number | null
-          sender_id: number
-          team_id: number | null
-        }
-        Insert: {
-          content: string
-          created_at?: string | null
-          id?: number
-          is_read?: boolean | null
-          recipient_id?: number | null
-          sender_id: number
-          team_id?: number | null
-        }
-        Update: {
-          content?: string
-          created_at?: string | null
-          id?: number
-          is_read?: boolean | null
-          recipient_id?: number | null
-          sender_id?: number
-          team_id?: number | null
-        }
-        Relationships: []
-      }
-      player_profiles: {
-        Row: {
-          bio: string | null
-          date_of_birth: string | null
-          height: number | null
-          id: number
-          is_active: boolean | null
-          number: number | null
-          position: string | null
-          preferred_foot: string | null
-          skills: Json | null
-          user_id: number
-          weight: number | null
-        }
-        Insert: {
-          bio?: string | null
-          date_of_birth?: string | null
-          height?: number | null
-          id?: number
-          is_active?: boolean | null
-          number?: number | null
-          position?: string | null
-          preferred_foot?: string | null
-          skills?: Json | null
-          user_id: number
-          weight?: number | null
-        }
-        Update: {
-          bio?: string | null
-          date_of_birth?: string | null
-          height?: number | null
-          id?: number
-          is_active?: boolean | null
-          number?: number | null
-          position?: string | null
-          preferred_foot?: string | null
-          skills?: Json | null
-          user_id?: number
-          weight?: number | null
-        }
-        Relationships: []
-      }
-      polls: {
-        Row: {
-          created_at: string | null
-          created_by: number
-          description: string | null
+          email: string
           expires_at: string | null
-          id: number
-          options: Json
-          team_id: number
-          title: string
+          id: string
+          invite_code: string | null
+          status: string | null
+          team_id: string | null
         }
         Insert: {
           created_at?: string | null
-          created_by: number
-          description?: string | null
+          email: string
           expires_at?: string | null
-          id?: number
-          options: Json
-          team_id: number
-          title: string
+          id?: string
+          invite_code?: string | null
+          status?: string | null
+          team_id?: string | null
         }
         Update: {
           created_at?: string | null
-          created_by?: number
-          description?: string | null
+          email?: string
           expires_at?: string | null
-          id?: number
-          options?: Json
-          team_id?: number
-          title?: string
+          id?: string
+          invite_code?: string | null
+          status?: string | null
+          team_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "invitations_team_id_fkey"
+            columns: ["team_id"]
+            isOneToOne: false
+            referencedRelation: "teams"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      profiles: {
+        Row: {
+          created_at: string | null
+          email: string | null
+          id: string
+          photo_url: string | null
+          updated_at: string | null
+          username: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          email?: string | null
+          id: string
+          photo_url?: string | null
+          updated_at?: string | null
+          username?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          email?: string | null
+          id?: string
+          photo_url?: string | null
+          updated_at?: string | null
+          username?: string | null
         }
         Relationships: []
       }
       team_members: {
         Row: {
-          id: number
-          is_starter: boolean | null
+          approved_at: string | null
+          approved_by: string | null
+          id: string
+          invite_code: string | null
           joined_at: string | null
-          team_id: number
-          user_id: number
+          role: string | null
+          status: string | null
+          team_id: string | null
+          user_id: string | null
         }
         Insert: {
-          id?: number
-          is_starter?: boolean | null
+          approved_at?: string | null
+          approved_by?: string | null
+          id?: string
+          invite_code?: string | null
           joined_at?: string | null
-          team_id: number
-          user_id: number
+          role?: string | null
+          status?: string | null
+          team_id?: string | null
+          user_id?: string | null
         }
         Update: {
-          id?: number
-          is_starter?: boolean | null
+          approved_at?: string | null
+          approved_by?: string | null
+          id?: string
+          invite_code?: string | null
           joined_at?: string | null
-          team_id?: number
-          user_id?: number
+          role?: string | null
+          status?: string | null
+          team_id?: string | null
+          user_id?: string | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "team_members_approved_by_fkey"
+            columns: ["approved_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "team_members_team_id_fkey"
+            columns: ["team_id"]
+            isOneToOne: false
+            referencedRelation: "teams"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "team_members_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       teams: {
         Row: {
           created_at: string | null
-          id: number
-          location: string | null
+          created_by: string | null
+          description: string | null
+          id: string
           logo_url: string | null
-          manager_id: number
+          max_players: number | null
           name: string
-          short_name: string
-          team_size: number
+          updated_at: string | null
         }
         Insert: {
           created_at?: string | null
-          id?: number
-          location?: string | null
+          created_by?: string | null
+          description?: string | null
+          id?: string
           logo_url?: string | null
-          manager_id: number
+          max_players?: number | null
           name: string
-          short_name: string
-          team_size: number
+          updated_at?: string | null
         }
         Update: {
           created_at?: string | null
-          id?: number
-          location?: string | null
+          created_by?: string | null
+          description?: string | null
+          id?: string
           logo_url?: string | null
-          manager_id?: number
+          max_players?: number | null
           name?: string
-          short_name?: string
-          team_size?: number
+          updated_at?: string | null
         }
-        Relationships: []
-      }
-      users: {
-        Row: {
-          auth_id: string | null
-          auth_provider: string | null
-          avatar: string | null
-          created_at: string | null
-          email: string
-          full_name: string
-          id: number
-          is_onboarded: boolean | null
-          language: string | null
-          password: string | null
-          user_type: string | null
-          username: string
-        }
-        Insert: {
-          auth_id?: string | null
-          auth_provider?: string | null
-          avatar?: string | null
-          created_at?: string | null
-          email: string
-          full_name: string
-          id?: number
-          is_onboarded?: boolean | null
-          language?: string | null
-          password?: string | null
-          user_type?: string | null
-          username: string
-        }
-        Update: {
-          auth_id?: string | null
-          auth_provider?: string | null
-          avatar?: string | null
-          created_at?: string | null
-          email?: string
-          full_name?: string
-          id?: number
-          is_onboarded?: boolean | null
-          language?: string | null
-          password?: string | null
-          user_type?: string | null
-          username?: string
-        }
-        Relationships: []
-      }
-      venues: {
-        Row: {
-          address: string
-          contact_info: string | null
-          id: number
-          latitude: number | null
-          longitude: number | null
-          name: string
-          price_per_hour: number | null
-        }
-        Insert: {
-          address: string
-          contact_info?: string | null
-          id?: number
-          latitude?: number | null
-          longitude?: number | null
-          name: string
-          price_per_hour?: number | null
-        }
-        Update: {
-          address?: string
-          contact_info?: string | null
-          id?: number
-          latitude?: number | null
-          longitude?: number | null
-          name?: string
-          price_per_hour?: number | null
-        }
-        Relationships: []
-      }
-      votes: {
-        Row: {
-          id: number
-          option_index: number
-          poll_id: number
-          user_id: number
-          voted_at: string | null
-        }
-        Insert: {
-          id?: number
-          option_index: number
-          poll_id: number
-          user_id: number
-          voted_at?: string | null
-        }
-        Update: {
-          id?: number
-          option_index?: number
-          poll_id?: number
-          user_id?: number
-          voted_at?: string | null
-        }
-        Relationships: []
-      }
-      weather_data: {
-        Row: {
-          conditions: string | null
-          event_id: number
-          fetched_at: string | null
-          id: number
-          precipitation: number | null
-          temperature: number | null
-          wind_speed: number | null
-        }
-        Insert: {
-          conditions?: string | null
-          event_id: number
-          fetched_at?: string | null
-          id?: number
-          precipitation?: number | null
-          temperature?: number | null
-          wind_speed?: number | null
-        }
-        Update: {
-          conditions?: string | null
-          event_id?: number
-          fetched_at?: string | null
-          id?: number
-          precipitation?: number | null
-          temperature?: number | null
-          wind_speed?: number | null
-        }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "teams_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
       }
     }
     Views: {
@@ -400,7 +210,7 @@ export type Database = {
       [_ in never]: never
     }
     Enums: {
-      [_ in never]: never
+      team_role: "player" | "captain" | "coach" | "owner"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -527,6 +337,8 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      team_role: ["player", "captain", "coach", "owner"],
+    },
   },
 } as const
