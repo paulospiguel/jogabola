@@ -19,7 +19,8 @@ const menuHome = {
     },
     {
       label: "menu.marketplace",
-      href: "marketplace.jogabola.fun",
+      href: "marketplace",
+      isExternal: true,
       icon: null,
     },
     {
@@ -72,12 +73,14 @@ const menuHome = {
     href: string;
     isNew?: boolean;
     icon: typeof TypeIcon | null;
+    isExternal?: boolean;
   }[];
   footer: {
     label: string;
     href: string;
     isNew?: boolean;
     icon: typeof TypeIcon | null;
+    isExternal?: boolean;
   }[];
 };
 
