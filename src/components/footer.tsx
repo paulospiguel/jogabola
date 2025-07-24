@@ -4,6 +4,7 @@ import { Logo } from "./logo";
 import { DiscordIcon, Instagram, XTwitter } from "./icons";
 import { getTranslations } from "next-intl/server";
 import { COMPANY, TRANSLATION_KEYS } from "@/constants/app";
+import menuHome from "@/constants/menu-home";
 
 type FooterProps = {
   className?: string;
@@ -51,41 +52,19 @@ export default async function Footer({ className }: FooterProps) {
           </div>
 
           <ul className="mt-12 flex flex-wrap justify-center gap-6 md:gap-8 lg:mt-0 lg:justify-end lg:gap-12">
-            <li>
-              <Link
-                className="text-gray-700 transition hover:text-gray-700/75 dark:text-teal-700"
-                href="/contact"
-              >
-                {t("footer.contact")}
-              </Link>
-            </li>
-
-            <li>
-              <Link
-                className="text-gray-700 transition hover:text-gray-700/75 dark:text-teal-700"
-                href="#"
-              >
-                {t("footer.faq")}
-              </Link>
-            </li>
-
-            <li>
-              <Link
-                className="text-gray-700 transition hover:text-gray-700/75 dark:text-teal-700"
-                href="#"
-              >
-                {t("footer.privacyPolicy")}
-              </Link>
-            </li>
-
-            <li>
-              <Link
-                className="text-gray-700 transition hover:text-gray-700/75 dark:text-teal-700"
-                href="/terms-and-conditions"
-              >
-                {t("footer.termsAndConditions")}
-              </Link>
-            </li>
+            {menuHome.footer.map(item => {
+              return (
+                <li key={item.label}>
+                  <Link
+                    href={item.href}
+                    className="flex items-center gap-2 text-sm text-gray-500 hover:text-gray-700"
+                  >
+                    {item.icon && <item.icon className="h-6 w-6" />}
+                    {t(item.label)}
+                  </Link>
+                </li>
+              );
+            })}
           </ul>
         </div>
 

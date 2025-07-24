@@ -117,6 +117,7 @@ const Navbar = ({ className }: { className?: string }) => {
             href={item.href}
             className="relative flex cursor-pointer items-center gap-1 hover:text-gray-300"
           >
+            {item.icon && <item.icon className="h-6 w-6" />}
             {t(item.label)}
             {item.isNew && (
               <span className="bg-yellow absolute -top-2 -right-5 rounded px-1 text-[10px] font-bold text-black">
