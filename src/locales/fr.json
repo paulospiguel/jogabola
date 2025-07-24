@@ -21,6 +21,19 @@
     "contact": "Contactez-nous",
     "follow_us": "Suivez-nous sur les Réseaux Sociaux"
   },
+  "menu": {
+    "home": "Accueil",
+    "ecosystem": "Ecosystème",
+    "community": "Communauté",
+    "marketplace": "Marché",
+    "academy": "Académie",
+    "about": "À propos",
+    "contact": "Contact",
+    "privacy": "Confidentialité",
+    "terms": "Conditions",
+    "blog": "Blog",
+    "howItWorks": "Comment ça fonctionne"
+  },
   "countDown": {
     "title": "Time left",
     "subtitle": "We're working hard to launch our incredible app.",

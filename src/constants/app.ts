@@ -13,7 +13,7 @@ export const COMPANY = {
     TWITTER: "https://x.com/jogabolafun",
   },
   // @deprecated - Use o sistema de tradução com TRANSLATION_KEYS.COMPANY.LEGAL_NAME
-  LEGAL_NAME: "JogaBola Fundation Ltda.",
+  LEGAL_NAME: "JogaBola é Diversão Ltda.",
   // @deprecated - Use o sistema de tradução com TRANSLATION_KEYS.COMPANY.SLOGAN
   SLOGAN: "O melhor lugar para encontrar sua malta e jogar uma pelada.",
 };

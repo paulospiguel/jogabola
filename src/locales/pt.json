@@ -185,6 +185,19 @@
     "new": "Novo",
     "launchJourney": "Iniciar jornada"
   },
+  "menu": {
+    "home": "Home",
+    "ecosystem": "Ecosistema",
+    "community": "Comunidade",
+    "marketplace": "Mercado",
+    "academy": "Academia",
+    "about": "Sobre",
+    "contact": "Contato",
+    "privacy": "Privacidade",
+    "terms": "Termos",
+    "blog": "Blog",
+    "howItWorks": "Como funciona"
+  },
   "homePage": {
     "createMyTeams": "Criar equipa",
     "description": "Monte a tua equipa, desafia os teus amigos e conquista a glória nos relvados. O campo chama-te. A vitória espera por ti!",
@@ -212,13 +225,18 @@
   "store": {
     "screen1": {
       "designation": "O melhor lugar para encontrar sua equipe e jogar futebol.",
-      "name": "JogaBola",
-      "quote": "O melhor lugar para encontrar sua equipe e jogar futebol.\n\nOrganize partidas, forme equipas e encontre campos disponíveis de maneira rápida e intuitiva.\n\nDescubra novas amizades, desafie outros times e viva a paixão pelo futebol onde quiser."
+      "name": "Login Social",
+      "quote": "Faça login com o seu Google ou Apple ID para continuar."
     },
     "screen2": {
-      "designation": "O melhor lugar para encontrar sua equipe e jogar futebol.",
-      "name": "JogaBola",
-      "quote": "O melhor lugar para encontrar sua equipe e jogar futebol.\n\nOrganize partidas, forme equipas e encontre campos disponíveis de maneira rápida e intuitiva.\n\nDescubra novas amizades, desafie outros times e viva a paixão pelo futebol onde quiser."
+      "designation": "Escolha a jornada que mais irá te ajudar a conquistar a glória.",
+      "name": "Cadastro de Jornada",
+      "quote": "Cadastre-se e crie sua jornada, e comece a conquistar a glória com modos personalizados para cada jornada."
+    },
+    "screen3": {
+      "designation": "Gerencie o tempo dos jogos e registre as estatísticas de cada partida.",
+      "name": "Timer",
+      "quote": "Acompanhe o desempenho de seus jogadores, monte estatísticas detalhadas e acompanhe o desempenho de sua equipe."
     }
   }
 }

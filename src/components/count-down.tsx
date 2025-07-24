@@ -56,7 +56,7 @@ const CountDownTimer = () => {
         .select("launch_date")
         .eq("slug", "launch-countdown")
         .eq("is_active", true)
-        .maybeSingle(); // allows no data without throwing error
+        .maybeSingle();
 
       if (error) {
         console.error("Erro a buscar o countdown:", error);

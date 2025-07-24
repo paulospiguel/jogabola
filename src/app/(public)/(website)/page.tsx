@@ -36,11 +36,21 @@ export default async function Home() {
       designation: t("store.screen2.designation"),
       src: "/assets/store/screen2.png",
     },
+    {
+      quote: t("store.screen3.quote"),
+      name: t("store.screen3.name"),
+      designation: t("store.screen3.designation"),
+      src: "/assets/store/screen3.png",
+    },
   ];
 
   return (
     <main className="dark:from-blue-850 relative flex flex-1 flex-col bg-linear-to-b/srgb from-white to-teal-600 p-4 md:gap-4 md:p-8 dark:to-teal-600">
       <div className="z-10 w-full items-center px-5 py-5">
+        <section className="mx-auto mt-2 flex flex-col items-center justify-center gap-6 rounded-2xl">
+          <CountDownTimer />
+        </section>
+
         <section className="z-auto">
           <div className="mx-auto max-w-(--breakpoint-xl) px-4 py-8 text-center lg:px-12 lg:py-16">
             <div className="mb-7 inline-flex items-center justify-center rounded-full bg-gray-100 px-1 py-1 pr-4 text-sm text-gray-700 hover:bg-gray-200 dark:bg-gray-800 dark:text-white dark:hover:bg-gray-700">
@@ -131,10 +141,6 @@ export default async function Home() {
               images={[fieldLogo, filaLogo, redBullLogo]}
             />
           </div>
-        </section>
-
-        <section className="mx-auto mt-2 flex flex-col items-center justify-center gap-6 rounded-2xl">
-          <CountDownTimer />
         </section>
 
         {/* Download App */}

@@ -157,6 +157,19 @@
     "privacyPolicy": "Privacy Policy",
     "termsAndConditions": "Terms and Conditions"
   },
+  "menu": {
+    "home": "Home",
+    "ecosystem": "Ecosystem",
+    "community": "Community",
+    "marketplace": "Marketplace",
+    "academy": "Academy",
+    "about": "About",
+    "contact": "Contact",
+    "privacy": "Privacy",
+    "terms": "Terms",
+    "blog": "Blog",
+    "howItWorks": "How it works"
+  },
   "header": {
     "about": "About us",
     "home": "Home",
@@ -196,6 +209,11 @@
       "designation": "The best place to find your team and play soccer."
     },
     "screen2": {
+      "quote": "The best place to find your team and play soccer.",
+      "name": "JogaBola",
+      "designation": "The best place to find your team and play soccer."
+    },
+    "screen3": {
       "quote": "The best place to find your team and play soccer.",
       "name": "JogaBola",
       "designation": "The best place to find your team and play soccer."

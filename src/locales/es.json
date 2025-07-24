@@ -72,6 +72,19 @@
   "aboutPage": {
     "title": "Acerca de"
   },
+  "menu": {
+    "home": "Inicio",
+    "ecosystem": "Ecosistema",
+    "community": "Comunidad",
+    "marketplace": "Mercado",
+    "academy": "Academia",
+    "about": "Acerca de",
+    "contact": "Contacto",
+    "privacy": "Privacidad",
+    "terms": "Términos",
+    "blog": "Blog",
+    "howItWorks": "Cómo funciona"
+  },
   "countDown": {
     "title": "Time left",
     "subtitle": "We're working hard to launch our incredible app.",

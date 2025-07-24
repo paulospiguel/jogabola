@@ -27,7 +27,7 @@ const LANGUAGES = {
     name: "locales.en",
   },
   pt: {
-    icon: "🇧🇷",
+    icon: "🇵🇹",
     name: "locales.pt",
   },
   es: {

@@ -11,9 +11,7 @@ import {
 } from "@/components/ui/menubar";
 import {
   Sheet,
-  SheetClose,
   SheetContent,
-  SheetDescription,
   SheetFooter,
   SheetHeader,
   SheetTitle,
@@ -24,6 +22,7 @@ import Link from "next/link";
 import LanguageSelector from "./language-selector";
 import { ThemeToggle } from "./theme-toggle";
 import { cn } from "@/lib/utils";
+import menuHome from "@/constants/menu-home";
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -111,27 +110,22 @@ const Navbar = ({ className }: { className?: string }) => {
         className,
       )}
     >
-      <Link
-        href="/"
-        className="flex cursor-pointer items-center gap-1 hover:text-gray-300"
-      >
-        {t("header.home")} <ChevronDown size={14} />
-      </Link>
-      <div className="flex cursor-pointer items-center gap-1 hover:text-gray-300">
-        {t("header.plans")} <ChevronDown size={14} />
-      </div>
-      <Link
-        href="/about"
-        className="flex cursor-pointer items-center gap-1 hover:text-gray-300"
-      >
-        {t("header.about")} <ChevronDown size={14} />
-      </Link>
-      <div className="relative flex cursor-pointer items-center gap-1 hover:text-gray-300">
-        {t("header.howItWorks")} <ChevronDown size={14} />
-        <span className="bg-yellow absolute -top-2 -right-5 rounded px-1 text-[10px] font-bold text-black">
-          {t("header.new")}
-        </span>
-      </div>
+      {menuHome.header.map(item => {
+        return (
+          <Link
+            key={item.label}
+            href={item.href}
+            className="relative flex cursor-pointer items-center gap-1 hover:text-gray-300"
+          >
+            {t(item.label)}
+            {item.isNew && (
+              <span className="bg-yellow absolute -top-2 -right-5 rounded px-1 text-[10px] font-bold text-black">
+                {t("header.new")}
+              </span>
+            )}
+          </Link>
+        );
+      })}
     </nav>
   );
 };
