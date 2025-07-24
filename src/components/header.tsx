@@ -116,7 +116,7 @@ const Navbar = ({ className }: { className?: string }) => {
         return (
           <Link
             key={item.label}
-            href={item.external ? `${item.href}.${MAIN_DOMAIN}` : item.href}
+            href={item.isExternal ? `https://${item.href}.${MAIN_DOMAIN}` : item.href}
             className="relative flex cursor-pointer items-center gap-1 hover:text-gray-300"
           >
             {item.icon && <item.icon className="h-6 w-6" />}
