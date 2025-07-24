@@ -24,6 +24,8 @@ import { ThemeToggle } from "./theme-toggle";
 import { cn } from "@/lib/utils";
 import menuHome from "@/constants/menu-home";
 
+const MAIN_DOMAIN = "jogabola.fun";
+
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
@@ -114,7 +116,7 @@ const Navbar = ({ className }: { className?: string }) => {
         return (
           <Link
             key={item.label}
-            href={item.href}
+            href={item.external ? `${item.href}.${MAIN_DOMAIN}` : item.href}
             className="relative flex cursor-pointer items-center gap-1 hover:text-gray-300"
           >
             {item.icon && <item.icon className="h-6 w-6" />}
