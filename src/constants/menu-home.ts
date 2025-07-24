@@ -19,7 +19,7 @@ const menuHome = {
     },
     {
       label: "menu.marketplace",
-      href: "/marketplace",
+      href: "marketplace.jogabola.fun",
       icon: null,
     },
     {
