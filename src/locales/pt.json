@@ -2,6 +2,81 @@
   "aboutPage": {
     "title": "Acerca de"
   },
+  "howItWorksPage": {
+    "title": "Como Funciona",
+    "subtitle": "Democratizando o Futebol",
+    "description": "Transformamos o futebol de base, amador e de bairro numa poderosa cadeia de talentos, bem-estar e saúde através de ferramentas inteligentes e acessíveis.",
+    "mission": {
+      "title": "Nossa Missão",
+      "description": "Profissionalizar e democratizar o futebol amador, oferecendo ferramentas poderosas que transformam paixão em oportunidade, talento em carreira, e comunidades em ecossistemas prósperos de desenvolvimento desportivo."
+    },
+    "howItWorks": {
+      "title": "Como Transformamos o Futebol",
+      "subtitle": "Através de tecnologia avançada e uma abordagem centrada na comunidade, criamos um ecossistema completo para o desenvolvimento do futebol."
+    },
+    "features": {
+      "connect": {
+        "title": "Conectar Comunidades",
+        "description": "Unimos jogadores, treinadores, clubes e fãs numa plataforma única que fortalece o ecossistema do futebol amador."
+      },
+      "technology": {
+        "title": "Tecnologia Inteligente",
+        "description": "Ferramentas avançadas de gestão, análise de performance e organização de competições ao alcance de todos."
+      },
+      "development": {
+        "title": "Desenvolvimento de Talentos",
+        "description": "Identificamos e desenvolvemos talentos através de um sistema de scouting e formação personalizada."
+      },
+      "global": {
+        "title": "Alcance Global",
+        "description": "Expandimos oportunidades além das fronteiras locais, conectando talentos a clubes e competições internacionais."
+      },
+      "analytics": {
+        "title": "Análise de Performance",
+        "description": "Dados detalhados e insights que ajudam jogadores e equipas a melhorar continuamente o seu desempenho."
+      },
+      "security": {
+        "title": "Ambiente Seguro",
+        "description": "Plataforma segura e confiável que protege dados e promove fair play em todas as interações."
+      }
+    },
+    "stats": {
+      "title": "Impacto Global",
+      "subtitle": "Números que demonstram como estamos a revolucionar o futebol amador em todo o mundo.",
+      "players": "Jogadores Ativos",
+      "clubs": "Clubes Parceiros",
+      "countries": "Países",
+      "games": "Jogos Organizados"
+    },
+    "objectives": {
+      "title": "Nossos Objetivos",
+      "democratization": {
+        "title": "Democratização",
+        "description": "Tornar ferramentas profissionais acessíveis a todos os níveis do futebol amador."
+      },
+      "professionalization": {
+        "title": "Profissionalização",
+        "description": "Elevar os padrões de organização e gestão no futebol de base e amador."
+      },
+      "wellness": {
+        "title": "Bem-estar",
+        "description": "Promover saúde física e mental através do desporto e da comunidade."
+      },
+      "vision2030": {
+        "title": "Visão 2030",
+        "description": "Ser a plataforma líder mundial na gestão e desenvolvimento do futebol amador, conectando milhões de jogadores e criando oportunidades em todos os continentes."
+      }
+    },
+    "cta": {
+      "title": "Junta-te à Revolução",
+      "description": "Faz parte da transformação do futebol amador. Juntos, vamos criar um futuro onde cada talento tem a oportunidade de brilhar.",
+      "button": "Começar Agora"
+    },
+    "buttons": {
+      "getStarted": "Começar Agora",
+      "learnMore": "Saber Mais"
+    }
+  },
   "about": {
     "title": "Sobre o Jogabola",
     "mission": "Nossa Missão",
@@ -144,7 +219,11 @@
     "teamPlayers": "Jogadores da equipe",
     "teamPlayersStats": "Estatísticas dos jogadores da equipe",
     "teamStats": "Estatísticas da equipa",
-    "title": "Título"
+    "title": "Título",
+    "light": "Claro",
+    "dark": "Escuro",
+    "system": "Sistema",
+    "toggleTheme": "Mudar o tema"
   },
   "company": {
     "description": "Encontre sua equipe ideal ou crie a sua própria, gerencie seus atletas e participe de ligas lendárias!",
@@ -186,25 +265,62 @@
     "launchJourney": "Iniciar jornada"
   },
   "menu": {
-    "home": "Home",
-    "ecosystem": "Ecosistema",
+    "home": "Início",
+    "ecosystem": "Ecossistema",
     "community": "Comunidade",
-    "marketplace": "Mercado",
+    "marketplace": "Marketplace",
     "academy": "Academia",
+    "howItWorks": "Como Funciona",
+    "becomePartner": "Tornar-se Parceiro",
     "about": "Sobre",
-    "contact": "Contato",
+    "contact": "Contacto",
     "privacy": "Privacidade",
     "terms": "Termos",
     "blog": "Blog",
-    "howItWorks": "Como funciona"
+    "privacyAndTerms": "Privacidade e Termos"
+  },
+  "becomePartnerPage": {
+    "title": "Torna-te Nosso Parceiro",
+    "subtitle": "Junta-te a nós na revolução do futebol amador",
+    "description": "Juntos, vamos criar oportunidades únicas e transformar paixão em sucesso.",
+    "benefits": {
+      "title": "Porquê Ser Nosso Parceiro?",
+      "subtitle": "Descubra as vantagens exclusivas de fazer parte do ecossistema JogaBola"
+    },
+    "categories": {
+      "title": "Escolha o Seu Nível de Parceria",
+      "subtitle": "Temos opções flexíveis para empresas de todos os tamanhos"
+    },
+    "form": {
+      "title": "Vamos Conversar",
+      "subtitle": "Preencha o formulário e entraremos em contacto em 24 horas",
+      "submit": "Enviar Candidatura",
+      "submitting": "Enviando..."
+    }
   },
   "homePage": {
     "createMyTeams": "Criar equipa",
     "description": "Monte a tua equipa, desafia os teus amigos e conquista a glória nos relvados. O campo chama-te. A vitória espera por ti!",
     "sponsors": "Patrocinadores",
+    "partnersSection": {
+      "title": "Nossos Parceiros",
+      "subtitle": "Juntos, estamos a revolucionar o futebol amador com o apoio de marcas que acreditam na nossa visão.",
+      "emptyState": {
+        "title": "Em Busca de Parceiros Visionários",
+        "description": "Estamos numa fase emocionante de crescimento e procuramos parceiros que partilhem a nossa paixão por transformar o mundo do futebol amador. Juntos, podemos criar oportunidades únicas e revolucionar o desporto que tanto amamos.",
+        "makePartner": "Torna-te Nosso Parceiro",
+        "features": [
+          "Visibilidade global na nossa plataforma",
+          "Acesso a uma comunidade apaixonada",
+          "Oportunidades de co-criação de conteúdo",
+          "Impacto real no desenvolvimento do futebol"
+        ]
+      },
+      "makePartner": "Torna-te Nosso Parceiro"
+    },
     "startMyJourney": "Iniciar Minha Jornada",
     "title": "Pronto para montar sua equipe dos sonhos?",
-    "watchVideo": "Assista ao vídeo",
+    "watchVideo": "Video de apresentação",
     "downloadAppTitle": "Baixa o app e assuma o controlo de sua Jornada!",
     "downloadAppDescription": "Tenha a experiência completa do Jogabola no seu celular. Disponível para iOS e Android.",
     "downloadOnAppStore": "Baixar na App Store",
@@ -237,6 +353,198 @@
       "designation": "Gerencie o tempo dos jogos e registre as estatísticas de cada partida.",
       "name": "Timer",
       "quote": "Acompanhe o desempenho de seus jogadores, monte estatísticas detalhadas e acompanhe o desempenho de sua equipe."
+    }
+  },
+  "ecosystemPage": {
+    "title": "Ecosistema JogaBola",
+    "subtitle": "Uma suite completa de aplicações e plataformas para revolucionar o futebol amador. Desde a descoberta de equipas até à gestão profissional de ligas.",
+    "apps": {
+      "jogabola-mobile": {
+        "name": "JogaBola Mobile",
+        "description": "App principal para jogadores encontrarem equipas e campos"
+      },
+      "jogabola-web": {
+        "name": "JogaBola Web",
+        "description": "Plataforma web completa para gestão de equipas e ligas"
+      },
+      "jogabola-community": {
+        "name": "JogaBola Community",
+        "description": "Rede social para a comunidade do futebol amador"
+      },
+      "jogabola-timer": {
+        "name": "JogaBola Timer",
+        "description": "App de gestão avançada para treinos e partidas"
+      },
+      "jogabola-academy": {
+        "name": "JogaBola Academy",
+        "description": "Plataforma de treino e desenvolvimento de jogadores"
+      },
+      "jogabola-manager": {
+        "name": "JogaBola Manager",
+        "description": "Ferramenta avançada para gestores e treinadores"
+      },
+      "jogabola-events": {
+        "name": "JogaBola Events",
+        "description": "Sistema de gestão de torneios e eventos"
+      }
+    },
+    "status": {
+      "launched": "Disponível",
+      "beta": "Beta",
+      "comingSoon": "Em Breve"
+    },
+    "cta": {
+      "title": "Junta-te à Revolução do Futebol Amador",
+      "description": "Estamos a construir o futuro do futebol amador. Cada app do nosso ecosistema foi pensado para elevar a tua experiência no relvado.",
+      "startNow": "Começar Agora",
+      "learnMore": "Saber Mais"
+    }
+  },
+  "welcomePage": {
+    "title": "Bem-vindo ao JogaBola!",
+    "subtitle": "Estás prestes a embarcar numa jornada épica no mundo do futebol amador",
+    "description": "Vamos configurar a tua experiência perfeita em apenas alguns passos.",
+    "steps": {
+      "welcome": {
+        "title": "Bem-vindo ao JogaBola!",
+        "subtitle": "Estás prestes a embarcar numa jornada épica no mundo do futebol amador",
+        "description": "Vamos configurar a tua experiência perfeita em apenas alguns passos.",
+        "features": {
+          "journey": "Escolha da jornada",
+          "configuration": "Configuração personalizada",
+          "earlyAccess": "Acesso antecipado"
+        }
+      },
+      "journey": {
+        "title": "Escolhe a Tua Jornada",
+        "description": "Cada jornada oferece uma experiência única. Seleciona a que melhor se adequa aos teus objetivos.",
+        "roles": {
+          "player": {
+            "title": "Jogador",
+            "description": "Encontra equipas, melhora as tuas habilidades e conquista a glória",
+            "features": ["Encontrar equipas", "Estatísticas pessoais", "Torneios", "Treinos"]
+          },
+          "manager": {
+            "title": "Gestor/Treinador",
+            "description": "Gere a tua equipa, organiza treinos e lidera para a vitória",
+            "features": ["Gestão de equipa", "Planeamento de treinos", "Análise de performance", "Recrutamento"]
+          },
+          "coach": {
+            "title": "Treinador Especializado",
+            "description": "Desenvolve talentos e cria programas de treino personalizados",
+            "features": ["Programas de treino", "Desenvolvimento técnico", "Análise táctica", "Mentoria"]
+          },
+          "fan": {
+            "title": "Adepto/Organizador",
+            "description": "Organiza eventos, apoia equipas e conecta a comunidade",
+            "features": ["Organização de eventos", "Apoio a equipas", "Comunidade", "Networking"]
+          }
+        }
+      },
+      "profile": {
+        "title": "Vamos Conhecer-te Melhor",
+        "description": "Estas informações ajudam-nos a personalizar a tua experiência no JogaBola.",
+        "fields": {
+          "name": "Nome Completo",
+          "email": "Email",
+          "location": "Localização",
+          "experience": "Experiência no Futebol",
+          "availability": "Disponibilidade"
+        },
+        "experience": {
+          "beginner": "Iniciante - Estou a começar",
+          "intermediate": "Intermédio - Jogo regularmente",
+          "advanced": "Avançado - Jogo competitivamente",
+          "professional": "Profissional/Semi-profissional"
+        },
+        "availability": {
+          "weekends": "Fins de semana",
+          "evenings": "Noites durante a semana",
+          "flexible": "Horário flexível",
+          "specific": "Horários específicos"
+        }
+      },
+      "goals": {
+        "title": "Quais São os Teus Objetivos?",
+        "description": "Seleciona todos os objetivos que se aplicam a ti. Isto ajuda-nos a sugerir as melhores funcionalidades.",
+        "options": {
+          "improve-skills": "Melhorar habilidades",
+          "find-team": "Encontrar uma equipa",
+          "organize-games": "Organizar jogos",
+          "track-stats": "Acompanhar estatísticas",
+          "make-friends": "Fazer novos amigos",
+          "compete": "Competir em torneios",
+          "coach-others": "Treinar outros",
+          "stay-fit": "Manter-me em forma",
+          "have-fun": "Divertir-me"
+        }
+      },
+      "waitlist": {
+        "title": "Junta-te à Lista de Espera",
+        "description": "Sê um dos primeiros a experimentar as nossas aplicações quando forem lançadas. Seleciona as que te interessam mais.",
+        "preferences": {
+          "title": "Preferências de Comunicação",
+          "notifications": "Receber notificações sobre atualizações",
+          "newsletter": "Subscrever newsletter com dicas e novidades",
+          "earlyAccess": "Acesso antecipado a novas funcionalidades"
+        }
+      }
+    },
+    "navigation": {
+      "previous": "Anterior",
+      "next": "Próximo",
+      "finish": "Finalizar Configuração",
+      "step": "Passo",
+      "of": "de",
+      "completed": "concluído"
+    }
+  },
+  "profile": {
+    "title": "Vamos Conhecer-te Melhor",
+    "description": "Estas informações ajudam-nos a personalizar a tua experiência no JogaBola.",
+    "fields": {
+      "name": "Nome Completo",
+      "email": "Email",
+      "location": "Localização",
+      "experience": "Experiência no Futebol",
+      "availability": "Disponibilidade"
+    },
+    "experience": {
+      "beginner": "Iniciante - Estou a começar",
+      "intermediate": "Intermédio - Jogo regularmente",
+      "advanced": "Avançado - Jogo competitivamente",
+      "professional": "Profissional/Semi-profissional"
+    },
+    "availability": {
+      "weekends": "Fins de semana",
+      "evenings": "Noites durante a semana",
+      "flexible": "Horário flexível",
+      "specific": "Horários específicos"
+    }
+  },
+  "goals": {
+    "title": "Quais São os Teus Objetivos?",
+    "description": "Seleciona todos os objetivos que se aplicam a ti. Isto ajuda-nos a sugerir as melhores funcionalidades.",
+    "options": {
+      "improve-skills": "Melhorar habilidades",
+      "find-team": "Encontrar uma equipa",
+      "organize-games": "Organizar jogos",
+      "track-stats": "Acompanhar estatísticas",
+      "make-friends": "Fazer novos amigos",
+      "compete": "Competir em torneios",
+      "coach-others": "Treinar outros",
+      "stay-fit": "Manter-me em forma",
+      "have-fun": "Divertir-me"
+    }
+  },
+  "waitlist": {
+    "title": "Junta-te à Lista de Espera",
+    "description": "Sê um dos primeiros a experimentar as nossas aplicações quando forem lançadas. Seleciona as que te interessam mais.",
+    "preferences": {
+      "title": "Preferências de Comunicação",
+      "notifications": "Receber notificações sobre atualizações",
+      "newsletter": "Subscrever newsletter com dicas e novidades",
+      "earlyAccess": "Acesso antecipado a novas funcionalidades"
     }
   }
 }
