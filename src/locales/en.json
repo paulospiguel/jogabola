@@ -144,7 +144,11 @@
     "teamPlayers": "Team players",
     "teamPlayersStats": "Team player statistics",
     "teamStats": "Team statistics",
-    "title": "Title"
+    "title": "Title",
+    "light": "Light",
+    "dark": "Dark",
+    "system": "System",
+    "toggleTheme": "Toggle theme"
   },
   "company": {
     "description": "Find your ideal team or create your own, manage your athletes and participate in legendary leagues!",
@@ -168,7 +172,8 @@
     "privacy": "Privacy",
     "terms": "Terms",
     "blog": "Blog",
-    "howItWorks": "How it works"
+    "howItWorks": "How it works",
+    "privacyAndTerms": "Privacy and Terms"
   },
   "header": {
     "about": "About us",
@@ -184,7 +189,7 @@
     "sponsors": "Sponsors",
     "startMyJourney": "Start my journey",
     "title": "Ready to build your dream team?",
-    "watchVideo": "Watch video",
+    "watchVideo": "Presentation video",
     "downloadAppTitle": "Download the app and take control of your journey!",
     "downloadAppDescription": "Get the full Jogabola experience on your phone. Available for iOS and Android.",
     "downloadOnAppStore": "Download on the App Store",
