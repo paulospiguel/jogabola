@@ -1,6 +1,6 @@
 "use client";
-import { useState, useEffect } from "react";
-import { Settings, Menu, Grid } from "lucide-react";
+import { useState } from "react";
+import { ChevronDown, Settings, Menu } from "lucide-react";
 import { Logo } from "./logo";
 import {
   Menubar,
@@ -23,57 +23,18 @@ import LanguageSelector from "./language-selector";
 import { ThemeToggle } from "./theme-toggle";
 import { cn } from "@/lib/utils";
 import menuHome from "@/constants/menu-home";
-import { motion } from "framer-motion";
-import { usePathname } from "next/navigation";
 
 const MAIN_DOMAIN = "jogabola.fun";
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [isScrolled, setIsScrolled] = useState(false);
-  const pathname = usePathname();
-  const isHome = pathname === "/";
 
   const t = useTranslations();
 
-  useEffect(() => {
-    const handleScroll = () => {
-      if (isHome) {
-        // Na home, muda de cor apenas quando passar da altura completa da viewport
-        const viewportHeight = window.innerHeight;
-        setIsScrolled(window.scrollY > viewportHeight);
-      } else {
-        // Em outras páginas, considera sempre como "scrolled" para manter o estilo verde
-        setIsScrolled(true);
-      }
-    };
-
-    // Executa imediatamente para páginas que não são home
-    handleScroll();
-
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, [isHome]);
-
   return (
-    <motion.header
-      initial={{ y: -100, opacity: 0 }}
-      animate={{ y: 0, opacity: 1 }}
-      transition={{ duration: 0.8, delay: 0.2 }}
-      className={cn(
-        "fixed top-0 right-0 left-0 z-50 flex w-full items-center justify-between px-4 py-2 transition-all duration-300",
-        "bg-transparent",
-      )}
-    >
-      {/* Header Container */}
-      <div
-        className={cn(
-          "flex w-full items-center justify-between rounded-full px-6 py-2 transition-all duration-300",
-          isScrolled || !isHome
-            ? "border border-emerald-200/50 bg-white/90 shadow-xl backdrop-blur-md dark:border-emerald-700/30 dark:bg-slate-900/90"
-            : "border border-white/20 bg-white/10 shadow-lg backdrop-blur-md",
-        )}
-      >
+    <header className="bg-trasparent flex w-full items-center justify-between px-4 py-2">
+      {/* Header */}
+      <div className="dark:bg-blue-850 flex w-full items-center justify-between rounded-full border bg-white px-6 py-2 shadow-md dark:border-gray-700">
         {/* Left side: Logo + Menu */}
         <div className="flex items-center space-x-6">
           {/* Logo */}
@@ -81,35 +42,19 @@ export default function Header() {
             <Logo size="small" isAnimate />
           </div>
 
-          <Navbar
-            className="hidden md:flex"
-            isScrolled={isScrolled}
-            isHome={isHome}
-          />
+          <Navbar className="hidden md:flex" />
         </div>
 
         <div className="flex items-center space-x-4">
           {/* Language Selector */}
-          <div
-            className={cn(
-              "hidden items-center gap-2 rounded-full bg-transparent px-3 py-1 text-sm transition-colors duration-300 md:visible md:flex",
-              isScrolled || !isHome
-                ? "text-emerald-700 dark:text-emerald-400"
-                : "text-white",
-            )}
-          >
+          <div className="hidden items-center gap-2 rounded-full bg-transparent px-3 py-1 text-sm text-blue-900 md:visible md:flex">
             <LanguageSelector />
           </div>
 
           {/* Launch Button */}
           <Link
             href="/welcome"
-            className={cn(
-              "hidden rounded-full px-4 py-2 font-semibold shadow-md transition-all duration-300 hover:scale-105 md:visible md:block",
-              isScrolled || !isHome
-                ? "bg-emerald-600 text-white hover:bg-emerald-700 dark:bg-emerald-700 dark:hover:bg-emerald-600"
-                : "bg-emerald-500/80 text-white backdrop-blur-sm hover:bg-emerald-600/90",
-            )}
+            className="hidden rounded-full bg-blue-800 px-4 py-2 font-semibold text-white shadow-md md:visible md:block dark:bg-teal-800"
           >
             {t("header.launchJourney")}
           </Link>
@@ -117,14 +62,7 @@ export default function Header() {
           {/* Settings Icon */}
           <Menubar className="hidden h-10 w-10 items-center justify-center p-0 md:flex">
             <MenubarMenu>
-              <MenubarTrigger
-                className={cn(
-                  "transition-colors duration-300 hover:scale-110",
-                  isScrolled || !isHome
-                    ? "text-emerald-600 hover:text-emerald-700 dark:text-emerald-400"
-                    : "text-white hover:text-emerald-200",
-                )}
-              >
+              <MenubarTrigger className="text-blue-800 transition hover:text-blue-900/80 dark:text-teal-600">
                 <Settings size={20} />
               </MenubarTrigger>
               <MenubarContent>
@@ -136,34 +74,21 @@ export default function Header() {
           </Menubar>
 
           {/* Mobile menu button */}
+
           <Sheet>
             <SheetTrigger asChild>
               <button
                 onClick={() => setIsMenuOpen(!isMenuOpen)}
-                className={cn(
-                  "transition-all duration-300 hover:scale-110 md:hidden",
-                  isScrolled || !isHome
-                    ? "text-emerald-600 hover:text-emerald-700"
-                    : "text-white hover:text-emerald-200",
-                )}
+                className="text-blue-800 transition hover:text-blue-900/80 md:hidden"
               >
                 <Menu size={24} />
               </button>
             </SheetTrigger>
-            <SheetContent
-              side={"right"}
-              className="h-screen bg-white/95 backdrop-blur-md dark:bg-slate-900"
-            >
+            <SheetContent side={"right"} className="dark:bg-blue-850 h-screen">
               <SheetHeader>
-                <SheetTitle className="text-emerald-700 dark:text-emerald-400">
-                  {"Menu"}
-                </SheetTitle>
+                <SheetTitle>{"Menu"}</SheetTitle>
               </SheetHeader>
-              <Navbar
-                className="items-start space-y-2 py-4 text-xl font-bold"
-                isScrolled={true}
-                isHome={isHome}
-              />
+              <Navbar className="items-start space-y-2 py-4 text-xl font-bold" />
               <SheetFooter>
                 <div className="my-4 flex gap-4">
                   <LanguageSelector />
@@ -174,53 +99,16 @@ export default function Header() {
           </Sheet>
         </div>
       </div>
-    </motion.header>
+    </header>
   );
 }
 
-const Navbar = ({
-  className,
-  isScrolled,
-  isHome,
-}: {
-  className?: string;
-  isScrolled?: boolean;
-  isHome?: boolean;
-}) => {
+const Navbar = ({ className }: { className?: string }) => {
   const t = useTranslations();
-
-  // Define as cores baseado na página e estado de scroll
-  const getTextColors = () => {
-    if (!isHome) {
-      // Em páginas que não são home, sempre verde
-      return {
-        default: "text-emerald-700 dark:text-emerald-400",
-        hover: "hover:text-emerald-500 dark:hover:text-emerald-300",
-      };
-    }
-
-    // Na home, depende do scroll
-    if (isScrolled) {
-      return {
-        default: "text-emerald-700 dark:text-emerald-400",
-        hover: "hover:text-emerald-500 dark:hover:text-emerald-300",
-      };
-    }
-
-    // Na home sem scroll, branco
-    return {
-      default: "text-white",
-      hover: "hover:text-emerald-200",
-    };
-  };
-
-  const colors = getTextColors();
-
   return (
     <nav
       className={cn(
-        "flex flex-col items-center space-x-6 text-sm transition-colors duration-300 md:flex-row",
-        colors.default,
+        "flex flex-col items-center space-x-6 text-sm text-blue-900 md:flex-row dark:text-teal-600",
         className,
       )}
     >
@@ -228,15 +116,8 @@ const Navbar = ({
         return (
           <Link
             key={item.label}
-            href={
-              item.isExternal
-                ? `https://${item.href}.${MAIN_DOMAIN}`
-                : item.href
-            }
-            className={cn(
-              "relative flex cursor-pointer items-center gap-1 transition-all duration-300 hover:scale-105",
-              colors.hover,
-            )}
+            href={item.isExternal ? `https://${item.href}.${MAIN_DOMAIN}` : item.href}
+            className="relative flex cursor-pointer items-center gap-1 hover:text-gray-300"
           >
             {item.icon && <item.icon className="h-6 w-6" />}
             {t(item.label)}
