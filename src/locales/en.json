@@ -1,0 +1,247 @@
+{
+  "aboutPage": {
+    "title": "About"
+  },
+  "about": {
+    "title": "About Jogabola",
+    "mission": "Our Mission",
+    "vision": "Our Vision",
+    "values": "Our Values",
+    "mission_vision_values": "Mission, Vision and Values",
+    "benefits": "Benefits",
+    "team": "Our Team",
+    "history": "Our History",
+    "history_text": "Jogabola was founded in {year} with the goal of transforming how people organize and participate in soccer games. Since then, we have worked tirelessly to make soccer more accessible to everyone.",
+    "history_operating": "Operating for {years} years",
+    "statistics": "Our Numbers",
+    "statistics_users": "Users",
+    "statistics_fields": "Fields",
+    "statistics_games": "Games",
+    "statistics_cities": "Cities",
+    "contact": "Contact Us",
+    "follow_us": "Follow Us on Social Media"
+  },
+  "business": {
+    "name": "Jogabola",
+    "slogan": "The best place to find your team and play soccer.",
+    "shortDescription": "The platform that connects soccer lovers with nearby sports fields.",
+    "longDescription": "Jogabola was born from a passion for soccer and the difficulty in organizing matches between friends. Our platform connects passionate players with available fields, simplifying the booking process and helping to form new sports communities.",
+    "mission": "Democratize access to soccer by connecting players and fields in a simple and intuitive way.",
+    "vision": "To be the leading platform connecting players and soccer fields in Brazil.",
+    "values": {
+      "passion": {
+        "title": "Passion for Sport",
+        "description": "We believe in the power of soccer to unite people and communities."
+      },
+      "accessibility": {
+        "title": "Accessibility",
+        "description": "We work to make soccer accessible to everyone, regardless of skill level."
+      },
+      "community": {
+        "title": "Community",
+        "description": "We foster the creation of new friendships and communities through sport."
+      },
+      "innovation": {
+        "title": "Innovation",
+        "description": "We constantly seek new ways to improve our users' experience."
+      }
+    },
+    "benefits": {
+      "findNearby": {
+        "title": "Find Nearby Games",
+        "description": "Locate fields and matches near you with just a few clicks."
+      },
+      "reserveFields": {
+        "title": "Reserve Fields",
+        "description": "Book fields quickly and securely, without complications."
+      },
+      "joinTournaments": {
+        "title": "Join Tournaments",
+        "description": "Sign up for local tournaments and showcase your skills."
+      },
+      "connectPlayers": {
+        "title": "Connect with Players",
+        "description": "Meet other soccer enthusiasts and expand your network."
+      }
+    },
+    "team": {
+      "paulo": {
+        "name": "Paulo Spiguel",
+        "role": "Founder & Developer",
+        "bio": "Passionate about technology and soccer, Paulo combines his two passions to create innovative solutions."
+      }
+    }
+  },
+  "countDown": {
+    "title": "Time left",
+    "subtitle": "We're working hard to launch our incredible app.",
+    "days": "Days",
+    "months": "Months",
+    "years": "Years",
+    "weeks": "Weeks",
+    "hours": "Hours",
+    "minutes": "Minutes",
+    "seconds": "Seconds",
+    "day": "Day",
+    "month": "Month",
+    "year": "Year",
+    "week": "Week",
+    "hour": "Hour",
+    "minute": "Minute",
+    "second": "Second"
+  },
+  "common": {
+    "accept": "Accept",
+    "actions": "Actions",
+    "back": "Back",
+    "cancel": "Cancel",
+    "city": "City",
+    "confirm": "Confirm",
+    "confirmPassword": "Confirm your password",
+    "copyright": "Copyright © {year}. All rights reserved.",
+    "close": "Close",
+    "create": "Create",
+    "date": "Date",
+    "decline": "Decline",
+    "delete": "Delete",
+    "description": "Description",
+    "edit": "Edit",
+    "email": "Email",
+    "error": "Error",
+    "finish": "Finish",
+    "join": "Joining",
+    "knowMore": "Know more",
+    "loading": "Loading",
+    "logo": "Then",
+    "manage": "Manage",
+    "name": "Name",
+    "next": "Next",
+    "password": "Password",
+    "performance": "Performance",
+    "player": "Player",
+    "playerDescription": "Player description",
+    "playerJouneys": "Player journeys",
+    "playerJouneysStats": "Player matchday statistics",
+    "playerMatches": "Player matches",
+    "playerMatchesStats": "Player's match statistics",
+    "playerName": "Player's name",
+    "playerRole": "Player's position",
+    "playerStats": "Player statistics",
+    "playerTeam": "Player's team",
+    "players": "Players",
+    "rights": "All rights reserved",
+    "role": "Position",
+    "save": "Save",
+    "season": "Season",
+    "success": "Success",
+    "team": "Team",
+    "teamDescription": "Team description",
+    "teamJouneys": "Team days",
+    "teamJouneysStats": "Team matchday statistics",
+    "teamMatches": "Team departures",
+    "teamMatchesStats": "Team match statistics",
+    "teamName": "Team name",
+    "teamPlayers": "Team players",
+    "teamPlayersStats": "Team player statistics",
+    "teamStats": "Team statistics",
+    "title": "Title",
+    "light": "Light",
+    "dark": "Dark",
+    "system": "System",
+    "toggleTheme": "Toggle theme"
+  },
+  "company": {
+    "description": "Find your ideal team or create your own, manage your athletes and participate in legendary leagues!",
+    "legalName": "JogaBola Foundation LLC",
+    "slogan": "The best place to find your crew and play soccer."
+  },
+  "footer": {
+    "contact": "Contact",
+    "faq": "FAQ",
+    "privacyPolicy": "Privacy Policy",
+    "termsAndConditions": "Terms and Conditions"
+  },
+  "menu": {
+    "home": "Home",
+    "ecosystem": "Ecosystem",
+    "community": "Community",
+    "marketplace": "Marketplace",
+    "academy": "Academy",
+    "about": "About",
+    "contact": "Contact",
+    "privacy": "Privacy",
+    "terms": "Terms",
+    "blog": "Blog",
+    "howItWorks": "How it works",
+    "privacyAndTerms": "Privacy and Terms"
+  },
+  "header": {
+    "about": "About us",
+    "home": "Home",
+    "howItWorks": "How it works",
+    "plans": "Plans",
+    "new": "New",
+    "launchJourney": "Launch journey"
+  },
+  "homePage": {
+    "createMyTeams": "Create my teams",
+    "description": "Build your team, challenge your friends, and conquer glory on the pitch.\nThe field is calling. Victory awaits you!",
+    "sponsors": "Sponsors",
+    "startMyJourney": "Start my journey",
+    "title": "Ready to build your dream team?",
+    "watchVideo": "Presentation video",
+    "downloadAppTitle": "Download the app and take control of your journey!",
+    "downloadAppDescription": "Get the full Jogabola experience on your phone. Available for iOS and Android.",
+    "downloadOnAppStore": "Download on the App Store",
+    "downloadOnGooglePlay": "Download on Google Play",
+    "appMockupAlt": "Jogabola app mockup"
+  },
+  "locales": {
+    "en": "English",
+    "es": "Spanish",
+    "fr": "French",
+    "placeholder": "Select a language",
+    "pt": "Portuguese"
+  },
+  "meta": {
+    "description": "The best place to find your crew and play soccer.",
+    "title": "JogaBola"
+  },
+  "store": {
+    "screen1": {
+      "quote": "The best place to find your team and play soccer.",
+      "name": "JogaBola",
+      "designation": "The best place to find your team and play soccer."
+    },
+    "screen2": {
+      "quote": "The best place to find your team and play soccer.",
+      "name": "JogaBola",
+      "designation": "The best place to find your team and play soccer."
+    },
+    "screen3": {
+      "quote": "The best place to find your team and play soccer.",
+      "name": "JogaBola",
+      "designation": "The best place to find your team and play soccer."
+    }
+  },
+  "contact": {
+    "title": "Contact",
+    "subtitle": "Get in touch with us",
+    "name_required": "Name is required",
+    "email_invalid": "Invalid email",
+    "email": "Email",
+    "message": "Message",
+    "name": "Name",
+    "phone": "Phone",
+    "send": "Send",
+    "subject": "Subject",
+    "send_error": "Error sending message",
+    "message_required": "Message is required",
+    "send_success": "Message sent successfully",
+    "suggestion": "Suggestion",
+    "complaint": "Complaint",
+    "question": "Question",
+    "bug": "Bug",
+    "other": "Other"
+  }
+}

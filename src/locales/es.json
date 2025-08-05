@@ -1,0 +1,235 @@
+{
+  "about": {
+    "title": "Sobre Jogabola",
+    "mission": "Nuestra Misión",
+    "vision": "Nuestra Visión",
+    "values": "Nuestros Valores",
+    "mission_vision_values": "Misión, Visión y Valores",
+    "benefits": "Beneficios",
+    "team": "Nuestro Equipo",
+    "history": "Nuestra Historia",
+    "history_text": "Jogabola fue fundada en {year} con el objetivo de transformar la forma en que las personas organizan y participan en partidos de fútbol. Desde entonces, hemos trabajado incansablemente para hacer que el fútbol sea más accesible para todos.",
+    "history_operating": "Operando durante {years} años",
+    "statistics": "Nuestros Números",
+    "statistics_users": "Usuarios",
+    "statistics_fields": "Campos",
+    "statistics_games": "Partidos",
+    "statistics_cities": "Ciudades",
+    "contact": "Contáctanos",
+    "follow_us": "Síguenos en Redes Sociales"
+  },
+  "business": {
+    "name": "Jogabola",
+    "slogan": "El mejor lugar para encontrar a tu equipo y jugar al fútbol.",
+    "shortDescription": "La plataforma que conecta a los amantes del fútbol con campos deportivos cercanos.",
+    "longDescription": "Jogabola nació de la pasión por el fútbol y la dificultad de organizar partidos entre amigos. Nuestra plataforma conecta a jugadores apasionados con campos disponibles, simplificando el proceso de reserva y ayudando a formar nuevas comunidades deportivas.",
+    "mission": "Democratizar el acceso al fútbol conectando a jugadores y campos de forma sencilla e intuitiva.",
+    "vision": "Ser la principal plataforma de conexión entre jugadores y campos de fútbol en Brasil.",
+    "values": {
+      "passion": {
+        "title": "Pasión por el Deporte",
+        "description": "Creemos en el poder del fútbol para unir a personas y comunidades."
+      },
+      "accessibility": {
+        "title": "Accesibilidad",
+        "description": "Trabajamos para hacer que el fútbol sea accesible para todos, independientemente del nivel de habilidad."
+      },
+      "community": {
+        "title": "Comunidad",
+        "description": "Fomentamos la creación de nuevas amistades y comunidades a través del deporte."
+      },
+      "innovation": {
+        "title": "Innovación",
+        "description": "Buscamos constantemente nuevas formas de mejorar la experiencia de nuestros usuarios."
+      }
+    },
+    "benefits": {
+      "findNearby": {
+        "title": "Encuentra partidos cercanos",
+        "description": "Localiza campos y partidos cerca de ti con solo unos clics."
+      },
+      "reserveFields": {
+        "title": "Reserva campos",
+        "description": "Haz reservas de campos de forma rápida y segura, sin complicaciones."
+      },
+      "joinTournaments": {
+        "title": "Participa en torneos",
+        "description": "Inscríbete en torneos locales y muestra tus habilidades."
+      },
+      "connectPlayers": {
+        "title": "Conéctate con jugadores",
+        "description": "Conoce a otros entusiastas del fútbol y amplía tu red de contactos."
+      }
+    },
+    "team": {
+      "paulo": {
+        "name": "Paulo Spiguel",
+        "role": "Fundador y Desarrollador",
+        "bio": "Apasionado por la tecnología y el fútbol, Paulo combina sus dos pasiones para crear soluciones innovadoras."
+      }
+    }
+  },
+  "aboutPage": {
+    "title": "Acerca de"
+  },
+  "menu": {
+    "home": "Inicio",
+    "ecosystem": "Ecosistema",
+    "community": "Comunidad",
+    "marketplace": "Mercado",
+    "academy": "Academia",
+    "about": "Acerca de",
+    "contact": "Contacto",
+    "privacy": "Privacidad",
+    "terms": "Términos",
+    "blog": "Blog",
+    "howItWorks": "Cómo funciona"
+  },
+  "countDown": {
+    "title": "Time left",
+    "subtitle": "We're working hard to launch our incredible app.",
+    "days": "Days",
+    "months": "Months",
+    "years": "Years",
+    "weeks": "Weeks",
+    "hours": "Hours",
+    "minutes": "Minutes",
+    "seconds": "Seconds",
+    "day": "Day",
+    "month": "Month",
+    "year": "Year",
+    "week": "Week",
+    "hour": "Hour",
+    "minute": "Minute",
+    "second": "Second"
+  },
+  "common": {
+    "accept": "Aceptar",
+    "actions": "Acciones",
+    "back": "Volver",
+    "cancel": "Cancelar",
+    "city": "Ciudad",
+    "confirm": "Confirmar",
+    "close": "Cerrar",
+    "confirmPassword": "Confirma tu contraseña",
+    "copyright": "Derechos de autor ©{year}. Todos los derechos reservados.",
+    "create": "Crear",
+    "date": "Fecha",
+    "decline": "Rechazar",
+    "delete": "Eliminar",
+    "description": "Descripción",
+    "edit": "Editar",
+    "email": "Correo electrónico",
+    "error": "Error",
+    "finish": "Finalizar",
+    "join": "Unirse",
+    "knowMore": "Conozca más",
+    "loading": "Cargando",
+    "logo": "Logo",
+    "manage": "Gestionar",
+    "name": "Nombre",
+    "next": "Siguiente",
+    "password": "Contraseña",
+    "performance": "Actuación",
+    "player": "Jugador",
+    "playerDescription": "Descripción del jugador",
+    "playerJouneys": "Viajes de los jugadores",
+    "playerJouneysStats": "Estadísticas de la jornada de los jugadores",
+    "playerMatches": "Partidas de jugadores",
+    "playerMatchesStats": "Estadísticas de partidos del jugador",
+    "playerName": "Nombre del jugador",
+    "playerRole": "Posición del jugador",
+    "playerStats": "Estadísticas de jugadores",
+    "playerTeam": "Equipo del jugador",
+    "players": "jugadores",
+    "rights": "Todos los derechos reservados",
+    "role": "Posición",
+    "save": "Guardar",
+    "season": "Temporada",
+    "success": "Éxito",
+    "team": "Equipo",
+    "teamDescription": "Descripción del equipo",
+    "teamJouneys": "Días de equipo",
+    "teamJouneysStats": "Estadísticas de la jornada por equipos",
+    "teamMatches": "Salidas de equipos",
+    "teamMatchesStats": "Estadísticas de partidos por equipos",
+    "teamName": "Nombre del equipo",
+    "teamPlayers": "Jugadores de equipo",
+    "teamPlayersStats": "Estadísticas de jugadores del equipo",
+    "teamStats": "Estadísticas del equipo",
+    "title": "Título"
+  },
+  "contact": {
+    "title": "Contacto",
+    "subtitle": "Ponte en contacto con nosotros",
+    "name_required": "El nombre es requerido",
+    "email_invalid": "Email inválido",
+    "email": "Email",
+    "message": "Mensaje",
+    "name": "Nombre",
+    "phone": "Teléfono",
+    "send": "Enviar",
+    "subject": "Asunto",
+    "send_error": "Error al enviar mensaje",
+    "message_required": "El mensaje es requerido",
+    "send_success": "Mensaje enviado con éxito",
+    "suggestion": "Sugerencia",
+    "complaint": "Queja",
+    "question": "Pregunta",
+    "other": "Otro",
+    "bug": "Error"
+  },
+  "company": {
+    "description": "¡Encuentra tu equipo ideal o crea el tuyo propio, gestiona a tus atletas y participa en ligas legendarias!",
+    "legalName": "Fundación JogaBola LLC",
+    "slogan": "El mejor lugar para encontrar a tu equipo y jugar al fútbol."
+  },
+  "footer": {
+    "contact": "Contacto",
+    "faq": "Preguntas frecuentes",
+    "privacyPolicy": "Política de privacidad",
+    "termsAndConditions": "Términos y condiciones"
+  },
+  "header": {
+    "about": "Acerca de nosotros",
+    "home": "Inicio",
+    "howItWorks": "Cómo funciona",
+    "plans": "Planes"
+  },
+  "homePage": {
+    "createMyTeams": "Crear mis equipos",
+    "description": "Forma tu equipo, desafía a tus amigos y conquista la gloria en el campo.\nEl campo llama. ¡La victoria te espera!",
+    "sponsors": "Patrocinadores",
+    "startMyJourney": "Comenzar mi viaje",
+    "title": "¿Estás listo para crear el equipo de tus sueños?",
+    "watchVideo": "Ver video",
+    "downloadAppTitle": "¡Descarga la app y juega donde quieras!",
+    "downloadAppDescription": "Disfruta de la experiencia completa de Jogabola en tu móvil. Disponible para iOS y Android.",
+    "downloadOnAppStore": "Descargar en App Store",
+    "downloadOnGooglePlay": "Descargar en Google Play",
+    "appMockupAlt": "Mockup de la aplicación Jogabola"
+  },
+  "locales": {
+    "en": "Inglés",
+    "es": "Español",
+    "fr": "Francés",
+    "placeholder": "Selecciona un idioma",
+    "pt": "Portugués"
+  },
+  "meta": {
+    "description": "El mejor lugar para encontrar a tu equipo y jugar al fútbol.",
+    "title": "Joga Bola"
+  },
+  "store": {
+    "screen1": {
+      "quote": "El mejor lugar para encontrar a tu equipo y jugar al fútbol.",
+      "name": "JogaBola",
+      "designation": "El mejor lugar para encontrar a tu equipo y jugar al fútbol."
+    },
+    "screen2": {
+      "quote": "El mejor lugar para encontrar a tu equipo y jugar al fútbol.",
+      "name": "JogaBola",
+      "designation": "El mejor lugar para encontrar a tu equipo y jugar al fútbol."
+    }
+  }
+}
