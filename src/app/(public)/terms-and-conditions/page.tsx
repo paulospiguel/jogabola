@@ -1,7 +1,6 @@
 import Footer from "@/components/footer";
 import HeaderHome from "@/components/header";
-import { getUserLocale } from "@/services/locale";
-import { supabase } from "@/services/supabase";
+import { getUserLocale } from "@/utils";
 import ReactMarkdown from "react-markdown";
 import { z } from "zod";
 
@@ -40,18 +39,18 @@ export default async function TermsAndConditionsPage({
   const markdownPath = `${lang}/terms-and-conditions.md`;
 
   const fetchMarkdown = async () => {
-    const { data, error } = await supabase.storage
-      .from("legal")
-      .download(markdownPath);
+    // const { data, error } = await supabase.storage
+    //   .from("legal")
+    //   .download(markdownPath);
 
-    if (error) {
-      console.error("Erro ao baixar o arquivo Markdown:", error.message);
-      return;
-    }
+    // if (error) {
+    //   console.error("Erro ao baixar o arquivo Markdown:", error.message);
+    //   return;
+    // }
 
-    const text = await data.text();
+    // const text = await data.text();
 
-    return text;
+    return "# Terms and Conditions";
   };
 
   const markdown = (await fetchMarkdown()) || "";

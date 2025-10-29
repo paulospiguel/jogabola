@@ -1,199 +1,99 @@
 "use client";
 
-import directorIcon from "@/assets/icons/director.png";
-import footballIcon from "@/assets/icons/football.png";
-import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
+import { saveProfileData } from "@/actions/profile";
+import { CommunicationPreferences } from "@/components/communication-preferences";
+import { FloatingOrb } from "@/components/floating-orb";
+import { GoalCard } from "@/components/goal-card";
+import { JourneyOptionCard } from "@/components/journey-option-card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Progress } from "@/components/ui/progress";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { cn } from "@/lib/utils";
-import { RoleValues } from "@/schemas";
-import { motion } from "framer-motion";
+import { WaitlistAppCard } from "@/components/waitlist-app-card";
+import { WelcomeNavigation } from "@/components/welcome-navigation";
+import { WelcomeProgressHeader } from "@/components/welcome-progress-header";
+import { WelcomeStepHeader } from "@/components/welcome-step-header";
+import { AVAILABLE_APPS, GOALS, JOURNEY_OPTIONS } from "@/constants/welcome";
+import { useToast } from "@/hooks/use-toast-custom";
+import { useSession } from "@/lib/auth-client";
 import {
-  ArrowLeft,
-  ArrowRight,
-  Calendar,
-  CheckCircle,
-  Clock,
-  Heart,
-  Sparkles,
-  Star,
-  Target,
-  Trophy,
-  User,
-  Users,
-} from "lucide-react";
+  step1Schema,
+  step2Schema,
+  step3Schema,
+  step4Schema,
+} from "@/schemas/profile";
+import { useProfileStore } from "@/stores/profile";
+import { motion } from "framer-motion";
+import { CheckCircle, Sparkles } from "lucide-react";
 import { useTranslations } from "next-intl";
-import Image from "next/image";
-import { useSearchParams } from "next/navigation";
-import { useState } from "react";
-
-// Tipos para o questionário
-interface WelcomeFormData {
-  role: string;
-  name: string;
-  email: string;
-  location: string;
-  experience: string;
-  goals: string[];
-  availability: string;
-  preferences: {
-    notifications: boolean;
-    newsletter: boolean;
-    earlyAccess: boolean;
-  };
-  waitlistApps: string[];
-}
-
-// Componente para orbs flutuantes
-const FloatingOrb = ({
-  delay,
-  size,
-  position,
-}: {
-  delay: number;
-  size: number;
-  position: string;
-}) => (
-  <motion.div
-    initial={{ opacity: 0, scale: 0 }}
-    animate={{
-      opacity: [0, 0.6, 0],
-      scale: [0, 1, 0],
-      x: [0, Math.random() * 100 - 50],
-      y: [0, Math.random() * 100 - 50],
-    }}
-    transition={{
-      duration: 4,
-      delay,
-      repeat: Infinity,
-      repeatDelay: Math.random() * 3,
-    }}
-    className={cn(
-      "absolute rounded-full bg-gradient-to-r from-emerald-400/20 to-teal-400/20 blur-xl",
-      position,
-    )}
-    style={{ width: size, height: size }}
-  />
-);
+import { useRouter, useSearchParams } from "next/navigation";
+import { useEffect, useState } from "react";
 
 export default function WelcomePage() {
   const t = useTranslations();
+  const router = useRouter();
   const searchParams = useSearchParams();
-  const [currentStep, setCurrentStep] = useState(0);
-  const [formData, setFormData] = useState<WelcomeFormData>({
-    role: searchParams.get("role") || "",
-    name: "",
-    email: "",
-    location: "",
-    experience: "",
-    goals: [],
-    availability: "",
-    preferences: {
-      notifications: true,
-      newsletter: true,
-      earlyAccess: true,
-    },
-    waitlistApps: [],
-  });
+  const { toast } = useToast();
+  const { data: session } = useSession();
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  // Zustand store
+  const {
+    data: formData,
+    currentStep,
+    updateData,
+    setCurrentStep,
+    setCompleted,
+  } = useProfileStore();
 
   const totalSteps = 5;
-  const progress = ((currentStep + 1) / totalSteps) * 100;
 
-  // Opções de jornada
-  const journeyOptions = [
-    {
-      id: RoleValues.PLAYER,
-      title: "Jogador",
-      description:
-        "Encontra equipas, melhora as tuas habilidades e conquista a glória",
-      icon: footballIcon,
-      color: "from-emerald-500 to-teal-600",
-      features: [
-        "Encontrar equipas",
-        "Estatísticas pessoais",
-        "Torneios",
-        "Treinos",
-      ],
-    },
-    {
-      id: RoleValues.MANAGER,
-      title: "Gestor/Treinador",
-      description:
-        "Gere a tua equipa, organiza treinos e lidera para a vitória",
-      icon: directorIcon,
-      color: "from-purple-500 to-indigo-600",
-      features: [
-        "Gestão de equipa",
-        "Planeamento de treinos",
-        "Análise de performance",
-        "Recrutamento",
-      ],
-    },
-    {
-      id: RoleValues.COACH,
-      title: "Treinador Especializado",
-      description:
-        "Desenvolve talentos e cria programas de treino personalizados",
-      icon: directorIcon,
-      color: "from-orange-500 to-red-600",
-      features: [
-        "Programas de treino",
-        "Desenvolvimento técnico",
-        "Análise táctica",
-        "Mentoria",
-      ],
-    },
-    {
-      id: RoleValues.FAN,
-      title: "Adepto/Organizador",
-      description: "Organiza eventos, apoia equipas e conecta a comunidade",
-      icon: footballIcon,
-      color: "from-blue-500 to-cyan-600",
-      features: [
-        "Organização de eventos",
-        "Apoio a equipas",
-        "Comunidade",
-        "Networking",
-      ],
-    },
-  ];
+  // Initialize with search params
+  useEffect(() => {
+    const roleParam = searchParams.get("role");
+    if (roleParam && !formData.role) {
+      updateData({ role: roleParam as any });
+    }
+  }, [searchParams, formData.role, updateData]);
 
-  // Apps disponíveis para lista de espera
-  const availableApps = [
-    {
-      id: "jogabola-mobile",
-      name: "JogaBola Mobile",
-      description: "App principal para jogadores e gestores",
-      status: "coming-soon",
-      estimatedLaunch: "Q2 2024",
-    },
-    {
-      id: "jogabola-timer",
-      name: "JogaBola Timer",
-      description: "Cronómetro avançado para treinos e jogos",
-      status: "beta",
-      estimatedLaunch: "Disponível em Beta",
-    },
-    {
-      id: "jogabola-academy",
-      name: "JogaBola Academy",
-      description: "Plataforma de treino e desenvolvimento",
-      status: "coming-soon",
-      estimatedLaunch: "Q3 2024",
-    },
-    {
-      id: "jogabola-manager",
-      name: "JogaBola Manager",
-      description: "Ferramenta avançada para gestores",
-      status: "coming-soon",
-      estimatedLaunch: "Q4 2024",
-    },
-  ];
+  const validateStep = (step: number): boolean => {
+    try {
+      switch (step) {
+        case 1:
+          step1Schema.parse({ role: formData.role });
+          return true;
+        case 2:
+          step2Schema.parse({
+            name: formData.name,
+            email: formData.email,
+            location: formData.location,
+            experience: formData.experience,
+            availability: formData.availability,
+          });
+          return true;
+        case 3:
+          step3Schema.parse({ goals: formData.goals });
+          return true;
+        case 4:
+          step4Schema.parse({
+            waitlistApps: formData.waitlistApps,
+            preferences: formData.preferences,
+          });
+          return true;
+        default:
+          return true;
+      }
+    } catch (error: any) {
+      const errorMessage = error?.errors?.[0]?.message || "Erro de validação";
+      toast.error("Erro de Validação", errorMessage);
+      return false;
+    }
+  };
 
   const handleNext = () => {
+    if (!validateStep(currentStep)) {
+      return;
+    }
+
     if (currentStep < totalSteps - 1) {
       setCurrentStep(currentStep + 1);
     }
@@ -206,31 +106,75 @@ export default function WelcomePage() {
   };
 
   const handleSubmit = async () => {
-    // Aqui implementarias a lógica para enviar os dados
-    console.log("Dados do formulário:", formData);
-    // Redirecionar ou mostrar mensagem de sucesso
+    if (!validateStep(currentStep)) {
+      return;
+    }
+
+    setIsSubmitting(true);
+
+    try {
+      // If user is logged in, save to database
+      if (session?.user?.id) {
+        const result = await saveProfileData(session.user.id, formData as any);
+        
+        if (!result.success) {
+          toast.error("Erro", result.error || "Ocorreu um erro ao guardar os dados.");
+          setIsSubmitting(false);
+          return;
+        }
+
+        // Mark as completed in store
+        setCompleted(true);
+        
+        toast.success(
+          "Onboarding Concluído!",
+          "Os teus dados foram guardados com sucesso!"
+        );
+
+        // Redirect to arena with delay
+        setTimeout(() => {
+          router.push("/arena");
+        }, 1500);
+      } else {
+        // User not logged in - save to store and redirect to sign-in
+        setCompleted(true);
+        
+        toast.success(
+          "Onboarding Concluído!",
+          "Cria a tua conta para continuar e guardar os dados."
+        );
+
+        // Redirect to sign-in with delay
+        setTimeout(() => {
+          router.push("/sign-in");
+        }, 1500);
+      }
+    } catch (error) {
+      console.error("Error submitting onboarding:", error);
+      toast.error("Erro", "Ocorreu um erro ao guardar os dados.");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const updateFormData = (field: string, value: any) => {
-    setFormData(prev => ({ ...prev, [field]: value }));
+    updateData({ [field]: value });
   };
 
   const toggleGoal = (goal: string) => {
-    setFormData(prev => ({
-      ...prev,
-      goals: prev.goals.includes(goal)
-        ? prev.goals.filter(g => g !== goal)
-        : [...prev.goals, goal],
-    }));
+    const currentGoals = formData.goals || [];
+    const newGoals = currentGoals.includes(goal)
+      ? currentGoals.filter((g) => g !== goal)
+      : [...currentGoals, goal];
+    updateData({ goals: newGoals });
   };
 
   const toggleWaitlistApp = (appId: string) => {
-    setFormData(prev => ({
-      ...prev,
-      waitlistApps: prev.waitlistApps.includes(appId)
-        ? prev.waitlistApps.filter(id => id !== appId)
-        : [...prev.waitlistApps, appId],
-    }));
+    const currentApps = formData.waitlistApps || [];
+    const newApps = currentApps.includes(appId)
+      ? currentApps.filter((id) => id !== appId)
+      : [...currentApps, appId];
+    updateData({ waitlistApps: newApps });
   };
 
   const renderStep = () => {
@@ -290,86 +234,20 @@ export default function WelcomePage() {
             animate={{ opacity: 1, y: 0 }}
             className="space-y-8"
           >
-            <div className="space-y-4 text-center">
-              <h2 className="bg-gradient-to-r from-[#00cfb1] to-[#1effbf] bg-clip-text text-3xl font-bold text-transparent">
-                Escolhe a Tua Jornada
-              </h2>
-              <p className="mx-auto max-w-2xl text-[#ba93ff]">
-                Cada jornada oferece uma experiência única. Seleciona a que
-                melhor se adequa aos teus objetivos.
-              </p>
-            </div>
+            <WelcomeStepHeader
+              title="Escolhe a Tua Jornada"
+              description="Cada jornada oferece uma experiência única. Seleciona a que melhor se adequa aos teus objetivos."
+            />
 
             <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-              {journeyOptions.map((option, index) => (
-                <motion.div
+              {JOURNEY_OPTIONS.map((option, index) => (
+                <JourneyOptionCard
                   key={option.id}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: index * 0.1 }}
-                  whileHover={{ scale: 1.02 }}
-                  className={cn(
-                    "relative cursor-pointer overflow-hidden rounded-2xl border transition-all duration-300",
-                    formData.role === option.id
-                      ? "border-[#00cfb1] bg-gradient-to-br from-[#00cfb1]/10 to-[#1effbf]/5 shadow-lg shadow-[#00cfb1]/25"
-                      : "border-white/20 bg-gradient-to-br from-white/5 to-white/2 hover:border-[#00cfb1]/50",
-                  )}
-                  onClick={() => updateFormData("role", option.id)}
-                >
-                  <div className="space-y-4 p-6">
-                    <div className="flex items-center gap-4">
-                      <div
-                        className={cn(
-                          "flex h-12 w-12 items-center justify-center rounded-full bg-gradient-to-r",
-                          option.color,
-                        )}
-                      >
-                        <Image
-                          src={option.icon}
-                          alt={option.title}
-                          width={24}
-                          height={24}
-                          className="invert"
-                        />
-                      </div>
-                      <div>
-                        <h3 className="text-xl font-bold text-white">
-                          {option.title}
-                        </h3>
-                        <p className="text-sm text-[#ba93ff]">
-                          {option.description}
-                        </p>
-                      </div>
-                    </div>
-
-                    <div className="space-y-2">
-                      <p className="text-sm font-medium text-[#00cfb1]">
-                        Funcionalidades principais:
-                      </p>
-                      <div className="grid grid-cols-2 gap-2">
-                        {option.features.map((feature, idx) => (
-                          <div
-                            key={idx}
-                            className="flex items-center gap-2 text-sm text-[#ba93ff]"
-                          >
-                            <div className="h-1.5 w-1.5 rounded-full bg-[#00cfb1]" />
-                            {feature}
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  </div>
-
-                  {formData.role === option.id && (
-                    <motion.div
-                      initial={{ scale: 0 }}
-                      animate={{ scale: 1 }}
-                      className="absolute top-4 right-4 flex h-6 w-6 items-center justify-center rounded-full bg-[#00cfb1]"
-                    >
-                      <CheckCircle className="h-4 w-4 text-white" />
-                    </motion.div>
-                  )}
-                </motion.div>
+                  option={option}
+                  isSelected={formData.role === option.id}
+                  onSelect={id => updateFormData("role", id)}
+                  index={index}
+                />
               ))}
             </div>
           </motion.div>
@@ -382,15 +260,10 @@ export default function WelcomePage() {
             animate={{ opacity: 1, y: 0 }}
             className="space-y-8"
           >
-            <div className="space-y-4 text-center">
-              <h2 className="bg-gradient-to-r from-[#00cfb1] to-[#1effbf] bg-clip-text text-3xl font-bold text-transparent">
-                Vamos Conhecer-te Melhor
-              </h2>
-              <p className="mx-auto max-w-2xl text-[#ba93ff]">
-                Estas informações ajudam-nos a personalizar a tua experiência no
-                JogaBola.
-              </p>
-            </div>
+            <WelcomeStepHeader
+              title="Vamos Conhecer-te Melhor"
+              description="Estas informações ajudam-nos a personalizar a tua experiência no JogaBola."
+            />
 
             <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
               <div className="space-y-4">
@@ -531,91 +404,20 @@ export default function WelcomePage() {
             animate={{ opacity: 1, y: 0 }}
             className="space-y-8"
           >
-            <div className="space-y-4 text-center">
-              <h2 className="bg-gradient-to-r from-[#00cfb1] to-[#1effbf] bg-clip-text text-3xl font-bold text-transparent">
-                Quais São os Teus Objetivos?
-              </h2>
-              <p className="mx-auto max-w-2xl text-[#ba93ff]">
-                Seleciona todos os objetivos que se aplicam a ti. Isto ajuda-nos
-                a sugerir as melhores funcionalidades.
-              </p>
-            </div>
+            <WelcomeStepHeader
+              title="Quais São os Teus Objetivos?"
+              description="Seleciona todos os objetivos que se aplicam a ti. Isto ajuda-nos a sugerir as melhores funcionalidades."
+            />
 
             <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
-              {[
-                {
-                  id: "improve-skills",
-                  label: "Melhorar habilidades",
-                  icon: Target,
-                },
-                { id: "find-team", label: "Encontrar uma equipa", icon: Users },
-                {
-                  id: "organize-games",
-                  label: "Organizar jogos",
-                  icon: Calendar,
-                },
-                {
-                  id: "track-stats",
-                  label: "Acompanhar estatísticas",
-                  icon: Trophy,
-                },
-                {
-                  id: "make-friends",
-                  label: "Fazer novos amigos",
-                  icon: Heart,
-                },
-                { id: "compete", label: "Competir em torneios", icon: Star },
-                { id: "coach-others", label: "Treinar outros", icon: User },
-                { id: "stay-fit", label: "Manter-me em forma", icon: Clock },
-                { id: "have-fun", label: "Divertir-me", icon: Sparkles },
-              ].map(goal => {
-                const Icon = goal.icon;
-                const isSelected = formData.goals.includes(goal.id);
-
-                return (
-                  <motion.div
-                    key={goal.id}
-                    whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
-                    className={cn(
-                      "relative cursor-pointer overflow-hidden rounded-xl border p-4 transition-all duration-300",
-                      isSelected
-                        ? "border-[#00cfb1] bg-gradient-to-br from-[#00cfb1]/10 to-[#1effbf]/5 shadow-lg shadow-[#00cfb1]/25"
-                        : "border-white/20 bg-gradient-to-br from-white/5 to-white/2 hover:border-[#00cfb1]/50",
-                    )}
-                    onClick={() => toggleGoal(goal.id)}
-                  >
-                    <div className="flex items-center gap-3">
-                      <div
-                        className={cn(
-                          "flex h-10 w-10 items-center justify-center rounded-full transition-colors",
-                          isSelected ? "bg-[#00cfb1]" : "bg-white/10",
-                        )}
-                      >
-                        <Icon
-                          className={cn(
-                            "h-5 w-5 transition-colors",
-                            isSelected ? "text-white" : "text-[#00cfb1]",
-                          )}
-                        />
-                      </div>
-                      <span className="font-medium text-white">
-                        {goal.label}
-                      </span>
-                    </div>
-
-                    {isSelected && (
-                      <motion.div
-                        initial={{ scale: 0 }}
-                        animate={{ scale: 1 }}
-                        className="absolute top-2 right-2 flex h-5 w-5 items-center justify-center rounded-full bg-[#00cfb1]"
-                      >
-                        <CheckCircle className="h-3 w-3 text-white" />
-                      </motion.div>
-                    )}
-                  </motion.div>
-                );
-              })}
+              {GOALS.map(goal => (
+                <GoalCard
+                  key={goal.id}
+                  goal={goal}
+                  isSelected={(formData.goals || []).includes(goal.id)}
+                  onToggle={toggleGoal}
+                />
+              ))}
             </div>
           </motion.div>
         );
@@ -627,124 +429,42 @@ export default function WelcomePage() {
             animate={{ opacity: 1, y: 0 }}
             className="space-y-8"
           >
-            <div className="space-y-4 text-center">
-              <h2 className="bg-gradient-to-r from-[#00cfb1] to-[#1effbf] bg-clip-text text-3xl font-bold text-transparent">
-                Junta-te à Lista de Espera
-              </h2>
-              <p className="mx-auto max-w-2xl text-[#ba93ff]">
-                Sê um dos primeiros a experimentar as nossas aplicações quando
-                forem lançadas. Seleciona as que te interessam mais.
-              </p>
-            </div>
+            <WelcomeStepHeader
+              title="Junta-te à Lista de Espera"
+              description="Sê um dos primeiros a experimentar as nossas aplicações quando forem lançadas. Seleciona as que te interessam mais."
+            />
 
             <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-              {availableApps.map((app, index) => {
-                const isSelected = formData.waitlistApps.includes(app.id);
-
-                return (
-                  <motion.div
-                    key={app.id}
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: index * 0.1 }}
-                    whileHover={{ scale: 1.02 }}
-                    className={cn(
-                      "relative cursor-pointer overflow-hidden rounded-2xl border p-6 transition-all duration-300",
-                      isSelected
-                        ? "border-[#00cfb1] bg-gradient-to-br from-[#00cfb1]/10 to-[#1effbf]/5 shadow-lg shadow-[#00cfb1]/25"
-                        : "border-white/20 bg-gradient-to-br from-white/5 to-white/2 hover:border-[#00cfb1]/50",
-                    )}
-                    onClick={() => toggleWaitlistApp(app.id)}
-                  >
-                    <div className="space-y-4">
-                      <div className="flex items-start justify-between">
-                        <div className="space-y-2">
-                          <h3 className="text-xl font-bold text-white">
-                            {app.name}
-                          </h3>
-                          <p className="text-sm text-[#ba93ff]">
-                            {app.description}
-                          </p>
-                        </div>
-
-                        <div
-                          className={cn(
-                            "rounded-full px-3 py-1 text-xs font-medium",
-                            app.status === "beta"
-                              ? "border border-orange-500/30 bg-orange-500/20 text-orange-300"
-                              : "border border-blue-500/30 bg-blue-500/20 text-blue-300",
-                          )}
-                        >
-                          {app.status === "beta" ? "Beta" : "Em Breve"}
-                        </div>
-                      </div>
-
-                      <div className="flex items-center gap-2 text-sm text-[#00cfb1]">
-                        <Calendar className="h-4 w-4" />
-                        <span>{app.estimatedLaunch}</span>
-                      </div>
-                    </div>
-
-                    {isSelected && (
-                      <motion.div
-                        initial={{ scale: 0 }}
-                        animate={{ scale: 1 }}
-                        className="absolute top-4 right-4 flex h-6 w-6 items-center justify-center rounded-full bg-[#00cfb1]"
-                      >
-                        <CheckCircle className="h-4 w-4 text-white" />
-                      </motion.div>
-                    )}
-                  </motion.div>
-                );
-              })}
+              {AVAILABLE_APPS.map((app, index) => (
+                <WaitlistAppCard
+                  key={app.id}
+                  app={app}
+                  isSelected={(formData.waitlistApps || []).includes(app.id)}
+                  onToggle={toggleWaitlistApp}
+                  index={index}
+                />
+              ))}
             </div>
 
-            {/* Preferências de notificação */}
-            <div className="space-y-4 rounded-2xl bg-white/5 p-6">
-              <h3 className="text-lg font-bold text-white">
-                Preferências de Comunicação
-              </h3>
-              <div className="space-y-3">
-                {[
-                  {
-                    key: "notifications",
-                    label: "Receber notificações sobre atualizações",
+            <CommunicationPreferences
+              preferences={formData.preferences || {
+                notifications: true,
+                newsletter: true,
+                earlyAccess: true,
+              }}
+              onPreferenceChange={(key: string, value: boolean) =>
+                updateData({
+                  preferences: {
+                    ...(formData.preferences || {
+                      notifications: true,
+                      newsletter: true,
+                      earlyAccess: true,
+                    }),
+                    [key]: value,
                   },
-                  {
-                    key: "newsletter",
-                    label: "Subscrever newsletter com dicas e novidades",
-                  },
-                  {
-                    key: "earlyAccess",
-                    label: "Acesso antecipado a novas funcionalidades",
-                  },
-                ].map(pref => (
-                  <div key={pref.key} className="flex items-center space-x-3">
-                    <Checkbox
-                      id={pref.key}
-                      checked={
-                        formData.preferences[
-                          pref.key as keyof typeof formData.preferences
-                        ]
-                      }
-                      onCheckedChange={checked =>
-                        setFormData(prev => ({
-                          ...prev,
-                          preferences: {
-                            ...prev.preferences,
-                            [pref.key]: checked,
-                          },
-                        }))
-                      }
-                      className="border-white/40"
-                    />
-                    <Label htmlFor={pref.key} className="text-sm text-white/90">
-                      {pref.label}
-                    </Label>
-                  </div>
-                ))}
-              </div>
-            </div>
+                })
+              }
+            />
           </motion.div>
         );
 
@@ -764,63 +484,23 @@ export default function WelcomePage() {
       </div>
 
       <div className="relative z-10 container mx-auto max-w-4xl px-4 py-12">
-        {/* Header com progresso */}
-        <div className="mb-12">
-          <div className="mb-6 flex items-center justify-between">
-            <motion.div
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              className="text-sm text-[#ba93ff]"
-            >
-              Passo {currentStep + 1} de {totalSteps}
-            </motion.div>
-
-            <motion.div
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              className="text-sm font-medium text-[#00cfb1]"
-            >
-              {Math.round(progress)}% concluído
-            </motion.div>
-          </div>
-
-          <Progress value={progress} className="h-2 bg-white/10" />
-        </div>
+        <WelcomeProgressHeader
+          currentStep={currentStep}
+          totalSteps={totalSteps}
+        />
 
         {/* Conteúdo do passo atual */}
         <div className="mb-12">{renderStep()}</div>
 
-        {/* Navegação */}
-        <div className="flex items-center justify-between">
-          <Button
-            variant="outline"
-            onClick={handlePrevious}
-            disabled={currentStep === 0}
-            className="border-white/20 bg-white/5 text-white hover:bg-white/10 disabled:opacity-50"
-          >
-            <ArrowLeft className="mr-2 h-4 w-4" />
-            Anterior
-          </Button>
-
-          {currentStep === totalSteps - 1 ? (
-            <Button
-              onClick={handleSubmit}
-              className="bg-gradient-to-r from-[#00cfb1] to-[#1effbf] font-bold text-[#21005a] hover:from-[#1effbf] hover:to-[#00cfb1]"
-            >
-              Finalizar Configuração
-              <CheckCircle className="ml-2 h-4 w-4" />
-            </Button>
-          ) : (
-            <Button
-              onClick={handleNext}
-              disabled={currentStep === 1 && !formData.role}
-              className="bg-gradient-to-r from-[#00cfb1] to-[#1effbf] font-bold text-[#21005a] hover:from-[#1effbf] hover:to-[#00cfb1] disabled:opacity-50"
-            >
-              Próximo
-              <ArrowRight className="ml-2 h-4 w-4" />
-            </Button>
-          )}
-        </div>
+        <WelcomeNavigation
+          currentStep={currentStep}
+          totalSteps={totalSteps}
+          canProceed={currentStep !== 1 || !!formData.role}
+          isSubmitting={isSubmitting}
+          onPrevious={handlePrevious}
+          onNext={handleNext}
+          onSubmit={handleSubmit}
+        />
       </div>
     </div>
   );
