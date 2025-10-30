@@ -4,7 +4,7 @@ import {
   pgTable,
   serial,
   text,
-  timestamp
+  timestamp,
 } from "drizzle-orm/pg-core";
 import { user } from "./users";
 
@@ -29,6 +29,9 @@ export const profile = pgTable("profile", {
 
   // Apps da waitlist (array de strings)
   waitlistApps: jsonb("waitlist_apps").$type<string[]>().default([]),
+
+  // Campos personalizados por role (JSON flexível)
+  customFields: jsonb("custom_fields").$type<Record<string, any>>().default({}),
 
   // Preferências
   notificationsEnabled: boolean("notifications_enabled").default(true),

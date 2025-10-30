@@ -1,6 +1,7 @@
 import cn from "@/components/ui/lib/cn";
 import { format } from "date-fns";
 import { pt } from "date-fns/locale";
+import { defaultLocale, locales } from "@/i18n/configs";
 
 export const formatDate = (date: Date, locale?: string) => {
   return format(date, "dd/MM/yyyy", { locale: locale ? pt : undefined });
@@ -66,11 +67,27 @@ export const getSearchParams = <T = unknown>(
 };
 
 const getUserLocale = async (): Promise<string> => {
-  // Implement your logic to get the user's locale here.
-  if (typeof window !== "undefined") {
-    return navigator.language || "en";
+  // Server-side: honor cookie set by server action
+  try {
+    if (typeof window === "undefined") {
+      const { cookies } = await import("next/headers");
+      const cookieStore = cookies();
+      const fromCookie = cookieStore.get("NEXT_LOCALE")?.value;
+      if (fromCookie && locales.includes(fromCookie as (typeof locales)[number])) {
+        return fromCookie;
+      }
+    }
+  } catch (_) {
+    // no-op: fallback below
   }
-  return "en";
+
+  // Client-side fallback: navigator.language narrowed to supported locales
+  if (typeof window !== "undefined") {
+    const nav = (navigator.language || defaultLocale).slice(0, 2);
+    return locales.includes(nav as (typeof locales)[number]) ? nav : defaultLocale;
+  }
+
+  return defaultLocale;
 };
 
 export { cn, getUserLocale };

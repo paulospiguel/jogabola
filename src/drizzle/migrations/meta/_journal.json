@@ -43,6 +43,13 @@
       "when": 1761777484207,
       "tag": "0005_furry_exiles",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1761851104556,
+      "tag": "0006_swift_wolfpack",
+      "breakpoints": true
     }
   ]
 }

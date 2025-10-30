@@ -1,7 +1,4 @@
 "use client";
-import { useState, useEffect } from "react";
-import { Settings, Menu, Grid } from "lucide-react";
-import { Logo } from "./logo";
 import {
   Menubar,
   MenubarContent,
@@ -17,14 +14,17 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
+import menuHome from "@/constants/menu-home";
+import { cn } from "@/lib/utils";
+import { motion } from "framer-motion";
+import { Menu, Settings } from "lucide-react";
 import { useTranslations } from "next-intl";
 import Link from "next/link";
-import LanguageSelector from "./language-selector";
-import { ThemeToggle } from "./theme-toggle";
-import { cn } from "@/lib/utils";
-import menuHome from "@/constants/menu-home";
-import { motion } from "framer-motion";
 import { usePathname } from "next/navigation";
+import { useEffect, useState } from "react";
+import LanguageSelector from "./language-selector";
+import { Logo } from "./logo";
+import { ThemeToggle } from "./theme-toggle";
 
 const MAIN_DOMAIN = "jogabola.fun";
 
@@ -114,6 +114,8 @@ export default function Header() {
             {t("header.launchJourney")}
           </Link>
 
+          <ThemeToggle />
+
           {/* Settings Icon */}
           <Menubar className="hidden h-10 w-10 items-center justify-center p-0 md:flex">
             <MenubarMenu>
@@ -129,7 +131,9 @@ export default function Header() {
               </MenubarTrigger>
               <MenubarContent>
                 <MenubarItem>
-                  <ThemeToggle />
+                  <Link href="/sign-in" className="w-full">
+                    {t("header.signIn")}
+                  </Link>
                 </MenubarItem>
               </MenubarContent>
             </MenubarMenu>

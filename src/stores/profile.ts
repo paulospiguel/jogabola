@@ -6,7 +6,7 @@ interface ProfileState {
   data: Partial<OnboardingData>;
   completed: boolean;
   currentStep: number;
-  
+
   // Actions
   setData: (data: Partial<OnboardingData>) => void;
   updateData: (data: Partial<OnboardingData>) => void;
@@ -31,6 +31,7 @@ const initialState = {
       earlyAccess: true,
     },
     waitlistApps: [],
+    customFields: {},
   },
   completed: false,
   currentStep: 0,
@@ -46,7 +47,7 @@ export const useProfileStore = create<ProfileState>()(
       },
 
       updateData: (newData: Partial<OnboardingData>) => {
-        set((state) => ({
+        set(state => ({
           data: {
             ...state.data,
             ...newData,
@@ -79,6 +80,6 @@ export const useProfileStore = create<ProfileState>()(
     {
       name: "jogabola-profile-storage",
       storage: createJSONStorage(() => localStorage),
-    }
-  )
+    },
+  ),
 );

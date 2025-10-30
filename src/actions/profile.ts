@@ -7,7 +7,7 @@ import { eq } from "drizzle-orm";
 
 export async function saveProfileData(
   userId: string,
-  data: Partial<OnboardingData>
+  data: Partial<OnboardingData>,
 ) {
   try {
     // Validate data
@@ -29,6 +29,7 @@ export async function saveProfileData(
       availability: validatedData.availability || null,
       goals: validatedData.goals,
       waitlistApps: validatedData.waitlistApps,
+      customFields: validatedData.customFields || {},
       notificationsEnabled: validatedData.preferences.notifications,
       newsletterEnabled: validatedData.preferences.newsletter,
       earlyAccessEnabled: validatedData.preferences.earlyAccess,
@@ -57,11 +58,11 @@ export async function saveProfileData(
     }
   } catch (error) {
     console.error("Error saving profile data:", error);
-    
+
     if (error instanceof Error) {
       return { success: false, error: error.message };
     }
-    
+
     return { success: false, error: "Erro ao guardar dados do perfil" };
   }
 }

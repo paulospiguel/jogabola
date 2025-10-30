@@ -39,9 +39,7 @@ export function CommunicationPreferences({
           <div key={pref.key} className="flex items-center space-x-3">
             <Checkbox
               id={pref.key}
-              checked={
-                preferences[pref.key as keyof typeof preferences]
-              }
+              checked={preferences[pref.key as keyof typeof preferences]}
               onCheckedChange={checked =>
                 onPreferenceChange(pref.key, checked as boolean)
               }

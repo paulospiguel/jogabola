@@ -1,5 +1,7 @@
 import { getProfileData } from "@/actions/profile";
+import { JourneyWrapper } from "@/components/journey-wrapper";
 import { auth } from "@/lib/auth";
+import type { Role } from "@/schemas/profile";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 
@@ -26,10 +28,13 @@ export default async function ProtectedLayout({
     if (!profileResult.data.completed) {
       redirect("/welcome");
     }
+
+    // Profile is complete - wrap children with JourneyWrapper
+    const { role } = profileResult.data;
+
+    return <JourneyWrapper role={role as Role}>{children}</JourneyWrapper>;
   } else {
     // If no profile exists at all, redirect to welcome
     redirect("/welcome");
   }
-
-  return <>{children}</>;
 }

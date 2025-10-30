@@ -11,7 +11,7 @@ export const experienceSchema = z.enum(
   {
     required_error: "Seleciona o teu nível de experiência",
     invalid_type_error: "Nível de experiência inválido",
-  }
+  },
 );
 
 export const availabilitySchema = z.enum(
@@ -19,7 +19,7 @@ export const availabilitySchema = z.enum(
   {
     required_error: "Seleciona a tua disponibilidade",
     invalid_type_error: "Disponibilidade inválida",
-  }
+  },
 );
 
 // Preferences schema
@@ -51,6 +51,8 @@ export const onboardingSchema = z.object({
   availability: availabilitySchema.optional().or(z.literal("")),
   preferences: preferencesSchema,
   waitlistApps: z.array(z.string()).default([]),
+  // Campos personalizados por role (armazenados como JSON)
+  customFields: z.record(z.string(), z.any()).optional().default({}),
 });
 
 // Step-specific schemas for progressive validation

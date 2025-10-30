@@ -12,6 +12,7 @@ import {
 import useUser from "@/hooks/useUser";
 import { type Locale, locales } from "@/i18n/configs";
 import { useLocale, useTranslations } from "next-intl";
+import { useRouter } from "next/navigation";
 import { useTransition } from "react";
 import { z } from "zod";
 
@@ -50,11 +51,13 @@ export default function LanguageSelector({
   const locale = useLocale();
   const [isPending, startTransition] = useTransition();
   const { user } = useUser();
+  const router = useRouter();
 
   async function onLanguageChange(lang: Locale) {
-    const locale = lang as Locale;
-    startTransition(() => {
-      setUserLocale(locale, user?.id!);
+    const newLocale = lang as Locale;
+    startTransition(async () => {
+      await setUserLocale(newLocale, user?.id!);
+      router.refresh();
     });
   }
 

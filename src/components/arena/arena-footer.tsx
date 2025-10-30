@@ -12,14 +12,14 @@ export default function ArenaFooter({ className }: ArenaFooterProps) {
   return (
     <footer
       className={cn(
-        "border-t bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60",
-        className
+        "bg-background/95 supports-[backdrop-filter]:bg-background/60 border-t backdrop-blur md:ml-64",
+        className,
       )}
     >
       <div className="container mx-auto px-4 py-6">
         <div className="flex flex-col items-center justify-between gap-4 md:flex-row">
           {/* Copyright */}
-          <div className="text-center text-sm text-muted-foreground md:text-left">
+          <div className="text-muted-foreground text-center text-sm md:text-left">
             <p>
               © {currentYear} {COMPANY.NAME}. Todos os direitos reservados.
             </p>
