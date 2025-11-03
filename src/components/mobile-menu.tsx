@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "./theme-toggle";
 import LanguageSelector from "./language-selector";
 import AnimatedBorderTrail from "./animated-border-trail";
+import { useJourneyRedirect } from "@/hooks/use-journey-redirect";
 import { X } from "lucide-react";
 // import { cn } from "@/lib/utils"; // unused
 
@@ -23,6 +24,8 @@ const menuItems = [
 
 export default function MobileMenu({ open, onClose }: MobileMenuProps) {
   const t = useTranslations();
+  const { redirectToJourney } = useJourneyRedirect();
+  
   if (!open) return null;
   return (
     <div className="fixed inset-0 z-50 bg-background/95 backdrop-blur-md flex flex-col items-center justify-center p-6 md:hidden">
@@ -49,18 +52,30 @@ export default function MobileMenu({ open, onClose }: MobileMenuProps) {
         <ThemeToggle />
         <LanguageSelector />
       </div>
-      <div className="mt-8">
+      <div className="mt-8 flex flex-col gap-4">
         <AnimatedBorderTrail
           className="rounded-full"
           contentClassName="rounded-full transparent"
           trailColor="purple"
         >
-          <Link href="/welcome" onClick={onClose}>
-            <Button className="bg-primary dark:bg-teal-700 hover:text-secondary rounded-full px-4 py-2 whitespace-nowrap text-white shadow-md transition-all duration-150 ease-linear hover:brightness-110">
-              {t("homePage.startMyJourney")}
-            </Button>
-          </Link>
+          <Button 
+            onClick={() => {
+              redirectToJourney();
+              onClose();
+            }}
+            className="bg-primary dark:bg-teal-700 hover:text-secondary rounded-full px-4 py-2 whitespace-nowrap text-white shadow-md transition-all duration-150 ease-linear hover:brightness-110"
+          >
+            {t("homePage.startMyJourney")}
+          </Button>
         </AnimatedBorderTrail>
+        <Link href="/sign-in" onClick={onClose}>
+          <Button 
+            variant="outline"
+            className="rounded-full px-4 py-2 whitespace-nowrap border-blue-600 text-blue-600 hover:bg-blue-50 dark:border-blue-400 dark:text-blue-400 dark:hover:bg-blue-950"
+          >
+            {t("header.signIn")}
+          </Button>
+        </Link>
       </div>
     </div>
   );

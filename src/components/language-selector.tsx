@@ -1,7 +1,7 @@
 "use client";
 
-import { type Locale, locales } from "@/i18n/configs";
-import { setUserLocale } from "@/services/locale";
+import { setUserLocale } from "@/actions/user";
+import { LuGlobe as Globe } from "@/components/icons";
 import {
   Select,
   SelectContent,
@@ -9,8 +9,10 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { LuGlobe as Globe } from "@/components/icons";
+import useUser from "@/hooks/useUser";
+import { type Locale, locales } from "@/i18n/configs";
 import { useLocale, useTranslations } from "next-intl";
+import { useRouter } from "next/navigation";
 import { useTransition } from "react";
 import { z } from "zod";
 
@@ -48,11 +50,14 @@ export default function LanguageSelector({
   const t = useTranslations();
   const locale = useLocale();
   const [isPending, startTransition] = useTransition();
+  const { user } = useUser();
+  const router = useRouter();
 
   async function onLanguageChange(lang: Locale) {
-    const locale = lang as Locale;
-    startTransition(() => {
-      setUserLocale(locale);
+    const newLocale = lang as Locale;
+    startTransition(async () => {
+      await setUserLocale(newLocale, user?.id!);
+      router.refresh();
     });
   }
 

@@ -97,6 +97,8 @@
   --color-blue-800: #282854;
   --color-blue-850: #18193b;
 
+  --color-brand-green: #00cfb1;
+
   --animate-fade-in-scale: fade-in-scale 0.3s ease-out;
   --animate-marquee-horizontal: marquee-x 0.5s infinite linear;
   --animate-marquee-vertical: marquee-y 0.5s linear infinite;
