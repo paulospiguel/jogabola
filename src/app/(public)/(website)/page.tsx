@@ -535,9 +535,9 @@ const CTASection = () => {
           </Button>
           <Button
             variant="outline"
-            className="border-2 border-gray-700 px-8 py-6 text-lg text-white hover:bg-gray-100 hover:text-gray-900"
+            className="border-2 border-gray-700 px-8 py-6 text-lg text-gray-700 hover:bg-gray-100 hover:text-gray-900 dark:text-white"
           >
-            <Handshake className="mr-2 h-6 w-6 text-white" />
+            <Handshake className="mr-2 h-6 w-6 text-gray-700 dark:text-white" />
             {t("becomePartner")}
           </Button>
         </div>
