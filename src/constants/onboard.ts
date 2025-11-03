@@ -1,9 +1,9 @@
-import directorIcon from "@/assets/icons/director.png";
-import footballIcon from "@/assets/icons/football.png";
-import fanFriend from "@/assets/icons/friendship.png";
-import stadiumIcon from "@/assets/icons/stadium.png";
+import coachIcon from "@/assets/images/coach.png";
+import fanFriend from "@/assets/images/fan.png";
+import organizerIcon from "@/assets/images/manager.png";
+import playerIcon from "@/assets/images/player.png";
 import { RoleValues } from "@/schemas";
-import type { Goal, JourneyOption, WaitlistApp } from "@/types/welcome";
+import type { Goal, JourneyOption, WaitlistApp } from "@/types/onboard";
 import {
   Calendar,
   Clock,
@@ -20,9 +20,8 @@ export const JOURNEY_OPTIONS: JourneyOption[] = [
   {
     id: RoleValues.PLAYER,
     title: "Jogador",
-    description:
-      "Encontra equipas, melhora as tuas habilidades e conquista a glória",
-    icon: footballIcon,
+    description: "Encontra equipas, Melhora habilidades, Conquista glória",
+    icon: playerIcon,
     color: "from-emerald-500 to-teal-600",
     features: [
       "Encontrar equipas",
@@ -35,7 +34,7 @@ export const JOURNEY_OPTIONS: JourneyOption[] = [
     id: RoleValues.MANAGER,
     title: "Gestor/Treinador",
     description: "Gere a tua equipa, organiza treinos e lidera para a vitória",
-    icon: directorIcon,
+    icon: coachIcon,
     color: "from-purple-500 to-indigo-600",
     features: [
       "Gestão de equipa",
@@ -62,7 +61,7 @@ export const JOURNEY_OPTIONS: JourneyOption[] = [
     id: RoleValues.ORGANIZER,
     title: "Federação/Organizador",
     description: "Organiza eventos, apoia equipas e conecta a comunidade",
-    icon: stadiumIcon,
+    icon: organizerIcon,
     color: "from-blue-500 to-cyan-600",
     features: [
       "Organização de eventos",

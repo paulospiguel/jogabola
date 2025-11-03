@@ -15,6 +15,7 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import menuHome from "@/constants/menu-home";
+import { useJourneyRedirect } from "@/hooks/use-journey-redirect";
 import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
 import { Menu, Settings } from "lucide-react";
@@ -33,6 +34,7 @@ export default function Header() {
   const [isScrolled, setIsScrolled] = useState(false);
   const pathname = usePathname();
   const isHome = pathname === "/";
+  const { redirectToJourney } = useJourneyRedirect();
 
   const t = useTranslations();
 
@@ -97,16 +99,27 @@ export default function Header() {
             <LanguageSelector />
           </div>
 
-          {/* Launch Button */}
+          {/* Login Button */}
           <Link
-            href="/welcome"
+            href="/sign-in"
+            className={cn(
+              "hidden rounded-full px-4 py-2 font-semibold shadow-md transition-all duration-300 hover:scale-105 md:visible md:block",
+              "bg-blue-600 text-white hover:bg-blue-700 dark:bg-blue-700 dark:hover:bg-blue-800",
+            )}
+          >
+            {t("header.signIn")}
+          </Link>
+
+          {/* Launch Button */}
+          <button
+            onClick={redirectToJourney}
             className={cn(
               "hidden rounded-full px-4 py-2 font-semibold shadow-md transition-all duration-300 hover:scale-105 md:visible md:block",
               "bg-emerald-700 text-white hover:bg-emerald-800 dark:bg-lime-700 dark:hover:bg-lime-800",
             )}
           >
             {t("header.launchJourney")}
-          </Link>
+          </button>
 
           <ThemeToggle />
 

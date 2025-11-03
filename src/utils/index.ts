@@ -71,7 +71,7 @@ const getUserLocale = async (): Promise<string> => {
   try {
     if (typeof window === "undefined") {
       const { cookies } = await import("next/headers");
-      const cookieStore = cookies();
+      const cookieStore = await cookies();
       const fromCookie = cookieStore.get("NEXT_LOCALE")?.value;
       if (fromCookie && locales.includes(fromCookie as (typeof locales)[number])) {
         return fromCookie;

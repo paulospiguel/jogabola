@@ -91,6 +91,11 @@ export default function ResetPasswordPage() {
   }
 
   async function onSubmit(values: ResetPasswordInput) {
+    if (!token) {
+      toast.error("Erro", "Token inválido");
+      return;
+    }
+    
     setLoading(true);
     try {
       const result = await resetPassword(token, values.password);

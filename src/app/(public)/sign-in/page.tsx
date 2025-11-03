@@ -25,13 +25,14 @@ import {
 } from "@/schemas/auth";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { motion } from "framer-motion";
-import { Loader2, Lock, Mail, Trophy, User } from "lucide-react";
+import { ArrowLeft, Loader2, Lock, Mail, Trophy, User } from "lucide-react";
 import Link from "next/link";
-import { redirect } from "next/navigation";
+import { redirect, useRouter } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 
 export default function LoginPage() {
+  const router = useRouter();
   const [tab, setTab] = useState<"login" | "register">("login");
   const [loading, setLoading] = useState(false);
   const { data } = useSession();
@@ -67,17 +68,28 @@ export default function LoginPage() {
     try {
       const result = await signIn.social({
         provider: "google",
-        callbackURL: "/welcome",
+        callbackURL: "/onboard",
       });
-      
-      if (!result.data) {
-        throw new Error("Falha ao autenticar com Google");
+
+      // O login social pode retornar um redirect URL ou um erro
+      if (result.error) {
+        throw new Error(result.error.message || "Falha ao autenticar com Google");
       }
+
+      // Se houver redirect URL, o navegador será redirecionado automaticamente
+      if (result.data?.url) {
+        // O Better Auth redireciona automaticamente, mas podemos garantir
+        window.location.href = result.data.url;
+        return;
+      }
+
+      // Se não houver erro nem URL, pode ser que a autenticação esteja em progresso
+      // Não definir loading como false aqui, pois o redirecionamento pode estar ocorrendo
     } catch (err: any) {
       console.error("Google login error:", err);
       toast.error(
         "Erro ao entrar",
-        err.message || "Não foi possível entrar com Google. Tenta novamente."
+        err.message || "Não foi possível entrar com Google. Verifica as configurações e tenta novamente."
       );
       setLoading(false);
     }
@@ -114,7 +126,7 @@ export default function LoginPage() {
         email: values.email,
         password: values.password,
         name: values.name,
-        callbackURL: "/welcome",
+        callbackURL: "/onboard",
       });
 
       if (result.error) {
@@ -145,6 +157,17 @@ export default function LoginPage() {
         <FloatingOrb delay={2} size={100} position="bottom-20 left-1/4" />
         <FloatingOrb delay={3} size={120} position="bottom-40 right-1/3" />
       </div>
+
+      {/* Botão de voltar à home */}
+      <Button
+        onClick={() => router.push("/")}
+        variant="ghost"
+        size="icon"
+        className="fixed top-4 left-4 z-50 h-10 w-10 rounded-full border border-white/20 bg-white/10 text-white backdrop-blur transition-all hover:bg-white/20 hover:text-[#00cfb1]"
+        aria-label="Voltar à home"
+      >
+        <ArrowLeft className="h-5 w-5" />
+      </Button>
 
       <div className="relative z-10 flex min-h-screen">
         {/* Lado esquerdo - Hero Section */}

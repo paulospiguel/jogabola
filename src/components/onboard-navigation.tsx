@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, ArrowRight, CheckCircle } from "lucide-react";
 
-interface WelcomeNavigationProps {
+interface OnboardNavigationProps {
   currentStep: number;
   totalSteps: number;
   canProceed?: boolean;
@@ -11,7 +11,7 @@ interface WelcomeNavigationProps {
   onSubmit: () => void;
 }
 
-export function WelcomeNavigation({
+export function OnboardNavigation({
   currentStep,
   totalSteps,
   canProceed = true,
@@ -19,7 +19,7 @@ export function WelcomeNavigation({
   onPrevious,
   onNext,
   onSubmit,
-}: WelcomeNavigationProps) {
+}: OnboardNavigationProps) {
   const isLastStep = currentStep === totalSteps - 1;
 
   return (

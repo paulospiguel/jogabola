@@ -1,6 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
+import { useJourneyRedirect } from "@/hooks/use-journey-redirect";
 import { motion } from "framer-motion";
 import {
   Calendar,
@@ -26,6 +27,7 @@ const FieldPattern = () => {
 // Hero Section - Estilo Mockup Exato
 const HeroSection = () => {
   const t = useTranslations();
+  const { redirectToJourney } = useJourneyRedirect();
 
   return (
     <section className="relative flex min-h-screen items-center overflow-hidden pt-20">
@@ -63,7 +65,10 @@ const HeroSection = () => {
 
               {/* CTA Buttons */}
               <div className="flex flex-col gap-4 pt-2 sm:flex-row">
-                <Button className="rounded-lg bg-emerald-500 px-6 py-5 text-base font-medium text-white shadow-md hover:bg-emerald-600 md:px-8 md:py-6 md:text-lg">
+                <Button 
+                  onClick={redirectToJourney}
+                  className="rounded-lg bg-emerald-500 px-6 py-5 text-base font-medium text-white shadow-md hover:bg-emerald-600 md:px-8 md:py-6 md:text-lg"
+                >
                   Iniciar Minha Jornada
                 </Button>
                 <Button
@@ -507,6 +512,8 @@ const FeaturesSection = () => {
 
 // CTA Section
 const CTASection = () => {
+  const { redirectToJourney } = useJourneyRedirect();
+  
   return (
     <section className="bg-gradient-to-br from-gray-900 to-gray-800 py-20">
       <div className="container mx-auto max-w-7xl px-4 text-center md:px-6">
@@ -517,7 +524,10 @@ const CTASection = () => {
           Junte-se a milhares de times que já estão revolucionando sua gestão
         </p>
         <div className="flex flex-col justify-center gap-4 sm:flex-row">
-          <Button className="bg-gradient-to-r from-emerald-500 to-green-500 px-8 py-6 text-lg text-white hover:from-emerald-600 hover:to-green-600">
+          <Button 
+            onClick={redirectToJourney}
+            className="bg-gradient-to-r from-emerald-500 to-green-500 px-8 py-6 text-lg text-white hover:from-emerald-600 hover:to-green-600"
+          >
             Criar Conta Grátis
           </Button>
           <Button

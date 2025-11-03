@@ -1,7 +1,7 @@
 import { LucideIcon } from "lucide-react";
 import { StaticImageData } from "next/image";
 
-export interface WelcomeFormData {
+export interface OnboardFormData {
   role: string;
   name: string;
   email: string;

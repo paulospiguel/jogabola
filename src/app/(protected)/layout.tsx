@@ -24,9 +24,9 @@ export default async function ProtectedLayout({
   const profileResult = await getProfileData(session.user.id);
 
   if (profileResult.success && profileResult.data) {
-    // If profile exists but not completed, redirect to welcome
+    // If profile exists but not completed, redirect to onboard
     if (!profileResult.data.completed) {
-      redirect("/welcome");
+      redirect("/onboard");
     }
 
     // Profile is complete - wrap children with JourneyWrapper
@@ -34,7 +34,7 @@ export default async function ProtectedLayout({
 
     return <JourneyWrapper role={role as Role}>{children}</JourneyWrapper>;
   } else {
-    // If no profile exists at all, redirect to welcome
-    redirect("/welcome");
+    // If no profile exists at all, redirect to onboard
+    redirect("/onboard");
   }
 }

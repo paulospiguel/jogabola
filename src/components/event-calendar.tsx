@@ -329,20 +329,7 @@ export function EventCalendar({
             const days = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
             const dayIndex = date.getDay();
             const adjustedIndex = dayIndex === 0 ? 6 : dayIndex - 1;
-            const isSelectedWeekday =
-              typeof selectedWeekday === "number" &&
-              (selectedWeekday === 0 ? 6 : selectedWeekday - 1) === adjustedIndex;
-
-            return (
-              <span
-                className={cn(
-                  "text-xs font-medium uppercase tracking-[0.08em] text-gray-400",
-                  isSelectedWeekday && "text-[#FF6B4A]"
-                )}
-              >
-                {days[adjustedIndex]}
-              </span>
-            );
+            return days[adjustedIndex];
           },
         }}
         weekStartsOn={1}

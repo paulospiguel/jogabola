@@ -20,7 +20,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { getJourneyRoute } from "@/components/journey-router";
 import { useToast } from "@/hooks/use-toast-custom";
 import { useSession } from "@/lib/auth-client";
-import type { Role } from "@/schemas/profile";
+import type { Availability, Role } from "@/schemas/profile";
 import {
   Camera,
   Globe,
@@ -144,7 +144,7 @@ export default function ProfilePage() {
         name: profileData.name,
         location: profileData.location || undefined,
         experience: (profileData.experience as any) || undefined,
-        availability: profileData.availability || undefined,
+        availability: (profileData.availability as Availability | "" | undefined) || undefined,
         goals: [],
         waitlistApps: [],
         customFields: {

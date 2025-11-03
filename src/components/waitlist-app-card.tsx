@@ -1,5 +1,5 @@
 import { cn } from "@/lib/utils";
-import { WaitlistApp } from "@/types/welcome";
+import { WaitlistApp } from "@/types/onboard";
 import { motion } from "framer-motion";
 import { Calendar, CheckCircle } from "lucide-react";
 

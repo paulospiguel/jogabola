@@ -1,5 +1,5 @@
 import { cn } from "@/lib/utils";
-import { Goal } from "@/types/welcome";
+import { Goal } from "@/types/onboard";
 import { motion } from "framer-motion";
 import { CheckCircle } from "lucide-react";
 

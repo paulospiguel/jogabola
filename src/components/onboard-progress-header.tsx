@@ -1,15 +1,15 @@
 import { Progress } from "@/components/ui/progress";
 import { motion } from "framer-motion";
 
-interface WelcomeProgressHeaderProps {
+interface OnboardProgressHeaderProps {
   currentStep: number;
   totalSteps: number;
 }
 
-export function WelcomeProgressHeader({
+export function OnboardProgressHeader({
   currentStep,
   totalSteps,
-}: WelcomeProgressHeaderProps) {
+}: OnboardProgressHeaderProps) {
   const progress = ((currentStep + 1) / totalSteps) * 100;
 
   return (
