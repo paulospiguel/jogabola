@@ -26,6 +26,7 @@ import {
 import { zodResolver } from "@hookform/resolvers/zod";
 import { motion } from "framer-motion";
 import { Loader2, Lock, Mail, Trophy, User } from "lucide-react";
+import Link from "next/link";
 import { redirect } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -309,12 +310,12 @@ export default function LoginPage() {
                     />
 
                     <div className="flex justify-end">
-                      <button
-                        type="button"
+                      <Link
+                        href="/forgot-password"
                         className="text-xs text-[#00cfb1] hover:text-[#1effbf] transition-colors"
                       >
                         Esqueceste a palavra-passe?
-                      </button>
+                      </Link>
                     </div>
 
                     {/* Buttons */}

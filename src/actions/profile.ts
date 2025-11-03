@@ -75,9 +75,21 @@ export async function getProfileData(userId: string) {
       .where(eq(profile.userId, userId))
       .limit(1);
 
-    return { success: true, data };
+    const profileLevel = await calculateProfileLevel(userId);
+
+    const profileData = {
+      ...data,
+      level: profileLevel,
+    };
+
+    return { success: true, data: profileData };
   } catch (error) {
     console.error("Error fetching profile data:", error);
     return { success: false, error: "Erro ao buscar dados do perfil" };
   }
+}
+
+async function calculateProfileLevel(userId: string) {
+  // TODO: calcular level baseado em estatísticas reais
+  return null;
 }

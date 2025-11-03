@@ -109,3 +109,71 @@ When implementing UI components and pages:
   - Card: `src/components/journey-option-card.tsx`
   - Button: `src/components/neon-button.tsx`
   - Header: `src/components/header.tsx`
+
+---
+
+## Jogabola Arena – Gamer Theme (PlayZone)
+
+This theme is the default baseline for protected app areas (PlayZone, dashboards, feeds). Use these tokens and patterns unless explicitly overridden.
+
+### Color Tokens (Tailwind)
+
+- Background Base: `#050312` → `bg-[#050312]`
+- Background Gradient (135°): `#050312` → `#080a25` → `#0f163f`
+  - `bg-[linear-gradient(135deg,#050312_0%,#080a25_45%,#0f163f_100%)]`
+- Radial Glow Overlay: `rgba(0,255,213,0.22)`
+  - `bg-[radial-gradient(90%_90%_at_50%_0%,rgba(0,255,213,0.22)_0%,rgba(5,3,18,0)_72%)]`
+- Neon Primary (mint): `#6fffe9` → highlights, meta labels
+  - `text-[#6fffe9]` `border-[#6fffe9]` `bg-[#6fffe9]`
+- Neon Secondary (mint strong): `#24ffe6` → primary CTAs
+  - `bg-[#24ffe6] hover:bg-[#24ffe6]/90`
+- Accent Blue (gradient tail): `#02a7ff`
+  - `from-[#24ffe6] to-[#02a7ff]`
+- Surfaces (frosted): translucent whites
+  - Surfaces: `bg-white/5` ~ `bg-white/10`
+  - Borders: `border-white/8` … `border-white/12`
+  - Backdrop: `backdrop-blur` ou `backdrop-blur-xl`
+
+### Elevation / Effects
+
+- Card Shadow (neon soft): `shadow-[0_35px_80px_-45px_rgba(36,255,230,0.8)]`
+- CTA Shadow: `shadow-[0_16px_45px_-20px_rgba(36,255,230,0.9)]`
+- Avatar Glow Ring: overlay `bg-[#6fffe9]/30 blur-xl` atrás do avatar
+
+### Radii / Spacing
+
+- Containers principais: `rounded-3xl`
+- Itens/tiles: `rounded-2xl`
+- Espaçamentos entre blocos: `gap-6` a `gap-8`
+
+### Component Patterns
+
+- CTA Primário (Neon Mint)
+  - `className="group min-w-[180px] bg-[#24ffe6] font-semibold text-slate-900 shadow-[0_16px_45px_-20px_rgba(36,255,230,0.9)] transition-all duration-300 hover:-translate-y-1 hover:bg-[#24ffe6]/90"`
+  - Ícone seta com leve translate-x no hover
+
+- CTA Secundário (Glass Outline)
+  - `variant="outline"` + `className="border-white/25 bg-white/10 text-white backdrop-blur hover:border-[#24ffe6]/60 hover:bg-[#24ffe6]/15"`
+
+- Card Frosted
+  - `rounded-3xl border border-white/8 bg-white/5 backdrop-blur`
+  - Destaque neon: `border-[#24ffe6]/25` + gradiente escuro interno
+
+- Badge/Meta
+  - `text-xs uppercase tracking-[0.3em] text-[#6fffe9]`
+  - Tags: `rounded-full border border-white/10 bg-white/15 px-3 py-1 text-xs font-medium uppercase tracking-wide text-white/80`
+
+### Responsividade
+
+- Container: `container mx-auto px-4 md:px-8 lg:px-12`
+- Grids: `grid gap-6 lg:grid-cols-[minmax(0,1.6fr)_minmax(0,1fr)]`
+- Tipografia/botões escalam em `sm:` e `lg:`
+
+### Acessibilidade
+
+- Contraste AA: `text-white`, `text-slate-200/300` em superfícies translúcidas
+- Foco visível: `focus-visible:ring-[3px] focus-visible:ring-[#6fffe9]/40`
+
+### Regra Global
+
+- Todas as novas implementações devem adotar este tema por padrão (cores, sombras, bordas e gradientes). Desvios precisam ser justificados no PR e documentados no topo do arquivo da página/componente.

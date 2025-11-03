@@ -22,11 +22,14 @@ interface JourneyRouterProps {
  * - ORGANIZER -> /organizer (área de gestão do organizador)
  */
 const JOURNEY_ROUTES: Record<Role, string> = {
-  PLAYER: "/dashboard",
+  PLAYER: "/play-zone",
   MANAGER: "/arena",
   FAN: "/fan-zone",
   ORGANIZER: "/organizer",
 };
+
+// Rotas comuns acessíveis por todos os roles
+const COMMON_ROUTES = ["/profile"];
 
 export function JourneyRouter({
   role,
@@ -36,15 +39,25 @@ export function JourneyRouter({
   const router = useRouter();
   const expectedPath = JOURNEY_ROUTES[role];
 
+  // Verificar se é uma rota comum (acessível por todos)
+  const isCommonRoute = COMMON_ROUTES.some(route =>
+    currentPath.startsWith(route),
+  );
+
   useEffect(() => {
+    // Se for uma rota comum, permite acesso
+    if (isCommonRoute) {
+      return;
+    }
+
     // Se o usuário não estiver na rota correta para sua jornada, redireciona
     if (!currentPath.startsWith(expectedPath)) {
       router.push(expectedPath);
     }
-  }, [role, currentPath, expectedPath, router]);
+  }, [role, currentPath, expectedPath, router, isCommonRoute]);
 
-  // Se estiver na rota correta, renderiza o conteúdo
-  if (currentPath.startsWith(expectedPath)) {
+  // Se for uma rota comum ou estiver na rota correta, renderiza o conteúdo
+  if (isCommonRoute || currentPath.startsWith(expectedPath)) {
     return <>{children}</>;
   }
 
@@ -57,7 +70,10 @@ export function JourneyRouter({
  */
 export function useJourneyAccess(role: Role, currentPath: string): boolean {
   const expectedPath = JOURNEY_ROUTES[role];
-  return currentPath.startsWith(expectedPath);
+  const isCommonRoute = COMMON_ROUTES.some(route =>
+    currentPath.startsWith(route),
+  );
+  return isCommonRoute || currentPath.startsWith(expectedPath);
 }
 
 /**

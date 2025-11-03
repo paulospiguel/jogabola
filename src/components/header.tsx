@@ -69,9 +69,7 @@ export default function Header() {
       <div
         className={cn(
           "flex w-full items-center justify-between rounded-full px-6 py-2 transition-all duration-300",
-          isScrolled || !isHome
-            ? "border border-emerald-200/50 bg-white/90 shadow-xl backdrop-blur-md dark:border-emerald-700/30 dark:bg-slate-900/90"
-            : "border border-white/20 bg-white/10 shadow-lg backdrop-blur-md",
+          "border border-emerald-200/50 bg-white/90 shadow-xl backdrop-blur-md dark:border-emerald-700/30 dark:bg-slate-900/90",
         )}
       >
         {/* Left side: Logo + Menu */}
@@ -93,9 +91,7 @@ export default function Header() {
           <div
             className={cn(
               "hidden items-center gap-2 rounded-full bg-transparent px-3 py-1 text-sm transition-colors duration-300 md:visible md:flex",
-              isScrolled || !isHome
-                ? "text-emerald-700 dark:text-emerald-400"
-                : "text-white",
+              "text-black dark:text-white",
             )}
           >
             <LanguageSelector />
@@ -106,9 +102,7 @@ export default function Header() {
             href="/welcome"
             className={cn(
               "hidden rounded-full px-4 py-2 font-semibold shadow-md transition-all duration-300 hover:scale-105 md:visible md:block",
-              isScrolled || !isHome
-                ? "bg-emerald-600 text-white hover:bg-emerald-700 dark:bg-emerald-700 dark:hover:bg-emerald-600"
-                : "bg-emerald-500/80 text-white backdrop-blur-sm hover:bg-emerald-600/90",
+              "bg-emerald-700 text-white hover:bg-emerald-800 dark:bg-lime-700 dark:hover:bg-lime-800",
             )}
           >
             {t("header.launchJourney")}
@@ -122,9 +116,7 @@ export default function Header() {
               <MenubarTrigger
                 className={cn(
                   "transition-colors duration-300 hover:scale-110",
-                  isScrolled || !isHome
-                    ? "text-emerald-600 hover:text-emerald-700 dark:text-emerald-400"
-                    : "text-white hover:text-emerald-200",
+                  "text-black dark:text-white",
                 )}
               >
                 <Settings size={20} />
@@ -146,9 +138,7 @@ export default function Header() {
                 onClick={() => setIsMenuOpen(!isMenuOpen)}
                 className={cn(
                   "transition-all duration-300 hover:scale-110 md:hidden",
-                  isScrolled || !isHome
-                    ? "text-emerald-600 hover:text-emerald-700"
-                    : "text-white hover:text-emerald-200",
+                  "text-black dark:text-white",
                 )}
               >
                 <Menu size={24} />
@@ -195,26 +185,9 @@ const Navbar = ({
 
   // Define as cores baseado na página e estado de scroll
   const getTextColors = () => {
-    if (!isHome) {
-      // Em páginas que não são home, sempre verde
-      return {
-        default: "text-emerald-700 dark:text-emerald-400",
-        hover: "hover:text-emerald-500 dark:hover:text-emerald-300",
-      };
-    }
-
-    // Na home, depende do scroll
-    if (isScrolled) {
-      return {
-        default: "text-emerald-700 dark:text-emerald-400",
-        hover: "hover:text-emerald-500 dark:hover:text-emerald-300",
-      };
-    }
-
-    // Na home sem scroll, branco
     return {
-      default: "text-white",
-      hover: "hover:text-emerald-200",
+      default: "text-blue-850 dark:text-white font-semibold",
+      hover: "hover:text-emerald-700 dark:hover:text-lime-700 font-semibold",
     };
   };
 

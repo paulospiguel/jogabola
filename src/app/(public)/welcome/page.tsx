@@ -1,6 +1,6 @@
 "use client";
 
-import { saveProfileData } from "@/actions/profile";
+import { getProfileData, saveProfileData } from "@/actions/profile";
 import { CommunicationPreferences } from "@/components/communication-preferences";
 import { CustomFieldRenderer } from "@/components/custom-field-renderer";
 import { FloatingOrb } from "@/components/floating-orb";
@@ -33,6 +33,14 @@ export default function WelcomePage() {
   const { toast } = useToast();
   const { data: session } = useSession();
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [autoFilledFields, setAutoFilledFields] = useState<{
+    name?: boolean;
+    email?: boolean;
+  }>({});
+  const [originalValues, setOriginalValues] = useState<{
+    name?: string;
+    email?: string;
+  }>({});
 
   // Zustand store
   const {
@@ -58,6 +66,93 @@ export default function WelcomePage() {
       updateData({ role: roleParam as any });
     }
   }, [searchParams, formData.role, updateData]);
+
+  // Preencher nome e email automaticamente quando usuário estiver logado
+  useEffect(() => {
+    async function loadUserData() {
+      if (!session?.user?.id) return;
+
+      const filledFields: typeof autoFilledFields = {};
+      const updates: Partial<typeof formData> = {};
+
+      try {
+        // Tentar carregar dados do perfil existente
+        const profileResult = await getProfileData(session.user.id);
+        
+        // Sempre preencher nome e email da sessão quando usuário estiver logado
+        if (session.user.name) {
+          updates.name = session.user.name;
+          filledFields.name = true;
+          setOriginalValues(prev => ({ ...prev, name: session.user.name }));
+        }
+        
+        if (session.user.email) {
+          updates.email = session.user.email;
+          filledFields.email = true;
+          setOriginalValues(prev => ({ ...prev, email: session.user.email }));
+        }
+        
+        // Se já tem perfil, preencher outros dados do perfil
+        if (profileResult.success && profileResult.data) {
+          // Usar nome do perfil se existir e for diferente do nome da sessão
+          if (profileResult.data.name && profileResult.data.name !== session.user.name) {
+            updates.name = profileResult.data.name;
+            setOriginalValues(prev => ({ ...prev, name: profileResult.data.name }));
+          }
+          
+          if (profileResult.data.role && !formData.role) {
+            updates.role = profileResult.data.role as any;
+          }
+          
+          if (profileResult.data.location && !formData.location) {
+            updates.location = profileResult.data.location;
+          }
+          
+          if (profileResult.data.experience && !formData.experience) {
+            updates.experience = profileResult.data.experience as any;
+          }
+          
+          if (profileResult.data.goals && profileResult.data.goals.length > 0 && (!formData.goals || formData.goals.length === 0)) {
+            updates.goals = profileResult.data.goals;
+          }
+        }
+        
+        // Aplicar atualizações
+        if (Object.keys(updates).length > 0) {
+          updateData(updates);
+        }
+        
+        // Marcar campos como auto-preenchidos
+        if (Object.keys(filledFields).length > 0) {
+          setAutoFilledFields(filledFields);
+        }
+      } catch (error) {
+        console.error("Error loading user data:", error);
+        // Em caso de erro, pelo menos tentar preencher com dados da sessão
+        if (session.user.name) {
+          updates.name = session.user.name;
+          filledFields.name = true;
+          setOriginalValues(prev => ({ ...prev, name: session.user.name }));
+        }
+        
+        if (session.user.email) {
+          updates.email = session.user.email;
+          filledFields.email = true;
+          setOriginalValues(prev => ({ ...prev, email: session.user.email }));
+        }
+        
+        if (Object.keys(updates).length > 0) {
+          updateData(updates);
+        }
+        
+        if (Object.keys(filledFields).length > 0) {
+          setAutoFilledFields(filledFields);
+        }
+      }
+    }
+
+    loadUserData();
+  }, [session?.user?.id, session?.user?.name, session?.user?.email]);
 
   // Update custom fields in form data
   const updateCustomField = (fieldId: string, value: any) => {
@@ -330,10 +425,20 @@ export default function WelcomePage() {
                 <Input
                   id="name"
                   value={formData.name}
-                  onChange={e => updateFormData("name", e.target.value)}
+                  onChange={e => {
+                    // Se o campo está desabilitado, não permitir edição
+                    if (autoFilledFields.name) return;
+                    updateFormData("name", e.target.value);
+                  }}
                   placeholder="O teu nome"
-                  className="mt-2 border-white/20 bg-white/10 text-white placeholder:text-white/60"
+                  disabled={!!autoFilledFields.name}
+                  className="mt-2 border-white/20 bg-white/10 text-white placeholder:text-white/60 disabled:cursor-not-allowed disabled:opacity-60"
                 />
+                {autoFilledFields.name && (
+                  <p className="mt-1 text-xs text-white/60">
+                    Este campo foi preenchido automaticamente com os dados da tua conta.
+                  </p>
+                )}
               </div>
 
               <div>
@@ -344,10 +449,20 @@ export default function WelcomePage() {
                   id="email"
                   type="email"
                   value={formData.email}
-                  onChange={e => updateFormData("email", e.target.value)}
+                  onChange={e => {
+                    // Se o campo está desabilitado, não permitir edição
+                    if (autoFilledFields.email) return;
+                    updateFormData("email", e.target.value);
+                  }}
                   placeholder="teu@email.com"
-                  className="mt-2 border-white/20 bg-white/10 text-white placeholder:text-white/60"
+                  disabled={!!autoFilledFields.email}
+                  className="mt-2 border-white/20 bg-white/10 text-white placeholder:text-white/60 disabled:cursor-not-allowed disabled:opacity-60"
                 />
+                {autoFilledFields.email && (
+                  <p className="mt-1 text-xs text-white/60">
+                    Este campo foi preenchido automaticamente com os dados da tua conta.
+                  </p>
+                )}
               </div>
 
               <div>

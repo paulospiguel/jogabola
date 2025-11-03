@@ -49,7 +49,7 @@ e acessível.
 
 1. **Onboarding** — Definição de jornada (jogador ou gestor).
 2. **Autenticação** — Login via Google e e-mail/senha (Better Auth v2).
-3. **Dashboard** — Agenda, estatísticas e notificações.
+3. **PlayZone** — Agenda, estatísticas e notificações.
 4. **Gestão de Equipe** — Criação de equipes, convites, treinos e escalações.
 5. **Perfil do Jogador** — Estatísticas, histórico e conquistas.
 6. **Avaliação e Ranking** — Feedback pós-jogo e sistema de XP.
