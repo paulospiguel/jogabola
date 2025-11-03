@@ -1,7 +1,11 @@
 "use client";
 
-import { saveProfileData } from "@/actions/profile";
+import {
+  linkOnboardingToUser,
+  saveProfileData,
+} from "@/actions/profile";
 import { FloatingOrb } from "@/components/floating-orb";
+import Header from "@/components/header";
 import { GoogleIcon } from "@/components/icons";
 import { Logo } from "@/components/logo";
 import { Button } from "@/components/ui/button";
@@ -27,24 +31,31 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { motion } from "framer-motion";
 import { ArrowLeft, Loader2, Lock, Mail, Trophy, User } from "lucide-react";
 import Link from "next/link";
-import { redirect, useRouter } from "next/navigation";
-import { useState } from "react";
+import { useTranslations } from "next-intl";
+import { redirect, useRouter, useSearchParams } from "next/navigation";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 
 export default function LoginPage() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [tab, setTab] = useState<"login" | "register">("login");
   const [loading, setLoading] = useState(false);
   const { data } = useSession();
   const { toast } = useToast();
+  const t = useTranslations("signIn.page");
 
   // Sync profile data when user logs in
   useProfileSync(data?.user?.id, saveProfileData);
 
+  // Preencher formulários com dados do query params (vindo do onboarding)
+  const emailParam = searchParams.get("email");
+  const nameParam = searchParams.get("name");
+
   const loginForm = useForm<LoginInput>({
     resolver: zodResolver(loginSchema),
     defaultValues: {
-      email: "",
+      email: emailParam || "",
       password: "",
     },
   });
@@ -52,12 +63,23 @@ export default function LoginPage() {
   const registerForm = useForm<RegisterInput>({
     resolver: zodResolver(registerSchema),
     defaultValues: {
-      name: "",
-      email: "",
+      name: nameParam || "",
+      email: emailParam || "",
       password: "",
       confirmPassword: "",
     },
   });
+
+  // Atualizar formulários quando os params mudarem
+  useEffect(() => {
+    if (emailParam) {
+      loginForm.setValue("email", emailParam);
+      registerForm.setValue("email", emailParam);
+    }
+    if (nameParam) {
+      registerForm.setValue("name", nameParam);
+    }
+  }, [emailParam, nameParam, loginForm, registerForm]);
 
   if (data?.user) {
     redirect("/arena");
@@ -66,14 +88,17 @@ export default function LoginPage() {
   async function handleGoogleLogin() {
     setLoading(true);
     try {
+      // Se temos email nos params, usar callback diferente para migrar onboarding
+      const callbackURL = emailParam ? "/onboard?migrate=true" : "/onboard";
+
       const result = await signIn.social({
         provider: "google",
-        callbackURL: "/onboard",
+        callbackURL,
       });
 
       // O login social pode retornar um redirect URL ou um erro
       if (result.error) {
-        throw new Error(result.error.message || "Falha ao autenticar com Google");
+        throw new Error(result.error.message || t("errors.googleAuthFailed"));
       }
 
       // Se houver redirect URL, o navegador será redirecionado automaticamente
@@ -88,8 +113,8 @@ export default function LoginPage() {
     } catch (err: any) {
       console.error("Google login error:", err);
       toast.error(
-        "Erro ao entrar",
-        err.message || "Não foi possível entrar com Google. Verifica as configurações e tenta novamente."
+        t("errors.loginError"),
+        err.message || t("errors.loginFailed")
       );
       setLoading(false);
     }
@@ -105,15 +130,17 @@ export default function LoginPage() {
       });
 
       if (result.error) {
-        throw new Error(result.error.message || "Email ou palavra-passe incorretos");
+        throw new Error(result.error.message || t("errors.invalidCredentials"));
       }
+
+      toast.success(t("success.login"), t("success.loginMessage"));
       
-      toast.success("Bem-vindo!", "Login realizado com sucesso");
+      // A migração será feita pelo hook useProfileSync que monitora a sessão
     } catch (err: any) {
       console.error("Login error:", err);
       toast.error(
-        "Erro ao entrar",
-        err.message || "Email ou palavra-passe incorretos. Verifica os teus dados e tenta novamente."
+        t("errors.loginError"),
+        err.message || t("errors.invalidCredentialsDetails")
       );
       setLoading(false);
     }
@@ -130,18 +157,20 @@ export default function LoginPage() {
       });
 
       if (result.error) {
-        throw new Error(result.error.message || "Não foi possível criar a conta");
+        throw new Error(result.error.message || t("errors.registerFailed"));
       }
 
       toast.success(
-        "Conta criada!",
-        "A tua conta foi criada com sucesso. Vamos configurar o teu perfil."
+        t("success.register"),
+        t("success.registerMessage")
       );
+      
+      // A migração será feita pelo hook useProfileSync que monitora a sessão
     } catch (err: any) {
       console.error("Register error:", err);
       toast.error(
-        "Erro ao criar conta",
-        err.message || "Não foi possível criar a conta. Tenta novamente ou usa outro email."
+        t("errors.registerError"),
+        err.message || t("errors.registerFailedDetails")
       );
       setLoading(false);
     }
@@ -150,6 +179,9 @@ export default function LoginPage() {
 
   return (
     <div className="relative min-h-screen overflow-hidden bg-gradient-to-br from-[#21005a] via-[#2b0071] to-[#21005a]">
+      {/* Header */}
+      <Header />
+
       {/* Background decorativo com floating orbs */}
       <div className="absolute inset-0 overflow-hidden">
         <FloatingOrb delay={0} size={200} position="top-20 left-10" />
@@ -157,17 +189,6 @@ export default function LoginPage() {
         <FloatingOrb delay={2} size={100} position="bottom-20 left-1/4" />
         <FloatingOrb delay={3} size={120} position="bottom-40 right-1/3" />
       </div>
-
-      {/* Botão de voltar à home */}
-      <Button
-        onClick={() => router.push("/")}
-        variant="ghost"
-        size="icon"
-        className="fixed top-4 left-4 z-50 h-10 w-10 rounded-full border border-white/20 bg-white/10 text-white backdrop-blur transition-all hover:bg-white/20 hover:text-[#00cfb1]"
-        aria-label="Voltar à home"
-      >
-        <ArrowLeft className="h-5 w-5" />
-      </Button>
 
       <div className="relative z-10 flex min-h-screen">
         {/* Lado esquerdo - Hero Section */}
@@ -181,25 +202,24 @@ export default function LoginPage() {
             <div className="inline-flex items-center gap-2 rounded-full bg-[#00cfb1]/10 px-4 py-2 backdrop-blur-sm">
               <Trophy className="h-5 w-5 text-[#00cfb1]" />
               <span className="text-sm font-medium text-[#00cfb1]">
-                Plataforma #1 de Futebol Amador
+                {t("hero.badge")}
               </span>
             </div>
 
             <h1 className="max-w-xl bg-gradient-to-r from-[#00cfb1] to-[#1effbf] bg-clip-text text-6xl font-bold leading-tight text-transparent">
-              Entre na Arena
+              {t("hero.title")}
             </h1>
 
             <p className="max-w-lg text-xl leading-relaxed text-[#ba93ff]">
-              Conecta-te com jogadores, organiza partidas e vive o futebol como
-              nunca antes. A tua jornada começa aqui.
+              {t("hero.description")}
             </p>
 
             <div className="flex flex-col gap-4 pt-6">
               {[
-                "🎯 Encontra equipas e jogadores",
-                "📊 Acompanha as tuas estatísticas",
-                "🏆 Participa em torneios",
-                "⚡ Comunidade ativa",
+                t("features.findTeams"),
+                t("features.trackStats"),
+                t("features.joinTournaments"),
+                t("features.activeCommunity"),
               ].map((feature, i) => (
                 <motion.div
                   key={i}
@@ -236,12 +256,12 @@ export default function LoginPage() {
                   <Logo size="medium" />
                 </motion.div>
                 <h2 className="bg-gradient-to-r from-[#00cfb1] to-[#1effbf] bg-clip-text text-3xl font-bold text-transparent">
-                  {tab === "login" ? "Bem-vindo de volta!" : "Cria a tua conta"}
+                  {tab === "login" ? t("form.title.login") : t("form.title.register")}
                 </h2>
                 <p className="text-sm text-[#ba93ff]">
                   {tab === "login"
-                    ? "Entre e continua a tua jornada"
-                    : "Começa a tua aventura no futebol"}
+                    ? t("form.subtitle.login")
+                    : t("form.subtitle.register")}
                 </p>
               </div>
 
@@ -258,7 +278,7 @@ export default function LoginPage() {
                       : "text-white/60 hover:text-white"
                   }`}
                 >
-                  Login
+                  {t("form.tabs.login")}
                 </button>
                 <button
                   onClick={() => {
@@ -271,7 +291,7 @@ export default function LoginPage() {
                       : "text-white/60 hover:text-white"
                   }`}
                 >
-                  Registo
+                  {t("form.tabs.register")}
                 </button>
               </div>
 
@@ -288,7 +308,7 @@ export default function LoginPage() {
                       render={({ field }) => (
                         <FormItem>
                           <FormLabel className="text-sm font-medium text-white">
-                            Email
+                            {t("form.fields.email")}
                           </FormLabel>
                           <FormControl>
                             <div className="relative">
@@ -296,7 +316,7 @@ export default function LoginPage() {
                               <Input
                                 {...field}
                                 type="email"
-                                placeholder="teu@email.com"
+                                placeholder={t("form.fields.emailPlaceholder")}
                                 disabled={loading}
                                 className="border-white/20 bg-white/10 pl-10 text-white placeholder:text-white/40 focus:border-[#00cfb1] focus:ring-[#00cfb1]"
                               />
@@ -313,7 +333,7 @@ export default function LoginPage() {
                       render={({ field }) => (
                         <FormItem>
                           <FormLabel className="text-sm font-medium text-white">
-                            Palavra-passe
+                            {t("form.fields.password")}
                           </FormLabel>
                           <FormControl>
                             <div className="relative">
@@ -321,7 +341,7 @@ export default function LoginPage() {
                               <Input
                                 {...field}
                                 type="password"
-                                placeholder="••••••••"
+                                placeholder={t("form.fields.passwordPlaceholder")}
                                 disabled={loading}
                                 className="border-white/20 bg-white/10 pl-10 text-white placeholder:text-white/40 focus:border-[#00cfb1] focus:ring-[#00cfb1]"
                               />
@@ -337,7 +357,7 @@ export default function LoginPage() {
                         href="/forgot-password"
                         className="text-xs text-[#00cfb1] hover:text-[#1effbf] transition-colors"
                       >
-                        Esqueceste a palavra-passe?
+                        {t("form.forgotPassword")}
                       </Link>
                     </div>
 
@@ -351,10 +371,10 @@ export default function LoginPage() {
                         {loading ? (
                           <>
                             <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                            A entrar...
+                            {t("form.buttons.logging")}
                           </>
                         ) : (
-                          "Entrar"
+                          t("form.buttons.login")
                         )}
                       </Button>
 
@@ -364,7 +384,7 @@ export default function LoginPage() {
                         </div>
                         <div className="relative flex justify-center text-xs">
                           <span className="bg-gradient-to-br from-white/10 to-white/5 px-3 py-1 text-white/60">
-                            ou continua com
+                            {t("form.continueWith")}
                           </span>
                         </div>
                       </div>
@@ -384,7 +404,7 @@ export default function LoginPage() {
                         ) : (
                           <>
                             <GoogleIcon className="mr-2 h-5 w-5" />
-                            Google
+                            {t("form.buttons.google")}
                           </>
                         )}
                       </Button>
@@ -406,7 +426,7 @@ export default function LoginPage() {
                       render={({ field }) => (
                         <FormItem>
                           <FormLabel className="text-sm font-medium text-white">
-                            Nome
+                            {t("form.fields.name")}
                           </FormLabel>
                           <FormControl>
                             <div className="relative">
@@ -414,7 +434,7 @@ export default function LoginPage() {
                               <Input
                                 {...field}
                                 type="text"
-                                placeholder="O teu nome"
+                                placeholder={t("form.fields.namePlaceholder")}
                                 disabled={loading}
                                 className="border-white/20 bg-white/10 pl-10 text-white placeholder:text-white/40 focus:border-[#00cfb1] focus:ring-[#00cfb1]"
                               />
@@ -431,7 +451,7 @@ export default function LoginPage() {
                       render={({ field }) => (
                         <FormItem>
                           <FormLabel className="text-sm font-medium text-white">
-                            Email
+                            {t("form.fields.email")}
                           </FormLabel>
                           <FormControl>
                             <div className="relative">
@@ -439,7 +459,7 @@ export default function LoginPage() {
                               <Input
                                 {...field}
                                 type="email"
-                                placeholder="teu@email.com"
+                                placeholder={t("form.fields.emailPlaceholder")}
                                 disabled={loading}
                                 className="border-white/20 bg-white/10 pl-10 text-white placeholder:text-white/40 focus:border-[#00cfb1] focus:ring-[#00cfb1]"
                               />
@@ -456,7 +476,7 @@ export default function LoginPage() {
                       render={({ field }) => (
                         <FormItem>
                           <FormLabel className="text-sm font-medium text-white">
-                            Palavra-passe
+                            {t("form.fields.password")}
                           </FormLabel>
                           <FormControl>
                             <div className="relative">
@@ -464,7 +484,7 @@ export default function LoginPage() {
                               <Input
                                 {...field}
                                 type="password"
-                                placeholder="••••••••"
+                                placeholder={t("form.fields.passwordPlaceholder")}
                                 disabled={loading}
                                 className="border-white/20 bg-white/10 pl-10 text-white placeholder:text-white/40 focus:border-[#00cfb1] focus:ring-[#00cfb1]"
                               />
@@ -481,7 +501,7 @@ export default function LoginPage() {
                       render={({ field }) => (
                         <FormItem>
                           <FormLabel className="text-sm font-medium text-white">
-                            Confirmar palavra-passe
+                            {t("form.fields.confirmPassword")}
                           </FormLabel>
                           <FormControl>
                             <div className="relative">
@@ -489,7 +509,7 @@ export default function LoginPage() {
                               <Input
                                 {...field}
                                 type="password"
-                                placeholder="••••••••"
+                                placeholder={t("form.fields.passwordPlaceholder")}
                                 disabled={loading}
                                 className="border-white/20 bg-white/10 pl-10 text-white placeholder:text-white/40 focus:border-[#00cfb1] focus:ring-[#00cfb1]"
                               />
@@ -510,10 +530,10 @@ export default function LoginPage() {
                         {loading ? (
                           <>
                             <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                            A criar conta...
+                            {t("form.buttons.registering")}
                           </>
                         ) : (
-                          "Criar Conta"
+                          t("form.buttons.register")
                         )}
                       </Button>
 
@@ -523,7 +543,7 @@ export default function LoginPage() {
                         </div>
                         <div className="relative flex justify-center text-xs">
                           <span className="bg-gradient-to-br from-white/10 to-white/5 px-3 py-1 text-white/60">
-                            ou continua com
+                            {t("form.continueWith")}
                           </span>
                         </div>
                       </div>
@@ -543,7 +563,7 @@ export default function LoginPage() {
                         ) : (
                           <>
                             <GoogleIcon className="mr-2 h-5 w-5" />
-                            Google
+                            {t("form.buttons.google")}
                           </>
                         )}
                       </Button>
@@ -555,8 +575,7 @@ export default function LoginPage() {
 
             {/* Footer */}
             <p className="mt-6 text-center text-xs text-white/40">
-              © {new Date().getFullYear()} JogaBola — Vive o Futebol
-              ⚡
+              {t("footer", { year: new Date().getFullYear() })}
             </p>
           </motion.div>
         </div>

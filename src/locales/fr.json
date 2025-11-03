@@ -27,12 +27,14 @@
     "community": "Communauté",
     "marketplace": "Marché",
     "academy": "Académie",
+    "howItWorks": "Comment ça fonctionne",
+    "becomePartner": "Devenir Partenaire",
     "about": "À propos",
     "contact": "Contact",
     "privacy": "Confidentialité",
     "terms": "Conditions",
     "blog": "Blog",
-    "howItWorks": "Comment ça fonctionne"
+    "privacyAndTerms": "Confidentialité et Conditions"
   },
   "countDown": {
     "title": "Time left",
@@ -194,7 +196,10 @@
     "about": "À propos de nous",
     "home": "Accueil",
     "howItWorks": "Comment ça fonctionne",
-    "plans": "Plans"
+    "plans": "Plans",
+    "new": "Nouveau",
+    "launchJourney": "Lancer le voyage",
+    "signIn": "Se connecter"
   },
   "homePage": {
     "createMyTeams": "Créer mes équipes",
@@ -207,7 +212,83 @@
     "downloadAppDescription": "Profitez de l'expérience complète Jogabola sur votre mobile. Disponible sur iOS et Android.",
     "downloadOnAppStore": "Télécharger sur l'App Store",
     "downloadOnGooglePlay": "Télécharger sur Google Play",
-    "appMockupAlt": "Mockup de l'application Jogabola"
+    "appMockupAlt": "Mockup de l'application Jogabola",
+    "hero": {
+      "versionBadge": "Version 2.0",
+      "title": "Prêt à gérer votre",
+      "titleHighlight": "équipe de rêve?",
+      "subtitle": "Construisez votre équipe professionnelle, définissez des tactiques et dominez le terrain numérique.",
+      "startJourney": "Commencer Mon Voyage",
+      "watchDemo": "Voir la Démonstration",
+      "trustIndicators": {
+        "freeToStart": "Gratuit pour commencer",
+        "noCard": "Pas de carte requise"
+      }
+    },
+    "demo": {
+      "title": "Démonstration de l'App",
+      "subtitle": "Découvrez comme il est facile de gérer votre équipe et d'atteindre la victoire",
+      "stats": {
+        "activePlayers": "Joueurs actifs",
+        "championships": "Championnats",
+        "averageRating": "Note moyenne"
+      }
+    },
+    "testimonials": {
+      "title": "Histoires de Succès",
+      "items": {
+        "coach": {
+          "name": "João Silva",
+          "role": "Entraîneur",
+          "text": "Meilleure plateforme pour gérer mon équipe!"
+        },
+        "captain": {
+          "name": "Maria Costa",
+          "role": "Capitaine",
+          "text": "Agilité et organisation en un seul endroit!"
+        },
+        "player": {
+          "name": "Pedro Santos",
+          "role": "Joueur",
+          "text": "Plus de temps pour se concentrer sur le jeu!"
+        }
+      }
+    },
+    "features": {
+      "title": "Fonctionnalités Complètes",
+      "items": {
+        "playerManagement": {
+          "title": "Gestion des Joueurs",
+          "description": "Profils, statistiques et disponibilité"
+        },
+        "centralizedSchedule": {
+          "title": "Agenda Centralisé",
+          "description": "Entraînements et matchs organisés"
+        },
+        "championshipOrganization": {
+          "title": "Organisation des Championnats",
+          "description": "Créez et gérez des tournois"
+        },
+        "communication": {
+          "title": "Communication",
+          "description": "Chat intégré avec l'équipe"
+        },
+        "accessControl": {
+          "title": "Contrôle d'Accès",
+          "description": "Différents niveaux de permission"
+        },
+        "performanceAnalysis": {
+          "title": "Analyse de Performance",
+          "description": "Statistiques détaillées"
+        }
+      }
+    },
+    "cta": {
+      "title": "Prêt à commencer?",
+      "subtitle": "Rejoignez des milliers d'équipes qui révolutionnent déjà leur gestion",
+      "createAccount": "Créer un Compte Gratuit",
+      "becomePartner": "Devenir Partenaire"
+    }
   },
   "locales": {
     "en": "Anglais",
@@ -230,6 +311,190 @@
       "quote": "Le meilleur endroit pour trouver votre équipe et jouer au football.",
       "name": "JogaBola",
       "designation": "Le meilleur endroit pour trouver votre équipe et jouer au football."
+    }
+  },
+  "arena": {
+    "header": {
+      "subtitle": "Centre de l'Arena",
+      "title": "Bienvenue dans l'Arena ⚽",
+      "description": "Suivez le rythme de votre équipe, organisez des matchs et gardez la communauté toujours active."
+    },
+    "stats": {
+      "matchesPlayed": "Matchs Joués",
+      "activeTeams": "Équipes Actives",
+      "upcomingMatches": "Prochains Matchs",
+      "winRate": "Taux de Victoire",
+      "thisWeek": "Cette semaine"
+    },
+    "actions": {
+      "newMatch": "Nouveau Match",
+      "scheduleMatch": "Programmer un Match",
+      "inviteFriends": "Inviter des Amis",
+      "createTournament": "Créer un Tournoi",
+      "viewStats": "Voir les Statistiques",
+      "quickActions": "⚡ Actions Rapides"
+    },
+    "matches": {
+      "title": "Prochains Matchs",
+      "viewAll": "Voir tous les matchs",
+      "status": {
+        "confirmed": "✓ Confirmé",
+        "pending": "⏳ En attente"
+      }
+    },
+    "activity": {
+      "title": "Activité Récente"
+    }
+  },
+  "signIn": {
+    "page": {
+      "hero": {
+        "badge": "Plateforme #1 de Football Amateur",
+        "title": "Entrez dans l'Arena",
+        "description": "Connectez-vous avec des joueurs, organisez des matchs et vivez le football comme jamais auparavant. Votre voyage commence ici."
+      },
+      "features": {
+        "findTeams": "🎯 Trouvez des équipes et des joueurs",
+        "trackStats": "📊 Suivez vos statistiques",
+        "joinTournaments": "🏆 Participez à des tournois",
+        "activeCommunity": "⚡ Communauté active"
+      },
+      "form": {
+        "title": {
+          "login": "Bon retour!",
+          "register": "Créez votre compte"
+        },
+        "subtitle": {
+          "login": "Connectez-vous et continuez votre voyage",
+          "register": "Commencez votre aventure footballistique"
+        },
+        "tabs": {
+          "login": "Connexion",
+          "register": "S'inscrire"
+        },
+        "fields": {
+          "name": "Nom",
+          "email": "Courriel",
+          "password": "Mot de passe",
+          "confirmPassword": "Confirmer le mot de passe",
+          "namePlaceholder": "Votre nom",
+          "emailPlaceholder": "votre@email.com",
+          "passwordPlaceholder": "••••••••"
+        },
+        "forgotPassword": "Mot de passe oublié?",
+        "continueWith": "ou continuez avec",
+        "buttons": {
+          "login": "Se connecter",
+          "logging": "Connexion...",
+          "register": "Créer un compte",
+          "registering": "Création du compte...",
+          "google": "Google"
+        }
+      },
+      "footer": "© {year} JogaBola — Vivez le Football ⚡",
+      "errors": {
+        "googleAuthFailed": "Échec de l'authentification avec Google",
+        "loginError": "Erreur de connexion",
+        "loginFailed": "Impossible de se connecter avec Google. Vérifiez vos paramètres et réessayez.",
+        "invalidCredentials": "Courriel ou mot de passe incorrect",
+        "invalidCredentialsDetails": "Courriel ou mot de passe incorrect. Vérifiez vos données et réessayez.",
+        "registerError": "Erreur de création de compte",
+        "registerFailed": "Impossible de créer le compte",
+        "registerFailedDetails": "Impossible de créer le compte. Réessayez ou utilisez un autre courriel."
+      },
+      "success": {
+        "login": "Bienvenue!",
+        "loginMessage": "Connexion réussie",
+        "register": "Compte créé!",
+        "registerMessage": "Votre compte a été créé avec succès. Configurons votre profil."
+      }
+    }
+  },
+  "onboard": {
+    "errors": {
+      "title": "Erreur",
+      "requiredFields": "Le courriel, le nom et le rôle sont obligatoires pour enregistrer l'onboarding.",
+      "saveError": "Une erreur s'est produite lors de l'enregistrement des données.",
+      "createProfileError": "Une erreur s'est produite lors de la création du profil. L'onboarding a été enregistré.",
+      "saveDataError": "Une erreur s'est produite lors de l'enregistrement des données."
+    },
+    "success": {
+      "completed": "Onboarding Terminé!",
+      "completedMessage": "Vos données ont été enregistrées avec succès!",
+      "completedPending": "Onboarding Terminé!",
+      "completedPendingMessage": "Créez votre compte pour continuer et enregistrer les données.",
+      "recovered": "Onboarding récupéré!",
+      "recoveredMessage": "Vos données d'onboarding ont été appliquées à votre profil."
+    },
+    "close": "Fermer l'onboarding"
+  },
+  "playZone": {
+    "loading": "Chargement de votre voyage...",
+    "header": {
+      "subtitle": "Centre du voyage du joueur",
+      "greeting": "👋 Salut, {name}! Prêt pour le prochain match?",
+      "defaultGreeting": "Salut, bienvenue sur Jogabola!"
+    },
+    "nextMatch": {
+      "label": "Prochain match"
+    },
+    "stats": {
+      "gamesPlayed": "Matchs joués",
+      "goals": "Buts",
+      "assists": "Passes décisives",
+      "averageRating": "Note moyenne"
+    },
+    "achievements": {
+      "hattrickHero": {
+        "title": "Héros du Hat-trick",
+        "description": "3 buts dans le même match"
+      },
+      "perfectPasses": {
+        "title": "100 passes parfaites",
+        "description": "Précision maximale en 4 matchs"
+      },
+      "defensiveMVP": {
+        "title": "MVP défensif",
+        "description": "Domination totale du milieu de terrain"
+      }
+    },
+    "feed": {
+      "title": "Fil d'actualité de l'équipe",
+      "subtitle": "Derniers événements",
+      "updates": {
+        "trainingGoals": "⚽ Lucas a marqué 3 buts à l'entraînement d'hier.",
+        "newMatch": "🔥 Nouveau match programmé pour dimanche!",
+        "tacticalReview": "🧠 Révision tactique publiée pour l'équipe."
+      }
+    },
+    "coachInsight": {
+      "title": "Insight de l'entraîneur virtuel"
+    },
+    "actions": {
+      "evaluateTeam": {
+        "title": "Évaluer les coéquipiers du dernier match",
+        "description": "Débloquez les récompenses de l'équipe en laissant des commentaires sur les performances.",
+        "button": "Commencer l'évaluation"
+      },
+      "challenges": {
+        "title": "Explorer les défis hebdomadaires",
+        "description": "Complétez des missions spéciales et montez dans le classement PlayZone.",
+        "button": "Voir les défis disponibles"
+      }
+    },
+    "positions": {
+      "goalkeeper": "Gardien",
+      "defender": "Défenseur",
+      "midfielder": "Milieu",
+      "forward": "Attaquant",
+      "versatile": "Polyvalent",
+      "default": "Joueur"
+    },
+    "experience": {
+      "beginner": "Débutant",
+      "intermediate": "Intermédiaire",
+      "advanced": "Avancé",
+      "professional": "Professionnel"
     }
   }
 }

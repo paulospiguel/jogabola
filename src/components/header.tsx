@@ -1,12 +1,5 @@
 "use client";
 import {
-  Menubar,
-  MenubarContent,
-  MenubarItem,
-  MenubarMenu,
-  MenubarTrigger,
-} from "@/components/ui/menubar";
-import {
   Sheet,
   SheetContent,
   SheetFooter,
@@ -18,7 +11,7 @@ import menuHome from "@/constants/menu-home";
 import { useJourneyRedirect } from "@/hooks/use-journey-redirect";
 import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
-import { Menu, Settings } from "lucide-react";
+import { Menu } from "lucide-react";
 import { useTranslations } from "next-intl";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -122,27 +115,6 @@ export default function Header() {
           </button>
 
           <ThemeToggle />
-
-          {/* Settings Icon */}
-          <Menubar className="hidden h-10 w-10 items-center justify-center p-0 md:flex">
-            <MenubarMenu>
-              <MenubarTrigger
-                className={cn(
-                  "transition-colors duration-300 hover:scale-110",
-                  "text-black dark:text-white",
-                )}
-              >
-                <Settings size={20} />
-              </MenubarTrigger>
-              <MenubarContent>
-                <MenubarItem>
-                  <Link href="/sign-in" className="w-full">
-                    {t("header.signIn")}
-                  </Link>
-                </MenubarItem>
-              </MenubarContent>
-            </MenubarMenu>
-          </Menubar>
 
           {/* Mobile menu button */}
           <Sheet>

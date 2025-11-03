@@ -3,6 +3,8 @@
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { motion } from "framer-motion";
+import { useTranslations } from "next-intl";
 import {
   Activity,
   Calendar,
@@ -17,38 +19,32 @@ import {
 } from "lucide-react";
 
 export default function ArenaPage() {
+  const t = useTranslations("arena");
+
   const stats = [
     {
-      title: "Partidas Jogadas",
+      title: t("stats.matchesPlayed"),
       value: "24",
       change: "+12%",
       icon: Trophy,
-      gradient: "from-emerald-500 to-green-600",
-      bgGradient: "from-emerald-500/10 to-green-600/10",
     },
     {
-      title: "Times Ativos",
+      title: t("stats.activeTeams"),
       value: "3",
       change: "+1",
       icon: Users,
-      gradient: "from-blue-500 to-cyan-600",
-      bgGradient: "from-blue-500/10 to-cyan-600/10",
     },
     {
-      title: "Próximas Partidas",
+      title: t("stats.upcomingMatches"),
       value: "5",
-      change: "Esta semana",
+      change: t("stats.thisWeek"),
       icon: Calendar,
-      gradient: "from-purple-500 to-pink-600",
-      bgGradient: "from-purple-500/10 to-pink-600/10",
     },
     {
-      title: "Taxa de Vitória",
+      title: t("stats.winRate"),
       value: "68%",
       change: "+5%",
       icon: TrendingUp,
-      gradient: "from-orange-500 to-amber-600",
-      bgGradient: "from-orange-500/10 to-amber-600/10",
     },
   ];
 
@@ -103,24 +99,42 @@ export default function ArenaPage() {
     },
   ];
 
+  const fadeUp = {
+    initial: { opacity: 0, y: 24 },
+    animate: { opacity: 1, y: 0 },
+  };
+
+  const MotionCard = motion(Card);
+
   return (
-    <div className="relative">
-      <div className="pointer-events-none absolute inset-0 overflow-hidden">
-        <div className="absolute top-20 left-10 h-56 w-56 rounded-full bg-[radial-gradient(circle,#24ffe6_0%,rgba(36,255,230,0)_70%)] blur-3xl opacity-60" />
-        <div className="absolute right-24 bottom-24 h-64 w-64 rounded-full bg-[radial-gradient(circle,#00f0ff_0%,rgba(0,240,255,0)_70%)] blur-3xl opacity-60" />
-        <div className="absolute top-1/2 left-1/3 h-52 w-52 rounded-full bg-[radial-gradient(circle,#1effbf_0%,rgba(30,255,191,0)_70%)] blur-3xl opacity-40" />
+    <div className="relative min-h-screen overflow-hidden text-white">
+      <div className="pointer-events-none absolute inset-0 -z-10">
+        <div className="absolute inset-0 bg-[linear-gradient(135deg,#050312_0%,#080a25_45%,#0f163f_100%)]" />
+        <div className="absolute inset-0 bg-[radial-gradient(90%_90%_at_50%_0%,rgba(0,255,213,0.22)_0%,rgba(5,3,18,0)_72%)]" />
+        <div className="absolute top-32 left-1/4 h-72 w-72 -translate-x-1/2 rounded-full bg-[#24ffe6]/12 blur-[120px]" />
+        <div className="absolute bottom-16 right-20 h-80 w-80 rounded-full bg-[#02a7ff]/12 blur-[120px]" />
+        <div className="absolute top-1/2 right-1/3 h-64 w-64 rounded-full bg-[#1effbf]/12 blur-[120px]" />
       </div>
 
-      <div className="relative z-10 container mx-auto max-w-6xl px-4 py-8 md:px-8 md:py-10 lg:px-12 lg:py-12">
-        {/* Welcome Section with Glass Morphism */}
-        <div className="relative mb-8 overflow-hidden rounded-3xl border border-white/8 bg-white/5 p-8 backdrop-blur shadow-[0_35px_80px_-45px_rgba(36,255,230,0.8)]">
+      <div className="relative z-10 container mx-auto max-w-6xl px-4 py-10 md:px-8 lg:px-12">
+        <motion.section
+          className="relative mb-10 overflow-hidden rounded-3xl border border-white/10 bg-white/5 p-8 shadow-[0_35px_80px_-45px_rgba(36,255,230,0.8)] backdrop-blur-xl"
+          initial={{ opacity: 0, y: -24 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+        >
+          <div className="absolute inset-x-0 -top-px h-px bg-gradient-to-r from-transparent via-[#24ffe6]/60 to-transparent" />
+          <div className="absolute top-1/2 -right-24 h-72 w-72 -translate-y-1/2 rounded-full bg-[#24ffe6]/15 blur-[120px]" />
           <div className="relative flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-            <div>
-              <h1 className="mb-2 bg-gradient-to-r from-[#24ffe6] to-[#02a7ff] bg-clip-text text-3xl font-bold text-transparent md:text-4xl">
-                Bem-vindo de volta! ⚽
+            <div className="space-y-3">
+              <span className="text-xs font-semibold uppercase tracking-[0.35em] text-[#6fffe9]">
+                {t("header.subtitle")}
+              </span>
+              <h1 className="text-3xl font-semibold text-white md:text-4xl">
+                {t("header.title")}
               </h1>
-              <p className="text-lg text-slate-200/80">
-                Confira suas estatísticas e próximas partidas
+              <p className="max-w-xl text-base text-slate-200/85">
+                {t("header.description")}
               </p>
             </div>
             <Button
@@ -128,20 +142,27 @@ export default function ArenaPage() {
               className="group min-w-[180px] bg-[#24ffe6] font-semibold text-slate-900 shadow-[0_16px_45px_-20px_rgba(36,255,230,0.9)] transition-all duration-300 hover:-translate-y-1 hover:bg-[#24ffe6]/90"
             >
               <Plus className="mr-2 h-5 w-5 transition-transform group-hover:translate-x-0.5" />
-              Nova Partida
+              {t("actions.newMatch")}
             </Button>
           </div>
-        </div>
+        </motion.section>
 
-        {/* Stats Grid with Glass Morphism */}
-        <div className="mb-8 grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+        <motion.section
+          className="mb-10 grid gap-4 md:grid-cols-2 lg:grid-cols-4"
+          variants={fadeUp}
+          initial="initial"
+          animate="animate"
+          transition={{ staggerChildren: 0.08, delayChildren: 0.12 }}
+        >
           {stats.map(stat => {
             const Icon = stat.icon;
             return (
-              <Card
+              <MotionCard
                 key={stat.title}
-                className="relative overflow-hidden rounded-2xl border border-white/8 bg-white/5 backdrop-blur transition-all duration-300 hover:-translate-y-1 hover:border-[#24ffe6]/25"
+                variants={fadeUp}
+                className="group relative overflow-hidden rounded-2xl border border-white/10 bg-white/6 text-white backdrop-blur-xl transition-all duration-300 hover:-translate-y-1 hover:border-[#24ffe6]/45"
               >
+                <div className="absolute -top-16 right-0 h-32 w-32 rounded-full bg-[#24ffe6]/15 blur-3xl transition-opacity duration-500 group-hover:opacity-100" />
                 <CardHeader className="relative flex flex-row items-center justify-between space-y-0 pb-3">
                   <CardTitle className="text-sm font-semibold text-white/90">
                     {stat.title}
@@ -150,203 +171,209 @@ export default function ArenaPage() {
                     <Icon className="h-5 w-5 text-[#6fffe9]" />
                   </div>
                 </CardHeader>
-                <CardContent className="relative">
-                  <div className="text-3xl font-bold">
+                <CardContent>
+                  <p className="text-3xl font-bold">
                     <span className="bg-gradient-to-br from-[#24ffe6] to-[#02a7ff] bg-clip-text text-transparent">
                       {stat.value}
                     </span>
-                  </div>
+                  </p>
                   <p className="mt-2 text-sm font-medium text-[#6fffe9]">
                     {stat.change}
                   </p>
                 </CardContent>
-              </Card>
+              </MotionCard>
             );
           })}
-        </div>
+        </motion.section>
 
         <div className="grid gap-6 lg:grid-cols-3">
-          {/* Upcoming Matches */}
-          <Card className="border border-white/8 bg-white/5 shadow-2xl backdrop-blur lg:col-span-2">
-            <CardHeader className="border-b border-white/8">
-              <CardTitle className="flex items-center gap-3 text-xl">
-                <div className="rounded-full border border-white/10 bg-white/10 p-2 shadow">
-                  <Calendar className="h-5 w-5 text-white" />
-                </div>
-                <span className="bg-gradient-to-r from-[#24ffe6] to-[#02a7ff] bg-clip-text font-bold text-transparent">
-                  Próximas Partidas
-                </span>
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="pt-6">
-              <div className="space-y-4">
-                {upcomingMatches.map((match, index) => (
-                  <div
-                    key={match.id}
-                    className="group relative flex items-center justify-between rounded-2xl border border-white/8 bg-white/5 p-5 backdrop-blur transition-all duration-300 hover:-translate-y-0.5 hover:border-[#24ffe6]/25"
-                  >
-                    {/* Field line decoration */}
-                    <div className="absolute top-0 bottom-0 left-0 w-1 rounded-l-2xl bg-gradient-to-b from-[#24ffe6] to-[#02a7ff]" />
-
-                    <div className="flex-1 pl-3">
-                      <div className="mb-3 flex items-center gap-3">
-                        <div className="flex h-10 w-10 items-center justify-center rounded-full border border-white/10 bg-white/10 font-bold text-white shadow">
-                          {index + 1}
+          <motion.section
+            className="lg:col-span-2"
+            variants={fadeUp}
+            initial="initial"
+            animate="animate"
+            transition={{ duration: 0.55, delay: 0.2 }}
+          >
+            <MotionCard className="overflow-hidden border border-white/10 bg-white/6 shadow-2xl backdrop-blur-xl">
+              <CardHeader className="relative border-b border-white/10">
+                <CardTitle className="flex items-center gap-3 text-xl">
+                  <div className="rounded-full border border-white/10 bg-white/10 p-2 shadow">
+                    <Calendar className="h-5 w-5 text-white" />
+                  </div>
+                  <span className="bg-gradient-to-r from-[#24ffe6] to-[#02a7ff] bg-clip-text font-bold text-transparent">
+                    {t("matches.title")}
+                  </span>
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="pt-6">
+                <div className="space-y-4">
+                  {upcomingMatches.map((match, index) => (
+                    <motion.div
+                      key={match.id}
+                      variants={fadeUp}
+                      initial="initial"
+                      animate="animate"
+                      transition={{ duration: 0.45, delay: index * 0.1 }}
+                      className="group relative flex items-center justify-between overflow-hidden rounded-2xl border border-white/10 bg-white/6 p-5 backdrop-blur-xl transition-all duration-300 hover:-translate-y-0.5 hover:border-[#24ffe6]/35"
+                    >
+                      <div className="absolute inset-y-0 left-0 w-1 bg-gradient-to-b from-[#24ffe6] to-[#02a7ff]" />
+                      <div className="flex-1 pl-4">
+                        <div className="mb-3 flex flex-wrap items-center gap-3">
+                          <div className="flex h-10 w-10 items-center justify-center rounded-full border border-white/10 bg-white/10 text-base font-semibold text-white shadow">
+                            {index + 1}
+                          </div>
+                          <h3 className="text-lg font-semibold text-white/90">
+                            {match.title}
+                          </h3>
+                          <Badge
+                            className={
+                              match.status === "confirmed"
+                                ? "border-0 bg-[#24ffe6] font-semibold text-slate-900 shadow-[0_16px_45px_-20px_rgba(36,255,230,0.9)]"
+                                : "border border-white/15 bg-white/10 text-white/75"
+                            }
+                          >
+                            {match.status === "confirmed"
+                              ? t("matches.status.confirmed")
+                              : t("matches.status.pending")}
+                          </Badge>
                         </div>
-                        <h3 className="text-lg font-bold text-white/90">
-                          {match.title}
-                        </h3>
-                        <Badge
-                          className={
-                            match.status === "confirmed"
-                              ? "border-0 bg-[#24ffe6] font-semibold text-slate-900 shadow-[0_16px_45px_-20px_rgba(36,255,230,0.9)]"
-                              : "border border-white/10 bg-white/10 text-white/80"
-                          }
-                        >
-                          {match.status === "confirmed"
-                            ? "✓ Confirmada"
-                            : "⏳ Pendente"}
-                        </Badge>
-                      </div>
-                      <div className="flex flex-wrap gap-4 text-sm font-medium">
-                        <div className="flex items-center gap-1.5 text-slate-200/80">
-                          <Calendar className="h-4 w-4 text-[#6fffe9]" />
-                          {match.date}
-                        </div>
-                        <div className="flex items-center gap-1.5 text-slate-200/80">
-                          <Clock className="h-4 w-4 text-[#6fffe9]" />
-                          {match.time}
-                        </div>
-                        <div className="flex items-center gap-1.5 text-slate-200/80">
-                          <MapPin className="h-4 w-4 text-[#6fffe9]" />
-                          {match.location}
-                        </div>
-                        <div className="flex items-center gap-1.5 text-slate-200/80">
-                          <Users className="h-4 w-4 text-[#6fffe9]" />
-                          <span className="font-semibold text-white">
-                            {match.players}
+                        <div className="flex flex-wrap gap-4 text-sm font-medium text-slate-200/80">
+                          <span className="inline-flex items-center gap-1.5">
+                            <Calendar className="h-4 w-4 text-[#6fffe9]" />
+                            {match.date}
+                          </span>
+                          <span className="inline-flex items-center gap-1.5">
+                            <Clock className="h-4 w-4 text-[#6fffe9]" />
+                            {match.time}
+                          </span>
+                          <span className="inline-flex items-center gap-1.5">
+                            <MapPin className="h-4 w-4 text-[#6fffe9]" />
+                            {match.location}
+                          </span>
+                          <span className="inline-flex items-center gap-1.5">
+                            <Users className="h-4 w-4 text-[#6fffe9]" />
+                            <span className="font-semibold text-white">
+                              {match.players}
+                            </span>
                           </span>
                         </div>
                       </div>
-                    </div>
-                    <Button
-                      size="sm"
-                      className="bg-[#24ffe6] font-semibold text-slate-900 shadow-[0_16px_45px_-20px_rgba(36,255,230,0.9)] transition-all duration-300 hover:-translate-y-0.5 hover:bg-[#24ffe6]/90"
-                    >
-                      <Play className="h-4 w-4" />
-                    </Button>
-                  </div>
-                ))}
-              </div>
-              <Button className="mt-6 w-full bg-[#24ffe6] font-semibold text-slate-900 shadow-[0_16px_45px_-20px_rgba(36,255,230,0.9)] transition-all duration-300 hover:-translate-y-0.5 hover:bg-[#24ffe6]/90">
-                Ver Todas as Partidas
-              </Button>
-            </CardContent>
-          </Card>
-
-          {/* Recent Activity */}
-          <Card className="border border-white/8 bg-white/5 shadow-2xl backdrop-blur">
-            <CardHeader className="border-b border-white/8">
-              <CardTitle className="flex items-center gap-3 text-xl">
-                <div className="rounded-full border border-white/10 bg-white/10 p-2 shadow">
-                  <Activity className="h-5 w-5 text-white" />
+                      <Button
+                        size="sm"
+                        className="bg-[#24ffe6] font-semibold text-slate-900 shadow-[0_16px_45px_-20px_rgba(36,255,230,0.9)] transition-all duration-300 hover:-translate-y-0.5 hover:bg-[#24ffe6]/90"
+                      >
+                        <Play className="h-4 w-4" />
+                      </Button>
+                    </motion.div>
+                  ))}
                 </div>
-                <span className="bg-gradient-to-r from-[#24ffe6] to-[#02a7ff] bg-clip-text font-bold text-transparent">
-                  Atividade Recente
-                </span>
+                <Button className="mt-6 w-full bg-[#24ffe6] font-semibold text-slate-900 shadow-[0_16px_45px_-20px_rgba(36,255,230,0.9)] transition-all duration-300 hover:-translate-y-0.5 hover:bg-[#24ffe6]/90">
+                  {t("matches.viewAll")}
+                </Button>
+              </CardContent>
+            </MotionCard>
+          </motion.section>
+
+          <motion.section
+            variants={fadeUp}
+            initial="initial"
+            animate="animate"
+            transition={{ duration: 0.55, delay: 0.3 }}
+          >
+            <MotionCard className="overflow-hidden border border-white/10 bg-white/6 shadow-2xl backdrop-blur-xl">
+              <CardHeader className="relative border-b border-white/10">
+                <CardTitle className="flex items-center gap-3 text-xl">
+                  <div className="rounded-full border border-white/10 bg-white/10 p-2 shadow">
+                    <Activity className="h-5 w-5 text-white" />
+                  </div>
+                  <span className="bg-gradient-to-r from-[#24ffe6] to-[#02a7ff] bg-clip-text font-bold text-transparent">
+                    {t("activity.title")}
+                  </span>
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="pt-6">
+                <div className="space-y-5">
+                  {recentActivities.map((activity, index) => (
+                    <motion.div
+                      key={activity.id}
+                      variants={fadeUp}
+                      initial="initial"
+                      animate="animate"
+                      transition={{ duration: 0.45, delay: index * 0.12 }}
+                      className="group flex items-start gap-4 rounded-2xl border border-white/10 bg-white/6 p-4 backdrop-blur-xl transition-all duration-300 hover:border-[#24ffe6]/35"
+                    >
+                      <div
+                        className={`rounded-full bg-gradient-to-br p-2 shadow ${
+                          activity.type === "win"
+                            ? "from-[#24ffe6] to-[#02a7ff]"
+                            : "from-red-400 to-pink-500"
+                        }`}
+                      >
+                        {activity.type === "win" ? (
+                          <Trophy className="h-4 w-4 text-white" />
+                        ) : (
+                          <Target className="h-4 w-4 text-white" />
+                        )}
+                      </div>
+                      <div className="flex-1">
+                        <p className="text-sm font-medium leading-relaxed text-white/90">
+                          {activity.text}
+                        </p>
+                        <p className="mt-1 text-xs font-medium text-slate-300/75">
+                          {activity.time}
+                        </p>
+                      </div>
+                    </motion.div>
+                  ))}
+                </div>
+              </CardContent>
+            </MotionCard>
+          </motion.section>
+        </div>
+
+        <motion.section
+          className="mt-10"
+          variants={fadeUp}
+          initial="initial"
+          animate="animate"
+          transition={{ duration: 0.55, delay: 0.4 }}
+        >
+          <MotionCard className="overflow-hidden border border-white/10 bg-white/6 shadow-2xl backdrop-blur-xl">
+            <CardHeader className="border-b border-white/10">
+              <CardTitle className="bg-gradient-to-r from-[#24ffe6] to-[#02a7ff] bg-clip-text text-2xl font-bold text-transparent">
+                {t("actions.quickActions")}
               </CardTitle>
             </CardHeader>
             <CardContent className="pt-6">
-              <div className="space-y-5">
-                {recentActivities.map((activity, index) => (
-                  <div
-                    key={activity.id}
-                    className="group flex items-start gap-4 rounded-xl border border-white/8 bg-white/5 p-4 backdrop-blur transition-all duration-300 hover:border-[#24ffe6]/25"
+              <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+                {[
+                  { label: t("actions.scheduleMatch"), icon: Calendar },
+                  { label: t("actions.inviteFriends"), icon: Users },
+                  { label: t("actions.createTournament"), icon: Trophy },
+                  { label: t("actions.viewStats"), icon: TrendingUp },
+                ].map(({ label, icon: Icon }, index) => (
+                  <motion.div
+                    key={label}
+                    variants={fadeUp}
+                    initial="initial"
+                    animate="animate"
+                    transition={{ duration: 0.45, delay: index * 0.08 }}
                   >
-                    <div
-                      className={`rounded-full bg-gradient-to-br p-2 ${
-                        activity.type === "win"
-                          ? "from-[#24ffe6] to-[#02a7ff]"
-                          : "from-red-400 to-pink-500"
-                      } shadow`}
+                    <Button
+                      variant="outline"
+                      className="group h-auto w-full flex-col gap-3 border-white/20 bg-white/8 py-6 text-white backdrop-blur-xl transition-all duration-300 hover:-translate-y-1 hover:border-[#24ffe6]/50 hover:bg-[#24ffe6]/15"
                     >
-                      {activity.type === "win" ? (
-                        <Trophy className="h-4 w-4 text-white" />
-                      ) : (
-                        <Target className="h-4 w-4 text-white" />
-                      )}
-                    </div>
-                    <div className="flex-1">
-                      <p className="leading-relaxed font-medium text-white/90">
-                        {activity.text}
-                      </p>
-                      <p className="mt-1 text-sm font-medium text-slate-300/70">
-                        {activity.time}
-                      </p>
-                    </div>
-                  </div>
+                      <div className="rounded-full border border-white/10 bg-white/10 p-3 shadow transition-transform group-hover:scale-110">
+                        <Icon className="h-6 w-6 text-white" />
+                      </div>
+                      <span className="font-semibold text-white">{label}</span>
+                    </Button>
+                  </motion.div>
                 ))}
               </div>
             </CardContent>
-          </Card>
-        </div>
-
-        {/* Quick Actions with Glass Morphism */}
-        <Card className="mt-6 overflow-hidden border border-white/8 bg-white/5 shadow-2xl backdrop-blur">
-          <CardHeader className="border-b border-white/8">
-            <CardTitle className="bg-gradient-to-r from-[#24ffe6] to-[#02a7ff] bg-clip-text text-2xl font-bold text-transparent">
-              ⚡ Ações Rápidas
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="pt-6">
-            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-              <Button
-                className="group h-auto flex-col gap-3 border-white/25 bg-white/10 py-6 text-white backdrop-blur transition-all duration-300 hover:-translate-y-1 hover:border-[#24ffe6]/60 hover:bg-[#24ffe6]/15"
-                variant="outline"
-              >
-                <div className="rounded-full border border-white/10 bg-white/10 p-3 shadow transition-transform group-hover:scale-110">
-                  <Calendar className="h-6 w-6 text-white" />
-                </div>
-                <span className="font-semibold text-white">
-                  Agendar Partida
-                </span>
-              </Button>
-              <Button
-                className="group h-auto flex-col gap-3 border-white/25 bg-white/10 py-6 text-white backdrop-blur transition-all duration-300 hover:-translate-y-1 hover:border-[#24ffe6]/60 hover:bg-[#24ffe6]/15"
-                variant="outline"
-              >
-                <div className="rounded-full border border-white/10 bg-white/10 p-3 shadow transition-transform group-hover:scale-110">
-                  <Users className="h-6 w-6 text-white" />
-                </div>
-                <span className="font-semibold text-white">
-                  Convidar Amigos
-                </span>
-              </Button>
-              <Button
-                className="group h-auto flex-col gap-3 border-white/25 bg-white/10 py-6 text-white backdrop-blur transition-all duration-300 hover:-translate-y-1 hover:border-[#24ffe6]/60 hover:bg-[#24ffe6]/15"
-                variant="outline"
-              >
-                <div className="rounded-full border border-white/10 bg-white/10 p-3 shadow transition-transform group-hover:scale-110">
-                  <Trophy className="h-6 w-6 text-white" />
-                </div>
-                <span className="font-semibold text-white">
-                  Criar Torneio
-                </span>
-              </Button>
-              <Button
-                className="group h-auto flex-col gap-3 border-white/25 bg-white/10 py-6 text-white backdrop-blur transition-all duration-300 hover:-translate-y-1 hover:border-[#24ffe6]/60 hover:bg-[#24ffe6]/15"
-                variant="outline"
-              >
-                <div className="rounded-full border border-white/10 bg-white/10 p-3 shadow transition-transform group-hover:scale-110">
-                  <TrendingUp className="h-6 w-6 text-white" />
-                </div>
-                <span className="font-semibold text-white">
-                  Ver Estatísticas
-                </span>
-              </Button>
-            </div>
-          </CardContent>
-        </Card>
+          </MotionCard>
+        </motion.section>
       </div>
     </div>
   );

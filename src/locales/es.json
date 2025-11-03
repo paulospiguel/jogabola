@@ -78,12 +78,14 @@
     "community": "Comunidad",
     "marketplace": "Mercado",
     "academy": "Academia",
+    "howItWorks": "Cómo funciona",
+    "becomePartner": "Convertirse en Socio",
     "about": "Acerca de",
     "contact": "Contacto",
     "privacy": "Privacidad",
     "terms": "Términos",
     "blog": "Blog",
-    "howItWorks": "Cómo funciona"
+    "privacyAndTerms": "Privacidad y Términos"
   },
   "countDown": {
     "title": "Time left",
@@ -194,7 +196,10 @@
     "about": "Acerca de nosotros",
     "home": "Inicio",
     "howItWorks": "Cómo funciona",
-    "plans": "Planes"
+    "plans": "Planes",
+    "new": "Nuevo",
+    "launchJourney": "Iniciar jornada",
+    "signIn": "Iniciar sesión"
   },
   "homePage": {
     "createMyTeams": "Crear mis equipos",
@@ -207,7 +212,83 @@
     "downloadAppDescription": "Disfruta de la experiencia completa de Jogabola en tu móvil. Disponible para iOS y Android.",
     "downloadOnAppStore": "Descargar en App Store",
     "downloadOnGooglePlay": "Descargar en Google Play",
-    "appMockupAlt": "Mockup de la aplicación Jogabola"
+    "appMockupAlt": "Mockup de la aplicación Jogabola",
+    "hero": {
+      "versionBadge": "Versión 2.0",
+      "title": "¿Listo para gestionar tu",
+      "titleHighlight": "equipo de ensueño?",
+      "subtitle": "Construye tu equipo profesional, define tácticas y domina el campo digital.",
+      "startJourney": "Comenzar Mi Viaje",
+      "watchDemo": "Ver Demostración",
+      "trustIndicators": {
+        "freeToStart": "Gratis para empezar",
+        "noCard": "Sin tarjeta"
+      }
+    },
+    "demo": {
+      "title": "Demostración de la App",
+      "subtitle": "Ve cómo es fácil gestionar tu equipo y alcanzar la victoria",
+      "stats": {
+        "activePlayers": "Jugadores activos",
+        "championships": "Campeonatos",
+        "averageRating": "Calificación promedio"
+      }
+    },
+    "testimonials": {
+      "title": "Historias de Éxito",
+      "items": {
+        "coach": {
+          "name": "João Silva",
+          "role": "Entrenador",
+          "text": "¡Mejor plataforma para gestionar mi equipo!"
+        },
+        "captain": {
+          "name": "Maria Costa",
+          "role": "Capitana",
+          "text": "¡Agilidad y organización en un solo lugar!"
+        },
+        "player": {
+          "name": "Pedro Santos",
+          "role": "Jugador",
+          "text": "¡Más tiempo para enfocarse en el juego!"
+        }
+      }
+    },
+    "features": {
+      "title": "Características Completas",
+      "items": {
+        "playerManagement": {
+          "title": "Gestión de Jugadores",
+          "description": "Perfiles, estadísticas y disponibilidad"
+        },
+        "centralizedSchedule": {
+          "title": "Agenda Centralizada",
+          "description": "Entrenamientos y partidos organizados"
+        },
+        "championshipOrganization": {
+          "title": "Organización de Campeonatos",
+          "description": "Crea y gestiona torneos"
+        },
+        "communication": {
+          "title": "Comunicación",
+          "description": "Chat integrado con el equipo"
+        },
+        "accessControl": {
+          "title": "Control de Acceso",
+          "description": "Diferentes niveles de permiso"
+        },
+        "performanceAnalysis": {
+          "title": "Análisis de Rendimiento",
+          "description": "Estadísticas detalladas"
+        }
+      }
+    },
+    "cta": {
+      "title": "¿Listo para comenzar?",
+      "subtitle": "Únete a miles de equipos que ya están revolucionando su gestión",
+      "createAccount": "Crear Cuenta Gratuita",
+      "becomePartner": "Conviértete en Socio"
+    }
   },
   "locales": {
     "en": "Inglés",
@@ -230,6 +311,190 @@
       "quote": "El mejor lugar para encontrar a tu equipo y jugar al fútbol.",
       "name": "JogaBola",
       "designation": "El mejor lugar para encontrar a tu equipo y jugar al fútbol."
+    }
+  },
+  "arena": {
+    "header": {
+      "subtitle": "Central de la Arena",
+      "title": "Bienvenido de vuelta a la Arena ⚽",
+      "description": "Acompaña el ritmo de tu equipo, organiza partidos y mantén la comunidad siempre activa."
+    },
+    "stats": {
+      "matchesPlayed": "Partidos Jugados",
+      "activeTeams": "Equipos Activos",
+      "upcomingMatches": "Próximos Partidos",
+      "winRate": "Tasa de Victoria",
+      "thisWeek": "Esta semana"
+    },
+    "actions": {
+      "newMatch": "Nuevo Partido",
+      "scheduleMatch": "Programar Partido",
+      "inviteFriends": "Invitar Amigos",
+      "createTournament": "Crear Torneo",
+      "viewStats": "Ver Estadísticas",
+      "quickActions": "⚡ Acciones Rápidas"
+    },
+    "matches": {
+      "title": "Próximos Partidos",
+      "viewAll": "Ver todos los partidos",
+      "status": {
+        "confirmed": "✓ Confirmado",
+        "pending": "⏳ Pendiente"
+      }
+    },
+    "activity": {
+      "title": "Actividad Reciente"
+    }
+  },
+  "signIn": {
+    "page": {
+      "hero": {
+        "badge": "Plataforma #1 de Fútbol Aficionado",
+        "title": "Entra en la Arena",
+        "description": "Conéctate con jugadores, organiza partidos y vive el fútbol como nunca antes. Tu viaje comienza aquí."
+      },
+      "features": {
+        "findTeams": "🎯 Encuentra equipos y jugadores",
+        "trackStats": "📊 Acompanha tus estadísticas",
+        "joinTournaments": "🏆 Participa en torneos",
+        "activeCommunity": "⚡ Comunidad activa"
+      },
+      "form": {
+        "title": {
+          "login": "¡Bienvenido de vuelta!",
+          "register": "Crea tu cuenta"
+        },
+        "subtitle": {
+          "login": "Inicia sesión y continúa tu viaje",
+          "register": "Comienza tu aventura en el fútbol"
+        },
+        "tabs": {
+          "login": "Iniciar sesión",
+          "register": "Registrarse"
+        },
+        "fields": {
+          "name": "Nombre",
+          "email": "Correo electrónico",
+          "password": "Contraseña",
+          "confirmPassword": "Confirmar contraseña",
+          "namePlaceholder": "Tu nombre",
+          "emailPlaceholder": "tu@email.com",
+          "passwordPlaceholder": "••••••••"
+        },
+        "forgotPassword": "¿Olvidaste tu contraseña?",
+        "continueWith": "o continúa con",
+        "buttons": {
+          "login": "Entrar",
+          "logging": "Entrando...",
+          "register": "Crear Cuenta",
+          "registering": "Creando cuenta...",
+          "google": "Google"
+        }
+      },
+      "footer": "© {year} JogaBola — Vive el Fútbol ⚡",
+      "errors": {
+        "googleAuthFailed": "Error al autenticar con Google",
+        "loginError": "Error al entrar",
+        "loginFailed": "No se pudo entrar con Google. Verifica la configuración e intenta de nuevo.",
+        "invalidCredentials": "Correo o contraseña incorrectos",
+        "invalidCredentialsDetails": "Correo o contraseña incorrectos. Verifica tus datos e intenta de nuevo.",
+        "registerError": "Error al crear cuenta",
+        "registerFailed": "No se pudo crear la cuenta",
+        "registerFailedDetails": "No se pudo crear la cuenta. Intenta de nuevo o usa otro correo."
+      },
+      "success": {
+        "login": "¡Bienvenido!",
+        "loginMessage": "Sesión iniciada con éxito",
+        "register": "¡Cuenta creada!",
+        "registerMessage": "Tu cuenta ha sido creada con éxito. Vamos a configurar tu perfil."
+      }
+    }
+  },
+  "onboard": {
+    "errors": {
+      "title": "Error",
+      "requiredFields": "El correo, nombre y rol son obligatorios para guardar el onboarding.",
+      "saveError": "Ocurrió un error al guardar los datos.",
+      "createProfileError": "Ocurrió un error al crear el perfil. El onboarding fue guardado.",
+      "saveDataError": "Ocurrió un error al guardar los datos."
+    },
+    "success": {
+      "completed": "¡Onboarding Completado!",
+      "completedMessage": "¡Tus datos han sido guardados con éxito!",
+      "completedPending": "¡Onboarding Completado!",
+      "completedPendingMessage": "Crea tu cuenta para continuar y guardar los datos.",
+      "recovered": "¡Onboarding recuperado!",
+      "recoveredMessage": "Tus datos del onboarding han sido aplicados a tu perfil."
+    },
+    "close": "Cerrar onboarding"
+  },
+  "playZone": {
+    "loading": "Cargando tu viaje...",
+    "header": {
+      "subtitle": "Centro del viaje del jugador",
+      "greeting": "👋 ¡Hola, {name}! ¿Listo para el próximo partido?",
+      "defaultGreeting": "¡Hola, bienvenido a Jogabola!"
+    },
+    "nextMatch": {
+      "label": "Próximo partido"
+    },
+    "stats": {
+      "gamesPlayed": "Partidos jugados",
+      "goals": "Goles",
+      "assists": "Asistencias",
+      "averageRating": "Nota promedio"
+    },
+    "achievements": {
+      "hattrickHero": {
+        "title": "Héroe del Hat-trick",
+        "description": "3 goles en el mismo partido"
+      },
+      "perfectPasses": {
+        "title": "100 pases perfectos",
+        "description": "Precisión máxima en 4 partidos"
+      },
+      "defensiveMVP": {
+        "title": "MVP defensivo",
+        "description": "Dominio total del mediocampo"
+      }
+    },
+    "feed": {
+      "title": "Feed del equipo",
+      "subtitle": "Últimos eventos",
+      "updates": {
+        "trainingGoals": "⚽ Lucas marcó 3 goles en el entrenamiento de ayer.",
+        "newMatch": "🔥 ¡Nuevo partido programado para el domingo!",
+        "tacticalReview": "🧠 Revisión táctica liberada para el equipo."
+      }
+    },
+    "coachInsight": {
+      "title": "Insight del entrenador virtual"
+    },
+    "actions": {
+      "evaluateTeam": {
+        "title": "Evaluar compañeros del último partido",
+        "description": "Libera recompensas del equipo dejando comentarios sobre el desempeño.",
+        "button": "Comenzar evaluación"
+      },
+      "challenges": {
+        "title": "Explorar desafíos semanales",
+        "description": "Completa misiones especiales y sube en el ranking de PlayZone.",
+        "button": "Ver desafíos disponibles"
+      }
+    },
+    "positions": {
+      "goalkeeper": "Portero",
+      "defender": "Defensor",
+      "midfielder": "Mediocampista",
+      "forward": "Delantero",
+      "versatile": "Polivalente",
+      "default": "Jugador"
+    },
+    "experience": {
+      "beginner": "Principiante",
+      "intermediate": "Intermedio",
+      "advanced": "Avanzado",
+      "professional": "Profesional"
     }
   }
 }

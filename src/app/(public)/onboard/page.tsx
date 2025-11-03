@@ -1,26 +1,35 @@
 "use client";
 
-import { getProfileData, saveProfileData } from "@/actions/profile";
+import {
+  createProfileFromOnboarding,
+  getPendingOnboarding,
+  getProfileData,
+  linkOnboardingToUser,
+  saveOnboarding,
+  saveProfileData,
+} from "@/actions/profile";
 import { FloatingOrb } from "@/components/floating-orb";
 import { OnboardNavigation } from "@/components/onboard-navigation";
 import { OnboardProgressHeader } from "@/components/onboard-progress-header";
-import { getQuestionsByRole } from "@/constants/onboarding-questions";
-import { useToast } from "@/hooks/use-toast-custom";
-import { useSession } from "@/lib/auth-client";
-import { useProfileStore } from "@/stores/profile";
-import { useRouter, useSearchParams } from "next/navigation";
-import { useEffect, useMemo, useState } from "react";
 import { AdditionalInfoStep } from "@/components/onboard/steps/additional-info-step";
 import { BasicInfoStep } from "@/components/onboard/steps/basic-info-step";
 import { ConfirmationStep } from "@/components/onboard/steps/confirmation-step";
 import { ExperienceStep } from "@/components/onboard/steps/experience-step";
 import { GoalsStep } from "@/components/onboard/steps/goals-step";
 import { JourneySelectionStep } from "@/components/onboard/steps/journey-selection-step";
-import { RoleSpecificStep } from "@/components/onboard/steps/role-specific-step";
 import { OnboardIntroStep } from "@/components/onboard/steps/onboard-intro-step";
+import { RoleSpecificStep } from "@/components/onboard/steps/role-specific-step";
 import { useOnboardValidation } from "@/components/onboard/use-onboard-validation";
-import { X } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { getQuestionsByRole } from "@/constants/onboarding-questions";
+import { useProfileSync } from "@/hooks/use-profile-sync";
+import { useToast } from "@/hooks/use-toast-custom";
+import { useSession } from "@/lib/auth-client";
+import { useProfileStore } from "@/stores/profile";
+import { X } from "lucide-react";
+import { useTranslations } from "next-intl";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useEffect, useMemo, useState } from "react";
 
 export default function OnboardPage() {
   const router = useRouter();
@@ -28,6 +37,10 @@ export default function OnboardPage() {
   const { toast } = useToast();
   const { data: session } = useSession();
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const t = useTranslations("onboard");
+
+  // Sync profile data when user logs in (para vincular onboarding pendente)
+  useProfileSync(session?.user?.id, saveProfileData);
   const [autoFilledFields, setAutoFilledFields] = useState<{
     name?: boolean;
     email?: boolean;
@@ -44,6 +57,7 @@ export default function OnboardPage() {
     updateData,
     setCurrentStep,
     setCompleted,
+    reset,
   } = useProfileStore();
 
   const totalSteps = 8;
@@ -76,13 +90,78 @@ export default function OnboardPage() {
     getCustomFieldValue,
   });
 
+  // Limpar dados ao carregar a página (refresh = perde tudo)
+  // Mas não limpar se:
+  // 1. Há migração em andamento (migrate=true)
+  // 2. Usuário já está logado e pode ter dados para carregar
+  useEffect(() => {
+    const { completed } = useProfileStore.getState();
+    const migrateParam = searchParams.get("migrate");
+    const hasActiveSession = !!session?.user?.id;
+
+    // Se não está completado e não há migração nem sessão ativa, limpar ao montar (refresh)
+    // Isso garante que cada visita à página comece limpo, exceto quando há contexto especial
+    if (!completed && !migrateParam && !hasActiveSession) {
+      reset();
+    }
+  }, [reset, searchParams, session?.user?.id]); // Executar quando parâmetros mudarem
+
   // Initialize with search params
   useEffect(() => {
     const roleParam = searchParams.get("role");
     if (roleParam && !formData.role) {
       updateData({ role: roleParam as any });
     }
-  }, [searchParams, formData.role, updateData]);
+
+    // Se há parâmetro migrate=true e usuário está logado, vincular onboarding pendente
+    const migrateParam = searchParams.get("migrate");
+    if (migrateParam === "true" && session?.user?.id && session?.user?.email) {
+      // Primeiro buscar os dados do onboarding pendente
+      getPendingOnboarding(session.user.email).then(pendingResult => {
+        if (pendingResult.success && pendingResult.data) {
+          // Carregar dados no formulário antes de vincular
+          const pendingData = pendingResult.data;
+          updateData({
+            role: pendingData.role as any,
+            name: pendingData.name,
+            email: pendingData.email,
+            location: pendingData.location,
+            experience: pendingData.experience as any,
+            availability: pendingData.availability as any,
+            goals: pendingData.goals || [],
+            waitlistApps: pendingData.waitlistApps || [],
+            customFields: pendingData.customFields || {},
+            preferences: pendingData.preferences || {
+              notifications: true,
+              newsletter: true,
+              earlyAccess: true,
+            },
+          });
+          setCompleted(true);
+
+          // Vincular onboarding ao user e criar profile se completo
+          linkOnboardingToUser(session.user.id, session.user.email).then(
+            linkResult => {
+              if (linkResult.success) {
+                toast.success(
+                  t("success.recovered"),
+                  t("success.recoveredMessage"),
+                );
+              }
+            },
+          );
+        }
+      });
+    }
+  }, [
+    searchParams,
+    formData.role,
+    updateData,
+    session?.user?.id,
+    session?.user?.email,
+    setCompleted,
+    toast,
+  ]);
 
   // Bloquear acesso se já completou onboarding
   useEffect(() => {
@@ -91,7 +170,7 @@ export default function OnboardPage() {
 
       try {
         const profileResult = await getProfileData(session.user.id);
-        
+
         // Se já completou onboarding, redirecionar para dashboard
         if (profileResult.success && profileResult.data?.completed) {
           const role = profileResult.data.role;
@@ -244,14 +323,37 @@ export default function OnboardPage() {
     setIsSubmitting(true);
 
     try {
-      // If user is logged in, save to database
-      if (session?.user?.id) {
-        const result = await saveProfileData(session.user.id, formData as any);
+      if (!formData.email || !formData.name || !formData.role) {
+        toast.error(t("errors.title"), t("errors.requiredFields"));
+        setIsSubmitting(false);
+        return;
+      }
 
-        if (!result.success) {
+      // Sempre salvar onboarding (com ou sem user_id)
+      const onboardingResult = await saveOnboarding(
+        formData as any,
+        session?.user?.id,
+      );
+
+      if (!onboardingResult.success) {
+        toast.error(
+          t("errors.title"),
+          onboardingResult.error || t("errors.saveError"),
+        );
+        setIsSubmitting(false);
+        return;
+      }
+
+      // Se usuário está logado, criar profile também
+      if (session?.user?.id) {
+        const profileResult = await createProfileFromOnboarding(
+          session.user.id,
+        );
+
+        if (!profileResult.success) {
           toast.error(
-            "Erro",
-            result.error || "Ocorreu um erro ao guardar os dados.",
+            t("errors.title"),
+            profileResult.error || t("errors.createProfileError"),
           );
           setIsSubmitting(false);
           return;
@@ -260,32 +362,34 @@ export default function OnboardPage() {
         // Mark as completed in store
         setCompleted(true);
 
-        toast.success(
-          "Onboarding Concluído!",
-          "Os teus dados foram guardados com sucesso!",
-        );
+        toast.success(t("success.completed"), t("success.completedMessage"));
 
         // Redirect to arena with delay
         setTimeout(() => {
           router.push("/arena");
         }, 1500);
       } else {
-        // User not logged in - save to store and redirect to sign-in
+        // User not logged in - onboarding salvo como pendente
+        // Mark as completed in store
         setCompleted(true);
 
         toast.success(
-          "Onboarding Concluído!",
-          "Cria a tua conta para continuar e guardar os dados.",
+          t("success.completedPending"),
+          t("success.completedPendingMessage"),
         );
 
-        // Redirect to sign-in with delay
+        // Redirect to sign-in with email and name as query params
         setTimeout(() => {
-          router.push("/sign-in");
+          const params = new URLSearchParams({
+            email: formData.email || "",
+            name: formData.name || "",
+          });
+          router.push(`/sign-in?${params.toString()}`);
         }, 1500);
       }
     } catch (error) {
       console.error("Error submitting onboarding:", error);
-      toast.error("Erro", "Ocorreu um erro ao guardar os dados.");
+      toast.error(t("errors.title"), t("errors.saveDataError"));
     } finally {
       setIsSubmitting(false);
     }
@@ -436,8 +540,8 @@ export default function OnboardPage() {
         onClick={handleClose}
         variant="ghost"
         size="icon"
-        className="fixed top-4 right-4 z-50 h-10 w-10 rounded-full border border-white/20 bg-white/10 text-white backdrop-blur hover:bg-white/20 hover:text-[#00cfb1] transition-all"
-        aria-label="Fechar onboarding"
+        className="fixed top-4 right-4 z-50 h-10 w-10 rounded-full border border-white/20 bg-white/10 text-white backdrop-blur transition-all hover:bg-white/20 hover:text-[#00cfb1]"
+        aria-label={t("close")}
       >
         <X className="h-5 w-5" />
       </Button>

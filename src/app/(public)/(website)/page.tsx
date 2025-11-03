@@ -5,6 +5,7 @@ import { useJourneyRedirect } from "@/hooks/use-journey-redirect";
 import { motion } from "framer-motion";
 import {
   Calendar,
+  Handshake,
   MessageSquare,
   Play,
   Shield,
@@ -26,7 +27,7 @@ const FieldPattern = () => {
 
 // Hero Section - Estilo Mockup Exato
 const HeroSection = () => {
-  const t = useTranslations();
+  const t = useTranslations("homePage.hero");
   const { redirectToJourney } = useJourneyRedirect();
 
   return (
@@ -47,44 +48,43 @@ const HeroSection = () => {
               {/* Badge Versão 2.0 - Verde claro como no mockup */}
               <div className="inline-flex items-center rounded-full bg-emerald-100 px-4 py-1.5">
                 <span className="text-sm font-medium text-emerald-700">
-                  Versão 2.0
+                  {t("versionBadge")}
                 </span>
               </div>
 
               {/* Title - Texto escuro, sem gradiente */}
               <h1 className="text-4xl leading-tight font-bold text-gray-900 md:text-5xl lg:text-6xl">
-                Pronto para gerenciar seu{" "}
-                <span className="text-gray-900">time dos sonhos?</span>
+                {t("title")}{" "}
+                <span className="text-gray-900">{t("titleHighlight")}</span>
               </h1>
 
               {/* Subtitle */}
               <p className="text-lg text-gray-700 md:text-xl">
-                Monte sua equipe profissional, defina táticas e domine o campo
-                digital.
+                {t("subtitle")}
               </p>
 
               {/* CTA Buttons */}
               <div className="flex flex-col gap-4 pt-2 sm:flex-row">
-                <Button 
+                <Button
                   onClick={redirectToJourney}
                   className="rounded-lg bg-emerald-500 px-6 py-5 text-base font-medium text-white shadow-md hover:bg-emerald-600 md:px-8 md:py-6 md:text-lg"
                 >
-                  Iniciar Minha Jornada
+                  {t("startJourney")}
                 </Button>
                 <Button
                   variant="outline"
                   className="group rounded-lg border-2 border-blue-300 bg-white px-6 py-5 text-base font-medium text-blue-500 hover:bg-blue-50 md:px-8 md:py-6 md:text-lg"
                 >
                   <Play className="mr-2 h-5 w-5 fill-blue-500 transition-transform group-hover:scale-110" />
-                  Ver Demonstração
+                  {t("watchDemo")}
                 </Button>
               </div>
 
               {/* Trust indicators - Linha única */}
               <div className="flex items-center space-x-4 pt-2 text-sm text-gray-600">
-                <span>Grátis para começar</span>
+                <span>{t("trustIndicators.freeToStart")}</span>
                 <span className="text-gray-400">|</span>
-                <span>Sem cartão</span>
+                <span>{t("trustIndicators.noCard")}</span>
               </div>
             </motion.div>
 
@@ -280,7 +280,7 @@ const HeroSection = () => {
 
 // Demo Section
 const DemoSection = () => {
-  const t = useTranslations();
+  const t = useTranslations("homePage.demo");
 
   return (
     <section className="bg-white py-20">
@@ -288,10 +288,10 @@ const DemoSection = () => {
         {/* Header */}
         <div className="mb-12 text-center">
           <h2 className="mb-4 text-4xl font-bold text-gray-900">
-            Demonstração do App
+            {t("title")}
           </h2>
           <p className="mx-auto max-w-3xl text-xl text-gray-600">
-            Veja como é fácil gerenciar seu time e alcançar a vitória
+            {t("subtitle")}
           </p>
         </div>
 
@@ -302,21 +302,21 @@ const DemoSection = () => {
               <Users className="mr-2 h-8 w-8 text-blue-500" />
               <span className="text-3xl font-bold text-gray-900">10.000+</span>
             </div>
-            <p className="text-gray-600">Jogadores ativos</p>
+            <p className="text-gray-600">{t("stats.activePlayers")}</p>
           </div>
           <div className="text-center">
             <div className="mb-2 flex items-center justify-center">
               <Trophy className="mr-2 h-8 w-8 text-yellow-500" />
               <span className="text-3xl font-bold text-gray-900">500+</span>
             </div>
-            <p className="text-gray-600">Campeonatos</p>
+            <p className="text-gray-600">{t("stats.championships")}</p>
           </div>
           <div className="text-center">
             <div className="mb-2 flex items-center justify-center">
               <Star className="mr-2 h-8 w-8 text-emerald-500" />
               <span className="text-3xl font-bold text-gray-900">4.9</span>
             </div>
-            <p className="text-gray-600">Avaliação média</p>
+            <p className="text-gray-600">{t("stats.averageRating")}</p>
           </div>
         </div>
 
@@ -372,26 +372,28 @@ const DemoSection = () => {
 
 // Testimonials Section
 const TestimonialsSection = () => {
+  const t = useTranslations("homePage.testimonials");
+
   const testimonials = [
     {
-      name: "João Silva",
-      role: "Treinador",
+      name: t("items.coach.name"),
+      role: t("items.coach.role"),
       rating: 5,
-      text: "Melhor plataforma para gerenciar meu time!",
+      text: t("items.coach.text"),
       avatar: "👨‍💼",
     },
     {
-      name: "Maria Costa",
-      role: "Capitã",
+      name: t("items.captain.name"),
+      role: t("items.captain.role"),
       rating: 5,
-      text: "Agilidade e organização em um só lugar!",
+      text: t("items.captain.text"),
       avatar: "👩‍💼",
     },
     {
-      name: "Pedro Santos",
-      role: "Jogador",
+      name: t("items.player.name"),
+      role: t("items.player.role"),
       rating: 5,
-      text: "Mais tempo para focar no jogo!",
+      text: t("items.player.text"),
       avatar: "👨‍💼",
     },
   ];
@@ -401,7 +403,7 @@ const TestimonialsSection = () => {
       <div className="container mx-auto max-w-7xl px-4 md:px-6">
         <div className="mb-12 text-center">
           <h2 className="mb-4 text-4xl font-bold text-gray-900">
-            Prova Social - Histórias de Sucesso
+            {t("title")}
           </h2>
         </div>
 
@@ -444,36 +446,38 @@ const TestimonialsSection = () => {
 
 // Features Section
 const FeaturesSection = () => {
+  const t = useTranslations("homePage.features");
+
   const features = [
     {
       icon: Users,
-      title: "Gestão de Jogadores",
-      description: "Perfis, estatísticas e disponibilidade",
+      title: t("items.playerManagement.title"),
+      description: t("items.playerManagement.description"),
     },
     {
       icon: Calendar,
-      title: "Agenda Centralizada",
-      description: "Treinos e jogos organizados",
+      title: t("items.centralizedSchedule.title"),
+      description: t("items.centralizedSchedule.description"),
     },
     {
       icon: Trophy,
-      title: "Organização de Campeonatos",
-      description: "Crie e gerencie torneios",
+      title: t("items.championshipOrganization.title"),
+      description: t("items.championshipOrganization.description"),
     },
     {
       icon: MessageSquare,
-      title: "Comunicação",
-      description: "Chat integrado com o time",
+      title: t("items.communication.title"),
+      description: t("items.communication.description"),
     },
     {
       icon: Shield,
-      title: "Controle de Acesso",
-      description: "Diferentes níveis de permissão",
+      title: t("items.accessControl.title"),
+      description: t("items.accessControl.description"),
     },
     {
       icon: Star,
-      title: "Análise de Desempenho",
-      description: "Estatísticas detalhadas",
+      title: t("items.performanceAnalysis.title"),
+      description: t("items.performanceAnalysis.description"),
     },
   ];
 
@@ -482,7 +486,7 @@ const FeaturesSection = () => {
       <div className="container mx-auto max-w-7xl px-4 md:px-6">
         <div className="mb-12 text-center">
           <h2 className="mb-4 text-4xl font-bold text-gray-900">
-            Recursos Completos
+            {t("title")}
           </h2>
         </div>
 
@@ -513,28 +517,28 @@ const FeaturesSection = () => {
 // CTA Section
 const CTASection = () => {
   const { redirectToJourney } = useJourneyRedirect();
-  
+  const t = useTranslations("homePage.cta");
+
   return (
     <section className="bg-gradient-to-br from-gray-900 to-gray-800 py-20">
       <div className="container mx-auto max-w-7xl px-4 text-center md:px-6">
-        <h2 className="mb-4 text-4xl font-bold text-white">
-          Pronto para começar?
-        </h2>
+        <h2 className="mb-4 text-4xl font-bold text-white">{t("title")}</h2>
         <p className="mx-auto mb-8 max-w-2xl text-xl text-gray-300">
-          Junte-se a milhares de times que já estão revolucionando sua gestão
+          {t("subtitle")}
         </p>
         <div className="flex flex-col justify-center gap-4 sm:flex-row">
-          <Button 
+          <Button
             onClick={redirectToJourney}
-            className="bg-gradient-to-r from-emerald-500 to-green-500 px-8 py-6 text-lg text-white hover:from-emerald-600 hover:to-green-600"
+            className="border-2 border-white bg-gradient-to-r from-emerald-500 to-green-500 px-8 py-6 text-lg text-white hover:from-emerald-600 hover:to-green-600"
           >
-            Criar Conta Grátis
+            {t("createAccount")}
           </Button>
           <Button
             variant="outline"
-            className="border-2 border-white px-8 py-6 text-lg text-white hover:bg-white hover:text-gray-900"
+            className="border-2 border-gray-700 px-8 py-6 text-lg text-white hover:bg-gray-100 hover:text-gray-900"
           >
-            Falar com Vendas
+            <Handshake className="mr-2 h-6 w-6 text-white" />
+            {t("becomePartner")}
           </Button>
         </div>
       </div>
