@@ -18,14 +18,14 @@ export function JourneySelectionStep({
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      className="space-y-6 sm:space-y-8"
+      className="space-y-4 sm:space-y-6"
     >
       <OnboardStepHeader
         title="Escolhe a Tua Jornada"
         description="Cada jornada oferece uma experiência única. Seleciona a que melhor se adequa aos teus objetivos."
       />
 
-      <div className="grid grid-cols-1 gap-4 sm:gap-6 md:grid-cols-2">
+      <div className="grid grid-cols-1 gap-3 sm:gap-3 md:grid-cols-2 md:gap-4">
         {JOURNEY_OPTIONS.map((option, index) => (
           <JourneyOptionCard
             key={option.id}

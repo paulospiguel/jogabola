@@ -20,7 +20,7 @@ export const JOURNEY_OPTIONS: JourneyOption[] = [
   {
     id: RoleValues.PLAYER,
     title: "Jogador",
-    description: "Encontra equipas, Melhora habilidades, Conquista glória",
+    tags: ["Encontra equipas", "Melhora habilidades", "Conquista glória"],
     icon: playerIcon,
     color: "from-emerald-500 to-teal-600",
     features: [
@@ -33,7 +33,7 @@ export const JOURNEY_OPTIONS: JourneyOption[] = [
   {
     id: RoleValues.MANAGER,
     title: "Gestor/Treinador",
-    description: "Gere a tua equipa, organiza treinos e lidera para a vitória",
+    tags: ["Gere equipa", "Organiza treinos", "Lidera para vitória"],
     icon: coachIcon,
     color: "from-purple-500 to-indigo-600",
     features: [
@@ -45,9 +45,8 @@ export const JOURNEY_OPTIONS: JourneyOption[] = [
   },
   {
     id: RoleValues.FAN,
-    title: "Adepto/Observador",
-    description:
-      "Apoia a tua equipa, segue jogos e conecta-te com a comunidade",
+    title: "Adepto",
+    tags: ["Apoia equipa", "Conecta-te", "Comunidade"],
     icon: fanFriend,
     color: "from-orange-500 to-red-600",
     features: [
@@ -60,7 +59,7 @@ export const JOURNEY_OPTIONS: JourneyOption[] = [
   {
     id: RoleValues.ORGANIZER,
     title: "Federação/Organizador",
-    description: "Organiza eventos, apoia equipas e conecta a comunidade",
+    tags: ["Organiza eventos", "Apoia equipas", "Conecta comunidade"],
     icon: organizerIcon,
     color: "from-blue-500 to-cyan-600",
     features: [

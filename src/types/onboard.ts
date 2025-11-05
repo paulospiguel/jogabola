@@ -20,7 +20,7 @@ export interface OnboardFormData {
 export interface JourneyOption {
   id: string;
   title: string;
-  description: string;
+  tags: string[];
   icon: StaticImageData;
   color: string;
   features: string[];

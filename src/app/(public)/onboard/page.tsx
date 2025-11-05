@@ -546,24 +546,30 @@ export default function OnboardPage() {
         <X className="h-4 w-4 sm:h-5 sm:w-5" />
       </Button>
 
-      <div className="relative z-10 container mx-auto max-w-4xl px-4 py-6 sm:px-6 sm:py-8 md:py-12">
-        <OnboardProgressHeader
-          currentStep={currentStep}
-          totalSteps={totalSteps}
-        />
+      <div className="relative z-10 flex min-h-screen flex-col">
+        <div className="container mx-auto flex max-w-4xl flex-1 flex-col px-4 py-4 sm:px-6 sm:py-6 md:py-8">
+          <OnboardProgressHeader
+            currentStep={currentStep}
+            totalSteps={totalSteps}
+          />
 
-        {/* Conteúdo do passo atual */}
-        <div className="mb-6 sm:mb-8 md:mb-12">{renderStep()}</div>
+          {/* Conteúdo do passo atual - com scroll se necessário */}
+          <div className="mb-4 flex-1 overflow-y-auto sm:mb-6 md:mb-8">
+            <div className="max-h-[calc(100vh-280px)] sm:max-h-[calc(100vh-320px)] md:max-h-[calc(100vh-340px)]">
+              {renderStep()}
+            </div>
+          </div>
 
-        <OnboardNavigation
-          currentStep={currentStep}
-          totalSteps={totalSteps}
-          canProceed={canProceed()}
-          isSubmitting={isSubmitting}
-          onPrevious={handlePrevious}
-          onNext={handleNext}
-          onSubmit={handleSubmit}
-        />
+          <OnboardNavigation
+            currentStep={currentStep}
+            totalSteps={totalSteps}
+            canProceed={canProceed()}
+            isSubmitting={isSubmitting}
+            onPrevious={handlePrevious}
+            onNext={handleNext}
+            onSubmit={handleSubmit}
+          />
+        </div>
       </div>
     </div>
   );
