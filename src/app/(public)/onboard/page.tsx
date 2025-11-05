@@ -540,20 +540,20 @@ export default function OnboardPage() {
         onClick={handleClose}
         variant="ghost"
         size="icon"
-        className="fixed top-4 right-4 z-50 h-10 w-10 rounded-full border border-white/20 bg-white/10 text-white backdrop-blur transition-all hover:bg-white/20 hover:text-[#00cfb1]"
+        className="fixed top-3 right-3 z-50 h-8 w-8 rounded-full border border-white/20 bg-white/10 text-white backdrop-blur transition-all hover:bg-white/20 hover:text-[#00cfb1] sm:top-4 sm:right-4 sm:h-10 sm:w-10"
         aria-label={t("close")}
       >
-        <X className="h-5 w-5" />
+        <X className="h-4 w-4 sm:h-5 sm:w-5" />
       </Button>
 
-      <div className="relative z-10 container mx-auto max-w-4xl px-4 py-12">
+      <div className="relative z-10 container mx-auto max-w-4xl px-4 py-6 sm:px-6 sm:py-8 md:py-12">
         <OnboardProgressHeader
           currentStep={currentStep}
           totalSteps={totalSteps}
         />
 
         {/* Conteúdo do passo atual */}
-        <div className="mb-12">{renderStep()}</div>
+        <div className="mb-6 sm:mb-8 md:mb-12">{renderStep()}</div>
 
         <OnboardNavigation
           currentStep={currentStep}

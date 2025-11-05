@@ -20,16 +20,16 @@ export function AdditionalInfoStep({
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      className="space-y-8"
+      className="space-y-6 sm:space-y-8"
     >
       <OnboardStepHeader
         title="Mais Algumas Informações"
         description="Últimos detalhes para personalizar completamente a tua experiência."
       />
 
-      <div className="mx-auto max-w-2xl space-y-6">
+      <div className="mx-auto max-w-2xl space-y-4 sm:space-y-6">
         {roleQuestions && roleQuestions.customFields.length > 0 ? (
-          <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+          <div className="grid grid-cols-1 gap-3 sm:gap-4 md:grid-cols-2">
             {roleQuestions.customFields.map((question, index) => (
               <CustomFieldRenderer
                 key={question.id}
@@ -41,7 +41,7 @@ export function AdditionalInfoStep({
             ))}
           </div>
         ) : (
-          <p className="text-center text-white/60">
+          <p className="text-center text-sm text-white/60 sm:text-base">
             Nenhuma informação adicional necessária. Continua para o próximo
             passo!
           </p>

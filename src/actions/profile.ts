@@ -4,6 +4,7 @@ import { onboarding, profile } from "@/drizzle/schema";
 import { db } from "@/lib/db";
 import { onboardingSchema, type OnboardingData } from "@/schemas/profile";
 import { and, eq, isNull } from "drizzle-orm";
+import { z } from "zod";
 
 // Salvar onboarding (sempre cria registro, com ou sem user_id)
 export async function saveOnboarding(
@@ -18,8 +19,23 @@ export async function saveOnboarding(
       };
     }
 
-    // Validate data
-    const validatedData = onboardingSchema.parse(data);
+    // Se é uma atualização (tem userId), usar schema mais flexível que permite goals vazio
+    let validatedData;
+    if (userId) {
+      // Schema flexível para atualização: goals pode ser vazio
+      const updateSchema = onboardingSchema.omit({ goals: true }).merge(
+        z.object({
+          goals: z.array(z.string()).min(0).default([]),
+        })
+      );
+      validatedData = updateSchema.parse({
+        ...data,
+        goals: data.goals || [],
+      });
+    } else {
+      // Schema completo para novo onboarding
+      validatedData = onboardingSchema.parse(data);
+    }
 
     const onboardingData = {
       userId: userId || null,

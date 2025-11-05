@@ -22,14 +22,14 @@ export function GoalsStep({
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      className="space-y-8"
+      className="space-y-6 sm:space-y-8"
     >
       <OnboardStepHeader
         title="Quais São os Teus Objetivos?"
         description="Seleciona todos os objetivos que se aplicam a ti. Isto ajuda-nos a sugerir as melhores funcionalidades."
       />
 
-      <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+      <div className="grid grid-cols-1 gap-3 sm:gap-4 md:grid-cols-2 lg:grid-cols-3">
         {goalsToDisplay.map(goal => (
           <GoalCard
             key={goal.id}

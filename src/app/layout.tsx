@@ -25,8 +25,14 @@ export default async function RootLayout({
   const locale = await getUserLocale();
 
   return (
-    <html lang={locale}>
-      <body className={cn("antialiased", fonts)} suppressHydrationWarning>
+    <html lang={locale} suppressHydrationWarning>
+      <body
+        className={cn(
+          "min-h-screen bg-background text-foreground antialiased",
+          fonts,
+        )}
+        suppressHydrationWarning
+      >
         <NextIntlClientProvider messages={dictionary}>
           <Providers>{children}</Providers>
         </NextIntlClientProvider>

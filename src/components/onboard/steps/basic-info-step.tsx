@@ -31,14 +31,14 @@ export function BasicInfoStep({
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      className="space-y-8"
+      className="space-y-6 sm:space-y-8"
     >
       <OnboardStepHeader
         title="Informações Básicas"
         description="Vamos começar com as tuas informações essenciais."
       />
 
-      <div className="mx-auto max-w-xl space-y-6">
+      <div className="mx-auto max-w-xl space-y-4 sm:space-y-6">
         <div>
           <Label htmlFor="name" className="font-medium text-white">
             Nome Completo *

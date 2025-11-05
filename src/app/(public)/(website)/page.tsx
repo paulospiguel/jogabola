@@ -20,7 +20,7 @@ const FieldPattern = () => {
   return (
     <div className="pointer-events-none absolute inset-0 overflow-hidden">
       {/* Gradiente base: azul claro top-left para verde claro bottom-right */}
-      <div className="absolute inset-0 bg-gradient-to-br from-blue-100 via-cyan-50 to-emerald-100" />
+      <div className="absolute inset-0 bg-linear-to-br from-blue-100 via-cyan-50 to-emerald-100 dark:from-slate-900/80 dark:via-emerald-900/40 dark:to-slate-950/80" />
     </div>
   );
 };
@@ -31,12 +31,12 @@ const HeroSection = () => {
   const { redirectToJourney } = useJourneyRedirect();
 
   return (
-    <section className="relative flex min-h-screen items-center overflow-hidden pt-20">
+    <section className="bg-background relative flex min-h-screen items-center overflow-hidden pt-20 dark:bg-(--color-blue-850)">
       <FieldPattern />
 
       {/* Container principal arredondado como no mockup */}
       <div className="relative z-10 container mx-auto max-w-7xl px-4 py-12 md:px-6">
-        <div className="mx-auto max-w-6xl rounded-3xl bg-gradient-to-br from-blue-50/80 via-cyan-50/80 to-emerald-50/80 p-8 backdrop-blur-sm md:p-12 lg:p-16">
+        <div className="mx-auto max-w-6xl rounded-3xl bg-linear-to-br from-blue-50/80 via-cyan-50/80 to-emerald-50/80 p-8 backdrop-blur-sm md:p-12 lg:p-16 dark:from-slate-900/90 dark:via-slate-900/70 dark:to-emerald-900/40">
           <div className="grid items-center gap-12 lg:grid-cols-2">
             {/* Content - Lado Esquerdo */}
             <motion.div
@@ -46,20 +46,22 @@ const HeroSection = () => {
               className="space-y-6"
             >
               {/* Badge Versão 2.0 - Verde claro como no mockup */}
-              <div className="inline-flex items-center rounded-full bg-emerald-100 px-4 py-1.5">
-                <span className="text-sm font-medium text-emerald-700">
+              <div className="inline-flex items-center rounded-full bg-emerald-100 px-4 py-1.5 dark:bg-emerald-500/10">
+                <span className="text-sm font-medium text-emerald-700 dark:text-emerald-300">
                   {t("versionBadge")}
                 </span>
               </div>
 
               {/* Title - Texto escuro, sem gradiente */}
-              <h1 className="text-4xl leading-tight font-bold text-gray-900 md:text-5xl lg:text-6xl">
+              <h1 className="text-4xl leading-tight font-bold text-gray-900 md:text-5xl lg:text-6xl dark:text-white">
                 {t("title")}{" "}
-                <span className="text-gray-900">{t("titleHighlight")}</span>
+                <span className="text-gray-900 dark:text-emerald-300">
+                  {t("titleHighlight")}
+                </span>
               </h1>
 
               {/* Subtitle */}
-              <p className="text-lg text-gray-700 md:text-xl">
+              <p className="text-lg text-gray-700 md:text-xl dark:text-gray-300">
                 {t("subtitle")}
               </p>
 
@@ -67,23 +69,23 @@ const HeroSection = () => {
               <div className="flex flex-col gap-4 pt-2 sm:flex-row">
                 <Button
                   onClick={redirectToJourney}
-                  className="rounded-lg bg-emerald-500 px-6 py-5 text-base font-medium text-white shadow-md hover:bg-emerald-600 md:px-8 md:py-6 md:text-lg"
+                  className="rounded-lg bg-emerald-500 px-6 py-5 text-base font-medium text-white shadow-md hover:bg-emerald-600 md:px-8 md:py-6 md:text-lg dark:bg-emerald-500 dark:text-white dark:shadow-emerald-500/30 dark:hover:bg-emerald-600"
                 >
                   {t("startJourney")}
                 </Button>
                 <Button
                   variant="outline"
-                  className="group rounded-lg border-2 border-blue-300 bg-white px-6 py-5 text-base font-medium text-blue-500 hover:bg-blue-50 md:px-8 md:py-6 md:text-lg"
+                  className="group rounded-lg border-2 border-blue-300 bg-white px-6 py-5 text-base font-medium text-blue-500 hover:bg-blue-50 md:px-8 md:py-6 md:text-lg dark:border-emerald-500/40 dark:bg-slate-900 dark:text-emerald-300 dark:hover:bg-slate-800"
                 >
-                  <Play className="mr-2 h-5 w-5 fill-blue-500 transition-transform group-hover:scale-110" />
+                  <Play className="mr-2 h-5 w-5 fill-blue-500 transition-transform group-hover:scale-110 dark:fill-emerald-300" />
                   {t("watchDemo")}
                 </Button>
               </div>
 
               {/* Trust indicators - Linha única */}
-              <div className="flex items-center space-x-4 pt-2 text-sm text-gray-600">
+              <div className="flex items-center space-x-4 pt-2 text-sm text-gray-600 dark:text-gray-300">
                 <span>{t("trustIndicators.freeToStart")}</span>
-                <span className="text-gray-400">|</span>
+                <span className="text-gray-400 dark:text-gray-500">|</span>
                 <span>{t("trustIndicators.noCard")}</span>
               </div>
             </motion.div>
@@ -98,18 +100,18 @@ const HeroSection = () => {
               {/* Tablet Principal */}
               <div className="relative mx-auto max-w-md">
                 {/* Tablet Frame */}
-                <div className="relative rounded-2xl bg-white p-3 shadow-2xl">
+                <div className="relative rounded-2xl bg-white p-3 shadow-2xl dark:bg-slate-900 dark:shadow-emerald-900/30">
                   {/* Screen */}
-                  <div className="aspect-[4/3] rounded-xl bg-gradient-to-br from-gray-50 to-gray-100 p-4">
+                  <div className="aspect-4/3 rounded-xl bg-linear-to-br from-gray-50 to-gray-100 p-4 dark:from-slate-900 dark:to-slate-800">
                     {/* Header do app */}
                     <div className="mb-4 flex items-center justify-between">
-                      <h3 className="text-lg font-bold text-gray-900">
+                      <h3 className="text-lg font-bold text-gray-900 dark:text-white">
                         JogaBola
                       </h3>
                       <div className="flex space-x-1">
-                        <div className="h-2 w-2 rounded-full bg-gray-300" />
-                        <div className="h-2 w-2 rounded-full bg-gray-300" />
-                        <div className="h-2 w-2 rounded-full bg-gray-300" />
+                        <div className="h-2 w-2 rounded-full bg-gray-300 dark:bg-slate-700" />
+                        <div className="h-2 w-2 rounded-full bg-gray-300 dark:bg-slate-700" />
+                        <div className="h-2 w-2 rounded-full bg-gray-300 dark:bg-slate-700" />
                       </div>
                     </div>
 
@@ -118,7 +120,7 @@ const HeroSection = () => {
                       {[...Array(6)].map((_, i) => (
                         <div
                           key={i}
-                          className="aspect-square rounded-lg bg-white shadow-sm"
+                          className="aspect-square rounded-lg bg-white shadow-sm dark:bg-slate-900/60 dark:shadow-emerald-900/20"
                         />
                       ))}
                     </div>
@@ -128,7 +130,7 @@ const HeroSection = () => {
                 {/* Elementos flutuantes conectados */}
                 {/* Profile Card 1 */}
                 <motion.div
-                  className="absolute top-8 -left-8 rounded-xl bg-white p-3 shadow-lg"
+                  className="absolute top-8 -left-8 rounded-xl bg-white p-3 shadow-lg dark:bg-slate-900/90 dark:shadow-emerald-900/30"
                   animate={{
                     y: [0, -8, 0],
                     rotate: [-2, 2, -2],
@@ -140,14 +142,14 @@ const HeroSection = () => {
                   }}
                 >
                   <div className="flex items-center space-x-2">
-                    <div className="h-8 w-8 rounded-full bg-gradient-to-br from-blue-400 to-cyan-400" />
-                    <div className="h-2 w-12 rounded bg-gray-200" />
+                    <div className="h-8 w-8 rounded-full bg-linear-to-br from-blue-400 to-cyan-400 dark:from-emerald-500 dark:to-blue-500" />
+                    <div className="h-2 w-12 rounded bg-gray-200 dark:bg-slate-700" />
                   </div>
                 </motion.div>
 
                 {/* Profile Card 2 */}
                 <motion.div
-                  className="absolute top-16 -right-6 rounded-xl bg-white p-3 shadow-lg"
+                  className="absolute top-16 -right-6 rounded-xl bg-white p-3 shadow-lg dark:bg-slate-900/90 dark:shadow-emerald-900/30"
                   animate={{
                     y: [0, 8, 0],
                     rotate: [2, -2, 2],
@@ -160,14 +162,14 @@ const HeroSection = () => {
                   }}
                 >
                   <div className="flex items-center space-x-2">
-                    <div className="h-8 w-8 rounded-full bg-gradient-to-br from-emerald-400 to-green-400" />
-                    <div className="h-2 w-12 rounded bg-gray-200" />
+                    <div className="h-8 w-8 rounded-full bg-linear-to-br from-emerald-400 to-green-400 dark:from-emerald-500 dark:to-green-500" />
+                    <div className="h-2 w-12 rounded bg-gray-200 dark:bg-slate-700" />
                   </div>
                 </motion.div>
 
                 {/* Document Icon */}
                 <motion.div
-                  className="absolute bottom-12 -left-4 rounded-lg bg-white p-2 shadow-lg"
+                  className="absolute bottom-12 -left-4 rounded-lg bg-white p-2 shadow-lg dark:bg-slate-900/90 dark:shadow-emerald-900/30"
                   animate={{
                     y: [0, -6, 0],
                   }}
@@ -178,12 +180,12 @@ const HeroSection = () => {
                     delay: 0.5,
                   }}
                 >
-                  <div className="h-6 w-6 rounded bg-blue-100" />
+                  <div className="h-6 w-6 rounded bg-blue-100 dark:bg-emerald-900/60" />
                 </motion.div>
 
                 {/* Chart Icon */}
                 <motion.div
-                  className="absolute -right-4 bottom-8 rounded-lg bg-white p-2 shadow-lg"
+                  className="absolute -right-4 bottom-8 rounded-lg bg-white p-2 shadow-lg dark:bg-slate-900/90 dark:shadow-emerald-900/30"
                   animate={{
                     y: [0, 6, 0],
                   }}
@@ -194,7 +196,7 @@ const HeroSection = () => {
                     delay: 1.5,
                   }}
                 >
-                  <div className="h-6 w-6 rounded bg-emerald-100" />
+                  <div className="h-6 w-6 rounded bg-emerald-100 dark:bg-emerald-900/60" />
                 </motion.div>
 
                 {/* Linhas conectando elementos (glow effect) */}
@@ -253,14 +255,14 @@ const HeroSection = () => {
                 repeat: Infinity,
                 ease: "easeInOut",
               }}
-              className="flex h-10 w-10 items-center justify-center rounded-full bg-white/80 shadow-md backdrop-blur-sm"
+              className="flex h-10 w-10 items-center justify-center rounded-full bg-white/80 shadow-md backdrop-blur-sm dark:bg-slate-900/80 dark:shadow-emerald-900/40"
             >
               <svg
                 width="20"
                 height="20"
                 viewBox="0 0 20 20"
                 fill="none"
-                className="text-gray-400"
+                className="text-gray-400 dark:text-gray-500"
               >
                 <path
                   d="M5 7.5L10 12.5L15 7.5"
@@ -283,14 +285,14 @@ const DemoSection = () => {
   const t = useTranslations("homePage.demo");
 
   return (
-    <section className="bg-white py-20">
+    <section className="bg-white py-20 dark:bg-(--color-blue-850)">
       <div className="container mx-auto max-w-7xl px-4 md:px-6">
         {/* Header */}
         <div className="mb-12 text-center">
-          <h2 className="mb-4 text-4xl font-bold text-gray-900">
+          <h2 className="mb-4 text-4xl font-bold text-gray-900 dark:text-white">
             {t("title")}
           </h2>
-          <p className="mx-auto max-w-3xl text-xl text-gray-600">
+          <p className="mx-auto max-w-3xl text-xl text-gray-600 dark:text-gray-300">
             {t("subtitle")}
           </p>
         </div>
@@ -299,24 +301,36 @@ const DemoSection = () => {
         <div className="mb-12 grid gap-8 md:grid-cols-3">
           <div className="text-center">
             <div className="mb-2 flex items-center justify-center">
-              <Users className="mr-2 h-8 w-8 text-blue-500" />
-              <span className="text-3xl font-bold text-gray-900">10.000+</span>
+              <Users className="mr-2 h-8 w-8 text-blue-500 dark:text-emerald-300" />
+              <span className="text-3xl font-bold text-gray-900 dark:text-white">
+                10.000+
+              </span>
             </div>
-            <p className="text-gray-600">{t("stats.activePlayers")}</p>
+            <p className="text-gray-600 dark:text-gray-300">
+              {t("stats.activePlayers")}
+            </p>
           </div>
           <div className="text-center">
             <div className="mb-2 flex items-center justify-center">
-              <Trophy className="mr-2 h-8 w-8 text-yellow-500" />
-              <span className="text-3xl font-bold text-gray-900">500+</span>
+              <Trophy className="mr-2 h-8 w-8 text-yellow-500 dark:text-yellow-400" />
+              <span className="text-3xl font-bold text-gray-900 dark:text-white">
+                500+
+              </span>
             </div>
-            <p className="text-gray-600">{t("stats.championships")}</p>
+            <p className="text-gray-600 dark:text-gray-300">
+              {t("stats.championships")}
+            </p>
           </div>
           <div className="text-center">
             <div className="mb-2 flex items-center justify-center">
-              <Star className="mr-2 h-8 w-8 text-emerald-500" />
-              <span className="text-3xl font-bold text-gray-900">4.9</span>
+              <Star className="mr-2 h-8 w-8 text-emerald-500 dark:text-emerald-300" />
+              <span className="text-3xl font-bold text-gray-900 dark:text-white">
+                4.9
+              </span>
             </div>
-            <p className="text-gray-600">{t("stats.averageRating")}</p>
+            <p className="text-gray-600 dark:text-gray-300">
+              {t("stats.averageRating")}
+            </p>
           </div>
         </div>
 
@@ -324,16 +338,16 @@ const DemoSection = () => {
         <div className="relative">
           {/* Desktop */}
           <div className="relative mx-auto max-w-4xl">
-            <div className="rounded-t-2xl bg-gray-900 px-4 py-2">
+            <div className="rounded-t-2xl bg-gray-900 px-4 py-2 dark:bg-slate-900/80">
               <div className="flex space-x-2">
                 <div className="h-3 w-3 rounded-full bg-red-500" />
                 <div className="h-3 w-3 rounded-full bg-yellow-500" />
                 <div className="h-3 w-3 rounded-full bg-green-500" />
               </div>
             </div>
-            <div className="rounded-b-2xl border-x-4 border-b-4 border-gray-900 bg-white p-8">
-              <div className="flex h-96 items-center justify-center rounded-xl bg-gradient-to-br from-gray-50 to-gray-100">
-                <Play className="h-16 w-16 text-gray-400" />
+            <div className="rounded-b-2xl border-x-4 border-b-4 border-gray-900 bg-white p-8 dark:border-slate-800 dark:bg-slate-900">
+              <div className="flex h-96 items-center justify-center rounded-xl bg-linear-to-br from-gray-50 to-gray-100 dark:from-slate-900 dark:to-slate-800">
+                <Play className="h-16 w-16 text-gray-400 dark:text-gray-500" />
               </div>
             </div>
           </div>
@@ -345,9 +359,9 @@ const DemoSection = () => {
             transition={{ duration: 0.5 }}
             className="absolute bottom-0 -left-8 w-48"
           >
-            <div className="rounded-3xl bg-gray-900 p-2">
-              <div className="h-80 rounded-2xl bg-white p-4">
-                <div className="h-full rounded-xl bg-gradient-to-br from-gray-50 to-gray-100" />
+            <div className="rounded-3xl bg-gray-900 p-2 dark:bg-slate-900">
+              <div className="h-80 rounded-2xl bg-white p-4 dark:bg-slate-900">
+                <div className="h-full rounded-xl bg-linear-to-br from-gray-50 to-gray-100 dark:from-slate-900 dark:to-slate-800" />
               </div>
             </div>
           </motion.div>
@@ -358,9 +372,9 @@ const DemoSection = () => {
             transition={{ duration: 0.5 }}
             className="absolute -right-8 bottom-0 w-48"
           >
-            <div className="rounded-3xl bg-gray-900 p-2">
-              <div className="h-80 rounded-2xl bg-white p-4">
-                <div className="h-full rounded-xl bg-gradient-to-br from-gray-50 to-gray-100" />
+            <div className="rounded-3xl bg-gray-900 p-2 dark:bg-slate-900">
+              <div className="h-80 rounded-2xl bg-white p-4 dark:bg-slate-900">
+                <div className="h-full rounded-xl bg-linear-to-br from-gray-50 to-gray-100 dark:from-slate-900 dark:to-slate-800" />
               </div>
             </div>
           </motion.div>
@@ -399,10 +413,10 @@ const TestimonialsSection = () => {
   ];
 
   return (
-    <section className="bg-gray-50 py-20">
+    <section className="bg-gray-50 py-20 dark:bg-(--color-blue-850)">
       <div className="container mx-auto max-w-7xl px-4 md:px-6">
         <div className="mb-12 text-center">
-          <h2 className="mb-4 text-4xl font-bold text-gray-900">
+          <h2 className="mb-4 text-4xl font-bold text-gray-900 dark:text-white">
             {t("title")}
           </h2>
         </div>
@@ -414,7 +428,7 @@ const TestimonialsSection = () => {
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: index * 0.1 }}
-              className="rounded-2xl bg-white p-6 shadow-lg"
+              className="rounded-2xl bg-white p-6 shadow-lg dark:bg-slate-900/80 dark:shadow-emerald-900/20"
             >
               <div className="mb-4 flex items-center space-x-1">
                 {[...Array(testimonial.rating)].map((_, i) => (
@@ -424,14 +438,16 @@ const TestimonialsSection = () => {
                   />
                 ))}
               </div>
-              <p className="mb-4 text-gray-600">"{testimonial.text}"</p>
+              <p className="mb-4 text-gray-600 dark:text-gray-300">
+                "{testimonial.text}"
+              </p>
               <div className="flex items-center space-x-3">
                 <div className="text-3xl">{testimonial.avatar}</div>
                 <div>
-                  <div className="font-semibold text-gray-900">
+                  <div className="font-semibold text-gray-900 dark:text-white">
                     {testimonial.name}
                   </div>
-                  <div className="text-sm text-gray-500">
+                  <div className="text-sm text-gray-500 dark:text-gray-400">
                     {testimonial.role}
                   </div>
                 </div>
@@ -482,10 +498,10 @@ const FeaturesSection = () => {
   ];
 
   return (
-    <section className="bg-white py-20">
+    <section className="bg-white py-20 dark:bg-(--color-blue-850)">
       <div className="container mx-auto max-w-7xl px-4 md:px-6">
         <div className="mb-12 text-center">
-          <h2 className="mb-4 text-4xl font-bold text-gray-900">
+          <h2 className="mb-4 text-4xl font-bold text-gray-900 dark:text-white">
             {t("title")}
           </h2>
         </div>
@@ -497,15 +513,17 @@ const FeaturesSection = () => {
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: index * 0.1 }}
-              className="rounded-2xl border border-gray-100 bg-gradient-to-br from-gray-50 to-white p-6 transition-shadow hover:shadow-lg"
+              className="rounded-2xl border border-gray-100 bg-linear-to-br from-gray-50 to-white p-6 transition-shadow hover:shadow-lg dark:border-slate-800 dark:from-slate-900/90 dark:to-slate-900"
             >
-              <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-blue-100 to-cyan-100">
-                <feature.icon className="h-6 w-6 text-blue-600" />
+              <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-linear-to-br from-blue-100 to-cyan-100 dark:from-emerald-500/10 dark:to-blue-500/10">
+                <feature.icon className="h-6 w-6 text-blue-600 dark:text-emerald-300" />
               </div>
-              <h3 className="mb-2 text-xl font-semibold text-gray-900">
+              <h3 className="mb-2 text-xl font-semibold text-gray-900 dark:text-white">
                 {feature.title}
               </h3>
-              <p className="text-gray-600">{feature.description}</p>
+              <p className="text-gray-600 dark:text-gray-300">
+                {feature.description}
+              </p>
             </motion.div>
           ))}
         </div>
@@ -520,24 +538,24 @@ const CTASection = () => {
   const t = useTranslations("homePage.cta");
 
   return (
-    <section className="bg-gradient-to-br from-gray-900 to-gray-800 py-20">
+    <section className="bg-linear-to-br from-gray-900 to-gray-800 py-20 dark:from-slate-950 dark:to-slate-900">
       <div className="container mx-auto max-w-7xl px-4 text-center md:px-6">
         <h2 className="mb-4 text-4xl font-bold text-white">{t("title")}</h2>
-        <p className="mx-auto mb-8 max-w-2xl text-xl text-gray-300">
+        <p className="mx-auto mb-8 max-w-2xl text-xl text-gray-300 dark:text-gray-300">
           {t("subtitle")}
         </p>
         <div className="flex flex-col justify-center gap-4 sm:flex-row">
           <Button
             onClick={redirectToJourney}
-            className="border-2 border-white bg-gradient-to-r from-emerald-500 to-green-500 px-8 py-6 text-lg text-white hover:from-emerald-600 hover:to-green-600"
+            className="border-2 border-white bg-linear-to-r from-emerald-500 to-green-500 px-8 py-6 text-lg text-white hover:from-emerald-600 hover:to-green-600"
           >
             {t("createAccount")}
           </Button>
           <Button
             variant="outline"
-            className="border-2 border-gray-700 px-8 py-6 text-lg text-gray-700 hover:bg-gray-100 hover:text-gray-900 dark:text-white"
+            className="border-2 border-gray-700 px-8 py-6 text-lg text-gray-700 hover:bg-gray-100 hover:text-gray-900 dark:border-emerald-500/40 dark:bg-transparent dark:text-white dark:hover:bg-emerald-500/10"
           >
-            <Handshake className="mr-2 h-6 w-6 text-gray-700 dark:text-white" />
+            <Handshake className="mr-2 h-6 w-6 text-gray-700 dark:text-emerald-300" />
             {t("becomePartner")}
           </Button>
         </div>

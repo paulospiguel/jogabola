@@ -50,7 +50,7 @@ export function useProfileSync(
         } else {
           console.log(
             "Nenhum onboarding pendente encontrado:",
-            linkResult.error,
+            "error" in linkResult ? linkResult.error : "Nenhum erro específico",
           );
         }
 

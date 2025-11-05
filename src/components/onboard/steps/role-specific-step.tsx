@@ -23,7 +23,7 @@ export function RoleSpecificStep({
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      className="space-y-8"
+      className="space-y-6 sm:space-y-8"
     >
       <OnboardStepHeader
         title="Habilidades Específicas"
@@ -32,9 +32,9 @@ export function RoleSpecificStep({
         }.`}
       />
 
-      <div className="mx-auto max-w-2xl space-y-6">
+      <div className="mx-auto max-w-2xl space-y-4 sm:space-y-6">
         {roleQuestions && roleQuestions.personalInfo.length > 0 ? (
-          <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+          <div className="grid grid-cols-1 gap-3 sm:gap-4 md:grid-cols-2">
             {roleQuestions.personalInfo.map((question, index) => (
               <CustomFieldRenderer
                 key={question.id}
@@ -46,7 +46,7 @@ export function RoleSpecificStep({
             ))}
           </div>
         ) : (
-          <p className="text-center text-white/60">
+          <p className="text-center text-sm text-white/60 sm:text-base">
             Não há campos adicionais para este tipo de jornada.
           </p>
         )}

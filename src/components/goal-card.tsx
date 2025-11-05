@@ -17,28 +17,28 @@ export function GoalCard({ goal, isSelected, onToggle }: GoalCardProps) {
       whileHover={{ scale: 1.02 }}
       whileTap={{ scale: 0.98 }}
       className={cn(
-        "relative cursor-pointer overflow-hidden rounded-xl border p-4 transition-all duration-300",
+        "relative cursor-pointer overflow-hidden rounded-xl border p-3 transition-all duration-300 sm:p-4",
         isSelected
           ? "border-[#00cfb1] bg-gradient-to-br from-[#00cfb1]/10 to-[#1effbf]/5 shadow-lg shadow-[#00cfb1]/25"
           : "border-white/20 bg-gradient-to-br from-white/5 to-white/2 hover:border-[#00cfb1]/50",
       )}
       onClick={() => onToggle(goal.id)}
     >
-      <div className="flex items-center gap-3">
+      <div className="flex items-center gap-2.5 sm:gap-3">
         <div
           className={cn(
-            "flex h-10 w-10 items-center justify-center rounded-full transition-colors",
+            "flex h-8 w-8 shrink-0 items-center justify-center rounded-full transition-colors sm:h-10 sm:w-10",
             isSelected ? "bg-[#00cfb1]" : "bg-white/10",
           )}
         >
           <Icon
             className={cn(
-              "h-5 w-5 transition-colors",
+              "h-4 w-4 transition-colors sm:h-5 sm:w-5",
               isSelected ? "text-white" : "text-[#00cfb1]",
             )}
           />
         </div>
-        <span className="font-medium text-white">{goal.label}</span>
+        <span className="text-sm font-medium text-white sm:text-base">{goal.label}</span>
       </div>
 
       {isSelected && (

@@ -107,39 +107,39 @@ export default function ArenaPage() {
   const MotionCard = motion(Card);
 
   return (
-    <div className="relative min-h-screen overflow-hidden text-white">
+    <div className="relative min-h-screen overflow-hidden bg-linear-to-br from-emerald-50/60 via-white to-sky-50 text-slate-900 transition-colors dark:from-[#050312] dark:via-[#080a25] dark:to-[#0f163f] dark:text-white">
       <div className="pointer-events-none absolute inset-0 -z-10">
-        <div className="absolute inset-0 bg-[linear-gradient(135deg,#050312_0%,#080a25_45%,#0f163f_100%)]" />
-        <div className="absolute inset-0 bg-[radial-gradient(90%_90%_at_50%_0%,rgba(0,255,213,0.22)_0%,rgba(5,3,18,0)_72%)]" />
-        <div className="absolute top-32 left-1/4 h-72 w-72 -translate-x-1/2 rounded-full bg-[#24ffe6]/12 blur-[120px]" />
-        <div className="absolute bottom-16 right-20 h-80 w-80 rounded-full bg-[#02a7ff]/12 blur-[120px]" />
-        <div className="absolute top-1/2 right-1/3 h-64 w-64 rounded-full bg-[#1effbf]/12 blur-[120px]" />
+        <div className="absolute inset-0 bg-linear-to-br from-emerald-200/30 via-white to-sky-200/20 dark:bg-[linear-gradient(135deg,#050312_0%,#080a25_45%,#0f163f_100%)]" />
+        <div className="absolute inset-0 bg-[radial-gradient(90%_90%_at_50%_0%,rgba(56,189,248,0.15)_0%,rgba(255,255,255,0)_72%)] dark:bg-[radial-gradient(90%_90%_at_50%_0%,rgba(0,255,213,0.22)_0%,rgba(5,3,18,0)_72%)]" />
+        <div className="absolute top-32 left-1/4 h-72 w-72 -translate-x-1/2 rounded-full bg-emerald-200/40 blur-[120px] dark:bg-[#24ffe6]/12" />
+        <div className="absolute bottom-16 right-20 h-80 w-80 rounded-full bg-sky-200/40 blur-[120px] dark:bg-[#02a7ff]/12" />
+        <div className="absolute top-1/2 right-1/3 h-64 w-64 rounded-full bg-lime-200/40 blur-[120px] dark:bg-[#1effbf]/12" />
       </div>
 
       <div className="relative z-10 container mx-auto max-w-6xl px-4 py-10 md:px-8 lg:px-12">
         <motion.section
-          className="relative mb-10 overflow-hidden rounded-3xl border border-white/10 bg-white/5 p-8 shadow-[0_35px_80px_-45px_rgba(36,255,230,0.8)] backdrop-blur-xl"
+          className="relative mb-10 overflow-hidden rounded-3xl border border-emerald-100/70 bg-white/90 p-8 text-slate-800 shadow-[0_35px_80px_-45px_rgba(16,185,129,0.35)] backdrop-blur-xl transition-colors dark:border-white/10 dark:bg-white/5 dark:text-white dark:shadow-[0_35px_80px_-45px_rgba(36,255,230,0.8)]"
           initial={{ opacity: 0, y: -24 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
         >
-          <div className="absolute inset-x-0 -top-px h-px bg-gradient-to-r from-transparent via-[#24ffe6]/60 to-transparent" />
-          <div className="absolute top-1/2 -right-24 h-72 w-72 -translate-y-1/2 rounded-full bg-[#24ffe6]/15 blur-[120px]" />
+          <div className="absolute inset-x-0 -top-px h-px bg-linear-to-r from-transparent via-emerald-400/60 to-transparent dark:via-[#24ffe6]/60" />
+          <div className="absolute top-1/2 -right-24 h-72 w-72 -translate-y-1/2 rounded-full bg-emerald-200/40 blur-[120px] dark:bg-[#24ffe6]/15" />
           <div className="relative flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
             <div className="space-y-3">
               <span className="text-xs font-semibold uppercase tracking-[0.35em] text-[#6fffe9]">
                 {t("header.subtitle")}
               </span>
-              <h1 className="text-3xl font-semibold text-white md:text-4xl">
+              <h1 className="text-3xl font-semibold text-slate-900 md:text-4xl dark:text-white">
                 {t("header.title")}
               </h1>
-              <p className="max-w-xl text-base text-slate-200/85">
+              <p className="max-w-xl text-base text-slate-600 dark:text-slate-200/85">
                 {t("header.description")}
               </p>
             </div>
             <Button
               size="lg"
-              className="group min-w-[180px] bg-[#24ffe6] font-semibold text-slate-900 shadow-[0_16px_45px_-20px_rgba(36,255,230,0.9)] transition-all duration-300 hover:-translate-y-1 hover:bg-[#24ffe6]/90"
+              className="group min-w-[180px] bg-emerald-500 font-semibold text-white shadow-[0_16px_45px_-20px_rgba(16,185,129,0.5)] transition-all duration-300 hover:-translate-y-1 hover:bg-emerald-600 dark:bg-[#24ffe6] dark:text-slate-900 dark:shadow-[0_16px_45px_-20px_rgba(36,255,230,0.9)] dark:hover:bg-[#24ffe6]/90"
             >
               <Plus className="mr-2 h-5 w-5 transition-transform group-hover:translate-x-0.5" />
               {t("actions.newMatch")}
@@ -160,24 +160,24 @@ export default function ArenaPage() {
               <MotionCard
                 key={stat.title}
                 variants={fadeUp}
-                className="group relative overflow-hidden rounded-2xl border border-white/10 bg-white/6 text-white backdrop-blur-xl transition-all duration-300 hover:-translate-y-1 hover:border-[#24ffe6]/45"
+                className="group relative overflow-hidden rounded-2xl border border-emerald-100/70 bg-white text-slate-800 backdrop-blur-xl transition-all duration-300 hover:-translate-y-1 hover:border-emerald-400/70 hover:shadow-[0_20px_50px_-30px_rgba(16,185,129,0.35)] dark:border-white/10 dark:bg-white/6 dark:text-white dark:hover:border-[#24ffe6]/45"
               >
-                <div className="absolute -top-16 right-0 h-32 w-32 rounded-full bg-[#24ffe6]/15 blur-3xl transition-opacity duration-500 group-hover:opacity-100" />
+                <div className="absolute -top-16 right-0 h-32 w-32 rounded-full bg-emerald-200/40 blur-3xl transition-opacity duration-500 group-hover:opacity-100 dark:bg-[#24ffe6]/15" />
                 <CardHeader className="relative flex flex-row items-center justify-between space-y-0 pb-3">
-                  <CardTitle className="text-sm font-semibold text-white/90">
+                  <CardTitle className="text-sm font-semibold text-slate-600 dark:text-white/90">
                     {stat.title}
                   </CardTitle>
-                  <div className="rounded-full border border-white/10 bg-white/10 p-2.5 shadow">
-                    <Icon className="h-5 w-5 text-[#6fffe9]" />
+                  <div className="rounded-full border border-emerald-100/70 bg-emerald-50/80 p-2.5 shadow dark:border-white/10 dark:bg-white/10">
+                    <Icon className="h-5 w-5 text-emerald-500 dark:text-[#6fffe9]" />
                   </div>
                 </CardHeader>
                 <CardContent>
                   <p className="text-3xl font-bold">
-                    <span className="bg-gradient-to-br from-[#24ffe6] to-[#02a7ff] bg-clip-text text-transparent">
+                    <span className="bg-linear-to-br from-emerald-500 to-sky-500 bg-clip-text text-transparent dark:from-[#24ffe6] dark:to-[#02a7ff]">
                       {stat.value}
                     </span>
                   </p>
-                  <p className="mt-2 text-sm font-medium text-[#6fffe9]">
+                  <p className="mt-2 text-sm font-medium text-emerald-500 dark:text-[#6fffe9]">
                     {stat.change}
                   </p>
                 </CardContent>
@@ -194,13 +194,13 @@ export default function ArenaPage() {
             animate="animate"
             transition={{ duration: 0.55, delay: 0.2 }}
           >
-            <MotionCard className="overflow-hidden border border-white/10 bg-white/6 shadow-2xl backdrop-blur-xl">
-              <CardHeader className="relative border-b border-white/10">
-                <CardTitle className="flex items-center gap-3 text-xl">
-                  <div className="rounded-full border border-white/10 bg-white/10 p-2 shadow">
-                    <Calendar className="h-5 w-5 text-white" />
+            <MotionCard className="overflow-hidden border border-emerald-100/70 bg-white shadow-2xl backdrop-blur-xl transition-colors dark:border-white/10 dark:bg-white/6">
+              <CardHeader className="relative border-b border-emerald-100/70 dark:border-white/10">
+                <CardTitle className="flex items-center gap-3 text-xl text-slate-800 dark:text-white">
+                  <div className="rounded-full border border-emerald-100/70 bg-emerald-50/80 p-2 shadow dark:border-white/10 dark:bg-white/10">
+                    <Calendar className="h-5 w-5 text-emerald-500 dark:text-white" />
                   </div>
-                  <span className="bg-gradient-to-r from-[#24ffe6] to-[#02a7ff] bg-clip-text font-bold text-transparent">
+                  <span className="bg-linear-to-r from-emerald-500 to-sky-500 bg-clip-text font-bold text-transparent dark:from-[#24ffe6] dark:to-[#02a7ff]">
                     {t("matches.title")}
                   </span>
                 </CardTitle>
@@ -214,22 +214,22 @@ export default function ArenaPage() {
                       initial="initial"
                       animate="animate"
                       transition={{ duration: 0.45, delay: index * 0.1 }}
-                      className="group relative flex items-center justify-between overflow-hidden rounded-2xl border border-white/10 bg-white/6 p-5 backdrop-blur-xl transition-all duration-300 hover:-translate-y-0.5 hover:border-[#24ffe6]/35"
+                      className="group relative flex items-center justify-between overflow-hidden rounded-2xl border border-emerald-100/70 bg-white p-5 backdrop-blur-xl transition-all duration-300 hover:-translate-y-0.5 hover:border-emerald-400 dark:border-white/10 dark:bg-white/6 dark:hover:border-[#24ffe6]/35"
                     >
-                      <div className="absolute inset-y-0 left-0 w-1 bg-gradient-to-b from-[#24ffe6] to-[#02a7ff]" />
+                      <div className="absolute inset-y-0 left-0 w-1 bg-linear-to-b from-emerald-500 to-sky-500 dark:from-[#24ffe6] dark:to-[#02a7ff]" />
                       <div className="flex-1 pl-4">
                         <div className="mb-3 flex flex-wrap items-center gap-3">
-                          <div className="flex h-10 w-10 items-center justify-center rounded-full border border-white/10 bg-white/10 text-base font-semibold text-white shadow">
+                          <div className="flex h-10 w-10 items-center justify-center rounded-full border border-emerald-100/70 bg-emerald-50/80 text-base font-semibold text-emerald-600 shadow dark:border-white/10 dark:bg-white/10 dark:text-white">
                             {index + 1}
                           </div>
-                          <h3 className="text-lg font-semibold text-white/90">
+                          <h3 className="text-lg font-semibold text-slate-800 dark:text-white/90">
                             {match.title}
                           </h3>
                           <Badge
                             className={
                               match.status === "confirmed"
-                                ? "border-0 bg-[#24ffe6] font-semibold text-slate-900 shadow-[0_16px_45px_-20px_rgba(36,255,230,0.9)]"
-                                : "border border-white/15 bg-white/10 text-white/75"
+                                ? "border-0 bg-emerald-500 font-semibold text-white shadow-[0_16px_45px_-20px_rgba(16,185,129,0.45)] dark:bg-[#24ffe6] dark:text-slate-900 dark:shadow-[0_16px_45px_-20px_rgba(36,255,230,0.9)]"
+                                : "border border-emerald-100 bg-emerald-50/80 text-emerald-600 dark:border-white/15 dark:bg-white/10 dark:text-white/75"
                             }
                           >
                             {match.status === "confirmed"
@@ -237,22 +237,22 @@ export default function ArenaPage() {
                               : t("matches.status.pending")}
                           </Badge>
                         </div>
-                        <div className="flex flex-wrap gap-4 text-sm font-medium text-slate-200/80">
+                        <div className="flex flex-wrap gap-4 text-sm font-medium text-slate-600 dark:text-slate-200/80">
                           <span className="inline-flex items-center gap-1.5">
-                            <Calendar className="h-4 w-4 text-[#6fffe9]" />
+                            <Calendar className="h-4 w-4 text-emerald-500 dark:text-[#6fffe9]" />
                             {match.date}
                           </span>
                           <span className="inline-flex items-center gap-1.5">
-                            <Clock className="h-4 w-4 text-[#6fffe9]" />
+                            <Clock className="h-4 w-4 text-emerald-500 dark:text-[#6fffe9]" />
                             {match.time}
                           </span>
                           <span className="inline-flex items-center gap-1.5">
-                            <MapPin className="h-4 w-4 text-[#6fffe9]" />
+                            <MapPin className="h-4 w-4 text-emerald-500 dark:text-[#6fffe9]" />
                             {match.location}
                           </span>
                           <span className="inline-flex items-center gap-1.5">
-                            <Users className="h-4 w-4 text-[#6fffe9]" />
-                            <span className="font-semibold text-white">
+                            <Users className="h-4 w-4 text-emerald-500 dark:text-[#6fffe9]" />
+                            <span className="font-semibold text-slate-900 dark:text-white">
                               {match.players}
                             </span>
                           </span>
@@ -260,14 +260,14 @@ export default function ArenaPage() {
                       </div>
                       <Button
                         size="sm"
-                        className="bg-[#24ffe6] font-semibold text-slate-900 shadow-[0_16px_45px_-20px_rgba(36,255,230,0.9)] transition-all duration-300 hover:-translate-y-0.5 hover:bg-[#24ffe6]/90"
+                        className="bg-emerald-500 font-semibold text-white shadow-[0_16px_45px_-20px_rgba(16,185,129,0.45)] transition-all duration-300 hover:-translate-y-0.5 hover:bg-emerald-600 dark:bg-[#24ffe6] dark:text-slate-900 dark:shadow-[0_16px_45px_-20px_rgba(36,255,230,0.9)] dark:hover:bg-[#24ffe6]/90"
                       >
                         <Play className="h-4 w-4" />
                       </Button>
                     </motion.div>
                   ))}
                 </div>
-                <Button className="mt-6 w-full bg-[#24ffe6] font-semibold text-slate-900 shadow-[0_16px_45px_-20px_rgba(36,255,230,0.9)] transition-all duration-300 hover:-translate-y-0.5 hover:bg-[#24ffe6]/90">
+                <Button className="mt-6 w-full bg-emerald-500 font-semibold text-white shadow-[0_16px_45px_-20px_rgba(16,185,129,0.45)] transition-all duration-300 hover:-translate-y-0.5 hover:bg-emerald-600 dark:bg-[#24ffe6] dark:text-slate-900 dark:shadow-[0_16px_45px_-20px_rgba(36,255,230,0.9)] dark:hover:bg-[#24ffe6]/90">
                   {t("matches.viewAll")}
                 </Button>
               </CardContent>
@@ -280,13 +280,13 @@ export default function ArenaPage() {
             animate="animate"
             transition={{ duration: 0.55, delay: 0.3 }}
           >
-            <MotionCard className="overflow-hidden border border-white/10 bg-white/6 shadow-2xl backdrop-blur-xl">
-              <CardHeader className="relative border-b border-white/10">
-                <CardTitle className="flex items-center gap-3 text-xl">
-                  <div className="rounded-full border border-white/10 bg-white/10 p-2 shadow">
-                    <Activity className="h-5 w-5 text-white" />
+            <MotionCard className="overflow-hidden border border-emerald-100/70 bg-white shadow-2xl backdrop-blur-xl transition-colors dark:border-white/10 dark:bg-white/6">
+              <CardHeader className="relative border-b border-emerald-100/70 dark:border-white/10">
+                <CardTitle className="flex items-center gap-3 text-xl text-slate-800 dark:text-white">
+                  <div className="rounded-full border border-emerald-100/70 bg-emerald-50/80 p-2 shadow dark:border-white/10 dark:bg-white/10">
+                    <Activity className="h-5 w-5 text-emerald-500 dark:text-white" />
                   </div>
-                  <span className="bg-gradient-to-r from-[#24ffe6] to-[#02a7ff] bg-clip-text font-bold text-transparent">
+                  <span className="bg-linear-to-r from-emerald-500 to-sky-500 bg-clip-text font-bold text-transparent dark:from-[#24ffe6] dark:to-[#02a7ff]">
                     {t("activity.title")}
                   </span>
                 </CardTitle>
@@ -300,12 +300,12 @@ export default function ArenaPage() {
                       initial="initial"
                       animate="animate"
                       transition={{ duration: 0.45, delay: index * 0.12 }}
-                      className="group flex items-start gap-4 rounded-2xl border border-white/10 bg-white/6 p-4 backdrop-blur-xl transition-all duration-300 hover:border-[#24ffe6]/35"
+                      className="group flex items-start gap-4 rounded-2xl border border-emerald-100/70 bg-white p-4 backdrop-blur-xl transition-all duration-300 hover:border-emerald-400 dark:border-white/10 dark:bg-white/6 dark:hover:border-[#24ffe6]/35"
                     >
                       <div
                         className={`rounded-full bg-gradient-to-br p-2 shadow ${
                           activity.type === "win"
-                            ? "from-[#24ffe6] to-[#02a7ff]"
+                            ? "from-emerald-500 to-sky-500 dark:from-[#24ffe6] dark:to-[#02a7ff]"
                             : "from-red-400 to-pink-500"
                         }`}
                       >
@@ -316,10 +316,10 @@ export default function ArenaPage() {
                         )}
                       </div>
                       <div className="flex-1">
-                        <p className="text-sm font-medium leading-relaxed text-white/90">
+                        <p className="text-sm font-medium leading-relaxed text-slate-700 dark:text-white/90">
                           {activity.text}
                         </p>
-                        <p className="mt-1 text-xs font-medium text-slate-300/75">
+                        <p className="mt-1 text-xs font-medium text-slate-500 dark:text-slate-300/75">
                           {activity.time}
                         </p>
                       </div>
@@ -338,9 +338,9 @@ export default function ArenaPage() {
           animate="animate"
           transition={{ duration: 0.55, delay: 0.4 }}
         >
-          <MotionCard className="overflow-hidden border border-white/10 bg-white/6 shadow-2xl backdrop-blur-xl">
-            <CardHeader className="border-b border-white/10">
-              <CardTitle className="bg-gradient-to-r from-[#24ffe6] to-[#02a7ff] bg-clip-text text-2xl font-bold text-transparent">
+          <MotionCard className="overflow-hidden border border-emerald-100/70 bg-white shadow-2xl backdrop-blur-xl transition-colors dark:border-white/10 dark:bg-white/6">
+            <CardHeader className="border-b border-emerald-100/70 dark:border-white/10">
+              <CardTitle className="bg-linear-to-r from-emerald-500 to-sky-500 bg-clip-text text-2xl font-bold text-transparent dark:from-[#24ffe6] dark:to-[#02a7ff]">
                 {t("actions.quickActions")}
               </CardTitle>
             </CardHeader>
@@ -361,12 +361,14 @@ export default function ArenaPage() {
                   >
                     <Button
                       variant="outline"
-                      className="group h-auto w-full flex-col gap-3 border-white/20 bg-white/8 py-6 text-white backdrop-blur-xl transition-all duration-300 hover:-translate-y-1 hover:border-[#24ffe6]/50 hover:bg-[#24ffe6]/15"
+                      className="group h-auto w-full flex-col gap-3 border-emerald-100/70 bg-white py-6 text-slate-700 backdrop-blur-xl transition-all duration-300 hover:-translate-y-1 hover:border-emerald-400 hover:bg-emerald-50/80 dark:border-white/20 dark:bg-white/8 dark:text-white dark:hover:border-[#24ffe6]/50 dark:hover:bg-[#24ffe6]/15"
                     >
-                      <div className="rounded-full border border-white/10 bg-white/10 p-3 shadow transition-transform group-hover:scale-110">
-                        <Icon className="h-6 w-6 text-white" />
+                      <div className="rounded-full border border-emerald-100/70 bg-emerald-50/80 p-3 shadow transition-transform group-hover:scale-110 dark:border-white/10 dark:bg-white/10">
+                        <Icon className="h-6 w-6 text-emerald-500 dark:text-white" />
                       </div>
-                      <span className="font-semibold text-white">{label}</span>
+                      <span className="font-semibold text-slate-800 dark:text-white">
+                        {label}
+                      </span>
                     </Button>
                   </motion.div>
                 ))}

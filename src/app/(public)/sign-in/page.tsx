@@ -179,8 +179,7 @@ export default function LoginPage() {
 
   return (
     <div className="relative min-h-screen overflow-hidden bg-gradient-to-br from-[#21005a] via-[#2b0071] to-[#21005a]">
-      {/* Header */}
-      <Header />
+      {/* Header removido */}
 
       {/* Background decorativo com floating orbs */}
       <div className="absolute inset-0 overflow-hidden">
@@ -190,31 +189,31 @@ export default function LoginPage() {
         <FloatingOrb delay={3} size={120} position="bottom-40 right-1/3" />
       </div>
 
-      <div className="relative z-10 flex min-h-screen">
+      <div className="relative z-10 flex min-h-screen flex-col lg:flex-row">
         {/* Lado esquerdo - Hero Section */}
-        <div className="relative hidden w-1/2 flex-col justify-center p-16 lg:flex">
+        <div className="relative flex w-full flex-col justify-center px-4 py-8 lg:w-1/2 lg:p-16">
           <motion.div
             initial={{ opacity: 0, x: -50 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.6 }}
-            className="space-y-6"
+            className="space-y-4 lg:space-y-6"
           >
-            <div className="inline-flex items-center gap-2 rounded-full bg-[#00cfb1]/10 px-4 py-2 backdrop-blur-sm">
-              <Trophy className="h-5 w-5 text-[#00cfb1]" />
-              <span className="text-sm font-medium text-[#00cfb1]">
+            <div className="inline-flex items-center gap-2 rounded-full bg-[#00cfb1]/10 px-3 py-1.5 backdrop-blur-sm lg:px-4 lg:py-2">
+              <Trophy className="h-4 w-4 text-[#00cfb1] lg:h-5 lg:w-5" />
+              <span className="text-xs font-medium text-[#00cfb1] lg:text-sm">
                 {t("hero.badge")}
               </span>
             </div>
 
-            <h1 className="max-w-xl bg-gradient-to-r from-[#00cfb1] to-[#1effbf] bg-clip-text text-6xl font-bold leading-tight text-transparent">
+            <h1 className="max-w-xl bg-gradient-to-r from-[#00cfb1] to-[#1effbf] bg-clip-text text-3xl font-bold leading-tight text-transparent sm:text-4xl md:text-5xl lg:text-6xl">
               {t("hero.title")}
             </h1>
 
-            <p className="max-w-lg text-xl leading-relaxed text-[#ba93ff]">
+            <p className="max-w-lg text-base leading-relaxed text-[#ba93ff] lg:text-xl">
               {t("hero.description")}
             </p>
 
-            <div className="flex flex-col gap-4 pt-6">
+            <div className="flex flex-col gap-3 pt-4 lg:gap-4 lg:pt-6">
               {[
                 t("features.findTeams"),
                 t("features.trackStats"),
@@ -226,10 +225,10 @@ export default function LoginPage() {
                   initial={{ opacity: 0, x: -20 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: 0.3 + i * 0.1 }}
-                  className="flex items-center gap-3 text-white/90"
+                  className="flex items-center gap-2 text-sm text-white/90 lg:gap-3 lg:text-base"
                 >
-                  <div className="h-1.5 w-1.5 rounded-full bg-[#00cfb1]" />
-                  {feature}
+                  <div className="h-1.5 w-1.5 shrink-0 rounded-full bg-[#00cfb1]" />
+                  <span className="break-words">{feature}</span>
                 </motion.div>
               ))}
             </div>
@@ -237,16 +236,16 @@ export default function LoginPage() {
         </div>
 
         {/* Lado direito - Form */}
-        <div className="flex flex-1 items-center justify-center p-8">
+        <div className="flex flex-1 items-center justify-center px-4 py-6 sm:px-6 lg:p-8">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
             className="w-full max-w-md"
           >
-            <div className="overflow-hidden rounded-3xl border border-white/20 bg-gradient-to-br from-white/10 to-white/5 p-8 backdrop-blur-xl shadow-2xl">
+            <div className="overflow-hidden rounded-2xl border border-white/20 bg-gradient-to-br from-white/10 to-white/5 p-4 backdrop-blur-xl shadow-2xl sm:rounded-3xl sm:p-6 lg:p-8">
               {/* Header */}
-              <div className="mb-8 space-y-2 text-center">
+              <div className="mb-6 space-y-2 text-center lg:mb-8">
                 <motion.div
                   initial={{ scale: 0 }}
                   animate={{ scale: 1 }}
@@ -255,10 +254,10 @@ export default function LoginPage() {
                 >
                   <Logo size="medium" />
                 </motion.div>
-                <h2 className="bg-gradient-to-r from-[#00cfb1] to-[#1effbf] bg-clip-text text-3xl font-bold text-transparent">
+                <h2 className="bg-gradient-to-r from-[#00cfb1] to-[#1effbf] bg-clip-text text-2xl font-bold text-transparent sm:text-3xl">
                   {tab === "login" ? t("form.title.login") : t("form.title.register")}
                 </h2>
-                <p className="text-sm text-[#ba93ff]">
+                <p className="text-xs text-[#ba93ff] sm:text-sm">
                   {tab === "login"
                     ? t("form.subtitle.login")
                     : t("form.subtitle.register")}
@@ -266,13 +265,13 @@ export default function LoginPage() {
               </div>
 
               {/* Tabs */}
-              <div className="mb-6 flex gap-2 rounded-xl bg-white/5 p-1">
+              <div className="mb-4 flex gap-2 rounded-xl bg-white/5 p-1 lg:mb-6">
                 <button
                   onClick={() => {
                     setTab("login");
                     registerForm.reset();
                   }}
-                  className={`flex-1 rounded-lg py-2.5 text-sm font-semibold transition-all ${
+                  className={`flex-1 rounded-lg py-2 text-xs font-semibold transition-all sm:py-2.5 sm:text-sm ${
                     tab === "login"
                       ? "bg-gradient-to-r from-[#00cfb1] to-[#1effbf] text-[#21005a] shadow-lg"
                       : "text-white/60 hover:text-white"
@@ -285,7 +284,7 @@ export default function LoginPage() {
                     setTab("register");
                     loginForm.reset();
                   }}
-                  className={`flex-1 rounded-lg py-2.5 text-sm font-semibold transition-all ${
+                  className={`flex-1 rounded-lg py-2 text-xs font-semibold transition-all sm:py-2.5 sm:text-sm ${
                     tab === "register"
                       ? "bg-gradient-to-r from-[#00cfb1] to-[#1effbf] text-[#21005a] shadow-lg"
                       : "text-white/60 hover:text-white"
@@ -299,7 +298,7 @@ export default function LoginPage() {
               {tab === "login" && (
                 <Form {...loginForm}>
                   <form
-                    className="space-y-4"
+                    className="space-y-3 sm:space-y-4"
                     onSubmit={loginForm.handleSubmit(onLoginSubmit)}
                   >
                     <FormField
@@ -362,11 +361,11 @@ export default function LoginPage() {
                     </div>
 
                     {/* Buttons */}
-                    <div className="space-y-3 pt-2">
+                    <div className="space-y-2.5 pt-2 sm:space-y-3">
                       <Button
                         type="submit"
                         disabled={loading}
-                        className="w-full bg-gradient-to-r from-[#00cfb1] to-[#1effbf] font-bold text-[#21005a] hover:from-[#1effbf] hover:to-[#00cfb1] hover:shadow-lg hover:shadow-[#00cfb1]/50 disabled:opacity-50"
+                        className="w-full bg-gradient-to-r from-[#00cfb1] to-[#1effbf] text-sm font-bold text-[#21005a] hover:from-[#1effbf] hover:to-[#00cfb1] hover:shadow-lg hover:shadow-[#00cfb1]/50 disabled:opacity-50 sm:text-base"
                       >
                         {loading ? (
                           <>
@@ -417,7 +416,7 @@ export default function LoginPage() {
               {tab === "register" && (
                 <Form {...registerForm}>
                   <form
-                    className="space-y-4"
+                    className="space-y-3 sm:space-y-4"
                     onSubmit={registerForm.handleSubmit(onRegisterSubmit)}
                   >
                     <FormField
@@ -521,11 +520,11 @@ export default function LoginPage() {
                     />
 
                     {/* Buttons */}
-                    <div className="space-y-3 pt-2">
+                    <div className="space-y-2.5 pt-2 sm:space-y-3">
                       <Button
                         type="submit"
                         disabled={loading}
-                        className="w-full bg-gradient-to-r from-[#00cfb1] to-[#1effbf] font-bold text-[#21005a] hover:from-[#1effbf] hover:to-[#00cfb1] hover:shadow-lg hover:shadow-[#00cfb1]/50 disabled:opacity-50"
+                        className="w-full bg-gradient-to-r from-[#00cfb1] to-[#1effbf] text-sm font-bold text-[#21005a] hover:from-[#1effbf] hover:to-[#00cfb1] hover:shadow-lg hover:shadow-[#00cfb1]/50 disabled:opacity-50 sm:text-base"
                       >
                         {loading ? (
                           <>
@@ -574,7 +573,7 @@ export default function LoginPage() {
             </div>
 
             {/* Footer */}
-            <p className="mt-6 text-center text-xs text-white/40">
+            <p className="mt-4 text-center text-xs text-white/40 sm:mt-6">
               {t("footer", { year: new Date().getFullYear() })}
             </p>
           </motion.div>

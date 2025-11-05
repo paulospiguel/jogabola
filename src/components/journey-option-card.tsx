@@ -31,9 +31,9 @@ export function JourneyOptionCard({
       )}
       onClick={() => onSelect(option.id)}
     >
-      <div className="space-y-4 p-6">
-        <div className="flex items-center gap-4">
-          <div className="relative flex h-16 w-16 shrink-0 items-center justify-center overflow-hidden rounded-lg">
+      <div className="space-y-3 p-4 sm:space-y-4 sm:p-6">
+        <div className="flex items-center gap-3 sm:gap-4">
+          <div className="relative flex h-12 w-12 shrink-0 items-center justify-center overflow-hidden rounded-lg sm:h-16 sm:w-16">
             <Image
               src={option.icon}
               alt={option.title}
@@ -42,14 +42,14 @@ export function JourneyOptionCard({
               className="object-contain"
             />
           </div>
-          <div className="flex-1">
-            <h3 className="text-xl font-bold text-white">{option.title}</h3>
+          <div className="flex-1 min-w-0">
+            <h3 className="text-lg font-bold text-white sm:text-xl">{option.title}</h3>
             {/* Exibir descrição como tags */}
-            <div className="mt-2 flex flex-wrap gap-2">
+            <div className="mt-2 flex flex-wrap gap-1.5 sm:gap-2">
               {option.description.split(", ").map((tag, index) => (
                 <span
                   key={index}
-                  className="border-brand-green/30 bg-brand-green/10 text-brand-green rounded-full border px-3 py-1 text-xs font-medium"
+                  className="border-brand-green/30 bg-brand-green/10 text-brand-green rounded-full border px-2 py-0.5 text-xs font-medium sm:px-3 sm:py-1"
                 >
                   {tag}
                 </span>
@@ -59,17 +59,17 @@ export function JourneyOptionCard({
         </div>
 
         <div className="space-y-2">
-          <p className="text-brand-green text-sm font-medium">
+          <p className="text-brand-green text-xs font-medium sm:text-sm">
             Funcionalidades principais:
           </p>
-          <div className="grid grid-cols-2 gap-2">
+          <div className="grid grid-cols-1 gap-1.5 sm:grid-cols-2 sm:gap-2">
             {option.features.map((feature, idx) => (
               <div
                 key={idx}
-                className="flex items-center gap-2 text-sm text-[#ba93ff]"
+                className="flex items-center gap-2 text-xs text-[#ba93ff] sm:text-sm"
               >
-                <div className="bg-brand-green h-1.5 w-1.5 rounded-full" />
-                {feature}
+                <div className="bg-brand-green h-1.5 w-1.5 shrink-0 rounded-full" />
+                <span className="break-words">{feature}</span>
               </div>
             ))}
           </div>
