@@ -100,9 +100,16 @@ export function ConfirmationStep({
                 <p className="text-sm font-semibold text-white sm:text-base">
                   {journeyOption.title}
                 </p>
-                <p className="text-xs text-white/60 sm:text-sm">
-                  {journeyOption.description}
-                </p>
+                <div className="mt-1 flex flex-wrap gap-1">
+                  {journeyOption.tags.map((tag, index) => (
+                    <span
+                      key={index}
+                      className="border-brand-green/30 bg-brand-green/10 text-brand-green rounded-full border px-2 py-0.5 text-xs font-medium"
+                    >
+                      {tag}
+                    </span>
+                  ))}
+                </div>
               </div>
             </div>
           )}
