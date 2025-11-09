@@ -6,8 +6,13 @@ import { db } from "./db";
 
 const baseURL = getBaseURL();
 
+const trustedOrigins = (process.env.TRUSTED_ORIGINS ?? "")
+  .split(",")
+  .map(o => o.trim());
+
 export const auth = betterAuth({
   baseURL,
+  trustedOrigins,
   database: drizzleAdapter(db, {
     provider: "pg",
     schema: {

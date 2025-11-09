@@ -95,20 +95,18 @@ const getUserLocale = async (): Promise<string> => {
   return defaultLocale;
 };
 
-function getBaseURL() {
+const getBaseURL = () => {
   if (typeof window !== "undefined") {
-    return process.env.NEXT_PUBLIC_APP_URL || window.location.origin;
+    return window.location.origin;
   }
 
-  if (process.env.NEXT_PUBLIC_APP_URL) {
-    return process.env.NEXT_PUBLIC_APP_URL;
+  // Vercel URL (sem protocolo)
+  if (process.env.VERCEL_URL) {
+    return `https://${process.env.VERCEL_URL}`;
   }
 
-  if (process.env.NEXTAUTH_URL) {
-    return process.env.NEXTAUTH_URL;
-  }
-
+  // Local dev fallback
   return "http://localhost:3000";
-}
+};
 
 export { cn, getBaseURL, getUserLocale };
