@@ -1,7 +1,7 @@
 import cn from "@/components/ui/lib/cn";
+import { defaultLocale, locales } from "@/i18n/configs";
 import { format } from "date-fns";
 import { pt } from "date-fns/locale";
-import { defaultLocale, locales } from "@/i18n/configs";
 
 export const formatDate = (date: Date, locale?: string) => {
   return format(date, "dd/MM/yyyy", { locale: locale ? pt : undefined });
@@ -73,7 +73,10 @@ const getUserLocale = async (): Promise<string> => {
       const { cookies } = await import("next/headers");
       const cookieStore = await cookies();
       const fromCookie = cookieStore.get("NEXT_LOCALE")?.value;
-      if (fromCookie && locales.includes(fromCookie as (typeof locales)[number])) {
+      if (
+        fromCookie &&
+        locales.includes(fromCookie as (typeof locales)[number])
+      ) {
         return fromCookie;
       }
     }
@@ -84,10 +87,28 @@ const getUserLocale = async (): Promise<string> => {
   // Client-side fallback: navigator.language narrowed to supported locales
   if (typeof window !== "undefined") {
     const nav = (navigator.language || defaultLocale).slice(0, 2);
-    return locales.includes(nav as (typeof locales)[number]) ? nav : defaultLocale;
+    return locales.includes(nav as (typeof locales)[number])
+      ? nav
+      : defaultLocale;
   }
 
   return defaultLocale;
 };
 
-export { cn, getUserLocale };
+function getBaseURL() {
+  if (typeof window !== "undefined") {
+    return process.env.NEXT_PUBLIC_APP_URL || window.location.origin;
+  }
+
+  if (process.env.NEXT_PUBLIC_APP_URL) {
+    return process.env.NEXT_PUBLIC_APP_URL;
+  }
+
+  if (process.env.NEXTAUTH_URL) {
+    return process.env.NEXTAUTH_URL;
+  }
+
+  return "http://localhost:3000";
+}
+
+export { cn, getBaseURL, getUserLocale };

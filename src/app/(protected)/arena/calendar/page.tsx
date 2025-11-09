@@ -1,15 +1,12 @@
 "use client";
 
-import { useMemo, useState } from "react";
-import { format, isAfter, isSameDay as isSameDayFn } from "date-fns";
-import { ptBR } from "date-fns/locale";
 import {
   EventCalendar,
   type CalendarEvent,
   type EventType,
 } from "@/components/event-calendar";
-import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -25,8 +22,13 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import {
   Select,
@@ -35,13 +37,10 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast-custom";
+import { format, isAfter, isSameDay as isSameDayFn } from "date-fns";
+import { ptBR } from "date-fns/locale";
 import {
   CalendarClock,
   CalendarDays,
@@ -55,6 +54,7 @@ import {
   Trash2,
   Users2,
 } from "lucide-react";
+import { useMemo, useState } from "react";
 
 type ResponseStatus = "aceito" | "pendente" | "recusado";
 
@@ -178,8 +178,7 @@ const formatDateLabel = (date: Date) =>
 const formatDateTimeLabel = (date?: Date) =>
   date ? format(date, "dd/MM 'às' HH:mm", { locale: ptBR }) : "Sem registos";
 
-const formatTimeLabel = (date: Date) =>
-  format(date, "HH:mm", { locale: ptBR });
+const formatTimeLabel = (date: Date) => format(date, "HH:mm", { locale: ptBR });
 
 const getDefaultFormValues = (date: Date): FormValues => ({
   title: "",
@@ -199,41 +198,83 @@ const initialEvents: AgendaEvent[] = sortEvents([
     id: "evt-1",
     title: "Treino técnico",
     type: "treino",
-    date: new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate(), 19, 30),
+    date: new Date(
+      new Date().getFullYear(),
+      new Date().getMonth(),
+      new Date().getDate(),
+      19,
+      30,
+    ),
     time: "19:30",
     location: "Centro de Treinos do Clube",
     description: "Sessão focada em posse de bola e pressão alta.",
     status: "confirmado",
     createdBy: "Comissão Técnica",
     responses: [
-      { name: "Ana Silva", status: "aceito", respondedAt: new Date(Date.now() - 1000 * 60 * 60 * 24 * 2) },
-      { name: "João Pereira", status: "aceito", respondedAt: new Date(Date.now() - 1000 * 60 * 60 * 18) },
+      {
+        name: "Ana Silva",
+        status: "aceito",
+        respondedAt: new Date(Date.now() - 1000 * 60 * 60 * 24 * 2),
+      },
+      {
+        name: "João Pereira",
+        status: "aceito",
+        respondedAt: new Date(Date.now() - 1000 * 60 * 60 * 18),
+      },
       { name: "Carlos Lima", status: "pendente" },
-      { name: "Mariana Souza", status: "aceito", respondedAt: new Date(Date.now() - 1000 * 60 * 60 * 3) },
+      {
+        name: "Mariana Souza",
+        status: "aceito",
+        respondedAt: new Date(Date.now() - 1000 * 60 * 60 * 3),
+      },
     ],
   },
   {
     id: "evt-2",
     title: "Jogo - Liga Regional",
     type: "jogo",
-    date: new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate() + 3, 16, 0),
+    date: new Date(
+      new Date().getFullYear(),
+      new Date().getMonth(),
+      new Date().getDate() + 3,
+      16,
+      0,
+    ),
     time: "16:00",
     location: "Estádio Municipal",
     description: "Partida válida pela 8ª rodada da Liga Regional.",
     status: "confirmado",
     createdBy: "Depart. Competições",
     responses: [
-      { name: "Ana Silva", status: "aceito", respondedAt: new Date(Date.now() - 1000 * 60 * 60 * 5) },
+      {
+        name: "Ana Silva",
+        status: "aceito",
+        respondedAt: new Date(Date.now() - 1000 * 60 * 60 * 5),
+      },
       { name: "João Pereira", status: "pendente" },
-      { name: "Carlos Lima", status: "aceito", respondedAt: new Date(Date.now() - 1000 * 60 * 60 * 2) },
-      { name: "Mariana Souza", status: "recusado", respondedAt: new Date(Date.now() - 1000 * 60 * 60 * 8) },
+      {
+        name: "Carlos Lima",
+        status: "aceito",
+        respondedAt: new Date(Date.now() - 1000 * 60 * 60 * 2),
+      },
+      {
+        name: "Mariana Souza",
+        status: "recusado",
+        respondedAt: new Date(Date.now() - 1000 * 60 * 60 * 8),
+      },
     ],
   },
   {
     id: "evt-3",
     title: "Reunião de alinhamento",
     type: "reuniao",
-    date: new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate() + 1, 11, 30),
+    date: new Date(
+      new Date().getFullYear(),
+      new Date().getMonth(),
+      new Date().getDate() + 1,
+      11,
+      30,
+    ),
     time: "11:30",
     location: "Sede administrativa",
     description: "Revisão de metas do trimestre e definição de prioridades.",
@@ -249,14 +290,24 @@ const initialEvents: AgendaEvent[] = sortEvents([
     id: "evt-4",
     title: "Amistoso beneficente",
     type: "amistoso",
-    date: new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate() + 7, 20, 0),
+    date: new Date(
+      new Date().getFullYear(),
+      new Date().getMonth(),
+      new Date().getDate() + 7,
+      20,
+      0,
+    ),
     time: "20:00",
     location: "Arena Solidária",
     description: "Evento beneficente com arrecadação de alimentos.",
     status: "confirmado",
     createdBy: "Marketing",
     responses: [
-      { name: "Equipa Principal", status: "aceito", respondedAt: new Date(Date.now() - 1000 * 60 * 60 * 10) },
+      {
+        name: "Equipa Principal",
+        status: "aceito",
+        respondedAt: new Date(Date.now() - 1000 * 60 * 60 * 10),
+      },
       { name: "Convidados VIP", status: "pendente" },
     ],
   },
@@ -315,7 +366,10 @@ export default function AgendaPage() {
         if (response.status === "aceito") {
           summary.accepted += 1;
           if (response.respondedAt) {
-            if (!lastAcceptedAt || isAfter(response.respondedAt, lastAcceptedAt)) {
+            if (
+              !lastAcceptedAt ||
+              isAfter(response.respondedAt, lastAcceptedAt)
+            ) {
               lastAcceptedAt = response.respondedAt;
             }
           }
@@ -345,13 +399,19 @@ export default function AgendaPage() {
   };
 
   const handleCalendarEventClick = (event: CalendarEvent) => {
-    const agendaEvent = events.find(item => item.id === (event as AgendaEvent).id);
+    const agendaEvent = events.find(
+      item => item.id === (event as AgendaEvent).id,
+    );
     if (!agendaEvent) return;
     setSelectedEvent(agendaEvent);
     setIsDetailsOpen(true);
   };
 
-  const openForm = (mode: "create" | "edit", date?: Date, eventToEdit?: AgendaEvent) => {
+  const openForm = (
+    mode: "create" | "edit",
+    date?: Date,
+    eventToEdit?: AgendaEvent,
+  ) => {
     setFormMode(mode);
     if (mode === "create") {
       const referenceDate = date ?? selectedDate ?? new Date();
@@ -429,7 +489,9 @@ export default function AgendaPage() {
         ...baseEvent,
       };
       setEvents(prev =>
-        sortEvents(prev.map(event => (event.id === updated.id ? updated : event))),
+        sortEvents(
+          prev.map(event => (event.id === updated.id ? updated : event)),
+        ),
       );
       setSelectedEvent(updated);
       toast.success("Evento atualizado", "As alterações foram guardadas.");
@@ -456,20 +518,20 @@ export default function AgendaPage() {
   const renderResponseBadge = (status: ResponseStatus) => {
     if (status === "aceito") {
       return (
-        <Badge className="bg-emerald-100 text-emerald-700 border-emerald-200">
+        <Badge className="border-emerald-200 bg-emerald-100 text-emerald-700">
           Aceite
         </Badge>
       );
     }
     if (status === "pendente") {
       return (
-        <Badge className="bg-amber-100 text-amber-700 border-amber-200">
+        <Badge className="border-amber-200 bg-amber-100 text-amber-700">
           Pendente
         </Badge>
       );
     }
     return (
-      <Badge className="bg-red-100 text-red-700 border-red-200">Recusado</Badge>
+      <Badge className="border-red-200 bg-red-100 text-red-700">Recusado</Badge>
     );
   };
 
@@ -485,9 +547,9 @@ export default function AgendaPage() {
             Agenda da equipa
           </h1>
           <p className="max-w-2xl text-sm text-slate-600 dark:text-slate-300">
-            Organiza treinos, jogos e reuniões num só lugar. Acompanha confirmações
-            de presença, gere alterações e integra tudo com o Google Calendar para
-            manter a equipa alinhada.
+            Organiza treinos, jogos e reuniões num só lugar. Acompanha
+            confirmações de presença, gere alterações e integra tudo com o
+            Google Calendar para manter a equipa alinhada.
           </p>
         </div>
         <div className="flex flex-col gap-3 sm:flex-row">
@@ -502,7 +564,9 @@ export default function AgendaPage() {
             ) : (
               <RefreshCw className="mr-2 h-4 w-4" />
             )}
-            {isSyncingGCal ? "A sincronizar..." : "Sincronizar com Google Calendar"}
+            {isSyncingGCal
+              ? "A sincronizar..."
+              : "Sincronizar com Google Calendar"}
           </Button>
           <Button
             onClick={() => handleCreateClick(selectedDate)}
@@ -627,7 +691,8 @@ export default function AgendaPage() {
                               )}
                               <span className="flex items-center gap-1">
                                 <Users2 className="h-3.5 w-3.5" />
-                                {accepted} aceites · {pending} pendentes · {declined} recusos
+                                {accepted} aceites · {pending} pendentes ·{" "}
+                                {declined} recusos
                               </span>
                             </div>
                           </div>
@@ -685,8 +750,8 @@ export default function AgendaPage() {
                 Estado da sincronização
               </CardTitle>
               <CardDescription className="text-xs text-slate-500 dark:text-slate-300">
-                Conecta a agenda do Jogabola com o Google Calendar para garantir que
-                toda a equipa esteja atualizada.
+                Conecta a agenda do Jogabola com o Google Calendar para garantir
+                que toda a equipa esteja atualizada.
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
@@ -701,8 +766,9 @@ export default function AgendaPage() {
                 </Badge>
               </div>
               <p className="text-xs text-slate-500 dark:text-slate-300">
-                Ao sincronizar vinculamos automaticamente treinos, jogos, eventos e
-                reuniões ao calendário pessoal de cada atleta ou membro da equipa.
+                Ao sincronizar vinculamos automaticamente treinos, jogos,
+                eventos e reuniões ao calendário pessoal de cada atleta ou
+                membro da equipa.
               </p>
               <Button
                 size="sm"
@@ -748,7 +814,9 @@ export default function AgendaPage() {
               >
                 <CardHeader className="space-y-4">
                   <div className="flex items-center gap-3">
-                    <span className={`text-2xl ${meta.highlight}`}>{meta.emoji}</span>
+                    <span className={`text-2xl ${meta.highlight}`}>
+                      {meta.emoji}
+                    </span>
                     <div>
                       <CardTitle className="text-sm font-semibold text-slate-900 dark:text-white">
                         {meta.label}
@@ -824,7 +892,10 @@ export default function AgendaPage() {
                   id="title"
                   value={formValues.title}
                   onChange={event =>
-                    setFormValues(prev => ({ ...prev, title: event.target.value }))
+                    setFormValues(prev => ({
+                      ...prev,
+                      title: event.target.value,
+                    }))
                   }
                   placeholder="Ex: Treino tático"
                   required
@@ -835,7 +906,10 @@ export default function AgendaPage() {
                 <Select
                   value={formValues.type}
                   onValueChange={value =>
-                    setFormValues(prev => ({ ...prev, type: value as EventType }))
+                    setFormValues(prev => ({
+                      ...prev,
+                      type: value as EventType,
+                    }))
                   }
                 >
                   <SelectTrigger id="type">
@@ -857,7 +931,10 @@ export default function AgendaPage() {
                   type="date"
                   value={formValues.date}
                   onChange={event =>
-                    setFormValues(prev => ({ ...prev, date: event.target.value }))
+                    setFormValues(prev => ({
+                      ...prev,
+                      date: event.target.value,
+                    }))
                   }
                   required
                 />
@@ -869,7 +946,10 @@ export default function AgendaPage() {
                   type="time"
                   value={formValues.time}
                   onChange={event =>
-                    setFormValues(prev => ({ ...prev, time: event.target.value }))
+                    setFormValues(prev => ({
+                      ...prev,
+                      time: event.target.value,
+                    }))
                   }
                   required
                 />
@@ -880,7 +960,10 @@ export default function AgendaPage() {
                   id="location"
                   value={formValues.location}
                   onChange={event =>
-                    setFormValues(prev => ({ ...prev, location: event.target.value }))
+                    setFormValues(prev => ({
+                      ...prev,
+                      location: event.target.value,
+                    }))
                   }
                   placeholder="Ex: Campo sintético - Campo Grande"
                 />
@@ -914,7 +997,10 @@ export default function AgendaPage() {
                 rows={4}
                 value={formValues.description}
                 onChange={event =>
-                  setFormValues(prev => ({ ...prev, description: event.target.value }))
+                  setFormValues(prev => ({
+                    ...prev,
+                    description: event.target.value,
+                  }))
                 }
                 placeholder="Adiciona contexto, objetivos ou logística para a equipa."
               />
@@ -935,20 +1021,27 @@ export default function AgendaPage() {
                 ) : (
                   <Pencil className="mr-2 h-4 w-4" />
                 )}
-                {formMode === "create" ? "Guardar evento" : "Guardar alterações"}
+                {formMode === "create"
+                  ? "Guardar evento"
+                  : "Guardar alterações"}
               </Button>
             </DialogFooter>
           </form>
         </DialogContent>
       </Dialog>
 
-      <Dialog open={isDetailsOpen && !!selectedEvent} onOpenChange={setIsDetailsOpen}>
+      <Dialog
+        open={isDetailsOpen && !!selectedEvent}
+        onOpenChange={setIsDetailsOpen}
+      >
         <DialogContent className="max-w-xl">
           {selectedEvent && (
             <div className="space-y-4">
               <DialogHeader>
                 <DialogTitle className="flex items-center gap-2 text-lg font-semibold">
-                  <span className={`text-xl ${typeMeta[selectedEvent.type].highlight}`}>
+                  <span
+                    className={`text-xl ${typeMeta[selectedEvent.type].highlight}`}
+                  >
                     {typeMeta[selectedEvent.type].emoji}
                   </span>
                   {selectedEvent.title}
@@ -979,8 +1072,8 @@ export default function AgendaPage() {
                 </h3>
                 {selectedEvent.responses.length === 0 ? (
                   <div className="rounded-xl border border-dashed border-emerald-200 p-4 text-xs text-slate-500 dark:border-emerald-500/40 dark:text-slate-300">
-                    Ainda não há respostas registradas. Envia convites ou partilha o
-                    evento para recolher confirmações.
+                    Ainda não há respostas registradas. Envia convites ou
+                    partilha o evento para recolher confirmações.
                   </div>
                 ) : (
                   <div className="grid gap-2">
@@ -1018,7 +1111,9 @@ export default function AgendaPage() {
                 </Button>
                 <Button
                   variant="destructive"
-                  onClick={() => selectedEvent && handleDeleteEvent(selectedEvent.id)}
+                  onClick={() =>
+                    selectedEvent && handleDeleteEvent(selectedEvent.id)
+                  }
                 >
                   <Trash2 className="mr-2 h-4 w-4" /> Remover evento
                 </Button>
@@ -1030,8 +1125,3 @@ export default function AgendaPage() {
     </div>
   );
 }
-
-
-
-
-

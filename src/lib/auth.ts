@@ -1,9 +1,10 @@
 import * as schema from "@/drizzle/schema";
+import { getBaseURL } from "@/utils";
 import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import { db } from "./db";
 
-const baseURL = process.env.NEXT_PUBLIC_APP_URL || process.env.NEXTAUTH_URL || "http://localhost:3000";
+const baseURL = getBaseURL();
 
 export const auth = betterAuth({
   baseURL,

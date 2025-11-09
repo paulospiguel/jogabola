@@ -1,11 +1,30 @@
 "use server";
 
+// Função helper para obter o baseURL de forma consistente
+function getBaseURL(): string {
+  if (process.env.NEXT_PUBLIC_APP_URL) {
+    return process.env.NEXT_PUBLIC_APP_URL;
+  }
+
+  if (process.env.NEXTAUTH_URL) {
+    return process.env.NEXTAUTH_URL;
+  }
+
+  // Em produção na Vercel, usar VERCEL_URL
+  if (process.env.VERCEL_URL) {
+    return `https://${process.env.VERCEL_URL}`;
+  }
+
+  // Fallback para desenvolvimento
+  return "http://localhost:3000";
+}
+
 export async function forgotPassword(email: string) {
   try {
     // Better Auth tem suporte nativo para forgot password via API
     // O endpoint é /api/auth/forgot-password e aceita { email }
-    const baseUrl = process.env.NEXT_PUBLIC_APP_URL || process.env.NEXTAUTH_URL || "http://localhost:3000";
-    
+    const baseUrl = getBaseURL();
+
     const response = await fetch(`${baseUrl}/api/auth/forgot-password`, {
       method: "POST",
       headers: {
@@ -18,8 +37,8 @@ export async function forgotPassword(email: string) {
 
     if (!response.ok) {
       throw new Error(
-        data?.message || 
-        "Erro ao enviar email de recuperação. Verifica se o email está correto."
+        data?.message ||
+          "Erro ao enviar email de recuperação. Verifica se o email está correto.",
       );
     }
 
@@ -39,8 +58,8 @@ export async function forgotPassword(email: string) {
 
 export async function resetPassword(token: string, password: string) {
   try {
-    const baseUrl = process.env.NEXT_PUBLIC_APP_URL || process.env.NEXTAUTH_URL || "http://localhost:3000";
-    
+    const baseUrl = getBaseURL();
+
     const response = await fetch(`${baseUrl}/api/auth/reset-password`, {
       method: "POST",
       headers: {
@@ -53,8 +72,8 @@ export async function resetPassword(token: string, password: string) {
 
     if (!response.ok) {
       throw new Error(
-        data?.message || 
-        "Erro ao redefinir palavra-passe. O token pode ter expirado."
+        data?.message ||
+          "Erro ao redefinir palavra-passe. O token pode ter expirado.",
       );
     }
 
