@@ -12,6 +12,10 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import {
+  getPositionConfig,
+  getPositionLabel,
+} from "@/constants/positions";
 import { signOut, useSession } from "@/lib/auth-client";
 import { motion } from "framer-motion";
 import {
@@ -116,15 +120,6 @@ export default function PlayZonePage() {
     loadProfile();
   }, [session]);
 
-  // Mapear posições para labels
-  const positionLabels: Record<string, string> = {
-    goalkeeper: "Guarda-Redes",
-    defender: "Defesa",
-    midfielder: "Médio",
-    forward: "Avançado",
-    versatile: "Polivalente",
-  };
-
   // Mapear experiência para labels
   const experienceLabels: Record<string, string> = {
     beginner: "Iniciante",
@@ -140,9 +135,7 @@ export default function PlayZonePage() {
 
     // Buscar posição dos customFields (definida no onboarding)
     const positionValue = profileData?.customFields?.position as string;
-    const positionLabel = positionValue
-      ? positionLabels[positionValue] || positionValue
-      : "Jogador";
+    const positionLabel = getPositionLabel(positionValue);
 
     // Buscar experiência (nível)
     const experienceValue = profileData?.experience as string;
@@ -158,6 +151,7 @@ export default function PlayZonePage() {
       fullName: userName || profileData?.name || "Jogador",
       greeting: `👋 Olá, ${firstName}! Pronto para o próximo jogo?`,
       position: positionDisplay,
+      positionValue: positionValue,
       image: session?.user?.image || null,
       level: profileData?.level,
     };
@@ -212,9 +206,21 @@ export default function PlayZonePage() {
               {player.greeting}
             </h1>
             <div className="flex items-center gap-3 text-sm text-slate-200">
-              <span className="rounded-full border border-white/10 bg-white/15 px-3 py-1 text-xs font-medium tracking-wide text-white/80 uppercase">
-                {player.position}
-              </span>
+              {(() => {
+                const positionConfig = getPositionConfig(player.positionValue);
+                const PositionIcon = positionConfig?.icon;
+                return (
+                  <span className="flex items-center gap-2 rounded-full border border-white/10 bg-white/15 px-3 py-1 text-xs font-medium tracking-wide text-white/80 uppercase">
+                    {positionConfig?.emoji && (
+                      <span className="text-sm">{positionConfig.emoji}</span>
+                    )}
+                    {PositionIcon && (
+                      <PositionIcon className="h-3.5 w-3.5 text-[#00cfb1]" />
+                    )}
+                    {player.position}
+                  </span>
+                );
+              })()}
               <span className="flex items-center gap-2 text-sm text-[#6fffe9]">
                 <Star className="h-4 w-4" /> Nível {player.level}
               </span>
@@ -238,9 +244,21 @@ export default function PlayZonePage() {
                 </div>
                 <div className="text-left text-sm">
                   <p className="font-medium text-white">{player.fullName}</p>
-                  <p className="text-xs text-slate-400 lowercase first-letter:uppercase">
-                    {player.position}
-                  </p>
+                  {(() => {
+                    const positionConfig = getPositionConfig(player.positionValue);
+                    const PositionIcon = positionConfig?.icon;
+                    return (
+                      <p className="flex items-center gap-1.5 text-xs text-slate-400 lowercase first-letter:uppercase">
+                        {positionConfig?.emoji && (
+                          <span className="text-xs">{positionConfig.emoji}</span>
+                        )}
+                        {PositionIcon && (
+                          <PositionIcon className="h-3 w-3 text-[#00cfb1]" />
+                        )}
+                        {player.position}
+                      </p>
+                    );
+                  })()}
                 </div>
               </button>
               </DropdownMenuTrigger>

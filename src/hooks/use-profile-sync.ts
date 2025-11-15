@@ -13,20 +13,34 @@ export function useProfileSync(
   saveAction?: (userId: string, data: any) => Promise<any>,
 ) {
   const { data: session } = useSession();
-  const { data, completed, reset } = useProfileStore();
+  const { reset } = useProfileStore();
   const { toast } = useToast();
   const [isPending, startTransition] = useTransition();
   const hasLinkedRef = useRef(false); // Evitar múltiplas execuções
+  const lastUserIdRef = useRef<string | undefined>(undefined);
+  const lastEmailRef = useRef<string | undefined>(undefined);
 
   useEffect(() => {
     if (!userId || !session?.user?.email) {
       return;
     }
 
-    // Evitar múltiplas execuções
+    // Se já processamos este userId/email, não processar novamente
+    if (
+      hasLinkedRef.current &&
+      lastUserIdRef.current === userId &&
+      lastEmailRef.current === session.user.email
+    ) {
+      return;
+    }
+
+    // Evitar múltiplas execuções simultâneas
     if (hasLinkedRef.current) {
       return;
     }
+
+    lastUserIdRef.current = userId;
+    lastEmailRef.current = session.user.email;
 
     startTransition(async () => {
       try {
@@ -54,11 +68,20 @@ export function useProfileSync(
           );
         }
 
-        // Se não há onboarding pendente, mas há dados completos no store, salvar
-        if (completed && data.role && data.email && data.name) {
+        // Verificar dados do store apenas uma vez, sem depender de data/completed
+        const storeState = useProfileStore.getState();
+        if (
+          storeState.completed &&
+          storeState.data.role &&
+          storeState.data.email &&
+          storeState.data.name
+        ) {
           console.log("Salvando dados do store...");
           // Salvar onboarding vinculado ao user
-          const onboardingResult = await saveOnboarding(data, userId);
+          const onboardingResult = await saveOnboarding(
+            storeState.data,
+            userId,
+          );
 
           if (onboardingResult.success) {
             // Criar profile se onboarding está completo
@@ -92,7 +115,12 @@ export function useProfileSync(
         toast.error("Erro", "Ocorreu um erro ao sincronizar os teus dados.");
       }
     });
-  }, [userId, session?.user?.email, completed, data, reset, toast]);
+  }, [userId, session?.user?.email, reset, toast]); // Removidas dependências que causam loop
 
-  return { hasProfileData: completed && !!data.role, isPending };
+  // Obter valores do store apenas quando necessário, sem criar dependência
+  const storeState = useProfileStore.getState();
+  return {
+    hasProfileData: storeState.completed && !!storeState.data.role,
+    isPending,
+  };
 }

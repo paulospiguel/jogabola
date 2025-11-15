@@ -25,7 +25,7 @@ export function JourneySelectionStep({
         description="Cada jornada oferece uma experiência única. Seleciona a que melhor se adequa aos teus objetivos."
       />
 
-      <div className="grid grid-cols-1 gap-3 sm:gap-3 md:grid-cols-2 md:gap-4">
+      <div className="m-4 grid grid-cols-1 gap-3 sm:gap-3 md:grid-cols-2 md:gap-4">
         {JOURNEY_OPTIONS.map((option, index) => (
           <JourneyOptionCard
             key={option.id}

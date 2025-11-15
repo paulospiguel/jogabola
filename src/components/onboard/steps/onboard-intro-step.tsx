@@ -1,8 +1,8 @@
 "use client";
 
 import { Logo } from "@/components/logo";
-import { CheckCircle } from "lucide-react";
 import { motion } from "framer-motion";
+import { CheckCircle } from "lucide-react";
 
 export function OnboardIntroStep() {
   return (
@@ -52,4 +52,3 @@ export function OnboardIntroStep() {
     </motion.div>
   );
 }
-

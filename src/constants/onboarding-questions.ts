@@ -52,7 +52,7 @@ const playerQuestions: RoleQuestions = {
         { value: "forward", label: "Avançado" },
         { value: "versatile", label: "Polivalente" },
       ],
-      icon: Shield,
+      icon: Shield, // Ícone geral do campo, os ícones específicos estão em constants/positions.ts
     },
     {
       id: "preferredFoot",

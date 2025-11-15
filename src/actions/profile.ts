@@ -2,8 +2,8 @@
 
 import { onboarding, profile } from "@/drizzle/schema";
 import { db } from "@/lib/db";
-import { onboardingSchema, type OnboardingData } from "@/schemas/profile";
-import { and, eq, isNull } from "drizzle-orm";
+import { createSlugFromNickname, onboardingSchema, type OnboardingData } from "@/schemas/profile";
+import { and, eq, isNotNull, isNull } from "drizzle-orm";
 import { z } from "zod";
 
 // Salvar onboarding (sempre cria registro, com ou sem user_id)
@@ -37,10 +37,30 @@ export async function saveOnboarding(
       validatedData = onboardingSchema.parse(data);
     }
 
+    // Processar nickname: criar slug se fornecido
+    let nicknameSlug: string | null = null;
+    if (validatedData.nickname && validatedData.nickname.trim()) {
+      nicknameSlug = createSlugFromNickname(validatedData.nickname);
+      
+      // Verificar disponibilidade do nickname
+      const nicknameCheck = await checkNicknameAvailability(validatedData.nickname, userId);
+      if (!nicknameCheck.success || !nicknameCheck.available) {
+        return {
+          success: false,
+          error: "Este nickname já está em uso. Por favor, escolhe outro.",
+        };
+      }
+    }
+
     const onboardingData = {
       userId: userId || null,
       email: validatedData.email,
       name: validatedData.name,
+      nickname: nicknameSlug,
+      dateOfBirth: validatedData.dateOfBirth || null,
+      nationality: validatedData.nationality || null,
+      country: validatedData.country || null,
+      city: validatedData.city || null,
       role: validatedData.role,
       location: validatedData.location || null,
       experience: validatedData.experience || null,
@@ -143,6 +163,11 @@ export async function createProfileFromOnboarding(userId: string) {
       userId,
       role: onboardingData.role,
       name: onboardingData.name,
+      nickname: onboardingData.nickname,
+      dateOfBirth: onboardingData.dateOfBirth,
+      nationality: onboardingData.nationality,
+      country: onboardingData.country,
+      city: onboardingData.city,
       location: onboardingData.location,
       experience: onboardingData.experience,
       availability: onboardingData.availability,
@@ -245,6 +270,11 @@ export async function getPendingOnboarding(email: string) {
     const onboardingData: Partial<OnboardingData> = {
       email: data.email,
       name: data.name,
+      nickname: data.nickname || undefined,
+      dateOfBirth: data.dateOfBirth || undefined,
+      nationality: data.nationality || undefined,
+      country: data.country || undefined,
+      city: data.city || undefined,
       role: data.role as any,
       location: data.location || undefined,
       experience: data.experience as any,
@@ -330,4 +360,55 @@ export async function migratePendingOnboardingToProfile(
   email: string,
 ) {
   return linkOnboardingToUser(userId, email);
+}
+
+// Verificar se nickname já existe (verifica em profile e onboarding)
+export async function checkNicknameAvailability(nickname: string, excludeUserId?: string) {
+  try {
+    if (!nickname || nickname.trim().length < 3) {
+      return { success: false, available: false, error: "Nickname muito curto" };
+    }
+
+    // Criar slug do nickname
+    const slug = createSlugFromNickname(nickname);
+
+    // Verificar em profile (apenas os que têm nickname não nulo)
+    const profiles = await db
+      .select()
+      .from(profile)
+      .where(and(eq(profile.nickname, slug), isNotNull(profile.nickname)));
+
+    // Se há userId para excluir, filtrar
+    const filteredProfiles = excludeUserId
+      ? profiles.filter(p => p.userId !== excludeUserId)
+      : profiles;
+
+    if (filteredProfiles.length > 0) {
+      return { success: true, available: false };
+    }
+
+    // Verificar em onboarding (apenas os que têm nickname não nulo)
+    const onboardings = await db
+      .select()
+      .from(onboarding)
+      .where(and(eq(onboarding.nickname, slug), isNotNull(onboarding.nickname)));
+
+    // Se há userId para excluir, filtrar
+    const filteredOnboardings = excludeUserId
+      ? onboardings.filter(o => o.userId !== excludeUserId)
+      : onboardings;
+
+    if (filteredOnboardings.length > 0) {
+      return { success: true, available: false };
+    }
+
+    return { success: true, available: true };
+  } catch (error) {
+    console.error("Error checking nickname availability:", error);
+    return {
+      success: false,
+      available: false,
+      error: "Erro ao verificar disponibilidade do nickname",
+    };
+  }
 }

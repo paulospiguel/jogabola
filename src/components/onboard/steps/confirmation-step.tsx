@@ -3,13 +3,26 @@
 import { OnboardStepHeader } from "@/components/onboard-step-header";
 import { JOURNEY_OPTIONS } from "@/constants/onboard";
 import type { RoleQuestions } from "@/constants/onboarding-questions";
+import {
+  getPositionConfig,
+  getPositionLabel,
+} from "@/constants/positions";
+import { translateFieldValue } from "@/constants/field-translations";
 import { CheckCircle } from "lucide-react";
 import Image from "next/image";
 import { motion } from "framer-motion";
+import { format } from "date-fns";
+import { pt } from "date-fns/locale";
+import { countries } from "country-data-list";
 
 interface ConfirmationStepProps {
   name: string;
   email: string;
+  nickname?: string;
+  dateOfBirth?: Date | null;
+  nationality?: string;
+  country?: string;
+  city?: string;
   location?: string;
   role?: string;
   experience?: string;
@@ -17,6 +30,42 @@ interface ConfirmationStepProps {
   roleQuestions?: RoleQuestions;
   getCustomFieldValue: (fieldId: string) => any;
 }
+
+// Mapeamento de nomes em inglês para português (principais países)
+const countryNamesPT: Record<string, string> = {
+  "Portugal": "Portugal",
+  "Brazil": "Brasil",
+  "Angola": "Angola",
+  "Mozambique": "Moçambique",
+  "Cape Verde": "Cabo Verde",
+  "Guinea-Bissau": "Guiné-Bissau",
+  "São Tomé and Príncipe": "São Tomé e Príncipe",
+  "Spain": "Espanha",
+  "France": "França",
+  "Italy": "Itália",
+  "Germany": "Alemanha",
+  "United Kingdom": "Reino Unido",
+  "United States": "Estados Unidos",
+  "Canada": "Canadá",
+  "Argentina": "Argentina",
+  "Mexico": "México",
+  "Chile": "Chile",
+  "Colombia": "Colômbia",
+  "Peru": "Peru",
+  "Uruguay": "Uruguai",
+  "Venezuela": "Venezuela",
+  "Ecuador": "Equador",
+  "Paraguay": "Paraguai",
+  "Bolivia": "Bolívia",
+};
+
+// Função para obter o nome do país a partir do código
+const getCountryName = (code?: string): string => {
+  if (!code) return "";
+  const country = countries.all.find(c => c.alpha2 === code.toUpperCase());
+  if (!country) return code;
+  return countryNamesPT[country.name] || country.name;
+};
 
 const experienceLabels: Record<string, string> = {
   beginner: "Iniciante",
@@ -28,6 +77,11 @@ const experienceLabels: Record<string, string> = {
 export function ConfirmationStep({
   name,
   email,
+  nickname,
+  dateOfBirth,
+  nationality,
+  country,
+  city,
   location,
   role,
   experience,
@@ -74,6 +128,53 @@ export function ConfirmationStep({
                 {email || "Não preenchido"}
               </p>
             </div>
+            {nickname && (
+              <div>
+                <p className="text-sm text-white/60">Nickname</p>
+                <p className="font-medium text-white">{nickname}</p>
+              </div>
+            )}
+            {dateOfBirth && (
+              <div>
+                <p className="text-sm text-white/60">Data de Nascimento</p>
+                <p className="font-medium text-white">
+                  {(() => {
+                    try {
+                      const date =
+                        dateOfBirth instanceof Date
+                          ? dateOfBirth
+                          : new Date(dateOfBirth);
+                      if (isNaN(date.getTime())) return "Data inválida";
+                      return format(date, "PPP", { locale: pt });
+                    } catch {
+                      return "Data inválida";
+                    }
+                  })()}
+                </p>
+              </div>
+            )}
+            {nationality && (
+              <div>
+                <p className="text-sm text-white/60">Nacionalidade</p>
+                <p className="font-medium text-white">
+                  {getCountryName(nationality)}
+                </p>
+              </div>
+            )}
+            {country && (
+              <div>
+                <p className="text-sm text-white/60">País</p>
+                <p className="font-medium text-white">
+                  {getCountryName(country)}
+                </p>
+              </div>
+            )}
+            {city && (
+              <div>
+                <p className="text-sm text-white/60">Cidade</p>
+                <p className="font-medium text-white">{city}</p>
+              </div>
+            )}
             {location && (
               <div>
                 <p className="text-sm text-white/60">Localização</p>
@@ -145,15 +246,44 @@ export function ConfirmationStep({
                   )
                     return null;
 
+                  // Se for a posição, exibir com ícone e tradução
+                  if (question.id === "position" && typeof value === "string") {
+                    const positionConfig = getPositionConfig(value);
+                    const PositionIcon = positionConfig?.icon;
+                    const positionLabel = getPositionLabel(value);
+
+                    return (
+                      <div key={question.id}>
+                        <p className="text-sm text-white/60">{question.label}</p>
+                        <div className="flex items-center gap-2">
+                          {PositionIcon && (
+                            <PositionIcon className="h-4 w-4 text-[#00cfb1]" />
+                          )}
+                          {positionConfig?.emoji && (
+                            <span className="text-base">{positionConfig.emoji}</span>
+                          )}
+                          <p className="font-medium text-white">
+                            {positionLabel}
+                          </p>
+                        </div>
+                      </div>
+                    );
+                  }
+
+                  // Traduzir o valor se necessário
+                  const translatedValue = translateFieldValue(question.id, value);
+
                   return (
                     <div key={question.id}>
                       <p className="text-sm text-white/60">{question.label}</p>
                       <p className="font-medium text-white">
-                        {Array.isArray(value)
-                          ? value.join(", ")
-                          : typeof value === "object"
-                            ? JSON.stringify(value)
-                            : String(value)}
+                        {translatedValue || (
+                          Array.isArray(value)
+                            ? value.join(", ")
+                            : typeof value === "object"
+                              ? JSON.stringify(value)
+                              : String(value)
+                        )}
                       </p>
                     </div>
                   );
@@ -208,15 +338,20 @@ export function ConfirmationStep({
                   )
                     return null;
 
+                  // Traduzir o valor se necessário
+                  const translatedValue = translateFieldValue(question.id, value);
+
                   return (
                     <div key={question.id}>
                       <p className="text-sm text-white/60">{question.label}</p>
                       <p className="font-medium text-white">
-                        {Array.isArray(value)
-                          ? value.join(", ")
-                          : typeof value === "object"
-                            ? JSON.stringify(value)
-                            : String(value)}
+                        {translatedValue || (
+                          Array.isArray(value)
+                            ? value.join(", ")
+                            : typeof value === "object"
+                              ? JSON.stringify(value)
+                              : String(value)
+                        )}
                       </p>
                     </div>
                   );

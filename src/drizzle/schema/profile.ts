@@ -18,7 +18,12 @@ export const profile = pgTable("profile", {
   // Dados básicos
   role: text("role").notNull(), // player, manager, fan, organizer
   name: text("name").notNull(),
-  location: text("location"),
+  nickname: text("nickname").unique(), // nickname único usado como slug
+  dateOfBirth: timestamp("date_of_birth"), // data de nascimento
+  nationality: text("nationality"), // nacionalidade
+  country: text("country"), // país
+  city: text("city"), // cidade
+  location: text("location"), // mantido para compatibilidade
 
   // Experiência e disponibilidade
   experience: text("experience"), // beginner, intermediate, advanced, professional
@@ -56,10 +61,15 @@ export const onboarding = pgTable("onboarding", {
   // Identificação por email (para recuperar pendentes)
   email: text("email").notNull(),
   name: text("name").notNull(),
+  nickname: text("nickname"), // nickname usado como slug
+  dateOfBirth: timestamp("date_of_birth"), // data de nascimento
+  nationality: text("nationality"), // nacionalidade
+  country: text("country"), // país
+  city: text("city"), // cidade
 
   // Dados básicos
   role: text("role").notNull(), // player, manager, fan, organizer
-  location: text("location"),
+  location: text("location"), // mantido para compatibilidade
 
   // Experiência e disponibilidade
   experience: text("experience"), // beginner, intermediate, advanced, professional

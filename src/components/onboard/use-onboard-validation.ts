@@ -7,6 +7,8 @@ interface UseOnboardValidationProps {
     role?: string;
     name?: string;
     email?: string;
+    nickname?: string;
+    dateOfBirth?: Date | null;
     goals?: string[];
   };
   roleQuestions?: RoleQuestions;
@@ -29,7 +31,7 @@ export function useOnboardValidation({
           step1Schema.parse({ role: formData.role });
           return true;
         case 2:
-          // Validar apenas nome e email
+          // Validar nome e email (obrigatórios)
           if (!formData.name || formData.name.length < 2) {
             toast.error(
               "Erro de Validação",
@@ -43,6 +45,56 @@ export function useOnboardValidation({
           ) {
             toast.error("Erro de Validação", "Email inválido");
             return false;
+          }
+          // Validar nickname se fornecido (opcional)
+          if (formData.nickname && formData.nickname.trim()) {
+            const trimmedNickname = formData.nickname.trim();
+            if (trimmedNickname.length < 3) {
+              toast.error(
+                "Erro de Validação",
+                "O nickname deve ter pelo menos 3 caracteres",
+              );
+              return false;
+            }
+            if (trimmedNickname.length > 30) {
+              toast.error(
+                "Erro de Validação",
+                "O nickname deve ter no máximo 30 caracteres",
+              );
+              return false;
+            }
+            if (!/^[a-z0-9-]+$/.test(trimmedNickname)) {
+              toast.error(
+                "Erro de Validação",
+                "O nickname deve conter apenas letras minúsculas, números e traços",
+              );
+              return false;
+            }
+          }
+          // Validar data de nascimento se fornecida
+          if (formData.dateOfBirth) {
+            const today = new Date();
+            today.setHours(23, 59, 59, 999);
+            const birthDate = formData.dateOfBirth instanceof Date 
+              ? formData.dateOfBirth 
+              : new Date(formData.dateOfBirth);
+            
+            if (birthDate > today) {
+              toast.error(
+                "Erro de Validação",
+                "A data de nascimento não pode ser no futuro",
+              );
+              return false;
+            }
+            
+            const minDate = new Date("1900-01-01");
+            if (birthDate < minDate) {
+              toast.error(
+                "Erro de Validação",
+                "A data de nascimento deve ser após 1900",
+              );
+              return false;
+            }
           }
           return true;
         case 3:

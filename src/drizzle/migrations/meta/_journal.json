@@ -57,6 +57,20 @@
       "when": 1762170753882,
       "tag": "0007_nebulous_ender_wiggin",
       "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "7",
+      "when": 1763208517820,
+      "tag": "0008_free_magneto",
+      "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "7",
+      "when": 1763209573852,
+      "tag": "0009_messy_alice",
+      "breakpoints": true
     }
   ]
 }

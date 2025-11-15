@@ -29,6 +29,46 @@ export const preferencesSchema = z.object({
   earlyAccess: z.boolean().default(true),
 });
 
+// Helper function to create slug from nickname
+export function createSlugFromNickname(nickname: string): string {
+  return nickname
+    .toLowerCase()
+    .trim()
+    .replace(/[^a-z0-9-]/g, "-") // Replace non-alphanumeric with dash
+    .replace(/-+/g, "-") // Replace multiple dashes with single dash
+    .replace(/^-|-$/g, ""); // Remove leading/trailing dashes
+}
+
+// Gerar nickname automático baseado no nome + número aleatório curto
+export function generateNicknameFromName(name: string): string {
+  // Remover acentos e caracteres especiais, converter para minúsculas
+  const normalized = name
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "") // Remove acentos
+    .replace(/[^a-z0-9\s-]/g, "") // Remove caracteres especiais exceto espaços e traços
+    .trim()
+    .replace(/\s+/g, "-") // Substitui espaços por traços
+    .replace(/-+/g, "-") // Remove traços múltiplos
+    .replace(/^-|-$/g, ""); // Remove traços no início/fim
+
+  // Pegar primeiras palavras (máximo 20 caracteres para base)
+  // Considerar que vamos adicionar "-" + 3 dígitos = 4 caracteres extras
+  // Total máximo é 30, então base pode ter até 26 caracteres
+  let base = normalized.substring(0, 26);
+  
+  // Se terminar com traço, remover
+  base = base.replace(/-+$/, "");
+  
+  // Adicionar número aleatório curto (3 dígitos)
+  const randomNum = Math.floor(Math.random() * 900) + 100; // 100-999
+  
+  const generated = `${base}-${randomNum}`;
+  
+  // Garantir que não ultrapasse 30 caracteres
+  return generated.substring(0, 30);
+}
+
 // Main onboarding schema
 export const onboardingSchema = z.object({
   role: roleSchema,
@@ -36,7 +76,21 @@ export const onboardingSchema = z.object({
     .string()
     .min(2, "O nome deve ter pelo menos 2 caracteres")
     .max(100, "O nome deve ter no máximo 100 caracteres"),
+  nickname: z
+    .string()
+    .min(3, "O nickname deve ter pelo menos 3 caracteres")
+    .max(30, "O nickname deve ter no máximo 30 caracteres")
+    .regex(
+      /^[a-z0-9-]+$/,
+      "O nickname deve conter apenas letras minúsculas, números e traços"
+    )
+    .optional()
+    .or(z.literal("")),
   email: z.string().email("Email inválido"),
+  dateOfBirth: z.date().optional().or(z.literal(null)),
+  nationality: z.string().optional().or(z.literal("")), // nacionalidade
+  country: z.string().optional().or(z.literal("")), // país
+  city: z.string().optional().or(z.literal("")), // cidade
   location: z
     .string()
     .min(2, "Localização deve ter pelo menos 2 caracteres")
@@ -65,7 +119,21 @@ export const step2Schema = z.object({
     .string()
     .min(2, "O nome deve ter pelo menos 2 caracteres")
     .max(100, "O nome deve ter no máximo 100 caracteres"),
+  nickname: z
+    .string()
+    .min(3, "O nickname deve ter pelo menos 3 caracteres")
+    .max(30, "O nickname deve ter no máximo 30 caracteres")
+    .regex(
+      /^[a-z0-9-]+$/,
+      "O nickname deve conter apenas letras minúsculas, números e traços"
+    )
+    .optional()
+    .or(z.literal("")),
   email: z.string().email("Email inválido"),
+  dateOfBirth: z.date().optional().or(z.literal(null)),
+  nationality: z.string().optional().or(z.literal("")), // nacionalidade
+  country: z.string().optional().or(z.literal("")), // país
+  city: z.string().optional().or(z.literal("")), // cidade
   location: z
     .string()
     .min(2, "Localização deve ter pelo menos 2 caracteres")

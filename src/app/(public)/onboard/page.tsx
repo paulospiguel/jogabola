@@ -6,9 +6,9 @@ import {
   getProfileData,
   linkOnboardingToUser,
   saveOnboarding,
-  saveProfileData,
 } from "@/actions/profile";
 import { FloatingOrb } from "@/components/floating-orb";
+import { Logo } from "@/components/logo";
 import { OnboardNavigation } from "@/components/onboard-navigation";
 import { OnboardProgressHeader } from "@/components/onboard-progress-header";
 import { AdditionalInfoStep } from "@/components/onboard/steps/additional-info-step";
@@ -22,14 +22,13 @@ import { RoleSpecificStep } from "@/components/onboard/steps/role-specific-step"
 import { useOnboardValidation } from "@/components/onboard/use-onboard-validation";
 import { Button } from "@/components/ui/button";
 import { getQuestionsByRole } from "@/constants/onboarding-questions";
-import { useProfileSync } from "@/hooks/use-profile-sync";
 import { useToast } from "@/hooks/use-toast-custom";
 import { useSession } from "@/lib/auth-client";
 import { useProfileStore } from "@/stores/profile";
 import { X } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 
 export default function OnboardPage() {
   const router = useRouter();
@@ -37,10 +36,12 @@ export default function OnboardPage() {
   const { toast } = useToast();
   const { data: session } = useSession();
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isCheckingOnboarding, setIsCheckingOnboarding] = useState(true);
   const t = useTranslations("onboard");
 
   // Sync profile data when user logs in (para vincular onboarding pendente)
-  useProfileSync(session?.user?.id, saveProfileData);
+  // Desabilitado no onboarding para evitar loops - será tratado após completar
+  // useProfileSync(session?.user?.id, saveProfileData);
   const [autoFilledFields, setAutoFilledFields] = useState<{
     name?: boolean;
     email?: boolean;
@@ -94,28 +95,46 @@ export default function OnboardPage() {
   // Mas não limpar se:
   // 1. Há migração em andamento (migrate=true)
   // 2. Usuário já está logado e pode ter dados para carregar
+  const hasInitializedRef = useRef(false);
   useEffect(() => {
-    const { completed } = useProfileStore.getState();
+    if (hasInitializedRef.current) return;
+
+    const { completed, reset: resetStore } = useProfileStore.getState();
     const migrateParam = searchParams.get("migrate");
     const hasActiveSession = !!session?.user?.id;
 
     // Se não está completado e não há migração nem sessão ativa, limpar ao montar (refresh)
     // Isso garante que cada visita à página comece limpo, exceto quando há contexto especial
     if (!completed && !migrateParam && !hasActiveSession) {
-      reset();
+      resetStore();
     }
-  }, [reset, searchParams, session?.user?.id]); // Executar quando parâmetros mudarem
+
+    hasInitializedRef.current = true;
+  }, [searchParams, session?.user?.id]); // Usando getState() para evitar dependência
 
   // Initialize with search params
+  const hasInitializedParamsRef = useRef(false);
   useEffect(() => {
     const roleParam = searchParams.get("role");
-    if (roleParam && !formData.role) {
+    const migrateParam = searchParams.get("migrate");
+
+    // Inicializar role apenas uma vez se não estiver definido
+    // Usar getState() para evitar dependência de formData.role
+    const currentRole = useProfileStore.getState().data.role;
+    if (roleParam && !currentRole) {
       updateData({ role: roleParam as any });
     }
 
     // Se há parâmetro migrate=true e usuário está logado, vincular onboarding pendente
-    const migrateParam = searchParams.get("migrate");
-    if (migrateParam === "true" && session?.user?.id && session?.user?.email) {
+    // Executar apenas uma vez
+    if (
+      migrateParam === "true" &&
+      session?.user?.id &&
+      session?.user?.email &&
+      !hasInitializedParamsRef.current
+    ) {
+      hasInitializedParamsRef.current = true;
+
       // Primeiro buscar os dados do onboarding pendente
       getPendingOnboarding(session.user.email).then(pendingResult => {
         if (pendingResult.success && pendingResult.data) {
@@ -125,6 +144,15 @@ export default function OnboardPage() {
             role: pendingData.role as any,
             name: pendingData.name,
             email: pendingData.email,
+            nickname: pendingData.nickname || "",
+            dateOfBirth: pendingData.dateOfBirth
+              ? typeof pendingData.dateOfBirth === "string"
+                ? new Date(pendingData.dateOfBirth)
+                : pendingData.dateOfBirth
+              : null,
+            nationality: pendingData.nationality || "",
+            country: pendingData.country || "",
+            city: pendingData.city || "",
             location: pendingData.location,
             experience: pendingData.experience as any,
             availability: pendingData.availability as any,
@@ -153,20 +181,16 @@ export default function OnboardPage() {
         }
       });
     }
-  }, [
-    searchParams,
-    formData.role,
-    updateData,
-    session?.user?.id,
-    session?.user?.email,
-    setCompleted,
-    toast,
-  ]);
+  }, [searchParams, session?.user?.id, session?.user?.email]); // Removido formData.role da dependência
 
-  // Bloquear acesso se já completou onboarding
+  // Verificar status do onboarding ANTES de renderizar o conteúdo
   useEffect(() => {
     async function checkOnboardingStatus() {
-      if (!session?.user?.id) return;
+      // Se não tem sessão, pode mostrar o onboarding
+      if (!session?.user?.id) {
+        setIsCheckingOnboarding(false);
+        return;
+      }
 
       try {
         const profileResult = await getProfileData(session.user.id);
@@ -184,43 +208,53 @@ export default function OnboardPage() {
             };
             const dashboardRoute = journeyRoutes[role] || "/arena";
             router.push(dashboardRoute);
+            return; // Não definir isCheckingOnboarding como false, pois vai redirecionar
           } else {
             router.push("/arena");
+            return; // Não definir isCheckingOnboarding como false, pois vai redirecionar
           }
         }
       } catch (error) {
         console.error("Error checking onboarding status:", error);
       }
+
+      // Se chegou aqui, não completou o onboarding ou não tem sessão
+      // Pode mostrar o onboarding
+      setIsCheckingOnboarding(false);
     }
 
     checkOnboardingStatus();
   }, [session?.user?.id, router]);
 
   // Preencher nome e email automaticamente quando usuário estiver logado
+  const hasLoadedUserDataRef = useRef(false);
   useEffect(() => {
+    if (!session?.user?.id || hasLoadedUserDataRef.current) return;
+
     async function loadUserData() {
-      if (!session?.user?.id) return;
+      hasLoadedUserDataRef.current = true;
 
       const filledFields: typeof autoFilledFields = {};
       const updates: Partial<typeof formData> = {};
 
       try {
         // Tentar carregar dados do perfil existente
-        const profileResult = await getProfileData(session.user.id);
+        const profileResult = await getProfileData(session?.user?.id || "");
+        const currentFormData = useProfileStore.getState().data;
 
         // Sempre preencher nome e email da sessão quando usuário estiver logado
-        if (session.user.name) {
-          updates.name = session.user.name;
+        if (session?.user?.name && !currentFormData.name) {
+          updates.name = session?.user?.name;
           filledFields.name = true;
-          setOriginalValues(prev => ({ ...prev, name: session.user.name }));
+          setOriginalValues(prev => ({ ...prev, name: session?.user?.name }));
         }
 
-        if (session.user.email) {
-          updates.email = session.user.email;
+        if (session?.user?.email && !currentFormData.email) {
+          updates.email = session?.user?.email;
           filledFields.email = true;
           setOriginalValues(prev => ({
             ...prev,
-            email: session.user.email,
+            email: session?.user?.email,
           }));
         }
 
@@ -229,7 +263,8 @@ export default function OnboardPage() {
           // Usar nome do perfil se existir e for diferente do nome da sessão
           if (
             profileResult.data.name &&
-            profileResult.data.name !== session.user.name
+            profileResult.data.name !== session?.user?.name &&
+            !currentFormData.name
           ) {
             updates.name = profileResult.data.name;
             setOriginalValues(prev => ({
@@ -238,28 +273,28 @@ export default function OnboardPage() {
             }));
           }
 
-          if (profileResult.data.role && !formData.role) {
+          if (profileResult.data.role && !currentFormData.role) {
             updates.role = profileResult.data.role as any;
           }
 
-          if (profileResult.data.location && !formData.location) {
+          if (profileResult.data.location && !currentFormData.location) {
             updates.location = profileResult.data.location;
           }
 
-          if (profileResult.data.experience && !formData.experience) {
+          if (profileResult.data.experience && !currentFormData.experience) {
             updates.experience = profileResult.data.experience as any;
           }
 
           if (
             profileResult.data.goals &&
             profileResult.data.goals.length > 0 &&
-            (!formData.goals || formData.goals.length === 0)
+            (!currentFormData.goals || currentFormData.goals.length === 0)
           ) {
             updates.goals = profileResult.data.goals;
           }
         }
 
-        // Aplicar atualizações
+        // Aplicar atualizações apenas se houver algo para atualizar
         if (Object.keys(updates).length > 0) {
           updateData(updates);
         }
@@ -271,27 +306,31 @@ export default function OnboardPage() {
       } catch (error) {
         console.error("Error loading user data:", error);
         // Em caso de erro, pelo menos tentar preencher com dados da sessão
-        if (session.user.name) {
-          updates.name = session.user.name;
-          filledFields.name = true;
+        const currentFormData = useProfileStore.getState().data;
+        const errorUpdates: Partial<typeof formData> = {};
+        const errorFilledFields: typeof autoFilledFields = {};
+
+        if (session?.user?.name && !currentFormData.name) {
+          errorUpdates.name = session?.user?.name;
+          errorFilledFields.name = true;
           setOriginalValues(prev => ({ ...prev, name: session.user.name }));
         }
 
-        if (session.user.email) {
-          updates.email = session.user.email;
-          filledFields.email = true;
+        if (session?.user?.email && !currentFormData.email) {
+          errorUpdates.email = session?.user?.email;
+          errorFilledFields.email = true;
           setOriginalValues(prev => ({
             ...prev,
             email: session.user.email,
           }));
         }
 
-        if (Object.keys(updates).length > 0) {
-          updateData(updates);
+        if (Object.keys(errorUpdates).length > 0) {
+          updateData(errorUpdates);
         }
 
-        if (Object.keys(filledFields).length > 0) {
-          setAutoFilledFields(filledFields);
+        if (Object.keys(errorFilledFields).length > 0) {
+          setAutoFilledFields(errorFilledFields);
         }
       }
     }
@@ -425,10 +464,26 @@ export default function OnboardPage() {
           <BasicInfoStep
             name={formData.name || ""}
             email={formData.email || ""}
+            nickname={formData.nickname || ""}
+            dateOfBirth={
+              formData.dateOfBirth
+                ? typeof formData.dateOfBirth === "string"
+                  ? new Date(formData.dateOfBirth)
+                  : formData.dateOfBirth
+                : null
+            }
+            nationality={formData.nationality || ""}
+            country={formData.country || ""}
+            city={formData.city || ""}
             location={formData.location || ""}
             autoFilledFields={autoFilledFields}
             onNameChange={value => updateFormData("name", value)}
             onEmailChange={value => updateFormData("email", value)}
+            onNicknameChange={value => updateFormData("nickname", value)}
+            onDateOfBirthChange={value => updateFormData("dateOfBirth", value)}
+            onNationalityChange={value => updateFormData("nationality", value)}
+            onCountryChange={value => updateFormData("country", value)}
+            onCityChange={value => updateFormData("city", value)}
             onLocationChange={value => updateFormData("location", value)}
           />
         );
@@ -474,6 +529,17 @@ export default function OnboardPage() {
           <ConfirmationStep
             name={formData.name || ""}
             email={formData.email || ""}
+            nickname={formData.nickname}
+            dateOfBirth={
+              formData.dateOfBirth
+                ? typeof formData.dateOfBirth === "string"
+                  ? new Date(formData.dateOfBirth)
+                  : formData.dateOfBirth
+                : null
+            }
+            nationality={formData.nationality}
+            country={formData.country}
+            city={formData.city}
             location={formData.location}
             role={formData.role}
             experience={formData.experience}
@@ -524,6 +590,26 @@ export default function OnboardPage() {
   const handleClose = () => {
     router.push("/");
   };
+
+  // Mostrar loading enquanto verifica o status do onboarding
+  if (isCheckingOnboarding) {
+    return (
+      <div className="relative min-h-screen overflow-hidden bg-gradient-to-br from-[#21005a] via-[#2b0071] to-[#21005a]">
+        {/* Background decorativo */}
+        <div className="absolute inset-0 overflow-hidden">
+          <FloatingOrb delay={0} size={200} position="top-20 left-10" />
+          <FloatingOrb delay={1} size={150} position="top-40 right-20" />
+          <FloatingOrb delay={2} size={100} position="bottom-20 left-1/4" />
+          <FloatingOrb delay={3} size={120} position="bottom-40 right-1/3" />
+        </div>
+
+        {/* Loading centralizado */}
+        <div className="relative z-10 flex min-h-screen items-center justify-center">
+          <Logo size="medium" isAnimate color="white" />
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="relative min-h-screen overflow-hidden bg-gradient-to-br from-[#21005a] via-[#2b0071] to-[#21005a]">

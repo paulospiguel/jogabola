@@ -29,7 +29,16 @@ import {
 } from "@/schemas/auth";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { motion } from "framer-motion";
-import { ArrowLeft, Loader2, Lock, Mail, Trophy, User } from "lucide-react";
+import {
+  ArrowLeft,
+  Eye,
+  EyeOff,
+  Loader2,
+  Lock,
+  Mail,
+  Trophy,
+  User,
+} from "lucide-react";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
 import { redirect, useRouter, useSearchParams } from "next/navigation";
@@ -41,6 +50,9 @@ export default function LoginPage() {
   const searchParams = useSearchParams();
   const [tab, setTab] = useState<"login" | "register">("login");
   const [loading, setLoading] = useState(false);
+  const [showLoginPassword, setShowLoginPassword] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const { data } = useSession();
   const { toast } = useToast();
   const t = useTranslations("signIn.page");
@@ -339,11 +351,25 @@ export default function LoginPage() {
                               <Lock className="absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-[#00cfb1]" />
                               <Input
                                 {...field}
-                                type="password"
+                                type={showLoginPassword ? "text" : "password"}
                                 placeholder={t("form.fields.passwordPlaceholder")}
                                 disabled={loading}
-                                className="border-white/20 bg-white/10 pl-10 text-white placeholder:text-white/40 focus:border-[#00cfb1] focus:ring-[#00cfb1]"
+                                className="border-white/20 bg-white/10 pl-10 pr-10 text-white placeholder:text-white/40 focus:border-[#00cfb1] focus:ring-[#00cfb1]"
                               />
+                              <button
+                                type="button"
+                                onClick={() => setShowLoginPassword(!showLoginPassword)}
+                                className="absolute right-3 top-1/2 -translate-y-1/2 text-[#00cfb1] hover:text-[#1effbf] transition-colors"
+                                aria-label={
+                                  showLoginPassword ? "Ocultar senha" : "Mostrar senha"
+                                }
+                              >
+                                {showLoginPassword ? (
+                                  <EyeOff className="h-5 w-5" />
+                                ) : (
+                                  <Eye className="h-5 w-5" />
+                                )}
+                              </button>
                             </div>
                           </FormControl>
                           <FormMessage className="text-red-400" />
@@ -482,11 +508,25 @@ export default function LoginPage() {
                               <Lock className="absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-[#00cfb1]" />
                               <Input
                                 {...field}
-                                type="password"
+                                type={showPassword ? "text" : "password"}
                                 placeholder={t("form.fields.passwordPlaceholder")}
                                 disabled={loading}
-                                className="border-white/20 bg-white/10 pl-10 text-white placeholder:text-white/40 focus:border-[#00cfb1] focus:ring-[#00cfb1]"
+                                className="border-white/20 bg-white/10 pl-10 pr-10 text-white placeholder:text-white/40 focus:border-[#00cfb1] focus:ring-[#00cfb1]"
                               />
+                              <button
+                                type="button"
+                                onClick={() => setShowPassword(!showPassword)}
+                                className="absolute right-3 top-1/2 -translate-y-1/2 text-[#00cfb1] hover:text-[#1effbf] transition-colors"
+                                aria-label={
+                                  showPassword ? "Ocultar senha" : "Mostrar senha"
+                                }
+                              >
+                                {showPassword ? (
+                                  <EyeOff className="h-5 w-5" />
+                                ) : (
+                                  <Eye className="h-5 w-5" />
+                                )}
+                              </button>
                             </div>
                           </FormControl>
                           <FormMessage className="text-red-400" />
@@ -497,26 +537,74 @@ export default function LoginPage() {
                     <FormField
                       control={registerForm.control}
                       name="confirmPassword"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel className="text-sm font-medium text-white">
-                            {t("form.fields.confirmPassword")}
-                          </FormLabel>
-                          <FormControl>
-                            <div className="relative">
-                              <Lock className="absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-[#00cfb1]" />
-                              <Input
-                                {...field}
-                                type="password"
-                                placeholder={t("form.fields.passwordPlaceholder")}
-                                disabled={loading}
-                                className="border-white/20 bg-white/10 pl-10 text-white placeholder:text-white/40 focus:border-[#00cfb1] focus:ring-[#00cfb1]"
-                              />
-                            </div>
-                          </FormControl>
-                          <FormMessage className="text-red-400" />
-                        </FormItem>
-                      )}
+                      render={({ field }) => {
+                        const passwordValue =
+                          registerForm.watch("password") || "";
+                        const confirmPasswordValue = field.value || "";
+                        const passwordsMatch =
+                          passwordValue &&
+                          confirmPasswordValue &&
+                          passwordValue === confirmPasswordValue;
+                        const passwordsDontMatch =
+                          passwordValue &&
+                          confirmPasswordValue &&
+                          passwordValue !== confirmPasswordValue;
+
+                        return (
+                          <FormItem>
+                            <FormLabel className="text-sm font-medium text-white">
+                              {t("form.fields.confirmPassword")}
+                            </FormLabel>
+                            <FormControl>
+                              <div className="relative">
+                                <Lock className="absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-[#00cfb1]" />
+                                <Input
+                                  {...field}
+                                  type={showConfirmPassword ? "text" : "password"}
+                                  placeholder={t("form.fields.passwordPlaceholder")}
+                                  disabled={loading}
+                                  className={`border-white/20 bg-white/10 pl-10 pr-10 text-white placeholder:text-white/40 focus:border-[#00cfb1] focus:ring-[#00cfb1] ${
+                                    passwordsDontMatch
+                                      ? "border-red-400 focus:border-red-400 focus:ring-red-400"
+                                      : passwordsMatch
+                                        ? "border-green-400 focus:border-green-400 focus:ring-green-400"
+                                        : ""
+                                  }`}
+                                />
+                                <button
+                                  type="button"
+                                  onClick={() =>
+                                    setShowConfirmPassword(!showConfirmPassword)
+                                  }
+                                  className="absolute right-3 top-1/2 -translate-y-1/2 text-[#00cfb1] hover:text-[#1effbf] transition-colors"
+                                  aria-label={
+                                    showConfirmPassword
+                                      ? "Ocultar senha"
+                                      : "Mostrar senha"
+                                  }
+                                >
+                                  {showConfirmPassword ? (
+                                    <EyeOff className="h-5 w-5" />
+                                  ) : (
+                                    <Eye className="h-5 w-5" />
+                                  )}
+                                </button>
+                              </div>
+                            </FormControl>
+                            {passwordsDontMatch && (
+                              <p className="text-sm text-red-400 mt-1">
+                                As palavras-passe não coincidem
+                              </p>
+                            )}
+                            {passwordsMatch && confirmPasswordValue && (
+                              <p className="text-sm text-green-400 mt-1">
+                                As palavras-passe coincidem
+                              </p>
+                            )}
+                            <FormMessage className="text-red-400" />
+                          </FormItem>
+                        );
+                      }}
                     />
 
                     {/* Buttons */}
