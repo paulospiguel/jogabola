@@ -9,19 +9,14 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import useUser from "@/hooks/useUser";
 import { type Locale, locales } from "@/i18n/configs";
 import { useLocale, useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
 import { useTransition } from "react";
-import { z } from "zod";
-
-const languageSchema = z.object({
-  icon: z.string(),
-  name: z.string(),
-});
-
-type Language = z.infer<typeof languageSchema>;
+type Language = {
+  icon: string;
+  name: string;
+};
 
 const LANGUAGES = {
   en: {
@@ -50,13 +45,23 @@ export default function LanguageSelector({
   const t = useTranslations();
   const locale = useLocale();
   const [isPending, startTransition] = useTransition();
-  const { user } = useUser();
   const router = useRouter();
+
+  const buildLocalizedPath = (targetLocale: Locale) => {
+    if (typeof window === "undefined") {
+      return `/${targetLocale}`;
+    }
+
+    const matcher = new RegExp(`^/(${locales.join("|")})`);
+    const suffix = window.location.pathname.replace(matcher, "") || "";
+    return `/${targetLocale}${suffix}`;
+  };
 
   async function onLanguageChange(lang: Locale) {
     const newLocale = lang as Locale;
     startTransition(async () => {
-      await setUserLocale(newLocale, user?.id!);
+      await setUserLocale(newLocale);
+      router.replace(buildLocalizedPath(newLocale));
       router.refresh();
     });
   }

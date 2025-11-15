@@ -3,21 +3,12 @@
 import { motion } from "framer-motion";
 import { useTranslations } from "next-intl";
 import Image from "next/image";
-import { cn } from "@/lib/utils";
-import { useRouter } from "next/navigation";
-import { CheckCircle, Sparkles, Users, Globe, Handshake } from "lucide-react";
-import fieldLogo from "@/assets/partners/field.png";
-import filaLogo from "@/assets/partners/fila.svg";
-import redBullLogo from "@/assets/partners/redbull.svg";
-import InfiniteHorizontalScroll from "@/components/infinite-scroll";
 import Link from "next/link";
+import { CheckCircle, Sparkles, Users, Globe, Handshake } from "lucide-react";
 
-interface Partner {
-  name: string;
-  logo: any;
-  website?: string;
-  category: "premium" | "official" | "supporter";
-}
+import { partners, partnersByCategory } from "@/data/partners";
+import { cn } from "@/lib/utils";
+import type { Partner, PartnerCategory } from "@/types/partners";
 
 interface PartnersSectionProps {
   className?: string;
@@ -44,13 +35,7 @@ const categoryStyles = {
   },
 };
 
-const PartnerCard = ({
-  partner,
-  index,
-}: {
-  partner: Partner;
-  index: number;
-}) => {
+const PartnerCard = ({ partner, index }: { partner: Partner; index: number }) => {
   const styles = categoryStyles[partner.category];
 
   return (
@@ -247,58 +232,17 @@ const EmptyPartnersState = () => {
 export default function PartnersSection({ className }: PartnersSectionProps) {
   const t = useTranslations();
 
-  const router = useRouter();
+  const hasPartners = partners.length > 0;
 
-  // Dados dos parceiros organizados por categoria
-  const partners = [
-    // {
-    //   name: "Field",
-    //   logo: fieldLogo,
-    //   category: "premium" as const,
-    //   website: "https://field.com",
-    // },
-    // {
-    //   name: "Fila",
-    //   logo: filaLogo,
-    //   category: "official" as const,
-    //   website: "https://fila.com",
-    // },
-    // {
-    //   name: "Red Bull",
-    //   logo: redBullLogo,
-    //   category: "official" as const,
-    //   website: "https://redbull.com",
-    // },
-  ] as Partner[];
-
-  const hasPartners = partners && partners.length > 0;
-
-  // Agrupar parceiros por categoria
   const groupedPartners = hasPartners
-    ? partners.reduce(
-        (acc, partner) => {
-          if (!acc[partner.category]) acc[partner.category] = [];
-          acc[partner.category].push(partner);
-          return acc;
-        },
-        {} as Record<string, Partner[]>,
-      )
-    : {};
+    ? partnersByCategory
+    : ({} as Record<PartnerCategory, Partner[]>);
 
-  const categoryOrder: (keyof typeof categoryStyles)[] = [
-    "premium",
-    "official",
-    "supporter",
-  ];
+  const categoryOrder: PartnerCategory[] = ["premium", "official", "supporter"];
   const categoryTitles = {
     premium: "Parceiros Premium",
     official: "Parceiros Oficiais",
     supporter: "Apoiantes",
-  };
-
-  const handleBecomePartner = () => {
-    // Redirecionar para a página de parceria
-    router.push("/become-partner");
   };
 
   return (

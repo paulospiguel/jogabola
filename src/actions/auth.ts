@@ -1,29 +1,16 @@
 "use server";
 
-// Função helper para obter o baseURL de forma consistente
-function getBaseURL(): string {
-  if (process.env.NEXT_PUBLIC_APP_URL) {
-    return process.env.NEXT_PUBLIC_APP_URL;
-  }
-
-  if (process.env.NEXTAUTH_URL) {
-    return process.env.NEXTAUTH_URL;
-  }
-
-  // Em produção na Vercel, usar VERCEL_URL
-  if (process.env.VERCEL_URL) {
-    return `https://${process.env.VERCEL_URL}`;
-  }
-
-  // Fallback para desenvolvimento
-  return "http://localhost:3000";
-}
+import { getBaseURL } from "@/utils";
 
 export async function forgotPassword(email: string) {
   try {
     // Better Auth tem suporte nativo para forgot password via API
     // O endpoint é /api/auth/forgot-password e aceita { email }
     const baseUrl = getBaseURL();
+    
+    if (!baseUrl) {
+      throw new Error("Base URL não configurada");
+    }
 
     const response = await fetch(`${baseUrl}/api/auth/forgot-password`, {
       method: "POST",
@@ -47,11 +34,15 @@ export async function forgotPassword(email: string) {
       success: true,
       message: "Se o email existir, receberás um link de recuperação",
     };
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("Forgot password error:", error);
+    const message =
+      error instanceof Error
+        ? error.message
+        : "Erro ao enviar email de recuperação";
     return {
       success: false,
-      error: error?.message || "Erro ao enviar email de recuperação",
+      error: message,
     };
   }
 }
@@ -59,6 +50,10 @@ export async function forgotPassword(email: string) {
 export async function resetPassword(token: string, password: string) {
   try {
     const baseUrl = getBaseURL();
+    
+    if (!baseUrl) {
+      throw new Error("Base URL não configurada");
+    }
 
     const response = await fetch(`${baseUrl}/api/auth/reset-password`, {
       method: "POST",
@@ -81,11 +76,13 @@ export async function resetPassword(token: string, password: string) {
       success: true,
       message: "Palavra-passe redefinida com sucesso",
     };
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("Reset password error:", error);
+    const message =
+      error instanceof Error ? error.message : "Erro ao redefinir palavra-passe";
     return {
       success: false,
-      error: error?.message || "Erro ao redefinir palavra-passe",
+      error: message,
     };
   }
 }

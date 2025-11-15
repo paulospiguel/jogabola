@@ -96,27 +96,32 @@ const getUserLocale = async (): Promise<string> => {
 };
 
 const getBaseURL = () => {
-  // No cliente, sempre usar window.location.origin (mais confiável)
   if (typeof window !== "undefined") {
-    return process.env.NEXT_PUBLIC_APP_URL || window.location.origin;
+    // Prioridade: NEXT_PUBLIC_APP_URL > NEXT_PUBLIC_URL > window.location.origin
+    return (
+      process.env.NEXT_PUBLIC_APP_URL ||
+      process.env.NEXT_PUBLIC_URL ||
+      window.location.origin
+    );
   }
 
-  // No servidor, priorizar variáveis de ambiente
-  // Prioridade: NEXT_PUBLIC_APP_URL > NEXTAUTH_URL > VERCEL_URL > localhost
+  // No servidor, prioridade: NEXT_PUBLIC_APP_URL > NEXT_PUBLIC_URL > NEXTAUTH_URL > VERCEL_URL
   if (process.env.NEXT_PUBLIC_APP_URL) {
     return process.env.NEXT_PUBLIC_APP_URL;
+  }
+
+  if (process.env.NEXT_PUBLIC_URL) {
+    return process.env.NEXT_PUBLIC_URL;
   }
 
   if (process.env.NEXTAUTH_URL) {
     return process.env.NEXTAUTH_URL;
   }
 
-  // Vercel URL (sem protocolo) - usar apenas como fallback
   if (process.env.VERCEL_URL) {
     return `https://${process.env.VERCEL_URL}`;
   }
 
-  // Local dev fallback
   return "http://localhost:3000";
 };
 
