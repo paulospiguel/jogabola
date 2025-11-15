@@ -1,11 +1,7 @@
 "use client";
 
-import {
-  linkOnboardingToUser,
-  saveProfileData,
-} from "@/actions/profile";
+import { saveProfileData } from "@/actions/profile";
 import { FloatingOrb } from "@/components/floating-orb";
-import Header from "@/components/header";
 import { GoogleIcon } from "@/components/icons";
 import { Logo } from "@/components/logo";
 import { Button } from "@/components/ui/button";
@@ -29,19 +25,10 @@ import {
 } from "@/schemas/auth";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { motion } from "framer-motion";
-import {
-  ArrowLeft,
-  Eye,
-  EyeOff,
-  Loader2,
-  Lock,
-  Mail,
-  Trophy,
-  User,
-} from "lucide-react";
-import Link from "next/link";
+import { Eye, EyeOff, Loader2, Lock, Mail, Trophy, User } from "lucide-react";
 import { useTranslations } from "next-intl";
-import { redirect, useRouter, useSearchParams } from "next/navigation";
+import Link from "next/link";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 
@@ -93,15 +80,19 @@ export default function LoginPage() {
     }
   }, [emailParam, nameParam, loginForm, registerForm]);
 
-  if (data?.user) {
-    redirect("/arena");
-  }
+  // Verificar se usuário está logado - permitir login direto
+  useEffect(() => {
+    if (data?.user?.id) {
+      // Usuário está logado - redirecionar para arena (onboarding é opcional)
+      router.push("/arena");
+    }
+  }, [data?.user?.id, router]);
 
   async function handleGoogleLogin() {
     setLoading(true);
     try {
-      // Se temos email nos params, usar callback diferente para migrar onboarding
-      const callbackURL = emailParam ? "/onboard?migrate=true" : "/onboard";
+      // Redirecionar para arena após login (onboarding é opcional)
+      const callbackURL = "/arena";
 
       const result = await signIn.social({
         provider: "google",
@@ -126,7 +117,7 @@ export default function LoginPage() {
       console.error("Google login error:", err);
       toast.error(
         t("errors.loginError"),
-        err.message || t("errors.loginFailed")
+        err.message || t("errors.loginFailed"),
       );
       setLoading(false);
     }
@@ -146,13 +137,13 @@ export default function LoginPage() {
       }
 
       toast.success(t("success.login"), t("success.loginMessage"));
-      
+
       // A migração será feita pelo hook useProfileSync que monitora a sessão
     } catch (err: any) {
       console.error("Login error:", err);
       toast.error(
         t("errors.loginError"),
-        err.message || t("errors.invalidCredentialsDetails")
+        err.message || t("errors.invalidCredentialsDetails"),
       );
       setLoading(false);
     }
@@ -165,29 +156,25 @@ export default function LoginPage() {
         email: values.email,
         password: values.password,
         name: values.name,
-        callbackURL: "/onboard",
+        callbackURL: "/arena",
       });
 
       if (result.error) {
         throw new Error(result.error.message || t("errors.registerFailed"));
       }
 
-      toast.success(
-        t("success.register"),
-        t("success.registerMessage")
-      );
-      
+      toast.success(t("success.register"), t("success.registerMessage"));
+
       // A migração será feita pelo hook useProfileSync que monitora a sessão
     } catch (err: any) {
       console.error("Register error:", err);
       toast.error(
         t("errors.registerError"),
-        err.message || t("errors.registerFailedDetails")
+        err.message || t("errors.registerFailedDetails"),
       );
       setLoading(false);
     }
   }
-
 
   return (
     <div className="relative min-h-screen overflow-hidden bg-gradient-to-br from-[#21005a] via-[#2b0071] to-[#21005a]">
@@ -217,7 +204,7 @@ export default function LoginPage() {
               </span>
             </div>
 
-            <h1 className="max-w-xl bg-gradient-to-r from-[#00cfb1] to-[#1effbf] bg-clip-text text-3xl font-bold leading-tight text-transparent sm:text-4xl md:text-5xl lg:text-6xl">
+            <h1 className="max-w-xl bg-gradient-to-r from-[#00cfb1] to-[#1effbf] bg-clip-text text-3xl leading-tight font-bold text-transparent sm:text-4xl md:text-5xl lg:text-6xl">
               {t("hero.title")}
             </h1>
 
@@ -255,7 +242,7 @@ export default function LoginPage() {
             transition={{ duration: 0.6 }}
             className="w-full max-w-md"
           >
-            <div className="overflow-hidden rounded-2xl border border-white/20 bg-gradient-to-br from-white/10 to-white/5 p-4 backdrop-blur-xl shadow-2xl sm:rounded-3xl sm:p-6 lg:p-8">
+            <div className="overflow-hidden rounded-2xl border border-white/20 bg-gradient-to-br from-white/10 to-white/5 p-4 shadow-2xl backdrop-blur-xl sm:rounded-3xl sm:p-6 lg:p-8">
               {/* Header */}
               <div className="mb-6 space-y-2 text-center lg:mb-8">
                 <motion.div
@@ -267,7 +254,9 @@ export default function LoginPage() {
                   <Logo size="medium" />
                 </motion.div>
                 <h2 className="bg-gradient-to-r from-[#00cfb1] to-[#1effbf] bg-clip-text text-2xl font-bold text-transparent sm:text-3xl">
-                  {tab === "login" ? t("form.title.login") : t("form.title.register")}
+                  {tab === "login"
+                    ? t("form.title.login")
+                    : t("form.title.register")}
                 </h2>
                 <p className="text-xs text-[#ba93ff] sm:text-sm">
                   {tab === "login"
@@ -323,7 +312,7 @@ export default function LoginPage() {
                           </FormLabel>
                           <FormControl>
                             <div className="relative">
-                              <Mail className="absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-[#00cfb1]" />
+                              <Mail className="absolute top-1/2 left-3 h-5 w-5 -translate-y-1/2 text-[#00cfb1]" />
                               <Input
                                 {...field}
                                 type="email"
@@ -348,20 +337,26 @@ export default function LoginPage() {
                           </FormLabel>
                           <FormControl>
                             <div className="relative">
-                              <Lock className="absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-[#00cfb1]" />
+                              <Lock className="absolute top-1/2 left-3 h-5 w-5 -translate-y-1/2 text-[#00cfb1]" />
                               <Input
                                 {...field}
                                 type={showLoginPassword ? "text" : "password"}
-                                placeholder={t("form.fields.passwordPlaceholder")}
+                                placeholder={t(
+                                  "form.fields.passwordPlaceholder",
+                                )}
                                 disabled={loading}
-                                className="border-white/20 bg-white/10 pl-10 pr-10 text-white placeholder:text-white/40 focus:border-[#00cfb1] focus:ring-[#00cfb1]"
+                                className="border-white/20 bg-white/10 pr-10 pl-10 text-white placeholder:text-white/40 focus:border-[#00cfb1] focus:ring-[#00cfb1]"
                               />
                               <button
                                 type="button"
-                                onClick={() => setShowLoginPassword(!showLoginPassword)}
-                                className="absolute right-3 top-1/2 -translate-y-1/2 text-[#00cfb1] hover:text-[#1effbf] transition-colors"
+                                onClick={() =>
+                                  setShowLoginPassword(!showLoginPassword)
+                                }
+                                className="absolute top-1/2 right-3 -translate-y-1/2 text-[#00cfb1] transition-colors hover:text-[#1effbf]"
                                 aria-label={
-                                  showLoginPassword ? "Ocultar senha" : "Mostrar senha"
+                                  showLoginPassword
+                                    ? "Ocultar senha"
+                                    : "Mostrar senha"
                                 }
                               >
                                 {showLoginPassword ? (
@@ -380,7 +375,7 @@ export default function LoginPage() {
                     <div className="flex justify-end">
                       <Link
                         href="/forgot-password"
-                        className="text-xs text-[#00cfb1] hover:text-[#1effbf] transition-colors"
+                        className="text-xs text-[#00cfb1] transition-colors hover:text-[#1effbf]"
                       >
                         {t("form.forgotPassword")}
                       </Link>
@@ -423,8 +418,8 @@ export default function LoginPage() {
                       >
                         {loading ? (
                           <>
-                            <Loader2 className="mr-2 h-5 w-5 animate-spin" />
-                            A entrar...
+                            <Loader2 className="mr-2 h-5 w-5 animate-spin" />A
+                            entrar...
                           </>
                         ) : (
                           <>
@@ -455,7 +450,7 @@ export default function LoginPage() {
                           </FormLabel>
                           <FormControl>
                             <div className="relative">
-                              <User className="absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-[#00cfb1]" />
+                              <User className="absolute top-1/2 left-3 h-5 w-5 -translate-y-1/2 text-[#00cfb1]" />
                               <Input
                                 {...field}
                                 type="text"
@@ -480,7 +475,7 @@ export default function LoginPage() {
                           </FormLabel>
                           <FormControl>
                             <div className="relative">
-                              <Mail className="absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-[#00cfb1]" />
+                              <Mail className="absolute top-1/2 left-3 h-5 w-5 -translate-y-1/2 text-[#00cfb1]" />
                               <Input
                                 {...field}
                                 type="email"
@@ -505,20 +500,24 @@ export default function LoginPage() {
                           </FormLabel>
                           <FormControl>
                             <div className="relative">
-                              <Lock className="absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-[#00cfb1]" />
+                              <Lock className="absolute top-1/2 left-3 h-5 w-5 -translate-y-1/2 text-[#00cfb1]" />
                               <Input
                                 {...field}
                                 type={showPassword ? "text" : "password"}
-                                placeholder={t("form.fields.passwordPlaceholder")}
+                                placeholder={t(
+                                  "form.fields.passwordPlaceholder",
+                                )}
                                 disabled={loading}
-                                className="border-white/20 bg-white/10 pl-10 pr-10 text-white placeholder:text-white/40 focus:border-[#00cfb1] focus:ring-[#00cfb1]"
+                                className="border-white/20 bg-white/10 pr-10 pl-10 text-white placeholder:text-white/40 focus:border-[#00cfb1] focus:ring-[#00cfb1]"
                               />
                               <button
                                 type="button"
                                 onClick={() => setShowPassword(!showPassword)}
-                                className="absolute right-3 top-1/2 -translate-y-1/2 text-[#00cfb1] hover:text-[#1effbf] transition-colors"
+                                className="absolute top-1/2 right-3 -translate-y-1/2 text-[#00cfb1] transition-colors hover:text-[#1effbf]"
                                 aria-label={
-                                  showPassword ? "Ocultar senha" : "Mostrar senha"
+                                  showPassword
+                                    ? "Ocultar senha"
+                                    : "Mostrar senha"
                                 }
                               >
                                 {showPassword ? (
@@ -557,13 +556,17 @@ export default function LoginPage() {
                             </FormLabel>
                             <FormControl>
                               <div className="relative">
-                                <Lock className="absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-[#00cfb1]" />
+                                <Lock className="absolute top-1/2 left-3 h-5 w-5 -translate-y-1/2 text-[#00cfb1]" />
                                 <Input
                                   {...field}
-                                  type={showConfirmPassword ? "text" : "password"}
-                                  placeholder={t("form.fields.passwordPlaceholder")}
+                                  type={
+                                    showConfirmPassword ? "text" : "password"
+                                  }
+                                  placeholder={t(
+                                    "form.fields.passwordPlaceholder",
+                                  )}
                                   disabled={loading}
-                                  className={`border-white/20 bg-white/10 pl-10 pr-10 text-white placeholder:text-white/40 focus:border-[#00cfb1] focus:ring-[#00cfb1] ${
+                                  className={`border-white/20 bg-white/10 pr-10 pl-10 text-white placeholder:text-white/40 focus:border-[#00cfb1] focus:ring-[#00cfb1] ${
                                     passwordsDontMatch
                                       ? "border-red-400 focus:border-red-400 focus:ring-red-400"
                                       : passwordsMatch
@@ -576,7 +579,7 @@ export default function LoginPage() {
                                   onClick={() =>
                                     setShowConfirmPassword(!showConfirmPassword)
                                   }
-                                  className="absolute right-3 top-1/2 -translate-y-1/2 text-[#00cfb1] hover:text-[#1effbf] transition-colors"
+                                  className="absolute top-1/2 right-3 -translate-y-1/2 text-[#00cfb1] transition-colors hover:text-[#1effbf]"
                                   aria-label={
                                     showConfirmPassword
                                       ? "Ocultar senha"
@@ -592,12 +595,12 @@ export default function LoginPage() {
                               </div>
                             </FormControl>
                             {passwordsDontMatch && (
-                              <p className="text-sm text-red-400 mt-1">
+                              <p className="mt-1 text-sm text-red-400">
                                 As palavras-passe não coincidem
                               </p>
                             )}
                             {passwordsMatch && confirmPasswordValue && (
-                              <p className="text-sm text-green-400 mt-1">
+                              <p className="mt-1 text-sm text-green-400">
                                 As palavras-passe coincidem
                               </p>
                             )}
@@ -644,8 +647,8 @@ export default function LoginPage() {
                       >
                         {loading ? (
                           <>
-                            <Loader2 className="mr-2 h-5 w-5 animate-spin" />
-                            A entrar...
+                            <Loader2 className="mr-2 h-5 w-5 animate-spin" />A
+                            entrar...
                           </>
                         ) : (
                           <>

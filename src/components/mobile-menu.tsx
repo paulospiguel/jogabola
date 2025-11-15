@@ -3,7 +3,6 @@
 import Link from "next/link";
 import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
-import { ThemeToggle } from "./theme-toggle";
 import LanguageSelector from "./language-selector";
 import AnimatedBorderTrail from "./animated-border-trail";
 import { useJourneyRedirect } from "@/hooks/use-journey-redirect";
@@ -49,7 +48,6 @@ export default function MobileMenu({ open, onClose }: MobileMenuProps) {
         ))}
       </nav>
       <div className="mt-8 flex items-center gap-4">
-        <ThemeToggle />
         <LanguageSelector />
       </div>
       <div className="mt-8 flex flex-col gap-4">

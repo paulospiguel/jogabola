@@ -20,21 +20,18 @@ export default async function ProtectedLayout({
     redirect("/sign-in");
   }
 
-  // Check if user has completed onboarding
+  // Check if user has a profile (onboarding is optional)
   const profileResult = await getProfileData(session.user.id);
 
   if (profileResult.success && profileResult.data) {
-    // If profile exists but not completed, redirect to onboard
-    if (!profileResult.data.completed) {
-      redirect("/onboard");
-    }
-
-    // Profile is complete - wrap children with JourneyWrapper
+    // Profile exists - wrap children with JourneyWrapper
+    // If onboarding is not completed, role might be undefined, use default
     const { role } = profileResult.data;
 
     return <JourneyWrapper role={role as Role}>{children}</JourneyWrapper>;
   } else {
-    // If no profile exists at all, redirect to onboard
-    redirect("/onboard");
+    // No profile exists - allow access anyway (onboarding is optional)
+    // User can complete onboarding later if they want
+    return <JourneyWrapper role={undefined}>{children}</JourneyWrapper>;
   }
 }

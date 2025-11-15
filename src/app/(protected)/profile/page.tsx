@@ -18,6 +18,7 @@ import { Switch } from "@/components/ui/switch";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Textarea } from "@/components/ui/textarea";
 import { getJourneyRoute } from "@/components/journey-router";
+import { PerformanceTab } from "@/components/profile/performance-radar-chart";
 import { useToast } from "@/hooks/use-toast-custom";
 import { useSession } from "@/lib/auth-client";
 import type { Availability, Role } from "@/schemas/profile";
@@ -217,66 +218,72 @@ export default function ProfilePage() {
 
   if (loading) {
     return (
-      <div className="relative flex h-screen items-center justify-center overflow-hidden bg-linear-to-br from-emerald-50/60 via-white to-sky-50 text-slate-900 transition-colors dark:from-[#050312] dark:via-[#080a25] dark:to-[#0f163f] dark:text-white">
-        <div className="absolute inset-0 -z-10 bg-linear-to-br from-emerald-200/30 via-white to-sky-200/20 dark:bg-[linear-gradient(135deg,#050312_0%,#080a25_45%,#0f163f_100%)]" />
-        <div className="absolute inset-0 -z-20 bg-[radial-gradient(90%_90%_at_50%_0%,rgba(56,189,248,0.15)_0%,rgba(255,255,255,0)_72%)] dark:bg-[radial-gradient(90%_90%_at_50%_0%,rgba(0,255,213,0.22)_0%,rgba(5,3,18,0)_72%)]" />
+      <div className="relative flex h-screen items-center justify-center overflow-hidden bg-[linear-gradient(135deg,var(--color-background-gradient-start)_0%,var(--color-background-gradient-mid)_45%,var(--color-background-gradient-end)_100%)] text-text-primary transition-colors">
+        <div className="absolute inset-0 -z-10 bg-[linear-gradient(135deg,var(--color-background-gradient-start)_0%,var(--color-background-gradient-mid)_45%,var(--color-background-gradient-end)_100%)]" />
+        <div className="absolute inset-0 -z-20 bg-[radial-gradient(90%_90%_at_50%_0%,var(--color-radial-glow)_0%,rgba(5,3,18,0)_72%)]" />
         <div className="text-center">
-          <div className="mx-auto mb-4 h-8 w-8 animate-spin rounded-full border-4 border-emerald-400/40 border-t-emerald-500 dark:border-[#6fffe9]/30 dark:border-t-[#6fffe9]" />
-          <p className="text-slate-600 dark:text-slate-300">Carregando perfil...</p>
+          <div className="mx-auto mb-4 h-8 w-8 animate-spin rounded-full border-4 border-neon-primary/30 border-t-neon-primary" />
+          <p className="text-text-secondary">Carregando perfil...</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="relative min-h-screen overflow-hidden bg-linear-to-br from-emerald-50/60 via-white to-sky-50 text-slate-900 transition-colors dark:from-[#050312] dark:via-[#080a25] dark:to-[#0f163f] dark:text-white">
-      <div className="absolute inset-0 -z-10 bg-linear-to-br from-emerald-200/30 via-white to-sky-200/20 dark:bg-[linear-gradient(135deg,#050312_0%,#080a25_45%,#0f163f_100%)]" />
-      <div className="absolute inset-0 -z-20 bg-[radial-gradient(90%_90%_at_50%_0%,rgba(56,189,248,0.15)_0%,rgba(255,255,255,0)_72%)] dark:bg-[radial-gradient(90%_90%_at_50%_0%,rgba(0,255,213,0.22)_0%,rgba(5,3,18,0)_72%)]" />
+    <div className="relative min-h-screen overflow-hidden bg-[linear-gradient(135deg,var(--color-background-gradient-start)_0%,var(--color-background-gradient-mid)_45%,var(--color-background-gradient-end)_100%)] text-text-primary transition-colors">
+      <div className="absolute inset-0 -z-10 bg-[linear-gradient(135deg,var(--color-background-gradient-start)_0%,var(--color-background-gradient-mid)_45%,var(--color-background-gradient-end)_100%)]" />
+      <div className="absolute inset-0 -z-20 bg-[radial-gradient(90%_90%_at_50%_0%,var(--color-radial-glow)_0%,rgba(5,3,18,0)_72%)]" />
       <div className="container mx-auto max-w-4xl px-4 py-8 sm:px-6 md:px-8 lg:px-12">
         {/* Header */}
         <div className="mb-8">
-          <p className="text-xs uppercase tracking-[0.35em] text-emerald-500 dark:text-[#6fffe9]">
+          <p className="text-xs uppercase tracking-[0.35em] text-neon-primary">
             Configurações
           </p>
-          <h1 className="mt-2 text-3xl font-semibold text-slate-900 md:text-4xl dark:text-white">
+          <h1 className="mt-2 text-3xl font-semibold text-text-primary md:text-4xl">
             Configurações do Perfil
           </h1>
-          <p className="mt-2 text-sm text-slate-600 dark:text-slate-300">
+          <p className="mt-2 text-sm text-text-secondary">
             Gerencie suas informações pessoais, preferências e configurações da conta
           </p>
         </div>
 
       <Tabs defaultValue="account" className="space-y-6">
-        <TabsList className="grid w-full grid-cols-3 rounded-2xl border border-emerald-100/70 bg-white/90 p-1 backdrop-blur dark:border-white/10 dark:bg-white/5">
+        <TabsList className="grid w-full grid-cols-4 rounded-2xl border border-border-default bg-overlay-light p-1 backdrop-blur">
           <TabsTrigger 
             value="account" 
-            className="rounded-xl text-slate-500 transition-all data-[state=active]:bg-emerald-500 data-[state=active]:font-semibold data-[state=active]:text-white dark:text-slate-300 dark:data-[state=active]:bg-[#24ffe6] dark:data-[state=active]:text-slate-900"
+            className="rounded-xl text-text-muted transition-all data-[state=active]:bg-neon-secondary data-[state=active]:font-semibold data-[state=active]:text-slate-900"
           >
             Conta
           </TabsTrigger>
           <TabsTrigger 
             value="language" 
-            className="rounded-xl text-slate-500 transition-all data-[state=active]:bg-emerald-500 data-[state=active]:font-semibold data-[state=active]:text-white dark:text-slate-300 dark:data-[state=active]:bg-[#24ffe6] dark:data-[state=active]:text-slate-900"
+            className="rounded-xl text-text-muted transition-all data-[state=active]:bg-neon-secondary data-[state=active]:font-semibold data-[state=active]:text-slate-900"
           >
             Idioma
           </TabsTrigger>
           <TabsTrigger 
             value="details" 
-            className="rounded-xl text-slate-500 transition-all data-[state=active]:bg-emerald-500 data-[state=active]:font-semibold data-[state=active]:text-white dark:text-slate-300 dark:data-[state=active]:bg-[#24ffe6] dark:data-[state=active]:text-slate-900"
+            className="rounded-xl text-text-muted transition-all data-[state=active]:bg-neon-secondary data-[state=active]:font-semibold data-[state=active]:text-slate-900"
           >
             Dados Fundamentais
+          </TabsTrigger>
+          <TabsTrigger 
+            value="performance" 
+            className="rounded-xl text-text-muted transition-all data-[state=active]:bg-neon-secondary data-[state=active]:font-semibold data-[state=active]:text-slate-900"
+          >
+            Performance
           </TabsTrigger>
         </TabsList>
 
         {/* Tab: Detalhes da Conta */}
         <TabsContent value="account" className="space-y-6">
-          <Card className="rounded-3xl border border-emerald-100/70 bg-white backdrop-blur shadow-[0_35px_80px_-45px_rgba(16,185,129,0.28)] transition-colors dark:border-white/10 dark:bg-white/6 dark:shadow-[0_35px_80px_-45px_rgba(36,255,230,0.3)]">
+          <Card className="rounded-3xl border border-border-default bg-overlay-light backdrop-blur shadow-[0_35px_80px_-45px_var(--color-shadow-neon-soft)] transition-colors">
             <CardHeader>
-              <CardTitle className="flex items-center gap-2 text-slate-900 dark:text-white">
-                <UserCircle className="h-5 w-5 text-emerald-500 dark:text-[#6fffe9]" />
+              <CardTitle className="flex items-center gap-2 text-text-primary">
+                <UserCircle className="h-5 w-5 text-neon-primary" />
                 Detalhes da Conta
               </CardTitle>
-              <CardDescription className="text-slate-600 dark:text-slate-300">
+              <CardDescription className="text-text-secondary">
                 Atualize suas informações básicas e foto de perfil
               </CardDescription>
             </CardHeader>
@@ -284,10 +291,10 @@ export default function ProfilePage() {
               {/* Foto de Perfil */}
               <div className="flex items-center gap-6">
                 <div className="relative">
-                  <div className="absolute inset-0 rounded-full bg-emerald-200/60 blur-xl dark:bg-[#6fffe9]/30" />
-                  <Avatar className="relative h-20 w-20 border-2 border-emerald-400/70 shadow-[0_0_35px_rgba(16,185,129,0.25)] dark:border-[#6fffe9]/80 dark:shadow-[0_0_35px_rgba(111,255,233,0.35)]">
+                  <div className="absolute inset-0 rounded-full bg-neon-primary/30 blur-xl" />
+                  <Avatar className="relative h-20 w-20 border-2 border-neon-primary/80 shadow-[0_0_35px_var(--color-shadow-neon-soft)]">
                     <AvatarImage src={session?.user?.image || ""} alt={profileData.name} />
-                    <AvatarFallback className="bg-emerald-100 text-xl font-semibold text-emerald-700 dark:bg-[#101b46] dark:text-[#6fffe9]">
+                    <AvatarFallback className="bg-surface-101b46 text-xl font-semibold text-neon-primary">
                       {profileData.name
                         .split(" ")
                         .map(n => n[0])
@@ -301,23 +308,23 @@ export default function ProfilePage() {
                   <Button 
                     variant="outline" 
                     size="sm" 
-                    className="w-fit border-emerald-200 bg-white text-slate-700 backdrop-blur hover:border-emerald-400 hover:bg-emerald-50/80 hover:text-emerald-600 transition-all dark:border-white/25 dark:bg-white/10 dark:text-white dark:hover:border-[#24ffe6]/60 dark:hover:bg-[#24ffe6]/15"
+                    className="w-fit border-border-hover bg-overlay-medium text-text-primary backdrop-blur hover:border-neon-secondary/60 hover:bg-neon-secondary/15 transition-all"
                   >
                     <Camera className="mr-2 h-4 w-4" />
                     Alterar foto
                   </Button>
-                  <p className="text-xs text-slate-500 dark:text-slate-400">
+                  <p className="text-xs text-text-muted">
                     JPG, PNG ou GIF. Máximo 2MB.
                   </p>
                 </div>
               </div>
 
-              <Separator className="bg-emerald-100 dark:bg-white/10" />
+              <Separator className="bg-border-default" />
 
               {/* Nome */}
               <div className="space-y-2">
-                <Label htmlFor="name" className="flex items-center gap-2 text-slate-700 dark:text-white">
-                  <User className="h-4 w-4 text-emerald-500 dark:text-[#6fffe9]" />
+                <Label htmlFor="name" className="flex items-center gap-2 text-text-primary">
+                  <User className="h-4 w-4 text-neon-primary" />
                   Nome completo
                 </Label>
                 <Input
@@ -325,14 +332,14 @@ export default function ProfilePage() {
                   value={profileData.name}
                   onChange={e => handleInputChange("name", e.target.value)}
                   placeholder="Seu nome completo"
-                  className="border-emerald-100 bg-white text-slate-700 placeholder:text-slate-400 focus:border-emerald-400 focus:ring-emerald-400/30 backdrop-blur dark:border-white/10 dark:bg-white/5 dark:text-white dark:placeholder:text-slate-500 dark:focus:border-[#24ffe6] dark:focus:ring-[#24ffe6]/20"
+                  className="border-border-default bg-overlay-light text-text-primary placeholder:text-text-muted focus:border-border-focus focus:ring-border-focus backdrop-blur"
                 />
               </div>
 
               {/* Email */}
               <div className="space-y-2">
-                <Label htmlFor="email" className="flex items-center gap-2 text-slate-700 dark:text-white">
-                  <Mail className="h-4 w-4 text-emerald-500 dark:text-[#6fffe9]" />
+                <Label htmlFor="email" className="flex items-center gap-2 text-text-primary">
+                  <Mail className="h-4 w-4 text-neon-primary" />
                   Email
                 </Label>
                 <Input
@@ -342,17 +349,17 @@ export default function ProfilePage() {
                   onChange={e => handleInputChange("email", e.target.value)}
                   placeholder="seu@email.com"
                   disabled
-                  className="cursor-not-allowed border-emerald-100 bg-emerald-50/70 text-slate-500 backdrop-blur dark:border-white/10 dark:bg-white/5 dark:text-slate-400"
+                  className="cursor-not-allowed border-border-default bg-overlay-light text-text-muted backdrop-blur"
                 />
-                <p className="text-xs text-slate-500 dark:text-slate-400">
+                <p className="text-xs text-text-muted">
                   O email não pode ser alterado.
                 </p>
               </div>
 
               {/* Localização */}
               <div className="space-y-2">
-                <Label htmlFor="location" className="flex items-center gap-2 text-slate-700 dark:text-white">
-                  <MapPin className="h-4 w-4 text-emerald-500 dark:text-[#6fffe9]" />
+                <Label htmlFor="location" className="flex items-center gap-2 text-text-primary">
+                  <MapPin className="h-4 w-4 text-neon-primary" />
                   Localização
                 </Label>
                 <Input
@@ -360,7 +367,7 @@ export default function ProfilePage() {
                   value={profileData.location}
                   onChange={e => handleInputChange("location", e.target.value)}
                   placeholder="Cidade, Estado ou País"
-                  className="border-emerald-100 bg-white text-slate-700 placeholder:text-slate-400 focus:border-emerald-400 focus:ring-emerald-400/30 backdrop-blur dark:border-white/10 dark:bg-white/5 dark:text-white dark:placeholder:text-slate-500 dark:focus:border-[#24ffe6] dark:focus:ring-[#24ffe6]/20"
+                  className="border-border-default bg-overlay-light text-text-primary placeholder:text-text-muted focus:border-border-focus focus:ring-border-focus backdrop-blur"
                 />
               </div>
             </CardContent>
@@ -369,51 +376,51 @@ export default function ProfilePage() {
 
         {/* Tab: Idioma */}
         <TabsContent value="language" className="space-y-6">
-          <Card className="rounded-3xl border border-emerald-100/70 bg-white backdrop-blur shadow-[0_35px_80px_-45px_rgba(16,185,129,0.28)] transition-colors dark:border-white/10 dark:bg-white/6 dark:shadow-[0_35px_80px_-45px_rgba(36,255,230,0.3)]">
+          <Card className="rounded-3xl border border-border-default bg-overlay-light backdrop-blur shadow-[0_35px_80px_-45px_var(--color-shadow-neon-soft)] transition-colors">
             <CardHeader>
-              <CardTitle className="flex items-center gap-2 text-slate-900 dark:text-white">
-                <Globe className="h-5 w-5 text-emerald-500 dark:text-[#6fffe9]" />
+              <CardTitle className="flex items-center gap-2 text-text-primary">
+                <Globe className="h-5 w-5 text-neon-primary" />
                 Configurações de Idioma
               </CardTitle>
-              <CardDescription className="text-slate-600 dark:text-slate-300">
+              <CardDescription className="text-text-secondary">
                 Escolha seu idioma preferido para a interface
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
               <div className="space-y-2">
-                <Label htmlFor="language" className="text-slate-700 dark:text-white">Idioma da Interface</Label>
+                <Label htmlFor="language" className="text-text-primary">Idioma da Interface</Label>
                 <Select
                   value={profileData.language}
                   onValueChange={value => handleInputChange("language", value)}
                 >
                   <SelectTrigger 
                     id="language"
-                    className="border-emerald-100 bg-white text-slate-700 placeholder:text-slate-400 hover:bg-emerald-50/70 focus:border-emerald-400 focus:ring-emerald-400/30 backdrop-blur dark:border-white/10 dark:bg-white/5 dark:text-white dark:placeholder:text-slate-500 dark:hover:bg-white/10 dark:focus:border-[#24ffe6] dark:focus:ring-[#24ffe6]/20"
+                    className="border-border-default bg-overlay-light text-text-primary placeholder:text-text-muted hover:bg-overlay-medium focus:border-border-focus focus:ring-border-focus backdrop-blur"
                   >
                     <SelectValue placeholder="Selecione um idioma" />
                   </SelectTrigger>
-                  <SelectContent className="border-emerald-100 bg-white text-slate-700 backdrop-blur dark:border-white/10 dark:bg-[#0b1933] dark:text-white">
+                  <SelectContent className="border-border-default bg-background-surface text-text-primary backdrop-blur">
                     {languages.map(lang => (
                       <SelectItem 
                         key={lang.value} 
                         value={lang.value}
-                        className="text-slate-700 hover:bg-emerald-50/80 focus:bg-emerald-50/80 dark:text-white dark:hover:bg-white/10 dark:focus:bg-white/10"
+                        className="text-text-primary hover:bg-overlay-medium focus:bg-overlay-medium"
                       >
                         {lang.label}
                       </SelectItem>
                     ))}
                   </SelectContent>
                 </Select>
-                <p className="text-xs text-slate-500 dark:text-slate-400">
+                <p className="text-xs text-text-muted">
                   Esta configuração altera o idioma de todos os textos da interface.
                 </p>
               </div>
 
-              <Separator className="bg-emerald-100 dark:bg-white/10" />
+              <Separator className="bg-border-default" />
 
-              <div className="rounded-2xl border border-emerald-200 bg-emerald-50/80 p-4 backdrop-blur dark:border-[#24ffe6]/25 dark:bg-[#24ffe6]/10">
-                <p className="text-sm text-emerald-600 dark:text-[#6fffe9]">
-                  <strong className="text-slate-900 dark:text-white">Nota:</strong> Alguns conteúdos podem continuar em seus idiomas
+              <div className="rounded-2xl border border-neon-secondary/25 bg-neon-secondary/10 p-4 backdrop-blur">
+                <p className="text-sm text-neon-primary">
+                  <strong className="text-text-primary">Nota:</strong> Alguns conteúdos podem continuar em seus idiomas
                   originais, dependendo da disponibilidade.
                 </p>
               </div>
@@ -424,51 +431,51 @@ export default function ProfilePage() {
         {/* Tab: Dados Fundamentais */}
         <TabsContent value="details" className="space-y-6">
           {/* Informações Pessoais */}
-          <Card className="rounded-3xl border border-emerald-100/70 bg-white backdrop-blur shadow-[0_35px_80px_-45px_rgba(16,185,129,0.28)] transition-colors dark:border-white/10 dark:bg-white/6 dark:shadow-[0_35px_80px_-45px_rgba(36,255,230,0.3)]">
+          <Card className="rounded-3xl border border-border-default bg-overlay-light backdrop-blur shadow-[0_35px_80px_-45px_var(--color-shadow-neon-soft)] transition-colors">
             <CardHeader>
-              <CardTitle className="text-slate-900 dark:text-white">Informações Pessoais</CardTitle>
-              <CardDescription className="text-slate-600 dark:text-slate-300">
+              <CardTitle className="text-text-primary">Informações Pessoais</CardTitle>
+              <CardDescription className="text-text-secondary">
                 Complete seu perfil com informações adicionais
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
               {/* Bio */}
               <div className="space-y-2">
-                <Label htmlFor="bio" className="text-slate-700 dark:text-white">Sobre você</Label>
+                <Label htmlFor="bio" className="text-text-primary">Sobre você</Label>
                 <Textarea
                   id="bio"
                   value={profileData.bio}
                   onChange={e => handleInputChange("bio", e.target.value)}
                   placeholder="Conte um pouco sobre você..."
                   rows={4}
-                  className="border-emerald-100 bg-white text-slate-700 placeholder:text-slate-400 focus:border-emerald-400 focus:ring-emerald-400/30 backdrop-blur dark:border-white/10 dark:bg-white/5 dark:text-white dark:placeholder:text-slate-500 dark:focus:border-[#24ffe6] dark:focus:ring-[#24ffe6]/20"
+                  className="border-border-default bg-overlay-light text-text-primary placeholder:text-text-muted focus:border-border-focus focus:ring-border-focus backdrop-blur"
                 />
-                <p className="text-xs text-slate-500 dark:text-slate-400">
+                <p className="text-xs text-text-muted">
                   Compartilhe suas experiências, objetivos ou interesses.
                 </p>
               </div>
 
-              <Separator className="bg-emerald-100 dark:bg-white/10" />
+              <Separator className="bg-border-default" />
 
               {/* Nível de Experiência */}
               <div className="space-y-2">
-                <Label htmlFor="experience" className="text-slate-700 dark:text-white">Nível de Experiência</Label>
+                <Label htmlFor="experience" className="text-text-primary">Nível de Experiência</Label>
                 <Select
                   value={profileData.experience || ""}
                   onValueChange={value => handleInputChange("experience", value)}
                 >
                   <SelectTrigger 
                     id="experience"
-                    className="border-emerald-100 bg-white text-slate-700 placeholder:text-slate-400 hover:bg-emerald-50/70 focus:border-emerald-400 focus:ring-emerald-400/30 backdrop-blur dark:border-white/10 dark:bg-white/5 dark:text-white dark:placeholder:text-slate-500 dark:hover:bg-white/10 dark:focus:border-[#24ffe6] dark:focus:ring-[#24ffe6]/20"
+                    className="border-border-default bg-overlay-light text-text-primary placeholder:text-text-muted hover:bg-overlay-medium focus:border-border-focus focus:ring-border-focus backdrop-blur"
                   >
                     <SelectValue placeholder="Selecione seu nível" />
                   </SelectTrigger>
-                  <SelectContent className="border-emerald-100 bg-white text-slate-700 backdrop-blur dark:border-white/10 dark:bg-[#0b1933] dark:text-white">
+                  <SelectContent className="border-border-default bg-background-surface text-text-primary backdrop-blur">
                     {experienceLevels.map(level => (
                       <SelectItem 
                         key={level.value} 
                         value={level.value}
-                        className="text-slate-700 hover:bg-emerald-50/80 focus:bg-emerald-50/80 dark:text-white dark:hover:bg-white/10 dark:focus:bg-white/10"
+                        className="text-text-primary hover:bg-overlay-medium focus:bg-overlay-medium"
                       >
                         {level.label}
                       </SelectItem>
@@ -479,23 +486,23 @@ export default function ProfilePage() {
 
               {/* Disponibilidade */}
               <div className="space-y-2">
-                <Label htmlFor="availability" className="text-slate-700 dark:text-white">Disponibilidade</Label>
+                <Label htmlFor="availability" className="text-text-primary">Disponibilidade</Label>
                 <Select
                   value={profileData.availability || ""}
                   onValueChange={value => handleInputChange("availability", value)}
                 >
                   <SelectTrigger 
                     id="availability"
-                    className="border-emerald-100 bg-white text-slate-700 placeholder:text-slate-400 hover:bg-emerald-50/70 focus:border-emerald-400 focus:ring-emerald-400/30 backdrop-blur dark:border-white/10 dark:bg-white/5 dark:text-white dark:placeholder:text-slate-500 dark:hover:bg-white/10 dark:focus:border-[#24ffe6] dark:focus:ring-[#24ffe6]/20"
+                    className="border-border-default bg-overlay-light text-text-primary placeholder:text-text-muted hover:bg-overlay-medium focus:border-border-focus focus:ring-border-focus backdrop-blur"
                   >
                     <SelectValue placeholder="Selecione sua disponibilidade" />
                   </SelectTrigger>
-                  <SelectContent className="border-emerald-100 bg-white text-slate-700 backdrop-blur dark:border-white/10 dark:bg-[#0b1933] dark:text-white">
+                  <SelectContent className="border-border-default bg-background-surface text-text-primary backdrop-blur">
                     {availabilityOptions.map(option => (
                       <SelectItem 
                         key={option.value} 
                         value={option.value}
-                        className="text-slate-700 hover:bg-emerald-50/80 focus:bg-emerald-50/80 dark:text-white dark:hover:bg-white/10 dark:focus:bg-white/10"
+                        className="text-text-primary hover:bg-overlay-medium focus:bg-overlay-medium"
                       >
                         {option.label}
                       </SelectItem>
@@ -507,21 +514,21 @@ export default function ProfilePage() {
           </Card>
 
           {/* Preferências */}
-          <Card className="rounded-3xl border border-emerald-100/70 bg-white backdrop-blur shadow-[0_35px_80px_-45px_rgba(16,185,129,0.28)] transition-colors dark:border-white/10 dark:bg-white/6 dark:shadow-[0_35px_80px_-45px_rgba(36,255,230,0.3)]">
+          <Card className="rounded-3xl border border-border-default bg-overlay-light backdrop-blur shadow-[0_35px_80px_-45px_var(--color-shadow-neon-soft)] transition-colors">
             <CardHeader>
-              <CardTitle className="text-slate-900 dark:text-white">Preferências</CardTitle>
-              <CardDescription className="text-slate-600 dark:text-slate-300">
+              <CardTitle className="text-text-primary">Preferências</CardTitle>
+              <CardDescription className="text-text-secondary">
                 Configure suas preferências de notificações e comunicação
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
               <div className="flex items-center justify-between">
                 <div className="space-y-0.5">
-                  <Label htmlFor="notifications" className="flex items-center gap-2 text-slate-700 dark:text-white">
-                    <Bell className="h-4 w-4 text-emerald-500 dark:text-[#6fffe9]" />
+                  <Label htmlFor="notifications" className="flex items-center gap-2 text-text-primary">
+                    <Bell className="h-4 w-4 text-neon-primary" />
                     Notificações
                   </Label>
-                  <p className="text-sm text-slate-600 dark:text-slate-300">
+                  <p className="text-sm text-text-secondary">
                     Receba notificações sobre atividades e atualizações
                   </p>
                 </div>
@@ -534,15 +541,15 @@ export default function ProfilePage() {
                 />
               </div>
 
-              <Separator className="bg-emerald-100 dark:bg-white/10" />
+              <Separator className="bg-border-default" />
 
               <div className="flex items-center justify-between">
                 <div className="space-y-0.5">
-                  <Label htmlFor="newsletter" className="flex items-center gap-2 text-slate-700 dark:text-white">
-                    <Newspaper className="h-4 w-4 text-emerald-500 dark:text-[#6fffe9]" />
+                  <Label htmlFor="newsletter" className="flex items-center gap-2 text-text-primary">
+                    <Newspaper className="h-4 w-4 text-neon-primary" />
                     Newsletter
                   </Label>
-                  <p className="text-sm text-slate-600 dark:text-slate-300">
+                  <p className="text-sm text-text-secondary">
                     Receba emails com novidades e dicas
                   </p>
                 </div>
@@ -555,15 +562,15 @@ export default function ProfilePage() {
                 />
               </div>
 
-              <Separator className="bg-emerald-100 dark:bg-white/10" />
+              <Separator className="bg-border-default" />
 
               <div className="flex items-center justify-between">
                 <div className="space-y-0.5">
-                  <Label htmlFor="earlyAccess" className="flex items-center gap-2 text-slate-700 dark:text-white">
-                    <Sparkles className="h-4 w-4 text-emerald-500 dark:text-[#6fffe9]" />
+                  <Label htmlFor="earlyAccess" className="flex items-center gap-2 text-text-primary">
+                    <Sparkles className="h-4 w-4 text-neon-primary" />
                     Acesso Antecipado
                   </Label>
-                  <p className="text-sm text-slate-600 dark:text-slate-300">
+                  <p className="text-sm text-text-secondary">
                     Receba acesso a novos recursos antes do lançamento
                   </p>
                 </div>
@@ -575,6 +582,23 @@ export default function ProfilePage() {
                   }
                 />
               </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        {/* Tab: Performance */}
+        <TabsContent value="performance" className="space-y-6">
+          <Card className="rounded-3xl border border-border-default bg-overlay-light backdrop-blur shadow-[0_35px_80px_-45px_var(--color-shadow-neon-soft)] transition-colors">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2 text-slate-900 dark:text-white">
+                Performance
+              </CardTitle>
+              <CardDescription className="text-text-secondary">
+                Visualize suas estatísticas de desempenho
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <PerformanceTab />
             </CardContent>
           </Card>
         </TabsContent>

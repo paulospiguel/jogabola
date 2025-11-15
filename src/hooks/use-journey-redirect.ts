@@ -9,42 +9,39 @@ import { useCallback } from "react";
 
 /**
  * Hook para redirecionamento inteligente baseado no status do usuário
- * - Se tem sessão ativa e completou onboarding → vai para dashboard da jornada
- * - Se não tem sessão ou não completou → vai para onboarding
+ * - Se tem sessão ativa e tem role definido → vai para dashboard da jornada
+ * - Se tem sessão mas não tem role → vai para arena padrão (onboarding é opcional)
+ * - Se não tem sessão → vai para sign-in
  */
 export function useJourneyRedirect() {
   const router = useRouter();
   const { data: session } = useSession();
 
   const redirectToJourney = useCallback(async () => {
-    // Se não tem sessão, vai para onboarding
+    // Se não tem sessão, vai para sign-in
     if (!session?.user?.id) {
-      router.push("/onboard");
+      router.push("/sign-in");
       return;
     }
 
     try {
-      // Verificar se completou onboarding
+      // Verificar se tem profile e role definido
       const profileResult = await getProfileData(session.user.id);
 
-      if (profileResult.success && profileResult.data?.completed) {
-        // Já completou onboarding - redirecionar para dashboard da jornada
+      if (profileResult.success && profileResult.data?.role) {
+        // Tem role definido - redirecionar para dashboard da jornada
         const role = profileResult.data.role as Role;
-        if (role) {
-          const journeyRoute = getJourneyRoute(role);
-          router.push(journeyRoute);
-        } else {
-          // Role não definido, ir para arena padrão
-          router.push("/arena");
-        }
+        const journeyRoute = getJourneyRoute(role);
+        router.push(journeyRoute);
       } else {
-        // Não completou onboarding - ir para onboard
-        router.push("/onboard");
+        // Não tem role ou não completou onboarding - ir para arena padrão
+        // Onboarding é opcional, então permite acesso
+        router.push("/arena");
       }
     } catch (error) {
       console.error("Error checking profile:", error);
-      // Em caso de erro, ir para onboarding
-      router.push("/onboard");
+      // Em caso de erro, ir para arena padrão
+      router.push("/arena");
     }
   }, [session?.user?.id, router]);
 

@@ -1,5 +1,6 @@
 "use server";
 
+import { getPositionLabel } from "@/constants/positions";
 import { onboarding, profile } from "@/drizzle/schema";
 import { db } from "@/lib/db";
 import { createSlugFromNickname, onboardingSchema, type OnboardingData } from "@/schemas/profile";
@@ -251,6 +252,157 @@ export async function getProfileData(userId: string) {
 async function calculateProfileLevel(userId: string) {
   // TODO: calcular level baseado em estatísticas reais
   return null;
+}
+
+// Tipo para estatísticas de uma competição
+interface CompetitionStats {
+  started: number;
+  goals: number;
+  yellowCards: number;
+  ended: number;
+  aboutToStart: number;
+  halftimeScore: number;
+  redCards: number;
+  minutesPlayed: number;
+  averageRating: number;
+}
+
+// Buscar dados de performance do jogador
+export async function getPlayerPerformance(userId: string, competitionId?: string) {
+  try {
+    const [profileData] = await db
+      .select()
+      .from(profile)
+      .where(eq(profile.userId, userId))
+      .limit(1);
+
+    if (!profileData) {
+      return {
+        success: false,
+        error: "Perfil não encontrado",
+      };
+    }
+
+    // Buscar estatísticas de performance dos customFields
+    // Estrutura: { competitions: { [competitionId]: { stats... } } }
+    const performanceData = profileData.customFields?.performance as {
+      competitions?: Record<string, CompetitionStats>;
+    } || {};
+
+    const competitions = performanceData.competitions || {};
+    const competitionIds = Object.keys(competitions);
+
+    // Função para normalizar valores para o radar (0-10)
+    const normalizeStats = (stats: Partial<CompetitionStats>): CompetitionStats => {
+      const maxValue = 10;
+      return {
+        started: Math.min((stats.started || 0) / 10, maxValue),
+        goals: Math.min((stats.goals || 0) / 2, maxValue),
+        yellowCards: Math.min((stats.yellowCards || 0) / 2, maxValue),
+        ended: Math.min((stats.ended || 0) / 10, maxValue),
+        aboutToStart: Math.min((stats.aboutToStart || 0) / 10, maxValue),
+        halftimeScore: Math.min((stats.halftimeScore || 0) / 10, maxValue),
+        redCards: Math.min((stats.redCards || 0) / 2, maxValue),
+        minutesPlayed: stats.minutesPlayed || 0,
+        averageRating: stats.averageRating || 0,
+      };
+    };
+
+    // Calcular estatísticas baseadas na seleção
+    let selectedStats: CompetitionStats;
+    let selectedLeague: string;
+    let selectedCompetitionId: string | null = null;
+
+    if (competitionId === "general" || competitionId === undefined) {
+      // Calcular média geral de todas as competições
+      if (competitionIds.length === 0) {
+        // Sem dados: valores iniciais = 1
+        selectedStats = {
+          started: 1,
+          goals: 1,
+          yellowCards: 1,
+          ended: 1,
+          aboutToStart: 1,
+          halftimeScore: 1,
+          redCards: 1,
+          minutesPlayed: 0,
+          averageRating: 1,
+        };
+        selectedLeague = "Geral";
+      } else {
+        // Normalizar cada competição primeiro, depois calcular média
+        const normalizedStats = competitionIds.map(id => normalizeStats(competitions[id]));
+        selectedStats = {
+          started: normalizedStats.reduce((sum, s) => sum + s.started, 0) / normalizedStats.length,
+          goals: normalizedStats.reduce((sum, s) => sum + s.goals, 0) / normalizedStats.length,
+          yellowCards: normalizedStats.reduce((sum, s) => sum + s.yellowCards, 0) / normalizedStats.length,
+          ended: normalizedStats.reduce((sum, s) => sum + s.ended, 0) / normalizedStats.length,
+          aboutToStart: normalizedStats.reduce((sum, s) => sum + s.aboutToStart, 0) / normalizedStats.length,
+          halftimeScore: normalizedStats.reduce((sum, s) => sum + s.halftimeScore, 0) / normalizedStats.length,
+          redCards: normalizedStats.reduce((sum, s) => sum + s.redCards, 0) / normalizedStats.length,
+          minutesPlayed: normalizedStats.reduce((sum, s) => sum + s.minutesPlayed, 0),
+          averageRating: normalizedStats.reduce((sum, s) => sum + s.averageRating, 0) / normalizedStats.length,
+        };
+        selectedLeague = "Geral (Média)";
+      }
+    } else {
+      // Competição específica
+      const competition = competitions[competitionId];
+      if (!competition) {
+        // Competição não encontrada: valores iniciais = 1
+        selectedStats = {
+          started: 1,
+          goals: 1,
+          yellowCards: 1,
+          ended: 1,
+          aboutToStart: 1,
+          halftimeScore: 1,
+          redCards: 1,
+          minutesPlayed: 0,
+          averageRating: 1,
+        };
+        selectedLeague = competitionId;
+      } else {
+        selectedStats = normalizeStats(competition);
+        selectedLeague = competitionId;
+        selectedCompetitionId = competitionId;
+      }
+    }
+
+    const positionValue = (profileData.customFields?.position as string) || "";
+    const positionLabel = getPositionLabel(positionValue);
+
+    return {
+      success: true,
+      data: {
+        playerName: profileData.name,
+        league: selectedLeague,
+        position: positionLabel,
+        minutesPlayed: selectedStats.minutesPlayed,
+        averageRating: selectedStats.averageRating || 1,
+        stats: {
+          started: selectedStats.started,
+          goals: selectedStats.goals,
+          yellowCards: selectedStats.yellowCards,
+          ended: selectedStats.ended,
+          aboutToStart: selectedStats.aboutToStart,
+          halftimeScore: selectedStats.halftimeScore,
+          redCards: selectedStats.redCards,
+        },
+        competitions: competitionIds.map(id => ({
+          id,
+          name: id,
+        })),
+        selectedCompetitionId,
+      },
+    };
+  } catch (error) {
+    console.error("Error fetching player performance:", error);
+    return {
+      success: false,
+      error: "Erro ao buscar dados de performance",
+    };
+  }
 }
 
 // Recuperar onboarding pendente por email (user_id NULL)

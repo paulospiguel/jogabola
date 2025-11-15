@@ -588,7 +588,13 @@ export default function OnboardPage() {
   };
 
   const handleClose = () => {
-    router.push("/");
+    // Se usuário está logado, redirecionar para arena
+    // Se não está logado, redirecionar para home
+    if (session?.user?.id) {
+      router.push("/arena");
+    } else {
+      router.push("/");
+    }
   };
 
   // Mostrar loading enquanto verifica o status do onboarding

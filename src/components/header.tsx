@@ -19,7 +19,6 @@ import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import LanguageSelector from "./language-selector";
 import { Logo } from "./logo";
-import { ThemeToggle } from "./theme-toggle";
 
 const MAIN_DOMAIN = "jogabola.fun";
 
@@ -65,7 +64,7 @@ export default function Header() {
       <div
         className={cn(
           "flex w-full items-center justify-between rounded-full px-6 py-2 transition-all duration-300",
-          "border border-emerald-200/50 bg-white/90 shadow-xl backdrop-blur-md dark:border-emerald-700/30 dark:bg-slate-900/90",
+          "border border-border-default bg-overlay-light shadow-xl backdrop-blur-md",
         )}
       >
         {/* Left side: Logo + Menu */}
@@ -87,7 +86,7 @@ export default function Header() {
           <div
             className={cn(
               "hidden items-center gap-2 rounded-full bg-transparent px-3 py-1 text-sm transition-colors duration-300 md:visible md:flex",
-              "text-black dark:text-white",
+              "text-text-primary",
             )}
           >
             <LanguageSelector />
@@ -97,8 +96,8 @@ export default function Header() {
           <Link
             href="/sign-in"
             className={cn(
-              "hidden rounded-full px-4 py-2 font-semibold shadow-md transition-all duration-300 hover:scale-105 md:visible md:block",
-              "bg-blue-600 text-white hover:bg-blue-700 dark:bg-blue-700 dark:hover:bg-blue-800",
+              "hidden rounded-full px-4 py-2 font-semibold text-white shadow-md transition-all duration-300 hover:scale-105 md:visible md:block",
+              "bg-accent-blue hover:bg-accent-blue/90",
             )}
           >
             {t("header.signIn")}
@@ -108,14 +107,12 @@ export default function Header() {
           <button
             onClick={redirectToJourney}
             className={cn(
-              "hidden rounded-full px-4 py-2 font-semibold shadow-md transition-all duration-300 hover:scale-105 md:visible md:block",
-              "bg-emerald-700 text-white hover:bg-emerald-800 dark:bg-lime-700 dark:hover:bg-lime-800",
+              "hidden rounded-full px-4 py-2 font-semibold text-white shadow-md transition-all duration-300 hover:scale-105 md:visible md:block",
+              "bg-brand-green hover:bg-brand-green/90",
             )}
           >
             {t("header.launchJourney")}
           </button>
-
-          <ThemeToggle />
 
           {/* Mobile menu button */}
           <Sheet>
@@ -124,7 +121,7 @@ export default function Header() {
                 onClick={() => setIsMenuOpen(!isMenuOpen)}
                 className={cn(
                   "transition-all duration-300 hover:scale-110 md:hidden",
-                  "text-black dark:text-white",
+                  "text-text-primary",
                 )}
               >
                 <Menu size={24} />
@@ -132,11 +129,11 @@ export default function Header() {
             </SheetTrigger>
             <SheetContent
               side={"right"}
-              className="h-screen w-full max-w-sm border-l border-emerald-100/60 bg-white/95 backdrop-blur-xl shadow-[0_25px_60px_-40px_rgba(16,185,129,0.35)] dark:border-white/10 dark:bg-slate-900/95 dark:shadow-[0_25px_60px_-40px_rgba(36,255,230,0.6)] text-slate-900 dark:text-white"
+              className="h-screen w-full max-w-sm border-l border-border-default bg-overlay-light backdrop-blur-xl shadow-[0_25px_60px_-40px_var(--color-shadow-neon-secondary)] text-text-primary"
             >
               {/* Header do Menu */}
-              <div className="flex items-center justify-between border-b border-emerald-100/60 pb-4 dark:border-white/10">
-                <SheetTitle className="bg-gradient-to-r from-emerald-500 to-sky-500 bg-clip-text text-xl font-bold text-transparent dark:from-[#24ffe6] dark:to-[#02a7ff]">
+              <div className="flex items-center justify-between border-b border-border-default pb-4">
+                <SheetTitle className="bg-gradient-to-r from-neon-secondary to-accent-blue bg-clip-text text-xl font-bold text-transparent">
                   ⚽ Menu
                 </SheetTitle>
               </div>
@@ -152,14 +149,14 @@ export default function Header() {
               </div>
 
               {/* Footer com ações */}
-              <SheetFooter className="flex-col gap-3 border-t border-emerald-100/60 pt-4 dark:border-white/10">
+              <SheetFooter className="flex-col gap-3 border-t border-border-default pt-4">
                 {/* Botão de Login */}
                 <SheetClose asChild>
                   <Link
                     href="/sign-in"
                     className={cn(
-                      "w-full rounded-full px-4 py-2.5 text-center text-sm font-semibold shadow-md transition-all duration-300 hover:scale-105",
-                      "bg-blue-600 text-white hover:bg-blue-700 dark:bg-blue-700 dark:hover:bg-blue-800",
+                      "w-full rounded-full px-4 py-2.5 text-center text-sm font-semibold text-white shadow-md transition-all duration-300 hover:scale-105",
+                      "bg-accent-blue hover:bg-accent-blue/90",
                     )}
                   >
                     {t("header.signIn")}
@@ -171,18 +168,17 @@ export default function Header() {
                   <button
                     onClick={redirectToJourney}
                     className={cn(
-                      "w-full rounded-full px-4 py-2.5 text-sm font-semibold shadow-md transition-all duration-300 hover:scale-105",
-                      "bg-emerald-700 text-white hover:bg-emerald-800 dark:bg-lime-700 dark:hover:bg-lime-800",
+                      "w-full rounded-full px-4 py-2.5 text-sm font-semibold text-white shadow-md transition-all duration-300 hover:scale-105",
+                      "bg-brand-green hover:bg-brand-green/90",
                     )}
                   >
                     {t("header.launchJourney")}
                   </button>
                 </SheetClose>
 
-                {/* Opções de idioma e tema */}
+                {/* Opções de idioma */}
                 <div className="flex w-full items-center justify-center gap-4 pt-2">
                   <LanguageSelector />
-                  <ThemeToggle />
                 </div>
               </SheetFooter>
             </SheetContent>
@@ -210,8 +206,8 @@ const Navbar = ({
   // Define as cores baseado na página e estado de scroll
   const getTextColors = () => {
     return {
-      default: "text-blue-850 dark:text-white font-semibold",
-      hover: "hover:text-emerald-700 dark:hover:text-lime-700 font-semibold",
+      default: "text-white font-semibold",
+      hover: "hover:text-neon-secondary font-semibold",
     };
   };
 
@@ -241,8 +237,8 @@ const Navbar = ({
               className={cn(
                 "relative flex w-full cursor-pointer items-center gap-2 rounded-xl border border-transparent px-4 py-3 text-left transition-all duration-300",
                 isActive
-                  ? "border-emerald-300 bg-emerald-100/70 text-emerald-700 shadow-[0_20px_50px_-30px_rgba(16,185,129,0.45)] dark:border-[#24ffe6]/40 dark:bg-white/10 dark:text-white dark:shadow-[0_25px_60px_-35px_rgba(36,255,230,0.8)]"
-                  : "text-slate-600 hover:border-emerald-200 hover:bg-emerald-50/80 hover:text-emerald-700 dark:text-white/70 dark:hover:border-white/15 dark:hover:bg-white/5 dark:hover:text-white",
+                  ? "border-neon-secondary/40 bg-overlay-medium text-text-primary shadow-[0_25px_60px_-35px_var(--color-shadow-neon-primary)]"
+                  : "text-text-secondary hover:border-border-hover hover:bg-overlay-light hover:text-text-primary",
               )}
             >
               {item.icon && (
@@ -250,14 +246,14 @@ const Navbar = ({
                   className={cn(
                     "h-5 w-5",
                     isActive
-                      ? "text-emerald-600 dark:text-[#24ffe6]"
-                      : "text-slate-500 dark:text-white/60",
+                      ? "text-neon-secondary"
+                      : "text-text-muted",
                   )}
                 />
               )}
               <span className="flex-1">{t(item.label)}</span>
               {item.isNew && (
-                <span className="bg-yellow absolute -top-2 -right-5 rounded px-1 text-[10px] font-bold text-black dark:bg-yellow-400 dark:text-slate-900">
+                <span className="absolute -top-2 -right-5 rounded bg-yellow-400 px-1 text-[10px] font-bold text-slate-900">
                   {t("header.new")}
                 </span>
               )}

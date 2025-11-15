@@ -12,24 +12,27 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import {
-  getPositionConfig,
-  getPositionLabel,
-} from "@/constants/positions";
+import { getPositionConfig, getPositionLabel } from "@/constants/positions";
 import { signOut, useSession } from "@/lib/auth-client";
 import { motion } from "framer-motion";
 import {
   ArrowRight,
   CalendarDays,
+  ChevronDown,
+  ChevronUp,
   Clock,
+  Goal,
+  Home,
   MapPin,
   Settings,
   Sparkles,
   Star,
   Target,
+  TrendingUp,
   Trophy,
   User,
 } from "lucide-react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 
@@ -40,10 +43,34 @@ const nextMatch = {
 };
 
 const quickStats = [
-  { title: "Jogos disputados", value: "24" },
-  { title: "Gols", value: "18" },
-  { title: "Assistências", value: "11" },
-  { title: "Nota média", value: "8.7" },
+  {
+    title: "Jogos disputados",
+    value: "24",
+    icon: Trophy,
+    progress: 75, // 24/32 jogos possíveis
+    maxValue: 32,
+  },
+  {
+    title: "Gols",
+    value: "18",
+    icon: Goal,
+    progress: 60, // 18/30 gols meta
+    maxValue: 30,
+  },
+  {
+    title: "Assistências",
+    value: "11",
+    icon: Target,
+    progress: 55, // 11/20 assistências meta
+    maxValue: 20,
+  },
+  {
+    title: "Nota média",
+    value: "8.7",
+    icon: TrendingUp,
+    progress: 87, // 8.7/10
+    maxValue: 10,
+  },
 ];
 
 const achievements = [
@@ -87,6 +114,12 @@ export default function PlayZonePage() {
   const { data: session } = useSession();
   const [profileData, setProfileData] = useState<ProfileData | null>(null);
   const [loading, setLoading] = useState(true);
+
+  // Estado para controlar visibilidade de painéis secundários
+  const [showAchievements, setShowAchievements] = useState(true);
+  const [showInsights, setShowInsights] = useState(true);
+  const [showFeed, setShowFeed] = useState(true);
+  const [showActions, setShowActions] = useState(true);
 
   // Buscar dados do perfil
   useEffect(() => {
@@ -179,7 +212,7 @@ export default function PlayZonePage() {
       <div className="flex min-h-screen items-center justify-center bg-[#050312] text-white">
         <div className="text-center">
           <div className="mx-auto mb-4 h-8 w-8 animate-spin rounded-full border-4 border-[#6fffe9] border-t-transparent" />
-          <p className="text-slate-400">Carregando sua jornada...</p>
+          <p className="text-text-secondary">Carregando sua jornada...</p>
         </div>
       </div>
     );
@@ -190,8 +223,18 @@ export default function PlayZonePage() {
       <div className="absolute inset-0 -z-10 bg-[radial-gradient(90%_90%_at_50%_0%,rgba(0,255,213,0.22)_0%,rgba(5,3,18,0)_72%)]" />
       <div className="absolute inset-0 -z-20 bg-[linear-gradient(135deg,#050312_0%,#080a25_45%,#0f163f_100%)]" />
 
+      {/* Botão Home fixo - fácil acesso */}
+      <Link
+        href="/"
+        className="border-neon-primary/50 bg-background-surface/90 text-neon-primary hover:border-neon-primary hover:bg-neon-primary/10 focus-visible:ring-neon-primary focus-visible:ring-offset-background-base fixed top-4 right-4 z-50 flex items-center gap-2 rounded-full border-2 px-4 py-2.5 text-sm font-semibold shadow-[0_10px_30px_-10px_var(--color-shadow-neon-primary)] backdrop-blur-xl transition-all hover:scale-105 hover:shadow-[0_15px_40px_-10px_var(--color-shadow-neon-primary)] focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
+        aria-label="Voltar para a página inicial"
+      >
+        <Home className="h-5 w-5" />
+        <span className="hidden sm:inline">Início</span>
+      </Link>
+
       <main className="container mx-auto px-4 py-12 md:px-8 lg:px-12">
-      {/* Header */}
+        {/* Header */}
         <motion.header
           className="mb-12 flex flex-col gap-6 overflow-hidden rounded-3xl border border-white/8 bg-white/5 p-6 backdrop-blur-xl md:p-8 lg:flex-row lg:items-center lg:justify-between"
           initial={{ opacity: 0, y: -24 }}
@@ -227,9 +270,12 @@ export default function PlayZonePage() {
             </div>
           </div>
 
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-              <button className="flex items-center gap-4 rounded-xl p-2 transition-all hover:bg-white/5 focus-visible:ring-2 focus-visible:ring-[#6fffe9]/40 focus-visible:outline-none">
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <button
+                className="flex items-center gap-4 rounded-xl p-2 transition-all hover:bg-white/5 focus-visible:ring-2 focus-visible:ring-[#6fffe9]/40 focus-visible:outline-none"
+                aria-label="Menu do usuário"
+              >
                 <div className="relative">
                   <div className="absolute inset-0 rounded-full bg-[#6fffe9]/30 blur-xl" />
                   <Avatar className="relative h-16 w-16 border-2 border-[#6fffe9]/80 shadow-[0_0_35px_rgba(111,255,233,0.35)]">
@@ -245,12 +291,16 @@ export default function PlayZonePage() {
                 <div className="text-left text-sm">
                   <p className="font-medium text-white">{player.fullName}</p>
                   {(() => {
-                    const positionConfig = getPositionConfig(player.positionValue);
+                    const positionConfig = getPositionConfig(
+                      player.positionValue,
+                    );
                     const PositionIcon = positionConfig?.icon;
                     return (
-                      <p className="flex items-center gap-1.5 text-xs text-slate-400 lowercase first-letter:uppercase">
+                      <p className="text-text-secondary flex items-center gap-1.5 text-sm lowercase first-letter:uppercase">
                         {positionConfig?.emoji && (
-                          <span className="text-xs">{positionConfig.emoji}</span>
+                          <span className="text-xs">
+                            {positionConfig.emoji}
+                          </span>
                         )}
                         {PositionIcon && (
                           <PositionIcon className="h-3 w-3 text-[#00cfb1]" />
@@ -261,275 +311,410 @@ export default function PlayZonePage() {
                   })()}
                 </div>
               </button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent
-                align="end"
+            </DropdownMenuTrigger>
+            <DropdownMenuContent
+              align="end"
               className="w-56 border-white/10 bg-[#0b1933]/95 text-white backdrop-blur"
-              >
-                <DropdownMenuLabel className="text-white">
-                  Minha Conta
-                </DropdownMenuLabel>
+            >
+              <DropdownMenuLabel className="text-white">
+                Minha Conta
+              </DropdownMenuLabel>
               <DropdownMenuSeparator className="bg-white/10" />
-                <DropdownMenuItem
-                className="cursor-pointer text-white hover:bg-white/10 focus:bg-white/10"
-                  onClick={() => router.push("/profile")}
-                >
-                  <User className="mr-2 h-4 w-4" />
-                  Perfil
-                </DropdownMenuItem>
+              <DropdownMenuItem
+                className="min-h-[44px] cursor-pointer text-white hover:bg-white/10 focus:bg-white/10"
+                onClick={() => router.push("/")}
+              >
+                <Home className="mr-2 h-5 w-5" />
+                Início
+              </DropdownMenuItem>
+              <DropdownMenuItem
+                className="min-h-[44px] cursor-pointer text-white hover:bg-white/10 focus:bg-white/10"
+                onClick={() => router.push("/profile")}
+              >
+                <User className="mr-2 h-5 w-5" />
+                Perfil
+              </DropdownMenuItem>
               <DropdownMenuItem className="cursor-pointer text-white hover:bg-white/10 focus:bg-white/10">
                 <Settings className="mr-2 h-4 w-4" />
-                  Configurações
-                </DropdownMenuItem>
+                Configurações
+              </DropdownMenuItem>
               <DropdownMenuItem className="cursor-pointer text-white hover:bg-white/10 focus:bg-white/10">
                 <Trophy className="mr-2 h-4 w-4" />
-                  Estatísticas
-                </DropdownMenuItem>
+                Estatísticas
+              </DropdownMenuItem>
               <DropdownMenuSeparator className="bg-white/10" />
               <DropdownMenuItem
                 className="cursor-pointer text-red-400 hover:bg-white/10 focus:bg-white/10"
                 onClick={handleSignOut}
               >
-                  Sair
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
+                Sair
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
         </motion.header>
 
-        <div className="grid gap-6 lg:grid-cols-[minmax(0,1.6fr)_minmax(0,1fr)]">
-          <div className="space-y-6">
-            {/* Próximo jogo */}
-            <motion.section
-              className="relative overflow-hidden rounded-3xl border border-[#24ffe6]/35 bg-gradient-to-br from-[#0b1933] via-[#0c213d] to-[#081326] p-6 shadow-[0_35px_80px_-45px_rgba(36,255,230,0.8)] sm:p-8"
-              variants={fadeUp}
-              initial="initial"
-              animate="animate"
-              transition={{ duration: 0.6, delay: 0.05 }}
-            >
-              <div className="pointer-events-none absolute -top-14 -right-14 h-48 w-48 rounded-full bg-[#24ffe6]/20 blur-3xl" />
-              <div className="flex flex-wrap items-center gap-4 text-sm text-slate-200">
-                <div className="flex items-center gap-2 text-white">
-                  <CalendarDays className="h-5 w-5 text-[#6fffe9]" />
+        {/* Layout principal com hierarquia clara */}
+        <div className="space-y-8">
+          {/* Seção principal: Próximo jogo (destaque máximo) */}
+          <motion.section
+            className="relative overflow-hidden rounded-3xl border-2 border-[#24ffe6]/50 bg-gradient-to-br from-[#0b1933] via-[#0c213d] to-[#081326] p-8 shadow-[0_35px_80px_-45px_rgba(36,255,230,0.8)] sm:p-10"
+            variants={fadeUp}
+            initial="initial"
+            animate="animate"
+            transition={{ duration: 0.6, delay: 0.05 }}
+          >
+            <div className="pointer-events-none absolute -top-14 -right-14 h-48 w-48 rounded-full bg-[#24ffe6]/20 blur-3xl" />
+            <div className="relative z-10">
+              <div className="text-text-secondary mb-4 flex flex-wrap items-center gap-4 text-base">
+                <div className="text-text-primary flex items-center gap-2 font-medium">
+                  <CalendarDays className="text-neon-primary h-5 w-5" />
                   {nextMatch.datetime}
                 </div>
-                <div className="flex items-center gap-2">
-                  <MapPin className="h-5 w-5 text-[#6fffe9]" />
+                <div className="text-text-primary flex items-center gap-2 font-medium">
+                  <MapPin className="text-neon-primary h-5 w-5" />
                   {nextMatch.location}
-          </div>
-        </div>
-              <h2 className="mt-5 text-2xl font-semibold text-white">
+                </div>
+              </div>
+              <h2 className="text-3xl font-bold text-white md:text-4xl">
                 {nextMatch.label}
               </h2>
-              <p className="mt-2 text-sm text-slate-300">
+              <p className="text-text-secondary mt-3 text-lg leading-relaxed">
                 Confirme presença e garanta sua vaga no time titular. Chegue 30
                 minutos antes para aquecimento e briefing tático.
               </p>
-              <div className="mt-6 flex flex-wrap gap-3">
-                <Button className="group min-w-[180px] bg-[#24ffe6] font-semibold text-slate-900 shadow-[0_16px_45px_-20px_rgba(36,255,230,0.9)] transition-all duration-300 hover:-translate-y-1 hover:bg-[#24ffe6]/90">
+              <div className="mt-8 flex flex-wrap gap-4">
+                <Button
+                  size="lg"
+                  className="group bg-neon-secondary hover:bg-neon-secondary/90 min-w-[200px] font-semibold text-slate-900 shadow-[0_16px_45px_-20px_rgba(36,255,230,0.9)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_20px_50px_-20px_rgba(36,255,230,1)]"
+                >
                   Confirmar presença
-                  <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
+                  <ArrowRight className="ml-2 h-5 w-5 transition-transform group-hover:translate-x-1" />
                 </Button>
                 <Button
+                  size="lg"
                   variant="outline"
-                  className="border-white/25 bg-white/10 text-white backdrop-blur transition-all duration-300 hover:border-[#24ffe6]/60 hover:bg-[#24ffe6]/15"
+                  className="hover:border-neon-secondary/60 hover:bg-neon-secondary/15 border-2 border-white/25 bg-white/10 text-white backdrop-blur transition-all duration-300"
                 >
                   Ver detalhes
                 </Button>
               </div>
-            </motion.section>
+            </div>
+          </motion.section>
 
-            {/* Estatísticas rápidas */}
-            <section>
-              <div className="mb-4 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-                <h3 className="text-lg font-semibold text-white">
-                  Estatísticas rápidas
-                </h3>
-                <span className="text-xs tracking-[0.25em] text-[#6fffe9] uppercase">
-                  Atualizado em tempo real
-                </span>
-        </div>
-              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-                {quickStats.map((stat, index) => (
-                  <motion.div
-                key={stat.title}
-                    className="group rounded-2xl border border-white/8 bg-white/6 p-5 backdrop-blur transition-transform duration-300 hover:-translate-y-1 hover:border-[#24ffe6]/50"
-                    variants={fadeUp}
-                    initial="initial"
-                    animate="animate"
-                    transition={{ duration: 0.45, delay: index * 0.12 + 0.12 }}
-                  >
-                    <p className="text-xs tracking-[0.3em] text-slate-400 uppercase">
-                    {stat.title}
-                  </p>
-                    <p className="mt-3 text-3xl font-bold text-white">
-                    {stat.value}
-                  </p>
-                    <div className="mt-4 h-1.5 w-full rounded-full bg-white/10">
-                      <div className="h-1.5 rounded-full bg-gradient-to-r from-[#24ffe6] to-[#02a7ff] opacity-80" />
-                    </div>
-                  </motion.div>
-                ))}
-                    </div>
-            </section>
-
-            {/* Conquistas */}
-            <section>
-              <div className="mb-4 flex items-center justify-between">
-                <h3 className="text-lg font-semibold">Conquistas recentes</h3>
-                <span className="text-xs text-slate-400">
-                  Últimas 4 semanas
-                        </span>
-                      </div>
-              <div className="grid gap-4 md:grid-cols-3">
-                {achievements.map((achievement, index) => (
-                  <motion.div
-                    key={achievement.title}
-                    className="relative overflow-hidden rounded-2xl border border-white/12 bg-gradient-to-br from-white/12 via-white/6 to-white/12 p-5"
-                    initial={{ opacity: 0, scale: 0.92 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    transition={{ duration: 0.45, delay: index * 0.12 + 0.18 }}
-                    whileHover={{ scale: 1.03 }}
-                  >
-                    <motion.div
-                      className="absolute -inset-1 rounded-2xl bg-gradient-to-br from-[#24ffe6]/25 to-transparent opacity-0 blur-2xl"
-                      initial={{ opacity: 0 }}
-                      whileHover={{ opacity: 1 }}
-                      transition={{ duration: 0.4 }}
-                    />
-                    <div className="relative flex items-start gap-3">
-                      <span className="text-3xl">{achievement.emoji}</span>
-                      <div>
-                        <p className="text-sm font-semibold text-white">
-                          {achievement.title}
-                        </p>
-                        <p className="mt-1 text-xs text-slate-300">
-                          {achievement.description}
-                        </p>
-                      </div>
-                    </div>
-                  </motion.div>
-                      ))}
-                    </div>
-            </section>
-
-            {/* Insights */}
-            <motion.section
-              className="relative overflow-hidden rounded-3xl border border-[#6fffe9]/30 bg-gradient-to-r from-[#091530] via-[#0d1f45] to-[#14265c] p-6 sm:p-7"
-              variants={fadeUp}
-              initial="initial"
-              animate="animate"
-              transition={{ duration: 0.5, delay: 0.35 }}
-            >
-              <div className="absolute top-1/2 -left-16 h-48 w-48 -translate-y-1/2 rounded-full bg-[#6fffe9]/18 blur-3xl" />
-              <div className="flex items-start gap-4">
-                <div className="rounded-full bg-[#6fffe9]/20 p-3 text-[#6fffe9]">
-                  <Sparkles className="h-6 w-6" />
-                </div>
-                <div>
-                  <h3 className="text-lg font-semibold text-white">
-                    Insight do treinador virtual
+          {/* Grid principal: Estatísticas + Sidebar */}
+          <div className="grid gap-6 lg:grid-cols-[minmax(0,1.6fr)_minmax(0,1fr)]">
+            <div className="space-y-6">
+              {/* Estatísticas rápidas - Destaque secundário */}
+              <motion.section
+                className="rounded-3xl border border-white/10 bg-white/6 p-6 backdrop-blur-xl"
+                variants={fadeUp}
+                initial="initial"
+                animate="animate"
+                transition={{ duration: 0.45, delay: 0.12 }}
+              >
+                <div className="mb-6 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+                  <h3 className="text-xl font-bold text-white">
+                    Estatísticas rápidas
                   </h3>
-                  <p className="mt-2 text-sm text-slate-200">
-                    Seu desempenho melhorou{" "}
-                    <strong className="text-[#6fffe9]">15%</strong> nas últimas
-                    4 semanas. Mantenha o foco nos passes verticais: eles
-                    renderam{" "}
-                    <strong className="text-[#6fffe9]">8 assistências</strong> e
-                    abriram 12 oportunidades claras.
-                  </p>
-            </div>
-            </div>
-            </motion.section>
-          </div>
+                  <span className="text-neon-primary text-sm font-medium tracking-[0.25em] uppercase">
+                    Atualizado em tempo real
+                  </span>
+                </div>
+                <div className="grid grid-cols-2 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+                  {quickStats.map((stat, index) => {
+                    const Icon = stat.icon;
+                    return (
+                      <motion.div
+                        key={stat.title}
+                        className="group hover:border-neon-secondary/50 relative overflow-hidden rounded-2xl border border-white/8 bg-white/6 p-5 backdrop-blur transition-transform duration-300 hover:-translate-y-1"
+                        variants={fadeUp}
+                        initial="initial"
+                        animate="animate"
+                        transition={{
+                          duration: 0.45,
+                          delay: index * 0.12 + 0.12,
+                        }}
+                      >
+                        {/* Ícone no canto superior direito */}
+                        <div className="border-neon-primary/30 bg-neon-primary/10 absolute top-4 right-4 rounded-full border p-2">
+                          <Icon className="text-neon-primary h-5 w-5" />
+                        </div>
 
-          {/* Sidebar */}
-          <div className="space-y-6">
-            {/* Feed da equipe */}
-            <motion.section
-              className="rounded-3xl border border-white/10 bg-white/6 p-6 backdrop-blur"
-              variants={fadeUp}
-              initial="initial"
-              animate="animate"
-              transition={{ duration: 0.45, delay: 0.2 }}
-            >
-              <h3 className="text-lg font-semibold text-white">
-                Feed da equipe
-              </h3>
-              <p className="text-xs tracking-[0.3em] text-[#6fffe9] uppercase">
-                Últimos eventos
-              </p>
-              <div className="mt-5 space-y-4">
-                {feedUpdates.map((update, index) => (
-                  <motion.button
-                    key={update}
-                    className="group w-full rounded-2xl border border-white/12 bg-white/10 p-4 text-left transition-all duration-300 hover:-translate-y-1 hover:border-[#24ffe6]/40 hover:bg-[#24ffe6]/10"
-                    initial={{ opacity: 0, y: 12 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.4, delay: index * 0.12 + 0.25 }}
-                  >
-                    <p className="text-sm text-white">{update}</p>
-                    <div className="mt-2 flex items-center gap-2 text-xs text-slate-400">
-                      <Clock className="h-3.5 w-3.5 text-[#6fffe9]" />
-                      Atualizado há {index + 1}h
-                    </div>
-                  </motion.button>
-                ))}
-              </div>
-            </motion.section>
+                        {/* Conteúdo */}
+                        <div className="mt-8">
+                          <p className="text-neon-primary mb-2 text-xs font-medium tracking-[0.2em] uppercase">
+                            {stat.title}
+                          </p>
+                          <div className="flex items-baseline gap-2">
+                            <p className="text-3xl font-bold text-white">
+                              {stat.value}
+                            </p>
+                            {stat.maxValue && (
+                              <span className="text-text-secondary text-sm">
+                                / {stat.maxValue}
+                              </span>
+                            )}
+                          </div>
 
-            {/* Chamadas de ação */}
-            <motion.section
-              className="space-y-4"
-              variants={fadeUp}
-              initial="initial"
-              animate="animate"
-              transition={{ duration: 0.45, delay: 0.42 }}
-            >
-              <Card className="overflow-hidden rounded-3xl border border-[#24ffe6]/25 bg-gradient-to-br from-[#042d39] to-[#081b2d] p-1">
-                <CardContent className="relative rounded-[26px] border border-white/10 bg-[#050c1f]/85 p-6">
-                  <div className="absolute top-1/2 -right-16 h-40 w-40 -translate-y-1/2 rounded-full bg-[#24ffe6]/30 blur-2xl" />
-                  <div className="relative flex items-start gap-3 text-left">
-                    <Trophy className="mt-1 h-6 w-6 text-[#24ffe6]" />
-                    <div>
-                      <h3 className="text-lg font-semibold text-white">
-                        Avaliar colegas do último jogo
-                      </h3>
-                      <p className="mt-2 text-sm text-slate-300">
-                        Libere recompensas da equipe deixando feedback sobre o
-                        desempenho.
-                      </p>
-                      <Button className="mt-4 bg-[#24ffe6] font-semibold text-slate-900 shadow-[0_20px_50px_-28px_rgba(36,255,230,0.9)] transition-all hover:-translate-y-0.5 hover:bg-[#24ffe6]/90">
-                        Começar avaliação
-                      </Button>
-                      </div>
-                  </div>
-                </CardContent>
-              </Card>
+                          {/* Barra de progresso */}
+                          <div className="mt-4 space-y-1">
+                            <div className="h-2 w-full overflow-hidden rounded-full bg-white/10">
+                              <motion.div
+                                className="from-neon-secondary to-accent-blue h-full rounded-full bg-gradient-to-r"
+                                initial={{ width: 0 }}
+                                animate={{ width: `${stat.progress}%` }}
+                                transition={{
+                                  duration: 0.8,
+                                  delay: index * 0.1 + 0.3,
+                                  ease: "easeOut",
+                                }}
+                              />
+                            </div>
+                            <p className="text-text-secondary text-right text-xs">
+                              {stat.progress}%
+                            </p>
+                          </div>
+                        </div>
+                      </motion.div>
+                    );
+                  })}
+                </div>
+              </motion.section>
 
-              <Card className="overflow-hidden rounded-3xl border border-white/12 bg-white/8">
-                <CardContent className="flex flex-col gap-4 p-6">
-                  <div className="flex items-center gap-3 text-left">
-                    <Target className="h-6 w-6 text-[#6fffe9]" />
-                    <div>
-                      <h3 className="text-lg font-semibold text-white">
-                        Explorar desafios semanais
-                      </h3>
-                      <p className="pt-1 text-sm text-slate-300">
-                        Complete missões especiais e suba no ranking da
-                        PlayZone.
-                      </p>
-                    </div>
-                  </div>
-                <Button
-                    variant="ghost"
-                    className="justify-start gap-2 text-[#6fffe9] hover:bg-[#6fffe9]/10"
+              {/* Conquistas - Painel colapsável */}
+              <motion.section
+                className="rounded-3xl border border-white/10 bg-white/6 p-6 backdrop-blur-xl"
+                variants={fadeUp}
+                initial="initial"
+                animate="animate"
+                transition={{ duration: 0.45, delay: 0.18 }}
+              >
+                <button
+                  onClick={() => setShowAchievements(!showAchievements)}
+                  className="mb-4 flex w-full items-center justify-between text-left"
                 >
-                    Ver desafios disponíveis
-                    <ArrowRight className="h-4 w-4" />
-                </Button>
-              </CardContent>
-            </Card>
-            </motion.section>
+                  <div>
+                    <h3 className="text-lg font-semibold text-white">
+                      Conquistas recentes
+                    </h3>
+                    <span className="text-text-secondary text-sm">
+                      Últimas 4 semanas
+                    </span>
+                  </div>
+                  {showAchievements ? (
+                    <ChevronUp className="text-neon-primary h-5 w-5" />
+                  ) : (
+                    <ChevronDown className="text-neon-primary h-5 w-5" />
+                  )}
+                </button>
+                {showAchievements && (
+                  <div className="grid gap-4 md:grid-cols-3">
+                    {achievements.map((achievement, index) => (
+                      <motion.div
+                        key={achievement.title}
+                        className="relative overflow-hidden rounded-2xl border border-white/12 bg-gradient-to-br from-white/12 via-white/6 to-white/12 p-5"
+                        initial={{ opacity: 0, scale: 0.92 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        transition={{
+                          duration: 0.45,
+                          delay: index * 0.12 + 0.18,
+                        }}
+                        whileHover={{ scale: 1.03 }}
+                      >
+                        <motion.div
+                          className="absolute -inset-1 rounded-2xl bg-gradient-to-br from-[#24ffe6]/25 to-transparent opacity-0 blur-2xl"
+                          initial={{ opacity: 0 }}
+                          whileHover={{ opacity: 1 }}
+                          transition={{ duration: 0.4 }}
+                        />
+                        <div className="relative flex items-start gap-3">
+                          <span className="text-3xl">{achievement.emoji}</span>
+                          <div>
+                            <p className="text-sm font-semibold text-white">
+                              {achievement.title}
+                            </p>
+                            <p className="text-text-secondary mt-1 text-sm">
+                              {achievement.description}
+                            </p>
+                          </div>
+                        </div>
+                      </motion.div>
+                    ))}
+                  </div>
+                )}
+              </motion.section>
+
+              {/* Insights - Painel colapsável */}
+              <motion.section
+                className="border-neon-primary/30 relative overflow-hidden rounded-3xl border bg-gradient-to-r from-[#091530] via-[#0d1f45] to-[#14265c] p-6 sm:p-7"
+                variants={fadeUp}
+                initial="initial"
+                animate="animate"
+                transition={{ duration: 0.5, delay: 0.35 }}
+              >
+                <button
+                  onClick={() => setShowInsights(!showInsights)}
+                  className="flex w-full items-center justify-between text-left"
+                >
+                  <div className="flex items-start gap-4">
+                    <div className="bg-neon-primary/20 text-neon-primary rounded-full p-3">
+                      <Sparkles className="h-6 w-6" />
+                    </div>
+                    <div>
+                      <h3 className="text-lg font-semibold text-white">
+                        Insight do treinador virtual
+                      </h3>
+                      {showInsights && (
+                        <p className="text-text-secondary mt-2 text-base leading-relaxed">
+                          Seu desempenho melhorou{" "}
+                          <strong className="text-neon-primary">15%</strong> nas
+                          últimas 4 semanas. Mantenha o foco nos passes
+                          verticais: eles renderam{" "}
+                          <strong className="text-neon-primary">
+                            8 assistências
+                          </strong>{" "}
+                          e abriram 12 oportunidades claras.
+                        </p>
+                      )}
+                    </div>
+                  </div>
+                  {showInsights ? (
+                    <ChevronUp className="text-neon-primary h-5 w-5 flex-shrink-0" />
+                  ) : (
+                    <ChevronDown className="text-neon-primary h-5 w-5 flex-shrink-0" />
+                  )}
+                </button>
+              </motion.section>
+            </div>
+
+            {/* Sidebar - Painéis secundários */}
+            <div className="space-y-6">
+              {/* Feed da equipe - Painel colapsável */}
+              <motion.section
+                className="rounded-3xl border border-white/10 bg-white/6 p-6 backdrop-blur"
+                variants={fadeUp}
+                initial="initial"
+                animate="animate"
+                transition={{ duration: 0.45, delay: 0.2 }}
+              >
+                <button
+                  onClick={() => setShowFeed(!showFeed)}
+                  className="mb-4 flex w-full items-center justify-between text-left"
+                >
+                  <div>
+                    <h3 className="text-lg font-semibold text-white">
+                      Feed da equipe
+                    </h3>
+                    <p className="text-neon-primary text-sm tracking-[0.3em] uppercase">
+                      Últimos eventos
+                    </p>
+                  </div>
+                  {showFeed ? (
+                    <ChevronUp className="text-neon-primary h-5 w-5" />
+                  ) : (
+                    <ChevronDown className="text-neon-primary h-5 w-5" />
+                  )}
+                </button>
+                {showFeed && (
+                  <div className="space-y-4">
+                    {feedUpdates.map((update, index) => (
+                      <motion.button
+                        key={update}
+                        className="group w-full rounded-2xl border border-white/12 bg-white/10 p-4 text-left transition-all duration-300 hover:-translate-y-1 hover:border-[#24ffe6]/40 hover:bg-[#24ffe6]/10"
+                        initial={{ opacity: 0, y: 12 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{
+                          duration: 0.4,
+                          delay: index * 0.12 + 0.25,
+                        }}
+                      >
+                        <p className="text-base font-medium text-white">
+                          {update}
+                        </p>
+                        <div className="text-text-secondary mt-2 flex items-center gap-2 text-sm">
+                          <Clock
+                            className="text-neon-primary h-4 w-4"
+                            aria-hidden="true"
+                          />
+                          <span>Atualizado há {index + 1}h</span>
+                        </div>
+                      </motion.button>
+                    ))}
+                  </div>
+                )}
+              </motion.section>
+
+              {/* Chamadas de ação - Painel colapsável */}
+              <motion.section
+                className="space-y-4"
+                variants={fadeUp}
+                initial="initial"
+                animate="animate"
+                transition={{ duration: 0.45, delay: 0.42 }}
+              >
+                <button
+                  onClick={() => setShowActions(!showActions)}
+                  className="mb-4 flex w-full items-center justify-between text-left"
+                >
+                  <h3 className="text-lg font-semibold text-white">
+                    Ações rápidas
+                  </h3>
+                  {showActions ? (
+                    <ChevronUp className="text-neon-primary h-5 w-5" />
+                  ) : (
+                    <ChevronDown className="text-neon-primary h-5 w-5" />
+                  )}
+                </button>
+                {showActions && (
+                  <>
+                    <Card className="overflow-hidden rounded-3xl border border-[#24ffe6]/25 bg-gradient-to-br from-[#042d39] to-[#081b2d] p-1">
+                      <CardContent className="relative rounded-[26px] border border-white/10 bg-[#050c1f]/85 p-6">
+                        <div className="absolute top-1/2 -right-16 h-40 w-40 -translate-y-1/2 rounded-full bg-[#24ffe6]/30 blur-2xl" />
+                        <div className="relative flex items-start gap-3 text-left">
+                          <Trophy className="mt-1 h-6 w-6 text-[#24ffe6]" />
+                          <div>
+                            <h3 className="text-lg font-semibold text-white">
+                              Avaliar colegas do último jogo
+                            </h3>
+                            <p className="text-text-secondary mt-2 text-base">
+                              Libere recompensas da equipe deixando feedback
+                              sobre o desempenho.
+                            </p>
+                            <Button className="mt-4 bg-[#24ffe6] font-semibold text-slate-900 shadow-[0_20px_50px_-28px_rgba(36,255,230,0.9)] transition-all hover:-translate-y-0.5 hover:bg-[#24ffe6]/90">
+                              Começar avaliação
+                            </Button>
+                          </div>
+                        </div>
+                      </CardContent>
+                    </Card>
+
+                    <Card className="overflow-hidden rounded-3xl border border-white/12 bg-white/8">
+                      <CardContent className="flex flex-col gap-4 p-6">
+                        <div className="flex items-center gap-3 text-left">
+                          <Target className="text-neon-primary h-6 w-6" />
+                          <div>
+                            <h3 className="text-lg font-semibold text-white">
+                              Explorar desafios semanais
+                            </h3>
+                            <p className="text-text-secondary pt-1 text-base">
+                              Complete missões especiais e suba no ranking da
+                              PlayZone.
+                            </p>
+                          </div>
+                        </div>
+                        <Button
+                          variant="ghost"
+                          className="text-neon-primary hover:bg-neon-primary/10 justify-start gap-2"
+                        >
+                          Ver desafios disponíveis
+                          <ArrowRight className="h-4 w-4" />
+                        </Button>
+                      </CardContent>
+                    </Card>
+                  </>
+                )}
+              </motion.section>
+            </div>
           </div>
         </div>
       </main>

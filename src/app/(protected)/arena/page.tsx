@@ -316,10 +316,10 @@ export default function ArenaPage() {
                         )}
                       </div>
                       <div className="flex-1">
-                        <p className="text-sm font-medium leading-relaxed text-slate-700 dark:text-white/90">
+                        <p className="text-base font-semibold leading-relaxed text-text-primary">
                           {activity.text}
                         </p>
-                        <p className="mt-1 text-xs font-medium text-slate-500 dark:text-slate-300/75">
+                        <p className="mt-2 text-sm font-medium text-text-secondary">
                           {activity.time}
                         </p>
                       </div>

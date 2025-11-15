@@ -14,6 +14,7 @@ import {
   Trophy,
   Users,
   X,
+  Globe,
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -24,6 +25,12 @@ type ArenaSidebarProps = {
 };
 
 const menuItems = [
+  {
+    title: "Início",
+    href: "/",
+    icon: Globe,
+    badge: null,
+  },
   {
     title: "Dashboard",
     href: "/arena",
@@ -109,7 +116,7 @@ export default function ArenaSidebar({ isOpen, onClose }: ArenaSidebarProps) {
                 href={item.href}
                 onClick={onClose}
                 className={cn(
-                  "flex items-center gap-3 rounded-xl border border-transparent px-3 py-3 text-sm font-medium transition-all duration-300",
+                  "flex items-center gap-3 rounded-xl border border-transparent px-4 py-3 text-base font-medium transition-all duration-300 min-h-[44px]",
                   isActive
                     ? "scale-105 border border-emerald-300 bg-emerald-100/70 text-emerald-700 shadow-[0_20px_50px_-30px_rgba(16,185,129,0.45)] dark:border-[#24ffe6]/40 dark:bg-white/10 dark:text-white dark:shadow-[0_25px_60px_-35px_rgba(36,255,230,0.8)]"
                     : "text-slate-600 hover:scale-105 hover:border hover:border-emerald-200 hover:bg-emerald-50/80 hover:text-emerald-700 dark:text-white/70 dark:hover:border-white/15 dark:hover:bg-white/5 dark:hover:text-white",
@@ -117,17 +124,18 @@ export default function ArenaSidebar({ isOpen, onClose }: ArenaSidebarProps) {
               >
                 <Icon
                   className={cn(
-                    "h-5 w-5",
+                    "h-6 w-6 flex-shrink-0",
                     isActive
                       ? "text-emerald-600 dark:text-[#24ffe6]"
-                      : "text-slate-500 dark:text-white/60",
+                      : "text-slate-500 dark:text-white/70",
                   )}
+                  aria-hidden="true"
                 />
                 <span className="flex-1">{item.title}</span>
                 {item.badge && (
                   <span
                     className={cn(
-                      "rounded-full px-2.5 py-0.5 text-xs font-bold",
+                      "rounded-full px-3 py-1 text-sm font-bold",
                       isActive
                         ? "bg-emerald-500 text-white shadow-sm dark:bg-[#24ffe6] dark:text-slate-900"
                         : "border border-emerald-100 bg-emerald-50/80 text-emerald-600 dark:border-white/15 dark:bg-white/10 dark:text-white/80",

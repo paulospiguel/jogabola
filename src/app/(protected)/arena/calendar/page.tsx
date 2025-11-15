@@ -546,7 +546,7 @@ export default function AgendaPage() {
           <h1 className="text-3xl font-bold tracking-tight text-slate-900 dark:text-white">
             Agenda da equipa
           </h1>
-          <p className="max-w-2xl text-sm text-slate-600 dark:text-slate-300">
+          <p className="max-w-2xl text-base text-text-secondary">
             Organiza treinos, jogos e reuniões num só lugar. Acompanha
             confirmações de presença, gere alterações e integra tudo com o
             Google Calendar para manter a equipa alinhada.
@@ -585,7 +585,7 @@ export default function AgendaPage() {
               <CalendarDays className="h-4 w-4 text-emerald-500" />
               Calendário da temporada
             </CardTitle>
-            <CardDescription className="text-sm text-slate-500 dark:text-slate-300">
+            <CardDescription className="text-base text-text-secondary">
               Seleciona um dia para ver os eventos agendados ou clicando em um
               marcador para detalhes rápidos.
             </CardDescription>
@@ -608,7 +608,7 @@ export default function AgendaPage() {
                 <CardTitle className="text-base font-semibold">
                   {formatDateLabel(selectedDate)}
                 </CardTitle>
-                <CardDescription className="text-xs text-slate-500 dark:text-slate-300">
+                <CardDescription className="text-sm text-text-secondary">
                   {selectedDateEvents.length} evento(s) agendados
                 </CardDescription>
               </div>
@@ -629,7 +629,7 @@ export default function AgendaPage() {
                     <p className="text-sm font-semibold text-slate-700 dark:text-white">
                       Nenhum compromisso aqui ainda
                     </p>
-                    <p className="text-xs text-slate-500 dark:text-slate-300">
+                    <p className="text-sm text-text-secondary">
                       Cria eventos para treinos, jogos ou reuniões diretamente
                       nesta data.
                     </p>
@@ -678,7 +678,7 @@ export default function AgendaPage() {
                                 {statusStyles[event.status].label}
                               </Badge>
                             </div>
-                            <div className="flex flex-wrap items-center gap-3 text-xs text-slate-500 dark:text-slate-300">
+                            <div className="flex flex-wrap items-center gap-3 text-sm text-text-secondary">
                               <span className="flex items-center gap-1">
                                 <Clock3 className="h-3.5 w-3.5" />
                                 {event.time}
@@ -702,7 +702,7 @@ export default function AgendaPage() {
                               <Button
                                 variant="ghost"
                                 size="icon"
-                                className="h-8 w-8 text-slate-500 hover:text-emerald-600"
+                                className="h-10 w-10 text-text-secondary hover:text-neon-primary"
                               >
                                 <span className="sr-only">Abrir ações</span>
                                 <span className="text-lg">⋮</span>
@@ -732,7 +732,7 @@ export default function AgendaPage() {
                           </DropdownMenu>
                         </div>
                         {event.description && (
-                          <p className="mt-2 text-xs text-slate-500 dark:text-slate-300">
+                          <p className="mt-2 text-sm text-text-secondary">
                             {event.description}
                           </p>
                         )}
@@ -749,7 +749,7 @@ export default function AgendaPage() {
               <CardTitle className="text-sm font-semibold text-slate-800 dark:text-white">
                 Estado da sincronização
               </CardTitle>
-              <CardDescription className="text-xs text-slate-500 dark:text-slate-300">
+                      <CardDescription className="text-sm text-text-secondary">
                 Conecta a agenda do Jogabola com o Google Calendar para garantir
                 que toda a equipa esteja atualizada.
               </CardDescription>
@@ -765,7 +765,7 @@ export default function AgendaPage() {
                   Google Calendar
                 </Badge>
               </div>
-              <p className="text-xs text-slate-500 dark:text-slate-300">
+              <p className="text-sm text-text-secondary">
                 Ao sincronizar vinculamos automaticamente treinos, jogos,
                 eventos e reuniões ao calendário pessoal de cada atleta ou
                 membro da equipa.
@@ -821,13 +821,13 @@ export default function AgendaPage() {
                       <CardTitle className="text-sm font-semibold text-slate-900 dark:text-white">
                         {meta.label}
                       </CardTitle>
-                      <CardDescription className="text-xs text-slate-500 dark:text-slate-300">
+                      <CardDescription className="text-sm text-text-secondary">
                         {meta.description}
                       </CardDescription>
                     </div>
                   </div>
                   <div className="flex items-center justify-between text-xs">
-                    <div className="space-y-1 text-slate-500 dark:text-slate-300">
+                    <div className="space-y-1 text-text-secondary">
                       <div className="flex items-center gap-1">
                         <CheckCircle2 className="h-3.5 w-3.5 text-emerald-500" />
                         {summary.accepted} aceites
@@ -849,7 +849,7 @@ export default function AgendaPage() {
                     </div>
                   </div>
                 </CardHeader>
-                <CardContent className="space-y-3 text-xs text-slate-500 dark:text-slate-300">
+                <CardContent className="space-y-3 text-sm text-text-secondary">
                   <div className="flex items-center justify-between rounded-xl bg-slate-100/70 px-3 py-2 dark:bg-white/5">
                     <span>Último aceite</span>
                     <span className="font-medium text-slate-700 dark:text-white">
@@ -1071,7 +1071,7 @@ export default function AgendaPage() {
                   Respostas da equipa
                 </h3>
                 {selectedEvent.responses.length === 0 ? (
-                  <div className="rounded-xl border border-dashed border-emerald-200 p-4 text-xs text-slate-500 dark:border-emerald-500/40 dark:text-slate-300">
+                  <div className="rounded-xl border border-dashed border-emerald-200 p-4 text-sm text-text-secondary dark:border-emerald-500/40">
                     Ainda não há respostas registradas. Envia convites ou
                     partilha o evento para recolher confirmações.
                   </div>
@@ -1086,7 +1086,7 @@ export default function AgendaPage() {
                           <span className="font-semibold text-slate-700 dark:text-white">
                             {response.name}
                           </span>
-                          <span className="text-[10px] text-slate-400 dark:text-slate-300">
+                          <span className="text-xs text-text-secondary">
                             {response.respondedAt
                               ? `Atualizado ${formatDateTimeLabel(response.respondedAt)}`
                               : "Sem resposta"}

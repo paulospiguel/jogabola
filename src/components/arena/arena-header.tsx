@@ -1,7 +1,6 @@
 "use client";
 
 import { Logo } from "@/components/logo";
-import { ThemeToggle } from "@/components/theme-toggle";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -15,8 +14,9 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
 import { signOut } from "@/lib/auth-client";
-import { Bell, Menu, Search, User } from "lucide-react";
+import { Bell, Home, Menu, Search, User } from "lucide-react";
 import { useTranslations } from "next-intl";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
@@ -40,53 +40,55 @@ export default function ArenaHeader({ onMenuToggle }: ArenaHeaderProps) {
   };
 
   return (
-    <header className="w-full border-b border-emerald-100/60 bg-white/80 text-slate-900 backdrop-blur-xl shadow-[0_20px_45px_-30px_rgba(13,148,136,0.35)] transition-colors dark:border-white/10 dark:bg-white/5 dark:text-white dark:shadow-[0_20px_45px_-30px_rgba(36,255,230,0.7)]">
+    <header className="w-full border-b border-border-default bg-overlay-light text-text-primary backdrop-blur-xl shadow-[0_20px_45px_-30px_var(--color-shadow-neon-secondary)] transition-colors">
       <div className="flex h-20 items-center gap-4 px-4 md:px-8">
         {/* Menu Toggle Button */}
         <Button
           variant="ghost"
           size="icon"
-          className="text-slate-700 hover:bg-emerald-100/60 md:hidden dark:text-white dark:hover:bg-white/10"
+          className="text-text-primary hover:bg-overlay-medium md:hidden"
           onClick={onMenuToggle}
+          aria-label="Abrir menu de navegação"
         >
-          <Menu className="h-5 w-5" />
+          <Menu className="h-6 w-6" />
           <span className="sr-only">Toggle menu</span>
         </Button>
 
-        {/* Logo */}
-        <div className="flex items-center gap-2">
+        {/* Logo - Clicável para voltar à home */}
+        <Link 
+          href="/" 
+          className="flex items-center gap-2 transition-opacity hover:opacity-80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neon-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background-base rounded"
+          aria-label="Voltar para a página inicial"
+        >
           <Logo size="small" />
-        </div>
+        </Link>
 
         {/* Search Bar */}
         <div className="hidden max-w-md flex-1 sm:flex">
           <div className="relative w-full">
-            <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-emerald-500 dark:text-[#6fffe9]" />
+            <Search className="absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-neon-primary" aria-hidden="true" />
             <Input
               type="search"
               placeholder={t("search") || "Buscar partidas, times..."}
-              className="w-full rounded-full border border-emerald-100/80 bg-white/70 pl-10 text-slate-700 placeholder:text-slate-400 focus:border-emerald-400 focus:ring-emerald-400 dark:border-white/10 dark:bg-white/5 dark:text-white dark:placeholder:text-white/50 dark:focus:border-[#6fffe9] dark:focus:ring-[#6fffe9]"
+              className="w-full rounded-full border border-border-default bg-overlay-light pl-10 text-text-primary placeholder:text-text-muted focus:border-border-focus focus:ring-border-focus"
             />
           </div>
         </div>
 
         {/* Right Side Actions */}
         <div className="ml-auto flex items-center gap-3">
-          {/* Theme Toggle */}
-          <ThemeToggle />
-
           {/* Notifications */}
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button
                 variant="ghost"
                 size="icon"
-                className="relative text-slate-600 hover:bg-emerald-100/70 dark:text-white dark:hover:bg-white/10"
+                className="relative text-text-secondary hover:bg-overlay-medium"
               >
-                <Bell className="h-5 w-5" />
+                <Bell className="h-6 w-6" aria-hidden="true" />
                 {notifications > 0 && (
                   <Badge
-                    className="absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full border border-white bg-emerald-400 p-0 text-xs font-bold text-slate-900 shadow-[0_10px_25px_-12px_rgba(16,185,129,0.6)] animate-pulse dark:border-[#050312] dark:bg-[#24ffe6]"
+                    className="absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full border border-background-base bg-neon-secondary p-0 text-xs font-bold text-slate-900 shadow-[0_10px_25px_-12px_var(--color-shadow-brand-green)] animate-pulse"
                   >
                     {notifications}
                   </Badge>
@@ -96,24 +98,24 @@ export default function ArenaHeader({ onMenuToggle }: ArenaHeaderProps) {
             </DropdownMenuTrigger>
             <DropdownMenuContent
               align="end"
-              className="w-80 border border-emerald-100/60 bg-white/90 text-slate-800 backdrop-blur-xl dark:border-white/10 dark:bg-[#080a25]/90 dark:text-white"
+              className="w-80 border border-border-default bg-background-surface/90 text-text-primary backdrop-blur-xl"
             >
-              <DropdownMenuLabel className="text-sm font-semibold text-emerald-600 dark:text-[#6fffe9]">
+              <DropdownMenuLabel className="text-sm font-semibold text-neon-primary">
                 Notificações
               </DropdownMenuLabel>
-              <DropdownMenuSeparator className="bg-emerald-100 dark:bg-white/10" />
+              <DropdownMenuSeparator className="bg-border-default" />
               <div className="max-h-96 space-y-1 overflow-y-auto">
-                <DropdownMenuItem className="flex cursor-pointer flex-col gap-1 rounded-lg px-3 py-2 text-sm text-slate-700 transition-colors hover:bg-emerald-100/70 focus:bg-emerald-100/70 dark:text-white/90 dark:hover:bg-white/10 dark:focus:bg-white/10">
-                  <p className="font-medium">Nova partida disponível</p>
-                  <p className="text-xs text-white/60">Há 5 minutos</p>
+                <DropdownMenuItem className="flex cursor-pointer flex-col gap-1 rounded-lg px-4 py-3 text-base text-text-primary transition-colors hover:bg-overlay-medium focus:bg-overlay-medium min-h-[44px]">
+                  <p className="font-semibold">Nova partida disponível</p>
+                  <p className="text-sm text-text-secondary">Há 5 minutos</p>
                 </DropdownMenuItem>
-                <DropdownMenuItem className="flex cursor-pointer flex-col gap-1 rounded-lg px-3 py-2 text-sm text-slate-700 transition-colors hover:bg-emerald-100/70 focus:bg-emerald-100/70 dark:text-white/90 dark:hover:bg-white/10 dark:focus:bg-white/10">
-                  <p className="font-medium">Convite de time</p>
-                  <p className="text-xs text-white/60">Há 1 hora</p>
+                <DropdownMenuItem className="flex cursor-pointer flex-col gap-1 rounded-lg px-4 py-3 text-base text-text-primary transition-colors hover:bg-overlay-medium focus:bg-overlay-medium min-h-[44px]">
+                  <p className="font-semibold">Convite de time</p>
+                  <p className="text-sm text-text-secondary">Há 1 hora</p>
                 </DropdownMenuItem>
-                <DropdownMenuItem className="flex cursor-pointer flex-col gap-1 rounded-lg px-3 py-2 text-sm text-slate-700 transition-colors hover:bg-emerald-100/70 focus:bg-emerald-100/70 dark:text-white/90 dark:hover:bg-white/10 dark:focus:bg-white/10">
-                  <p className="font-medium">Torneio começando</p>
-                  <p className="text-xs text-white/60">Há 2 horas</p>
+                <DropdownMenuItem className="flex cursor-pointer flex-col gap-1 rounded-lg px-4 py-3 text-base text-text-primary transition-colors hover:bg-overlay-medium focus:bg-overlay-medium min-h-[44px]">
+                  <p className="font-semibold">Torneio começando</p>
+                  <p className="text-sm text-text-secondary">Há 2 horas</p>
                 </DropdownMenuItem>
               </div>
             </DropdownMenuContent>
@@ -125,41 +127,48 @@ export default function ArenaHeader({ onMenuToggle }: ArenaHeaderProps) {
               <Button
                 variant="ghost"
                 size="icon"
-                className="rounded-full text-slate-700 transition-all hover:-translate-y-0.5 hover:bg-emerald-100/70 hover:ring-2 hover:ring-emerald-400/40 hover:ring-offset-2 hover:ring-offset-white dark:text-white dark:hover:bg-white/10 dark:hover:ring-[#24ffe6]/40 dark:hover:ring-offset-[#050312]"
+                className="rounded-full text-text-primary transition-all hover:-translate-y-0.5 hover:bg-overlay-medium hover:ring-2 hover:ring-neon-secondary/40 hover:ring-offset-2 hover:ring-offset-background-base"
               >
-                <Avatar className="h-8 w-8 border-2 border-emerald-500/50 shadow dark:border-[#24ffe6]/60">
+                <Avatar className="h-8 w-8 border-2 border-neon-secondary/60 shadow">
                   <AvatarImage src="" alt="User" />
-                  <AvatarFallback className="bg-linear-to-br from-emerald-400 to-sky-400 font-bold text-white dark:from-[#24ffe6] dark:to-[#02a7ff] dark:text-slate-900">
-                    <User className="h-4 w-4" />
+                  <AvatarFallback className="bg-linear-to-br from-neon-secondary to-accent-blue font-bold text-slate-900">
+                    <User className="h-5 w-5" aria-hidden="true" />
                   </AvatarFallback>
                 </Avatar>
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent
               align="end"
-              className="w-56 border border-emerald-100/60 bg-white/90 text-slate-800 backdrop-blur-xl dark:border-white/10 dark:bg-[#080a25]/90 dark:text-white"
+              className="w-56 border border-border-default bg-background-surface/90 text-text-primary backdrop-blur-xl"
             >
-              <DropdownMenuLabel className="text-sm font-semibold text-emerald-600 dark:text-[#6fffe9]">
+              <DropdownMenuLabel className="text-sm font-semibold text-neon-primary">
                 Minha Conta
               </DropdownMenuLabel>
-              <DropdownMenuSeparator className="bg-emerald-100 dark:bg-white/10" />
+              <DropdownMenuSeparator className="bg-border-default" />
+              <DropdownMenuItem
+                onClick={() => router.push("/")}
+                className="flex cursor-pointer items-center gap-2 rounded-lg px-4 py-3 text-base text-text-primary transition-colors hover:bg-overlay-medium focus:bg-overlay-medium min-h-[44px]"
+              >
+                <Home className="mr-2 h-5 w-5" aria-hidden="true" />
+                Início
+              </DropdownMenuItem>
               <DropdownMenuItem
                 onClick={() => router.push("/profile")}
-                className="flex cursor-pointer items-center gap-2 rounded-lg px-3 py-2 text-sm text-slate-700 transition-colors hover:bg-emerald-100/80 focus:bg-emerald-100/80 dark:text-white dark:hover:bg-white/10 dark:focus:bg-white/10"
+                className="flex cursor-pointer items-center gap-2 rounded-lg px-4 py-3 text-base text-text-primary transition-colors hover:bg-overlay-medium focus:bg-overlay-medium min-h-[44px]"
               >
-                <User className="mr-2 h-4 w-4" />
+                <User className="mr-2 h-5 w-5" aria-hidden="true" />
                 Perfil
               </DropdownMenuItem>
-              <DropdownMenuItem className="rounded-lg px-3 py-2 text-sm text-slate-700 transition-colors hover:bg-emerald-100/80 focus:bg-emerald-100/80 dark:text-white dark:hover:bg-white/10 dark:focus:bg-white/10">
+              <DropdownMenuItem className="rounded-lg px-4 py-3 text-base text-text-primary transition-colors hover:bg-overlay-medium focus:bg-overlay-medium min-h-[44px]">
                 Configurações
               </DropdownMenuItem>
-              <DropdownMenuItem className="rounded-lg px-3 py-2 text-sm text-slate-700 transition-colors hover:bg-emerald-100/80 focus:bg-emerald-100/80 dark:text-white dark:hover:bg-white/10 dark:focus:bg-white/10">
+              <DropdownMenuItem className="rounded-lg px-4 py-3 text-base text-text-primary transition-colors hover:bg-overlay-medium focus:bg-overlay-medium min-h-[44px]">
                 Estatísticas
               </DropdownMenuItem>
-              <DropdownMenuSeparator className="bg-emerald-100 dark:bg-white/10" />
+              <DropdownMenuSeparator className="bg-border-default" />
               <DropdownMenuItem
                 onClick={handleSignOut}
-                className="rounded-lg px-3 py-2 text-sm text-red-500 transition-colors hover:bg-red-500/10 focus:bg-red-500/10"
+                className="rounded-lg px-4 py-3 text-base text-red-400 transition-colors hover:bg-red-500/10 focus:bg-red-500/10 min-h-[44px] font-semibold"
               >
                 Sair
               </DropdownMenuItem>

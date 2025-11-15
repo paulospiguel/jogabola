@@ -1,0 +1,170 @@
+/**
+ * Design System Color Tokens
+ * 
+ * Centralized color tokens for the Jogabola design system.
+ * All colors should be referenced through these tokens using Tailwind v4.
+ * 
+ * Usage:
+ * - In Tailwind classes: bg-neon-primary, text-accent-blue, etc.
+ * - In CSS: var(--color-neon-primary)
+ */
+
+@theme {
+  /* ============================================
+     BACKGROUND COLORS
+     ============================================ */
+
+  /* Base Backgrounds */
+  --color-background-base: #050312;
+  --color-background-dark: #18193b;
+  --color-background-gradient-start: #050312;
+  --color-background-gradient-mid: #080a25;
+  --color-background-gradient-end: #0f163f;
+  --color-background-surface: #080a25;
+
+  /* Surface Variants */
+  --color-surface-1: #1a1c2c;
+  --color-surface-2: #282854;
+  --color-surface-3: #18193b;
+
+  /* ============================================
+     NEON & ACCENT COLORS
+     ============================================ */
+
+  /* Neon Primary (Mint) - Highlights, meta labels */
+  --color-neon-primary: #6fffe9;
+  --color-neon-primary-hover: #5effd9;
+
+  /* Neon Secondary (Mint Strong) - Primary CTAs */
+  --color-neon-secondary: #24ffe6;
+  --color-neon-secondary-hover: #1effd6;
+
+  /* Accent Blue - Gradient tail, secondary actions */
+  --color-accent-blue: #02a7ff;
+  --color-accent-blue-hover: #0290e6;
+
+  /* Brand Green - Primary brand color */
+  --color-brand-green: #00cfb1;
+  --color-brand-green-hover: #00b89a;
+
+  /* Blue Neon - Hexagon strokes, 3D elements */
+  --color-blue-neon: #00f0ff;
+
+  /* Active Text (Hover) */
+  --color-active-text: #1effbf;
+
+  /* Secondary Text */
+  --color-secondary-text: #ba93ff;
+
+  /* ============================================
+     SEMANTIC COLORS
+     ============================================ */
+
+  /* Text Colors - Improved contrast for accessibility */
+  --color-text-primary: #ffffff;
+  --color-text-secondary: rgba(255, 255, 255, 0.85);
+  --color-text-muted: rgba(255, 255, 255, 0.7);
+  --color-text-disabled: rgba(255, 255, 255, 0.4);
+
+  /* Border Colors */
+  --color-border-default: rgba(255, 255, 255, 0.1);
+  --color-border-hover: rgba(255, 255, 255, 0.15);
+  --color-border-focus: rgba(111, 255, 233, 0.5);
+
+  /* Overlay Colors */
+  --color-overlay-light: rgba(255, 255, 255, 0.05);
+  --color-overlay-medium: rgba(255, 255, 255, 0.1);
+  --color-overlay-heavy: rgba(255, 255, 255, 0.15);
+
+  /* ============================================
+     SHADOW COLORS (for glow effects)
+     ============================================ */
+
+  --color-shadow-neon-primary: rgba(36, 255, 230, 0.8);
+  --color-shadow-neon-secondary: rgba(36, 255, 230, 0.6);
+  --color-shadow-neon-soft: rgba(36, 255, 230, 0.3);
+  --color-shadow-accent-blue: rgba(2, 167, 255, 0.4);
+  --color-shadow-brand-green: rgba(0, 207, 177, 0.4);
+
+  /* Radial Glow */
+  --color-radial-glow: rgba(0, 255, 213, 0.22);
+
+  /* ============================================
+     LEGACY COLORS (for compatibility)
+     ============================================ */
+
+  --color-black: #0b0d17;
+  --color-blue: #72d0ff;
+  --color-yellow: #f2b824;
+  --color-green: #00ff00;
+  --color-blue-900: #1a1c2c;
+  --color-blue-800: #282854;
+  --color-blue-850: #18193b;
+
+  /* ============================================
+     TAILWIND COLOR MAPPINGS
+     ============================================ */
+
+  /* These map to Tailwind utility classes with opacity variants */
+  --color-neon-primary-80: rgba(111, 255, 233, 0.8);
+  --color-neon-primary-50: rgba(111, 255, 233, 0.5);
+  --color-neon-primary-40: rgba(111, 255, 233, 0.4);
+  --color-neon-primary-30: rgba(111, 255, 233, 0.3);
+  --color-neon-primary-25: rgba(111, 255, 233, 0.25);
+
+  --color-neon-secondary-60: rgba(36, 255, 230, 0.6);
+  --color-neon-secondary-40: rgba(36, 255, 230, 0.4);
+  --color-neon-secondary-15: rgba(36, 255, 230, 0.15);
+
+  --color-accent-blue-90: rgba(2, 167, 255, 0.9);
+
+  --color-brand-green-90: rgba(0, 207, 177, 0.9);
+
+  --color-white-10: rgba(255, 255, 255, 0.1);
+  --color-white-15: rgba(255, 255, 255, 0.15);
+  --color-white-8: rgba(255, 255, 255, 0.08);
+  --color-white-6: rgba(255, 255, 255, 0.06);
+  --color-white-5: rgba(255, 255, 255, 0.05);
+
+  /* Additional surface colors */
+  --color-surface-101b46: #101b46;
+
+  /* ============================================
+     ACCESSIBILITY TOKENS
+     ============================================ */
+
+  /* Minimum touch target sizes (WCAG 2.5.5) */
+  --size-touch-target-min: 44px;
+  --size-icon-min: 20px;
+  --size-icon-comfortable: 24px;
+
+  /* Text contrast improvements (WCAG AAA) */
+  --color-text-primary-accessible: #ffffff;
+  --color-text-secondary-accessible: rgba(255, 255, 255, 0.85);
+  --color-text-muted-accessible: rgba(255, 255, 255, 0.7);
+
+  /* Focus indicators - high contrast */
+  --color-focus-ring: #6fffe9;
+  --color-focus-ring-thickness: 3px;
+  --color-focus-ring-offset: 2px;
+
+  /* Dyslexia-friendly typography */
+  --font-dyslexia-friendly:
+    "Inter", "OpenDyslexic", "Comic Sans MS", system-ui, sans-serif;
+  --line-height-comfortable: 1.75;
+  --line-height-relaxed: 2;
+  --letter-spacing-comfortable: 0.05em;
+  --word-spacing-comfortable: 0.1em;
+
+  /* Semantic color meanings - consistent across app */
+  --color-success: #00cfb1;
+  --color-warning: #f2b824;
+  --color-error: #ef4444;
+  --color-info: #02a7ff;
+
+  /* High contrast variants for accessibility */
+  --color-neon-primary-high-contrast: #7ffff0;
+  --color-neon-secondary-high-contrast: #2efff0;
+  --color-accent-blue-high-contrast: #1ab8ff;
+  --color-brand-green-high-contrast: #00e6c4;
+}

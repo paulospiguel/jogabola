@@ -1,0 +1,225 @@
+/**
+ * Accessibility Styles
+ * 
+ * This file contains accessibility improvements following WCAG 2.1 guidelines
+ * and best practices for inclusive design, including support for users with dyslexia.
+ */
+
+/* ============================================
+   DYSLEXIA-FRIENDLY TYPOGRAPHY
+   ============================================ */
+
+/* Font stack optimized for readability */
+/* Note: OpenDyslexic should be loaded separately if needed */
+/* For now, we use system fonts that are dyslexia-friendly */
+
+/* Improved line spacing for readability */
+.dyslexia-friendly {
+  font-family: var(--font-dyslexia-friendly);
+  line-height: var(--line-height-comfortable, 1.75);
+  letter-spacing: var(--letter-spacing-comfortable, 0.05em);
+  word-spacing: var(--word-spacing-comfortable, 0.1em);
+}
+
+/* ============================================
+   HIGH CONTRAST MODE SUPPORT
+   ============================================ */
+
+@media (prefers-contrast: high) {
+  :root {
+    --color-text-primary: #ffffff;
+    --color-text-secondary: #ffffff;
+    --color-text-muted: #e0e0e0;
+    --color-border-default: rgba(255, 255, 255, 0.3);
+    --color-border-hover: rgba(255, 255, 255, 0.5);
+    --color-focus-ring: #ffffff;
+  }
+
+  button, a, [role="button"] {
+    border: 2px solid currentColor;
+  }
+}
+
+/* ============================================
+   REDUCED MOTION SUPPORT
+   ============================================ */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ============================================
+   FOCUS INDICATORS
+   ============================================ */
+
+/* Enhanced focus styles for keyboard navigation */
+:focus-visible {
+  outline: 3px solid var(--color-focus-ring, var(--color-neon-primary));
+  outline-offset: 2px;
+  border-radius: 4px;
+  box-shadow: 0 0 0 2px var(--color-background-base), 
+              0 0 0 5px var(--color-focus-ring, var(--color-neon-primary));
+}
+
+/* Skip link for keyboard navigation */
+.skip-link {
+  position: absolute;
+  top: -40px;
+  left: 0;
+  background: var(--color-neon-primary);
+  color: var(--color-background-base);
+  padding: 8px 16px;
+  text-decoration: none;
+  z-index: 100;
+  font-weight: bold;
+}
+
+.skip-link:focus {
+  top: 0;
+}
+
+/* ============================================
+   COLOR MEANING INDICATORS
+   ============================================ */
+
+/* Ensure information is not conveyed by color alone */
+.status-success::before {
+  content: "✓ ";
+  color: var(--color-success);
+  font-weight: bold;
+}
+
+.status-warning::before {
+  content: "⚠ ";
+  color: var(--color-warning);
+  font-weight: bold;
+}
+
+.status-error::before {
+  content: "✗ ";
+  color: var(--color-error);
+  font-weight: bold;
+}
+
+.status-info::before {
+  content: "ℹ ";
+  color: var(--color-info);
+  font-weight: bold;
+}
+
+/* ============================================
+   TOUCH TARGET SIZES
+   ============================================ */
+
+/* Ensure all interactive elements meet minimum touch target size */
+button,
+a[role="button"],
+input[type="button"],
+input[type="submit"],
+input[type="checkbox"],
+input[type="radio"],
+select,
+[tabindex="0"] {
+  min-height: 44px;
+  min-width: 44px;
+}
+
+/* Exception for inline links */
+a:not([role="button"]) {
+  min-width: auto;
+  min-height: auto;
+}
+
+/* ============================================
+   TEXT READABILITY
+   ============================================ */
+
+/* Minimum font sizes for readability */
+body {
+  font-size: clamp(16px, 1rem, 18px);
+}
+
+p, li, span, div {
+  font-size: clamp(16px, 1rem, 18px);
+  line-height: 1.75;
+}
+
+small, .text-sm {
+  font-size: clamp(14px, 0.875rem, 16px);
+}
+
+/* ============================================
+   FORM ACCESSIBILITY
+   ============================================ */
+
+label {
+  font-weight: 600;
+  font-size: clamp(16px, 1rem, 18px);
+  display: block;
+  margin-bottom: 0.5rem;
+}
+
+input, textarea, select {
+  font-size: clamp(16px, 1rem, 18px);
+  padding: 0.75rem 1rem;
+}
+
+/* Error states with icons */
+input[aria-invalid="true"],
+textarea[aria-invalid="true"],
+select[aria-invalid="true"] {
+  border-color: var(--color-error);
+  border-width: 2px;
+}
+
+input[aria-invalid="true"]::after {
+  content: "⚠";
+  position: absolute;
+  right: 0.5rem;
+  color: var(--color-error);
+}
+
+/* ============================================
+   ARIA LIVE REGIONS
+   ============================================ */
+
+[role="alert"],
+[role="status"],
+[aria-live] {
+  position: relative;
+}
+
+/* ============================================
+   SCREEN READER ONLY
+   ============================================ */
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+.sr-only-focusable:focus {
+  position: static;
+  width: auto;
+  height: auto;
+  padding: inherit;
+  margin: inherit;
+  overflow: visible;
+  clip: auto;
+  white-space: normal;
+}
+
