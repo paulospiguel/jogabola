@@ -24,6 +24,7 @@ import {
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
+import { EventSearch } from "@/components/event-search";
 
 const nextMatch = {
   label: "Próximo jogo",
@@ -103,6 +104,7 @@ export default function PlayZonePage() {
   const { data: session } = useSession();
   const [profileData, setProfileData] = useState<ProfileData | null>(null);
   const [loading, setLoading] = useState(true);
+  const [hasTeam, setHasTeam] = useState(false); // TODO: Verificar se usuário está em uma equipe
 
   // Estado para controlar visibilidade de painéis secundários
   const [showAchievements, setShowAchievements] = useState(true);
@@ -245,51 +247,72 @@ export default function PlayZonePage() {
 
         {/* Layout principal com hierarquia clara */}
         <div className="space-y-8">
-          {/* Seção principal: Próximo jogo (destaque máximo) */}
-          <motion.section
-            className="relative overflow-hidden rounded-3xl border-2 border-[#24ffe6]/50 bg-gradient-to-br from-[#0b1933] via-[#0c213d] to-[#081326] p-8 shadow-[0_35px_80px_-45px_rgba(36,255,230,0.8)] sm:p-10"
-            variants={fadeUp}
-            initial="initial"
-            animate="animate"
-            transition={{ duration: 0.6, delay: 0.05 }}
-          >
-            <div className="pointer-events-none absolute -top-14 -right-14 h-48 w-48 rounded-full bg-[#24ffe6]/20 blur-3xl" />
-            <div className="relative z-10">
-              <div className="text-text-secondary mb-4 flex flex-wrap items-center gap-4 text-base">
-                <div className="text-text-primary flex items-center gap-2 font-medium">
-                  <CalendarDays className="text-neon-primary h-5 w-5" />
-                  {nextMatch.datetime}
+          {/* Seção principal: Próximo jogo OU Busca de eventos */}
+          {hasTeam ? (
+            <motion.section
+              className="relative overflow-hidden rounded-3xl border-2 border-[#24ffe6]/50 bg-gradient-to-br from-[#0b1933] via-[#0c213d] to-[#081326] p-8 shadow-[0_35px_80px_-45px_rgba(36,255,230,0.8)] sm:p-10"
+              variants={fadeUp}
+              initial="initial"
+              animate="animate"
+              transition={{ duration: 0.6, delay: 0.05 }}
+            >
+              <div className="pointer-events-none absolute -top-14 -right-14 h-48 w-48 rounded-full bg-[#24ffe6]/20 blur-3xl" />
+              <div className="relative z-10">
+                <div className="text-text-secondary mb-4 flex flex-wrap items-center gap-4 text-base">
+                  <div className="text-text-primary flex items-center gap-2 font-medium">
+                    <CalendarDays className="text-neon-primary h-5 w-5" />
+                    {nextMatch.datetime}
+                  </div>
+                  <div className="text-text-primary flex items-center gap-2 font-medium">
+                    <MapPin className="text-neon-primary h-5 w-5" />
+                    {nextMatch.location}
+                  </div>
                 </div>
-                <div className="text-text-primary flex items-center gap-2 font-medium">
-                  <MapPin className="text-neon-primary h-5 w-5" />
-                  {nextMatch.location}
+                <h2 className="text-3xl font-bold text-white md:text-4xl">
+                  {nextMatch.label}
+                </h2>
+                <p className="text-text-secondary mt-3 text-lg leading-relaxed">
+                  Confirme presença e garanta sua vaga no time titular. Chegue 30
+                  minutos antes para aquecimento e briefing tático.
+                </p>
+                <div className="mt-8 flex flex-wrap gap-4">
+                  <Button
+                    size="lg"
+                    className="group bg-neon-secondary hover:bg-neon-secondary/90 min-w-[200px] font-semibold text-slate-900 shadow-[0_16px_45px_-20px_rgba(36,255,230,0.9)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_20px_50px_-20px_rgba(36,255,230,1)]"
+                  >
+                    Confirmar presença
+                    <ArrowRight className="ml-2 h-5 w-5 transition-transform group-hover:translate-x-1" />
+                  </Button>
+                  <Button
+                    size="lg"
+                    variant="outline"
+                    className="hover:border-neon-secondary/60 hover:bg-neon-secondary/15 border-2 border-white/25 bg-white/10 text-white backdrop-blur transition-all duration-300"
+                  >
+                    Ver detalhes
+                  </Button>
                 </div>
               </div>
-              <h2 className="text-3xl font-bold text-white md:text-4xl">
-                {nextMatch.label}
-              </h2>
-              <p className="text-text-secondary mt-3 text-lg leading-relaxed">
-                Confirme presença e garanta sua vaga no time titular. Chegue 30
-                minutos antes para aquecimento e briefing tático.
-              </p>
-              <div className="mt-8 flex flex-wrap gap-4">
-                <Button
-                  size="lg"
-                  className="group bg-neon-secondary hover:bg-neon-secondary/90 min-w-[200px] font-semibold text-slate-900 shadow-[0_16px_45px_-20px_rgba(36,255,230,0.9)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_20px_50px_-20px_rgba(36,255,230,1)]"
-                >
-                  Confirmar presença
-                  <ArrowRight className="ml-2 h-5 w-5 transition-transform group-hover:translate-x-1" />
-                </Button>
-                <Button
-                  size="lg"
-                  variant="outline"
-                  className="hover:border-neon-secondary/60 hover:bg-neon-secondary/15 border-2 border-white/25 bg-white/10 text-white backdrop-blur transition-all duration-300"
-                >
-                  Ver detalhes
-                </Button>
+            </motion.section>
+          ) : (
+            <motion.section
+              className="relative overflow-hidden rounded-3xl border-2 border-[#24ffe6]/50 bg-gradient-to-br from-[#0b1933] via-[#0c213d] to-[#081326] p-8 shadow-[0_35px_80px_-45px_rgba(36,255,230,0.8)] sm:p-10"
+              variants={fadeUp}
+              initial="initial"
+              animate="animate"
+              transition={{ duration: 0.6, delay: 0.05 }}
+            >
+              <div className="pointer-events-none absolute -top-14 -right-14 h-48 w-48 rounded-full bg-[#24ffe6]/20 blur-3xl" />
+              <div className="relative z-10">
+                <h2 className="mb-2 text-3xl font-bold text-white md:text-4xl">
+                  Encontre sua próxima partida
+                </h2>
+                <p className="text-text-secondary mb-6 text-lg leading-relaxed">
+                  Busque por partidas, treinos ou grupos próximos a você. Filtre por localização, estilo de jogo ou intervalo de datas.
+                </p>
+                <EventSearch />
               </div>
-            </div>
-          </motion.section>
+            </motion.section>
+          )}
 
           {/* Grid principal: Estatísticas + Sidebar */}
           <div className="grid gap-6 lg:grid-cols-[minmax(0,1.6fr)_minmax(0,1fr)]">

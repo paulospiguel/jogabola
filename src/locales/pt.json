@@ -817,6 +817,74 @@
         "description": "Complete missões especiais e suba no ranking da PlayZone.",
         "button": "Ver desafios disponíveis"
       }
+    },
+    "eventSearch": {
+      "title": "Encontre sua próxima partida",
+      "description": "Busque por partidas, treinos ou grupos próximos a você. Filtre por localização, estilo de jogo ou intervalo de datas.",
+      "location": "Localização",
+      "gameStyle": "Estilo de jogo",
+      "gameStyleOptions": {
+        "competitivo": "Competitivo",
+        "recreativo": "Recreativo",
+        "misto": "Misto"
+      },
+      "startDate": "Data inicial",
+      "endDate": "Data final",
+      "search": "Buscar",
+      "filters": "Filtros",
+      "filtersModal": {
+        "title": "Configurações de Filtros",
+        "description": "Configure os filtros avançados para refinar sua busca",
+        "radius": "Raio de busca",
+        "radiusUnit": "km",
+        "language": "Idioma preferido",
+        "languageOptions": {
+          "all": "Todos os idiomas",
+          "pt": "Português",
+          "en": "English",
+          "es": "Español",
+          "fr": "Français"
+        },
+        "clear": "Limpar",
+        "apply": "Aplicar"
+      }
+    },
+    "searchResults": {
+      "title": "Resultados da busca",
+      "resultsFound": "{count} {count, plural, =1 {resultado encontrado} other {resultados encontrados}}",
+      "noResults": "Nenhum resultado encontrado",
+      "noResultsDescription": "Tente ajustar os filtros de busca",
+      "loading": "Buscando eventos...",
+      "back": "Voltar",
+      "eventTypes": {
+        "partida": "Partida",
+        "treino": "Treino",
+        "grupo": "Grupo"
+      },
+      "participants": "participantes",
+      "organizedBy": "Organizado por"
+    },
+    "eventDetails": {
+      "back": "Voltar",
+      "loading": "Carregando evento...",
+      "notFound": "Evento não encontrado",
+      "about": "Sobre o evento",
+      "participationCriteria": "Critérios para participar",
+      "experienceLevel": "Nível de experiência",
+      "age": "Idade",
+      "gender": "Gênero",
+      "positionNeeded": "Posição necessária",
+      "organizer": "Organizador",
+      "participate": "Participar do evento",
+      "share": "Compartilhar",
+      "sendMessage": "Enviar mensagem",
+      "sendMessageTitle": "Enviar mensagem ao organizador",
+      "sendMessageDescription": "Envie uma mensagem para {organizer}",
+      "message": "Mensagem",
+      "messagePlaceholder": "Escreva sua mensagem aqui...",
+      "cancel": "Cancelar",
+      "send": "Enviar",
+      "sending": "Enviando..."
     }
   },
   "positions": {
