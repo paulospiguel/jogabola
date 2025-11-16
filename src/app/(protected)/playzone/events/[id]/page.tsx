@@ -1,9 +1,9 @@
 "use client";
 
+import { EventImageCarousel } from "@/components/event-image-carousel";
+import ShareDialog from "@/components/share-link-dialog";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import ShareDialog from "@/components/share-link-dialog";
-import { EventImageCarousel } from "@/components/event-image-carousel";
 import {
   Dialog,
   DialogContent,
@@ -11,32 +11,36 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { useSession } from "@/lib/auth-client";
 import { motion } from "framer-motion";
 import {
-  CalendarDays,
-  MapPin,
-  Users,
-  Clock,
   ArrowLeft,
-  Trophy,
-  Target,
-  Share2,
-  MessageCircle,
+  Award,
+  Bell,
+  CalendarDays,
   CheckCircle2,
-  XCircle,
+  Clock,
+  CreditCard,
+  Euro,
+  Gift,
+  MapPin,
+  MessageCircle,
+  Share2,
+  Star,
+  Target,
+  Trophy,
+  Users
 } from "lucide-react";
-import { useRouter, useParams } from "next/navigation";
-import { useState, useEffect } from "react";
-import { useSession } from "@/lib/auth-client";
+import { useParams, useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 
 interface EventDetails {
   id: number;
   title: string;
   description: string;
-  type: "partida" | "treino" | "grupo";
+  type: "partida" | "treino" | "grupo" | "torneio" | "competicao" | "evento";
   location: string;
   city?: string;
   country?: string;
@@ -56,6 +60,24 @@ interface EventDetails {
   organizerEmail?: string;
   language?: string;
   images?: string[];
+
+  // Payment info
+  isFree: boolean;
+  price?: number;
+  currency?: string;
+  paymentType?: "per_person" | "total" | "split";
+  paymentDescription?: string;
+
+  // Prize info
+  hasPrize: boolean;
+  prizeAmount?: number;
+  prizeCurrency?: string;
+  prizeDescription?: string;
+  prizeType?: "winner" | "draw" | "participation" | "custom";
+
+  // User-specific flags
+  isFavorited?: boolean;
+  isFollowingOrganizer?: boolean;
 }
 
 const fadeUp = {
@@ -73,17 +95,19 @@ export default function EventDetailsPage() {
   const [showMessageModal, setShowMessageModal] = useState(false);
   const [message, setMessage] = useState("");
   const [sendingMessage, setSendingMessage] = useState(false);
+  const [isFavorited, setIsFavorited] = useState(false);
+  const [isFollowing, setIsFollowing] = useState(false);
 
   // Mock data - substituir por chamada à API
   useEffect(() => {
     const eventId = params.id;
     setTimeout(() => {
-      setEvent({
+      const mockEvent = {
         id: Number(eventId),
         title: "Pelada Dominical - Parque Central",
         description:
-          "Partida recreativa de futebol 11 para todos os níveis. Venha se divertir e fazer novos amigos!",
-        type: "partida",
+          "Partida recreativa de futebol 11 para todos os níveis. Venha se divertir e fazer novos amigos! Evento com premiação para o time vencedor.",
+        type: "partida" as const,
         location: "Parque Central",
         city: "Lisboa",
         country: "Portugal",
@@ -110,7 +134,23 @@ export default function EventDetailsPage() {
           "/temp/barreiro.jpg",
           "/temp/bolacacem.jpg",
         ],
-      });
+        isFree: false,
+        price: 5,
+        currency: "EUR",
+        paymentType: "per_person" as const,
+        paymentDescription: "Valor para dividir o aluguel do campo entre os participantes",
+        hasPrize: true,
+        prizeAmount: 200,
+        prizeCurrency: "EUR",
+        prizeDescription: "Troféu personalizado + €200 em dinheiro para o time vencedor",
+        prizeType: "winner" as const,
+        isFavorited: false,
+        isFollowingOrganizer: false,
+      };
+
+      setEvent(mockEvent);
+      setIsFavorited(mockEvent.isFavorited || false);
+      setIsFollowing(mockEvent.isFollowingOrganizer || false);
       setLoading(false);
     }, 500);
   }, [params.id]);
@@ -150,13 +190,23 @@ export default function EventDetailsPage() {
     if (!message.trim() || !event) return;
 
     setSendingMessage(true);
-    // TODO: Implementar envio de mensagem
     setTimeout(() => {
       setSendingMessage(false);
       setShowMessageModal(false);
       setMessage("");
-      // Mostrar toast de sucesso
     }, 1000);
+  };
+
+  const handleToggleFavorite = () => {
+    setIsFavorited(!isFavorited);
+  };
+
+  const handleToggleFollow = () => {
+    setIsFollowing(!isFollowing);
+  };
+
+  const handleJoinEvent = () => {
+    console.log("Participar do evento");
   };
 
   const shareLink = event
@@ -397,6 +447,110 @@ export default function EventDetailsPage() {
                   <p className="text-white/80">{event.organizerName}</p>
                 </CardContent>
               </Card>
+
+              {/* Informações de Pagamento */}
+              {!event.isFree && event.price && (
+                <Card className="rounded-3xl border border-neon-secondary/20 bg-gradient-to-br from-neon-secondary/5 to-transparent p-6">
+                  <CardContent className="p-0">
+                    <div className="flex items-start gap-3 mb-4">
+                      <div className="rounded-lg bg-neon-secondary/10 p-2">
+                        <Target className="h-5 w-5 text-neon-secondary" />
+                      </div>
+                      <div>
+                        <h2 className="text-xl font-semibold text-white">
+                          Informações de Pagamento
+                        </h2>
+                        <p className="text-sm text-white/60 mt-1">
+                          Este evento requer pagamento
+                        </p>
+                      </div>
+                    </div>
+
+                    <div className="space-y-3">
+                      <div className="flex items-center justify-between p-3 rounded-lg bg-white/5">
+                        <span className="text-white/70">Valor por participante</span>
+                        <div className="flex items-center gap-1">
+                          <span className="text-2xl font-bold text-white">
+                            {event.currency ? `${event.currency} ${event.price}` : `${event.price}`}
+                          </span>
+                        </div>
+                      </div>
+
+                      {event.paymentDescription && (
+                        <p className="text-sm text-white/70 leading-relaxed">
+                          {event.paymentDescription}
+                        </p>
+                      )}
+
+                      <div className="flex items-center gap-2 text-xs text-white/50">
+                        <CheckCircle2 className="h-4 w-4 text-green-400" />
+                        <span>Pagamento seguro</span>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              )}
+
+              {event.isFree && (
+                <Card className="rounded-3xl border border-green-500/20 bg-gradient-to-br from-green-500/5 to-transparent p-6">
+                  <CardContent className="p-0">
+                    <div className="flex items-center gap-3">
+                      <div className="rounded-lg bg-green-500/10 p-2">
+                        <Target className="h-5 w-5 text-green-400" />
+                      </div>
+                      <div>
+                        <h3 className="text-lg font-semibold text-white">Evento Gratuito</h3>
+                        <p className="text-sm text-white/60">Sem custo de participação</p>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              )}
+
+              {/* Informações de Premiação */}
+              {event.hasPrize && event.prizeAmount && (
+                <Card className="rounded-3xl border border-amber-500/30 bg-gradient-to-br from-amber-500/10 to-transparent p-6">
+                  <CardContent className="p-0">
+                    <div className="flex items-start gap-3 mb-4">
+                      <div className="rounded-lg bg-amber-500/20 p-2">
+                        <Trophy className="h-6 w-6 text-amber-400" />
+                      </div>
+                      <div>
+                        <h2 className="text-xl font-semibold text-white">
+                          Premiação
+                        </h2>
+                        <p className="text-sm text-amber-200/70 mt-1">
+                          Evento com prêmio para os vencedores
+                        </p>
+                      </div>
+                    </div>
+
+                    <div className="space-y-3">
+                      <div className="flex items-center justify-between p-4 rounded-lg bg-amber-500/10 border border-amber-500/20">
+                        <span className="text-amber-100 font-medium">Valor do Prêmio</span>
+                        <div className="flex items-center gap-1">
+                          <span className="text-3xl font-bold text-amber-400">
+                            {event.prizeCurrency ? `${event.prizeCurrency} ${event.prizeAmount}` : `${event.prizeAmount}`}
+                          </span>
+                        </div>
+                      </div>
+
+                      {event.prizeDescription && (
+                        <div className="p-3 rounded-lg bg-amber-500/5">
+                          <p className="text-sm text-amber-100/90 leading-relaxed">
+                            {event.prizeDescription}
+                          </p>
+                        </div>
+                      )}
+
+                      <div className="flex items-center gap-2 text-xs text-amber-200/60">
+                        <Trophy className="h-4 w-4 text-amber-400" />
+                        <span className="capitalize">Tipo: {event.prizeType}</span>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              )}
             </motion.div>
           </div>
 
@@ -412,11 +566,47 @@ export default function EventDetailsPage() {
               <Card className="rounded-3xl border border-[#24ffe6]/25 bg-gradient-to-br from-[#042d39] to-[#081b2d] p-6">
                 <CardContent className="space-y-4 p-0">
                   <Button
-                    className="w-full bg-neon-secondary font-semibold text-slate-900"
+                    className="w-full bg-neon-secondary font-semibold text-slate-900 hover:bg-neon-secondary/90"
                     size="lg"
+                    onClick={handleJoinEvent}
                   >
-                    Participar do evento
+                    {!event.isFree && event.price ? (
+                      <span className="flex items-center gap-2">
+                        <Euro className="h-5 w-5" />
+                        Participar - €{event.price}
+                      </span>
+                    ) : (
+                      "Participar do evento"
+                    )}
                   </Button>
+
+                  <div className="grid grid-cols-2 gap-2">
+                    <Button
+                      variant="outline"
+                      className={`border-2 transition-all ${
+                        isFavorited
+                          ? "border-neon-secondary bg-neon-secondary/10 text-neon-secondary hover:bg-neon-secondary/20"
+                          : "border-white/25 bg-white/10 text-white hover:bg-white/20"
+                      }`}
+                      onClick={handleToggleFavorite}
+                    >
+                      <Star className={`mr-2 h-5 w-5 ${isFavorited ? "fill-current" : ""}`} />
+                      {isFavorited ? "Favoritado" : "Favoritar"}
+                    </Button>
+
+                    <Button
+                      variant="outline"
+                      className={`border-2 transition-all ${
+                        isFollowing
+                          ? "border-neon-secondary bg-neon-secondary/10 text-neon-secondary hover:bg-neon-secondary/20"
+                          : "border-white/25 bg-white/10 text-white hover:bg-white/20"
+                      }`}
+                      onClick={handleToggleFollow}
+                    >
+                      <Bell className={`mr-2 h-5 w-5 ${isFollowing ? "fill-current" : ""}`} />
+                      {isFollowing ? "Seguindo" : "Seguir"}
+                    </Button>
+                  </div>
 
                   <div className="space-y-2">
                     <Button

@@ -190,7 +190,7 @@ export default function LoginPage() {
 
       <div className="relative z-10 flex min-h-screen flex-col lg:flex-row">
         {/* Lado esquerdo - Hero Section */}
-        <div className="relative flex w-full flex-col justify-center px-4 py-8 lg:w-1/2 lg:p-16">
+        <div className="relative order-2 flex w-full flex-col justify-center px-4 py-8 md:order-1 lg:w-1/2 lg:p-16">
           <motion.div
             initial={{ opacity: 0, x: -50 }}
             animate={{ opacity: 1, x: 0 }}
@@ -235,7 +235,7 @@ export default function LoginPage() {
         </div>
 
         {/* Lado direito - Form */}
-        <div className="flex flex-1 items-center justify-center px-4 py-6 sm:px-6 lg:p-8">
+        <div className="order-1 flex flex-1 items-center justify-center px-4 py-6 sm:px-6 md:order-2 lg:p-8">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -312,13 +312,13 @@ export default function LoginPage() {
                           </FormLabel>
                           <FormControl>
                             <div className="relative">
-                              <Mail className="absolute top-1/2 left-3 h-5 w-5 -translate-y-1/2 text-[#00cfb1]" />
                               <Input
+                                icon={Mail}
                                 {...field}
                                 type="email"
                                 placeholder={t("form.fields.emailPlaceholder")}
                                 disabled={loading}
-                                className="border-white/20 bg-white/10 pl-10 text-white placeholder:text-white/40 focus:border-[#00cfb1] focus:ring-[#00cfb1]"
+                                className="relative z-10 border-white/20 bg-white/10 !pl-10 text-white placeholder:text-white/40 focus:border-[#00cfb1] focus:ring-[#00cfb1]"
                               />
                             </div>
                           </FormControl>
@@ -337,22 +337,22 @@ export default function LoginPage() {
                           </FormLabel>
                           <FormControl>
                             <div className="relative">
-                              <Lock className="absolute top-1/2 left-3 h-5 w-5 -translate-y-1/2 text-[#00cfb1]" />
                               <Input
+                                icon={Lock}
                                 {...field}
                                 type={showLoginPassword ? "text" : "password"}
                                 placeholder={t(
                                   "form.fields.passwordPlaceholder",
                                 )}
                                 disabled={loading}
-                                className="border-white/20 bg-white/10 pr-10 pl-10 text-white placeholder:text-white/40 focus:border-[#00cfb1] focus:ring-[#00cfb1]"
+                                className="relative z-10 border-white/20 bg-white/10 pr-10 !pl-10 text-white placeholder:text-white/40 focus:border-[#00cfb1] focus:ring-[#00cfb1]"
                               />
                               <button
                                 type="button"
                                 onClick={() =>
                                   setShowLoginPassword(!showLoginPassword)
                                 }
-                                className="absolute top-1/2 right-3 -translate-y-1/2 text-[#00cfb1] transition-colors hover:text-[#1effbf]"
+                                className="absolute top-1/2 right-3 z-10 -translate-y-1/2 text-[#00cfb1] transition-colors hover:text-[#1effbf]"
                                 aria-label={
                                   showLoginPassword
                                     ? "Ocultar senha"
@@ -450,13 +450,13 @@ export default function LoginPage() {
                           </FormLabel>
                           <FormControl>
                             <div className="relative">
-                              <User className="absolute top-1/2 left-3 h-5 w-5 -translate-y-1/2 text-[#00cfb1]" />
                               <Input
+                                icon={User}
                                 {...field}
                                 type="text"
                                 placeholder={t("form.fields.namePlaceholder")}
                                 disabled={loading}
-                                className="border-white/20 bg-white/10 pl-10 text-white placeholder:text-white/40 focus:border-[#00cfb1] focus:ring-[#00cfb1]"
+                                className="border-white/20 bg-white/10 !pl-10 text-white placeholder:text-white/40 focus:border-[#00cfb1] focus:ring-[#00cfb1]"
                               />
                             </div>
                           </FormControl>
@@ -475,13 +475,13 @@ export default function LoginPage() {
                           </FormLabel>
                           <FormControl>
                             <div className="relative">
-                              <Mail className="absolute top-1/2 left-3 h-5 w-5 -translate-y-1/2 text-[#00cfb1]" />
                               <Input
+                                icon={Mail}
                                 {...field}
                                 type="email"
                                 placeholder={t("form.fields.emailPlaceholder")}
                                 disabled={loading}
-                                className="border-white/20 bg-white/10 pl-10 text-white placeholder:text-white/40 focus:border-[#00cfb1] focus:ring-[#00cfb1]"
+                                className="border-white/20 bg-white/10 !pl-10 text-white placeholder:text-white/40 focus:border-[#00cfb1] focus:ring-[#00cfb1]"
                               />
                             </div>
                           </FormControl>
@@ -500,15 +500,15 @@ export default function LoginPage() {
                           </FormLabel>
                           <FormControl>
                             <div className="relative">
-                              <Lock className="absolute top-1/2 left-3 h-5 w-5 -translate-y-1/2 text-[#00cfb1]" />
                               <Input
+                                icon={Lock}
                                 {...field}
                                 type={showPassword ? "text" : "password"}
                                 placeholder={t(
                                   "form.fields.passwordPlaceholder",
                                 )}
                                 disabled={loading}
-                                className="border-white/20 bg-white/10 pr-10 pl-10 text-white placeholder:text-white/40 focus:border-[#00cfb1] focus:ring-[#00cfb1]"
+                                className="border-white/20 bg-white/10 pr-10 !pl-10 text-white placeholder:text-white/40 focus:border-[#00cfb1] focus:ring-[#00cfb1]"
                               />
                               <button
                                 type="button"
@@ -556,7 +556,7 @@ export default function LoginPage() {
                             </FormLabel>
                             <FormControl>
                               <div className="relative">
-                                <Lock className="absolute top-1/2 left-3 h-5 w-5 -translate-y-1/2 text-[#00cfb1]" />
+                                <Lock className="pointer-events-none absolute top-1/2 left-3 h-5 w-5 -translate-y-1/2 text-[#00cfb1]" />
                                 <Input
                                   {...field}
                                   type={
@@ -566,7 +566,7 @@ export default function LoginPage() {
                                     "form.fields.passwordPlaceholder",
                                   )}
                                   disabled={loading}
-                                  className={`border-white/20 bg-white/10 pr-10 pl-10 text-white placeholder:text-white/40 focus:border-[#00cfb1] focus:ring-[#00cfb1] ${
+                                  className={`border-white/20 bg-white/10 pr-10 !pl-10 text-white placeholder:text-white/40 focus:border-[#00cfb1] focus:ring-[#00cfb1] ${
                                     passwordsDontMatch
                                       ? "border-red-400 focus:border-red-400 focus:ring-red-400"
                                       : passwordsMatch

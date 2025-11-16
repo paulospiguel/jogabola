@@ -66,7 +66,7 @@ export default function MobileMenu({ open, onClose }: MobileMenuProps) {
             {t("homePage.startMyJourney")}
           </Button>
         </AnimatedBorderTrail>
-        <Link href="/sign-in" onClick={onClose}>
+        <Link href="/auth" onClick={onClose}>
           <Button 
             variant="outline"
             className="rounded-full px-4 py-2 whitespace-nowrap border-blue-600 text-blue-600 hover:bg-blue-50 dark:border-blue-400 dark:text-blue-400 dark:hover:bg-blue-950"

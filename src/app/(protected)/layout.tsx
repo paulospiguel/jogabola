@@ -15,9 +15,9 @@ export default async function ProtectedLayout({
     headers: await headers(),
   });
 
-  // If no session, redirect to sign-in
+  // If no session, redirect to auth
   if (!session) {
-    redirect("/sign-in");
+    redirect("/auth");
   }
 
   // Check if user has a profile (onboarding is optional)

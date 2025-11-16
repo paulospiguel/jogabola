@@ -13,6 +13,10 @@ import {
   Target,
   Trophy,
   Users,
+  Euro,
+  Award,
+  Star,
+  Bell,
 } from "lucide-react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -31,6 +35,11 @@ interface EventResult {
   maxParticipants?: number;
   organizerName: string;
   images?: string[];
+  price?: number;
+  isFree?: boolean;
+  prizeAmount?: number;
+  prizeDescription?: string;
+  isFavorited?: boolean;
 }
 
 const fadeUp = {
@@ -44,9 +53,7 @@ export default function SearchResultsPage() {
   const [results, setResults] = useState<EventResult[]>([]);
   const [loading, setLoading] = useState(true);
 
-  // Mock data - substituir por chamada à API
   useEffect(() => {
-    // Simular busca
     setTimeout(() => {
       setResults([
         {
@@ -66,6 +73,9 @@ export default function SearchResultsPage() {
             "/temp/barreiro.jpg",
             "/temp/bolacacem.jpg",
           ],
+          price: 5,
+          isFree: false,
+          isFavorited: false,
         },
         {
           id: 2,
@@ -80,6 +90,8 @@ export default function SearchResultsPage() {
           maxParticipants: 16,
           organizerName: "Maria Santos",
           images: ["/images/login-stadium.jpg", "/temp/barreiro.jpg"],
+          isFree: true,
+          isFavorited: true,
         },
         {
           id: 3,
@@ -93,7 +105,12 @@ export default function SearchResultsPage() {
           currentParticipants: 15,
           maxParticipants: 20,
           organizerName: "Pedro Costa",
-          images: ["/images/login-stadium.jpg"],
+          images: [],
+          price: 10,
+          isFree: false,
+          prizeAmount: 200,
+          prizeDescription: "Troféu + €200 para o time vencedor",
+          isFavorited: false,
         },
       ]);
       setLoading(false);
@@ -205,78 +222,134 @@ export default function SearchResultsPage() {
                   animate="animate"
                   transition={{ delay: index * 0.1 }}
                 >
-                  <Card className="group h-full cursor-pointer overflow-hidden rounded-3xl border border-white/10 bg-white/6 transition-all duration-300 hover:border-[#24ffe6]/40 hover:bg-white/10 hover:shadow-[0_20px_50px_-20px_rgba(36,255,230,0.3)]">
+                  <Card className="group relative h-full overflow-hidden rounded-3xl border border-white/10 bg-gradient-to-br from-white/8 to-white/4 backdrop-blur-sm transition-all duration-300 hover:border-neon-secondary/50 hover:shadow-[0_20px_50px_-20px_rgba(36,255,230,0.4)]">
                     <Link href={`/playzone/events/${event.id}`}>
-                      {/* Carrossel de imagens */}
                       <EventImageCarousel
                         images={event.images || []}
                         alt={event.title}
                         showControls={event.images && event.images.length > 1}
                       />
                     </Link>
+
+                    <div className="absolute top-3 right-3 z-20 flex gap-2">
+                      <button
+                        onClick={(e) => {
+                          e.preventDefault();
+                          e.stopPropagation();
+                        }}
+                        className={`h-10 w-10 rounded-full backdrop-blur-md border transition-all ${
+                          event.isFavorited
+                            ? "bg-neon-secondary/20 border-neon-secondary text-neon-secondary"
+                            : "bg-black/40 border-white/20 text-white hover:bg-black/60"
+                        }`}
+                        aria-label={event.isFavorited ? "Remover dos favoritos" : "Adicionar aos favoritos"}
+                      >
+                        <Star
+                          className={`h-5 w-5 mx-auto ${event.isFavorited ? "fill-current" : ""}`}
+                        />
+                      </button>
+                      <button
+                        onClick={(e) => {
+                          e.preventDefault();
+                          e.stopPropagation();
+                        }}
+                        className="h-10 w-10 rounded-full bg-black/40 backdrop-blur-md border border-white/20 text-white hover:bg-black/60 transition-all"
+                        aria-label="Seguir organizador"
+                      >
+                        <Bell className="h-5 w-5 mx-auto" />
+                      </button>
+                    </div>
+
                     <CardContent className="p-6">
                       <Link href={`/playzone/events/${event.id}`}>
                         <div className="space-y-4">
-                          {/* Tipo e título */}
-                          <div className="flex items-start justify-between">
+                          <div className="flex items-start justify-between gap-3">
                             <div className="flex items-center gap-2">
-                              <TypeIcon className="h-5 w-5 text-[#24ffe6]" />
-                              <span className="text-xs font-semibold tracking-wider text-[#24ffe6] uppercase">
+                              <div className="rounded-lg bg-neon-secondary/10 p-1.5">
+                                <TypeIcon className="h-4 w-4 text-neon-secondary" />
+                              </div>
+                              <span className="text-xs font-bold tracking-wider text-neon-secondary uppercase">
                                 {getTypeLabel(event.type)}
                               </span>
                             </div>
-                          </div>
 
-                          <h3 className="text-xl font-bold text-white">
-                            {event.title}
-                          </h3>
-
-                          {/* Informações */}
-                          <div className="space-y-2 text-sm">
-                            <div className="flex items-center gap-2 text-white/80">
-                              <MapPin className="h-4 w-4 text-[#24ffe6]" />
-                              <span>{event.location}</span>
-                              {event.city && (
-                                <span className="text-white/60">
-                                  • {event.city}
-                                </span>
-                              )}
-                            </div>
-
-                            <div className="flex items-center gap-2 text-white/80">
-                              <CalendarDays className="h-4 w-4 text-[#24ffe6]" />
-                              <span>{formatDate(event.startDate)}</span>
-                            </div>
-
-                            <div className="flex items-center gap-2 text-white/80">
-                              <Users className="h-4 w-4 text-[#24ffe6]" />
-                              <span>
-                                {event.currentParticipants}
-                                {event.maxParticipants &&
-                                  ` / ${event.maxParticipants}`}{" "}
-                                participantes
-                              </span>
-                            </div>
-
-                            {event.gameStyle && (
-                              <div className="flex items-center gap-2 text-white/80">
-                                <Clock className="h-4 w-4 text-[#24ffe6]" />
-                                <span className="capitalize">
-                                  {event.gameStyle}
+                            {event.prizeAmount && (
+                              <div className="flex items-center gap-1 rounded-full bg-amber-500/10 px-2.5 py-1 border border-amber-500/20">
+                                <Award className="h-3.5 w-3.5 text-amber-400" />
+                                <span className="text-xs font-bold text-amber-400">
+                                  €{event.prizeAmount}
                                 </span>
                               </div>
                             )}
                           </div>
 
-                          {/* Organizador */}
-                          <div className="border-t border-white/10 pt-4">
-                            <p className="text-xs text-white/60">
-                              Organizado por{" "}
-                              <span className="font-medium text-white">
-                                {event.organizerName}
+                          <h3 className="text-lg font-bold text-white leading-tight line-clamp-2">
+                            {event.title}
+                          </h3>
+
+                          <div className="space-y-2.5 text-sm">
+                            <div className="flex items-center gap-2 text-white/70">
+                              <MapPin className="h-4 w-4 text-neon-secondary flex-shrink-0" />
+                              <span className="truncate">{event.location}</span>
+                              {event.city && (
+                                <span className="text-white/50">• {event.city}</span>
+                              )}
+                            </div>
+
+                            <div className="flex items-center gap-2 text-white/70">
+                              <CalendarDays className="h-4 w-4 text-neon-secondary flex-shrink-0" />
+                              <span>{formatDate(event.startDate)}</span>
+                            </div>
+
+                            <div className="flex items-center gap-2 text-white/70">
+                              <Users className="h-4 w-4 text-neon-secondary flex-shrink-0" />
+                              <span>
+                                {event.currentParticipants}
+                                {event.maxParticipants && ` / ${event.maxParticipants}`} participantes
                               </span>
-                            </p>
+                            </div>
+
+                            {event.gameStyle && (
+                              <div className="flex items-center gap-2 text-white/70">
+                                <Clock className="h-4 w-4 text-neon-secondary flex-shrink-0" />
+                                <span className="capitalize">{event.gameStyle}</span>
+                              </div>
+                            )}
                           </div>
+
+                          <div className="flex items-center justify-between border-t border-white/10 pt-4">
+                            <div>
+                              <p className="text-xs text-white/50">Organizado por</p>
+                              <p className="text-sm font-semibold text-white">{event.organizerName}</p>
+                            </div>
+
+                            <div className="text-right">
+                              {event.isFree ? (
+                                <div className="rounded-lg bg-green-500/10 px-3 py-1.5 border border-green-500/20">
+                                  <span className="text-sm font-bold text-green-400">GRÁTIS</span>
+                                </div>
+                              ) : event.price ? (
+                                <div>
+                                  <p className="text-xs text-white/50">Participação</p>
+                                  <div className="flex items-center gap-1">
+                                    <Euro className="h-4 w-4 text-neon-secondary" />
+                                    <span className="text-lg font-bold text-white">{event.price}</span>
+                                  </div>
+                                </div>
+                              ) : null}
+                            </div>
+                          </div>
+
+                          {event.prizeDescription && (
+                            <div className="rounded-lg bg-amber-500/5 border border-amber-500/20 p-3">
+                              <div className="flex items-start gap-2">
+                                <Award className="h-4 w-4 text-amber-400 flex-shrink-0 mt-0.5" />
+                                <p className="text-xs text-amber-200/90 leading-relaxed">
+                                  {event.prizeDescription}
+                                </p>
+                              </div>
+                            </div>
+                          )}
                         </div>
                       </Link>
                     </CardContent>

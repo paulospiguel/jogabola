@@ -182,7 +182,7 @@ export default function ForgotPasswordPage() {
                       )}
                     </Button>
 
-                    <Link href="/sign-in">
+                    <Link href="/auth">
                       <Button
                         type="button"
                         variant="ghost"
@@ -208,7 +208,7 @@ export default function ForgotPasswordPage() {
                   Enviar para outro email
                 </Button>
 
-                <Link href="/sign-in">
+                <Link href="/auth">
                   <Button
                     type="button"
                     variant="ghost"

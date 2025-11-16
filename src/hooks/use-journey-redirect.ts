@@ -11,16 +11,16 @@ import { useCallback } from "react";
  * Hook para redirecionamento inteligente baseado no status do usuário
  * - Se tem sessão ativa e tem role definido → vai para dashboard da jornada
  * - Se tem sessão mas não tem role → vai para arena padrão (onboarding é opcional)
- * - Se não tem sessão → vai para sign-in
+ * - Se não tem sessão → vai para auth
  */
 export function useJourneyRedirect() {
   const router = useRouter();
   const { data: session } = useSession();
 
   const redirectToJourney = useCallback(async () => {
-    // Se não tem sessão, vai para sign-in
+    // Se não tem sessão, vai para auth
     if (!session?.user?.id) {
-      router.push("/sign-in");
+      router.push("/auth");
       return;
     }
 

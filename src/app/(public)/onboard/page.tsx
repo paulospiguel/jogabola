@@ -417,13 +417,13 @@ export default function OnboardPage() {
           t("success.completedPendingMessage"),
         );
 
-        // Redirect to sign-in with email and name as query params
+        // Redirect to auth with email and name as query params
         setTimeout(() => {
           const params = new URLSearchParams({
             email: formData.email || "",
             name: formData.name || "",
           });
-          router.push(`/sign-in?${params.toString()}`);
+          router.push(`/auth?${params.toString()}`);
         }, 1500);
       }
     } catch (error) {

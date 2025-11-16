@@ -112,7 +112,7 @@ export default function ResetPasswordPage() {
 
       // Redirecionar após 2 segundos
       setTimeout(() => {
-        router.push("/sign-in");
+        router.push("/auth");
       }, 2000);
     } catch (err: any) {
       console.error("Reset password error:", err);
@@ -259,7 +259,7 @@ export default function ResetPasswordPage() {
                       )}
                     </Button>
 
-                    <Link href="/sign-in">
+                    <Link href="/auth">
                       <Button
                         type="button"
                         variant="ghost"
@@ -274,7 +274,7 @@ export default function ResetPasswordPage() {
               </Form>
             ) : (
               <div className="space-y-4">
-                <Link href="/sign-in">
+                <Link href="/auth">
                   <Button
                     type="button"
                     className="w-full bg-gradient-to-r from-[#00cfb1] to-[#1effbf] font-bold text-[#21005a] hover:from-[#1effbf] hover:to-[#00cfb1] hover:shadow-lg hover:shadow-[#00cfb1]/50"

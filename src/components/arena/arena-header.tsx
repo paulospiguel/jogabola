@@ -33,7 +33,7 @@ export default function ArenaHeader({ onMenuToggle }: ArenaHeaderProps) {
     await signOut({
       fetchOptions: {
         onSuccess: () => {
-          router.push("/sign-in");
+          router.push("/auth");
         },
       },
     });

@@ -78,7 +78,7 @@ export default function PlayZoneHeader({ onMenuToggle }: PlayZoneHeaderProps) {
     await signOut({
       fetchOptions: {
         onSuccess: () => {
-          router.push("/sign-in");
+          router.push("/auth");
         },
       },
     });

@@ -262,7 +262,30 @@
   :focus-visible {
     outline: 3px solid var(--color-focus-ring, var(--color-neon-primary));
     outline-offset: 2px;
-    border-radius: 4px;
+  }
+
+  /* Preserve rounded-full border-radius on focus for form elements - use attribute selector for better specificity */
+  input[class*="rounded-full"]:focus-visible,
+  input[class*="rounded-full"]:focus,
+  input[class*="rounded-full"]:focus-within,
+  select[class*="rounded-full"]:focus-visible,
+  select[class*="rounded-full"]:focus,
+  select[class*="rounded-full"]:focus-within,
+  textarea[class*="rounded-full"]:focus-visible,
+  textarea[class*="rounded-full"]:focus,
+  textarea[class*="rounded-full"]:focus-within,
+  button[class*="rounded-full"]:focus-visible,
+  button[class*="rounded-full"]:focus,
+  button[class*="rounded-full"]:focus-within {
+    border-radius: 9999px !important;
+  }
+
+  /* Force rounded-full on all inputs with rounded-full class */
+  input[class*="rounded-full"],
+  select[class*="rounded-full"],
+  textarea[class*="rounded-full"],
+  button[class*="rounded-full"] {
+    border-radius: 9999px !important;
   }
 
   /* High contrast for interactive elements - exceptions for inline links */
@@ -273,6 +296,18 @@
   textarea {
     min-height: 44px;
     min-width: 44px;
+  }
+
+  /* Exception for Switch component - allow smaller height */
+  button[data-state],
+  [role="switch"],
+  [data-radix-switch-root] {
+    min-height: unset !important;
+  }
+
+  /* Force background color on Switch Thumb */
+  [data-radix-switch-thumb] {
+    background-color: var(--background) !important;
   }
 
   a[role="button"] {
@@ -298,7 +333,7 @@
 }
 
 @theme inline {
-  --color-background: var(--background);
+  --color-background: #18193b;
   --color-foreground: var(--foreground);
   --color-card: var(--card);
   --color-card-foreground: var(--card-foreground);

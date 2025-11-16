@@ -86,7 +86,7 @@ export function useHeaderButtons(): UseHeaderButtonsReturn {
       buttons: [
         {
           label: "header.signIn",
-          href: "/sign-in",
+          href: "/auth",
           variant: "primary",
         },
         {

@@ -1,133 +1,98 @@
 "use client";
 
-import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-  CarouselNext,
-  CarouselPrevious,
-  type CarouselApi,
-} from "@/components/ui/carousel";
-import { cn } from "@/utils";
+import { useState } from "react";
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 interface EventImageCarouselProps {
-  images: string[];
+  images?: string[];
   alt?: string;
   className?: string;
   showControls?: boolean;
 }
 
 export function EventImageCarousel({
-  images,
+  images = [],
   alt = "Event image",
   className,
   showControls = true,
 }: EventImageCarouselProps) {
   const [currentIndex, setCurrentIndex] = useState(0);
+  
+  const displayImages = images.length > 0 ? images : ["/images/login-stadium.jpg"];
+  const hasMultipleImages = displayImages.length > 1;
 
-  if (!images || images.length === 0) {
-    return (
-      <div
-        className={cn(
-          "relative h-48 w-full overflow-hidden rounded-t-3xl bg-gradient-to-br from-[#0b1933] to-[#081326]",
-          className,
-        )}
-      >
-        <div className="flex h-full items-center justify-center">
-          <span className="text-sm text-white/40">Sem imagem</span>
-        </div>
-      </div>
+  const goToPrevious = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setCurrentIndex((prev) =>
+      prev === 0 ? displayImages.length - 1 : prev - 1
     );
-  }
+  };
 
-  if (images.length === 1) {
-    return (
-      <div
-        className={cn(
-          "relative h-48 w-full overflow-hidden rounded-t-3xl",
-          className,
-        )}
-      >
-        <Image
-          src={images[0]}
-          alt={alt}
-          fill
-          className="object-cover"
-          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-        />
-      </div>
+  const goToNext = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setCurrentIndex((prev) =>
+      prev === displayImages.length - 1 ? 0 : prev + 1
     );
-  }
-
-  const [api, setApi] = useState<CarouselApi>();
-
-  useEffect(() => {
-    if (!api) {
-      return;
-    }
-
-    setCurrentIndex(api.selectedScrollSnap());
-
-    api.on("select", () => {
-      setCurrentIndex(api.selectedScrollSnap());
-    });
-  }, [api]);
+  };
 
   return (
-    <div
-      className={cn(
-        "relative h-48 w-full overflow-hidden rounded-t-3xl",
-        className,
-      )}
-    >
-      <Carousel
-        setApi={setApi}
-        className="h-full w-full"
-        opts={{
-          align: "start",
-          loop: true,
-        }}
-      >
-        <CarouselContent className="h-full">
-          {images.map((image, index) => (
-            <CarouselItem key={index} className="h-full basis-full">
-              <div className="relative h-full w-full">
-                <Image
-                  src={image}
-                  alt={`${alt} ${index + 1}`}
-                  fill
-                  className="object-cover"
-                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                />
-              </div>
-            </CarouselItem>
-          ))}
-        </CarouselContent>
-        {showControls && images.length > 1 && (
-          <>
-            <CarouselPrevious className="left-2 h-6 w-6 border-white/20 bg-white/10 text-white hover:bg-white/20" />
-            <CarouselNext className="right-2 h-6 w-6 border-white/20 bg-white/10 text-white hover:bg-white/20" />
-          </>
-        )}
-      </Carousel>
+    <div className={cn("relative aspect-video w-full overflow-hidden", className)}>
+      <Image
+        src={displayImages[currentIndex]}
+        alt={`${alt} - ${currentIndex + 1}`}
+        fill
+        className="object-cover transition-transform duration-300 group-hover:scale-105"
+        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+        priority={currentIndex === 0}
+      />
 
-      {/* Indicadores de página */}
-      {images.length > 1 && (
-        <div className="absolute bottom-2 left-1/2 flex -translate-x-1/2 gap-1.5">
-          {images.map((_, index) => (
-            <button
-              key={index}
-              className={cn(
-                "h-1.5 rounded-full transition-all",
-                index === currentIndex
-                  ? "w-6 bg-white"
-                  : "w-1.5 bg-white/40 hover:bg-white/60",
-              )}
-              aria-label={`Ir para imagem ${index + 1}`}
-            />
-          ))}
+      {showControls && hasMultipleImages && (
+        <>
+          <button
+            onClick={goToPrevious}
+            className="absolute left-2 top-1/2 z-10 -translate-y-1/2 rounded-full bg-black/60 p-2 text-white backdrop-blur-sm transition-all hover:bg-black/80 hover:scale-110"
+            aria-label="Imagem anterior"
+          >
+            <ChevronLeft className="h-5 w-5" />
+          </button>
+
+          <button
+            onClick={goToNext}
+            className="absolute right-2 top-1/2 z-10 -translate-y-1/2 rounded-full bg-black/60 p-2 text-white backdrop-blur-sm transition-all hover:bg-black/80 hover:scale-110"
+            aria-label="Próxima imagem"
+          >
+            <ChevronRight className="h-5 w-5" />
+          </button>
+
+          <div className="absolute bottom-3 left-1/2 z-10 flex -translate-x-1/2 gap-1.5">
+            {displayImages.map((_, index) => (
+              <button
+                key={index}
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  setCurrentIndex(index);
+                }}
+                className={cn(
+                  "h-1.5 rounded-full transition-all",
+                  index === currentIndex
+                    ? "w-6 bg-neon-secondary"
+                    : "w-1.5 bg-white/50 hover:bg-white/80"
+                )}
+                aria-label={`Ir para imagem ${index + 1}`}
+              />
+            ))}
+          </div>
+        </>
+      )}
+      
+      {images.length === 0 && (
+        <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-slate-800/50 to-slate-900/50">
+          <p className="text-sm text-white/40 font-medium">Sem imagens disponíveis</p>
         </div>
       )}
     </div>
