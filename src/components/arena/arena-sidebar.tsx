@@ -7,6 +7,7 @@ import { cn } from "@/lib/utils";
 import {
   BarChart3,
   Calendar,
+  Globe,
   Home,
   MessageSquare,
   Settings,
@@ -14,10 +15,10 @@ import {
   Trophy,
   Users,
   X,
-  Globe,
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { Badge } from "../ui/badge";
 
 type ArenaSidebarProps = {
   isOpen: boolean;
@@ -101,7 +102,7 @@ export default function ArenaSidebar({ isOpen, onClose }: ArenaSidebarProps) {
         </Button>
       </div>
 
-      <Separator className="bg-emerald-100 dark:bg-white/10 md:hidden" />
+      <Separator className="bg-emerald-100 md:hidden dark:bg-white/10" />
 
       {/* Navigation */}
       <ScrollArea className="flex-1 px-3 py-4">
@@ -116,7 +117,7 @@ export default function ArenaSidebar({ isOpen, onClose }: ArenaSidebarProps) {
                 href={item.href}
                 onClick={onClose}
                 className={cn(
-                  "flex items-center gap-3 rounded-xl border border-transparent px-4 py-3 text-base font-medium transition-all duration-300 min-h-[44px]",
+                  "flex min-h-[44px] items-center gap-3 rounded-xl border border-transparent px-4 py-3 text-base font-medium transition-all duration-300",
                   isActive
                     ? "scale-105 border border-emerald-300 bg-emerald-100/70 text-emerald-700 shadow-[0_20px_50px_-30px_rgba(16,185,129,0.45)] dark:border-[#24ffe6]/40 dark:bg-white/10 dark:text-white dark:shadow-[0_25px_60px_-35px_rgba(36,255,230,0.8)]"
                     : "text-slate-600 hover:scale-105 hover:border hover:border-emerald-200 hover:bg-emerald-50/80 hover:text-emerald-700 dark:text-white/70 dark:hover:border-white/15 dark:hover:bg-white/5 dark:hover:text-white",
@@ -133,16 +134,12 @@ export default function ArenaSidebar({ isOpen, onClose }: ArenaSidebarProps) {
                 />
                 <span className="flex-1">{item.title}</span>
                 {item.badge && (
-                  <span
-                    className={cn(
-                      "rounded-full px-3 py-1 text-sm font-bold",
-                      isActive
-                        ? "bg-emerald-500 text-white shadow-sm dark:bg-[#24ffe6] dark:text-slate-900"
-                        : "border border-emerald-100 bg-emerald-50/80 text-emerald-600 dark:border-white/15 dark:bg-white/10 dark:text-white/80",
-                    )}
+                  <Badge
+                    variant="default"
+                    className="rounded-full px-2 py-1 text-sm font-bold"
                   >
                     {item.badge}
-                  </span>
+                  </Badge>
                 )}
               </Link>
             );

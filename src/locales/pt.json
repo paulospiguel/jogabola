@@ -263,7 +263,12 @@
     "plans": "Planos",
     "new": "Novo",
     "launchJourney": "Iniciar jornada",
-    "signIn": "Entrar"
+    "signIn": "Entrar",
+    "arena": "Arena",
+    "playZone": "Play Zone",
+    "fanZone": "Fan Zone",
+    "palco": "Palco",
+    "universo": "Universo"
   },
   "menu": {
     "home": "Início",
@@ -499,22 +504,42 @@
           "player": {
             "title": "Jogador",
             "description": "Encontra equipas, melhora as tuas habilidades e conquista a glória",
-            "features": ["Encontrar equipas", "Estatísticas pessoais", "Torneios", "Treinos"]
+            "features": [
+              "Encontrar equipas",
+              "Estatísticas pessoais",
+              "Torneios",
+              "Treinos"
+            ]
           },
           "manager": {
             "title": "Gestor/Treinador",
             "description": "Gere a tua equipa, organiza treinos e lidera para a vitória",
-            "features": ["Gestão de equipa", "Planeamento de treinos", "Análise de performance", "Recrutamento"]
+            "features": [
+              "Gestão de equipa",
+              "Planeamento de treinos",
+              "Análise de performance",
+              "Recrutamento"
+            ]
           },
           "coach": {
             "title": "Treinador Especializado",
             "description": "Desenvolve talentos e cria programas de treino personalizados",
-            "features": ["Programas de treino", "Desenvolvimento técnico", "Análise táctica", "Mentoria"]
+            "features": [
+              "Programas de treino",
+              "Desenvolvimento técnico",
+              "Análise táctica",
+              "Mentoria"
+            ]
           },
           "fan": {
             "title": "Adepto/Organizador",
             "description": "Organiza eventos, apoia equipas e conecta a comunidade",
-            "features": ["Organização de eventos", "Apoio a equipas", "Comunidade", "Networking"]
+            "features": [
+              "Organização de eventos",
+              "Apoio a equipas",
+              "Comunidade",
+              "Networking"
+            ]
           }
         }
       },
@@ -792,20 +817,20 @@
         "description": "Complete missões especiais e suba no ranking da PlayZone.",
         "button": "Ver desafios disponíveis"
       }
-    },
-    "positions": {
-      "goalkeeper": "Guarda-Redes",
-      "defender": "Defesa",
-      "midfielder": "Médio",
-      "forward": "Avançado",
-      "versatile": "Polivalente",
-      "default": "Jogador"
-    },
-    "experience": {
-      "beginner": "Iniciante",
-      "intermediate": "Intermediário",
-      "advanced": "Avançado",
-      "professional": "Profissional"
     }
+  },
+  "positions": {
+    "goalkeeper": "Guarda-Redes",
+    "defender": "Defesa",
+    "midfielder": "Médio",
+    "forward": "Avançado",
+    "versatile": "Polivalente",
+    "default": "Jogador"
+  },
+  "experience": {
+    "beginner": "Iniciante",
+    "intermediate": "Intermediário",
+    "advanced": "Avançado",
+    "professional": "Profissional"
   }
 }

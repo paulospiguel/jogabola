@@ -4,15 +4,15 @@ import {
   SheetClose,
   SheetContent,
   SheetFooter,
-  SheetHeader,
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
 import menuHome from "@/constants/menu-home";
+import { useHeaderButtons } from "@/hooks/use-header-buttons";
 import { useJourneyRedirect } from "@/hooks/use-journey-redirect";
 import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
-import { Menu } from "lucide-react";
+import { Badge, Menu } from "lucide-react";
 import { useTranslations } from "next-intl";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -28,6 +28,7 @@ export default function Header() {
   const pathname = usePathname();
   const isHome = pathname === "/";
   const { redirectToJourney } = useJourneyRedirect();
+  const { buttons, isLoading } = useHeaderButtons();
 
   const t = useTranslations();
 
@@ -64,7 +65,7 @@ export default function Header() {
       <div
         className={cn(
           "flex w-full items-center justify-between rounded-full px-6 py-2 transition-all duration-300",
-          "border border-border-default bg-overlay-light shadow-xl backdrop-blur-md",
+          "border-border-default bg-overlay-light border shadow-xl backdrop-blur-md",
         )}
       >
         {/* Left side: Logo + Menu */}
@@ -92,27 +93,44 @@ export default function Header() {
             <LanguageSelector />
           </div>
 
-          {/* Login Button */}
-          <Link
-            href="/sign-in"
-            className={cn(
-              "hidden rounded-full px-4 py-2 font-semibold text-white shadow-md transition-all duration-300 hover:scale-105 md:visible md:block",
-              "bg-accent-blue hover:bg-accent-blue/90",
-            )}
-          >
-            {t("header.signIn")}
-          </Link>
-
-          {/* Launch Button */}
-          <button
-            onClick={redirectToJourney}
-            className={cn(
-              "hidden rounded-full px-4 py-2 font-semibold text-white shadow-md transition-all duration-300 hover:scale-105 md:visible md:block",
-              "bg-brand-green hover:bg-brand-green/90",
-            )}
-          >
-            {t("header.launchJourney")}
-          </button>
+          {/* Botões dinâmicos baseados no role */}
+          {!isLoading &&
+            buttons.map((button, index) => {
+              if (button.href) {
+                return (
+                  <Link
+                    key={index}
+                    href={button.href}
+                    className={cn(
+                      "hidden rounded-full px-4 py-2 font-semibold text-white shadow-md transition-all duration-300 hover:scale-105 md:visible md:block",
+                      button.variant === "primary"
+                        ? "bg-accent-blue hover:bg-accent-blue/90"
+                        : "bg-brand-green hover:bg-brand-green/90",
+                    )}
+                  >
+                    {button.label.includes("header.")
+                      ? t(button.label)
+                      : button.label}
+                  </Link>
+                );
+              }
+              return (
+                <button
+                  key={index}
+                  onClick={button.onClick || redirectToJourney}
+                  className={cn(
+                    "hidden rounded-full px-4 py-2 font-semibold text-white shadow-md transition-all duration-300 hover:scale-105 md:visible md:block",
+                    button.variant === "primary"
+                      ? "bg-accent-blue hover:bg-accent-blue/90"
+                      : "bg-brand-green hover:bg-brand-green/90",
+                  )}
+                >
+                  {button.label.includes("header.")
+                    ? t(button.label)
+                    : button.label}
+                </button>
+              );
+            })}
 
           {/* Mobile menu button */}
           <Sheet>
@@ -129,11 +147,11 @@ export default function Header() {
             </SheetTrigger>
             <SheetContent
               side={"right"}
-              className="h-screen w-full max-w-sm border-l border-border-default bg-overlay-light backdrop-blur-xl shadow-[0_25px_60px_-40px_var(--color-shadow-neon-secondary)] text-text-primary"
+              className="border-border-default bg-overlay-light text-text-primary h-screen w-full max-w-sm border-l shadow-[0_25px_60px_-40px_var(--color-shadow-neon-secondary)] backdrop-blur-xl"
             >
               {/* Header do Menu */}
-              <div className="flex items-center justify-between border-b border-border-default pb-4">
-                <SheetTitle className="bg-gradient-to-r from-neon-secondary to-accent-blue bg-clip-text text-xl font-bold text-transparent">
+              <div className="border-border-default flex items-center justify-between border-b pb-4">
+                <SheetTitle className="from-neon-secondary to-accent-blue bg-gradient-to-r bg-clip-text text-xl font-bold text-transparent">
                   ⚽ Menu
                 </SheetTitle>
               </div>
@@ -149,32 +167,47 @@ export default function Header() {
               </div>
 
               {/* Footer com ações */}
-              <SheetFooter className="flex-col gap-3 border-t border-border-default pt-4">
-                {/* Botão de Login */}
-                <SheetClose asChild>
-                  <Link
-                    href="/sign-in"
-                    className={cn(
-                      "w-full rounded-full px-4 py-2.5 text-center text-sm font-semibold text-white shadow-md transition-all duration-300 hover:scale-105",
-                      "bg-accent-blue hover:bg-accent-blue/90",
-                    )}
-                  >
-                    {t("header.signIn")}
-                  </Link>
-                </SheetClose>
-
-                {/* Botão Launch Journey */}
-                <SheetClose asChild>
-                  <button
-                    onClick={redirectToJourney}
-                    className={cn(
-                      "w-full rounded-full px-4 py-2.5 text-sm font-semibold text-white shadow-md transition-all duration-300 hover:scale-105",
-                      "bg-brand-green hover:bg-brand-green/90",
-                    )}
-                  >
-                    {t("header.launchJourney")}
-                  </button>
-                </SheetClose>
+              <SheetFooter className="border-border-default flex-col gap-3 border-t pt-4">
+                {/* Botões dinâmicos baseados no role */}
+                {!isLoading &&
+                  buttons.map((button, index) => {
+                    if (button.href) {
+                      return (
+                        <SheetClose key={index} asChild>
+                          <Link
+                            href={button.href}
+                            className={cn(
+                              "w-full rounded-full px-4 py-2.5 text-center text-sm font-semibold text-white shadow-md transition-all duration-300 hover:scale-105",
+                              button.variant === "primary"
+                                ? "bg-accent-blue hover:bg-accent-blue/90"
+                                : "bg-brand-green hover:bg-brand-green/90",
+                            )}
+                          >
+                            {button.label.includes("header.")
+                              ? t(button.label)
+                              : button.label}
+                          </Link>
+                        </SheetClose>
+                      );
+                    }
+                    return (
+                      <SheetClose key={index} asChild>
+                        <button
+                          onClick={button.onClick || redirectToJourney}
+                          className={cn(
+                            "w-full rounded-full px-4 py-2.5 text-sm font-semibold text-white shadow-md transition-all duration-300 hover:scale-105",
+                            button.variant === "primary"
+                              ? "bg-accent-blue hover:bg-accent-blue/90"
+                              : "bg-brand-green hover:bg-brand-green/90",
+                          )}
+                        >
+                          {button.label.includes("header.")
+                            ? t(button.label)
+                            : button.label}
+                        </button>
+                      </SheetClose>
+                    );
+                  })}
 
                 {/* Opções de idioma */}
                 <div className="flex w-full items-center justify-center gap-4 pt-2">
@@ -235,7 +268,7 @@ const Navbar = ({
               href={href}
               onClick={onItemClick}
               className={cn(
-                "relative flex w-full cursor-pointer items-center gap-2 rounded-xl border border-transparent px-4 py-3 text-left transition-all duration-300",
+                "relative flex w-full cursor-pointer items-center gap-2 rounded-xl border border-transparent px-4 py-3 text-left no-underline transition-all duration-300",
                 isActive
                   ? "border-neon-secondary/40 bg-overlay-medium text-text-primary shadow-[0_25px_60px_-35px_var(--color-shadow-neon-primary)]"
                   : "text-text-secondary hover:border-border-hover hover:bg-overlay-light hover:text-text-primary",
@@ -245,17 +278,15 @@ const Navbar = ({
                 <item.icon
                   className={cn(
                     "h-5 w-5",
-                    isActive
-                      ? "text-neon-secondary"
-                      : "text-text-muted",
+                    isActive ? "text-neon-secondary" : "text-text-muted",
                   )}
                 />
               )}
               <span className="flex-1">{t(item.label)}</span>
               {item.isNew && (
-                <span className="absolute -top-2 -right-5 rounded bg-yellow-400 px-1 text-[10px] font-bold text-slate-900">
+                <Badge className="rounded-full px-1 text-[10px] font-bold">
                   {t("header.new")}
-                </span>
+                </Badge>
               )}
             </Link>
           </SheetClose>
@@ -264,7 +295,7 @@ const Navbar = ({
             key={item.label}
             href={href}
             className={cn(
-              "relative flex cursor-pointer items-center gap-1 transition-all duration-300 hover:scale-105",
+              "relative flex cursor-pointer items-center gap-1 no-underline transition-all duration-300 hover:scale-105",
               colors.hover,
             )}
           >

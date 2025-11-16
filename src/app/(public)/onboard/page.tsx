@@ -201,7 +201,7 @@ export default function OnboardPage() {
           if (role) {
             // Redirecionar para dashboard da jornada
             const journeyRoutes: Record<string, string> = {
-              PLAYER: "/play-zone",
+              PLAYER: "/playzone",
               MANAGER: "/arena",
               FAN: "/fan-zone",
               ORGANIZER: "/organizer",

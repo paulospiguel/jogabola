@@ -12,7 +12,7 @@ export const preferredRegion = ["fra1", "sfo1", "iad1"];
 export const maxDuration = 60;
 
 export const metadata: Metadata = {
-  title: COMPANY.NAME,
+  title: COMPANY.NAME || "JogaBola",
   description: COMPANY.SLOGAN,
 };
 
@@ -28,7 +28,7 @@ export default async function RootLayout({
     <html lang={locale} className="dark" suppressHydrationWarning>
       <body
         className={cn(
-          "min-h-screen bg-background text-foreground antialiased",
+          "bg-background text-foreground min-h-screen antialiased",
           fonts,
         )}
         suppressHydrationWarning

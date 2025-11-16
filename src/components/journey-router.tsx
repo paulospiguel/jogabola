@@ -22,7 +22,7 @@ interface JourneyRouterProps {
  * - ORGANIZER -> /organizer (área de gestão do organizador)
  */
 const JOURNEY_ROUTES: Record<Role, string> = {
-  PLAYER: "/play-zone",
+  PLAYER: "/playzone",
   MANAGER: "/arena",
   FAN: "/fan-zone",
   ORGANIZER: "/organizer",

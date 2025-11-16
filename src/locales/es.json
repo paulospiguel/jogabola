@@ -199,7 +199,12 @@
     "plans": "Planes",
     "new": "Nuevo",
     "launchJourney": "Iniciar jornada",
-    "signIn": "Iniciar sesión"
+    "signIn": "Iniciar sesión",
+    "arena": "Arena",
+    "playZone": "Zona de Juego",
+    "fanZone": "Zona de Fan",
+    "palco": "Escenario",
+    "universo": "Universo"
   },
   "homePage": {
     "createMyTeams": "Crear mis equipos",
@@ -481,20 +486,20 @@
         "description": "Completa misiones especiales y sube en el ranking de PlayZone.",
         "button": "Ver desafíos disponibles"
       }
-    },
-    "positions": {
-      "goalkeeper": "Portero",
-      "defender": "Defensor",
-      "midfielder": "Mediocampista",
-      "forward": "Delantero",
-      "versatile": "Polivalente",
-      "default": "Jugador"
-    },
-    "experience": {
-      "beginner": "Principiante",
-      "intermediate": "Intermedio",
-      "advanced": "Avanzado",
-      "professional": "Profesional"
     }
+  },
+  "positions": {
+    "goalkeeper": "Portero",
+    "defender": "Defensor",
+    "midfielder": "Mediocampista",
+    "forward": "Delantero",
+    "versatile": "Polivalente",
+    "default": "Jugador"
+  },
+  "experience": {
+    "beginner": "Principiante",
+    "intermediate": "Intermedio",
+    "advanced": "Avanzado",
+    "professional": "Profesional"
   }
 }

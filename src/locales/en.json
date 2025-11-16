@@ -183,7 +183,12 @@
     "plans": "Plans",
     "new": "New",
     "launchJourney": "Launch journey",
-    "signIn": "Sign In"
+    "signIn": "Sign In",
+    "arena": "Arena",
+    "playZone": "Play Zone",
+    "fanZone": "Fan Zone",
+    "palco": "Stage",
+    "universo": "Universe"
   },
   "homePage": {
     "createMyTeams": "Create my teams",
@@ -490,20 +495,20 @@
         "description": "Complete special missions and climb the PlayZone ranking.",
         "button": "View available challenges"
       }
-    },
-    "positions": {
-      "goalkeeper": "Goalkeeper",
-      "defender": "Defender",
-      "midfielder": "Midfielder",
-      "forward": "Forward",
-      "versatile": "Versatile",
-      "default": "Player"
-    },
-    "experience": {
-      "beginner": "Beginner",
-      "intermediate": "Intermediate",
-      "advanced": "Advanced",
-      "professional": "Professional"
     }
+  },
+  "positions": {
+    "goalkeeper": "Goalkeeper",
+    "defender": "Defender",
+    "midfielder": "Midfielder",
+    "forward": "Forward",
+    "versatile": "Versatile",
+    "default": "Player"
+  },
+  "experience": {
+    "beginner": "Beginner",
+    "intermediate": "Intermediate",
+    "advanced": "Advanced",
+    "professional": "Professional"
   }
 }

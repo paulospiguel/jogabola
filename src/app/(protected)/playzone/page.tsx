@@ -1,36 +1,25 @@
 "use client";
 
 import { getProfileData } from "@/actions/profile";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import { getPositionConfig, getPositionLabel } from "@/constants/positions";
-import { signOut, useSession } from "@/lib/auth-client";
+import { useSession } from "@/lib/auth-client";
+import { Experience } from "@/schemas/profile";
 import { motion } from "framer-motion";
 import {
   ArrowRight,
   CalendarDays,
   ChevronDown,
+  ChevronRight,
   ChevronUp,
   Clock,
-  Goal,
-  Home,
   MapPin,
-  Settings,
   Sparkles,
   Star,
   Target,
   TrendingUp,
   Trophy,
-  User,
 } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -50,20 +39,20 @@ const quickStats = [
     progress: 75, // 24/32 jogos possíveis
     maxValue: 32,
   },
-  {
-    title: "Gols",
-    value: "18",
-    icon: Goal,
-    progress: 60, // 18/30 gols meta
-    maxValue: 30,
-  },
-  {
-    title: "Assistências",
-    value: "11",
-    icon: Target,
-    progress: 55, // 11/20 assistências meta
-    maxValue: 20,
-  },
+  // {
+  //   title: "Gols",
+  //   value: "18",
+  //   icon: Goal,
+  //   progress: 60, // 18/30 gols meta
+  //   maxValue: 30,
+  // },
+  // {
+  //   title: "Assistências",
+  //   value: "11",
+  //   icon: Target,
+  //   progress: 55, // 11/20 assistências meta
+  //   maxValue: 20,
+  // },
   {
     title: "Nota média",
     value: "8.7",
@@ -182,30 +171,16 @@ export default function PlayZonePage() {
     return {
       name: firstName,
       fullName: userName || profileData?.name || "Jogador",
-      greeting: `👋 Olá, ${firstName}! Pronto para o próximo jogo?`,
+      greeting: `👋 Olá, ${firstName}!`,
+      subtitle: `Pronto para o próximo jogo?`,
       position: positionDisplay,
       positionValue: positionValue,
       image: session?.user?.image || null,
       level: profileData?.level,
+      experience: profileData?.experience as Experience,
+      experienceLabel: experienceLabel,
     };
   }, [session, profileData]);
-
-  // Calcular tempo de atualização (mockado por enquanto)
-  const lastUpdated = useMemo(() => {
-    if (!session?.user) return "2h";
-    // TODO: calcular tempo real da última atualização
-    return "2h";
-  }, [session]);
-
-  const handleSignOut = async () => {
-    await signOut({
-      fetchOptions: {
-        onSuccess: () => {
-          router.push("/sign-in");
-        },
-      },
-    });
-  };
 
   if (loading) {
     return (
@@ -223,16 +198,6 @@ export default function PlayZonePage() {
       <div className="absolute inset-0 -z-10 bg-[radial-gradient(90%_90%_at_50%_0%,rgba(0,255,213,0.22)_0%,rgba(5,3,18,0)_72%)]" />
       <div className="absolute inset-0 -z-20 bg-[linear-gradient(135deg,#050312_0%,#080a25_45%,#0f163f_100%)]" />
 
-      {/* Botão Home fixo - fácil acesso */}
-      <Link
-        href="/"
-        className="border-neon-primary/50 bg-background-surface/90 text-neon-primary hover:border-neon-primary hover:bg-neon-primary/10 focus-visible:ring-neon-primary focus-visible:ring-offset-background-base fixed top-4 right-4 z-50 flex items-center gap-2 rounded-full border-2 px-4 py-2.5 text-sm font-semibold shadow-[0_10px_30px_-10px_var(--color-shadow-neon-primary)] backdrop-blur-xl transition-all hover:scale-105 hover:shadow-[0_15px_40px_-10px_var(--color-shadow-neon-primary)] focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
-        aria-label="Voltar para a página inicial"
-      >
-        <Home className="h-5 w-5" />
-        <span className="hidden sm:inline">Início</span>
-      </Link>
-
       <main className="container mx-auto px-4 py-12 md:px-8 lg:px-12">
         {/* Header */}
         <motion.header
@@ -242,115 +207,40 @@ export default function PlayZonePage() {
           transition={{ duration: 0.6 }}
         >
           <div className="space-y-3">
-            <p className="text-xs tracking-[0.35em] text-[#6fffe9] uppercase">
-              Centro da jornada do jogador
+            <p className="text-2xl tracking-[0.35em] text-[#6fffe9] uppercase">
+              Play Zone
             </p>
-            <h1 className="text-2xl font-semibold text-white md:text-3xl lg:text-[34px]">
+            <h2 className="text-2xl font-semibold text-white md:text-3xl lg:text-[34px]">
               {player.greeting}
-            </h1>
-            <div className="flex items-center gap-3 text-sm text-slate-200">
-              {(() => {
-                const positionConfig = getPositionConfig(player.positionValue);
-                const PositionIcon = positionConfig?.icon;
-                return (
-                  <span className="flex items-center gap-2 rounded-full border border-white/10 bg-white/15 px-3 py-1 text-xs font-medium tracking-wide text-white/80 uppercase">
-                    {positionConfig?.emoji && (
-                      <span className="text-sm">{positionConfig.emoji}</span>
-                    )}
-                    {PositionIcon && (
-                      <PositionIcon className="h-3.5 w-3.5 text-[#00cfb1]" />
-                    )}
-                    {player.position}
-                  </span>
-                );
-              })()}
-              <span className="flex items-center gap-2 text-sm text-[#6fffe9]">
-                <Star className="h-4 w-4" /> Nível {player.level}
-              </span>
-            </div>
+            </h2>
+            <h3 className="text-text-secondary text-lg">{player.subtitle}</h3>
           </div>
 
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <button
-                className="flex items-center gap-4 rounded-xl p-2 transition-all hover:bg-white/5 focus-visible:ring-2 focus-visible:ring-[#6fffe9]/40 focus-visible:outline-none"
-                aria-label="Menu do usuário"
-              >
-                <div className="relative">
-                  <div className="absolute inset-0 rounded-full bg-[#6fffe9]/30 blur-xl" />
-                  <Avatar className="relative h-16 w-16 border-2 border-[#6fffe9]/80 shadow-[0_0_35px_rgba(111,255,233,0.35)]">
-                    <AvatarImage
-                      src={player.image || undefined}
-                      alt={player.fullName}
-                    />
-                    <AvatarFallback className="bg-[#101b46] text-lg font-semibold text-[#6fffe9]">
-                      {player.name[0]?.toUpperCase() || "J"}
-                    </AvatarFallback>
-                  </Avatar>
-                </div>
-                <div className="text-left text-sm">
-                  <p className="font-medium text-white">{player.fullName}</p>
-                  {(() => {
-                    const positionConfig = getPositionConfig(
-                      player.positionValue,
-                    );
-                    const PositionIcon = positionConfig?.icon;
-                    return (
-                      <p className="text-text-secondary flex items-center gap-1.5 text-sm lowercase first-letter:uppercase">
-                        {positionConfig?.emoji && (
-                          <span className="text-xs">
-                            {positionConfig.emoji}
-                          </span>
-                        )}
-                        {PositionIcon && (
-                          <PositionIcon className="h-3 w-3 text-[#00cfb1]" />
-                        )}
-                        {player.position}
-                      </p>
-                    );
-                  })()}
-                </div>
-              </button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent
-              align="end"
-              className="w-56 border-white/10 bg-[#0b1933]/95 text-white backdrop-blur"
-            >
-              <DropdownMenuLabel className="text-white">
-                Minha Conta
-              </DropdownMenuLabel>
-              <DropdownMenuSeparator className="bg-white/10" />
-              <DropdownMenuItem
-                className="min-h-[44px] cursor-pointer text-white hover:bg-white/10 focus:bg-white/10"
-                onClick={() => router.push("/")}
-              >
-                <Home className="mr-2 h-5 w-5" />
-                Início
-              </DropdownMenuItem>
-              <DropdownMenuItem
-                className="min-h-[44px] cursor-pointer text-white hover:bg-white/10 focus:bg-white/10"
-                onClick={() => router.push("/profile")}
-              >
-                <User className="mr-2 h-5 w-5" />
-                Perfil
-              </DropdownMenuItem>
-              <DropdownMenuItem className="cursor-pointer text-white hover:bg-white/10 focus:bg-white/10">
-                <Settings className="mr-2 h-4 w-4" />
-                Configurações
-              </DropdownMenuItem>
-              <DropdownMenuItem className="cursor-pointer text-white hover:bg-white/10 focus:bg-white/10">
-                <Trophy className="mr-2 h-4 w-4" />
-                Estatísticas
-              </DropdownMenuItem>
-              <DropdownMenuSeparator className="bg-white/10" />
-              <DropdownMenuItem
-                className="cursor-pointer text-red-400 hover:bg-white/10 focus:bg-white/10"
-                onClick={handleSignOut}
-              >
-                Sair
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
+          <div className="flex flex-col items-end gap-2 text-sm text-slate-200">
+            {(() => {
+              const positionConfig = getPositionConfig(player.positionValue);
+              const PositionIcon = positionConfig?.icon;
+              return (
+                <span className="flex items-center gap-2 rounded-full border border-white/10 bg-white/15 px-3 py-1 text-xs font-medium tracking-wide text-white/80 uppercase">
+                  {positionConfig?.emoji && (
+                    <span className="text-sm">{positionConfig.emoji}</span>
+                  )}
+                  {PositionIcon && (
+                    <PositionIcon className="h-3.5 w-3.5 text-[#00cfb1]" />
+                  )}
+                  {player.position}
+                </span>
+              );
+            })()}
+            {player.experienceLabel && (
+              <span className="flex items-center text-sm text-[#6fffe9]">
+                {player.experienceLabel}
+              </span>
+            )}
+            <span className="flex items-center gap-2 text-sm text-[#6fffe9]">
+              <Star className="h-4 w-4" /> Nível {player.level}
+            </span>
+          </div>
         </motion.header>
 
         {/* Layout principal com hierarquia clara */}
@@ -420,13 +310,13 @@ export default function PlayZonePage() {
                     Atualizado em tempo real
                   </span>
                 </div>
-                <div className="grid grid-cols-2 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+                <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                   {quickStats.map((stat, index) => {
                     const Icon = stat.icon;
                     return (
                       <motion.div
                         key={stat.title}
-                        className="group hover:border-neon-secondary/50 relative overflow-hidden rounded-2xl border border-white/8 bg-white/6 p-5 backdrop-blur transition-transform duration-300 hover:-translate-y-1"
+                        className="group hover:border-neon-secondary/50 relative flex min-h-[180px] flex-col overflow-hidden rounded-2xl border border-white/10 bg-white/5 p-6 backdrop-blur transition-transform duration-300 hover:-translate-y-1"
                         variants={fadeUp}
                         initial="initial"
                         animate="animate"
@@ -436,31 +326,39 @@ export default function PlayZonePage() {
                         }}
                       >
                         {/* Ícone no canto superior direito */}
-                        <div className="border-neon-primary/30 bg-neon-primary/10 absolute top-4 right-4 rounded-full border p-2">
-                          <Icon className="text-neon-primary h-5 w-5" />
+                        <div className="absolute top-4 right-4 flex h-10 w-10 items-center justify-center rounded-full border border-[#6fffe9]/40 bg-transparent">
+                          <Icon className="h-5 w-5 text-[#6fffe9]" />
                         </div>
 
                         {/* Conteúdo */}
-                        <div className="mt-8">
-                          <p className="text-neon-primary mb-2 text-xs font-medium tracking-[0.2em] uppercase">
-                            {stat.title}
+                        <div className="mt-0 flex flex-1 flex-col justify-between">
+                          {/* Título */}
+                          <p className="mb-4 text-[10px] leading-tight font-semibold tracking-[0.15em] text-[#6fffe9] uppercase">
+                            {stat.title.split(" ").map((word, i) => (
+                              <span key={i}>
+                                {word}
+                                {i < stat.title.split(" ").length - 1 && <br />}
+                              </span>
+                            ))}
                           </p>
-                          <div className="flex items-baseline gap-2">
-                            <p className="text-3xl font-bold text-white">
+
+                          {/* Valor numérico */}
+                          <div className="mb-4 flex items-baseline gap-1">
+                            <p className="text-2xl leading-none font-bold text-white">
                               {stat.value}
                             </p>
                             {stat.maxValue && (
-                              <span className="text-text-secondary text-sm">
+                              <span className="text-sm leading-none font-medium text-white/60">
                                 / {stat.maxValue}
                               </span>
                             )}
                           </div>
 
-                          {/* Barra de progresso */}
-                          <div className="mt-4 space-y-1">
-                            <div className="h-2 w-full overflow-hidden rounded-full bg-white/10">
+                          {/* Barra de progresso e porcentagem */}
+                          <div className="mt-auto space-y-2">
+                            <div className="h-2 w-full overflow-hidden rounded-full bg-white/20">
                               <motion.div
-                                className="from-neon-secondary to-accent-blue h-full rounded-full bg-gradient-to-r"
+                                className="h-full rounded-full bg-gradient-to-r from-[#6fffe9] to-[#00d4ff]"
                                 initial={{ width: 0 }}
                                 animate={{ width: `${stat.progress}%` }}
                                 transition={{
@@ -470,7 +368,7 @@ export default function PlayZonePage() {
                                 }}
                               />
                             </div>
-                            <p className="text-text-secondary text-right text-xs">
+                            <p className="text-right text-sm font-medium text-white">
                               {stat.progress}%
                             </p>
                           </div>
@@ -479,6 +377,15 @@ export default function PlayZonePage() {
                     );
                   })}
                 </div>
+                <Link
+                  href="/playzone/stats"
+                  className="group hover:text-neon-primary mt-2 flex w-full items-center justify-end text-right no-underline"
+                >
+                  <span className="group-hover:text-neon-primary text-sm font-medium text-white transition-colors">
+                    Ver todas as estatísticas
+                  </span>
+                  <ChevronRight className="h-5 w-5 transition-transform group-hover:translate-x-1" />
+                </Link>
               </motion.section>
 
               {/* Conquistas - Painel colapsável */}
