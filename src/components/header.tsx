@@ -1,11 +1,11 @@
 "use client";
 import {
-  Sheet,
-  SheetClose,
-  SheetContent,
-  SheetFooter,
-  SheetTitle,
-  SheetTrigger,
+    Sheet,
+    SheetClose,
+    SheetContent,
+    SheetFooter,
+    SheetTitle,
+    SheetTrigger,
 } from "@/components/ui/sheet";
 import menuHome from "@/constants/menu-home";
 import { useHeaderButtons } from "@/hooks/use-header-buttons";
@@ -102,10 +102,10 @@ export default function Header() {
                     key={index}
                     href={button.href}
                     className={cn(
-                      "hidden rounded-full px-4 py-2 font-semibold text-white shadow-md transition-all duration-300 hover:scale-105 md:visible md:block",
+                      "hidden rounded-full px-6 py-2 font-bold no-underline transition-all duration-300 hover:scale-105 md:visible md:block",
                       button.variant === "primary"
-                        ? "bg-accent-blue hover:bg-accent-blue/90"
-                        : "bg-brand-green hover:bg-brand-green/90",
+                        ? "bg-gradient-to-r from-[#00cfb1] to-[#1effbf] text-[#21005a] shadow-lg shadow-[#00cfb1]/20 hover:shadow-[#00cfb1]/40"
+                        : "border border-white/20 bg-white/5 text-white hover:bg-white/10 hover:border-white/40",
                     )}
                   >
                     {button.label.includes("header.")
@@ -119,10 +119,10 @@ export default function Header() {
                   key={index}
                   onClick={button.onClick || redirectToJourney}
                   className={cn(
-                    "hidden rounded-full px-4 py-2 font-semibold text-white shadow-md transition-all duration-300 hover:scale-105 md:visible md:block",
+                    "hidden rounded-full px-6 py-2 font-bold no-underline transition-all duration-300 hover:scale-105 md:visible md:block",
                     button.variant === "primary"
-                      ? "bg-accent-blue hover:bg-accent-blue/90"
-                      : "bg-brand-green hover:bg-brand-green/90",
+                      ? "bg-gradient-to-r from-[#00cfb1] to-[#1effbf] text-[#21005a] shadow-lg shadow-[#00cfb1]/20 hover:shadow-[#00cfb1]/40"
+                      : "border border-white/20 bg-white/5 text-white hover:bg-white/10 hover:border-white/40",
                   )}
                 >
                   {button.label.includes("header.")
@@ -177,10 +177,10 @@ export default function Header() {
                           <Link
                             href={button.href}
                             className={cn(
-                              "w-full rounded-full px-4 py-2.5 text-center text-sm font-semibold text-white shadow-md transition-all duration-300 hover:scale-105",
+                              "w-full rounded-full px-4 py-3 text-center text-sm font-bold no-underline transition-all duration-300 hover:scale-105",
                               button.variant === "primary"
-                                ? "bg-accent-blue hover:bg-accent-blue/90"
-                                : "bg-brand-green hover:bg-brand-green/90",
+                                ? "bg-gradient-to-r from-[#00cfb1] to-[#1effbf] text-[#21005a] shadow-lg shadow-[#00cfb1]/20"
+                                : "border border-white/20 bg-white/5 text-white hover:bg-white/10",
                             )}
                           >
                             {button.label.includes("header.")
@@ -195,10 +195,10 @@ export default function Header() {
                         <button
                           onClick={button.onClick || redirectToJourney}
                           className={cn(
-                            "w-full rounded-full px-4 py-2.5 text-sm font-semibold text-white shadow-md transition-all duration-300 hover:scale-105",
+                            "w-full rounded-full px-4 py-3 text-sm font-bold transition-all duration-300 hover:scale-105",
                             button.variant === "primary"
-                              ? "bg-accent-blue hover:bg-accent-blue/90"
-                              : "bg-brand-green hover:bg-brand-green/90",
+                              ? "bg-gradient-to-r from-[#00cfb1] to-[#1effbf] text-[#21005a] shadow-lg shadow-[#00cfb1]/20"
+                              : "border border-white/20 bg-white/5 text-white hover:bg-white/10",
                           )}
                         >
                           {button.label.includes("header.")

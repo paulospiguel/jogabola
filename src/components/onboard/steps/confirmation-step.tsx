@@ -114,7 +114,7 @@ export function ConfirmationStep({
         {/* Informações Básicas */}
         <div className="rounded-xl border border-white/10 bg-white/5 p-4 backdrop-blur sm:rounded-2xl sm:p-6">
           <h3 className="mb-3 flex items-center gap-2 text-base font-semibold text-white sm:mb-4 sm:text-lg">
-            <CheckCircle className="h-4 w-4 text-[#00cfb1] sm:h-5 sm:w-5" />
+            <CheckCircle className="h-4 w-4 text-brand-green sm:h-5 sm:w-5" />
             Informações Básicas
           </h3>
           <div className="grid grid-cols-1 gap-3 sm:gap-4 md:grid-cols-2">
@@ -187,7 +187,7 @@ export function ConfirmationStep({
         {/* Jornada */}
         <div className="rounded-xl border border-white/10 bg-white/5 p-4 backdrop-blur sm:rounded-2xl sm:p-6">
           <h3 className="mb-3 flex items-center gap-2 text-base font-semibold text-white sm:mb-4 sm:text-lg">
-            <CheckCircle className="h-4 w-4 text-[#00cfb1] sm:h-5 sm:w-5" />
+            <CheckCircle className="h-4 w-4 text-brand-green sm:h-5 sm:w-5" />
             Jornada Escolhida
           </h3>
           {journeyOption && (
@@ -220,7 +220,7 @@ export function ConfirmationStep({
         {experience && (
           <div className="rounded-xl border border-white/10 bg-white/5 p-4 backdrop-blur sm:rounded-2xl sm:p-6">
             <h3 className="mb-3 flex items-center gap-2 text-base font-semibold text-white sm:mb-4 sm:text-lg">
-              <CheckCircle className="h-4 w-4 text-[#00cfb1] sm:h-5 sm:w-5" />
+              <CheckCircle className="h-4 w-4 text-brand-green sm:h-5 sm:w-5" />
               Experiência
             </h3>
             <p className="text-sm font-medium text-white sm:text-base">
@@ -234,7 +234,7 @@ export function ConfirmationStep({
           roleQuestions.personalInfo.length > 0 && (
             <div className="rounded-xl border border-white/10 bg-white/5 p-4 backdrop-blur sm:rounded-2xl sm:p-6">
               <h3 className="mb-3 flex items-center gap-2 text-base font-semibold text-white sm:mb-4 sm:text-lg">
-                <CheckCircle className="h-4 w-4 text-[#00cfb1] sm:h-5 sm:w-5" />
+                <CheckCircle className="h-4 w-4 text-brand-green sm:h-5 sm:w-5" />
                 Informações Específicas
               </h3>
               <div className="grid grid-cols-1 gap-3 sm:gap-4 md:grid-cols-2">
@@ -257,7 +257,7 @@ export function ConfirmationStep({
                         <p className="text-sm text-white/60">{question.label}</p>
                         <div className="flex items-center gap-2">
                           {PositionIcon && (
-                            <PositionIcon className="h-4 w-4 text-[#00cfb1]" />
+                            <PositionIcon className="h-4 w-4 text-brand-green" />
                           )}
                           {positionConfig?.emoji && (
                             <span className="text-base">{positionConfig.emoji}</span>
@@ -296,17 +296,17 @@ export function ConfirmationStep({
         {selectedGoals.length > 0 && (
           <div className="rounded-xl border border-white/10 bg-white/5 p-4 backdrop-blur sm:rounded-2xl sm:p-6">
             <h3 className="mb-3 flex items-center gap-2 text-base font-semibold text-white sm:mb-4 sm:text-lg">
-              <CheckCircle className="h-4 w-4 text-[#00cfb1] sm:h-5 sm:w-5" />
+              <CheckCircle className="h-4 w-4 text-brand-green sm:h-5 sm:w-5" />
               Objetivos Selecionados
             </h3>
             <div className="flex flex-wrap gap-1.5 sm:gap-2">
               {selectedGoals.map(goal => (
                 <div
                   key={goal.id}
-                  className="flex items-center gap-1.5 rounded-full border border-[#00cfb1]/30 bg-[#00cfb1]/10 px-2.5 py-1.5 sm:gap-2 sm:px-4 sm:py-2"
+                  className="flex items-center gap-1.5 rounded-full border border-brand-green/30 bg-brand-green/10 px-2.5 py-1.5 sm:gap-2 sm:px-4 sm:py-2"
                 >
                   {goal.icon && (
-                    <goal.icon className="h-3.5 w-3.5 text-[#00cfb1] sm:h-4 sm:w-4" />
+                    <goal.icon className="h-3.5 w-3.5 text-brand-green sm:h-4 sm:w-4" />
                   )}
                   <span className="text-xs font-medium text-white sm:text-sm">
                     {goal.label}
@@ -326,7 +326,7 @@ export function ConfirmationStep({
           }) && (
             <div className="rounded-xl border border-white/10 bg-white/5 p-4 backdrop-blur sm:rounded-2xl sm:p-6">
               <h3 className="mb-3 flex items-center gap-2 text-base font-semibold text-white sm:mb-4 sm:text-lg">
-                <CheckCircle className="h-4 w-4 text-[#00cfb1] sm:h-5 sm:w-5" />
+                <CheckCircle className="h-4 w-4 text-brand-green sm:h-5 sm:w-5" />
                 Informações Adicionais
               </h3>
               <div className="grid grid-cols-1 gap-3 sm:gap-4 md:grid-cols-2">
@@ -361,9 +361,9 @@ export function ConfirmationStep({
           )}
 
         {/* Mensagem final */}
-        <div className="rounded-xl border border-[#00cfb1]/30 bg-gradient-to-br from-[#00cfb1]/10 to-transparent p-4 text-center sm:rounded-2xl sm:p-6">
+        <div className="rounded-xl border border-brand-green/30 bg-gradient-to-br from-brand-green/10 to-transparent p-4 text-center sm:rounded-2xl sm:p-6">
           <p className="text-sm text-white/80 sm:text-base">
-            <span className="font-semibold text-[#00cfb1]">Tudo certo?</span>{" "}
+            <span className="font-semibold text-brand-green">Tudo certo?</span>{" "}
             Avança para finalizar o teu cadastro.
           </p>
         </div>

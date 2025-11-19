@@ -87,14 +87,11 @@ export function useHeaderButtons(): UseHeaderButtonsReturn {
         {
           label: "header.signIn",
           href: "/auth",
-          variant: "primary",
+          variant: "secondary",
         },
         {
           label: "header.launchJourney",
-          onClick: () => {
-            // Será tratado pelo useJourneyRedirect
-          },
-          variant: "secondary",
+          variant: "primary",
         },
       ],
       isLoading: false,

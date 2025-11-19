@@ -9,7 +9,7 @@ export function useToast() {
         title: message,
         description,
         variant: "default",
-        className: "border-[#00cfb1] bg-[#21005a] text-white shadow-xl backdrop-blur-xl",
+        className: "border-brand-green bg-toast-bg text-white shadow-xl backdrop-blur-xl",
       });
     },
     error: (message: string, description?: string) => {
@@ -17,7 +17,7 @@ export function useToast() {
         title: message,
         description,
         variant: "destructive",
-        className: "border-red-500 bg-[#21005a] text-white shadow-xl backdrop-blur-xl",
+        className: "border-red-500 bg-toast-bg text-white shadow-xl backdrop-blur-xl",
       });
     },
     info: (message: string, description?: string) => {
@@ -25,14 +25,14 @@ export function useToast() {
         title: message,
         description,
         variant: "default",
-        className: "border-[#ba93ff] bg-[#21005a] text-white shadow-xl backdrop-blur-xl",
+        className: "border-secondary-text bg-toast-bg text-white shadow-xl backdrop-blur-xl",
       });
     },
     warning: (message: string, description?: string) => {
       toastPrimitive({
         title: message,
         description,
-        className: "border-yellow-500 bg-[#21005a] text-white shadow-xl backdrop-blur-xl",
+        className: "border-yellow-500 bg-toast-bg text-white shadow-xl backdrop-blur-xl",
       });
     },
   };

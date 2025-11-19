@@ -29,25 +29,25 @@ export default function ArenaFooter({ className }: ArenaFooterProps) {
           <div className="flex flex-wrap items-center justify-center gap-4 text-sm">
             <Link
               href="/terms-and-conditions"
-              className="text-slate-500 transition-colors hover:text-emerald-600 dark:text-white/60 dark:hover:text-[#24ffe6]"
+              className="text-slate-500 transition-colors hover:text-emerald-600 dark:text-white/60 dark:hover:text-neon-secondary"
             >
               Termos de Uso
             </Link>
             <Link
               href="/privacy"
-              className="text-slate-500 transition-colors hover:text-emerald-600 dark:text-white/60 dark:hover:text-[#24ffe6]"
+              className="text-slate-500 transition-colors hover:text-emerald-600 dark:text-white/60 dark:hover:text-neon-secondary"
             >
               Privacidade
             </Link>
             <Link
               href="/support"
-              className="text-slate-500 transition-colors hover:text-emerald-600 dark:text-white/60 dark:hover:text-[#24ffe6]"
+              className="text-slate-500 transition-colors hover:text-emerald-600 dark:text-white/60 dark:hover:text-neon-secondary"
             >
               Suporte
             </Link>
             <Link
               href="/about"
-              className="text-slate-500 transition-colors hover:text-emerald-600 dark:text-white/60 dark:hover:text-[#24ffe6]"
+              className="text-slate-500 transition-colors hover:text-emerald-600 dark:text-white/60 dark:hover:text-neon-secondary"
             >
               Sobre
             </Link>
@@ -59,7 +59,7 @@ export default function ArenaFooter({ className }: ArenaFooterProps) {
               href="https://twitter.com/jogabola"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-slate-500 transition-colors hover:text-emerald-600 dark:text-white/60 dark:hover:text-[#24ffe6]"
+              className="text-slate-500 transition-colors hover:text-emerald-600 dark:text-white/60 dark:hover:text-neon-secondary"
             >
               <svg
                 className="h-5 w-5"
@@ -74,7 +74,7 @@ export default function ArenaFooter({ className }: ArenaFooterProps) {
               href="https://instagram.com/jogabola"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-slate-500 transition-colors hover:text-emerald-600 dark:text-white/60 dark:hover:text-[#24ffe6]"
+              className="text-slate-500 transition-colors hover:text-emerald-600 dark:text-white/60 dark:hover:text-neon-secondary"
             >
               <svg
                 className="h-5 w-5"

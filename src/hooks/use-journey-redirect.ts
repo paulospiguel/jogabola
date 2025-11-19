@@ -18,9 +18,9 @@ export function useJourneyRedirect() {
   const { data: session } = useSession();
 
   const redirectToJourney = useCallback(async () => {
-    // Se não tem sessão, vai para auth
+    // Se não tem sessão, vai para onboarding
     if (!session?.user?.id) {
-      router.push("/auth");
+      router.push("/onboard");
       return;
     }
 

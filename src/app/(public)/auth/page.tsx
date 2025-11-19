@@ -25,7 +25,16 @@ import {
 } from "@/schemas/auth";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { motion } from "framer-motion";
-import { Eye, EyeOff, Loader2, Lock, Mail, Trophy, User } from "lucide-react";
+import {
+  ArrowLeft,
+  Eye,
+  EyeOff,
+  Loader2,
+  Lock,
+  Mail,
+  Trophy,
+  User,
+} from "lucide-react";
 import { useTranslations } from "next-intl";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -178,6 +187,16 @@ export default function LoginPage() {
 
   return (
     <div className="relative min-h-screen overflow-hidden bg-gradient-to-br from-[#21005a] via-[#2b0071] to-[#21005a]">
+      {/* Back to Home Button */}
+      <Link
+        href="/"
+        aria-label="Voltar ao início"
+        className="absolute top-4 left-4 z-50 flex items-center gap-2 rounded-full border border-white/10 bg-white/5 p-3 text-sm font-medium text-white/80 backdrop-blur-sm transition-all hover:border-[#00cfb1]/50 hover:bg-[#00cfb1]/10 hover:text-[#00cfb1] sm:px-4 sm:py-2 lg:top-8 lg:left-8"
+      >
+        <ArrowLeft className="h-4 w-4" />
+        <span className="hidden sm:inline">Voltar ao início</span>
+      </Link>
+
       {/* Header removido */}
 
       {/* Background decorativo com floating orbs */}

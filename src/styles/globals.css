@@ -104,6 +104,18 @@
   --color-active-text: #1effbf;
   --color-secondary-text: #ba93ff;
 
+  /* Countdown colors */
+  --color-countdown-bg: #343650;
+  --color-countdown-dot: #191A24;
+  --color-countdown-text: #a5b4fc;
+  --color-countdown-label: #8486A9;
+
+  /* Toast colors */
+  --color-toast-bg: #21005a;
+
+  /* Popover colors */
+  --color-popover-dark: #0b1933;
+
   /* Background colors */
   --color-background-base: var(--color-background-base);
   --color-background-gradient-start: var(--color-background-gradient-start);

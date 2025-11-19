@@ -2,14 +2,14 @@
 
 import { getPlayerPerformance } from "@/actions/profile";
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
 } from "@/components/ui/select";
 import { useSession } from "@/lib/auth-client";
-import { RotateCcw, Flag, AlertCircle, CheckCircle2, PlayCircle, Star, XCircle } from "lucide-react";
+import { AlertCircle, CheckCircle2, Flag, PlayCircle, RotateCcw, Star, XCircle } from "lucide-react";
 import { useEffect, useState } from "react";
 
 interface RadarData {
@@ -238,7 +238,7 @@ export function PerformanceTab() {
     return (
       <div className="flex items-center justify-center py-12">
         <div className="text-center">
-          <div className="mx-auto mb-4 h-8 w-8 animate-spin rounded-full border-4 border-emerald-400/40 border-t-emerald-500 dark:border-[#6fffe9]/30 dark:border-t-[#6fffe9]" />
+          <div className="mx-auto mb-4 h-8 w-8 animate-spin rounded-full border-4 border-emerald-400/40 border-t-emerald-500 dark:border-neon-primary/30 dark:border-t-neon-primary" />
           <p className="text-base text-text-secondary">Carregando dados de performance...</p>
         </div>
       </div>
@@ -314,11 +314,11 @@ export function PerformanceTab() {
         <Select value={selectedCompetition} onValueChange={setSelectedCompetition}>
           <SelectTrigger 
             id="competition-select"
-            className="w-[250px] border-emerald-100 bg-white text-slate-700 placeholder:text-slate-400 hover:bg-emerald-50/70 focus:border-emerald-400 focus:ring-emerald-400/30 backdrop-blur dark:border-white/10 dark:bg-white/5 dark:text-white dark:placeholder:text-slate-500 dark:hover:bg-white/10 dark:focus:border-[#24ffe6] dark:focus:ring-[#24ffe6]/20"
+            className="w-[250px] border-emerald-100 bg-white text-slate-700 placeholder:text-slate-400 hover:bg-emerald-50/70 focus:border-emerald-400 focus:ring-emerald-400/30 backdrop-blur dark:border-white/10 dark:bg-white/5 dark:text-white dark:placeholder:text-slate-500 dark:hover:bg-white/10 dark:focus:border-neon-secondary dark:focus:ring-neon-secondary/20"
           >
             <SelectValue placeholder="Selecione uma competição" />
           </SelectTrigger>
-          <SelectContent className="border-emerald-100 bg-white text-slate-700 backdrop-blur dark:border-white/10 dark:bg-[#0b1933] dark:text-white">
+          <SelectContent className="border-emerald-100 bg-white text-slate-700 backdrop-blur dark:border-white/10 dark:bg-popover-dark dark:text-white">
             <SelectItem 
               value="general"
               className="text-slate-700 hover:bg-emerald-50/80 focus:bg-emerald-50/80 dark:text-white dark:hover:bg-white/10 dark:focus:bg-white/10"

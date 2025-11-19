@@ -1,9 +1,9 @@
 "use client";
 
+import { supabase } from "@/services/supabase";
 import { useTranslations } from "next-intl";
 import { useEffect, useRef, useState } from "react";
 import { Text } from "./ui/Text";
-import { supabase } from "@/services/supabase";
 
 const CountDownTimer = () => {
   const [countDownTime, setCountDownTIme] = useState({
@@ -101,50 +101,50 @@ const CountDownTimer = () => {
         <Text variant="lead">{t("subtitle")}</Text>
         <div className="mt-4 flex justify-center gap-3 sm:gap-8">
           <div className="relative flex flex-col gap-5">
-            <div className="flex h-16 w-16 items-center justify-between rounded-lg bg-[#343650] sm:h-32 sm:w-32 lg:h-40 lg:w-40">
-              <div className="relative !-left-[6px] h-2.5 w-2.5 rounded-full bg-[#191A24] sm:h-3 sm:w-3"></div>
-              <span className="text-3xl font-semibold text-[#a5b4fc] sm:text-6xl lg:text-7xl">
+            <div className="flex h-16 w-16 items-center justify-between rounded-lg bg-countdown-bg sm:h-32 sm:w-32 lg:h-40 lg:w-40">
+              <div className="relative !-left-[6px] h-2.5 w-2.5 rounded-full bg-countdown-dot sm:h-3 sm:w-3"></div>
+              <span className="text-3xl font-semibold text-countdown-text sm:text-6xl lg:text-7xl">
                 {countDownTime?.days}
               </span>
-              <div className="relative -right-[6px] h-2.5 w-2.5 rounded-full bg-[#191A24] sm:h-3 sm:w-3"></div>
+              <div className="relative -right-[6px] h-2.5 w-2.5 rounded-full bg-countdown-dot sm:h-3 sm:w-3"></div>
             </div>
-            <span className="text-center text-xs text-[#8486A9] capitalize sm:text-2xl">
+            <span className="text-center text-xs text-countdown-label capitalize sm:text-2xl">
               {Number(countDownTime?.days) == 1 ? t("day") : t("days")}
             </span>
           </div>
           <div className="relative flex flex-col gap-5">
-            <div className="flex h-16 w-16 items-center justify-between rounded-lg bg-[#343650] sm:h-32 sm:w-32 lg:h-40 lg:w-40">
-              <div className="relative !-left-[6px] h-2.5 w-2.5 rounded-full bg-[#191A24] sm:h-3 sm:w-3"></div>
-              <span className="text-3xl font-semibold text-[#a5b4fc] sm:text-6xl lg:text-7xl">
+            <div className="flex h-16 w-16 items-center justify-between rounded-lg bg-countdown-bg sm:h-32 sm:w-32 lg:h-40 lg:w-40">
+              <div className="relative !-left-[6px] h-2.5 w-2.5 rounded-full bg-countdown-dot sm:h-3 sm:w-3"></div>
+              <span className="text-3xl font-semibold text-countdown-text sm:text-6xl lg:text-7xl">
                 {countDownTime?.hours}
               </span>
-              <div className="relative -right-[6px] h-2.5 w-2.5 rounded-full bg-[#191A24] sm:h-3 sm:w-3"></div>
+              <div className="relative -right-[6px] h-2.5 w-2.5 rounded-full bg-countdown-dot sm:h-3 sm:w-3"></div>
             </div>
-            <span className="text-center text-xs font-medium text-[#8486A9] sm:text-2xl">
+            <span className="text-center text-xs font-medium text-countdown-label sm:text-2xl">
               {Number(countDownTime?.hours) == 1 ? t("hour") : t("hours")}
             </span>
           </div>
           <div className="relative flex flex-col gap-5">
-            <div className="flex h-16 w-16 items-center justify-between rounded-lg bg-[#343650] sm:h-32 sm:w-32 lg:h-40 lg:w-40">
-              <div className="relative !-left-[6px] h-2.5 w-2.5 rounded-full bg-[#191A24] sm:h-3 sm:w-3"></div>
-              <span className="text-3xl font-semibold text-[#a5b4fc] sm:text-6xl lg:text-7xl">
+            <div className="flex h-16 w-16 items-center justify-between rounded-lg bg-countdown-bg sm:h-32 sm:w-32 lg:h-40 lg:w-40">
+              <div className="relative !-left-[6px] h-2.5 w-2.5 rounded-full bg-countdown-dot sm:h-3 sm:w-3"></div>
+              <span className="text-3xl font-semibold text-countdown-text sm:text-6xl lg:text-7xl">
                 {countDownTime?.minutes}
               </span>
-              <div className="relative -right-[6px] h-2.5 w-2.5 rounded-full bg-[#191A24] sm:h-3 sm:w-3"></div>
+              <div className="relative -right-[6px] h-2.5 w-2.5 rounded-full bg-countdown-dot sm:h-3 sm:w-3"></div>
             </div>
-            <span className="text-center text-xs text-[#8486A9] capitalize sm:text-2xl">
+            <span className="text-center text-xs text-countdown-label capitalize sm:text-2xl">
               {Number(countDownTime?.minutes) == 1 ? t("minute") : t("minutes")}
             </span>
           </div>
           <div className="relative flex flex-col gap-5">
-            <div className="flex h-16 w-16 items-center justify-between rounded-lg bg-[#343650] sm:h-32 sm:w-32 lg:h-40 lg:w-40">
-              <div className="relative !-left-[6px] h-2.5 w-2.5 rounded-full bg-[#191A24] sm:h-3 sm:w-3"></div>
-              <span className="text-3xl font-semibold text-[#a5b4fc] sm:text-6xl lg:text-7xl">
+            <div className="flex h-16 w-16 items-center justify-between rounded-lg bg-countdown-bg sm:h-32 sm:w-32 lg:h-40 lg:w-40">
+              <div className="relative !-left-[6px] h-2.5 w-2.5 rounded-full bg-countdown-dot sm:h-3 sm:w-3"></div>
+              <span className="text-3xl font-semibold text-countdown-text sm:text-6xl lg:text-7xl">
                 {countDownTime?.seconds}
               </span>
-              <div className="relative -right-[6px] h-2.5 w-2.5 rounded-full bg-[#191A24] sm:h-3 sm:w-3"></div>
+              <div className="relative -right-[6px] h-2.5 w-2.5 rounded-full bg-countdown-dot sm:h-3 sm:w-3"></div>
             </div>
-            <span className="text-center text-xs text-[#8486A9] capitalize sm:text-2xl">
+            <span className="text-center text-xs text-countdown-label capitalize sm:text-2xl">
               {Number(countDownTime?.seconds) == 1 ? t("second") : t("seconds")}
             </span>
           </div>

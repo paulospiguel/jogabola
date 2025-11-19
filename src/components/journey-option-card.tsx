@@ -34,7 +34,7 @@ export function JourneyOptionCard({
       <div className={cn(
         "overflow-hidden rounded-2xl bg-linear-to-br",
         isSelected
-          ? "from-brand-green/10 to-[#1effbf]/5"
+          ? "from-brand-green/10 to-active-text/5"
           : "from-white/5 to-white/2"
       )}>
         <div className="space-y-2.5 p-3 sm:space-y-3 sm:p-4">
@@ -71,7 +71,7 @@ export function JourneyOptionCard({
             {option.features.map((feature, idx) => (
               <div
                 key={idx}
-                className="flex items-center gap-1.5 text-xs text-[#ba93ff]"
+                className="flex items-center gap-1.5 text-xs text-secondary-text"
               >
                 <div className="bg-brand-green h-1 w-1 shrink-0 rounded-full" />
                 <span className="break-words">{feature}</span>
