@@ -7,7 +7,6 @@ import {
   linkOnboardingToUser,
   saveOnboarding,
 } from "@/actions/profile";
-import { FloatingOrb } from "@/components/floating-orb";
 import { Logo } from "@/components/logo";
 import { OnboardNavigation } from "@/components/onboard-navigation";
 import { OnboardProgressHeader } from "@/components/onboard-progress-header";
@@ -597,49 +596,46 @@ export default function OnboardPage() {
     }
   };
 
+  // Background Pattern Component - Gradiente do mockup (Igual da Home)
+  const FieldPattern = () => {
+    return (
+      <div className="pointer-events-none absolute inset-0 overflow-hidden">
+        {/* Gradiente base: azul claro top-left para verde claro bottom-right */}
+        <div className="absolute inset-0 bg-linear-to-br from-blue-100 via-cyan-50 to-emerald-100 dark:from-slate-900/80 dark:via-emerald-900/40 dark:to-slate-950/80" />
+      </div>
+    );
+  };
+
   // Mostrar loading enquanto verifica o status do onboarding
   if (isCheckingOnboarding) {
     return (
-      <div className="relative min-h-screen overflow-hidden bg-gradient-to-br from-[#21005a] via-[#2b0071] to-[#21005a]">
-        {/* Background decorativo */}
-        <div className="absolute inset-0 overflow-hidden">
-          <FloatingOrb delay={0} size={200} position="top-20 left-10" />
-          <FloatingOrb delay={1} size={150} position="top-40 right-20" />
-          <FloatingOrb delay={2} size={100} position="bottom-20 left-1/4" />
-          <FloatingOrb delay={3} size={120} position="bottom-40 right-1/3" />
-        </div>
-
+      <div className="bg-background relative min-h-screen overflow-hidden dark:bg-(--color-blue-850)">
+        <FieldPattern />
         {/* Loading centralizado */}
         <div className="relative z-10 flex min-h-screen items-center justify-center">
-          <Logo size="medium" isAnimate color="white" />
+          <Logo size="medium" isAnimate color="green" />
         </div>
       </div>
     );
   }
 
   return (
-    <div className="relative min-h-screen overflow-hidden bg-gradient-to-br from-[#21005a] via-[#2b0071] to-[#21005a]">
-      {/* Background decorativo */}
-      <div className="absolute inset-0 overflow-hidden">
-        <FloatingOrb delay={0} size={200} position="top-20 left-10" />
-        <FloatingOrb delay={1} size={150} position="top-40 right-20" />
-        <FloatingOrb delay={2} size={100} position="bottom-20 left-1/4" />
-        <FloatingOrb delay={3} size={120} position="bottom-40 right-1/3" />
-      </div>
+    <div className="bg-background relative min-h-screen overflow-hidden dark:bg-(--color-blue-850)">
+      <FieldPattern />
 
       {/* Botão de fechar flutuante */}
       <Button
         onClick={handleClose}
         variant="ghost"
         size="icon"
-        className="fixed top-3 right-3 z-50 h-8 w-8 rounded-full border border-white/20 bg-white/10 text-white backdrop-blur transition-all hover:bg-white/20 hover:text-[#00cfb1] sm:top-4 sm:right-4 sm:h-10 sm:w-10"
+        className="fixed top-3 right-3 z-50 h-8 w-8 rounded-full border border-white/10 bg-white/5 text-gray-700 backdrop-blur transition-all hover:bg-emerald-500/10 hover:text-emerald-600 sm:top-4 sm:right-4 sm:h-10 sm:w-10 dark:text-white dark:hover:text-emerald-400"
         aria-label={t("close")}
       >
         <X className="h-4 w-4 sm:h-5 sm:w-5" />
       </Button>
 
-      <div className="relative z-10 flex min-h-screen flex-col">
-        <div className="container mx-auto flex max-w-4xl flex-1 flex-col px-4 py-4 sm:px-6 sm:py-6 md:py-8">
+      <div className="relative z-10 flex min-h-screen flex-col items-center justify-center p-4 sm:p-6 lg:p-8">
+        <div className="w-full max-w-4xl overflow-hidden rounded-3xl bg-linear-to-br from-blue-50/80 via-cyan-50/80 to-emerald-50/80 p-6 shadow-xl backdrop-blur-sm sm:p-8 dark:from-slate-900/90 dark:via-slate-900/70 dark:to-emerald-900/40">
           <OnboardProgressHeader
             currentStep={currentStep}
             totalSteps={totalSteps}

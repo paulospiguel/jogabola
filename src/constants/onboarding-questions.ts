@@ -55,17 +55,6 @@ const playerQuestions: RoleQuestions = {
       icon: Shield, // Ícone geral do campo, os ícones específicos estão em constants/positions.ts
     },
     {
-      id: "preferredFoot",
-      label: "Pé Preferido",
-      type: "radio",
-      required: false,
-      options: [
-        { value: "right", label: "Direito" },
-        { value: "left", label: "Esquerdo" },
-        { value: "both", label: "Ambos" },
-      ],
-    },
-    {
       id: "playingStyle",
       label: "Estilo de Jogo",
       type: "select",
@@ -79,6 +68,17 @@ const playerQuestions: RoleQuestions = {
         { value: "physical", label: "Físico" },
       ],
       icon: Sparkles,
+    },
+    {
+      id: "preferredFoot",
+      label: "Pé Preferido",
+      type: "radio",
+      required: false,
+      options: [
+        { value: "right", label: "Direito" },
+        { value: "left", label: "Esquerdo" },
+        { value: "both", label: "Ambos" },
+      ],
     },
   ],
   goals: [

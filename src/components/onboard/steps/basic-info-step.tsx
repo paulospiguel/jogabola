@@ -194,7 +194,7 @@ export function BasicInfoStep({
         description="Vamos começar com as tuas informações essenciais."
       />
 
-      <div className="mx-auto max-w-xl space-y-4 sm:space-y-6">
+      <div className="mx-auto max-w-2xl space-y-4 py-4 sm:space-y-6">
         <div>
           <Label htmlFor="name" className="font-medium text-white">
             Nome Completo *
@@ -204,7 +204,7 @@ export function BasicInfoStep({
             value={name}
             onChange={e => onNameChange(e.target.value)}
             placeholder="O teu nome"
-            className="mt-2 border-white/20 bg-white/10 text-white placeholder:text-white/60"
+            className="mt-2"
           />
           {autoFilledFields.name && (
             <p className="mt-1 text-xs text-white/60">
@@ -224,7 +224,7 @@ export function BasicInfoStep({
               value={nicknameValue}
               onChange={e => handleNicknameChange(e.target.value)}
               placeholder="teu-nickname"
-              className="mt-2 border-white/20 bg-white/10 pr-10 text-white placeholder:text-white/60"
+              className="mt-2 pr-10"
               maxLength={30}
             />
             {nicknameValue && (
@@ -266,6 +266,30 @@ export function BasicInfoStep({
         </div>
 
         <div>
+          <Label htmlFor="email" className="font-medium text-white">
+            Email *
+          </Label>
+          <Input
+            id="email"
+            type="email"
+            value={email}
+            onChange={e => {
+              if (autoFilledFields.email) return;
+              onEmailChange(e.target.value);
+            }}
+            placeholder="teu@email.com"
+            disabled={!!autoFilledFields.email}
+            className="mt-2"
+          />
+          {autoFilledFields.email && (
+            <p className="mt-1 text-xs text-white/60">
+              Este campo foi preenchido automaticamente com os dados da tua
+              conta.
+            </p>
+          )}
+        </div>
+
+        <div>
           <Label htmlFor="dateOfBirth" className="font-medium text-white">
             Data de Nascimento
           </Label>
@@ -280,33 +304,6 @@ export function BasicInfoStep({
             selecionar datas no futuro.
           </p>
         </div>
-
-        {/* Mostrar email apenas se não estiver preenchido */}
-        {!email && (
-          <div>
-            <Label htmlFor="email" className="font-medium text-white">
-              Email *
-            </Label>
-            <Input
-              id="email"
-              type="email"
-              value={email}
-              onChange={e => {
-                if (autoFilledFields.email) return;
-                onEmailChange(e.target.value);
-              }}
-              placeholder="teu@email.com"
-              disabled={!!autoFilledFields.email}
-              className="mt-2 border-white/20 bg-white/10 text-white placeholder:text-white/60 disabled:cursor-not-allowed disabled:opacity-60"
-            />
-            {autoFilledFields.email && (
-              <p className="mt-1 text-xs text-white/60">
-                Este campo foi preenchido automaticamente com os dados da tua
-                conta.
-              </p>
-            )}
-          </div>
-        )}
 
         <div>
           <Label htmlFor="nationality" className="font-medium text-white">
@@ -353,7 +350,7 @@ export function BasicInfoStep({
                 value={city}
                 onChange={e => onCityChange(e.target.value)}
                 placeholder="A tua cidade"
-                className="mt-2 border-white/20 bg-white/10 text-white placeholder:text-white/60"
+                className="mt-2"
               />
             </div>
           </div>

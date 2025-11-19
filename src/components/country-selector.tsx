@@ -2,15 +2,15 @@
 
 import { Input } from "@/components/ui/input";
 import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
+    Popover,
+    PopoverContent,
+    PopoverTrigger,
 } from "@/components/ui/popover";
+import { cn } from "@/utils";
 import { countries } from "country-data-list";
 import { Check, ChevronsUpDown } from "lucide-react";
-import { CircleFlag } from "react-circle-flags";
 import { useState } from "react";
-import { cn } from "@/utils";
+import { CircleFlag } from "react-circle-flags";
 
 interface Country {
   code: string;
@@ -91,7 +91,7 @@ export function CountrySelector({
           role="combobox"
           aria-expanded={open}
           className={cn(
-            "flex h-10 w-full items-center justify-between rounded-full border border-white/20 bg-white/10 px-3 py-2 text-sm text-white ring-offset-background placeholder:text-white/60 focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 hover:bg-white/20",
+            "flex h-10 w-full items-center justify-between rounded-full border border-white/8 bg-white/5 backdrop-blur-sm px-3 py-2 text-sm text-white placeholder:text-white/60 transition-all duration-300 focus-visible:outline-hidden focus-visible:ring-[3px] focus-visible:ring-neon-primary/40 disabled:cursor-not-allowed disabled:opacity-50 hover:border-neon-primary/50 hover:bg-white/10",
             className,
           )}
         >
@@ -111,13 +111,13 @@ export function CountrySelector({
           <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
         </button>
       </PopoverTrigger>
-      <PopoverContent className="w-[300px] p-0 border-white/20 bg-[#2b0071]/95 backdrop-blur shadow-lg" align="start">
+      <PopoverContent className="w-[300px] p-0 border border-white/8 bg-[#050312]/95 backdrop-blur-xl shadow-[0_35px_80px_-45px_rgba(36,255,230,0.8)] rounded-2xl" align="start">
         <div className="p-2">
           <Input
             placeholder="Pesquisar país..."
             value={search}
             onChange={e => setSearch(e.target.value)}
-            className="mb-2 border-white/20 bg-white/10 text-white placeholder:text-white/60"
+            className="mb-2 rounded-full border border-neon-primary/30 bg-white/5 text-white placeholder:text-white/60 focus-visible:border-neon-primary focus-visible:ring-[3px] focus-visible:ring-neon-primary/40"
           />
         </div>
         <div className="max-h-[300px] overflow-auto">
@@ -136,8 +136,8 @@ export function CountrySelector({
                     setSearch("");
                   }}
                   className={cn(
-                    "relative flex w-full cursor-pointer select-none items-center gap-2 rounded-full px-3 py-2 text-sm text-white outline-none transition-colors hover:bg-white/10",
-                    value === country.code && "bg-white/10",
+                    "relative flex w-full cursor-pointer select-none items-center gap-2 rounded-lg px-3 py-2 text-sm text-white outline-none transition-all duration-200 hover:bg-white/10",
+                    value === country.code && "bg-neon-primary/10 border-l-2 border-neon-primary",
                   )}
                 >
                   <CircleFlag
@@ -146,7 +146,7 @@ export function CountrySelector({
                   />
                   <span className="flex-1 text-left">{country.name}</span>
                   {value === country.code && (
-                    <Check className="h-4 w-4 text-[#00cfb1]" />
+                    <Check className="h-4 w-4 text-neon-primary" />
                   )}
                 </button>
               ))}

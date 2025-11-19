@@ -26,7 +26,7 @@ export function OnboardProgressHeader({
         <motion.div
           initial={{ opacity: 0, x: 20 }}
           animate={{ opacity: 1, x: 0 }}
-          className="text-xs font-medium text-[#00cfb1] sm:text-sm"
+          className="text-xs font-medium text-emerald-600 sm:text-sm dark:text-emerald-400"
         >
           {Math.round(progress)}% concluído
         </motion.div>

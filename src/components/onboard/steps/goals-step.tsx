@@ -29,7 +29,7 @@ export function GoalsStep({
         description="Seleciona todos os objetivos que se aplicam a ti. Isto ajuda-nos a sugerir as melhores funcionalidades."
       />
 
-      <div className="grid grid-cols-1 gap-3 sm:gap-4 md:grid-cols-2 lg:grid-cols-3">
+      <div className="grid grid-cols-1 gap-3 p-4 sm:gap-4 md:grid-cols-2 lg:grid-cols-3">
         {goalsToDisplay.map(goal => (
           <GoalCard
             key={goal.id}
@@ -42,4 +42,3 @@ export function GoalsStep({
     </motion.div>
   );
 }
-

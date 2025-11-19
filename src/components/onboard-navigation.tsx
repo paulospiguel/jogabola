@@ -38,7 +38,7 @@ export function OnboardNavigation({
         <Button
           onClick={onSubmit}
           disabled={isSubmitting}
-          className="bg-gradient-to-r from-[#00cfb1] to-[#1effbf] text-sm font-bold text-[#21005a] hover:from-[#1effbf] hover:to-[#00cfb1] disabled:opacity-50 sm:text-base"
+          className="bg-emerald-500 text-sm font-bold text-white hover:bg-emerald-600 disabled:opacity-50 sm:text-base dark:bg-emerald-500 dark:hover:bg-emerald-600"
         >
           {isSubmitting ? "A guardar..." : "Finalizar Configuração"}
           <CheckCircle className="ml-2 h-4 w-4" />
@@ -47,7 +47,7 @@ export function OnboardNavigation({
         <Button
           onClick={onNext}
           disabled={!canProceed}
-          className="bg-gradient-to-r from-[#00cfb1] to-[#1effbf] text-sm font-bold text-[#21005a] hover:from-[#1effbf] hover:to-[#00cfb1] disabled:opacity-50 sm:text-base"
+          className="bg-emerald-500 text-sm font-bold text-white hover:bg-emerald-600 disabled:opacity-50 sm:text-base dark:bg-emerald-500 dark:hover:bg-emerald-600"
         >
           Próximo
           <ArrowRight className="ml-2 h-4 w-4" />

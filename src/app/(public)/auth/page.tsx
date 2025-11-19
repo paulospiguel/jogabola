@@ -1,7 +1,6 @@
 "use client";
 
 import { saveProfileData } from "@/actions/profile";
-import { FloatingOrb } from "@/components/floating-orb";
 import { GoogleIcon } from "@/components/icons";
 import { Logo } from "@/components/logo";
 import { Button } from "@/components/ui/button";
@@ -32,8 +31,7 @@ import {
   Loader2,
   Lock,
   Mail,
-  Trophy,
-  User,
+  User
 } from "lucide-react";
 import { useTranslations } from "next-intl";
 import Link from "next/link";
@@ -185,200 +183,382 @@ export default function LoginPage() {
     }
   }
 
+  // Background Pattern Component - Gradiente do mockup (Igual da Home)
+  const FieldPattern = () => {
+    return (
+      <div className="pointer-events-none absolute inset-0 overflow-hidden">
+        {/* Gradiente base: azul claro top-left para verde claro bottom-right */}
+        <div className="absolute inset-0 bg-linear-to-br from-blue-100 via-cyan-50 to-emerald-100 dark:from-slate-900/80 dark:via-emerald-900/40 dark:to-slate-950/80" />
+      </div>
+    );
+  };
+
   return (
-    <div className="relative min-h-screen overflow-hidden bg-gradient-to-br from-[#21005a] via-[#2b0071] to-[#21005a]">
+    <div className="bg-background relative min-h-screen overflow-hidden dark:bg-(--color-blue-850)">
+      <FieldPattern />
+
       {/* Back to Home Button */}
       <Link
         href="/"
         aria-label="Voltar ao início"
-        className="absolute top-4 left-4 z-50 flex items-center gap-2 rounded-full border border-white/10 bg-white/5 p-3 text-sm font-medium text-white/80 backdrop-blur-sm transition-all hover:border-[#00cfb1]/50 hover:bg-[#00cfb1]/10 hover:text-[#00cfb1] sm:px-4 sm:py-2 lg:top-8 lg:left-8"
+        className="absolute top-4 left-4 z-50 flex items-center gap-2 rounded-full border border-white/10 bg-white/5 p-3 text-sm font-medium text-gray-700 backdrop-blur-sm transition-all hover:border-emerald-500/50 hover:bg-emerald-500/10 hover:text-emerald-600 sm:px-4 sm:py-2 lg:top-8 lg:left-8 dark:text-white/80 dark:hover:text-emerald-400"
       >
         <ArrowLeft className="h-4 w-4" />
         <span className="hidden sm:inline">Voltar ao início</span>
       </Link>
 
-      {/* Header removido */}
-
-      {/* Background decorativo com floating orbs */}
-      <div className="absolute inset-0 overflow-hidden">
-        <FloatingOrb delay={0} size={200} position="top-20 left-10" />
-        <FloatingOrb delay={1} size={150} position="top-40 right-20" />
-        <FloatingOrb delay={2} size={100} position="bottom-20 left-1/4" />
-        <FloatingOrb delay={3} size={120} position="bottom-40 right-1/3" />
-      </div>
-
-      <div className="relative z-10 flex min-h-screen flex-col lg:flex-row">
-        {/* Lado esquerdo - Hero Section */}
-        <div className="relative order-2 flex w-full flex-col justify-center px-4 py-8 md:order-1 lg:w-1/2 lg:p-16">
-          <motion.div
-            initial={{ opacity: 0, x: -50 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.6 }}
-            className="space-y-4 lg:space-y-6"
-          >
-            <div className="inline-flex items-center gap-2 rounded-full bg-[#00cfb1]/10 px-3 py-1.5 backdrop-blur-sm lg:px-4 lg:py-2">
-              <Trophy className="h-4 w-4 text-[#00cfb1] lg:h-5 lg:w-5" />
-              <span className="text-xs font-medium text-[#00cfb1] lg:text-sm">
-                {t("hero.badge")}
-              </span>
+      <div className="relative z-10 flex min-h-screen flex-col items-center justify-center p-4 sm:p-6 lg:p-8">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+          className="w-full max-w-md"
+        >
+          <div className="overflow-hidden rounded-3xl bg-linear-to-br from-blue-50/80 via-cyan-50/80 to-emerald-50/80 p-6 shadow-xl backdrop-blur-sm sm:p-8 dark:from-slate-900/90 dark:via-slate-900/70 dark:to-emerald-900/40">
+            {/* Header */}
+            <div className="mb-6 space-y-2 text-center lg:mb-8">
+              <motion.div
+                initial={{ scale: 0 }}
+                animate={{ scale: 1 }}
+                transition={{ delay: 0.2, type: "spring" }}
+                className="mx-auto flex items-center justify-center"
+              >
+                <Logo size="medium" />
+              </motion.div>
+              <h2 className="text-2xl font-bold text-gray-900 sm:text-3xl dark:text-white">
+                {tab === "login"
+                  ? t("form.title.login")
+                  : t("form.title.register")}
+              </h2>
+              <p className="text-sm text-gray-600 sm:text-base dark:text-gray-300">
+                {tab === "login"
+                  ? t("form.subtitle.login")
+                  : t("form.subtitle.register")}
+              </p>
             </div>
 
-            <h1 className="max-w-xl bg-gradient-to-r from-[#00cfb1] to-[#1effbf] bg-clip-text text-3xl leading-tight font-bold text-transparent sm:text-4xl md:text-5xl lg:text-6xl">
-              {t("hero.title")}
-            </h1>
-
-            <p className="max-w-lg text-base leading-relaxed text-[#ba93ff] lg:text-xl">
-              {t("hero.description")}
-            </p>
-
-            <div className="flex flex-col gap-3 pt-4 lg:gap-4 lg:pt-6">
-              {[
-                t("features.findTeams"),
-                t("features.trackStats"),
-                t("features.joinTournaments"),
-                t("features.activeCommunity"),
-              ].map((feature, i) => (
-                <motion.div
-                  key={i}
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: 0.3 + i * 0.1 }}
-                  className="flex items-center gap-2 text-sm text-white/90 lg:gap-3 lg:text-base"
-                >
-                  <div className="h-1.5 w-1.5 shrink-0 rounded-full bg-[#00cfb1]" />
-                  <span className="break-words">{feature}</span>
-                </motion.div>
-              ))}
+            {/* Tabs */}
+            <div className="mb-6 flex gap-2 rounded-xl bg-white/50 p-1 dark:bg-slate-800/50">
+              <button
+                onClick={() => {
+                  setTab("login");
+                  registerForm.reset();
+                }}
+                className={`flex-1 rounded-lg py-2 text-xs font-semibold transition-all sm:py-2.5 sm:text-sm ${
+                  tab === "login"
+                    ? "bg-white text-emerald-600 shadow-sm dark:bg-slate-700 dark:text-emerald-400"
+                    : "text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
+                }`}
+              >
+                {t("form.tabs.login")}
+              </button>
+              <button
+                onClick={() => {
+                  setTab("register");
+                  loginForm.reset();
+                }}
+                className={`flex-1 rounded-lg py-2 text-xs font-semibold transition-all sm:py-2.5 sm:text-sm ${
+                  tab === "register"
+                    ? "bg-white text-emerald-600 shadow-sm dark:bg-slate-700 dark:text-emerald-400"
+                    : "text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
+                }`}
+              >
+                {t("form.tabs.register")}
+              </button>
             </div>
-          </motion.div>
-        </div>
 
-        {/* Lado direito - Form */}
-        <div className="order-1 flex flex-1 items-center justify-center px-4 py-6 sm:px-6 md:order-2 lg:p-8">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            className="w-full max-w-md"
-          >
-            <div className="overflow-hidden rounded-2xl border border-white/20 bg-gradient-to-br from-white/10 to-white/5 p-4 shadow-2xl backdrop-blur-xl sm:rounded-3xl sm:p-6 lg:p-8">
-              {/* Header */}
-              <div className="mb-6 space-y-2 text-center lg:mb-8">
-                <motion.div
-                  initial={{ scale: 0 }}
-                  animate={{ scale: 1 }}
-                  transition={{ delay: 0.2, type: "spring" }}
-                  className="mx-auto flex items-center justify-center"
+            {/* Login Form */}
+            {tab === "login" && (
+              <Form {...loginForm}>
+                <form
+                  className="space-y-4"
+                  onSubmit={loginForm.handleSubmit(onLoginSubmit)}
                 >
-                  <Logo size="medium" />
-                </motion.div>
-                <h2 className="bg-gradient-to-r from-[#00cfb1] to-[#1effbf] bg-clip-text text-2xl font-bold text-transparent sm:text-3xl">
-                  {tab === "login"
-                    ? t("form.title.login")
-                    : t("form.title.register")}
-                </h2>
-                <p className="text-xs text-[#ba93ff] sm:text-sm">
-                  {tab === "login"
-                    ? t("form.subtitle.login")
-                    : t("form.subtitle.register")}
-                </p>
-              </div>
+                  <FormField
+                    control={loginForm.control}
+                    name="email"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                          {t("form.fields.email")}
+                        </FormLabel>
+                        <FormControl>
+                          <div className="relative">
+                            <Input
+                              icon={Mail}
+                              {...field}
+                              type="email"
+                              placeholder={t("form.fields.emailPlaceholder")}
+                              disabled={loading}
+                              className="relative z-10 border-gray-200 bg-white/50 !pl-10 text-gray-900 placeholder:text-gray-400 focus:border-emerald-500 focus:ring-emerald-500 dark:border-slate-700 dark:bg-slate-800/50 dark:text-white dark:placeholder:text-gray-500"
+                            />
+                          </div>
+                        </FormControl>
+                        <FormMessage className="text-red-500 dark:text-red-400" />
+                      </FormItem>
+                    )}
+                  />
 
-              {/* Tabs */}
-              <div className="mb-4 flex gap-2 rounded-xl bg-white/5 p-1 lg:mb-6">
-                <button
-                  onClick={() => {
-                    setTab("login");
-                    registerForm.reset();
-                  }}
-                  className={`flex-1 rounded-lg py-2 text-xs font-semibold transition-all sm:py-2.5 sm:text-sm ${
-                    tab === "login"
-                      ? "bg-gradient-to-r from-[#00cfb1] to-[#1effbf] text-[#21005a] shadow-lg"
-                      : "text-white/60 hover:text-white"
-                  }`}
-                >
-                  {t("form.tabs.login")}
-                </button>
-                <button
-                  onClick={() => {
-                    setTab("register");
-                    loginForm.reset();
-                  }}
-                  className={`flex-1 rounded-lg py-2 text-xs font-semibold transition-all sm:py-2.5 sm:text-sm ${
-                    tab === "register"
-                      ? "bg-gradient-to-r from-[#00cfb1] to-[#1effbf] text-[#21005a] shadow-lg"
-                      : "text-white/60 hover:text-white"
-                  }`}
-                >
-                  {t("form.tabs.register")}
-                </button>
-              </div>
+                  <FormField
+                    control={loginForm.control}
+                    name="password"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                          {t("form.fields.password")}
+                        </FormLabel>
+                        <FormControl>
+                          <div className="relative">
+                            <Input
+                              icon={Lock}
+                              {...field}
+                              type={showLoginPassword ? "text" : "password"}
+                              placeholder={t(
+                                "form.fields.passwordPlaceholder",
+                              )}
+                              disabled={loading}
+                              className="relative z-10 border-gray-200 bg-white/50 pr-10 !pl-10 text-gray-900 placeholder:text-gray-400 focus:border-emerald-500 focus:ring-emerald-500 dark:border-slate-700 dark:bg-slate-800/50 dark:text-white dark:placeholder:text-gray-500"
+                            />
+                            <button
+                              type="button"
+                              onClick={() =>
+                                setShowLoginPassword(!showLoginPassword)
+                              }
+                              className="absolute top-1/2 right-3 z-10 -translate-y-1/2 text-gray-400 transition-colors hover:text-emerald-600 dark:text-gray-500 dark:hover:text-emerald-400"
+                              aria-label={
+                                showLoginPassword
+                                  ? "Ocultar senha"
+                                  : "Mostrar senha"
+                              }
+                            >
+                              {showLoginPassword ? (
+                                <EyeOff className="h-5 w-5" />
+                              ) : (
+                                <Eye className="h-5 w-5" />
+                              )}
+                            </button>
+                          </div>
+                        </FormControl>
+                        <FormMessage className="text-red-500 dark:text-red-400" />
+                      </FormItem>
+                    )}
+                  />
 
-              {/* Login Form */}
-              {tab === "login" && (
-                <Form {...loginForm}>
-                  <form
-                    className="space-y-3 sm:space-y-4"
-                    onSubmit={loginForm.handleSubmit(onLoginSubmit)}
-                  >
-                    <FormField
-                      control={loginForm.control}
-                      name="email"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel className="text-sm font-medium text-white">
-                            {t("form.fields.email")}
-                          </FormLabel>
-                          <FormControl>
-                            <div className="relative">
-                              <Input
-                                icon={Mail}
-                                {...field}
-                                type="email"
-                                placeholder={t("form.fields.emailPlaceholder")}
-                                disabled={loading}
-                                className="relative z-10 border-white/20 bg-white/10 !pl-10 text-white placeholder:text-white/40 focus:border-[#00cfb1] focus:ring-[#00cfb1]"
-                              />
-                            </div>
-                          </FormControl>
-                          <FormMessage className="text-red-400" />
-                        </FormItem>
+                  <div className="flex justify-end">
+                    <Link
+                      href="/forgot-password"
+                      className="text-xs text-emerald-600 transition-colors hover:text-emerald-700 dark:text-emerald-400 dark:hover:text-emerald-300"
+                    >
+                      {t("form.forgotPassword")}
+                    </Link>
+                  </div>
+
+                  {/* Buttons */}
+                  <div className="space-y-3 pt-2">
+                    <Button
+                      type="submit"
+                      disabled={loading}
+                      className="w-full rounded-lg bg-emerald-500 py-6 text-base font-medium text-white shadow-md hover:bg-emerald-600 disabled:opacity-50 dark:bg-emerald-500 dark:hover:bg-emerald-600"
+                    >
+                      {loading ? (
+                        <>
+                          <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                          {t("form.buttons.logging")}
+                        </>
+                      ) : (
+                        t("form.buttons.login")
                       )}
-                    />
+                    </Button>
 
-                    <FormField
-                      control={loginForm.control}
-                      name="password"
-                      render={({ field }) => (
+                    <div className="relative">
+                      <div className="absolute inset-0 flex items-center">
+                        <div className="w-full border-t border-gray-200 dark:border-slate-700" />
+                      </div>
+                      <div className="relative flex justify-center text-xs">
+                        <span className="bg-white/50 px-3 py-1 text-gray-500 backdrop-blur-sm dark:bg-slate-800/50 dark:text-gray-400">
+                          {t("form.continueWith")}
+                        </span>
+                      </div>
+                    </div>
+
+                    <Button
+                      type="button"
+                      onClick={handleGoogleLogin}
+                      disabled={loading}
+                      variant="outline"
+                      className="w-full border-gray-200 bg-white text-gray-700 hover:bg-gray-50 dark:border-slate-700 dark:bg-slate-800 dark:text-white dark:hover:bg-slate-700"
+                    >
+                      {loading ? (
+                        <>
+                          <Loader2 className="mr-2 h-5 w-5 animate-spin" />A
+                          entrar...
+                        </>
+                      ) : (
+                        <>
+                          <GoogleIcon className="mr-2 h-5 w-5" />
+                          {t("form.buttons.google")}
+                        </>
+                      )}
+                    </Button>
+                  </div>
+                </form>
+              </Form>
+            )}
+
+            {/* Register Form */}
+            {tab === "register" && (
+              <Form {...registerForm}>
+                <form
+                  className="space-y-4"
+                  onSubmit={registerForm.handleSubmit(onRegisterSubmit)}
+                >
+                  <FormField
+                    control={registerForm.control}
+                    name="name"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                          {t("form.fields.name")}
+                        </FormLabel>
+                        <FormControl>
+                          <div className="relative">
+                            <Input
+                              icon={User}
+                              {...field}
+                              type="text"
+                              placeholder={t("form.fields.namePlaceholder")}
+                              disabled={loading}
+                              className="border-gray-200 bg-white/50 !pl-10 text-gray-900 placeholder:text-gray-400 focus:border-emerald-500 focus:ring-emerald-500 dark:border-slate-700 dark:bg-slate-800/50 dark:text-white dark:placeholder:text-gray-500"
+                            />
+                          </div>
+                        </FormControl>
+                        <FormMessage className="text-red-500 dark:text-red-400" />
+                      </FormItem>
+                    )}
+                  />
+
+                  <FormField
+                    control={registerForm.control}
+                    name="email"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                          {t("form.fields.email")}
+                        </FormLabel>
+                        <FormControl>
+                          <div className="relative">
+                            <Input
+                              icon={Mail}
+                              {...field}
+                              type="email"
+                              placeholder={t("form.fields.emailPlaceholder")}
+                              disabled={loading}
+                              className="border-gray-200 bg-white/50 !pl-10 text-gray-900 placeholder:text-gray-400 focus:border-emerald-500 focus:ring-emerald-500 dark:border-slate-700 dark:bg-slate-800/50 dark:text-white dark:placeholder:text-gray-500"
+                            />
+                          </div>
+                        </FormControl>
+                        <FormMessage className="text-red-500 dark:text-red-400" />
+                      </FormItem>
+                    )}
+                  />
+
+                  <FormField
+                    control={registerForm.control}
+                    name="password"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                          {t("form.fields.password")}
+                        </FormLabel>
+                        <FormControl>
+                          <div className="relative">
+                            <Input
+                              icon={Lock}
+                              {...field}
+                              type={showPassword ? "text" : "password"}
+                              placeholder={t(
+                                "form.fields.passwordPlaceholder",
+                              )}
+                              disabled={loading}
+                              className="border-gray-200 bg-white/50 pr-10 !pl-10 text-gray-900 placeholder:text-gray-400 focus:border-emerald-500 focus:ring-emerald-500 dark:border-slate-700 dark:bg-slate-800/50 dark:text-white dark:placeholder:text-gray-500"
+                            />
+                            <button
+                              type="button"
+                              onClick={() => setShowPassword(!showPassword)}
+                              className="absolute top-1/2 right-3 -translate-y-1/2 text-gray-400 transition-colors hover:text-emerald-600 dark:text-gray-500 dark:hover:text-emerald-400"
+                              aria-label={
+                                showPassword
+                                  ? "Ocultar senha"
+                                  : "Mostrar senha"
+                              }
+                            >
+                              {showPassword ? (
+                                <EyeOff className="h-5 w-5" />
+                              ) : (
+                                <Eye className="h-5 w-5" />
+                              )}
+                            </button>
+                          </div>
+                        </FormControl>
+                        <FormMessage className="text-red-500 dark:text-red-400" />
+                      </FormItem>
+                    )}
+                  />
+
+                  <FormField
+                    control={registerForm.control}
+                    name="confirmPassword"
+                    render={({ field }) => {
+                      const passwordValue =
+                        registerForm.watch("password") || "";
+                      const confirmPasswordValue = field.value || "";
+                      const passwordsMatch =
+                        passwordValue &&
+                        confirmPasswordValue &&
+                        passwordValue === confirmPasswordValue;
+                      const passwordsDontMatch =
+                        passwordValue &&
+                        confirmPasswordValue &&
+                        passwordValue !== confirmPasswordValue;
+
+                      return (
                         <FormItem>
-                          <FormLabel className="text-sm font-medium text-white">
-                            {t("form.fields.password")}
+                          <FormLabel className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                            {t("form.fields.confirmPassword")}
                           </FormLabel>
                           <FormControl>
                             <div className="relative">
+                              <Lock className="pointer-events-none absolute top-1/2 left-3 h-5 w-5 -translate-y-1/2 text-gray-400 dark:text-gray-500" />
                               <Input
-                                icon={Lock}
                                 {...field}
-                                type={showLoginPassword ? "text" : "password"}
+                                type={
+                                  showConfirmPassword ? "text" : "password"
+                                }
                                 placeholder={t(
                                   "form.fields.passwordPlaceholder",
                                 )}
                                 disabled={loading}
-                                className="relative z-10 border-white/20 bg-white/10 pr-10 !pl-10 text-white placeholder:text-white/40 focus:border-[#00cfb1] focus:ring-[#00cfb1]"
+                                className={`border-gray-200 bg-white/50 pr-10 !pl-10 text-gray-900 placeholder:text-gray-400 focus:border-emerald-500 focus:ring-emerald-500 dark:border-slate-700 dark:bg-slate-800/50 dark:text-white dark:placeholder:text-gray-500 ${
+                                  passwordsDontMatch
+                                    ? "border-red-500 focus:border-red-500 focus:ring-red-500"
+                                    : passwordsMatch
+                                      ? "border-green-500 focus:border-green-500 focus:ring-green-500"
+                                      : ""
+                                }`}
                               />
                               <button
                                 type="button"
                                 onClick={() =>
-                                  setShowLoginPassword(!showLoginPassword)
+                                  setShowConfirmPassword(!showConfirmPassword)
                                 }
-                                className="absolute top-1/2 right-3 z-10 -translate-y-1/2 text-[#00cfb1] transition-colors hover:text-[#1effbf]"
+                                className="absolute top-1/2 right-3 -translate-y-1/2 text-gray-400 transition-colors hover:text-emerald-600 dark:text-gray-500 dark:hover:text-emerald-400"
                                 aria-label={
-                                  showLoginPassword
+                                  showConfirmPassword
                                     ? "Ocultar senha"
                                     : "Mostrar senha"
                                 }
                               >
-                                {showLoginPassword ? (
+                                {showConfirmPassword ? (
                                   <EyeOff className="h-5 w-5" />
                                 ) : (
                                   <Eye className="h-5 w-5" />
@@ -386,308 +566,80 @@ export default function LoginPage() {
                               </button>
                             </div>
                           </FormControl>
-                          <FormMessage className="text-red-400" />
+                          {passwordsDontMatch && (
+                            <p className="mt-1 text-sm text-red-500 dark:text-red-400">
+                              As palavras-passe não coincidem
+                            </p>
+                          )}
+                          {passwordsMatch && confirmPasswordValue && (
+                            <p className="mt-1 text-sm text-green-500 dark:text-green-400">
+                              As palavras-passe coincidem
+                            </p>
+                          )}
+                          <FormMessage className="text-red-500 dark:text-red-400" />
                         </FormItem>
+                      );
+                    }}
+                  />
+
+                  {/* Buttons */}
+                  <div className="space-y-3 pt-2">
+                    <Button
+                      type="submit"
+                      disabled={loading}
+                      className="w-full rounded-lg bg-emerald-500 py-6 text-base font-medium text-white shadow-md hover:bg-emerald-600 disabled:opacity-50 dark:bg-emerald-500 dark:hover:bg-emerald-600"
+                    >
+                      {loading ? (
+                        <>
+                          <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                          {t("form.buttons.registering")}
+                        </>
+                      ) : (
+                        t("form.buttons.register")
                       )}
-                    />
+                    </Button>
 
-                    <div className="flex justify-end">
-                      <Link
-                        href="/forgot-password"
-                        className="text-xs text-[#00cfb1] transition-colors hover:text-[#1effbf]"
-                      >
-                        {t("form.forgotPassword")}
-                      </Link>
-                    </div>
-
-                    {/* Buttons */}
-                    <div className="space-y-2.5 pt-2 sm:space-y-3">
-                      <Button
-                        type="submit"
-                        disabled={loading}
-                        className="w-full bg-gradient-to-r from-[#00cfb1] to-[#1effbf] text-sm font-bold text-[#21005a] hover:from-[#1effbf] hover:to-[#00cfb1] hover:shadow-lg hover:shadow-[#00cfb1]/50 disabled:opacity-50 sm:text-base"
-                      >
-                        {loading ? (
-                          <>
-                            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                            {t("form.buttons.logging")}
-                          </>
-                        ) : (
-                          t("form.buttons.login")
-                        )}
-                      </Button>
-
-                      <div className="relative">
-                        <div className="absolute inset-0 flex items-center">
-                          <div className="w-full border-t border-white/20" />
-                        </div>
-                        <div className="relative flex justify-center text-xs">
-                          <span className="bg-gradient-to-br from-white/10 to-white/5 px-3 py-1 text-white/60">
-                            {t("form.continueWith")}
-                          </span>
-                        </div>
+                    <div className="relative">
+                      <div className="absolute inset-0 flex items-center">
+                        <div className="w-full border-t border-gray-200 dark:border-slate-700" />
                       </div>
-
-                      <Button
-                        type="button"
-                        onClick={handleGoogleLogin}
-                        disabled={loading}
-                        variant="outline"
-                        className="w-full border-white/20 bg-white/5 text-white hover:bg-white/10 hover:text-white"
-                      >
-                        {loading ? (
-                          <>
-                            <Loader2 className="mr-2 h-5 w-5 animate-spin" />A
-                            entrar...
-                          </>
-                        ) : (
-                          <>
-                            <GoogleIcon className="mr-2 h-5 w-5" />
-                            {t("form.buttons.google")}
-                          </>
-                        )}
-                      </Button>
-                    </div>
-                  </form>
-                </Form>
-              )}
-
-              {/* Register Form */}
-              {tab === "register" && (
-                <Form {...registerForm}>
-                  <form
-                    className="space-y-3 sm:space-y-4"
-                    onSubmit={registerForm.handleSubmit(onRegisterSubmit)}
-                  >
-                    <FormField
-                      control={registerForm.control}
-                      name="name"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel className="text-sm font-medium text-white">
-                            {t("form.fields.name")}
-                          </FormLabel>
-                          <FormControl>
-                            <div className="relative">
-                              <Input
-                                icon={User}
-                                {...field}
-                                type="text"
-                                placeholder={t("form.fields.namePlaceholder")}
-                                disabled={loading}
-                                className="border-white/20 bg-white/10 !pl-10 text-white placeholder:text-white/40 focus:border-[#00cfb1] focus:ring-[#00cfb1]"
-                              />
-                            </div>
-                          </FormControl>
-                          <FormMessage className="text-red-400" />
-                        </FormItem>
-                      )}
-                    />
-
-                    <FormField
-                      control={registerForm.control}
-                      name="email"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel className="text-sm font-medium text-white">
-                            {t("form.fields.email")}
-                          </FormLabel>
-                          <FormControl>
-                            <div className="relative">
-                              <Input
-                                icon={Mail}
-                                {...field}
-                                type="email"
-                                placeholder={t("form.fields.emailPlaceholder")}
-                                disabled={loading}
-                                className="border-white/20 bg-white/10 !pl-10 text-white placeholder:text-white/40 focus:border-[#00cfb1] focus:ring-[#00cfb1]"
-                              />
-                            </div>
-                          </FormControl>
-                          <FormMessage className="text-red-400" />
-                        </FormItem>
-                      )}
-                    />
-
-                    <FormField
-                      control={registerForm.control}
-                      name="password"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel className="text-sm font-medium text-white">
-                            {t("form.fields.password")}
-                          </FormLabel>
-                          <FormControl>
-                            <div className="relative">
-                              <Input
-                                icon={Lock}
-                                {...field}
-                                type={showPassword ? "text" : "password"}
-                                placeholder={t(
-                                  "form.fields.passwordPlaceholder",
-                                )}
-                                disabled={loading}
-                                className="border-white/20 bg-white/10 pr-10 !pl-10 text-white placeholder:text-white/40 focus:border-[#00cfb1] focus:ring-[#00cfb1]"
-                              />
-                              <button
-                                type="button"
-                                onClick={() => setShowPassword(!showPassword)}
-                                className="absolute top-1/2 right-3 -translate-y-1/2 text-[#00cfb1] transition-colors hover:text-[#1effbf]"
-                                aria-label={
-                                  showPassword
-                                    ? "Ocultar senha"
-                                    : "Mostrar senha"
-                                }
-                              >
-                                {showPassword ? (
-                                  <EyeOff className="h-5 w-5" />
-                                ) : (
-                                  <Eye className="h-5 w-5" />
-                                )}
-                              </button>
-                            </div>
-                          </FormControl>
-                          <FormMessage className="text-red-400" />
-                        </FormItem>
-                      )}
-                    />
-
-                    <FormField
-                      control={registerForm.control}
-                      name="confirmPassword"
-                      render={({ field }) => {
-                        const passwordValue =
-                          registerForm.watch("password") || "";
-                        const confirmPasswordValue = field.value || "";
-                        const passwordsMatch =
-                          passwordValue &&
-                          confirmPasswordValue &&
-                          passwordValue === confirmPasswordValue;
-                        const passwordsDontMatch =
-                          passwordValue &&
-                          confirmPasswordValue &&
-                          passwordValue !== confirmPasswordValue;
-
-                        return (
-                          <FormItem>
-                            <FormLabel className="text-sm font-medium text-white">
-                              {t("form.fields.confirmPassword")}
-                            </FormLabel>
-                            <FormControl>
-                              <div className="relative">
-                                <Lock className="pointer-events-none absolute top-1/2 left-3 h-5 w-5 -translate-y-1/2 text-[#00cfb1]" />
-                                <Input
-                                  {...field}
-                                  type={
-                                    showConfirmPassword ? "text" : "password"
-                                  }
-                                  placeholder={t(
-                                    "form.fields.passwordPlaceholder",
-                                  )}
-                                  disabled={loading}
-                                  className={`border-white/20 bg-white/10 pr-10 !pl-10 text-white placeholder:text-white/40 focus:border-[#00cfb1] focus:ring-[#00cfb1] ${
-                                    passwordsDontMatch
-                                      ? "border-red-400 focus:border-red-400 focus:ring-red-400"
-                                      : passwordsMatch
-                                        ? "border-green-400 focus:border-green-400 focus:ring-green-400"
-                                        : ""
-                                  }`}
-                                />
-                                <button
-                                  type="button"
-                                  onClick={() =>
-                                    setShowConfirmPassword(!showConfirmPassword)
-                                  }
-                                  className="absolute top-1/2 right-3 -translate-y-1/2 text-[#00cfb1] transition-colors hover:text-[#1effbf]"
-                                  aria-label={
-                                    showConfirmPassword
-                                      ? "Ocultar senha"
-                                      : "Mostrar senha"
-                                  }
-                                >
-                                  {showConfirmPassword ? (
-                                    <EyeOff className="h-5 w-5" />
-                                  ) : (
-                                    <Eye className="h-5 w-5" />
-                                  )}
-                                </button>
-                              </div>
-                            </FormControl>
-                            {passwordsDontMatch && (
-                              <p className="mt-1 text-sm text-red-400">
-                                As palavras-passe não coincidem
-                              </p>
-                            )}
-                            {passwordsMatch && confirmPasswordValue && (
-                              <p className="mt-1 text-sm text-green-400">
-                                As palavras-passe coincidem
-                              </p>
-                            )}
-                            <FormMessage className="text-red-400" />
-                          </FormItem>
-                        );
-                      }}
-                    />
-
-                    {/* Buttons */}
-                    <div className="space-y-2.5 pt-2 sm:space-y-3">
-                      <Button
-                        type="submit"
-                        disabled={loading}
-                        className="w-full bg-gradient-to-r from-[#00cfb1] to-[#1effbf] text-sm font-bold text-[#21005a] hover:from-[#1effbf] hover:to-[#00cfb1] hover:shadow-lg hover:shadow-[#00cfb1]/50 disabled:opacity-50 sm:text-base"
-                      >
-                        {loading ? (
-                          <>
-                            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                            {t("form.buttons.registering")}
-                          </>
-                        ) : (
-                          t("form.buttons.register")
-                        )}
-                      </Button>
-
-                      <div className="relative">
-                        <div className="absolute inset-0 flex items-center">
-                          <div className="w-full border-t border-white/20" />
-                        </div>
-                        <div className="relative flex justify-center text-xs">
-                          <span className="bg-gradient-to-br from-white/10 to-white/5 px-3 py-1 text-white/60">
-                            {t("form.continueWith")}
-                          </span>
-                        </div>
+                      <div className="relative flex justify-center text-xs">
+                        <span className="bg-white/50 px-3 py-1 text-gray-500 backdrop-blur-sm dark:bg-slate-800/50 dark:text-gray-400">
+                          {t("form.continueWith")}
+                        </span>
                       </div>
-
-                      <Button
-                        type="button"
-                        onClick={handleGoogleLogin}
-                        disabled={loading}
-                        variant="outline"
-                        className="w-full border-white/20 bg-white/5 text-white hover:bg-white/10 hover:text-white"
-                      >
-                        {loading ? (
-                          <>
-                            <Loader2 className="mr-2 h-5 w-5 animate-spin" />A
-                            entrar...
-                          </>
-                        ) : (
-                          <>
-                            <GoogleIcon className="mr-2 h-5 w-5" />
-                            {t("form.buttons.google")}
-                          </>
-                        )}
-                      </Button>
                     </div>
-                  </form>
-                </Form>
-              )}
-            </div>
 
-            {/* Footer */}
-            <p className="mt-4 text-center text-xs text-white/40 sm:mt-6">
-              {t("footer", { year: new Date().getFullYear() })}
-            </p>
-          </motion.div>
-        </div>
+                    <Button
+                      type="button"
+                      onClick={handleGoogleLogin}
+                      disabled={loading}
+                      variant="outline"
+                      className="w-full border-gray-200 bg-white text-gray-700 hover:bg-gray-50 dark:border-slate-700 dark:bg-slate-800 dark:text-white dark:hover:bg-slate-700"
+                    >
+                      {loading ? (
+                        <>
+                          <Loader2 className="mr-2 h-5 w-5 animate-spin" />A
+                          entrar...
+                        </>
+                      ) : (
+                        <>
+                          <GoogleIcon className="mr-2 h-5 w-5" />
+                          {t("form.buttons.google")}
+                        </>
+                      )}
+                    </Button>
+                  </div>
+                </form>
+              </Form>
+            )}
+          </div>
+
+          {/* Footer */}
+          <p className="mt-4 text-center text-xs text-gray-500 dark:text-gray-400">
+            {t("footer", { year: new Date().getFullYear() })}
+          </p>
+        </motion.div>
       </div>
     </div>
   );

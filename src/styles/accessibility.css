@@ -35,7 +35,9 @@
     --color-focus-ring: #ffffff;
   }
 
-  button, a, [role="button"] {
+  button,
+  a,
+  [role="button"] {
     border: 2px solid currentColor;
   }
 }
@@ -64,8 +66,9 @@
   outline: 3px solid var(--color-focus-ring, var(--color-neon-primary));
   outline-offset: 2px;
   border-radius: 4px;
-  box-shadow: 0 0 0 2px var(--color-background-base), 
-              0 0 0 5px var(--color-focus-ring, var(--color-neon-primary));
+  box-shadow:
+    0 0 0 2px var(--color-background-base),
+    0 0 0 5px var(--color-focus-ring, var(--color-neon-primary));
 }
 
 /* Skip link for keyboard navigation */
@@ -119,17 +122,6 @@
    ============================================ */
 
 /* Ensure all interactive elements meet minimum touch target size */
-button,
-a[role="button"],
-input[type="button"],
-input[type="submit"],
-input[type="checkbox"],
-input[type="radio"],
-select,
-[tabindex="0"] {
-  min-height: 44px;
-  min-width: 44px;
-}
 
 /* Exception for inline links */
 a:not([role="button"]) {
@@ -146,12 +138,16 @@ body {
   font-size: clamp(16px, 1rem, 18px);
 }
 
-p, li, span, div {
+p,
+li,
+span,
+div {
   font-size: clamp(16px, 1rem, 18px);
   line-height: 1.75;
 }
 
-small, .text-sm {
+small,
+.text-sm {
   font-size: clamp(14px, 0.875rem, 16px);
 }
 
@@ -166,7 +162,9 @@ label {
   margin-bottom: 0.5rem;
 }
 
-input, textarea, select {
+input,
+textarea,
+select {
   font-size: clamp(16px, 1rem, 18px);
   padding: 0.75rem 1rem;
 }
@@ -222,4 +220,3 @@ input[aria-invalid="true"]::after {
   clip: auto;
   white-space: normal;
 }
-

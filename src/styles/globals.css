@@ -106,9 +106,9 @@
 
   /* Countdown colors */
   --color-countdown-bg: #343650;
-  --color-countdown-dot: #191A24;
+  --color-countdown-dot: #191a24;
   --color-countdown-text: #a5b4fc;
-  --color-countdown-label: #8486A9;
+  --color-countdown-label: #8486a9;
 
   /* Toast colors */
   --color-toast-bg: #21005a;
@@ -300,16 +300,6 @@
     border-radius: 9999px !important;
   }
 
-  /* High contrast for interactive elements - exceptions for inline links */
-  button,
-  [role="button"],
-  input,
-  select,
-  textarea {
-    min-height: 44px;
-    min-width: 44px;
-  }
-
   /* Exception for Switch component - allow smaller height */
   button[data-state],
   [role="switch"],
@@ -320,11 +310,6 @@
   /* Force background color on Switch Thumb */
   [data-radix-switch-thumb] {
     background-color: var(--background) !important;
-  }
-
-  a[role="button"] {
-    min-height: 44px;
-    min-width: 44px;
   }
 
   /* Icon minimum sizes */

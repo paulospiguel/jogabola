@@ -6,9 +6,9 @@ import * as React from "react";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
+    Popover,
+    PopoverContent,
+    PopoverTrigger,
 } from "@/components/ui/popover";
 import { cn } from "@/utils";
 import { format } from "date-fns";
@@ -49,7 +49,7 @@ export function DatePicker({
           <button
             type="button"
             className={cn(
-              "ring-offset-background focus-visible:ring-ring mt-2 flex h-10 w-full items-center justify-between rounded-full border border-white/20 bg-white/10 px-3 py-2 text-sm text-white placeholder:text-white/60 hover:bg-white/20 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-hidden disabled:cursor-not-allowed disabled:opacity-50",
+              "mt-2 flex h-10 w-full items-center justify-between rounded-full border border-white/8 bg-white/5 backdrop-blur-sm px-3 py-2 text-sm text-white placeholder:text-white/60 transition-all duration-300 hover:border-neon-primary/50 hover:bg-white/10 focus-visible:outline-hidden focus-visible:ring-[3px] focus-visible:ring-neon-primary/40 disabled:cursor-not-allowed disabled:opacity-50",
               !value && "text-white/60",
             )}
           >
@@ -71,7 +71,7 @@ export function DatePicker({
           </button>
         </PopoverTrigger>
         <PopoverContent
-          className="w-auto border-white/20 bg-[#2b0071]/95 p-3 shadow-lg backdrop-blur"
+          className="w-auto border border-white/8 bg-[#050312]/95 p-3 shadow-[0_35px_80px_-45px_rgba(36,255,230,0.8)] backdrop-blur-xl rounded-2xl"
           align="start"
         >
           <Calendar
@@ -133,7 +133,7 @@ export function DatePicker({
               // ),
               // range_end: "day-range-end",
               selected:
-                "[&_button]:bg-[#00cfb1] [&_button]:text-white [&_button]:hover:bg-[#00cfb1] [&_button]:hover:text-white [&_button]:focus:bg-[#00cfb1] [&_button]:focus:text-white",
+                "[&_button]:bg-neon-primary [&_button]:text-slate-900 [&_button]:font-semibold [&_button]:hover:bg-neon-primary/90 [&_button]:focus:bg-neon-primary",
               today:
                 "[&_button]:bg-white/10 [&_button]:text-white [&_button]:font-semibold",
               // outside: "[&_button]:text-white/30 [&_button]:opacity-50",
@@ -149,7 +149,7 @@ export function DatePicker({
                     variant="ghost"
                     size="icon"
                     className={cn(
-                      "h-9 w-9 rounded-full font-normal !text-white transition-colors hover:bg-white/10 data-[selected-single=true]:!bg-[#00cfb1] data-[selected-single=true]:!text-white",
+                      "h-9 w-9 rounded-full font-normal text-white! transition-colors hover:bg-white/10 data-[selected-single=true]:bg-neon-primary! data-[selected-single=true]:text-slate-900! data-[selected-single=true]:font-semibold!",
                       className,
                     )}
                     style={{ color: "white" }}
