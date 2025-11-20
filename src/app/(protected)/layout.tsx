@@ -30,8 +30,7 @@ export default async function ProtectedLayout({
 
     return <JourneyWrapper role={role as Role}>{children}</JourneyWrapper>;
   } else {
-    // No profile exists - allow access anyway (onboarding is optional)
-    // User can complete onboarding later if they want
-    return <JourneyWrapper role={undefined}>{children}</JourneyWrapper>;
+    // No profile exists - redirect to onboarding
+    redirect("/onboard");
   }
 }

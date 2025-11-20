@@ -1,9 +1,12 @@
 "use client";
 
 import { getProfileData, saveProfileData } from "@/actions/profile";
+import { CountrySelector } from "@/components/country-selector";
+import { GoalCard } from "@/components/goal-card";
 import { getJourneyRoute } from "@/components/journey-router";
+import { DashboardWidgets } from "@/components/profile/dashboard-widgets";
 import { PerformanceTab } from "@/components/profile/performance-radar-chart";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { ProfileHeader } from "@/components/profile/profile-header";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -12,8 +15,10 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import {
   Select,
   SelectContent,
@@ -25,18 +30,20 @@ import { Separator } from "@/components/ui/separator";
 import { Switch } from "@/components/ui/switch";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Textarea } from "@/components/ui/textarea";
+import { getQuestionsByRole } from "@/constants/onboarding-questions";
 import { useToast } from "@/hooks/use-toast-custom";
 import { useSession } from "@/lib/auth-client";
 import type { Availability, Role } from "@/schemas/profile";
 import {
+  ArrowLeft,
   Bell,
-  Camera,
   Globe,
   Mail,
   MapPin,
   Newspaper,
   Save,
   Sparkles,
+  Target,
   User,
   UserCircle,
 } from "lucide-react";
@@ -46,6 +53,7 @@ import { useEffect, useRef, useState } from "react";
 interface ProfileData {
   name: string;
   email: string;
+  nationality?: string;
   location?: string;
   experience?: string;
   availability?: string;
@@ -54,6 +62,8 @@ interface ProfileData {
   notificationsEnabled: boolean;
   newsletterEnabled: boolean;
   earlyAccessEnabled: boolean;
+  goals: string[];
+  customFields: Record<string, any>;
 }
 
 const languages = [
@@ -88,6 +98,7 @@ export default function ProfilePage() {
   const [profileData, setProfileData] = useState<ProfileData>({
     name: "",
     email: "",
+    nationality: "",
     location: "",
     experience: "",
     availability: "",
@@ -96,7 +107,11 @@ export default function ProfilePage() {
     notificationsEnabled: true,
     newsletterEnabled: true,
     earlyAccessEnabled: true,
+    goals: [],
+    customFields: {},
   });
+
+  const journeyRoute = getJourneyRoute(userRole as Role);
 
   useEffect(() => {
     async function loadProfile() {
@@ -115,6 +130,7 @@ export default function ProfilePage() {
           setProfileData({
             name: result.data.name || "",
             email: session.user.email || "",
+            nationality: result.data.nationality || "",
             location: result.data.location || "",
             experience: result.data.experience || "",
             availability: result.data.availability || "",
@@ -123,6 +139,8 @@ export default function ProfilePage() {
             notificationsEnabled: result.data.notificationsEnabled ?? true,
             newsletterEnabled: result.data.newsletterEnabled ?? true,
             earlyAccessEnabled: result.data.earlyAccessEnabled ?? true,
+            goals: result.data.goals || [],
+            customFields: result.data.customFields || {},
           });
         } else {
           // Se não tem perfil, usar dados da sessão
@@ -165,14 +183,16 @@ export default function ProfilePage() {
         role: userRole as any,
         name: profileData.name,
         email: profileData.email,
+        nationality: profileData.nationality || undefined,
         location: profileData.location || undefined,
         experience: (profileData.experience as any) || undefined,
         availability:
           (profileData.availability as Availability | "" | undefined) ||
           undefined,
-        goals: [],
+        goals: profileData.goals,
         waitlistApps: [],
         customFields: {
+          ...profileData.customFields,
           ...(profileData.bio && { bio: profileData.bio }),
           language: profileData.language,
         },
@@ -202,6 +222,42 @@ export default function ProfilePage() {
       [field]: value,
     }));
   };
+
+  const handleCustomFieldChange = (id: string, value: any) => {
+    // Check if it maps to a top-level field
+    if (id === "experience" || id === "availability" || id === "location") {
+      handleInputChange(id as keyof ProfileData, value);
+    } else {
+      // Otherwise update customFields
+      setProfileData(prev => ({
+        ...prev,
+        customFields: {
+          ...prev.customFields,
+          [id]: value,
+        },
+      }));
+    }
+  };
+
+  const toggleGoal = (goalId: string) => {
+    setProfileData(prev => {
+      const currentGoals = prev.goals || [];
+      if (currentGoals.includes(goalId)) {
+        return {
+          ...prev,
+          goals: currentGoals.filter(g => g !== goalId),
+        };
+      } else {
+        if (currentGoals.length >= 10) return prev; // Max 10 goals
+        return {
+          ...prev,
+          goals: [...currentGoals, goalId],
+        };
+      }
+    });
+  };
+
+  const roleQuestions = getQuestionsByRole(userRole as Role);
 
   const handleCancel = () => {
     // Verificar se há um referrer válido (página anterior no mesmo domínio)
@@ -245,47 +301,118 @@ export default function ProfilePage() {
       <div className="absolute inset-0 -z-10 bg-[linear-gradient(135deg,var(--color-background-gradient-start)_0%,var(--color-background-gradient-mid)_45%,var(--color-background-gradient-end)_100%)]" />
       <div className="absolute inset-0 -z-20 bg-[radial-gradient(90%_90%_at_50%_0%,var(--color-radial-glow)_0%,rgba(5,3,18,0)_72%)]" />
       <div className="container mx-auto max-w-4xl px-4 py-8 sm:px-6 md:px-8 lg:px-12">
-        {/* Header */}
-        <div className="mb-8">
-          <p className="text-neon-primary text-xs tracking-[0.35em] uppercase">
-            Configurações
-          </p>
-          <h1 className="text-text-primary mt-2 text-3xl font-semibold md:text-4xl">
-            Configurações do Perfil
-          </h1>
-          <p className="text-text-secondary mt-2 text-sm">
-            Gerencie suas informações pessoais, preferências e configurações da
-            conta
-          </p>
+        {/* Back Button & Header */}
+        <div className="mb-6">
+          <Button
+            variant="ghost"
+            onClick={() => router.push(journeyRoute)}
+            className="text-text-secondary hover:text-neon-primary -ml-2 gap-2 hover:bg-white/5"
+          >
+            <ArrowLeft className="h-4 w-4" />
+            Voltar para Arena
+          </Button>
         </div>
 
-        <Tabs defaultValue="account" className="space-y-6">
-          <TabsList className="border-border-default bg-overlay-light grid w-full grid-cols-4 rounded-2xl border p-1 backdrop-blur">
+        <ProfileHeader
+          name={profileData.name}
+          role={userRole}
+          image={session?.user?.image || ""}
+          level={5} // Mock level
+          nationality={profileData.nationality}
+          onEditImage={() => {
+            // Implement image upload logic or open modal
+            toast.info("Info", "Funcionalidade de upload em breve!");
+          }}
+        />
+
+        <Tabs defaultValue="overview" className="space-y-8">
+          <TabsList className="w-full justify-start overflow-x-auto rounded-xl border-white/10 bg-black/20 p-1 backdrop-blur-xl">
+            <TabsTrigger
+              value="overview"
+              className="text-text-muted data-[state=active]:bg-neon-primary rounded-lg px-6 py-2.5 text-sm font-medium transition-all data-[state=active]:text-black data-[state=active]:shadow-[0_0_20px_rgba(111,255,233,0.3)]"
+            >
+              Overview
+            </TabsTrigger>
+            {userRole === "PLAYER" && (
+              <TabsTrigger
+                value="performance"
+                className="text-text-muted data-[state=active]:bg-neon-primary rounded-lg px-6 py-2.5 text-sm font-medium transition-all data-[state=active]:text-black data-[state=active]:shadow-[0_0_20px_rgba(111,255,233,0.3)]"
+              >
+                Performance
+              </TabsTrigger>
+            )}
+            <TabsTrigger
+              value="details"
+              className="text-text-muted data-[state=active]:bg-neon-primary rounded-lg px-6 py-2.5 text-sm font-medium transition-all data-[state=active]:text-black data-[state=active]:shadow-[0_0_20px_rgba(111,255,233,0.3)]"
+            >
+              Profile Details
+            </TabsTrigger>
             <TabsTrigger
               value="account"
-              className="text-text-muted data-[state=active]:bg-neon-secondary rounded-xl transition-all data-[state=active]:font-semibold data-[state=active]:text-slate-900"
+              className="text-text-muted data-[state=active]:bg-neon-primary rounded-lg px-6 py-2.5 text-sm font-medium transition-all data-[state=active]:text-black data-[state=active]:shadow-[0_0_20px_rgba(111,255,233,0.3)]"
             >
-              Conta
+              Account
             </TabsTrigger>
             <TabsTrigger
               value="language"
-              className="text-text-muted data-[state=active]:bg-neon-secondary rounded-xl transition-all data-[state=active]:font-semibold data-[state=active]:text-slate-900"
+              className="text-text-muted data-[state=active]:bg-neon-primary rounded-lg px-6 py-2.5 text-sm font-medium transition-all data-[state=active]:text-black data-[state=active]:shadow-[0_0_20px_rgba(111,255,233,0.3)]"
             >
-              Idioma
-            </TabsTrigger>
-            <TabsTrigger
-              value="details"
-              className="text-text-muted data-[state=active]:bg-neon-secondary rounded-xl transition-all data-[state=active]:font-semibold data-[state=active]:text-slate-900"
-            >
-              Dados Fundamentais
-            </TabsTrigger>
-            <TabsTrigger
-              value="performance"
-              className="text-text-muted data-[state=active]:bg-neon-secondary rounded-xl transition-all data-[state=active]:font-semibold data-[state=active]:text-slate-900"
-            >
-              Performance
+              Settings
             </TabsTrigger>
           </TabsList>
+
+          {/* Tab: Overview */}
+          <TabsContent
+            value="overview"
+            className="animate-in fade-in slide-in-from-bottom-4 space-y-8 duration-500"
+          >
+            <div className="grid gap-6">
+              <div className="flex items-center justify-between">
+                <h2 className="text-2xl font-bold text-white">Dashboard</h2>
+              </div>
+              <DashboardWidgets role={userRole} />
+
+              {/* Quick Stats / Summary for all roles */}
+              <div className="grid gap-6 md:grid-cols-2">
+                <Card className="border-white/10 bg-white/5 backdrop-blur">
+                  <CardHeader>
+                    <CardTitle className="text-white">Bio</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-text-secondary italic">
+                      {profileData.bio ||
+                        "No bio yet. Go to Profile Details to add one!"}
+                    </p>
+                  </CardContent>
+                </Card>
+
+                <Card className="border-white/10 bg-white/5 backdrop-blur">
+                  <CardHeader>
+                    <CardTitle className="text-white">My Goals</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="flex flex-wrap gap-2">
+                      {profileData.goals.length > 0 ? (
+                        profileData.goals.map(goal => (
+                          <span
+                            key={goal}
+                            className="bg-neon-primary/10 text-neon-primary border-neon-primary/20 rounded-full border px-3 py-1 text-xs font-medium"
+                          >
+                            {roleQuestions?.goals.find(g => g.id === goal)
+                              ?.label || goal}
+                          </span>
+                        ))
+                      ) : (
+                        <span className="text-text-muted text-sm">
+                          No goals selected yet.
+                        </span>
+                      )}
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+            </div>
+          </TabsContent>
 
           {/* Tab: Detalhes da Conta */}
           <TabsContent value="account" className="space-y-6">
@@ -300,38 +427,9 @@ export default function ProfilePage() {
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-6">
-                {/* Foto de Perfil */}
-                <div className="flex items-center gap-6">
-                  <div className="relative">
-                    <div className="bg-neon-primary/30 absolute inset-0 rounded-full blur-xl" />
-                    <Avatar className="border-neon-primary/80 relative h-20 w-20 border-2 shadow-[0_0_35px_var(--color-shadow-neon-soft)]">
-                      <AvatarImage
-                        src={session?.user?.image || ""}
-                        alt={profileData.name}
-                      />
-                      <AvatarFallback className="bg-surface-101b46 text-neon-primary text-xl font-semibold">
-                        {profileData.name
-                          .split(" ")
-                          .map(n => n[0])
-                          .join("")
-                          .toUpperCase()
-                          .slice(0, 2)}
-                      </AvatarFallback>
-                    </Avatar>
-                  </div>
-                  <div className="flex flex-col gap-2">
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      className="border-border-hover bg-overlay-medium text-text-primary hover:border-neon-secondary/60 hover:bg-neon-secondary/15 w-fit backdrop-blur transition-all"
-                    >
-                      <Camera className="mr-2 h-4 w-4" />
-                      Alterar foto
-                    </Button>
-                    <p className="text-text-muted text-xs">
-                      JPG, PNG ou GIF. Máximo 2MB.
-                    </p>
-                  </div>
+                {/* Foto de Perfil - Removed from here as it is in header now, but kept structure for other fields */}
+                <div className="hidden">
+                  {/* Hidden old avatar section to preserve structure if needed, or just remove */}
                 </div>
 
                 <Separator className="bg-border-default" />
@@ -340,7 +438,7 @@ export default function ProfilePage() {
                 <div className="space-y-2">
                   <Label
                     htmlFor="name"
-                    className="text-text-primary flex items-center gap-2"
+                    className="text-text-primary flex flex-row items-center gap-2"
                   >
                     <User className="text-neon-primary h-4 w-4" />
                     Nome completo
@@ -350,7 +448,7 @@ export default function ProfilePage() {
                     value={profileData.name}
                     onChange={e => handleInputChange("name", e.target.value)}
                     placeholder="Seu nome completo"
-                    className="border-border-default bg-overlay-light text-text-primary placeholder:text-text-muted focus:border-border-focus focus:ring-border-focus backdrop-blur"
+                    className="text-text-primary placeholder:text-text-muted focus:border-neon-primary/50 focus:ring-neon-primary/20 rounded-xl border-white/10 bg-white/5 backdrop-blur transition-all"
                   />
                 </div>
 
@@ -358,7 +456,7 @@ export default function ProfilePage() {
                 <div className="space-y-2">
                   <Label
                     htmlFor="email"
-                    className="text-text-primary flex items-center gap-2"
+                    className="text-text-primary flex flex-row items-center gap-2"
                   >
                     <Mail className="text-neon-primary h-4 w-4" />
                     Email
@@ -370,7 +468,7 @@ export default function ProfilePage() {
                     onChange={e => handleInputChange("email", e.target.value)}
                     placeholder="seu@email.com"
                     disabled
-                    className="border-border-default bg-overlay-light text-text-muted cursor-not-allowed backdrop-blur"
+                    className="text-text-muted cursor-not-allowed rounded-xl border-white/10 bg-white/5 backdrop-blur"
                   />
                   <p className="text-text-muted text-xs">
                     O email não pode ser alterado.
@@ -381,7 +479,7 @@ export default function ProfilePage() {
                 <div className="space-y-2">
                   <Label
                     htmlFor="location"
-                    className="text-text-primary flex items-center gap-2"
+                    className="text-text-primary flex flex-row items-center gap-2"
                   >
                     <MapPin className="text-neon-primary h-4 w-4" />
                     Localização
@@ -393,7 +491,26 @@ export default function ProfilePage() {
                       handleInputChange("location", e.target.value)
                     }
                     placeholder="Cidade, Estado ou País"
-                    className="border-border-default bg-overlay-light text-text-primary placeholder:text-text-muted focus:border-border-focus focus:ring-border-focus backdrop-blur"
+                    className="text-text-primary placeholder:text-text-muted focus:border-neon-primary/50 focus:ring-neon-primary/20 rounded-xl border-white/10 bg-white/5 backdrop-blur transition-all"
+                  />
+                </div>
+
+                {/* Nacionalidade */}
+                <div className="space-y-2">
+                  <Label
+                    htmlFor="nationality"
+                    className="text-text-primary flex flex-row items-center gap-2"
+                  >
+                    <Globe className="text-neon-primary h-4 w-4" />
+                    Nacionalidade
+                  </Label>
+                  <CountrySelector
+                    value={profileData.nationality}
+                    onValueChange={value =>
+                      handleInputChange("nationality", value)
+                    }
+                    placeholder="Selecione sua nacionalidade"
+                    className="text-text-primary placeholder:text-text-muted focus:border-neon-primary/50 focus:ring-neon-primary/20 rounded-xl border-white/10 bg-white/5 backdrop-blur transition-all"
                   />
                 </div>
               </CardContent>
@@ -493,67 +610,275 @@ export default function ProfilePage() {
 
                 <Separator className="bg-border-default" />
 
-                {/* Nível de Experiência */}
-                <div className="space-y-2">
-                  <Label htmlFor="experience" className="text-text-primary">
-                    Nível de Experiência
-                  </Label>
-                  <Select
-                    value={profileData.experience || ""}
-                    onValueChange={value =>
-                      handleInputChange("experience", value)
-                    }
-                  >
-                    <SelectTrigger
-                      id="experience"
-                      className="border-border-default bg-overlay-light text-text-primary placeholder:text-text-muted hover:bg-overlay-medium focus:border-border-focus focus:ring-border-focus backdrop-blur"
-                    >
-                      <SelectValue placeholder="Selecione seu nível" />
-                    </SelectTrigger>
-                    <SelectContent className="border-border-default bg-background-surface text-text-primary backdrop-blur">
-                      {experienceLevels.map(level => (
-                        <SelectItem
-                          key={level.value}
-                          value={level.value}
-                          className="text-text-primary hover:bg-overlay-medium focus:bg-overlay-medium"
+                {/* Dynamic Fields based on Role */}
+                {roleQuestions && (
+                  <div className="space-y-6">
+                    {/* Personal Info Questions */}
+                    {roleQuestions.personalInfo.map(question => (
+                      <div key={question.id} className="space-y-2">
+                        <Label
+                          htmlFor={question.id}
+                          className="text-text-primary flex items-center gap-2"
                         >
-                          {level.label}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
+                          {question.icon && (
+                            <question.icon className="text-neon-primary h-4 w-4" />
+                          )}
+                          {question.label}
+                        </Label>
 
-                {/* Disponibilidade */}
-                <div className="space-y-2">
-                  <Label htmlFor="availability" className="text-text-primary">
-                    Disponibilidade
-                  </Label>
-                  <Select
-                    value={profileData.availability || ""}
-                    onValueChange={value =>
-                      handleInputChange("availability", value)
-                    }
-                  >
-                    <SelectTrigger
-                      id="availability"
-                      className="border-border-default bg-overlay-light text-text-primary placeholder:text-text-muted hover:bg-overlay-medium focus:border-border-focus focus:ring-border-focus backdrop-blur"
-                    >
-                      <SelectValue placeholder="Selecione sua disponibilidade" />
-                    </SelectTrigger>
-                    <SelectContent className="border-border-default bg-background-surface text-text-primary backdrop-blur">
-                      {availabilityOptions.map(option => (
-                        <SelectItem
-                          key={option.value}
-                          value={option.value}
-                          className="text-text-primary hover:bg-overlay-medium focus:bg-overlay-medium"
+                        {question.type === "select" && question.options && (
+                          <Select
+                            value={
+                              (question.id === "experience"
+                                ? profileData.experience
+                                : question.id === "availability"
+                                  ? profileData.availability
+                                  : profileData.customFields[question.id]) || ""
+                            }
+                            onValueChange={value =>
+                              handleCustomFieldChange(question.id, value)
+                            }
+                          >
+                            <SelectTrigger
+                              id={question.id}
+                              className="border-border-default bg-overlay-light text-text-primary placeholder:text-text-muted hover:bg-overlay-medium focus:border-border-focus focus:ring-border-focus backdrop-blur"
+                            >
+                              <SelectValue
+                                placeholder={
+                                  question.placeholder || "Selecione"
+                                }
+                              />
+                            </SelectTrigger>
+                            <SelectContent className="border-border-default bg-background-surface text-text-primary backdrop-blur">
+                              {question.options.map(option => (
+                                <SelectItem
+                                  key={option.value}
+                                  value={option.value}
+                                  className="text-text-primary hover:bg-overlay-medium focus:bg-overlay-medium"
+                                >
+                                  {option.label}
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                        )}
+
+                        {question.type === "text" && (
+                          <Input
+                            id={question.id}
+                            value={profileData.customFields[question.id] || ""}
+                            onChange={e =>
+                              handleCustomFieldChange(
+                                question.id,
+                                e.target.value,
+                              )
+                            }
+                            placeholder={question.placeholder}
+                            className="border-border-default bg-overlay-light text-text-primary placeholder:text-text-muted focus:border-border-focus focus:ring-border-focus backdrop-blur"
+                          />
+                        )}
+
+                        {question.type === "radio" && question.options && (
+                          <RadioGroup
+                            value={
+                              (question.id === "availability"
+                                ? profileData.availability
+                                : profileData.customFields[question.id]) || ""
+                            }
+                            onValueChange={value =>
+                              handleCustomFieldChange(question.id, value)
+                            }
+                            className="flex flex-col space-y-2"
+                          >
+                            {question.options.map(option => (
+                              <div
+                                key={option.value}
+                                className="flex items-center space-x-2"
+                              >
+                                <RadioGroupItem
+                                  value={option.value}
+                                  id={`${question.id}-${option.value}`}
+                                  className="border-neon-primary text-neon-primary"
+                                />
+                                <Label
+                                  htmlFor={`${question.id}-${option.value}`}
+                                  className="text-text-secondary cursor-pointer"
+                                >
+                                  {option.label}
+                                </Label>
+                              </div>
+                            ))}
+                          </RadioGroup>
+                        )}
+
+                        {question.type === "multiselect" &&
+                          question.options && (
+                            <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
+                              {question.options.map(option => {
+                                const currentValues =
+                                  (profileData.customFields[
+                                    question.id
+                                  ] as string[]) || [];
+                                const isSelected = currentValues.includes(
+                                  option.value,
+                                );
+
+                                return (
+                                  <div
+                                    key={option.value}
+                                    className={`flex cursor-pointer items-center gap-2 rounded-lg border p-3 transition-all ${
+                                      isSelected
+                                        ? "border-neon-primary bg-neon-primary/10"
+                                        : "border-border-default bg-overlay-light hover:border-neon-primary/50"
+                                    }`}
+                                    onClick={() => {
+                                      const newValues = isSelected
+                                        ? currentValues.filter(
+                                            v => v !== option.value,
+                                          )
+                                        : [...currentValues, option.value];
+                                      handleCustomFieldChange(
+                                        question.id,
+                                        newValues,
+                                      );
+                                    }}
+                                  >
+                                    <Checkbox
+                                      checked={isSelected}
+                                      className="border-neon-primary data-[state=checked]:bg-neon-primary data-[state=checked]:text-slate-900"
+                                    />
+                                    <span className="text-text-primary text-sm">
+                                      {option.label}
+                                    </span>
+                                  </div>
+                                );
+                              })}
+                            </div>
+                          )}
+                      </div>
+                    ))}
+
+                    {/* Custom Fields Questions */}
+                    {roleQuestions.customFields.map(question => (
+                      <div key={question.id} className="space-y-2">
+                        <Label
+                          htmlFor={question.id}
+                          className="text-text-primary flex items-center gap-2"
                         >
-                          {option.label}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
+                          {question.icon && (
+                            <question.icon className="text-neon-primary h-4 w-4" />
+                          )}
+                          {question.label}
+                        </Label>
+
+                        {question.type === "select" && question.options && (
+                          <Select
+                            value={
+                              (question.id === "experience"
+                                ? profileData.experience
+                                : question.id === "availability"
+                                  ? profileData.availability
+                                  : profileData.customFields[question.id]) || ""
+                            }
+                            onValueChange={value =>
+                              handleCustomFieldChange(question.id, value)
+                            }
+                          >
+                            <SelectTrigger
+                              id={question.id}
+                              className="border-border-default bg-overlay-light text-text-primary placeholder:text-text-muted hover:bg-overlay-medium focus:border-border-focus focus:ring-border-focus backdrop-blur"
+                            >
+                              <SelectValue
+                                placeholder={
+                                  question.placeholder || "Selecione"
+                                }
+                              />
+                            </SelectTrigger>
+                            <SelectContent className="border-border-default bg-background-surface text-text-primary backdrop-blur">
+                              {question.options.map(option => (
+                                <SelectItem
+                                  key={option.value}
+                                  value={option.value}
+                                  className="text-text-primary hover:bg-overlay-medium focus:bg-overlay-medium"
+                                >
+                                  {option.label}
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                        )}
+
+                        {question.type === "text" && (
+                          <Input
+                            id={question.id}
+                            value={profileData.customFields[question.id] || ""}
+                            onChange={e =>
+                              handleCustomFieldChange(
+                                question.id,
+                                e.target.value,
+                              )
+                            }
+                            placeholder={question.placeholder}
+                            className="border-border-default bg-overlay-light text-text-primary placeholder:text-text-muted focus:border-border-focus focus:ring-border-focus backdrop-blur"
+                          />
+                        )}
+
+                        {question.type === "radio" && question.options && (
+                          <RadioGroup
+                            value={
+                              (question.id === "availability"
+                                ? profileData.availability
+                                : profileData.customFields[question.id]) || ""
+                            }
+                            onValueChange={value =>
+                              handleCustomFieldChange(question.id, value)
+                            }
+                            className="flex flex-col space-y-2"
+                          >
+                            {question.options.map(option => (
+                              <div
+                                key={option.value}
+                                className="flex items-center space-x-2"
+                              >
+                                <RadioGroupItem
+                                  value={option.value}
+                                  id={`${question.id}-${option.value}`}
+                                  className="border-neon-primary text-neon-primary"
+                                />
+                                <Label
+                                  htmlFor={`${question.id}-${option.value}`}
+                                  className="text-text-secondary cursor-pointer"
+                                >
+                                  {option.label}
+                                </Label>
+                              </div>
+                            ))}
+                          </RadioGroup>
+                        )}
+                      </div>
+                    ))}
+
+                    <Separator className="bg-border-default" />
+
+                    {/* Goals Section */}
+                    <div className="space-y-4">
+                      <Label className="text-text-primary flex items-center gap-2">
+                        <Target className="text-neon-primary h-4 w-4" />
+                        Objetivos
+                      </Label>
+                      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+                        {roleQuestions.goals.map(goal => (
+                          <GoalCard
+                            key={goal.id}
+                            goal={goal}
+                            isSelected={profileData.goals.includes(goal.id)}
+                            onToggle={toggleGoal}
+                          />
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                )}
               </CardContent>
             </Card>
 
@@ -641,33 +966,28 @@ export default function ProfilePage() {
             </Card>
           </TabsContent>
 
-          {/* Tab: Performance */}
-          <TabsContent value="performance" className="space-y-6">
-            <Card className="border-border-default bg-overlay-light rounded-3xl border shadow-[0_35px_80px_-45px_var(--color-shadow-neon-soft)] backdrop-blur transition-colors">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2 text-slate-900 dark:text-white">
-                  Performance
-                </CardTitle>
-                <CardDescription className="text-text-secondary">
-                  Visualize suas estatísticas de desempenho
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <PerformanceTab />
-              </CardContent>
-            </Card>
-          </TabsContent>
+          {/* Tab: Performance - Apenas para Jogadores */}
+          {userRole === "PLAYER" && (
+            <TabsContent value="performance" className="space-y-6">
+              <Card className="border-border-default bg-overlay-light rounded-3xl border shadow-[0_35px_80px_-45px_var(--color-shadow-neon-soft)] backdrop-blur transition-colors">
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2 text-slate-900 dark:text-white">
+                    Performance
+                  </CardTitle>
+                  <CardDescription className="text-text-secondary">
+                    Visualize suas estatísticas de desempenho
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <PerformanceTab />
+                </CardContent>
+              </Card>
+            </TabsContent>
+          )}
         </Tabs>
 
         {/* Botão de Salvar */}
         <div className="mt-8 flex justify-end gap-4">
-          <Button
-            variant="outline"
-            onClick={handleCancel}
-            className="border-emerald-200 bg-white text-slate-700 backdrop-blur transition-all hover:border-emerald-400 hover:bg-emerald-50/80 hover:text-emerald-700 dark:border-white/25 dark:bg-white/10 dark:text-white dark:hover:border-[#24ffe6]/60 dark:hover:bg-[#24ffe6]/15"
-          >
-            Cancelar
-          </Button>
           <Button
             onClick={handleSave}
             disabled={saving}
