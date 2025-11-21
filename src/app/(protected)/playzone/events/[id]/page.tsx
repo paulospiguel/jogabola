@@ -1,5 +1,6 @@
 "use client";
 
+import { getEvent } from "@/actions/events";
 import { EventImageCarousel } from "@/components/event-image-carousel";
 import ShareDialog from "@/components/share-link-dialog";
 import { Button } from "@/components/ui/button";
@@ -17,21 +18,18 @@ import { useSession } from "@/lib/auth-client";
 import { motion } from "framer-motion";
 import {
   ArrowLeft,
-  Award,
   Bell,
   CalendarDays,
   CheckCircle2,
   Clock,
-  CreditCard,
   Euro,
-  Gift,
   MapPin,
   MessageCircle,
   Share2,
   Star,
   Target,
   Trophy,
-  Users
+  Users,
 } from "lucide-react";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -100,59 +98,72 @@ export default function EventDetailsPage() {
 
   // Mock data - substituir por chamada à API
   useEffect(() => {
-    const eventId = params.id;
-    setTimeout(() => {
-      const mockEvent = {
-        id: Number(eventId),
-        title: "Pelada Dominical - Parque Central",
-        description:
-          "Partida recreativa de futebol 11 para todos os níveis. Venha se divertir e fazer novos amigos! Evento com premiação para o time vencedor.",
-        type: "partida" as const,
-        location: "Parque Central",
-        city: "Lisboa",
-        country: "Portugal",
-        startDate: "2024-11-17T10:00:00",
-        endDate: "2024-11-17T12:00:00",
-        gameStyle: "recreativo",
-        experienceLevel: "intermediate",
-        minAge: "18",
-        maxAge: "50",
-        gender: "misto",
-        participationCriteria: {
-          experience: "intermediate ou superior",
-          equipment: "Trazer chuteiras e caneleiras",
-          commitment: "Confirmar presença até 24h antes",
-        },
-        currentParticipants: 12,
-        maxParticipants: 22,
-        organizerId: "1",
-        organizerName: "João Silva",
-        organizerEmail: "joao@example.com",
-        language: "pt",
-        images: [
-          "/images/login-stadium.jpg",
-          "/temp/barreiro.jpg",
-          "/temp/bolacacem.jpg",
-        ],
-        isFree: false,
-        price: 5,
-        currency: "EUR",
-        paymentType: "per_person" as const,
-        paymentDescription: "Valor para dividir o aluguel do campo entre os participantes",
-        hasPrize: true,
-        prizeAmount: 200,
-        prizeCurrency: "EUR",
-        prizeDescription: "Troféu personalizado + €200 em dinheiro para o time vencedor",
-        prizeType: "winner" as const,
-        isFavorited: false,
-        isFollowingOrganizer: false,
-      };
+    async function fetchEvent() {
+      if (!params.id) return;
 
-      setEvent(mockEvent);
-      setIsFavorited(mockEvent.isFavorited || false);
-      setIsFollowing(mockEvent.isFollowingOrganizer || false);
-      setLoading(false);
-    }, 500);
+      try {
+        const eventId = parseInt(params.id as string, 10);
+        if (isNaN(eventId)) {
+          setLoading(false);
+          return;
+        }
+
+        const result = await getEvent(eventId);
+
+        if (result.success && result.data) {
+          const dbEvent = result.data;
+
+          // Map DB event to EventDetails interface
+          const mappedEvent: EventDetails = {
+            id: dbEvent.id,
+            title: dbEvent.title,
+            description: dbEvent.description || "",
+            type: dbEvent.type as any,
+            location: dbEvent.location,
+            city: dbEvent.city || undefined,
+            country: dbEvent.country || undefined,
+            startDate: dbEvent.startDate.toISOString(),
+            endDate: dbEvent.endDate?.toISOString(),
+            gameStyle: dbEvent.gameStyle || undefined,
+            experienceLevel: dbEvent.experienceLevel || undefined,
+            minAge: dbEvent.minAge || undefined,
+            maxAge: dbEvent.maxAge || undefined,
+            gender: dbEvent.gender || undefined,
+            positionNeeded: dbEvent.positionNeeded || undefined,
+            participationCriteria:
+              (dbEvent.participationCriteria as Record<string, any>) || {},
+            currentParticipants: parseInt(
+              dbEvent.currentParticipants || "0",
+              10,
+            ),
+            maxParticipants: dbEvent.maxParticipants
+              ? parseInt(dbEvent.maxParticipants, 10)
+              : undefined,
+            organizerId: dbEvent.organizerId,
+            organizerName: dbEvent.organizer?.name || "Organizador",
+            organizerEmail: dbEvent.organizer?.email,
+            language: dbEvent.language || undefined,
+            images: (dbEvent.images as string[]) || [],
+
+            // Defaults for fields not yet in DB or handled differently
+            isFree: true, // TODO: Add to schema
+            hasPrize: false, // TODO: Add to schema
+            isFavorited: false,
+            isFollowingOrganizer: false,
+          };
+
+          setEvent(mappedEvent);
+          setIsFavorited(mappedEvent.isFavorited || false);
+          setIsFollowing(mappedEvent.isFollowingOrganizer || false);
+        }
+      } catch (error) {
+        console.error("Error fetching event:", error);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    fetchEvent();
   }, [params.id]);
 
   const getTypeLabel = (type: string) => {
@@ -231,7 +242,7 @@ export default function EventDetailsPage() {
           <p className="text-text-secondary text-lg">Evento não encontrado</p>
           <Button
             onClick={() => router.back()}
-            className="mt-4 bg-neon-secondary text-slate-900"
+            className="bg-neon-secondary mt-4 text-slate-900"
           >
             Voltar
           </Button>
@@ -286,7 +297,7 @@ export default function EventDetailsPage() {
                   <EventImageCarousel
                     images={event.images}
                     alt={event.title}
-                    className="h-64 md:h-80 lg:h-96 rounded-3xl"
+                    className="h-64 rounded-3xl md:h-80 lg:h-96"
                     showControls={event.images.length > 1}
                   />
                 </motion.div>
@@ -296,7 +307,7 @@ export default function EventDetailsPage() {
               <div className="space-y-4">
                 <div className="flex items-center gap-3">
                   <TypeIcon className="h-6 w-6 text-[#24ffe6]" />
-                  <span className="text-sm font-semibold uppercase tracking-wider text-[#24ffe6]">
+                  <span className="text-sm font-semibold tracking-wider text-[#24ffe6] uppercase">
                     {getTypeLabel(event.type)}
                   </span>
                 </div>
@@ -312,7 +323,9 @@ export default function EventDetailsPage() {
                       <p className="font-medium text-white">{event.location}</p>
                       {(event.city || event.country) && (
                         <p className="text-sm text-white/60">
-                          {[event.city, event.country].filter(Boolean).join(", ")}
+                          {[event.city, event.country]
+                            .filter(Boolean)
+                            .join(", ")}
                         </p>
                       )}
                     </div>
@@ -337,7 +350,8 @@ export default function EventDetailsPage() {
                     <div>
                       <p className="font-medium text-white">
                         {event.currentParticipants}
-                        {event.maxParticipants && ` / ${event.maxParticipants}`}{" "}
+                        {event.maxParticipants &&
+                          ` / ${event.maxParticipants}`}{" "}
                         participantes
                       </p>
                     </div>
@@ -363,7 +377,7 @@ export default function EventDetailsPage() {
                     <h2 className="mb-3 text-xl font-semibold text-white">
                       Sobre o evento
                     </h2>
-                    <p className="text-white/80 leading-relaxed">
+                    <p className="leading-relaxed text-white/80">
                       {event.description}
                     </p>
                   </CardContent>
@@ -382,7 +396,7 @@ export default function EventDetailsPage() {
                         <CheckCircle2 className="h-5 w-5 text-green-400" />
                         <span className="text-white/80">
                           Nível de experiência:{" "}
-                          <span className="font-medium capitalize text-white">
+                          <span className="font-medium text-white capitalize">
                             {event.experienceLevel}
                           </span>
                         </span>
@@ -404,7 +418,7 @@ export default function EventDetailsPage() {
                         <CheckCircle2 className="h-5 w-5 text-green-400" />
                         <span className="text-white/80">
                           Gênero:{" "}
-                          <span className="font-medium capitalize text-white">
+                          <span className="font-medium text-white capitalize">
                             {event.gender}
                           </span>
                         </span>
@@ -426,13 +440,13 @@ export default function EventDetailsPage() {
                         <div key={key} className="flex items-start gap-2">
                           <CheckCircle2 className="mt-0.5 h-5 w-5 flex-shrink-0 text-green-400" />
                           <span className="text-white/80">
-                            <span className="font-medium capitalize text-white">
+                            <span className="font-medium text-white capitalize">
                               {key}:
                             </span>{" "}
                             {String(value)}
                           </span>
                         </div>
-                      )
+                      ),
                     )}
                   </div>
                 </CardContent>
@@ -450,34 +464,38 @@ export default function EventDetailsPage() {
 
               {/* Informações de Pagamento */}
               {!event.isFree && event.price && (
-                <Card className="rounded-3xl border border-neon-secondary/20 bg-gradient-to-br from-neon-secondary/5 to-transparent p-6">
+                <Card className="border-neon-secondary/20 from-neon-secondary/5 rounded-3xl border bg-gradient-to-br to-transparent p-6">
                   <CardContent className="p-0">
-                    <div className="flex items-start gap-3 mb-4">
-                      <div className="rounded-lg bg-neon-secondary/10 p-2">
-                        <Target className="h-5 w-5 text-neon-secondary" />
+                    <div className="mb-4 flex items-start gap-3">
+                      <div className="bg-neon-secondary/10 rounded-lg p-2">
+                        <Target className="text-neon-secondary h-5 w-5" />
                       </div>
                       <div>
                         <h2 className="text-xl font-semibold text-white">
                           Informações de Pagamento
                         </h2>
-                        <p className="text-sm text-white/60 mt-1">
+                        <p className="mt-1 text-sm text-white/60">
                           Este evento requer pagamento
                         </p>
                       </div>
                     </div>
 
                     <div className="space-y-3">
-                      <div className="flex items-center justify-between p-3 rounded-lg bg-white/5">
-                        <span className="text-white/70">Valor por participante</span>
+                      <div className="flex items-center justify-between rounded-lg bg-white/5 p-3">
+                        <span className="text-white/70">
+                          Valor por participante
+                        </span>
                         <div className="flex items-center gap-1">
                           <span className="text-2xl font-bold text-white">
-                            {event.currency ? `${event.currency} ${event.price}` : `${event.price}`}
+                            {event.currency
+                              ? `${event.currency} ${event.price}`
+                              : `${event.price}`}
                           </span>
                         </div>
                       </div>
 
                       {event.paymentDescription && (
-                        <p className="text-sm text-white/70 leading-relaxed">
+                        <p className="text-sm leading-relaxed text-white/70">
                           {event.paymentDescription}
                         </p>
                       )}
@@ -499,8 +517,12 @@ export default function EventDetailsPage() {
                         <Target className="h-5 w-5 text-green-400" />
                       </div>
                       <div>
-                        <h3 className="text-lg font-semibold text-white">Evento Gratuito</h3>
-                        <p className="text-sm text-white/60">Sem custo de participação</p>
+                        <h3 className="text-lg font-semibold text-white">
+                          Evento Gratuito
+                        </h3>
+                        <p className="text-sm text-white/60">
+                          Sem custo de participação
+                        </p>
                       </div>
                     </div>
                   </CardContent>
@@ -511,7 +533,7 @@ export default function EventDetailsPage() {
               {event.hasPrize && event.prizeAmount && (
                 <Card className="rounded-3xl border border-amber-500/30 bg-gradient-to-br from-amber-500/10 to-transparent p-6">
                   <CardContent className="p-0">
-                    <div className="flex items-start gap-3 mb-4">
+                    <div className="mb-4 flex items-start gap-3">
                       <div className="rounded-lg bg-amber-500/20 p-2">
                         <Trophy className="h-6 w-6 text-amber-400" />
                       </div>
@@ -519,25 +541,29 @@ export default function EventDetailsPage() {
                         <h2 className="text-xl font-semibold text-white">
                           Premiação
                         </h2>
-                        <p className="text-sm text-amber-200/70 mt-1">
+                        <p className="mt-1 text-sm text-amber-200/70">
                           Evento com prêmio para os vencedores
                         </p>
                       </div>
                     </div>
 
                     <div className="space-y-3">
-                      <div className="flex items-center justify-between p-4 rounded-lg bg-amber-500/10 border border-amber-500/20">
-                        <span className="text-amber-100 font-medium">Valor do Prêmio</span>
+                      <div className="flex items-center justify-between rounded-lg border border-amber-500/20 bg-amber-500/10 p-4">
+                        <span className="font-medium text-amber-100">
+                          Valor do Prêmio
+                        </span>
                         <div className="flex items-center gap-1">
                           <span className="text-3xl font-bold text-amber-400">
-                            {event.prizeCurrency ? `${event.prizeCurrency} ${event.prizeAmount}` : `${event.prizeAmount}`}
+                            {event.prizeCurrency
+                              ? `${event.prizeCurrency} ${event.prizeAmount}`
+                              : `${event.prizeAmount}`}
                           </span>
                         </div>
                       </div>
 
                       {event.prizeDescription && (
-                        <div className="p-3 rounded-lg bg-amber-500/5">
-                          <p className="text-sm text-amber-100/90 leading-relaxed">
+                        <div className="rounded-lg bg-amber-500/5 p-3">
+                          <p className="text-sm leading-relaxed text-amber-100/90">
                             {event.prizeDescription}
                           </p>
                         </div>
@@ -545,7 +571,9 @@ export default function EventDetailsPage() {
 
                       <div className="flex items-center gap-2 text-xs text-amber-200/60">
                         <Trophy className="h-4 w-4 text-amber-400" />
-                        <span className="capitalize">Tipo: {event.prizeType}</span>
+                        <span className="capitalize">
+                          Tipo: {event.prizeType}
+                        </span>
                       </div>
                     </div>
                   </CardContent>
@@ -566,7 +594,7 @@ export default function EventDetailsPage() {
               <Card className="rounded-3xl border border-[#24ffe6]/25 bg-gradient-to-br from-[#042d39] to-[#081b2d] p-6">
                 <CardContent className="space-y-4 p-0">
                   <Button
-                    className="w-full bg-neon-secondary font-semibold text-slate-900 hover:bg-neon-secondary/90"
+                    className="bg-neon-secondary hover:bg-neon-secondary/90 w-full font-semibold text-slate-900"
                     size="lg"
                     onClick={handleJoinEvent}
                   >
@@ -590,7 +618,9 @@ export default function EventDetailsPage() {
                       }`}
                       onClick={handleToggleFavorite}
                     >
-                      <Star className={`mr-2 h-5 w-5 ${isFavorited ? "fill-current" : ""}`} />
+                      <Star
+                        className={`mr-2 h-5 w-5 ${isFavorited ? "fill-current" : ""}`}
+                      />
                       {isFavorited ? "Favoritado" : "Favoritar"}
                     </Button>
 
@@ -603,7 +633,9 @@ export default function EventDetailsPage() {
                       }`}
                       onClick={handleToggleFollow}
                     >
-                      <Bell className={`mr-2 h-5 w-5 ${isFollowing ? "fill-current" : ""}`} />
+                      <Bell
+                        className={`mr-2 h-5 w-5 ${isFollowing ? "fill-current" : ""}`}
+                      />
                       {isFollowing ? "Seguindo" : "Seguir"}
                     </Button>
                   </div>
@@ -656,7 +688,7 @@ export default function EventDetailsPage() {
                 id="message"
                 placeholder="Escreva sua mensagem aqui..."
                 value={message}
-                onChange={(e) => setMessage(e.target.value)}
+                onChange={e => setMessage(e.target.value)}
                 rows={6}
                 className="min-h-[150px]"
               />
@@ -685,4 +717,3 @@ export default function EventDetailsPage() {
     </div>
   );
 }
-

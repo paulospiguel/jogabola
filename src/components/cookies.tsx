@@ -28,8 +28,8 @@ export default function Cookies() {
   return (
     <div
       className={cn(
-        "fixed bottom-0 left-0 right-0 z-50 bg-card px-4 py-6 shadow-inner sm:px-6 sm:py-8",
-        "bg-white transition-all duration-300 ease-in-out dark:bg-gray-800",
+        "fixed right-0 bottom-0 left-0 z-50 px-4 py-6 sm:px-6 sm:py-8",
+        "border-t border-white/8 bg-[#050312]/95 shadow-[0_-10px_40px_-15px_rgba(36,255,230,0.3)] backdrop-blur-xl transition-all duration-300 ease-in-out",
         { "invisible z-0 opacity-0": !show },
       )}
     >

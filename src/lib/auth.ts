@@ -1,8 +1,8 @@
 import * as schema from "@/drizzle/schema";
 import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
-import { db } from "./db";
 import { authConfig } from "./auth/config";
+import { db } from "./db";
 
 // Obter configurações validadas
 const env = authConfig.getEnv();
@@ -37,4 +37,28 @@ export const auth = betterAuth({
     updateAge: authConfig.session.updateAge,
   },
   secret: env.secret,
+  databaseHooks: {
+    user: {
+      create: {
+        after: async user => {
+          try {
+            const { sendEmail } = await import("@/lib/email");
+            const { WelcomeEmail } = await import(
+              "@/components/emails/welcome-email"
+            );
+            const React = await import("react");
+            await sendEmail({
+              to: user.email,
+              subject: "Bem-vindo à Jogabola Arena!",
+              react: React.createElement(WelcomeEmail, {
+                username: user.name,
+              }),
+            });
+          } catch (error) {
+            console.error("Failed to send welcome email:", error);
+          }
+        },
+      },
+    },
+  },
 });

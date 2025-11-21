@@ -1,6 +1,8 @@
 "use client";
 
 import { getProfileData } from "@/actions/profile";
+import { CreateEventDialog } from "@/components/create-event-dialog";
+import { EventSearch } from "@/components/event-search";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { getPositionConfig, getPositionLabel } from "@/constants/positions";
@@ -24,7 +26,6 @@ import {
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
-import { EventSearch } from "@/components/event-search";
 
 const nextMatch = {
   label: "Próximo jogo",
@@ -272,8 +273,8 @@ export default function PlayZonePage() {
                   {nextMatch.label}
                 </h2>
                 <p className="text-text-secondary mt-3 text-lg leading-relaxed">
-                  Confirme presença e garanta sua vaga no time titular. Chegue 30
-                  minutos antes para aquecimento e briefing tático.
+                  Confirme presença e garanta sua vaga no time titular. Chegue
+                  30 minutos antes para aquecimento e briefing tático.
                 </p>
                 <div className="mt-8 flex flex-wrap gap-4">
                   <Button
@@ -307,7 +308,8 @@ export default function PlayZonePage() {
                   Encontre sua próxima partida
                 </h2>
                 <p className="text-text-secondary mb-6 text-lg leading-relaxed">
-                  Busque por partidas, treinos ou grupos próximos a você. Filtre por localização, estilo de jogo ou intervalo de datas.
+                  Busque por partidas, treinos ou grupos próximos a você. Filtre
+                  por localização, estilo de jogo ou intervalo de datas.
                 </p>
                 <EventSearch />
               </div>
@@ -600,24 +602,23 @@ export default function PlayZonePage() {
                     <Card className="overflow-hidden rounded-3xl border border-[#24ffe6]/25 bg-gradient-to-br from-[#042d39] to-[#081b2d] p-1">
                       <CardContent className="relative rounded-[26px] border border-white/10 bg-[#050c1f]/85 p-6">
                         <div className="absolute top-1/2 -right-16 h-40 w-40 -translate-y-1/2 rounded-full bg-[#24ffe6]/30 blur-2xl" />
-                        <div className="relative flex items-start gap-3 text-left">
-                          <Trophy className="mt-1 h-6 w-6 text-[#24ffe6]" />
-                          <div>
-                            <h3 className="text-lg font-semibold text-white">
-                              Avaliar colegas do último jogo
-                            </h3>
-                            <p className="text-text-secondary mt-2 text-base">
-                              Libere recompensas da equipe deixando feedback
-                              sobre o desempenho.
-                            </p>
-                            <Button className="mt-4 bg-[#24ffe6] font-semibold text-slate-900 shadow-[0_20px_50px_-28px_rgba(36,255,230,0.9)] transition-all hover:-translate-y-0.5 hover:bg-[#24ffe6]/90">
-                              Começar avaliação
-                            </Button>
+                        <div className="relative flex flex-col gap-4 text-left">
+                          <div className="flex items-start gap-3">
+                            <Trophy className="mt-1 h-6 w-6 text-[#24ffe6]" />
+                            <div>
+                              <h3 className="text-lg font-semibold text-white">
+                                Gerenciar Eventos
+                              </h3>
+                              <p className="text-text-secondary mt-2 text-base">
+                                Crie partidas, treinos e convide jogadores para
+                                sua equipe.
+                              </p>
+                            </div>
                           </div>
+                          <CreateEventDialog />
                         </div>
                       </CardContent>
                     </Card>
-
                     <Card className="overflow-hidden rounded-3xl border border-white/12 bg-white/8">
                       <CardContent className="flex flex-col gap-4 p-6">
                         <div className="flex items-center gap-3 text-left">

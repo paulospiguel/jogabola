@@ -1,22 +1,22 @@
 "use client";
 
+import { CreateEventDialog } from "@/components/create-event-dialog";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { motion } from "framer-motion";
-import { useTranslations } from "next-intl";
 import {
   Activity,
   Calendar,
   Clock,
   MapPin,
   Play,
-  Plus,
   Target,
   TrendingUp,
   Trophy,
   Users,
 } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 export default function ArenaPage() {
   const t = useTranslations("arena");
@@ -112,7 +112,7 @@ export default function ArenaPage() {
         <div className="absolute inset-0 bg-linear-to-br from-emerald-200/30 via-white to-sky-200/20 dark:bg-[linear-gradient(135deg,#050312_0%,#080a25_45%,#0f163f_100%)]" />
         <div className="absolute inset-0 bg-[radial-gradient(90%_90%_at_50%_0%,rgba(56,189,248,0.15)_0%,rgba(255,255,255,0)_72%)] dark:bg-[radial-gradient(90%_90%_at_50%_0%,rgba(0,255,213,0.22)_0%,rgba(5,3,18,0)_72%)]" />
         <div className="absolute top-32 left-1/4 h-72 w-72 -translate-x-1/2 rounded-full bg-emerald-200/40 blur-[120px] dark:bg-[#24ffe6]/12" />
-        <div className="absolute bottom-16 right-20 h-80 w-80 rounded-full bg-sky-200/40 blur-[120px] dark:bg-[#02a7ff]/12" />
+        <div className="absolute right-20 bottom-16 h-80 w-80 rounded-full bg-sky-200/40 blur-[120px] dark:bg-[#02a7ff]/12" />
         <div className="absolute top-1/2 right-1/3 h-64 w-64 rounded-full bg-lime-200/40 blur-[120px] dark:bg-[#1effbf]/12" />
       </div>
 
@@ -127,7 +127,7 @@ export default function ArenaPage() {
           <div className="absolute top-1/2 -right-24 h-72 w-72 -translate-y-1/2 rounded-full bg-emerald-200/40 blur-[120px] dark:bg-[#24ffe6]/15" />
           <div className="relative flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
             <div className="space-y-3">
-              <span className="text-xs font-semibold uppercase tracking-[0.35em] text-[#6fffe9]">
+              <span className="text-xs font-semibold tracking-[0.35em] text-[#6fffe9] uppercase">
                 {t("header.subtitle")}
               </span>
               <h1 className="text-3xl font-semibold text-slate-900 md:text-4xl dark:text-white">
@@ -137,13 +137,7 @@ export default function ArenaPage() {
                 {t("header.description")}
               </p>
             </div>
-            <Button
-              size="lg"
-              className="group min-w-[180px] bg-emerald-500 font-semibold text-white shadow-[0_16px_45px_-20px_rgba(16,185,129,0.5)] transition-all duration-300 hover:-translate-y-1 hover:bg-emerald-600 dark:bg-[#24ffe6] dark:text-slate-900 dark:shadow-[0_16px_45px_-20px_rgba(36,255,230,0.9)] dark:hover:bg-[#24ffe6]/90"
-            >
-              <Plus className="mr-2 h-5 w-5 transition-transform group-hover:translate-x-0.5" />
-              {t("actions.newMatch")}
-            </Button>
+            <CreateEventDialog />
           </div>
         </motion.section>
 
@@ -316,10 +310,10 @@ export default function ArenaPage() {
                         )}
                       </div>
                       <div className="flex-1">
-                        <p className="text-base font-semibold leading-relaxed text-text-primary">
+                        <p className="text-text-primary text-base leading-relaxed font-semibold">
                           {activity.text}
                         </p>
-                        <p className="mt-2 text-sm font-medium text-text-secondary">
+                        <p className="text-text-secondary mt-2 text-sm font-medium">
                           {activity.time}
                         </p>
                       </div>

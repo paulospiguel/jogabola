@@ -285,12 +285,14 @@ export default function ProfilePage() {
 
   if (loading) {
     return (
-      <div className="text-text-primary relative flex h-screen items-center justify-center overflow-hidden bg-[linear-gradient(135deg,var(--color-background-gradient-start)_0%,var(--color-background-gradient-mid)_45%,var(--color-background-gradient-end)_100%)] transition-colors">
+      <div className="relative flex h-screen items-center justify-center overflow-hidden">
         <div className="absolute inset-0 -z-10 bg-[linear-gradient(135deg,var(--color-background-gradient-start)_0%,var(--color-background-gradient-mid)_45%,var(--color-background-gradient-end)_100%)]" />
         <div className="absolute inset-0 -z-20 bg-[radial-gradient(90%_90%_at_50%_0%,var(--color-radial-glow)_0%,rgba(5,3,18,0)_72%)]" />
         <div className="text-center">
-          <div className="border-neon-primary/30 border-t-neon-primary mx-auto mb-4 h-8 w-8 animate-spin rounded-full border-4" />
-          <p className="text-text-secondary">Carregando perfil...</p>
+          <div className="border-neon-primary/30 border-t-neon-primary mx-auto mb-4 h-10 w-10 animate-spin rounded-full border-4 shadow-[0_0_15px_rgba(36,255,230,0.5)]" />
+          <p className="text-text-secondary animate-pulse text-lg font-medium">
+            Carregando perfil...
+          </p>
         </div>
       </div>
     );
