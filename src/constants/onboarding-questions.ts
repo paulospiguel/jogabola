@@ -14,6 +14,7 @@ import {
   User,
   Users,
 } from "lucide-react";
+import React from "react";
 
 export interface OnboardingQuestion {
   id: string;
@@ -22,7 +23,7 @@ export interface OnboardingQuestion {
   placeholder?: string;
   required: boolean;
   options?: { value: string; label: string }[];
-  icon?: any;
+  icon?: React.ElementType;
   description?: string;
 }
 
@@ -31,7 +32,7 @@ export interface RoleQuestions {
   goals: {
     id: string;
     label: string;
-    icon: any;
+    icon: React.ElementType;
   }[];
   customFields: OnboardingQuestion[];
 }

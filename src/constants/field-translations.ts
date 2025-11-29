@@ -44,7 +44,7 @@ export const managementRoleLabels: Record<string, string> = {
 // Função helper genérica para traduzir valores de campos
 export function translateFieldValue(
   fieldId: string,
-  value: string | string[] | undefined | null
+  value: string | string[] | undefined | null 
 ): string {
   if (!value) return "";
 

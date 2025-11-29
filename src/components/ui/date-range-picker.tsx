@@ -3,9 +3,9 @@
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
+    Popover,
+    PopoverContent,
+    PopoverTrigger,
 } from "@/components/ui/popover";
 import { cn } from "@/utils";
 import { format } from "date-fns";
@@ -109,7 +109,7 @@ export function DateRangePicker({
             hidden: "invisible",
           }}
           components={{
-            DayButton: ({ className, children, ...props }: any) => {
+            DayButton: ({ className, children, ...props }: React.ComponentProps<typeof Button>) => {
               return (
                 <Button
                   variant="ghost"

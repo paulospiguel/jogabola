@@ -5,12 +5,12 @@ import { FloatingOrb } from "@/components/floating-orb";
 import { Logo } from "@/components/logo";
 import { Button } from "@/components/ui/button";
 import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
+    Form,
+    FormControl,
+    FormField,
+    FormItem,
+    FormLabel,
+    FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast-custom";
@@ -18,7 +18,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { motion } from "framer-motion";
 import { ArrowLeft, CheckCircle, Loader2, Lock, Shield } from "lucide-react";
 import Link from "next/link";
-import { useSearchParams, useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -114,12 +114,12 @@ export default function ResetPasswordPage() {
       setTimeout(() => {
         router.push("/auth");
       }, 2000);
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error("Reset password error:", err);
+      const errorMessage = err instanceof Error ? err.message : "Não foi possível redefinir a palavra-passe. Verifica o link ou solicita um novo.";
       toast.error(
         "Erro ao redefinir",
-        err.message ||
-          "Não foi possível redefinir a palavra-passe. Verifica o link ou solicita um novo."
+        errorMessage
       );
     } finally {
       setLoading(false);

@@ -130,34 +130,11 @@ a:not([role="button"]) {
 }
 
 /* ============================================
-   TEXT READABILITY
-   ============================================ */
-
-/* Minimum font sizes for readability */
-body {
-  font-size: clamp(16px, 1rem, 18px);
-}
-
-p,
-li,
-span,
-div {
-  font-size: clamp(16px, 1rem, 18px);
-  line-height: 1.75;
-}
-
-small,
-.text-sm {
-  font-size: clamp(14px, 0.875rem, 16px);
-}
-
-/* ============================================
    FORM ACCESSIBILITY
    ============================================ */
 
 label {
   font-weight: 600;
-  font-size: clamp(16px, 1rem, 18px);
   display: block;
   margin-bottom: 0.5rem;
 }
@@ -165,7 +142,6 @@ label {
 input,
 textarea,
 select {
-  font-size: clamp(16px, 1rem, 18px);
   padding: 0.75rem 1rem;
 }
 

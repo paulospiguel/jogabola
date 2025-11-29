@@ -37,9 +37,10 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast-custom";
-import { format, isAfter, isSameDay as isSameDayFn } from "date-fns";
+import { addDays, addMonths, addWeeks, format, isAfter, isSameDay as isSameDayFn } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import {
   CalendarClock,
@@ -64,6 +65,15 @@ type EventResponse = {
   respondedAt?: Date;
 };
 
+type RecurrenceType = "none" | "daily" | "weekly" | "monthly";
+type ConfirmationMode = "automatic" | "manual";
+
+type RecurrenceSettings = {
+  type: RecurrenceType;
+  confirmationMode: ConfirmationMode;
+  advanceNoticeDays: number; // Dias de antecedência para confirmação manual
+};
+
 type AgendaEvent = CalendarEvent & {
   id: string;
   type: EventType;
@@ -74,6 +84,8 @@ type AgendaEvent = CalendarEvent & {
   status: "confirmado" | "pendente" | "cancelado";
   createdBy: string;
   responses: EventResponse[];
+  recurrence?: RecurrenceSettings;
+  parentEventId?: string; // Para eventos gerados por recorrência
 };
 
 type FormValues = {
@@ -84,6 +96,10 @@ type FormValues = {
   location: string;
   description: string;
   status: "confirmado" | "pendente" | "cancelado";
+  isRecurring: boolean;
+  recurrenceType: RecurrenceType;
+  confirmationMode: ConfirmationMode;
+  advanceNoticeDays: number;
 };
 
 type AcceptanceSummary = {
@@ -173,7 +189,7 @@ const buildDateFromInputs = (date: string, time: string) => {
 };
 
 const formatDateLabel = (date: Date) =>
-  format(date, "dd 'de' MMMM, yyyy", { locale: ptBR });
+  format(date, "dd/MM/yyyy", { locale: ptBR });
 
 const formatDateTimeLabel = (date?: Date) =>
   date ? format(date, "dd/MM 'às' HH:mm", { locale: ptBR }) : "Sem registos";
@@ -188,6 +204,10 @@ const getDefaultFormValues = (date: Date): FormValues => ({
   location: "",
   description: "",
   status: "confirmado",
+  isRecurring: false,
+  recurrenceType: "none",
+  confirmationMode: "automatic",
+  advanceNoticeDays: 7,
 });
 
 const sortEvents = (events: AgendaEvent[]) =>
@@ -427,6 +447,10 @@ export default function AgendaPage() {
         location: eventToEdit.location || "",
         description: eventToEdit.description || "",
         status: eventToEdit.status,
+        isRecurring: !!eventToEdit.recurrence,
+        recurrenceType: eventToEdit.recurrence?.type || "none",
+        confirmationMode: eventToEdit.recurrence?.confirmationMode || "automatic",
+        advanceNoticeDays: eventToEdit.recurrence?.advanceNoticeDays || 7,
       });
     }
     setIsFormOpen(true);
@@ -460,6 +484,14 @@ export default function AgendaPage() {
       return;
     }
 
+    const recurrenceSettings: RecurrenceSettings | undefined = formValues.isRecurring
+      ? {
+          type: formValues.recurrenceType,
+          confirmationMode: formValues.confirmationMode,
+          advanceNoticeDays: formValues.advanceNoticeDays,
+        }
+      : undefined;
+
     const baseEvent: Omit<AgendaEvent, "id"> = {
       type: formValues.type,
       date: eventDate,
@@ -472,17 +504,60 @@ export default function AgendaPage() {
       responses: editingEvent?.responses ?? [],
       icon: typeMeta[formValues.type].emoji,
       iconBg: typeMeta[formValues.type].badgeBg,
+      recurrence: recurrenceSettings,
     };
 
     if (formMode === "create") {
+      const parentId = crypto.randomUUID();
       const newEvent: AgendaEvent = {
         ...baseEvent,
-        id: crypto.randomUUID(),
+        id: parentId,
         responses: [],
       };
-      setEvents(prev => sortEvents([...prev, newEvent]));
+      
+      const eventsToAdd = [newEvent];
+      
+      // Gerar eventos recorrentes se aplicável
+      if (formValues.isRecurring && formValues.recurrenceType !== "none") {
+        const occurrences = 12; // Gerar próximas 12 ocorrências
+        let currentDate = new Date(eventDate);
+        
+        for (let i = 0; i < occurrences; i++) {
+          // Calcular próxima data baseada no tipo de recorrência
+          switch (formValues.recurrenceType) {
+            case "daily":
+              currentDate = addDays(currentDate, 1);
+              break;
+            case "weekly":
+              currentDate = addWeeks(currentDate, 1);
+              break;
+            case "monthly":
+              currentDate = addMonths(currentDate, 1);
+              break;
+          }
+          
+          const recurringEvent: AgendaEvent = {
+            ...baseEvent,
+            id: crypto.randomUUID(),
+            date: new Date(currentDate),
+            parentEventId: parentId,
+            status: formValues.confirmationMode === "automatic" ? "confirmado" : "pendente",
+            responses: [],
+          };
+          
+          eventsToAdd.push(recurringEvent);
+        }
+        
+        toast.success(
+          "Eventos recorrentes criados",
+          `Foram criados ${eventsToAdd.length} eventos (${formValues.recurrenceType === "daily" ? "diários" : formValues.recurrenceType === "weekly" ? "semanais" : "mensais"}).`
+        );
+      } else {
+        toast.success("Evento criado", "O novo evento foi adicionado à agenda.");
+      }
+      
+      setEvents(prev => sortEvents([...prev, ...eventsToAdd]));
       setSelectedDate(eventDate);
-      toast.success("Evento criado", "O novo evento foi adicionado à agenda.");
     } else if (editingEvent) {
       const updated: AgendaEvent = {
         ...editingEvent,
@@ -536,17 +611,17 @@ export default function AgendaPage() {
   };
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-8 p-8">
       <section className="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
         <div className="space-y-2">
-          <div className="flex items-center gap-2 text-sm font-semibold text-emerald-500">
+          <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.3em] text-[#6fffe9]">
             <CalendarClock className="h-4 w-4" />
             Agenda inteligente
           </div>
-          <h1 className="text-3xl font-bold tracking-tight text-slate-900 dark:text-white">
+          <h1 className="text-3xl font-bold tracking-tight text-white lg:text-4xl">
             Agenda da equipa
           </h1>
-          <p className="max-w-2xl text-base text-text-secondary">
+          <p className="max-w-2xl text-base text-white/70">
             Organiza treinos, jogos e reuniões num só lugar. Acompanha
             confirmações de presença, gere alterações e integra tudo com o
             Google Calendar para manter a equipa alinhada.
@@ -557,7 +632,7 @@ export default function AgendaPage() {
             variant="outline"
             onClick={handleSyncGoogleCalendar}
             disabled={isSyncingGCal}
-            className="border-emerald-200 bg-white text-emerald-600 hover:bg-emerald-50 dark:border-emerald-500/40 dark:bg-transparent dark:text-emerald-300"
+            className="border-white/25 bg-white/10 text-white backdrop-blur hover:border-[#24ffe6]/60 hover:bg-[#24ffe6]/15"
           >
             {isSyncingGCal ? (
               <Loader2 className="mr-2 h-4 w-4 animate-spin" />
@@ -570,7 +645,7 @@ export default function AgendaPage() {
           </Button>
           <Button
             onClick={() => handleCreateClick(selectedDate)}
-            className="bg-emerald-500 text-white hover:bg-emerald-600"
+            className="group min-w-[180px] bg-[#24ffe6] font-semibold text-slate-900 shadow-[0_16px_45px_-20px_rgba(36,255,230,0.9)] transition-all duration-300 hover:-translate-y-1 hover:bg-[#24ffe6]/90"
           >
             <Plus className="mr-2 h-4 w-4" />
             Novo evento
@@ -579,13 +654,13 @@ export default function AgendaPage() {
       </section>
 
       <div className="grid gap-6 lg:grid-cols-[1.35fr_1fr]">
-        <Card className="rounded-3xl border-emerald-100/60 bg-white/90 shadow-[0_32px_60px_-45px_rgba(16,185,129,0.35)] backdrop-blur dark:border-white/10 dark:bg-[#0f163f]/60 dark:text-white dark:shadow-[0_32px_60px_-45px_rgba(36,255,230,0.35)]">
-          <CardHeader className="border-b border-emerald-100/60 pb-4 dark:border-white/10">
-            <CardTitle className="flex items-center gap-2 text-lg font-semibold">
-              <CalendarDays className="h-4 w-4 text-emerald-500" />
+        <Card className="rounded-3xl border border-white/8 bg-white/5 shadow-[0_35px_80px_-45px_rgba(36,255,230,0.8)] backdrop-blur">
+          <CardHeader className="border-b border-white/8 pb-4">
+            <CardTitle className="flex items-center gap-2 text-lg font-semibold text-white">
+              <CalendarDays className="h-4 w-4 text-[#6fffe9]" />
               Calendário da temporada
             </CardTitle>
-            <CardDescription className="text-base text-text-secondary">
+            <CardDescription className="text-base text-white/60">
               Seleciona um dia para ver os eventos agendados ou clicando em um
               marcador para detalhes rápidos.
             </CardDescription>
@@ -602,13 +677,13 @@ export default function AgendaPage() {
         </Card>
 
         <div className="space-y-6">
-          <Card className="h-full rounded-3xl border-emerald-100/60 bg-white shadow-sm dark:border-white/10 dark:bg-white/10">
-            <CardHeader className="flex flex-row items-center justify-between border-b border-emerald-100/60 pb-4 dark:border-white/10">
+          <Card className="h-full rounded-3xl border border-white/8 bg-white/5 shadow-sm backdrop-blur">
+            <CardHeader className="flex flex-row items-center justify-between border-b border-white/8 pb-4">
               <div>
-                <CardTitle className="text-base font-semibold">
+                <CardTitle className="text-base font-semibold text-white">
                   {formatDateLabel(selectedDate)}
                 </CardTitle>
-                <CardDescription className="text-sm text-text-secondary">
+                <CardDescription className="text-sm text-white/60">
                   {selectedDateEvents.length} evento(s) agendados
                 </CardDescription>
               </div>
@@ -616,20 +691,20 @@ export default function AgendaPage() {
                 variant="outline"
                 size="sm"
                 onClick={() => handleCreateClick(selectedDate)}
-                className="border-emerald-200 text-emerald-600 hover:bg-emerald-50 dark:border-emerald-500/40 dark:text-emerald-300"
+                className="border-white/25 bg-white/10 text-white backdrop-blur hover:border-[#24ffe6]/60 hover:bg-[#24ffe6]/15"
               >
                 <Plus className="mr-2 h-4 w-4" /> novo evento
               </Button>
             </CardHeader>
             <CardContent className="space-y-4">
               {selectedDateEvents.length === 0 ? (
-                <div className="flex flex-col items-center justify-center gap-3 rounded-2xl border border-dashed border-emerald-200 bg-emerald-50/50 p-8 text-center dark:border-emerald-500/40 dark:bg-white/5">
-                  <CalendarDays className="h-8 w-8 text-emerald-500" />
+                <div className="flex flex-col items-center justify-center gap-3 rounded-2xl border border-dashed border-white/15 bg-white/5 p-8 text-center backdrop-blur">
+                  <CalendarDays className="h-8 w-8 text-[#6fffe9]" />
                   <div className="space-y-1">
-                    <p className="text-sm font-semibold text-slate-700 dark:text-white">
+                    <p className="text-sm font-semibold text-white">
                       Nenhum compromisso aqui ainda
                     </p>
-                    <p className="text-sm text-text-secondary">
+                    <p className="text-sm text-white/60">
                       Cria eventos para treinos, jogos ou reuniões diretamente
                       nesta data.
                     </p>
@@ -637,152 +712,153 @@ export default function AgendaPage() {
                   <Button
                     size="sm"
                     onClick={() => handleCreateClick(selectedDate)}
-                    className="bg-emerald-500 text-white hover:bg-emerald-600"
+                    className="bg-[#24ffe6] text-slate-900 hover:bg-[#24ffe6]/90"
                   >
                     Agendar agora
                   </Button>
                 </div>
               ) : (
-                <div className="space-y-4">
-                  {selectedDateEvents.map(event => {
-                    const accepted = event.responses.filter(
-                      response => response.status === "aceito",
-                    ).length;
-                    const pending = event.responses.filter(
-                      response => response.status === "pendente",
-                    ).length;
-                    const declined = event.responses.filter(
-                      response => response.status === "recusado",
-                    ).length;
+                <>
+                  <div className="space-y-4 py-4">
+                    {selectedDateEvents.map(event => {
+                      const accepted = event.responses.filter(
+                        response => response.status === "aceito",
+                      ).length;
+                      const pending = event.responses.filter(
+                        response => response.status === "pendente",
+                      ).length;
+                      const declined = event.responses.filter(
+                        response => response.status === "recusado",
+                      ).length;
 
-                    return (
-                      <div
-                        key={event.id}
-                        className="rounded-2xl border border-emerald-100/60 bg-white/80 p-4 shadow-sm transition-all hover:border-emerald-300 hover:shadow-md dark:border-white/10 dark:bg-white/5"
-                      >
-                        <div className="flex items-start justify-between gap-3">
-                          <div className="space-y-1.5">
-                            <div className="flex items-center gap-2">
-                              <span className="text-lg">
-                                {typeMeta[event.type].emoji}
-                              </span>
-                              <h3 className="text-sm font-semibold text-slate-800 dark:text-white">
-                                {event.title}
-                              </h3>
-                              <Badge
-                                className={
-                                  statusStyles[event.status].className +
-                                  " font-medium"
-                                }
-                              >
-                                {statusStyles[event.status].label}
-                              </Badge>
-                            </div>
-                            <div className="flex flex-wrap items-center gap-3 text-sm text-text-secondary">
-                              <span className="flex items-center gap-1">
-                                <Clock3 className="h-3.5 w-3.5" />
-                                {event.time}
-                              </span>
-                              {event.location && (
-                                <span className="flex items-center gap-1">
-                                  <MapPin className="h-3.5 w-3.5" />
-                                  {event.location}
+                      return (
+                        <div
+                          key={event.id}
+                          className="rounded-2xl border border-white/10 bg-white/5 p-4 shadow-sm backdrop-blur transition-all hover:border-[#24ffe6]/40 hover:shadow-md"
+                        >
+                          <div className="flex items-start justify-between gap-3">
+                            <div className="space-y-1.5">
+                              <div className="flex items-center gap-2">
+                                <span className="text-lg">
+                                  {typeMeta[event.type].emoji}
                                 </span>
-                              )}
-                              <span className="flex items-center gap-1">
-                                <Users2 className="h-3.5 w-3.5" />
-                                {accepted} aceites · {pending} pendentes ·{" "}
-                                {declined} recusos
-                              </span>
+                                <h3 className="text-sm font-semibold text-white">
+                                  {event.title}
+                                </h3>
+                                <Badge
+                                  className={
+                                    statusStyles[event.status].className +
+                                    " font-medium"
+                                  }
+                                >
+                                  {statusStyles[event.status].label}
+                                </Badge>
+                              </div>
+                              <div className="flex flex-wrap items-center gap-3 text-sm text-white/60">
+                                <span className="flex items-center gap-1">
+                                  <Clock3 className="h-3.5 w-3.5" />
+                                  {event.time}
+                                </span>
+                                {event.location && (
+                                  <span className="flex items-center gap-1">
+                                    <MapPin className="h-3.5 w-3.5" />
+                                    {event.location}
+                                  </span>
+                                )}
+                                <span className="flex items-center gap-1">
+                                  <Users2 className="h-3.5 w-3.5" />
+                                  {accepted} aceites · {pending} pendentes ·{" "}
+                                  {declined} recusos
+                                </span>
+                              </div>
                             </div>
+
+                            <DropdownMenu>
+                              <DropdownMenuTrigger asChild>
+                                <Button
+                                  variant="ghost"
+                                  size="icon"
+                                  className="h-10 w-10 text-text-secondary hover:text-neon-primary"
+                                >
+                                  <span className="sr-only">Abrir ações</span>
+                                  <span className="text-lg">⋮</span>
+                                </Button>
+                              </DropdownMenuTrigger>
+                              <DropdownMenuContent align="end">
+                                <DropdownMenuItem
+                                  onClick={() => {
+                                    setSelectedEvent(event);
+                                    setIsDetailsOpen(true);
+                                  }}
+                                >
+                                  Ver detalhes
+                                </DropdownMenuItem>
+                                <DropdownMenuItem
+                                  onClick={() => handleEditEvent(event)}
+                                >
+                                  Editar
+                                </DropdownMenuItem>
+                                <DropdownMenuItem
+                                  className="text-red-600 focus:text-red-600"
+                                  onClick={() => handleDeleteEvent(event.id)}
+                                >
+                                  Remover
+                                </DropdownMenuItem>
+                              </DropdownMenuContent>
+                            </DropdownMenu>
                           </div>
-
-                          <DropdownMenu>
-                            <DropdownMenuTrigger asChild>
-                              <Button
-                                variant="ghost"
-                                size="icon"
-                                className="h-10 w-10 text-text-secondary hover:text-neon-primary"
-                              >
-                                <span className="sr-only">Abrir ações</span>
-                                <span className="text-lg">⋮</span>
-                              </Button>
-                            </DropdownMenuTrigger>
-                            <DropdownMenuContent align="end">
-                              <DropdownMenuItem
-                                onClick={() => {
-                                  setSelectedEvent(event);
-                                  setIsDetailsOpen(true);
-                                }}
-                              >
-                                Ver detalhes
-                              </DropdownMenuItem>
-                              <DropdownMenuItem
-                                onClick={() => handleEditEvent(event)}
-                              >
-                                Editar
-                              </DropdownMenuItem>
-                              <DropdownMenuItem
-                                className="text-red-600 focus:text-red-600"
-                                onClick={() => handleDeleteEvent(event.id)}
-                              >
-                                Remover
-                              </DropdownMenuItem>
-                            </DropdownMenuContent>
-                          </DropdownMenu>
+                          {event.description && (
+                            <p className="mt-2 text-sm text-text-secondary">
+                              {event.description}
+                            </p>
+                          )}
                         </div>
-                        {event.description && (
-                          <p className="mt-2 text-sm text-text-secondary">
-                            {event.description}
-                          </p>
-                        )}
+                      );
+                    })}
+                  </div>
+                  <Card className="rounded-3xl border-emerald-100/60 bg-white shadow-sm dark:border-white/10 dark:bg-white/5">
+                    <CardHeader>
+                      <CardTitle className="text-sm font-semibold text-slate-800 dark:text-white">
+                        Estado da sincronização
+                      </CardTitle>
+                              <CardDescription className="text-sm text-text-secondary">
+                        Conecta a agenda do Jogabola com o Google Calendar para garantir
+                        que toda a equipa esteja atualizada.
+                      </CardDescription>
+                    </CardHeader>
+                    <CardContent className="space-y-4">
+                      <div className="flex items-center justify-between rounded-xl border border-emerald-100/60 bg-emerald-50/60 px-4 py-3 text-xs text-slate-600 dark:border-emerald-500/40 dark:bg-emerald-500/10 dark:text-emerald-200">
+                        <span>
+                          {lastSyncAt
+                            ? `Última sincronização em ${formatDateTimeLabel(lastSyncAt)}`
+                            : "Sem sincronizações anteriores"}
+                        </span>
+                        <Badge className="border-emerald-300 bg-white text-emerald-600 dark:border-emerald-500/50 dark:bg-transparent dark:text-emerald-300">
+                          Google Calendar
+                        </Badge>
                       </div>
-                    );
-                  })}
-                </div>
+                      <p className="text-sm text-text-secondary">
+                        Ao sincronizar vinculamos automaticamente treinos, jogos,
+                        eventos e reuniões ao calendário pessoal de cada atleta ou
+                        membro da equipa.
+                      </p>
+                      <Button
+                        size="sm"
+                        onClick={handleSyncGoogleCalendar}
+                        disabled={isSyncingGCal}
+                        className="w-full bg-emerald-500 text-white hover:bg-emerald-600 disabled:opacity-60"
+                      >
+                        {isSyncingGCal ? (
+                          <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                        ) : (
+                          <RefreshCw className="mr-2 h-4 w-4" />
+                        )}
+                        {isSyncingGCal ? "A sincronizar..." : "Sincronizar agora"}
+                      </Button>
+                    </CardContent>
+                  </Card>
+               </>
               )}
-            </CardContent>
-          </Card>
-
-          <Card className="rounded-3xl border-emerald-100/60 bg-white shadow-sm dark:border-white/10 dark:bg-white/5">
-            <CardHeader>
-              <CardTitle className="text-sm font-semibold text-slate-800 dark:text-white">
-                Estado da sincronização
-              </CardTitle>
-                      <CardDescription className="text-sm text-text-secondary">
-                Conecta a agenda do Jogabola com o Google Calendar para garantir
-                que toda a equipa esteja atualizada.
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="flex items-center justify-between rounded-xl border border-emerald-100/60 bg-emerald-50/60 px-4 py-3 text-xs text-slate-600 dark:border-emerald-500/40 dark:bg-emerald-500/10 dark:text-emerald-200">
-                <span>
-                  {lastSyncAt
-                    ? `Última sincronização em ${formatDateTimeLabel(lastSyncAt)}`
-                    : "Sem sincronizações anteriores"}
-                </span>
-                <Badge className="border-emerald-300 bg-white text-emerald-600 dark:border-emerald-500/50 dark:bg-transparent dark:text-emerald-300">
-                  Google Calendar
-                </Badge>
-              </div>
-              <p className="text-sm text-text-secondary">
-                Ao sincronizar vinculamos automaticamente treinos, jogos,
-                eventos e reuniões ao calendário pessoal de cada atleta ou
-                membro da equipa.
-              </p>
-              <Button
-                size="sm"
-                onClick={handleSyncGoogleCalendar}
-                disabled={isSyncingGCal}
-                className="w-full bg-emerald-500 text-white hover:bg-emerald-600 disabled:opacity-60"
-              >
-                {isSyncingGCal ? (
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                ) : (
-                  <RefreshCw className="mr-2 h-4 w-4" />
-                )}
-                {isSyncingGCal ? "A sincronizar..." : "Sincronizar agora"}
-              </Button>
             </CardContent>
           </Card>
         </div>
@@ -1004,6 +1080,106 @@ export default function AgendaPage() {
                 }
                 placeholder="Adiciona contexto, objetivos ou logística para a equipa."
               />
+            </div>
+
+            {/* Configuração de Recorrência */}
+            <div className="space-y-4 rounded-2xl border border-emerald-100/60 bg-emerald-50/30 p-4 dark:border-emerald-500/40 dark:bg-emerald-500/5">
+              <div className="flex items-center justify-between">
+                <div className="space-y-0.5">
+                  <Label htmlFor="isRecurring" className="text-base font-semibold">
+                    Evento recorrente
+                  </Label>
+                  <p className="text-sm text-text-secondary">
+                    Cria automaticamente eventos futuros com base numa frequência
+                  </p>
+                </div>
+                <Switch
+                  id="isRecurring"
+                  checked={formValues.isRecurring}
+                  onCheckedChange={checked =>
+                    setFormValues(prev => ({
+                      ...prev,
+                      isRecurring: checked,
+                      recurrenceType: checked ? "weekly" : "none",
+                    }))
+                  }
+                />
+              </div>
+
+              {formValues.isRecurring && (
+                <div className="grid gap-4 pt-2 md:grid-cols-2">
+                  <div className="space-y-2">
+                    <Label htmlFor="recurrenceType">Frequência</Label>
+                    <Select
+                      value={formValues.recurrenceType}
+                      onValueChange={value =>
+                        setFormValues(prev => ({
+                          ...prev,
+                          recurrenceType: value as RecurrenceType,
+                        }))
+                      }
+                    >
+                      <SelectTrigger id="recurrenceType">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="daily">📅 Diário</SelectItem>
+                        <SelectItem value="weekly">📆 Semanal</SelectItem>
+                        <SelectItem value="monthly">🗓️ Mensal</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="confirmationMode">Modo de confirmação</Label>
+                    <Select
+                      value={formValues.confirmationMode}
+                      onValueChange={value =>
+                        setFormValues(prev => ({
+                          ...prev,
+                          confirmationMode: value as ConfirmationMode,
+                        }))
+                      }
+                    >
+                      <SelectTrigger id="confirmationMode">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="automatic">
+                          ✅ Automático (confirmado imediatamente)
+                        </SelectItem>
+                        <SelectItem value="manual">
+                          ⏳ Manual (requer confirmação)
+                        </SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+
+                  {formValues.confirmationMode === "manual" && (
+                    <div className="space-y-2 md:col-span-2">
+                      <Label htmlFor="advanceNoticeDays">
+                        Dias de antecedência para confirmação
+                      </Label>
+                      <Input
+                        id="advanceNoticeDays"
+                        type="number"
+                        min="1"
+                        max="30"
+                        value={formValues.advanceNoticeDays}
+                        onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
+                          setFormValues(prev => ({
+                            ...prev,
+                            advanceNoticeDays: parseInt(event.target.value) || 7,
+                          }))
+                        }
+                      />
+                      <p className="text-xs text-text-secondary">
+                        O evento será criado como "pendente" e precisará de confirmação {formValues.advanceNoticeDays} dias antes da data
+                      </p>
+                    </div>
+                  )}
+                </div>
+              )}
             </div>
             <DialogFooter>
               <Button

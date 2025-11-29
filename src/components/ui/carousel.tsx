@@ -1,12 +1,12 @@
 "use client";
 
-import useEmblaCarousel, {
-  type UseEmblaCarouselType,
-} from "embla-carousel-react";
 import {
-  LuArrowLeft as ArrowLeft,
-  LuArrowRight as ArrowRight,
+    LuArrowLeft as ArrowLeft,
+    LuArrowRight as ArrowRight,
 } from "@/components/icons";
+import useEmblaCarousel, {
+    type UseEmblaCarouselType,
+} from "embla-carousel-react";
 import * as React from "react";
 
 import { cn } from "@/utils";
@@ -202,7 +202,7 @@ const CarouselPrevious = React.forwardRef<
   HTMLButtonElement,
   React.ComponentProps<typeof Button>
 >(({ className, variant = "outline", size = "icon", ...props }, ref) => {
-  const { orientation, scrollPrev, canScrollPrev } = useCarousel();
+  const { scrollPrev, canScrollPrev } = useCarousel();
 
   return (
     <Button
@@ -231,7 +231,7 @@ const CarouselNext = React.forwardRef<
   HTMLButtonElement,
   React.ComponentProps<typeof Button>
 >(({ className, variant = "outline", size = "icon", ...props }, ref) => {
-  const { orientation, scrollNext, canScrollNext } = useCarousel();
+  const { scrollNext, canScrollNext } = useCarousel();
 
   return (
     <Button
@@ -256,11 +256,10 @@ const CarouselNext = React.forwardRef<
 });
 CarouselNext.displayName = "CarouselNext";
 
-export type { CarouselApi };
 export {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-  CarouselPrevious,
-  CarouselNext,
+    Carousel,
+    CarouselContent,
+    CarouselItem, CarouselNext, CarouselPrevious
 };
+export type { CarouselApi };
+

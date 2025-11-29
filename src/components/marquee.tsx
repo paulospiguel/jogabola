@@ -53,10 +53,10 @@ export default function Marquee({
     <div
       {...props}
       data-duration={speed}
-      // @ts-expect-error
+      // @ts-expect-error -- CSS custom property for animation duration
       style={{ "--duration": `${speed}s` }}
       className={cn(
-        "group relative flex h-full w-full [gap:var(--gap)] p-2 [--gap:12px]",
+        "group relative flex h-full w-full gap-[var(--gap)] p-2 [--gap:12px]",
         {
           "flex-col": vertical,
           "flex-row": !vertical,
@@ -67,7 +67,7 @@ export default function Marquee({
       {Array.from({ length: repeat }).map((_, index) => (
         <div
           key={`item-${index}`}
-          className={cn("flex shrink-0 [gap:var(--gap)]", {
+          className={cn("flex shrink-0 gap-[var(--gap)]", {
             "group-hover:[animation-play-state:paused]": pauseOnHover,
             "[animation-direction:reverse]": reverse,
             "animate-marquee-horizontal flex-row": !vertical,

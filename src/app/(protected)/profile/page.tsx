@@ -63,7 +63,7 @@ interface ProfileData {
   newsletterEnabled: boolean;
   earlyAccessEnabled: boolean;
   goals: string[];
-  customFields: Record<string, any>;
+  customFields: Record<string, unknown>;
 }
 
 const languages = [
@@ -216,14 +216,14 @@ export default function ProfilePage() {
     }
   };
 
-  const handleInputChange = (field: keyof ProfileData, value: any) => {
+  const handleInputChange = (field: keyof ProfileData, value: unknown) => {
     setProfileData(prev => ({
       ...prev,
       [field]: value,
     }));
   };
 
-  const handleCustomFieldChange = (id: string, value: any) => {
+  const handleCustomFieldChange = (id: string, value: unknown) => {
     // Check if it maps to a top-level field
     if (id === "experience" || id === "availability" || id === "location") {
       handleInputChange(id as keyof ProfileData, value);
@@ -635,7 +635,7 @@ export default function ProfilePage() {
                                 ? profileData.experience
                                 : question.id === "availability"
                                   ? profileData.availability
-                                  : profileData.customFields[question.id]) || ""
+                                  : (profileData.customFields[question.id] as string)) || ""
                             }
                             onValueChange={value =>
                               handleCustomFieldChange(question.id, value)
@@ -668,7 +668,7 @@ export default function ProfilePage() {
                         {question.type === "text" && (
                           <Input
                             id={question.id}
-                            value={profileData.customFields[question.id] || ""}
+                            value={(profileData.customFields[question.id] as string) || ""}
                             onChange={e =>
                               handleCustomFieldChange(
                                 question.id,
@@ -685,7 +685,7 @@ export default function ProfilePage() {
                             value={
                               (question.id === "availability"
                                 ? profileData.availability
-                                : profileData.customFields[question.id]) || ""
+                                : (profileData.customFields[question.id] as string)) || ""
                             }
                             onValueChange={value =>
                               handleCustomFieldChange(question.id, value)
@@ -780,7 +780,7 @@ export default function ProfilePage() {
                                 ? profileData.experience
                                 : question.id === "availability"
                                   ? profileData.availability
-                                  : profileData.customFields[question.id]) || ""
+                                  : (profileData.customFields[question.id] as string)) || ""
                             }
                             onValueChange={value =>
                               handleCustomFieldChange(question.id, value)
@@ -813,7 +813,7 @@ export default function ProfilePage() {
                         {question.type === "text" && (
                           <Input
                             id={question.id}
-                            value={profileData.customFields[question.id] || ""}
+                            value={(profileData.customFields[question.id] as string) || ""}
                             onChange={e =>
                               handleCustomFieldChange(
                                 question.id,
@@ -830,7 +830,7 @@ export default function ProfilePage() {
                             value={
                               (question.id === "availability"
                                 ? profileData.availability
-                                : profileData.customFields[question.id]) || ""
+                                : (profileData.customFields[question.id] as string)) || ""
                             }
                             onValueChange={value =>
                               handleCustomFieldChange(question.id, value)
@@ -872,7 +872,7 @@ export default function ProfilePage() {
                         {roleQuestions.goals.map(goal => (
                           <GoalCard
                             key={goal.id}
-                            goal={goal}
+                            goal={goal as any}
                             isSelected={profileData.goals.includes(goal.id)}
                             onToggle={toggleGoal}
                           />

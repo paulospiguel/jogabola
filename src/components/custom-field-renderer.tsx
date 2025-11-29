@@ -4,11 +4,11 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
 } from "@/components/ui/select";
 import type { OnboardingQuestion } from "@/constants/onboarding-questions";
 import { cn } from "@/lib/utils";
@@ -17,8 +17,8 @@ import { Checkbox } from "./ui/checkbox";
 
 interface CustomFieldRendererProps {
   question: OnboardingQuestion;
-  value: any;
-  onChange: (value: any) => void;
+  value: string | string[] | number | boolean | null;
+  onChange: (value: string | string[] | number | boolean | null) => void;
   index: number;
 }
 
@@ -34,7 +34,7 @@ export function CustomFieldRenderer({
         return (
           <Input
             id={question.id}
-            value={value || ""}
+            value={(value as string) || ""}
             onChange={e => onChange(e.target.value)}
             placeholder={question.placeholder}
             className="mt-2 border-white/20 bg-white/10 text-white placeholder:text-white/60"
@@ -43,7 +43,7 @@ export function CustomFieldRenderer({
 
       case "select":
         return (
-          <Select value={value || ""} onValueChange={onChange}>
+          <Select value={(value as string) || ""} onValueChange={onChange}>
             <SelectTrigger className="mt-2 border-white/20 bg-white/10 text-white">
               <SelectValue
                 placeholder={question.placeholder || "Seleciona uma opção"}
@@ -62,7 +62,7 @@ export function CustomFieldRenderer({
       case "radio":
         return (
           <RadioGroup
-            value={value || ""}
+            value={(value as string) || ""}
             onValueChange={onChange}
             className="mt-2 space-y-2"
           >
@@ -86,7 +86,7 @@ export function CustomFieldRenderer({
 
       case "multiselect":
       case "checkbox":
-        const selectedValues = Array.isArray(value) ? value : [];
+        const selectedValues = (Array.isArray(value) ? value : []) as string[];
         return (
           <div className="mt-2 space-y-2">
             {question.options?.map(option => (

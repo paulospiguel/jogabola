@@ -1,6 +1,7 @@
-import React from "react";
-import type { SVGProps } from "react";
+import { createLucideIcon } from "lucide-react";
+import { type SVGProps } from "react";
 export * from "react-icons/lu";
+
 
 export function LineMdCogLoop(props: SVGProps<SVGSVGElement>) {
   return (
@@ -761,3 +762,58 @@ export function AppleStore(props: SVGProps<SVGSVGElement>) {
     </svg>
   );
 }
+
+
+export const FieldSoccerIcon = createLucideIcon("FieldIcon", [
+  [
+    "rect",
+    {
+      x: "3",
+      y: "2",
+      width: "18",
+      height: "20",
+      rx: "2",
+      key: "border",
+    },
+  ],
+
+  // 2. Linha central (Horizontal, de ponta a ponta da nova largura)
+  [
+    "line",
+    {
+      x1: "3",
+      y1: "12",
+      x2: "21",
+      y2: "12",
+      key: "center-line",
+    },
+  ],
+
+  // 3. Círculo central
+  [
+    "path",
+    {
+      d: "M12 9a3 3 0 1 0 0 6 3 3 0 1 0 0-6",
+      key: "center-circle",
+    },
+  ],
+
+  // 4. Área superior (Alargada para acompanhar o campo)
+  // x=7 com width=10 centraliza perfeitamente no campo de largura 18
+  [
+    "path",
+    {
+      d: "M7 2v4h10V2",
+      key: "top-box",
+    },
+  ],
+
+  // 5. Área inferior
+  [
+    "path",
+    {
+      d: "M7 22v-4h10v4",
+      key: "bottom-box",
+    },
+  ],
+]);

@@ -90,6 +90,8 @@ export function CountrySelector({
           type="button"
           role="combobox"
           aria-expanded={open}
+          aria-controls="country-selector-list"
+          aria-haspopup="listbox"
           className={cn(
             "flex h-10 w-full items-center justify-between rounded-full border border-white/8 bg-white/5 backdrop-blur-sm px-3 py-2 text-sm text-white placeholder:text-white/60 transition-all duration-300 focus-visible:outline-hidden focus-visible:ring-[3px] focus-visible:ring-neon-primary/40 disabled:cursor-not-allowed disabled:opacity-50 hover:border-neon-primary/50 hover:bg-white/10",
             className,
@@ -111,7 +113,7 @@ export function CountrySelector({
           <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
         </button>
       </PopoverTrigger>
-      <PopoverContent className="w-[300px] p-0 border border-white/8 bg-[#050312]/95 backdrop-blur-xl shadow-[0_35px_80px_-45px_rgba(36,255,230,0.8)] rounded-2xl" align="start">
+      <PopoverContent id="country-selector-list" className="w-[300px] border-white/10 bg-toast-bg/95 text-white backdrop-blur-xl shadow-[0_35px_80px_-45px_rgba(36,255,230,0.8)] rounded-2xl" align="start">
         <div className="p-2">
           <Input
             placeholder="Pesquisar país..."

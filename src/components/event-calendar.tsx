@@ -5,7 +5,9 @@ import { cn } from "@/utils";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import * as React from "react";
 import { useEffect, useMemo, useState } from "react";
-import type { DayPickerSingleProps } from "react-day-picker";
+import { DayButton, DayPicker } from "react-day-picker";
+
+type DayPickerProps = React.ComponentProps<typeof DayPicker>;
 
 export type EventType = "jogo" | "treino" | "amistoso" | "reuniao" | "outro";
 
@@ -20,20 +22,22 @@ export interface CalendarEvent {
 }
 
 interface EventCalendarProps
-  extends Omit<DayPickerSingleProps, "modifiers" | "mode"> {
+  extends Omit<DayPickerProps, "modifiers" | "mode"> {
   events?: CalendarEvent[];
   onEventClick?: (event: CalendarEvent) => void;
   showTotal?: boolean;
   className?: string;
   classNames?: Record<string, string>;
+  selected?: Date;
+  onSelect?: (date: Date | undefined) => void;
 }
 
 const eventColors: Record<EventType, string> = {
-  jogo: "bg-red-500",
-  treino: "bg-black",
-  amistoso: "bg-purple-500",
-  reuniao: "bg-yellow-500",
-  outro: "bg-gray-500",
+  jogo: "bg-[#24ffe6]",
+  treino: "bg-[#6fffe9]",
+  amistoso: "bg-[#02a7ff]",
+  reuniao: "bg-[#ba93ff]",
+  outro: "bg-white/40",
 };
 
 export function EventCalendar({
@@ -91,13 +95,16 @@ export function EventCalendar({
   const monthlyTotalLabel = useMemo(() => `$${monthlyTotal}`, [monthlyTotal]);
 
   // Componente customizado para renderizar os botões dos dias com eventos
-  const DayButtonComponent = (buttonProps: any) => {
+  const DayButtonComponent = (
+    buttonProps: React.ComponentProps<typeof DayButton>
+  ) => {
     const { day, modifiers, className, ...rest } = buttonProps;
     const date: Date = day.date;
     const dateKey = date.toDateString();
     const dayEvents = eventsByDate[dateKey] || [];
     const hasEvents = dayEvents.length > 0;
     const buttonRef = React.useRef<HTMLButtonElement>(null);
+    const isToday = new Date().toDateString() === dateKey;
 
     React.useEffect(() => {
       if (modifiers.focused) {
@@ -107,13 +114,13 @@ export function EventCalendar({
 
     const renderEventIcons = () => {
       if (!hasEvents) {
-        return <div className="min-h-[20px]" />;
+        return null;
       }
 
-      const displayedEvents = dayEvents.slice(0, 3);
+      const displayedEvents = dayEvents.slice(0, 2);
 
       return (
-        <div className="flex min-h-[20px] items-center justify-center gap-1.5">
+        <div className="absolute -bottom-1 left-1/2 flex -translate-x-1/2 items-center justify-center gap-1">
           {displayedEvents.map((event, index) => {
             const key = `${dateKey}-icon-${index}`;
             const handleClick = (e: React.MouseEvent) => {
@@ -125,20 +132,10 @@ export function EventCalendar({
               return (
                 <span
                   key={key}
-                  className={cn(
-                    "flex h-5 w-5 cursor-pointer items-center justify-center rounded-[10px] bg-white text-[11px] shadow-sm transition-colors hover:bg-neutral-50",
-                    event.iconBg
-                  )}
+                  className="flex h-4 w-4 cursor-pointer items-center justify-center text-[10px] transition-transform hover:scale-110"
                   onClick={handleClick}
                 >
-                  <span
-                    className={cn(
-                      "text-[11px] leading-none text-gray-700",
-                      event.iconClassName
-                    )}
-                  >
-                    {event.icon}
-                  </span>
+                  {event.icon}
                 </span>
               );
             }
@@ -146,22 +143,16 @@ export function EventCalendar({
             return (
               <span
                 key={key}
-                className="flex h-5 w-5 cursor-pointer items-center justify-center rounded-[10px] bg-white shadow-sm transition-colors hover:bg-neutral-50"
+                className={cn(
+                  "h-1.5 w-1.5 cursor-pointer rounded-full transition-all hover:scale-125",
+                  eventColors[event.type]
+                )}
                 onClick={handleClick}
-              >
-                <span
-                  className={cn(
-                    "h-2 w-2 rounded-full",
-                    eventColors[event.type]
-                  )}
-                />
-              </span>
+              />
             );
           })}
-          {dayEvents.length > 3 && (
-            <span className="flex h-5 min-w-[20px] cursor-pointer items-center justify-center rounded-[10px] bg-gray-100 px-1 text-[10px] font-semibold text-gray-500">
-              +{dayEvents.length - 3}
-            </span>
+          {dayEvents.length > 2 && (
+            <span className="h-1 w-1 rounded-full bg-white/60" />
           )}
         </div>
       );
@@ -174,38 +165,28 @@ export function EventCalendar({
         type="button"
         className={cn(
           className,
-          "group relative mx-auto flex h-[72px] w-full flex-col items-center justify-between rounded-[22px] border border-transparent bg-[#F6F6F6] px-0 py-2.5 text-sm font-medium text-gray-500 transition-all hover:border-gray-200 hover:bg-[#f2f2f2] focus-visible:outline-none",
-          hasEvents ? "text-gray-800" : "text-gray-500",
+          "group relative flex h-20 w-full items-center justify-center rounded-xl border border-white/8 bg-white/5 text-sm font-medium text-white/70 backdrop-blur transition-all duration-300 hover:border-[#24ffe6]/40 hover:bg-white/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#6fffe9]/40",
+          isToday && "border-[#6fffe9]/50 bg-[#6fffe9]/10 text-[#6fffe9]",
           modifiers.selected &&
-            "border border-[#FF6B4A] bg-white text-[#FF6B4A] shadow-[0_12px_32px_-20px_rgba(255,107,74,0.6)]",
-          modifiers.outside && "bg-white text-gray-300"
+            "border-[#24ffe6] bg-[#24ffe6]/20 text-white shadow-[0_8px_24px_-12px_rgba(36,255,230,0.6)]",
+          modifiers.outside && "text-white/30 hover:border-white/5 hover:bg-white/5"
         )}
       >
-        {renderEventIcons()}
         <span
           className={cn(
-            "text-[15px] font-medium",
-            modifiers.selected && "font-semibold",
-            modifiers.outside && "text-gray-300"
+            "relative z-10 text-lg font-bold",
+            modifiers.selected && "text-[#24ffe6]",
+            isToday && !modifiers.selected && "text-[#6fffe9]"
           )}
         >
           {date.getDate()}
         </span>
-        {hasEvents ? (
-          <span
-            className={cn(
-              "block h-1.5 w-1.5 rounded-full bg-gray-700",
-              modifiers.selected && "bg-[#FF6B4A]"
-            )}
-          />
-        ) : (
-          <span className="h-1.5 w-1.5" />
-        )}
+        {renderEventIcons()}
       </button>
     );
   };
 
-  const selectedWeekday = selected?.getDay();
+
   const monthNames = [
     "January",
     "February",
@@ -229,21 +210,20 @@ export function EventCalendar({
       currentMonth.getMonth() + (direction === "next" ? 1 : -1),
     );
     setCurrentMonth(newMonth);
-    // Não chamamos onSelect aqui pois é apenas para mudança de mês, não seleção de data
   };
 
   return (
-    <div className="w-full rounded-[32px] border border-gray-100 bg-white p-8 shadow-[0_32px_60px_-45px_rgba(15,23,42,0.45)]">
+    <div className="w-full rounded-3xl border border-white/8 bg-white/5 p-8 backdrop-blur-xl">
       {/* Header com botões Week/Month */}
-      <div className="mb-8 flex items-center justify-between">
-        <div className="flex gap-1.5 rounded-full border border-gray-200 bg-gray-100 p-1.5">
+      <div className="mb-6 flex items-center justify-between">
+        <div className="flex gap-1 rounded-full border border-white/10 bg-white/5 p-1 backdrop-blur">
           <button
             onClick={() => setViewMode("week")}
             className={cn(
-              "min-w-[90px] rounded-full px-5 py-2 text-sm font-medium transition-all",
+              "min-w-[90px] rounded-full px-5 py-2 text-sm font-medium transition-all duration-300",
               viewMode === "week"
-                ? "bg-white text-gray-900 shadow-[0_8px_18px_-12px_rgba(15,23,42,0.45)]"
-                : "text-gray-400 hover:text-gray-600",
+                ? "bg-[#24ffe6] text-slate-900 shadow-[0_8px_18px_-12px_rgba(36,255,230,0.9)]"
+                : "text-white/60 hover:text-white",
             )}
           >
             Week
@@ -251,10 +231,10 @@ export function EventCalendar({
           <button
             onClick={() => setViewMode("month")}
             className={cn(
-              "min-w-[90px] rounded-full px-5 py-2 text-sm font-medium transition-all",
+              "min-w-[90px] rounded-full px-5 py-2 text-sm font-medium transition-all duration-300",
               viewMode === "month"
-                ? "bg-white text-gray-900 shadow-[0_8px_18px_-12px_rgba(15,23,42,0.45)]"
-                : "text-gray-400 hover:text-gray-600",
+                ? "bg-[#24ffe6] text-slate-900 shadow-[0_8px_18px_-12px_rgba(36,255,230,0.9)]"
+                : "text-white/60 hover:text-white",
             )}
           >
             Month
@@ -264,29 +244,29 @@ export function EventCalendar({
 
       {/* Navegação do mês e total */}
       <div className="mb-6 flex items-center justify-between">
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-3">
           <button
             onClick={() => handleMonthChange("prev")}
-            className="flex h-8 w-8 items-center justify-center rounded-lg text-gray-400 transition-colors hover:bg-gray-100 hover:text-gray-700"
+            className="flex h-9 w-9 items-center justify-center rounded-xl border border-white/10 bg-white/5 text-white/60 backdrop-blur transition-all duration-300 hover:border-[#24ffe6]/40 hover:bg-white/10 hover:text-[#24ffe6]"
           >
             <ChevronLeft className="h-5 w-5" />
           </button>
-          <h2 className="text-xl font-semibold text-gray-800">
+          <h2 className="text-xl font-bold text-white">
             {monthName}{" "}
-            <span className="font-normal text-gray-500">{year}</span>
+            <span className="font-normal text-white/60">{year}</span>
           </h2>
           <button
             onClick={() => handleMonthChange("next")}
-            className="flex h-8 w-8 items-center justify-center rounded-lg text-gray-400 transition-colors hover:bg-gray-100 hover:text-gray-700"
+            className="flex h-9 w-9 items-center justify-center rounded-xl border border-white/10 bg-white/5 text-white/60 backdrop-blur transition-all duration-300 hover:border-[#24ffe6]/40 hover:bg-white/10 hover:text-[#24ffe6]"
           >
             <ChevronRight className="h-5 w-5" />
           </button>
         </div>
 
         {showTotal && (
-          <div className="text-base font-medium text-gray-500">
+          <div className="text-sm font-medium text-white/60">
             Monthly total:{" "}
-            <span className="font-semibold text-gray-900">
+            <span className="font-bold text-[#24ffe6]">
               {monthlyTotalLabel}
             </span>
           </div>
@@ -302,30 +282,30 @@ export function EventCalendar({
         onMonthChange={setCurrentMonth}
         className={cn("w-full border-0 p-0", className)}
         classNames={{
+          root: "w-full",
           months: "flex flex-col space-y-6",
-          month: "space-y-4 w-full",
-          caption: "hidden", // Escondemos porque criamos nosso próprio header
-          nav: "hidden", // Escondemos porque criamos nossos próprios botões
-          table: "w-full table-fixed border-separate border-spacing-x-4 border-spacing-y-5",
-          head_row: "grid grid-cols-7 mb-3",
+          caption: "hidden",
+          nav: "hidden",
+          table: "w-full table-fixed border-separate border-spacing-3",
+          head_row: "grid grid-cols-7 mb-4",
           head_cell:
-            "text-center text-xs font-medium uppercase tracking-[0.08em] text-gray-400",
-          row: "grid grid-cols-7",
-          cell: "flex items-center justify-center p-0 align-top text-sm",
+            "text-center text-sm font-semibold uppercase tracking-[0.15em] text-[#6fffe9]/80",
+          row: "grid grid-cols-7 gap-3",
+          cell: "flex items-center justify-center p-0 text-sm",
           day: cn(
-            "rdp-day h-auto w-full border-0 bg-transparent p-0 font-normal",
+            "rdp-day h-auto w-full border-0 bg-transparent p-0.5 font-normal",
             "hover:bg-transparent focus-visible:outline-none focus-visible:ring-0"
           ),
           day_selected: "",
           day_today: "",
-          day_outside: "text-gray-300",
-          day_disabled: "text-gray-300 opacity-50",
+          day_outside: "text-white/20",
+          day_disabled: "text-white/20 opacity-50",
           day_range_middle: "",
           day_hidden: "invisible",
           ...classNames,
         }}
         formatters={{
-          formatWeekdayName: date => {
+          formatWeekdayName: (date: Date) => {
             const days = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
             const dayIndex = date.getDay();
             const adjustedIndex = dayIndex === 0 ? 6 : dayIndex - 1;

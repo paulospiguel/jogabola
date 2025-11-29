@@ -52,7 +52,8 @@ export default function LoginPage() {
   const t = useTranslations("signIn.page");
 
   // Sync profile data when user logs in
-  useProfileSync(data?.user?.id, saveProfileData);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  useProfileSync(data?.user?.id, (uid, d) => saveProfileData(uid, d as any));
 
   // Preencher formulários com dados do query params (vindo do onboarding)
   const emailParam = searchParams.get("email");
@@ -120,11 +121,12 @@ export default function LoginPage() {
 
       // Se não houver erro nem URL, pode ser que a autenticação esteja em progresso
       // Não definir loading como false aqui, pois o redirecionamento pode estar ocorrendo
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error("Google login error:", err);
+      const errorMessage = err instanceof Error ? err.message : t("errors.loginFailed");
       toast.error(
         t("errors.loginError"),
-        err.message || t("errors.loginFailed"),
+        errorMessage,
       );
       setLoading(false);
     }
@@ -146,11 +148,12 @@ export default function LoginPage() {
       toast.success(t("success.login"), t("success.loginMessage"));
 
       // A migração será feita pelo hook useProfileSync que monitora a sessão
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error("Login error:", err);
+      const errorMessage = err instanceof Error ? err.message : t("errors.invalidCredentialsDetails");
       toast.error(
         t("errors.loginError"),
-        err.message || t("errors.invalidCredentialsDetails"),
+        errorMessage,
       );
       setLoading(false);
     }
@@ -173,11 +176,12 @@ export default function LoginPage() {
       toast.success(t("success.register"), t("success.registerMessage"));
 
       // A migração será feita pelo hook useProfileSync que monitora a sessão
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error("Register error:", err);
+      const errorMessage = err instanceof Error ? err.message : t("errors.registerFailedDetails");
       toast.error(
         t("errors.registerError"),
-        err.message || t("errors.registerFailedDetails"),
+        errorMessage,
       );
       setLoading(false);
     }

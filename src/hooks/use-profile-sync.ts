@@ -1,7 +1,7 @@
 import {
-  createProfileFromOnboarding,
-  linkOnboardingToUser,
-  saveOnboarding,
+    createProfileFromOnboarding,
+    linkOnboardingToUser,
+    saveOnboarding,
 } from "@/actions/profile";
 import { useToast } from "@/hooks/use-toast-custom";
 import { useSession } from "@/lib/auth-client";
@@ -10,7 +10,7 @@ import { useEffect, useRef, useTransition } from "react";
 
 export function useProfileSync(
   userId?: string,
-  saveAction?: (userId: string, data: any) => Promise<any>,
+  saveAction?: (userId: string, data: unknown) => Promise<unknown>,
 ) {
   const { data: session } = useSession();
   const { reset } = useProfileStore();
@@ -44,15 +44,78 @@ export function useProfileSync(
 
     startTransition(async () => {
       try {
-        // Primeiro, tentar vincular onboarding pendente se existir
-        console.log("Tentando vincular onboarding para:", session.user.email);
+        console.log("=== useProfileSync: Iniciando sincronização ===");
+        console.log("User ID:", userId);
+        console.log("Email:", session.user.email);
+
+        // Verificar dados do store PRIMEIRO
+        const storeState = useProfileStore.getState();
+        console.log("Store state:", {
+          completed: storeState.completed,
+          hasRole: !!storeState.data.role,
+          hasEmail: !!storeState.data.email,
+          hasName: !!storeState.data.name,
+          email: storeState.data.email,
+        });
+
+        // Se tem dados completos no store, salvar primeiro
+        if (
+          storeState.completed &&
+          storeState.data.role &&
+          storeState.data.email &&
+          storeState.data.name
+        ) {
+          console.log("Salvando dados do store no banco de dados...");
+          // Salvar onboarding vinculado ao user
+          const onboardingResult = await saveOnboarding(
+            storeState.data,
+            userId,
+          );
+
+          if (onboardingResult.success) {
+            console.log("Onboarding salvo com sucesso!");
+            // Criar profile se onboarding está completo
+            const profileResult = await createProfileFromOnboarding(userId);
+
+            if (profileResult.success) {
+              hasLinkedRef.current = true;
+              toast.success(
+                "Perfil Configurado!",
+                "As tuas preferências foram guardadas com sucesso.",
+              );
+              // Reset store after successful save
+              reset();
+              return; // Sucesso, não precisa tentar vincular pendente
+            } else {
+              console.error("Erro ao criar perfil:", profileResult.error);
+              toast.error(
+                "Erro ao Criar Perfil",
+                profileResult.error ||
+                  "Onboarding guardado, mas erro ao criar perfil.",
+              );
+            }
+          } else {
+            console.error("Erro ao salvar onboarding:", onboardingResult.error);
+            toast.error(
+              "Erro ao Guardar",
+              onboardingResult.error ||
+                "Não foi possível guardar as tuas preferências.",
+            );
+          }
+        }
+
+        // Se não tem dados no store, tentar vincular onboarding pendente
+        console.log(
+          "Tentando vincular onboarding pendente para:",
+          session.user.email,
+        );
         const linkResult = await linkOnboardingToUser(
           userId,
           session.user.email,
         );
 
         if (linkResult.success) {
-          console.log("Onboarding vinculado com sucesso!");
+          console.log("Onboarding pendente vinculado com sucesso!");
           hasLinkedRef.current = true;
           toast.success(
             "Onboarding recuperado!",
@@ -68,48 +131,7 @@ export function useProfileSync(
           );
         }
 
-        // Verificar dados do store apenas uma vez, sem depender de data/completed
-        const storeState = useProfileStore.getState();
-        if (
-          storeState.completed &&
-          storeState.data.role &&
-          storeState.data.email &&
-          storeState.data.name
-        ) {
-          console.log("Salvando dados do store...");
-          // Salvar onboarding vinculado ao user
-          const onboardingResult = await saveOnboarding(
-            storeState.data,
-            userId,
-          );
-
-          if (onboardingResult.success) {
-            // Criar profile se onboarding está completo
-            const profileResult = await createProfileFromOnboarding(userId);
-
-            if (profileResult.success) {
-              hasLinkedRef.current = true;
-              toast.success(
-                "Perfil Configurado!",
-                "As tuas preferências foram guardadas com sucesso.",
-              );
-              // Reset store after successful save
-              reset();
-            } else {
-              toast.error(
-                "Erro ao Criar Perfil",
-                profileResult.error ||
-                  "Onboarding guardado, mas erro ao criar perfil.",
-              );
-            }
-          } else {
-            toast.error(
-              "Erro ao Guardar",
-              onboardingResult.error ||
-                "Não foi possível guardar as tuas preferências.",
-            );
-          }
-        }
+        console.log("=== useProfileSync: Nenhuma ação necessária ===");
       } catch (error) {
         console.error("Error syncing profile:", error);
         toast.error("Erro", "Ocorreu um erro ao sincronizar os teus dados.");

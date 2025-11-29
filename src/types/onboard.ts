@@ -1,5 +1,5 @@
-import { LucideIcon } from "lucide-react";
 import { StaticImageData } from "next/image";
+import React from "react";
 
 export interface OnboardFormData {
   role: string;
@@ -37,5 +37,5 @@ export interface WaitlistApp {
 export interface Goal {
   id: string;
   label: string;
-  icon: LucideIcon;
+  icon: React.ElementType;
 }

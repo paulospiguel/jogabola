@@ -18,18 +18,20 @@ export default function ArenaLayout({
         <div className="h-full w-full bg-[radial-gradient(90%_90%_at_50%_0%,rgba(56,189,248,0.12)_0%,rgba(255,255,255,0)_72%)] dark:bg-[radial-gradient(90%_90%_at_50%_0%,rgba(0,255,213,0.22)_0%,rgba(5,3,18,0)_72%)]" />
       </div>
 
-      {/* Header fixo */}
-      <div className="fixed top-0 left-0 right-0 z-50">
+      {/* Sidebar (Fixed Full Height) */}
+      <ArenaSidebar
+        isOpen={isSidebarOpen}
+        onClose={() => setIsSidebarOpen(false)}
+      />
+
+      {/* Header fixo (Adjusted for Sidebar) */}
+      <div className="fixed top-0 left-0 right-0 z-40 md:left-[88px]">
         <ArenaHeader onMenuToggle={() => setIsSidebarOpen(!isSidebarOpen)} />
       </div>
 
       {/* Conteúdo com scroll */}
       <div className="relative z-10 flex pt-20">
-        <ArenaSidebar
-          isOpen={isSidebarOpen}
-          onClose={() => setIsSidebarOpen(false)}
-        />
-        <main className="relative z-10 min-h-[calc(100vh-5rem)] flex-1 pb-12 md:ml-72">
+        <main className="relative z-10 min-h-[calc(100vh-5rem)] flex-1 pb-12 md:ml-[88px]">
           {children}
         </main>
       </div>

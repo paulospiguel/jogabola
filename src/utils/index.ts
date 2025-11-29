@@ -80,7 +80,7 @@ const getUserLocale = async (): Promise<string> => {
         return fromCookie;
       }
     }
-  } catch (_) {
+  } catch {
     // no-op: fallback below
   }
 

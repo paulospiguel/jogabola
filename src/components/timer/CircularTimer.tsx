@@ -58,10 +58,10 @@ export const CircularTimer: React.FC<CircularTimerProps> = ({
         />
       </svg>
       <div className="absolute inset-0 flex flex-col items-center justify-center">
-        <span className="text-5xl font-bold text-white font-mono tracking-widest">
+        <span style={{ fontSize: "3rem" }} className="font-bold text-white font-mono tracking-widest">
           {formattedTime}
         </span>
-        <span className="text-slate-400 text-sm mt-2 font-medium uppercase tracking-wider">
+        <span style={{ fontSize: "1rem" }} className="text-slate-400 mt-2 font-medium uppercase tracking-wider">
           Elapsed
         </span>
       </div>

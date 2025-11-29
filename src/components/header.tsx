@@ -1,11 +1,11 @@
 "use client";
 import {
-    Sheet,
-    SheetClose,
-    SheetContent,
-    SheetFooter,
-    SheetTitle,
-    SheetTrigger,
+  Sheet,
+  SheetClose,
+  SheetContent,
+  SheetFooter,
+  SheetTitle,
+  SheetTrigger,
 } from "@/components/ui/sheet";
 import menuHome from "@/constants/menu-home";
 import { useHeaderButtons } from "@/hooks/use-header-buttons";
@@ -77,8 +77,6 @@ export default function Header() {
 
           <Navbar
             className="hidden md:flex"
-            isScrolled={isScrolled}
-            isHome={isHome}
           />
         </div>
 
@@ -104,7 +102,7 @@ export default function Header() {
                     className={cn(
                       "hidden rounded-full px-6 py-2 font-bold no-underline transition-all duration-300 hover:scale-105 md:visible md:block",
                       button.variant === "primary"
-                        ? "bg-gradient-to-r from-[#00cfb1] to-[#1effbf] text-[#21005a] shadow-lg shadow-[#00cfb1]/20 hover:shadow-[#00cfb1]/40"
+                        ? "bg-linear-to-r from-brand-green to-active-text text-[#21005a] shadow-lg shadow-brand-green/20 hover:shadow-brand-green/40"
                         : "border border-white/20 bg-white/5 text-white hover:bg-white/10 hover:border-white/40",
                     )}
                   >
@@ -121,7 +119,7 @@ export default function Header() {
                   className={cn(
                     "hidden rounded-full px-6 py-2 font-bold no-underline transition-all duration-300 hover:scale-105 md:visible md:block",
                     button.variant === "primary"
-                      ? "bg-gradient-to-r from-[#00cfb1] to-[#1effbf] text-[#21005a] shadow-lg shadow-[#00cfb1]/20 hover:shadow-[#00cfb1]/40"
+                      ? "bg-linear-to-r from-brand-green to-active-text text-[#21005a] shadow-lg shadow-brand-green/20 hover:shadow-brand-green/40"
                       : "border border-white/20 bg-white/5 text-white hover:bg-white/10 hover:border-white/40",
                   )}
                 >
@@ -151,7 +149,7 @@ export default function Header() {
             >
               {/* Header do Menu */}
               <div className="border-border-default flex items-center justify-between border-b pb-4">
-                <SheetTitle className="from-neon-secondary to-accent-blue bg-gradient-to-r bg-clip-text text-xl font-bold text-transparent">
+                <SheetTitle className="from-neon-secondary to-accent-blue bg-linear-to-r bg-clip-text text-xl font-bold text-transparent">
                   ⚽ Menu
                 </SheetTitle>
               </div>
@@ -160,8 +158,6 @@ export default function Header() {
               <div className="flex-1 overflow-y-auto py-6">
                 <Navbar
                   className="flex-col items-start space-y-3 text-base font-medium"
-                  isScrolled={true}
-                  isHome={isHome}
                   onItemClick={() => setIsMenuOpen(false)}
                 />
               </div>
@@ -179,7 +175,7 @@ export default function Header() {
                             className={cn(
                               "w-full rounded-full px-4 py-3 text-center text-sm font-bold no-underline transition-all duration-300 hover:scale-105",
                               button.variant === "primary"
-                                ? "bg-gradient-to-r from-[#00cfb1] to-[#1effbf] text-[#21005a] shadow-lg shadow-[#00cfb1]/20"
+                                ? "bg-linear-to-r from-brand-green to-active-text text-[#21005a] shadow-lg shadow-brand-green/20"
                                 : "border border-white/20 bg-white/5 text-white hover:bg-white/10",
                             )}
                           >
@@ -197,7 +193,7 @@ export default function Header() {
                           className={cn(
                             "w-full rounded-full px-4 py-3 text-sm font-bold transition-all duration-300 hover:scale-105",
                             button.variant === "primary"
-                              ? "bg-gradient-to-r from-[#00cfb1] to-[#1effbf] text-[#21005a] shadow-lg shadow-[#00cfb1]/20"
+                              ? "bg-linear-to-r from-brand-green to-active-text text-[#21005a] shadow-lg shadow-brand-green/20"
                               : "border border-white/20 bg-white/5 text-white hover:bg-white/10",
                           )}
                         >
@@ -224,13 +220,9 @@ export default function Header() {
 
 const Navbar = ({
   className,
-  isScrolled,
-  isHome,
   onItemClick,
 }: {
   className?: string;
-  isScrolled?: boolean;
-  isHome?: boolean;
   onItemClick?: () => void;
 }) => {
   const t = useTranslations();

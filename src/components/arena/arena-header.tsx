@@ -5,16 +5,15 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
-    DropdownMenu,
-    DropdownMenuContent,
-    DropdownMenuItem,
-    DropdownMenuLabel,
-    DropdownMenuSeparator,
-    DropdownMenuTrigger,
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Input } from "@/components/ui/input";
 import { signOut } from "@/lib/auth-client";
-import { Bell, Home, Menu, Search, User } from "lucide-react";
+import { Bell, Home, Menu, User } from "lucide-react";
 import { useTranslations } from "next-intl";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -62,18 +61,6 @@ export default function ArenaHeader({ onMenuToggle }: ArenaHeaderProps) {
         >
           <Logo size="small" />
         </Link>
-
-        {/* Search Bar */}
-        <div className="hidden max-w-md flex-1 sm:flex">
-          <div className="relative w-full">
-            <Search className="absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-neon-primary" aria-hidden="true" />
-            <Input
-              type="search"
-              placeholder={t("search") || "Buscar partidas, times..."}
-              className="w-full rounded-full border border-border-default bg-overlay-light pl-10 text-text-primary placeholder:text-text-muted focus:border-border-focus focus:ring-border-focus"
-            />
-          </div>
-        </div>
 
         {/* Right Side Actions */}
         <div className="ml-auto flex items-center gap-3">

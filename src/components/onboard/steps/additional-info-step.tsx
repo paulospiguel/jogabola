@@ -7,8 +7,8 @@ import { motion } from "framer-motion";
 
 interface AdditionalInfoStepProps {
   roleQuestions?: RoleQuestions;
-  getCustomFieldValue: (fieldId: string) => any;
-  updateCustomField: (fieldId: string, value: any) => void;
+  getCustomFieldValue: (fieldId: string) => string | string[] | number | boolean | null;
+  updateCustomField: (fieldId: string, value: string | string[] | number | boolean | null) => void;
 }
 
 export function AdditionalInfoStep({

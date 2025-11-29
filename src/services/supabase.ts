@@ -4,7 +4,7 @@
 export const supabase = {
   from: (table: string) => ({
     select: (columns: string) => ({
-      eq: (column: string, value: any) => ({
+      eq: (column: string, value: unknown) => ({
         maybeSingle: async () => {
           // Placeholder implementation
           console.warn(`Supabase query not implemented: ${table}.${columns} where ${column} = ${value}`);
@@ -13,5 +13,5 @@ export const supabase = {
       }),
     }),
   }),
-} as any;
+} as unknown;
 

@@ -15,8 +15,12 @@ import { cn } from "@/utils";
 import { Loader2, LocateFixed, MapPin, Search, Settings } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { DateRange } from "react-day-picker";
 import { EventFiltersModal } from "./event-filters-modal";
+
+type DateRange = {
+  from: Date | undefined;
+  to?: Date | undefined;
+};
 
 interface SearchFilters {
   location?: string;
@@ -176,19 +180,21 @@ export function EventSearch({
         "Localização obtida",
         "Sua localização atual foi definida com sucesso.",
       );
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error("Erro ao obter localização:", error);
-      if (error.code === 1) {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const geoError = error as any; // GeolocationPositionError might not be globally available or has different shape
+      if (geoError.code === 1) {
         toast.error(
           "Permissão negada",
           "Por favor, permita o acesso à localização nas configurações do navegador.",
         );
-      } else if (error.code === 2) {
+      } else if (geoError.code === 2) {
         toast.error(
           "Localização não disponível",
           "Verifique se o GPS está ativado.",
         );
-      } else if (error.code === 3) {
+      } else if (geoError.code === 3) {
         toast.error(
           "Tempo esgotado",
           "Tente novamente para obter sua localização.",

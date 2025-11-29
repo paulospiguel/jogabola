@@ -65,12 +65,6 @@ export const useProfileStore = create<ProfileState>()(
 
       setCompleted: (completed: boolean) => {
         set({ completed });
-        // Limpar após completar (com delay para permitir migração)
-        if (completed) {
-          setTimeout(() => {
-            get().reset();
-          }, 3000);
-        }
       },
 
       reset: () => {

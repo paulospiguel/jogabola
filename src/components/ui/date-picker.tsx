@@ -143,7 +143,7 @@ export function DatePicker({
               hidden: "invisible",
             }}
             components={{
-              DayButton: ({ className, children, ...props }: any) => {
+              DayButton: ({ className, children, ...props }: React.ComponentProps<typeof Button>) => {
                 return (
                   <Button
                     variant="ghost"

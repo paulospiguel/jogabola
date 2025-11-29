@@ -2,15 +2,15 @@
 
 import { motion } from "framer-motion";
 import {
-  BarChart3,
-  Globe,
-  Heart,
-  Shield,
-  Smartphone,
-  Star,
-  Target,
-  Trophy,
-  Users,
+    BarChart3,
+    Globe,
+    Heart,
+    Shield,
+    Smartphone,
+    Star,
+    Target,
+    Trophy,
+    Users,
 } from "lucide-react";
 import { useTranslations } from "next-intl";
 
@@ -126,7 +126,7 @@ const FeatureCard = ({
   description,
   delay,
 }: {
-  icon: any;
+  icon: React.ElementType;
   title: string;
   description: string;
   delay: number;

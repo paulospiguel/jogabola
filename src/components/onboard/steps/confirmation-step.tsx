@@ -1,19 +1,19 @@
 "use client";
 
 import { OnboardStepHeader } from "@/components/onboard-step-header";
+import { translateFieldValue } from "@/constants/field-translations";
 import { JOURNEY_OPTIONS } from "@/constants/onboard";
 import type { RoleQuestions } from "@/constants/onboarding-questions";
 import {
   getPositionConfig,
   getPositionLabel,
 } from "@/constants/positions";
-import { translateFieldValue } from "@/constants/field-translations";
-import { CheckCircle } from "lucide-react";
-import Image from "next/image";
-import { motion } from "framer-motion";
+import { countries } from "country-data-list";
 import { format } from "date-fns";
 import { pt } from "date-fns/locale";
-import { countries } from "country-data-list";
+import { motion } from "framer-motion";
+import { CheckCircle } from "lucide-react";
+import Image from "next/image";
 
 interface ConfirmationStepProps {
   name: string;
@@ -28,7 +28,7 @@ interface ConfirmationStepProps {
   experience?: string;
   goals: string[];
   roleQuestions?: RoleQuestions;
-  getCustomFieldValue: (fieldId: string) => any;
+  getCustomFieldValue: (fieldId: string) => string | string[] | number | boolean | null;
 }
 
 // Mapeamento de nomes em inglês para português (principais países)
@@ -271,7 +271,7 @@ export function ConfirmationStep({
                   }
 
                   // Traduzir o valor se necessário
-                  const translatedValue = translateFieldValue(question.id, value);
+                  const translatedValue = translateFieldValue(question.id, String(value));
 
                   return (
                     <div key={question.id}>
@@ -339,7 +339,7 @@ export function ConfirmationStep({
                     return null;
 
                   // Traduzir o valor se necessário
-                  const translatedValue = translateFieldValue(question.id, value);
+                  const translatedValue = translateFieldValue(question.id, String(value));
 
                   return (
                     <div key={question.id}>

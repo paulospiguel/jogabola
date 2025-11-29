@@ -1,5 +1,6 @@
 import { signIn, signOut } from "@/lib/auth-client";
 import { LogIn, LogOut } from "lucide-react";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 import React from "react";
 
@@ -47,9 +48,11 @@ export const AuthButton: React.FC<AuthButtonProps> = ({ user }) => {
     return (
       <div className="flex items-center gap-2 rounded-full border border-slate-700 bg-slate-800 py-1 pr-3 pl-1">
         {user.image ? (
-          <img
+          <Image
             src={user.image}
             alt={user.name || "User"}
+            width={24}
+            height={24}
             className="h-6 w-6 rounded-full"
           />
         ) : (

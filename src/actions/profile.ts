@@ -3,7 +3,11 @@
 import { getPositionLabel } from "@/constants/positions";
 import { onboarding, profile } from "@/drizzle/schema";
 import { db } from "@/lib/db";
-import { createSlugFromNickname, onboardingSchema, type OnboardingData } from "@/schemas/profile";
+import {
+  createSlugFromNickname,
+  onboardingSchema,
+  type OnboardingData,
+} from "@/schemas/profile";
 import { and, eq, isNotNull, isNull } from "drizzle-orm";
 import { z } from "zod";
 
@@ -13,7 +17,18 @@ export async function saveOnboarding(
   userId?: string,
 ) {
   try {
+    console.log("=== saveOnboarding ===");
+    console.log("User ID:", userId || "null (pendente)");
+    console.log("Email:", data.email);
+    console.log("Nome:", data.name);
+    console.log("Role:", data.role);
+
     if (!data.email || !data.name || !data.role) {
+      console.error("Dados obrigatórios faltando:", {
+        email: data.email,
+        name: data.name,
+        role: data.role,
+      });
       return {
         success: false,
         error: "Email, nome e role são obrigatórios",
@@ -27,7 +42,7 @@ export async function saveOnboarding(
       const updateSchema = onboardingSchema.omit({ goals: true }).merge(
         z.object({
           goals: z.array(z.string()).min(0).default([]),
-        })
+        }),
       );
       validatedData = updateSchema.parse({
         ...data,
@@ -42,9 +57,12 @@ export async function saveOnboarding(
     let nicknameSlug: string | null = null;
     if (validatedData.nickname && validatedData.nickname.trim()) {
       nicknameSlug = createSlugFromNickname(validatedData.nickname);
-      
+
       // Verificar disponibilidade do nickname
-      const nicknameCheck = await checkNicknameAvailability(validatedData.nickname, userId);
+      const nicknameCheck = await checkNicknameAvailability(
+        validatedData.nickname,
+        userId,
+      );
       if (!nicknameCheck.success || !nicknameCheck.available) {
         return {
           success: false,
@@ -77,14 +95,27 @@ export async function saveOnboarding(
       updatedAt: new Date(),
     };
 
+    console.log(
+      "Buscando onboarding pendente existente para:",
+      validatedData.email,
+    );
     // Buscar onboarding existente pendente (user_id NULL) pelo email
     const existingPending = await db
       .select()
       .from(onboarding)
-      .where(and(eq(onboarding.email, validatedData.email), isNull(onboarding.userId)))
+      .where(
+        and(
+          eq(onboarding.email, validatedData.email),
+          isNull(onboarding.userId),
+        ),
+      )
       .limit(1);
 
     if (existingPending.length > 0) {
+      console.log(
+        "Atualizando onboarding pendente existente, ID:",
+        existingPending[0].id,
+      );
       // Atualizar onboarding pendente existente
       const [updated] = await db
         .update(onboarding)
@@ -95,11 +126,16 @@ export async function saveOnboarding(
         .where(eq(onboarding.id, existingPending[0].id))
         .returning();
 
+      console.log("Onboarding atualizado com sucesso!");
       return { success: true, data: updated };
     }
 
     // Se tem userId, verificar se já existe onboarding vinculado
     if (userId) {
+      console.log(
+        "Verificando onboarding vinculado existente para userId:",
+        userId,
+      );
       const existingLinked = await db
         .select()
         .from(onboarding)
@@ -107,6 +143,10 @@ export async function saveOnboarding(
         .limit(1);
 
       if (existingLinked.length > 0) {
+        console.log(
+          "Atualizando onboarding vinculado existente, ID:",
+          existingLinked[0].id,
+        );
         // Atualizar onboarding vinculado existente
         const [updated] = await db
           .update(onboarding)
@@ -114,16 +154,19 @@ export async function saveOnboarding(
           .where(eq(onboarding.id, existingLinked[0].id))
           .returning();
 
+        console.log("Onboarding vinculado atualizado com sucesso!");
         return { success: true, data: updated };
       }
     }
 
+    console.log("Criando novo onboarding...");
     // Criar novo onboarding
     const [created] = await db
       .insert(onboarding)
       .values(onboardingData)
       .returning();
 
+    console.log("Novo onboarding criado com sucesso! ID:", created.id);
     return { success: true, data: created };
   } catch (error) {
     console.error("Error saving onboarding:", error);
@@ -218,7 +261,7 @@ export async function saveProfileData(
 ) {
   // Primeiro salvar onboarding vinculado ao user
   const onboardingResult = await saveOnboarding(data, userId);
-  
+
   if (!onboardingResult.success) {
     return onboardingResult;
   }
@@ -268,7 +311,10 @@ interface CompetitionStats {
 }
 
 // Buscar dados de performance do jogador
-export async function getPlayerPerformance(userId: string, competitionId?: string) {
+export async function getPlayerPerformance(
+  userId: string,
+  competitionId?: string,
+) {
   try {
     const [profileData] = await db
       .select()
@@ -285,15 +331,18 @@ export async function getPlayerPerformance(userId: string, competitionId?: strin
 
     // Buscar estatísticas de performance dos customFields
     // Estrutura: { competitions: { [competitionId]: { stats... } } }
-    const performanceData = profileData.customFields?.performance as {
-      competitions?: Record<string, CompetitionStats>;
-    } || {};
+    const performanceData =
+      (profileData.customFields?.performance as {
+        competitions?: Record<string, CompetitionStats>;
+      }) || {};
 
     const competitions = performanceData.competitions || {};
     const competitionIds = Object.keys(competitions);
 
     // Função para normalizar valores para o radar (0-10)
-    const normalizeStats = (stats: Partial<CompetitionStats>): CompetitionStats => {
+    const normalizeStats = (
+      stats: Partial<CompetitionStats>,
+    ): CompetitionStats => {
       const maxValue = 10;
       return {
         started: Math.min((stats.started || 0) / 10, maxValue),
@@ -331,17 +380,38 @@ export async function getPlayerPerformance(userId: string, competitionId?: strin
         selectedLeague = "Geral";
       } else {
         // Normalizar cada competição primeiro, depois calcular média
-        const normalizedStats = competitionIds.map(id => normalizeStats(competitions[id]));
+        const normalizedStats = competitionIds.map(id =>
+          normalizeStats(competitions[id]),
+        );
         selectedStats = {
-          started: normalizedStats.reduce((sum, s) => sum + s.started, 0) / normalizedStats.length,
-          goals: normalizedStats.reduce((sum, s) => sum + s.goals, 0) / normalizedStats.length,
-          yellowCards: normalizedStats.reduce((sum, s) => sum + s.yellowCards, 0) / normalizedStats.length,
-          ended: normalizedStats.reduce((sum, s) => sum + s.ended, 0) / normalizedStats.length,
-          aboutToStart: normalizedStats.reduce((sum, s) => sum + s.aboutToStart, 0) / normalizedStats.length,
-          halftimeScore: normalizedStats.reduce((sum, s) => sum + s.halftimeScore, 0) / normalizedStats.length,
-          redCards: normalizedStats.reduce((sum, s) => sum + s.redCards, 0) / normalizedStats.length,
-          minutesPlayed: normalizedStats.reduce((sum, s) => sum + s.minutesPlayed, 0),
-          averageRating: normalizedStats.reduce((sum, s) => sum + s.averageRating, 0) / normalizedStats.length,
+          started:
+            normalizedStats.reduce((sum, s) => sum + s.started, 0) /
+            normalizedStats.length,
+          goals:
+            normalizedStats.reduce((sum, s) => sum + s.goals, 0) /
+            normalizedStats.length,
+          yellowCards:
+            normalizedStats.reduce((sum, s) => sum + s.yellowCards, 0) /
+            normalizedStats.length,
+          ended:
+            normalizedStats.reduce((sum, s) => sum + s.ended, 0) /
+            normalizedStats.length,
+          aboutToStart:
+            normalizedStats.reduce((sum, s) => sum + s.aboutToStart, 0) /
+            normalizedStats.length,
+          halftimeScore:
+            normalizedStats.reduce((sum, s) => sum + s.halftimeScore, 0) /
+            normalizedStats.length,
+          redCards:
+            normalizedStats.reduce((sum, s) => sum + s.redCards, 0) /
+            normalizedStats.length,
+          minutesPlayed: normalizedStats.reduce(
+            (sum, s) => sum + s.minutesPlayed,
+            0,
+          ),
+          averageRating:
+            normalizedStats.reduce((sum, s) => sum + s.averageRating, 0) /
+            normalizedStats.length,
         };
         selectedLeague = "Geral (Média)";
       }
@@ -454,6 +524,10 @@ export async function getPendingOnboarding(email: string) {
 // Vincular onboarding pendente a um usuário quando fizer login/registro
 export async function linkOnboardingToUser(userId: string, email: string) {
   try {
+    console.log("=== linkOnboardingToUser ===");
+    console.log("Buscando onboarding pendente para:", email);
+    console.log("User ID:", userId);
+
     // Buscar onboarding pendente pelo email
     const [pendingOnboarding] = await db
       .select()
@@ -461,13 +535,51 @@ export async function linkOnboardingToUser(userId: string, email: string) {
       .where(and(eq(onboarding.email, email), isNull(onboarding.userId)))
       .limit(1);
 
+    console.log(
+      "Resultado da busca:",
+      pendingOnboarding ? "Encontrado" : "Não encontrado",
+    );
+
+    if (pendingOnboarding) {
+      console.log("Onboarding pendente:", {
+        id: pendingOnboarding.id,
+        email: pendingOnboarding.email,
+        name: pendingOnboarding.name,
+        role: pendingOnboarding.role,
+        completed: pendingOnboarding.completed,
+      });
+    }
+
     if (!pendingOnboarding) {
+      // Buscar TODOS os onboardings para este email (para debug)
+      const allOnboardings = await db
+        .select()
+        .from(onboarding)
+        .where(eq(onboarding.email, email));
+
+      console.log(
+        `Total de onboardings encontrados para ${email}:`,
+        allOnboardings.length,
+      );
+      if (allOnboardings.length > 0) {
+        console.log(
+          "Onboardings existentes:",
+          allOnboardings.map(o => ({
+            id: o.id,
+            userId: o.userId,
+            email: o.email,
+            completed: o.completed,
+          })),
+        );
+      }
+
       return {
         success: false,
         error: "Onboarding pendente não encontrado para este email",
       };
     }
 
+    console.log("Vinculando onboarding ao usuário...");
     // Vincular ao user
     const [updated] = await db
       .update(onboarding)
@@ -478,12 +590,17 @@ export async function linkOnboardingToUser(userId: string, email: string) {
       .where(eq(onboarding.id, pendingOnboarding.id))
       .returning();
 
+    console.log("Onboarding vinculado com sucesso!");
+
     // Se onboarding está completo, criar profile
     if (updated.completed) {
+      console.log("Criando profile a partir do onboarding...");
       const profileResult = await createProfileFromOnboarding(userId);
       if (!profileResult.success) {
+        console.error("Erro ao criar profile:", profileResult.error);
         return profileResult;
       }
+      console.log("Profile criado com sucesso!");
     }
 
     return { success: true, data: updated };
@@ -515,10 +632,17 @@ export async function migratePendingOnboardingToProfile(
 }
 
 // Verificar se nickname já existe (verifica em profile e onboarding)
-export async function checkNicknameAvailability(nickname: string, excludeUserId?: string) {
+export async function checkNicknameAvailability(
+  nickname: string,
+  excludeUserId?: string,
+) {
   try {
     if (!nickname || nickname.trim().length < 3) {
-      return { success: false, available: false, error: "Nickname muito curto" };
+      return {
+        success: false,
+        available: false,
+        error: "Nickname muito curto",
+      };
     }
 
     // Criar slug do nickname
@@ -543,7 +667,9 @@ export async function checkNicknameAvailability(nickname: string, excludeUserId?
     const onboardings = await db
       .select()
       .from(onboarding)
-      .where(and(eq(onboarding.nickname, slug), isNotNull(onboarding.nickname)));
+      .where(
+        and(eq(onboarding.nickname, slug), isNotNull(onboarding.nickname)),
+      );
 
     // Se há userId para excluir, filtrar
     const filteredOnboardings = excludeUserId

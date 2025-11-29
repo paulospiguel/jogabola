@@ -1,20 +1,20 @@
 "use client";
 
 import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogFooter,
+    DialogHeader,
+    DialogTitle,
+    DialogTrigger,
 } from "@/components/ui/dialog";
 import {
-  type ComponentProps,
-  forwardRef,
-  useImperativeHandle,
-  useRef,
-  useState,
+    type ComponentProps,
+    forwardRef,
+    useImperativeHandle,
+    useRef,
+    useState,
 } from "react";
 
 const widthSize = {
@@ -53,7 +53,7 @@ export const Modal = forwardRef<ModalRef, ModalProps>(
     ref,
   ) => {
     const [isOpen, setIsOpen] = useState(false);
-    const modalRef = useRef<any>(null);
+    const modalRef = useRef<HTMLDivElement>(null);
 
     useImperativeHandle(ref, () => ({
       open: () => setIsOpen(true),

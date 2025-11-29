@@ -1,19 +1,19 @@
 "use client";
 
+import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
+import {
+    Award,
+    CheckCircle,
+    Globe,
+    Heart,
+    Sparkles,
+    TrendingUp,
+    Users,
+    Zap,
+} from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useState } from "react";
-import {
-  CheckCircle,
-  Sparkles,
-  Users,
-  Globe,
-  TrendingUp,
-  Award,
-  Heart,
-  Zap,
-} from "lucide-react";
-import { cn } from "@/lib/utils";
 
 interface FormData {
   companyName: string;
@@ -62,7 +62,7 @@ const BenefitCard = ({
   description,
   index,
 }: {
-  icon: any;
+  icon: React.ElementType;
   title: string;
   description: string;
   index: number;

@@ -45,7 +45,7 @@ export const PlayerStatsChart: React.FC<PlayerStatsChartProps> = ({
     >
       <svg width={size} height={size} className="overflow-visible">
         {/* Grid Background */}
-        {levels.map((level, lvlIndex) => (
+        {levels.map((level, _) => (
           <polygon
             key={level}
             points={labels

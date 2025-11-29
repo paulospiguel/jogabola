@@ -13,19 +13,13 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { getPositionConfig } from "@/constants/positions";
 import { signOut, useSession } from "@/lib/auth-client";
 import { Experience } from "@/schemas/profile";
 import {
   Bell,
   Home,
-  LucideIcon,
-  Medal,
   Menu,
-  Sparkles,
-  Trophy,
-  User,
-  Zap,
+  User
 } from "lucide-react";
 import { useTranslations } from "next-intl";
 import Link from "next/link";
@@ -94,15 +88,7 @@ export default function PlayZoneHeader({ onMenuToggle }: PlayZoneHeaderProps) {
     return labels[experience as Experience];
   };
 
-  const getExperienceIcon = (experience: Experience) => {
-    const icons: Record<Experience, LucideIcon> = {
-      beginner: Sparkles,
-      intermediate: Zap,
-      advanced: Trophy,
-      professional: Medal,
-    };
-    return icons[experience as Experience] || Zap;
-  };
+
 
   const getInitials = (name: string) => {
     return name
@@ -113,12 +99,10 @@ export default function PlayZoneHeader({ onMenuToggle }: PlayZoneHeaderProps) {
       .slice(0, 2);
   };
 
-  const positionConfig = userProfile?.position
-    ? getPositionConfig(userProfile.position)
-    : null;
+
 
   return (
-    <header className="w-full border-b border-white/10 bg-[#050312]/95 text-white shadow-[0_20px_45px_-30px_rgba(0,255,213,0.3)] backdrop-blur-xl transition-colors">
+    <header className="w-full border-b border-white/10 bg-toast-bg/95 text-white shadow-[0_20px_45px_-30px_rgba(0,255,213,0.3)] backdrop-blur-xl transition-colors">
       <div className="mx-auto flex h-20 max-w-7xl items-center gap-4 px-4 md:px-8">
         {/* Menu Toggle Button */}
         <Button

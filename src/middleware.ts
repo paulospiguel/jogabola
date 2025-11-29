@@ -1,7 +1,7 @@
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 
-export default function middleware(request: NextRequest) {
+export default function middleware(_request: NextRequest) {
   // Allow all requests to pass through
   // Better Auth handles authentication on its own
   return NextResponse.next();

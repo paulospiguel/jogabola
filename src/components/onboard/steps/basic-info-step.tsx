@@ -19,7 +19,6 @@ interface BasicInfoStepProps {
   nationality?: string;
   country?: string;
   city?: string;
-  location?: string;
   autoFilledFields: {
     name?: boolean;
     email?: boolean;
@@ -31,7 +30,6 @@ interface BasicInfoStepProps {
   onNationalityChange: (value: string) => void;
   onCountryChange: (value: string) => void;
   onCityChange: (value: string) => void;
-  onLocationChange?: (value: string) => void;
 }
 
 export function BasicInfoStep({
@@ -42,7 +40,6 @@ export function BasicInfoStep({
   nationality = "",
   country = "",
   city = "",
-  location = "",
   autoFilledFields,
   onNameChange,
   onEmailChange,
@@ -51,7 +48,6 @@ export function BasicInfoStep({
   onNationalityChange,
   onCountryChange,
   onCityChange,
-  onLocationChange,
 }: BasicInfoStepProps) {
   const [nicknameValue, setNicknameValue] = useState(nickname);
   const [isCheckingNickname, setIsCheckingNickname] = useState(false);

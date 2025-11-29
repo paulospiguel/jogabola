@@ -1,4 +1,4 @@
-import { GraduationCap, Handshake, TypeIcon } from "lucide-react";
+import { GraduationCap, Handshake, Timer, TypeIcon } from "lucide-react";
 
 const menuHome = {
   header: [
@@ -29,10 +29,9 @@ const menuHome = {
       icon: GraduationCap,
     },
     {
-      label: "menu.howItWorks",
-      href: "/how-it-works",
-      isNew: false,
-      icon: null,
+      label: "menu.timer",
+      href: "/timer",
+      icon: Timer,
     },
   ],
   footer: [

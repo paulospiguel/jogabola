@@ -8,13 +8,13 @@ import { cn } from "@/utils";
 const Tabs = React.forwardRef<
 	React.ElementRef<typeof TabsPrimitive.Root>,
 	React.ComponentPropsWithoutRef<typeof TabsPrimitive.Root> & { httpState?: boolean }
->(({ httpState, ...props }, ref) => {
+>(({ ...props }, ref) => {
 	
 	const handleOnValueChange = (value: string) => {
 		window.location.hash = value;
 	}
 
-	if (!!window && window.location.hash.includes("#")){
+	if (typeof window !== "undefined" && window.location.hash.includes("#")){
 		props.defaultValue = window.location.hash.replace("#", "");
 	}
 
@@ -70,4 +70,5 @@ const TabsContent = React.forwardRef<
 ));
 TabsContent.displayName = TabsPrimitive.Content.displayName;
 
-export { Tabs, TabsList, TabsTrigger, TabsContent };
+export { Tabs, TabsContent, TabsList, TabsTrigger };
+

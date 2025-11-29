@@ -1,5 +1,5 @@
-import { useToast } from "@/hooks/use-toast-custom";
 import type { RoleQuestions } from "@/constants/onboarding-questions";
+import { useToast } from "@/hooks/use-toast-custom";
 import { step1Schema, step3Schema } from "@/schemas/profile";
 
 interface UseOnboardValidationProps {
@@ -12,7 +12,7 @@ interface UseOnboardValidationProps {
     goals?: string[];
   };
   roleQuestions?: RoleQuestions;
-  getCustomFieldValue: (fieldId: string) => any;
+  getCustomFieldValue: (fieldId: string) => string | string[] | number | boolean | null;
 }
 
 export function useOnboardValidation({
@@ -130,9 +130,9 @@ export function useOnboardValidation({
         default:
           return true;
       }
-    } catch (error: any) {
+    } catch (error: unknown) {
       const errorMessage =
-        error?.errors?.[0]?.message || "Erro de validação";
+        (error as { errors?: { message: string }[] })?.errors?.[0]?.message || "Erro de validação";
       toast.error("Erro de Validação", errorMessage);
       return false;
     }

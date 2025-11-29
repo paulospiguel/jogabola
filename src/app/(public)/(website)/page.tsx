@@ -55,7 +55,7 @@ const HeroSection = () => {
               {/* Title - Texto escuro, sem gradiente */}
               <h1 className="text-4xl leading-tight font-bold text-gray-900 md:text-5xl lg:text-6xl dark:text-white">
                 {t("title")}{" "}
-                <span className="text-gray-900 dark:text-emerald-300">
+                <span className="text-gray-900 text-3xl dark:text-emerald-300">
                   {t("titleHighlight")}
                 </span>
               </h1>

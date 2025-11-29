@@ -279,16 +279,7 @@
     font-family: var(--font-dyslexia-friendly, var(--font-body));
     line-height: var(--line-height-comfortable, 1.75);
     letter-spacing: var(--letter-spacing-comfortable, 0.02em);
-  }
-
-  /* Minimum text sizes for readability */
-  p,
-  span,
-  div,
-  a,
-  button,
-  label {
-    font-size: clamp(0.875rem, 0.8rem + 0.2vw, 1rem);
+    /* Base font size - can be overridden by Tailwind text-* classes */
   }
 
   /* Improved focus styles */

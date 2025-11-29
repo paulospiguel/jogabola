@@ -1,32 +1,32 @@
 import { generateBalancedTeams } from "@/services/geminiService";
 import {
-  AppSettings,
-  EventType,
-  GameEvent,
-  GameType,
-  Player,
-  PlayerStats,
-  Position,
+    AppSettings,
+    EventType,
+    GameEvent,
+    GameType,
+    Player,
+    PlayerStats,
+    Position,
 } from "@/types/timer";
 import {
-  Activity,
-  ArrowDownUp,
-  BarChart2,
-  ClipboardList,
-  Goal,
-  Hand,
-  Pencil,
-  RefreshCw,
-  Save,
-  Settings,
-  Shield,
-  Shirt,
-  Skull,
-  SlidersHorizontal,
-  Sparkles,
-  Trash2,
-  UserPlus,
-  X,
+    Activity,
+    ArrowDownUp,
+    BarChart2,
+    ClipboardList,
+    Goal,
+    Hand,
+    Pencil,
+    RefreshCw,
+    Save,
+    Settings,
+    Shield,
+    Shirt,
+    Skull,
+    SlidersHorizontal,
+    Sparkles,
+    Trash2,
+    UserPlus,
+    X,
 } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import { PlayerStatsChart } from "./PlayerStatsChart";
@@ -44,7 +44,7 @@ const generateStats = (pos: Position, skill: number): PlayerStats => {
   const base = 40 + skill * 10;
   const variance = () => Math.floor(Math.random() * 10) - 5; // +/- 5 randomness
 
-  let stats: PlayerStats = {
+  const stats: PlayerStats = {
     pace: base,
     shooting: base,
     passing: base,
@@ -285,7 +285,7 @@ export const TeamBuilder: React.FC<TeamBuilderProps> = ({
           return { ...p, team: null, isSubstitute: false };
         });
       });
-    } catch (error) {
+    } catch {
       alert("Failed to generate teams. Please try again.");
     } finally {
       setIsGenerating(false);

@@ -1,11 +1,11 @@
 "use client";
 
 import {
-  createProfileFromOnboarding,
-  getPendingOnboarding,
-  getProfileData,
-  linkOnboardingToUser,
-  saveOnboarding,
+    createProfileFromOnboarding,
+    getPendingOnboarding,
+    getProfileData,
+    linkOnboardingToUser,
+    saveOnboarding,
 } from "@/actions/profile";
 import { Logo } from "@/components/logo";
 import { OnboardNavigation } from "@/components/onboard-navigation";
@@ -69,7 +69,7 @@ export default function OnboardPage() {
   );
 
   // Update custom fields in form data
-  const updateCustomField = (fieldId: string, value: any) => {
+  const updateCustomField = (fieldId: string, value: unknown) => {
     const currentCustomFields = formData.customFields || {};
     updateData({
       customFields: {
@@ -433,7 +433,7 @@ export default function OnboardPage() {
     }
   };
 
-  const updateFormData = (field: string, value: any) => {
+  const updateFormData = (field: string, value: unknown) => {
     updateData({ [field]: value });
   };
 

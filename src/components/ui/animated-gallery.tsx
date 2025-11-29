@@ -2,8 +2,9 @@
 
 import { cn } from "@/lib/utils";
 import { ArrowLeft, ArrowRight } from "lucide-react";
-import { motion, AnimatePresence } from "motion/react";
+import { AnimatePresence, motion } from "motion/react";
 
+import Image from "next/image";
 import { useEffect, useState } from "react";
 import { Text } from "./Text";
 
@@ -90,7 +91,7 @@ export const AnimatedGallery = ({
                 }}
                 className="absolute inset-0 origin-bottom"
               >
-                <img
+                <Image
                   src={testimonial.src}
                   alt={testimonial.name}
                   width={view === "mobile" ? 630 : 500}

@@ -2,12 +2,12 @@
 
 import { FloatingOrb } from "@/components/floating-orb";
 import { Logo } from "@/components/logo";
-import { Loader2 } from "lucide-react";
 import { motion } from "framer-motion";
+import { Loader2 } from "lucide-react";
 
 export default function LoadingPage() {
   return (
-    <div className="relative min-h-screen overflow-hidden bg-gradient-to-br from-[#21005a] via-[#2b0071] to-[#21005a]">
+    <div className="relative min-h-screen overflow-hidden bg-gradient-to-br from-background-gradient-start via-background-gradient-mid to-background-gradient-end">
       {/* Background decorativo com floating orbs */}
       <div className="absolute inset-0 overflow-hidden">
         <FloatingOrb delay={0} size={200} position="top-20 left-10" />

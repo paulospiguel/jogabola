@@ -1,18 +1,18 @@
 "use client";
 
+import { forgotPassword } from "@/actions/auth";
 import { FloatingOrb } from "@/components/floating-orb";
 import { Logo } from "@/components/logo";
 import { Button } from "@/components/ui/button";
 import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
+    Form,
+    FormControl,
+    FormField,
+    FormItem,
+    FormLabel,
+    FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { forgotPassword } from "@/actions/auth";
 import { useToast } from "@/hooks/use-toast-custom";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { motion } from "framer-motion";
@@ -57,12 +57,12 @@ export default function ForgotPasswordPage() {
         "Email enviado!",
         "Verifica a tua caixa de entrada para recuperares a palavra-passe."
       );
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error("Forgot password error:", err);
+      const errorMessage = err instanceof Error ? err.message : "Não foi possível enviar o email de recuperação. Tenta novamente.";
       toast.error(
         "Erro ao enviar email",
-        err.message ||
-          "Não foi possível enviar o email de recuperação. Tenta novamente."
+        errorMessage
       );
     } finally {
       setLoading(false);

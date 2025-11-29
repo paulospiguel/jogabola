@@ -18,7 +18,6 @@ export function JourneyOptionCard({
   isSelected,
   isFocused = false,
   onSelect,
-  onToggleFocus,
   index,
 }: JourneyOptionCardProps) {
   const showExpanded = isSelected && isFocused;
@@ -141,7 +140,7 @@ export function JourneyOptionCard({
                   initial={{ scaleX: 0 }}
                   animate={{ scaleX: 1 }}
                   transition={{ duration: 0.5, delay: 0.1 }}
-                  className="h-px origin-left bg-gradient-to-r from-emerald-500/60 via-emerald-500/30 to-transparent"
+                  className="h-px origin-left bg-linear-to-r from-emerald-500/60 via-emerald-500/30 to-transparent"
                 />
 
                 {/* Características Section */}
@@ -228,7 +227,7 @@ export function JourneyOptionCard({
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          className="pointer-events-none absolute inset-0 rounded-2xl bg-gradient-to-br from-emerald-500/10 via-transparent to-transparent"
+          className="pointer-events-none absolute inset-0 rounded-2xl bg-linear-to-br from-emerald-500/10 via-transparent to-transparent"
         />
       )}
     </motion.div>

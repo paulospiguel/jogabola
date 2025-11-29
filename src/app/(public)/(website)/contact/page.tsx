@@ -1,27 +1,27 @@
 "use client";
 
-import { useForm } from "react-hook-form";
+import { sendEmail } from "@/actions/sendEmail";
+import Loading from "@/components/loading";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import {
+    Select,
+    SelectContent,
+    SelectGroup,
+    SelectItem,
+    SelectLabel,
+    SelectValue,
+} from "@/components/ui/select";
+import { Text } from "@/components/ui/Text";
+import { Textarea } from "@/components/ui/textarea";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
+import { SelectTrigger } from "@radix-ui/react-select";
+import { Send } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useState } from "react";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { Button } from "@/components/ui/button";
-import { Text } from "@/components/ui/Text";
-import Loading from "@/components/loading";
-import { Send } from "lucide-react";
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectLabel,
-  SelectValue,
-} from "@/components/ui/select";
-import { SelectTrigger } from "@radix-ui/react-select";
+import { useForm } from "react-hook-form";
 import { LuBook, LuBug, LuHand, LuMailQuestion } from "react-icons/lu";
-import { sendEmail } from "@/actions/sendEmail";
+import { z } from "zod";
 
 const subjects = [
   { value: "suggestion", label: "Suggestion", icon: LuBook },
@@ -82,9 +82,10 @@ export default function ContactPage() {
 
       setSuccess(true);
       reset();
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error("Erro ao enviar email:", err);
-      setError(err.message || t("contact.send_error"));
+      const errorMessage = err instanceof Error ? err.message : t("contact.send_error");
+      setError(errorMessage);
     } finally {
       setLoading(false);
     }

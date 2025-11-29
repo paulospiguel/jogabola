@@ -3,6 +3,7 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { cn } from "@/lib/utils";
 import { Flame, Globe } from "lucide-react";
+import Image from "next/image";
 
 interface JourneyCardAvatarProps {
   image?: string;
@@ -114,9 +115,11 @@ export function JourneyCardAvatar({
         {/* Flag Badge */}
         <div className="absolute top-3 right-3 z-20 flex h-5 w-5 items-center justify-center overflow-hidden rounded-full border border-white/20 bg-black/40 shadow-md">
           {countryCode ? (
-            <img
+            <Image
               src={`https://flagcdn.com/${countryCode?.toLowerCase()}.svg`}
               alt="Flag"
+              width={20}
+              height={20}
               className="h-full w-full object-cover"
             />
           ) : (
