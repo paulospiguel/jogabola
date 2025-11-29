@@ -15,7 +15,6 @@ import {
 import { signOut } from "@/lib/auth-client";
 import { Bell, Home, Menu, User } from "lucide-react";
 import { useTranslations } from "next-intl";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
@@ -54,13 +53,9 @@ export default function ArenaHeader({ onMenuToggle }: ArenaHeaderProps) {
         </Button>
 
         {/* Logo - Clicável para voltar à home */}
-        <Link 
-          href="/" 
-          className="flex items-center gap-2 transition-opacity hover:opacity-80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neon-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background-base rounded"
-          aria-label="Voltar para a página inicial"
-        >
+        <div className="flex items-center gap-2">
           <Logo size="small" />
-        </Link>
+        </div>
 
         {/* Right Side Actions */}
         <div className="ml-auto flex items-center gap-3">

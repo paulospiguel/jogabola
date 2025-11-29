@@ -22,7 +22,6 @@ import {
   User
 } from "lucide-react";
 import { useTranslations } from "next-intl";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
@@ -117,13 +116,9 @@ export default function PlayZoneHeader({ onMenuToggle }: PlayZoneHeaderProps) {
         </Button>
 
         {/* Logo - Clicável para voltar à home */}
-        <Link
-          href="/"
-          className="flex items-center gap-2 rounded transition-opacity hover:opacity-80 focus-visible:ring-2 focus-visible:ring-[#6fffe9] focus-visible:ring-offset-2 focus-visible:ring-offset-[#050312] focus-visible:outline-none"
-          aria-label="Voltar para a página inicial"
-        >
+        <div className="flex items-center gap-2">
           <Logo size="small" />
-        </Link>
+        </div>
 
         {/* Right Side Actions */}
         <div className="ml-auto flex items-center gap-3">

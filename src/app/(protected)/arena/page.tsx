@@ -4,6 +4,8 @@ import { CreateEventDialog } from "@/components/create-event-dialog";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { useEventsList } from "@/hooks/use-events";
+import { useSafeNavigation } from "@/hooks/use-safe-navigation";
 import { motion } from "framer-motion";
 import {
   Activity,
@@ -17,10 +19,12 @@ import {
   Users,
 } from "lucide-react";
 import { useTranslations } from "next-intl";
-import Link from "next/link";
 
 export default function ArenaPage() {
   const t = useTranslations("arena");
+  const { navigateWithJourneyCheck } = useSafeNavigation();
+
+  const upcomingEvents = useEventsList({ limit: 10, upcomingOnly: true });
 
   const stats = [
     {
@@ -46,54 +50,6 @@ export default function ArenaPage() {
       value: "68%",
       change: "+5%",
       icon: TrendingUp,
-    },
-  ];
-
-
-  const upcomingEvents = [
-    {
-      id: 1,
-      type: "jogo" as const,
-      emoji: "🏆",
-      title: "Jogo - Liga Regional",
-      date: "Sáb, 02 Nov",
-      time: "16:00",
-      location: "Estádio Municipal",
-      players: "10/11",
-      status: "confirmed" as const,
-    },
-    {
-      id: 2,
-      type: "treino" as const,
-      emoji: "🏋️",
-      title: "Treino Técnico",
-      date: "Dom, 03 Nov",
-      time: "09:00",
-      location: "Centro de Treinos",
-      players: "8/12",
-      status: "confirmed" as const,
-    },
-    {
-      id: 3,
-      type: "amistoso" as const,
-      emoji: "🤝",
-      title: "Amistoso Beneficente",
-      date: "Seg, 04 Nov",
-      time: "19:30",
-      location: "Arena Solidária",
-      players: "10/10",
-      status: "confirmed" as const,
-    },
-    {
-      id: 4,
-      type: "reuniao" as const,
-      emoji: "🗣️",
-      title: "Reunião de Planeamento",
-      date: "Ter, 05 Nov",
-      time: "18:00",
-      location: "Sede do Clube",
-      players: "5/8",
-      status: "pending" as const,
     },
   ];
 
@@ -214,13 +170,13 @@ export default function ArenaPage() {
                     <Calendar className="h-5 w-5 text-emerald-500 dark:text-white" />
                   </div>
                   <span className="bg-linear-to-r from-emerald-500 to-sky-500 bg-clip-text font-bold text-transparent dark:from-neon-secondary dark:to-accent-blue">
-                    Próximos Eventos
+                    {t("events.title")}
                   </span>
                 </CardTitle>
               </CardHeader>
-              <CardContent className="pt-6">
+              <CardContent className="pt-6 space-y-4">
                 <div className="space-y-4">
-                  {upcomingEvents.map((event, index) => (
+                  {upcomingEvents?.map((event, index) => (
                     <motion.div
                       key={event.id}
                       variants={fadeUp}
@@ -273,6 +229,9 @@ export default function ArenaPage() {
                       </div>
                       <Button
                         size="sm"
+                        onClick={() =>
+                          navigateWithJourneyCheck(`events/${event.id}`)
+                        }
                         className="bg-emerald-500 font-semibold text-white shadow-[0_16px_45px_-20px_rgba(16,185,129,0.45)] transition-all duration-300 hover:-translate-y-0.5 hover:bg-emerald-600 dark:bg-neon-secondary dark:text-slate-900 dark:shadow-[0_16px_45px_-20px_rgba(36,255,230,0.9)] dark:hover:bg-neon-secondary/90"
                       >
                         <Play className="h-4 w-4" />
@@ -280,11 +239,12 @@ export default function ArenaPage() {
                     </motion.div>
                   ))}
                 </div>
-                <Link href="/arena/calendar" className="block w-full">
-                  <Button className="w-full bg-emerald-500 font-semibold text-white shadow-[0_16px_45px_-20px_rgba(16,185,129,0.45)] transition-all duration-300 hover:-translate-y-0.5 hover:bg-emerald-600 dark:bg-neon-secondary dark:text-slate-900 dark:shadow-[0_16px_45px_-20px_rgba(36,255,230,0.9)] dark:hover:bg-neon-secondary/90">
-                    Ver todos os eventos
-                  </Button>
-                </Link>
+                <Button
+                  onClick={() => navigateWithJourneyCheck("calendar")}
+                  className="w-full bg-emerald-500 font-semibold text-white shadow-[0_16px_45px_-20px_rgba(16,185,129,0.45)] transition-all duration-300 hover:-translate-y-0.5 hover:bg-emerald-600 dark:bg-neon-secondary dark:text-slate-900 dark:shadow-[0_16px_45px_-20px_rgba(36,255,230,0.9)] dark:hover:bg-neon-secondary/90"
+                >
+                  {t("events.viewAll")}
+                </Button>
               </CardContent>
             </MotionCard>
           </motion.section>

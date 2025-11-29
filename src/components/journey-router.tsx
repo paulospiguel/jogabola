@@ -1,5 +1,6 @@
 "use client";
 
+import { JOURNEY_ROUTES } from "@/constants/journey";
 import type { Role } from "@/schemas/profile";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
@@ -21,15 +22,9 @@ interface JourneyRouterProps {
  * - FAN -> /fan-zone (área de gestão do fã)
  * - ORGANIZER -> /organizer (área de gestão do organizador)
  */
-const JOURNEY_ROUTES: Record<Role, string> = {
-  PLAYER: "/playzone",
-  MANAGER: "/arena",
-  FAN: "/fan-zone",
-  ORGANIZER: "/organizer",
-};
 
 // Rotas comuns acessíveis por todos os roles
-const COMMON_ROUTES = ["/profile"];
+const COMMON_ROUTES = ["/profile", "/playzone/events"];
 
 export function JourneyRouter({
   role,

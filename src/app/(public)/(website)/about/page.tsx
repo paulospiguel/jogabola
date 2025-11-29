@@ -1,14 +1,14 @@
 "use client";
 
+import { BackgroundBeamsWithCollision } from "@/components/background-beams-with-collision";
+import { Text } from "@/components/ui/Text";
+import { infoBusiness } from "@/constants/info-business";
 import { motion } from "framer-motion";
 import { useTranslations } from "next-intl";
-import { infoBusiness } from "@/constants/infoBusiness";
-import { Text } from "@/components/ui/Text";
-import { LuCalendarClock, LuMail } from "react-icons/lu";
-import { FaInstagram, FaLinkedin, FaYoutube } from "react-icons/fa";
 import Image from "next/image";
+import { FaInstagram, FaLinkedin, FaYoutube } from "react-icons/fa";
+import { LuCalendarClock, LuMail } from "react-icons/lu";
 import Beam from "./beam";
-import { BackgroundBeamsWithCollision } from "@/components/background-beams-with-collision";
 
 export default function SobrePage() {
   const t = useTranslations();

@@ -77,10 +77,11 @@ When writing or reviewing code, ensure:
 4. **React/Next.js Best Practices:**
    - Use functional components with hooks
    - Prefer `const` arrow functions over `function` declarations for components
+   - **ALWAYS use TanStack React Query (`useQuery`, `useMutation`) for API calls - NEVER use `useEffect` for data fetching**
    - Minimize `useEffect` usage; favor derived state and memoization
-   - Use TanStack React Query for data fetching
-   - Implement proper loading and error states
-   - Use Next.js App Router conventions
+   - Use Next.js App Router conventions (Server Components, Server Actions)
+   - Leverage React 19+ features: Server Components, Actions, Suspense boundaries
+   - Use Next.js 15+ features: Partial Prerendering, React Compiler optimizations
 
 5. **Styling and UI:**
    - Use Tailwind CSS classes exclusively; avoid inline styles
@@ -207,19 +208,157 @@ export const useUserStore = create<UserStore>(set => ({
 
 ### Data Fetching Pattern
 
-```tsx
-// Use TanStack React Query
-import { useQuery } from "@tanstack/react-query";
+**CRITICAL**: Always use TanStack React Query for data fetching. NEVER use `useEffect` for API calls.
 
-export function useUserData(userId: string) {
+**Priority Order:**
+1. **Use existing custom hooks** (e.g., `useEvent`, `useEvents`) - These encapsulate `useQuery` logic
+2. **Create custom hooks** if the data fetching pattern will be reused
+3. **Use `useQuery` directly** only if it's a one-off query that won't be reused
+
+```tsx
+// ✅ BEST - Use existing custom hook (if available)
+import { useEvent } from "@/hooks/use-events";
+
+export function EventDetailsPage({ eventId }: { eventId: number }) {
+  const { event, isLoading, error } = useEvent(eventId);
+  
+  if (isLoading) return <div>Loading...</div>;
+  if (error) return <div>Error: {error.message}</div>;
+  
+  return <div>{event?.title}</div>;
+}
+
+// ✅ GOOD - Create custom hook for reusable data fetching
+import { useQuery } from "@tanstack/react-query";
+import { getEvent } from "@/actions/events";
+
+export function useEventData(eventId: number | null) {
   return useQuery({
-    queryKey: ["user", userId],
+    queryKey: ["event", eventId],
     queryFn: async () => {
-      const response = await fetch(`/api/users/${userId}`);
-      if (!response.ok) throw new Error("Failed to fetch user");
-      return response.json();
+      if (!eventId) return null;
+      
+      const result = await getEvent(eventId);
+      if (!result.success) {
+        throw new Error(result.error || "Failed to fetch event");
+      }
+      return result.data;
     },
-    enabled: !!userId,
+    enabled: !!eventId,
+    staleTime: 1000 * 60 * 5, // 5 minutes
+    refetchOnWindowFocus: false,
+  });
+}
+
+// ⚠️ ACCEPTABLE - Use useQuery directly only for one-off queries
+import { useQuery } from "@tanstack/react-query";
+import { getEvent } from "@/actions/events";
+
+export function OneOffComponent({ eventId }: { eventId: number }) {
+  const { data, isLoading } = useQuery({
+    queryKey: ["event", eventId],
+    queryFn: () => getEvent(eventId),
+    enabled: !!eventId,
+  });
+  
+  // ... component logic
+}
+
+// ❌ WRONG - Using useEffect for data fetching
+export function BadComponent({ eventId }: { eventId: number }) {
+  const [data, setData] = useState(null);
+  const [loading, setLoading] = useState(true);
+  
+  useEffect(() => {
+    async function fetchData() {
+      setLoading(true);
+      const result = await getEvent(eventId);
+      setData(result.data);
+      setLoading(false);
+    }
+    fetchData();
+  }, [eventId]);
+  
+  // ... rest of component
+}
+```
+
+### Server Actions Pattern (Next.js App Router)
+
+```tsx
+// ✅ CORRECT - Use Server Actions with React Query
+"use server";
+
+import { db } from "@/lib/db";
+import { revalidatePath } from "next/cache";
+
+export async function getEvents(options?: { limit?: number }) {
+  try {
+    const events = await db.query.publicEvent.findMany({
+      limit: options?.limit || 10,
+    });
+    return { success: true, data: events };
+  } catch (error) {
+    return { success: false, error: "Failed to fetch events" };
+  }
+}
+
+// In component - use with React Query
+"use client";
+
+import { useQuery } from "@tanstack/react-query";
+import { getEvents } from "@/actions/events";
+
+export function EventsList() {
+  const { data, isLoading, error } = useQuery({
+    queryKey: ["events"],
+    queryFn: () => getEvents({ limit: 10 }),
+  });
+  
+  if (isLoading) return <div>Loading...</div>;
+  if (error) return <div>Error: {error.message}</div>;
+  
+  return (
+    <div>
+      {data?.success && data.data.map(event => (
+        <div key={event.id}>{event.title}</div>
+      ))}
+    </div>
+  );
+}
+```
+
+### React Query Best Practices
+
+```tsx
+// ✅ Good: Proper query configuration
+const { data, isLoading, error, refetch } = useQuery({
+  queryKey: ["events", { limit, status }], // Include all dependencies
+  queryFn: async () => {
+    const result = await getEvents({ limit, status });
+    if (!result.success) {
+      throw new Error(result.error || "Failed to fetch");
+    }
+    return result.data;
+  },
+  enabled: !!userId, // Conditional fetching
+  staleTime: 1000 * 60 * 5, // Cache for 5 minutes
+  refetchOnWindowFocus: false, // Prevent unnecessary refetches
+  retry: 2, // Retry failed requests
+});
+
+// ✅ Good: Mutations for data updates
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+
+export function useCreateEvent() {
+  const queryClient = useQueryClient();
+  
+  return useMutation({
+    mutationFn: createEvent,
+    onSuccess: () => {
+      // Invalidate and refetch events list
+      queryClient.invalidateQueries({ queryKey: ["events"] });
+    },
   });
 }
 ```
@@ -318,6 +457,164 @@ src/
 
 ---
 
+## Journey-Based Navigation & Authorization
+
+**CRITICAL**: Always verify user journey/role before navigation actions.
+
+### Navigation Pattern with Journey Check
+
+**NEVER** use direct `router.push()` in onClick handlers. **ALWAYS** use `useSafeNavigation` hook with **relative paths**:
+
+```tsx
+// ❌ WRONG - Direct navigation without journey check
+<Button onClick={() => router.push(`/playzone/events/${event.id}`)}>
+  View Event
+</Button>
+
+// ❌ WRONG - Absolute path (hardcoded journey)
+<Button onClick={() => navigateWithJourneyCheck(`/playzone/events/${event.id}`)}>
+  View Event
+</Button>
+
+// ✅ CORRECT - Relative path (automatically uses logged user's journey)
+import { useSafeNavigation } from "@/hooks/use-safe-navigation";
+
+const { navigateWithJourneyCheck } = useSafeNavigation();
+
+<Button onClick={() => navigateWithJourneyCheck(`events/${event.id}`)}>
+  View Event
+</Button>
+// Automatically becomes:
+// - "/playzone/events/123" if user is PLAYER
+// - "/arena/events/123" if user is MANAGER
+// - "/fan-zone/events/123" if user is FAN
+// - "/organizer/events/123" if user is ORGANIZER
+```
+
+### Journey Routes Mapping
+
+- **PLAYER** → `/playzone`
+- **MANAGER** → `/arena`
+- **FAN** → `/fan-zone`
+- **ORGANIZER** → `/organizer`
+
+### Common Routes (Accessible by All Roles)
+
+- `/profile` - User profile
+- `/playzone/events` - Event details (all can view)
+
+### Implementation Rules
+
+1. **All navigation actions** (onClick, Link href, router.push) must verify journey access
+2. **Use `useSafeNavigation` hook** for programmatic navigation
+3. **Show error messages** when access is denied (default behavior)
+4. **Redirect to correct journey route** if user doesn't have access
+5. **Common routes** are automatically allowed - no check needed
+
+### Example: Safe Navigation Hook
+
+```tsx
+import { useSafeNavigation } from "@/hooks/use-safe-navigation";
+
+export function MyComponent() {
+  const { navigateWithJourneyCheck } = useSafeNavigation();
+
+  const handleViewEvent = (eventId: number) => {
+    // Relative path - automatically uses logged user's journey base
+    // PLAYER → "/playzone/events/123"
+    // MANAGER → "/arena/events/123"
+    navigateWithJourneyCheck(`events/${eventId}`);
+  };
+
+  const handleViewCalendar = () => {
+    // Relative path - automatically uses logged user's journey base
+    navigateWithJourneyCheck("calendar");
+  };
+
+  // Absolute path for common routes (accessible by all)
+  const handleViewProfile = () => {
+    navigateWithJourneyCheck("/profile");
+  };
+
+  // Silent navigation (no error message)
+  const handleSilentNav = (path: string) => {
+    navigateWithJourneyCheck(path, { showError: false });
+  };
+
+  return (
+    <>
+      <Button onClick={() => handleViewEvent(123)}>
+        View Event
+      </Button>
+      <Button onClick={handleViewCalendar}>
+        Calendar
+      </Button>
+    </>
+  );
+}
+```
+
+### Path Types
+
+1. **Relative Paths** (Recommended): `"events/123"`, `"calendar"`, `"stats"`
+   - Automatically injects the logged user's journey base path
+   - Ensures navigation always goes to the correct journey area
+   - Example: `"events/123"` → `/playzone/events/123` (PLAYER) or `/arena/events/123` (MANAGER)
+
+2. **Absolute Paths**: `"/profile"`, `"/playzone/events/123"`
+   - Used for common routes accessible by all roles
+   - Still verifies access before navigation
+   - Example: `"/profile"` → accessible by all journeys
+
+### Error Messages
+
+When access is denied, the hook automatically:
+1. Shows a toast error: "Acesso não autorizado"
+2. Displays description: "Você não tem permissão para acessar esta página. Redirecionando para sua área."
+3. Redirects to the correct journey route after 1.5s
+
+## Modern React & Next.js Patterns
+
+### React 19+ Features
+
+- **Server Components**: Use by default, opt-in to Client Components with `"use client"`
+- **Server Actions**: Prefer Server Actions over API routes for mutations
+- **Suspense Boundaries**: Use for loading states and code splitting
+- **use() Hook**: For consuming promises and context in async components
+- **Form Actions**: Use Server Actions directly in forms
+
+### Next.js 15+ Features
+
+- **Partial Prerendering**: Leverage for better performance
+- **Server Actions**: Use for mutations and data updates
+- **Streaming**: Use Suspense for progressive page rendering
+- **Image Optimization**: Always use `next/image` for images
+- **Font Optimization**: Use `next/font` for custom fonts
+
+### Data Fetching Rules
+
+1. **ALWAYS use TanStack React Query** (`useQuery`, `useMutation`) for client-side data fetching
+2. **PREFER existing custom hooks** (e.g., `useEvent`, `useEvents`) when available - they encapsulate `useQuery` logic
+3. **CREATE custom hooks** for reusable data fetching patterns
+4. **NEVER use `useEffect`** for API calls or data fetching
+5. **Use Server Actions** for mutations and server-side operations
+6. **Implement proper error boundaries** for error handling
+7. **Use Suspense boundaries** for loading states
+
+### When to Use useEffect
+
+`useEffect` should ONLY be used for:
+- Side effects (DOM manipulation, subscriptions, timers)
+- Syncing with external systems (browser APIs, third-party libraries)
+- Cleanup operations
+
+`useEffect` should NEVER be used for:
+- Data fetching (use `useQuery` instead)
+- Derived state (use `useMemo` or computed values)
+- Event handlers (use event handlers directly)
+
+---
+
 ## Implementation Checklist
 
 Before finalizing any code:
@@ -325,6 +622,12 @@ Before finalizing any code:
 - [ ] All TypeScript types are properly defined
 - [ ] Component props use interfaces, not inline types
 - [ ] Error handling is implemented with early returns
+- [ ] **Data fetching uses custom hooks (e.g., `useEvent`) when available, or `useQuery` directly - NEVER `useEffect`**
+- [ ] **Mutations use `useMutation` with proper cache invalidation**
+- [ ] **Navigation actions use `useSafeNavigation` hook**
+- [ ] **Journey access is verified before all redirects**
+- [ ] **Server Components used by default, Client Components only when needed**
+- [ ] **Server Actions used for mutations instead of API routes**
 - [ ] No TODOs, placeholders, or incomplete code
 - [ ] All imports are included and properly organized
 - [ ] Component names follow PascalCase convention
@@ -334,7 +637,7 @@ Before finalizing any code:
 - [ ] Code follows single responsibility principle
 - [ ] Complex logic is extracted into utilities
 - [ ] Zod schemas are used for data validation
-- [ ] Loading and error states are handled
+- [ ] Loading and error states are handled (via React Query)
 - [ ] Responsive design is implemented (mobile-first)
 - [ ] Code is DRY - no repeated logic
 

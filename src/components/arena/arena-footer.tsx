@@ -12,11 +12,11 @@ export default function ArenaFooter({ className }: ArenaFooterProps) {
   return (
     <footer
       className={cn(
-        "border-t border-emerald-100/70 bg-white/80 text-slate-600 backdrop-blur transition-colors md:ml-72 dark:border-white/10 dark:bg-white/5 dark:text-white/70",
+        "border-t border-emerald-100/70 bg-white/80 text-slate-600 backdrop-blur transition-colors md:ml-[88px] dark:border-white/10 dark:bg-white/5 dark:text-white/70",
         className,
       )}
     >
-      <div className="container mx-auto px-4 py-6">
+      <div className="w-full px-4 py-6">
         <div className="flex flex-col items-center justify-between gap-4 md:flex-row">
           {/* Copyright */}
           <div className="text-center text-sm text-slate-500 md:text-left dark:text-white/60">

@@ -678,6 +678,49 @@
         "pending": "⏳ Pendente"
       }
     },
+    "events": {
+      "title": "Próximos Eventos",
+      "viewAll": "Ver todos os eventos",
+      "details": {
+        "loading": "Carregando evento...",
+        "notFound": "Evento não encontrado",
+        "back": "Voltar",
+        "about": "Sobre o evento",
+        "criteria": "Critérios para participar",
+        "organizer": "Organizador",
+        "participants": "participantes",
+        "join": "Participar do evento",
+        "favorite": "Favoritar",
+        "favorited": "Favoritado",
+        "follow": "Seguir",
+        "following": "Seguindo",
+        "share": "Compartilhar",
+        "sendMessage": "Enviar mensagem",
+        "participating": "Você está participando",
+        "actions": {
+          "organizer": {
+            "editEvent": "Editar Evento",
+            "manageParticipants": "Gerenciar Participantes",
+            "addParticipant": "Adicionar Participante",
+            "createChat": "Criar Chat do Evento"
+          },
+          "participant": {
+            "invitePeople": "Convidar Pessoas",
+            "createChat": "Criar Chat do Evento",
+            "manageParticipants": "Gerenciar Participantes"
+          }
+        },
+        "messageModal": {
+          "title": "Enviar mensagem ao organizador",
+          "description": "Envie uma mensagem para o organizador do evento",
+          "label": "Mensagem",
+          "placeholder": "Escreva sua mensagem aqui...",
+          "cancel": "Cancelar",
+          "send": "Enviar",
+          "sending": "Enviando..."
+        }
+      }
+    },
     "activity": {
       "title": "Atividade Recente"
     }

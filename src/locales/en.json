@@ -356,6 +356,10 @@
         "pending": "⏳ Pending"
       }
     },
+    "events": {
+      "title": "Upcoming Events",
+      "viewAll": "View all events"
+    },
     "activity": {
       "title": "Recent Activity"
     }
