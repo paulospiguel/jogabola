@@ -85,7 +85,8 @@
     "privacy": "Privacidad",
     "terms": "Términos",
     "blog": "Blog",
-    "privacyAndTerms": "Privacidad y Términos"
+    "privacyAndTerms": "Privacidad y Términos",
+    "timer": "Timer"
   },
   "countDown": {
     "title": "Time left",

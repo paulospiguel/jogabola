@@ -1,5 +1,6 @@
 "use client";
 
+import Modal, { ModalRef } from "@/components/modal";
 import { Button } from "@/components/ui/button";
 import { useJourneyRedirect } from "@/hooks/use-journey-redirect";
 import { motion } from "framer-motion";
@@ -14,6 +15,7 @@ import {
   Users,
 } from "lucide-react";
 import { useTranslations } from "next-intl";
+import { useRef } from "react";
 
 // Background Pattern Component - Gradiente do mockup
 const FieldPattern = () => {
@@ -22,6 +24,34 @@ const FieldPattern = () => {
       {/* Gradiente base: azul claro top-left para verde claro bottom-right */}
       <div className="absolute inset-0 bg-linear-to-br from-blue-100 via-cyan-50 to-emerald-100 dark:from-slate-900/80 dark:via-emerald-900/40 dark:to-slate-950/80" />
     </div>
+  );
+};
+
+const VideoPreviewModal = ({
+  children,
+  videoId,
+}: {
+  children: React.ReactNode;
+  videoId: string;
+}) => {
+  const modalRef = useRef<ModalRef>(null);
+  return (
+    <Modal
+      ref={modalRef}
+      size="large"
+      triggerComponent={children}
+      title="Jogabola - Demo"
+      content={
+        <iframe
+          width="100%"
+          height="auto"
+          src={`https://www.youtube.com/embed/${videoId}`}
+          title="YouTube video player"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+          allowFullScreen
+        ></iframe>
+      }
+    />
   );
 };
 
@@ -55,7 +85,7 @@ const HeroSection = () => {
               {/* Title - Texto escuro, sem gradiente */}
               <h1 className="text-4xl leading-tight font-bold text-gray-900 md:text-5xl lg:text-6xl dark:text-white">
                 {t("title")}{" "}
-                <span className="text-gray-900 text-4xl dark:text-emerald-300">
+                <span className="text-4xl text-gray-900 dark:text-emerald-300">
                   {t("titleHighlight")}
                 </span>
               </h1>
@@ -73,13 +103,16 @@ const HeroSection = () => {
                 >
                   {t("startJourney")}
                 </Button>
-                <Button
-                  variant="outline"
-                  className="group rounded-lg border-2 border-blue-300 bg-white px-6 py-5 text-base font-medium text-blue-500 hover:bg-blue-50 md:px-8 md:py-6 md:text-lg dark:border-emerald-500/40 dark:bg-slate-900 dark:text-emerald-300 dark:hover:bg-slate-800"
-                >
-                  <Play className="mr-2 h-5 w-5 fill-blue-500 transition-transform group-hover:scale-110 dark:fill-emerald-300" />
-                  {t("watchDemo")}
-                </Button>
+
+                <VideoPreviewModal videoId="VIDEO_ID">
+                  <Button
+                    variant="outline"
+                    className="group rounded-lg border-2 border-blue-300 bg-white px-6 py-5 text-base font-medium text-blue-500 hover:bg-blue-50 md:px-8 md:py-6 md:text-lg dark:border-emerald-500/40 dark:bg-slate-900 dark:text-emerald-300 dark:hover:bg-slate-800"
+                  >
+                    <Play className="mr-2 h-5 w-5 fill-blue-500 transition-transform group-hover:scale-110 dark:fill-emerald-300" />
+                    {t("watchDemo")}
+                  </Button>
+                </VideoPreviewModal>
               </div>
 
               {/* Trust indicators - Linha única */}
@@ -439,7 +472,7 @@ const TestimonialsSection = () => {
                 ))}
               </div>
               <p className="mb-4 text-gray-600 dark:text-gray-300">
-                "{testimonial.text}"
+                {testimonial.text}
               </p>
               <div className="flex items-center space-x-3">
                 <div className="text-3xl">{testimonial.avatar}</div>

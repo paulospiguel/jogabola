@@ -1,20 +1,20 @@
 "use client";
 
 import {
-    Dialog,
-    DialogContent,
-    DialogDescription,
-    DialogFooter,
-    DialogHeader,
-    DialogTitle,
-    DialogTrigger,
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
 } from "@/components/ui/dialog";
 import {
-    type ComponentProps,
-    forwardRef,
-    useImperativeHandle,
-    useRef,
-    useState,
+  type ComponentProps,
+  forwardRef,
+  useImperativeHandle,
+  useRef,
+  useState,
 } from "react";
 
 const widthSize = {
@@ -39,7 +39,7 @@ export type ModalRef = {
   close: () => void;
 } | null;
 
-export const Modal = forwardRef<ModalRef, ModalProps>(
+ const Modal = forwardRef<ModalRef, ModalProps>(
   (
     {
       size = "medium",
@@ -82,3 +82,7 @@ export const Modal = forwardRef<ModalRef, ModalProps>(
     );
   },
 );
+
+Modal.displayName = "Modal";
+
+export default Modal;
