@@ -1,4 +1,4 @@
-import { GraduationCap, Handshake, Timer, TypeIcon } from "lucide-react";
+import { GraduationCap, Handshake, TypeIcon } from "lucide-react";
 
 const menuHome = {
   header: [
@@ -8,8 +8,18 @@ const menuHome = {
       icon: null,
     },
     {
+      label: "menu.team",
+      href: "/team",
+      icon: null,
+    },
+    {
       label: "menu.ecosystem",
       href: "/ecosystem",
+      icon: null,
+    },
+    {
+      label: "header.plans",
+      href: "/plans",
       icon: null,
     },
     {
@@ -17,27 +27,21 @@ const menuHome = {
       href: "/community",
       icon: null,
     },
-    {
-      label: "menu.marketplace",
-      href: "marketplace",
-      isExternal: true,
-      icon: null,
-    },
-    {
-      label: "menu.academy",
-      href: "/academy",
-      icon: GraduationCap,
-    },
-    {
-      label: "menu.timer",
-      href: "/timer",
-      icon: Timer,
-    },
   ],
   footer: [
     {
+      label: "menu.team",
+      href: "/team",
+      icon: null,
+    },
+    {
       label: "menu.about",
       href: "/about",
+      icon: null,
+    },
+    {
+      label: "menu.careers",
+      href: "/careers",
       icon: null,
     },
     {

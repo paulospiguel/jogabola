@@ -2,6 +2,66 @@
   "aboutPage": {
     "title": "About"
   },
+  "teamPage": {
+    "title": "Our <blue>Team</blue>",
+    "subtitle": "Uniting human vision with artificial intelligence to revolutionize global sports management with JOGABOLA.",
+    "badge": "INNOVATION TEAM",
+    "ceoName": "FOUNDER & CEO",
+    "aiAgentsTitle": "AI AGENTS",
+    "agents": {
+      "dataEngineering": {
+        "title": "Data Engineering",
+        "description": "Massive processing of performance metrics and structuring of sports Big Data."
+      },
+      "tacticalAnalysis": {
+        "title": "AI Tactical Analysis",
+        "description": "Identification of game patterns and high-precision strategic scenario simulation."
+      },
+      "intelligentSupport": {
+        "title": "Intelligent Support",
+        "description": "24/7 assistance for managers and athletes with natural language and immediate resolutions."
+      }
+    }
+  },
+  "ecosystemPage": {
+    "badge": "ECOSYSTEM ROADMAP",
+    "title": "The Future of <blue>Sports Management</blue>",
+    "subtitle": "Explore the next generation of Jogabola technology modules, developed to elevate the performance of clubs and athletes.",
+    "status": {
+      "beta": "Beta Test",
+      "development": "In Development",
+      "more": "Learn More",
+      "joinBeta": "Join Beta",
+      "learnMore": "Learn More"
+    },
+    "modules": {
+      "scout": {
+        "title": "Scout Pro IA",
+        "description": "Advanced talent recognition system through computer vision and predictive analysis of competitive potential."
+      },
+      "finance": {
+        "title": "Elite Financial Module",
+        "description": "Sports treasury management, contracts and automated compliance with blockchain technology for total transparency."
+      },
+      "marketplace": {
+        "title": "Athletes Marketplace",
+        "description": "Direct connection between clubs, agents and talents in a secure environment with AI-validated digital portfolios."
+      },
+      "health": {
+        "title": "AI Preventive Health",
+        "description": "Real-time biometric monitoring for injury prevention and optimization of individualized training loads."
+      }
+    },
+    "newsletter": {
+      "title": "Stay Updated",
+      "subtitle": "Receive exclusive notifications about the launch of new modules and invites for closed betas.",
+      "placeholder": "Your best email",
+      "button": "Subscribe Newsletter"
+    },
+    "labels": {
+      "progress": "PROGRESS"
+    }
+  },
   "about": {
     "title": "About Jogabola",
     "mission": "Our Mission",
@@ -159,10 +219,31 @@
     "contact": "Contact",
     "faq": "FAQ",
     "privacyPolicy": "Privacy Policy",
-    "termsAndConditions": "Terms and Conditions"
+    "termsAndConditions": "Terms and Conditions",
+    "description": "Find your ideal team or create your own, manage your athletes and participate in legendary leagues!",
+    "columns": {
+      "product": "Product",
+      "institutional": "Institutional",
+      "legal": "Legal"
+    },
+    "links": {
+      "features": "Features",
+      "plans": "Plans",
+      "community": "Community",
+      "about": "About",
+      "contact": "Contact",
+      "academy": "Academy",
+      "partners": "Become a Partner",
+      "privacy": "Privacy",
+      "terms": "Terms",
+      "cookies": "Cookies"
+    },
+    "copyright": "Copyright © {year} {company}. All rights reserved.",
+    "systems": "OPERATING SYSTEMS"
   },
   "menu": {
     "home": "Home",
+    "team": "Team",
     "ecosystem": "Ecosystem",
     "community": "Community",
     "marketplace": "Marketplace",
@@ -171,6 +252,7 @@
     "becomePartner": "Become a Partner",
     "about": "About",
     "contact": "Contact",
+    "careers": "Careers",
     "privacy": "Privacy",
     "terms": "Terms",
     "blog": "Blog",
@@ -214,6 +296,13 @@
         "freeToStart": "Free to start",
         "noCard": "No card required"
       }
+    },
+    "stats": {
+      "title": "Jogabola in numbers",
+      "clubs": "Clubs",
+      "players": "Players",
+      "rating": "Rating",
+      "averageRating": "Average rating"
     },
     "demo": {
       "title": "App Demo",
@@ -332,7 +421,8 @@
     "header": {
       "subtitle": "Arena Central",
       "title": "Welcome back to the Arena ⚽",
-      "description": "Keep track of your team's pace, organize matches and keep the community always active."
+      "description": "Keep track of your team's pace, organize matches and keep the community always active.",
+      "quote": "Track the performance of your players, build detailed statistics and monitor the performance of your team."
     },
     "stats": {
       "matchesPlayed": "Matches Played",
@@ -515,5 +605,69 @@
     "intermediate": "Intermediate",
     "advanced": "Advanced",
     "professional": "Professional"
+  },
+  "clubPage": {
+    "stats": {
+      "followers": "Followers",
+      "following": "Following",
+      "matchesWon": "Matches Won"
+    },
+    "navigation": {
+      "home": "Home",
+      "matches": "Matches",
+      "squad": "Squad",
+      "news": "News",
+      "recruitment": "Recruitment",
+      "searchPlaceholder": "Search Players..."
+    },
+    "nextMatch": {
+      "title": "NEXT MATCH",
+      "fullSchedule": "FULL SCHEDULE",
+      "getTickets": "GET TICKETS",
+      "countdown": {
+        "days": "DAYS",
+        "hrs": "HRS",
+        "mins": "MINS"
+      }
+    },
+    "squad": {
+      "title": "THE LINEUP",
+      "filters": {
+        "all": "All",
+        "attack": "Attack",
+        "midfield": "Midfield",
+        "defense": "Defense"
+      }
+    },
+    "news": {
+      "title": "CLUB BRIEFINGS",
+      "viewAll": "VIEW ALL NEWS"
+    },
+    "recruitment": {
+      "title": "JOIN THE RANKS",
+      "subtitle": "Seeking elite talent for the upcoming season. Apply below.",
+      "fields": {
+        "name": "FULL NAME",
+        "namePlaceholder": "Enter your name",
+        "position": "PREFERRED POSITION",
+        "experience": "MESSAGE / EXPERIENCE",
+        "experiencePlaceholder": "Tell us about your background",
+        "submit": "SUBMIT APPLICATION"
+      }
+    }
+  },
+  "notFound": {
+    "warning": "POSITIONING ERROR",
+    "title": "404 - OFFSIDE!",
+    "subtitle": "Incorrect Formation: Misaligned Page",
+    "description": "The tactical scheme failed. The play was interrupted by the linesman because the destination you are looking for was not found on the field.",
+    "refreshButton": "REFRESH (RESTART MATCH)",
+    "mapButton": "MAP (VIEW SITE MAP)",
+    "status": {
+      "positioning": "POSITIONING: WRONG",
+      "impediment": "STATUS: OFFSIDE",
+      "var": "VAR: CHECKING..."
+    },
+    "footer": "JOGABOLA @ 2024 • TACTIQUALLY LOST"
   }
 }

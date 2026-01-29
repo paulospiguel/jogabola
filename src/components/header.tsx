@@ -57,15 +57,15 @@ export default function Header() {
       animate={{ y: 0, opacity: 1 }}
       transition={{ duration: 0.8, delay: 0.2 }}
       className={cn(
-        "fixed top-0 right-0 left-0 z-50 flex w-full items-center justify-between px-4 py-2 transition-all duration-300",
+        "fixed top-0 right-0 left-0 z-50 flex w-full items-center justify-between px-4 py-4 transition-all duration-300",
         "bg-transparent",
       )}
     >
       {/* Header Container */}
       <div
         className={cn(
-          "flex w-full items-center justify-between rounded-full px-6 py-2 transition-all duration-300",
-          "border-border-default bg-overlay-light border shadow-xl backdrop-blur-md",
+          "flex w-full items-center justify-between px-6 py-2 transition-all duration-300",
+          isScrolled ? "bg-slate-900/80 backdrop-blur-md" : "bg-transparent",
         )}
       >
         {/* Left side: Logo + Menu */}
@@ -75,9 +75,7 @@ export default function Header() {
             <Logo size="small" isAnimate />
           </div>
 
-          <Navbar
-            className="hidden md:flex"
-          />
+          <Navbar className="hidden md:flex" />
         </div>
 
         <div className="flex items-center space-x-4">
@@ -102,8 +100,8 @@ export default function Header() {
                     className={cn(
                       "hidden rounded-full px-6 py-2 font-bold no-underline transition-all duration-300 hover:scale-105 md:visible md:block",
                       button.variant === "primary"
-                        ? "bg-linear-to-r from-brand-green to-active-text text-[#21005a] shadow-lg shadow-brand-green/20 hover:shadow-brand-green/40"
-                        : "border border-white/20 bg-white/5 text-white hover:bg-white/10 hover:border-white/40",
+                        ? "bg-blue-600 px-6 py-2.5 text-white shadow-lg hover:bg-blue-700"
+                        : "font-medium text-white hover:text-blue-400",
                     )}
                   >
                     {button.label.includes("header.")
@@ -119,8 +117,8 @@ export default function Header() {
                   className={cn(
                     "hidden rounded-full px-6 py-2 font-bold no-underline transition-all duration-300 hover:scale-105 md:visible md:block",
                     button.variant === "primary"
-                      ? "bg-linear-to-r from-brand-green to-active-text text-[#21005a] shadow-lg shadow-brand-green/20 hover:shadow-brand-green/40"
-                      : "border border-white/20 bg-white/5 text-white hover:bg-white/10 hover:border-white/40",
+                      ? "bg-blue-600 px-6 py-2.5 text-white shadow-lg hover:bg-blue-700"
+                      : "font-medium text-white hover:text-blue-400",
                   )}
                 >
                   {button.label.includes("header.")
@@ -175,7 +173,7 @@ export default function Header() {
                             className={cn(
                               "w-full rounded-full px-4 py-3 text-center text-sm font-bold no-underline transition-all duration-300 hover:scale-105",
                               button.variant === "primary"
-                                ? "bg-linear-to-r from-brand-green to-active-text text-[#21005a] shadow-lg shadow-brand-green/20"
+                                ? "from-brand-green to-active-text shadow-brand-green/20 bg-linear-to-r text-[#21005a] shadow-lg"
                                 : "border border-white/20 bg-white/5 text-white hover:bg-white/10",
                             )}
                           >
@@ -193,7 +191,7 @@ export default function Header() {
                           className={cn(
                             "w-full rounded-full px-4 py-3 text-sm font-bold transition-all duration-300 hover:scale-105",
                             button.variant === "primary"
-                              ? "bg-linear-to-r from-brand-green to-active-text text-[#21005a] shadow-lg shadow-brand-green/20"
+                              ? "from-brand-green to-active-text shadow-brand-green/20 bg-linear-to-r text-[#21005a] shadow-lg"
                               : "border border-white/20 bg-white/5 text-white hover:bg-white/10",
                           )}
                         >
@@ -231,8 +229,8 @@ const Navbar = ({
   // Define as cores baseado na página e estado de scroll
   const getTextColors = () => {
     return {
-      default: "text-white font-semibold",
-      hover: "hover:text-neon-secondary font-semibold",
+      default: "text-gray-200 font-medium",
+      hover: "hover:text-white transition-colors",
     };
   };
 

@@ -2,6 +2,66 @@
   "aboutPage": {
     "title": "À propos"
   },
+  "teamPage": {
+    "title": "Notre <blue>Équipe</blue>",
+    "subtitle": "Unir la vision humaine à l'intelligence artificielle pour révolutionner la gestion du sport mondial avec JOGABOLA.",
+    "badge": "INNOVATION TEAM",
+    "ceoName": "FONDATEUR & CEO",
+    "aiAgentsTitle": "AGENTS D'IA",
+    "agents": {
+      "dataEngineering": {
+        "title": "Ingénierie des Données",
+        "description": "Traitement massif des mesures de performance et structuration du Big Data sportif."
+      },
+      "tacticalAnalysis": {
+        "title": "Analyse Tactique IA",
+        "description": "Identification de schémas de jeu et simulation de scénarios stratégiques de haute précision."
+      },
+      "intelligentSupport": {
+        "title": "Support Intelligent",
+        "description": "Assistance 24/7 pour les managers et les athlètes avec un langage naturel et des résolutions immédiates."
+      }
+    }
+  },
+  "ecosystemPage": {
+    "badge": "ROADMAP DE L'ÉCOSYSTÈME",
+    "title": "L'Avenir de la <blue>Gestion Sportive</blue>",
+    "subtitle": "Explorez la prochaine génération de modules technologiques de Jogabola, développés pour élever la performance des clubs et des athlètes.",
+    "status": {
+      "beta": "Test Bêta",
+      "development": "En Développement",
+      "more": "En Savoir Plus",
+      "joinBeta": "Rejoindre la Bêta",
+      "learnMore": "En Savoir Plus"
+    },
+    "modules": {
+      "scout": {
+        "title": "Scout Pro IA",
+        "description": "Système avancé de reconnaissance des talents grâce à la vision par ordinateur et à l'analyse prédictive du potentiel compétitif."
+      },
+      "finance": {
+        "title": "Module Financier Élite",
+        "description": "Gestion de la trésorerie sportive, contrats et conformité automatisés avec la technologie blockchain pour une transparence totale."
+      },
+      "marketplace": {
+        "title": "Marché des Athlètes",
+        "description": "Connexion directe entre clubs, agents et talents dans un environnement sécurisé avec des portefeuilles numériques validés par l'IA."
+      },
+      "health": {
+        "title": "Santé Préventive IA",
+        "description": "Suivi biométrique en temps réel pour la prévention des blessures et l'optimisation des charges d'entraînement individualisées."
+      }
+    },
+    "newsletter": {
+      "title": "Restez à Jour",
+      "subtitle": "Recevez des notifications exclusives sur le lancement de nouveaux modules et des invitations pour les bêtas fermées.",
+      "placeholder": "Votre meilleur e-mail",
+      "button": "S'abonner à la Newsletter"
+    },
+    "labels": {
+      "progress": "PROGRESSION"
+    }
+  },
   "about": {
     "title": "À propos de Jogabola",
     "mission": "Notre Mission",
@@ -23,19 +83,36 @@
   },
   "menu": {
     "home": "Accueil",
+    "team": "Équipe",
     "ecosystem": "Ecosystème",
     "community": "Communauté",
     "marketplace": "Marché",
+    "partners": "Partenaires",
     "academy": "Académie",
     "howItWorks": "Comment ça fonctionne",
     "becomePartner": "Devenir Partenaire",
     "about": "À propos",
     "contact": "Contact",
+    "careers": "Carrières",
     "privacy": "Confidentialité",
     "terms": "Conditions",
     "blog": "Blog",
     "privacyAndTerms": "Confidentialité et Conditions",
     "timer": "Timer"
+  },
+  "notFound": {
+    "warning": "ERREUR DE POSITIONNEMENT",
+    "title": "404 - HORS-JEU !",
+    "subtitle": "Formation Incorrecte : Page Désalignée",
+    "description": "Le schéma tactique a échoué. L'action a été interrompue par le juge de touche car la destination que vous recherchez n'a pas été trouvée sur le terrain.",
+    "refreshButton": "REFRESH (REDÉMARRER LE MATCH)",
+    "mapButton": "CARTE (VOIR LE PLAN DU SITE)",
+    "status": {
+      "positioning": "POSITIONNEMENT : ERRONE",
+      "impediment": "STATUT : HORS-JEU",
+      "var": "VAR : VÉRIFICATION..."
+    },
+    "footer": "JOGABOLA @ 2024 • TACTIQUEMENT PERDU"
   },
   "countDown": {
     "title": "Time left",
@@ -190,8 +267,28 @@
   "footer": {
     "contact": "Contact",
     "faq": "FAQ",
-    "privacyPolicy": "Politique de confidentialité",
-    "termsAndConditions": "Termes et conditions"
+    "privacyPolicy": "Politique de Confidentialité",
+    "termsAndConditions": "Termes et Conditions",
+    "description": "Trouvez votre équipe idéale ou créez la vôtre, gérez vos athlètes et participez à des ligues légendaires !",
+    "columns": {
+      "product": "Produit",
+      "institutional": "Institutionnel",
+      "legal": "Légal"
+    },
+    "links": {
+      "features": "Fonctionnalités",
+      "plans": "Plans",
+      "community": "Communauté",
+      "about": "À propos",
+      "contact": "Contact",
+      "academy": "Académie",
+      "partners": "Devenir Partenaire",
+      "privacy": "Confidentialité",
+      "terms": "Termes",
+      "cookies": "Cookies"
+    },
+    "copyright": "Droits d'auteur © {year} {company}. Tous droits réservés.",
+    "systems": "SYSTÈMES OPÉRATIONNELS"
   },
   "header": {
     "about": "À propos de nous",
@@ -230,6 +327,13 @@
         "freeToStart": "Gratuit pour commencer",
         "noCard": "Pas de carte requise"
       }
+    },
+    "stats": {
+      "title": "Jogabola en chiffres",
+      "clubs": "Clubs",
+      "players": "Joueurs",
+      "rating": "Note",
+      "averageRating": "Note moyenne"
     },
     "demo": {
       "title": "Démonstration de l'App",
@@ -506,5 +610,55 @@
     "forward": "Attaquant",
     "versatile": "Polyvalent",
     "default": "Joueur"
+  },
+  "clubPage": {
+    "stats": {
+      "followers": "Abonnés",
+      "following": "Abonnements",
+      "matchesWon": "Victoires"
+    },
+    "navigation": {
+      "home": "Accueil",
+      "matches": "Matchs",
+      "squad": "Effectif",
+      "news": "Actualités",
+      "recruitment": "Recrutement",
+      "searchPlaceholder": "Rechercher des Joueurs..."
+    },
+    "nextMatch": {
+      "title": "PROCHAIN MATCH",
+      "fullSchedule": "CALENDRIER COMPLET",
+      "getTickets": "BILLETS",
+      "countdown": {
+        "days": "JOURS",
+        "hrs": "HRS",
+        "mins": "MINS"
+      }
+    },
+    "squad": {
+      "title": "LA COMPO",
+      "filters": {
+        "all": "Tous",
+        "attack": "Attaque",
+        "midfield": "Milieu",
+        "defense": "Défense"
+      }
+    },
+    "news": {
+      "title": "INFOS DU CLUB",
+      "viewAll": "VOIR TOUTES LES INFOS"
+    },
+    "recruitment": {
+      "title": "REJOIGNEZ L'ÉQUIPE",
+      "subtitle": "Nous recherchons des talents d'élite pour la saison prochaine. Postulez ci-dessous.",
+      "fields": {
+        "name": "NOM COMPLET",
+        "namePlaceholder": "Entrez votre nom",
+        "position": "POSTE PRÉFÉRÉ",
+        "experience": "MESSAGE / EXPÉRIENCE",
+        "experiencePlaceholder": "Parlez-nous de votre parcours",
+        "submit": "ENVIAR CANDIDATURE"
+      }
+    }
   }
 }

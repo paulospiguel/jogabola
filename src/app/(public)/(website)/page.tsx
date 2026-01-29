@@ -2,17 +2,18 @@
 
 import Modal, { ModalRef } from "@/components/modal";
 import { Button } from "@/components/ui/button";
+import { HOME_STATS } from "@/constants/home-stats";
 import { useJourneyRedirect } from "@/hooks/use-journey-redirect";
+import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
 import {
-  Calendar,
-  Handshake,
-  MessageSquare,
+  Activity,
+  ArrowRight,
   Play,
-  Shield,
+  Share2,
   Star,
-  Trophy,
   Users,
+  Wallet,
 } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useRef } from "react";
@@ -21,9 +22,89 @@ import { useRef } from "react";
 const FieldPattern = () => {
   return (
     <div className="pointer-events-none absolute inset-0 overflow-hidden">
-      {/* Gradiente base: azul claro top-left para verde claro bottom-right */}
-      <div className="absolute inset-0 bg-linear-to-br from-blue-100 via-cyan-50 to-emerald-100 dark:from-slate-900/80 dark:via-emerald-900/40 dark:to-slate-950/80" />
+      {/* Imagem de fundo do campo de futebol com overlay escuro */}
+      <div
+        className="absolute inset-0 bg-cover bg-center brightness-[0.3]"
+        style={{
+          backgroundImage:
+            "url('https://images.unsplash.com/photo-1574629810360-7efbbe195018?q=80&w=2693&auto=format&fit=crop')",
+        }}
+      />
+      <div className="absolute inset-0 bg-linear-to-b from-slate-950/20 via-slate-900/60 to-slate-950" />
     </div>
+  );
+};
+
+const DashboardCard = () => {
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.8, delay: 0.5 }}
+      className="relative mx-auto max-w-md rounded-3xl border border-white/10 bg-slate-900/80 p-6 shadow-2xl backdrop-blur-xl"
+    >
+      <div className="mb-6 flex items-center justify-between">
+        <div className="flex items-center gap-3">
+          <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-blue-500/20 text-blue-400">
+            <Activity className="h-6 w-6" />
+          </div>
+          <div>
+            <h3 className="text-sm font-bold tracking-wider text-white uppercase">
+              Painel do Treinador
+            </h3>
+            <p className="text-[10px] font-medium text-gray-400">
+              PERFORMANCE GLOBAL
+            </p>
+          </div>
+        </div>
+        <div className="flex gap-1">
+          <div className="h-1 w-1 rounded-full bg-gray-500" />
+          <div className="h-1 w-1 rounded-full bg-gray-500" />
+          <div className="h-1 w-1 rounded-full bg-gray-500" />
+        </div>
+      </div>
+
+      {/* Bar Chart Mockup */}
+      <div className="mb-8 flex h-32 items-end justify-between gap-2 px-2">
+        {[40, 65, 30, 95, 75, 45].map((height, i) => (
+          <motion.div
+            key={i}
+            initial={{ height: 0 }}
+            animate={{ height: `${height}%` }}
+            transition={{ duration: 1, delay: 0.8 + i * 0.1 }}
+            className={cn(
+              "w-full rounded-t-md",
+              i === 3 ? "bg-blue-500" : "bg-blue-500/30",
+            )}
+          />
+        ))}
+      </div>
+
+      <div className="flex items-center justify-between border-t border-white/10 pt-4">
+        <div>
+          <p className="text-[10px] font-bold tracking-tight text-gray-400 uppercase">
+            STATUS DO ELENCO
+          </p>
+          <div className="flex items-baseline gap-1">
+            <span className="text-xl font-bold text-white">22</span>
+            <span className="text-xs text-gray-400">Prontos</span>
+          </div>
+        </div>
+        <div className="flex -space-x-2">
+          {[1, 2, 3].map(i => (
+            <div
+              key={i}
+              className="h-8 w-8 overflow-hidden rounded-full border-2 border-slate-900 bg-gray-700"
+            >
+              <div className="h-full w-full bg-linear-to-br from-blue-400 to-emerald-400" />
+            </div>
+          ))}
+          <div className="flex h-8 w-8 items-center justify-center rounded-full border-2 border-slate-900 bg-slate-800 text-[10px] font-bold text-white">
+            +18
+          </div>
+        </div>
+      </div>
+    </motion.div>
   );
 };
 
@@ -61,536 +142,196 @@ const HeroSection = () => {
   const { redirectToJourney } = useJourneyRedirect();
 
   return (
-    <section className="bg-background relative flex min-h-screen items-center overflow-hidden pt-20 dark:bg-(--color-blue-850)">
+    <section className="bg-background dark:bg-blue-850 relative flex min-h-screen items-center overflow-hidden pt-20">
       <FieldPattern />
 
-      {/* Container principal arredondado como no mockup */}
-      <div className="relative z-10 container mx-auto max-w-7xl px-4 py-12 md:px-6">
-        <div className="mx-auto max-w-6xl rounded-3xl bg-linear-to-br from-blue-50/80 via-cyan-50/80 to-emerald-50/80 p-8 backdrop-blur-sm md:p-12 lg:p-16 dark:from-slate-900/90 dark:via-slate-900/70 dark:to-emerald-900/40">
-          <div className="grid items-center gap-12 lg:grid-cols-2">
-            {/* Content - Lado Esquerdo */}
-            <motion.div
-              initial={{ opacity: 0, x: -50 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.8 }}
-              className="space-y-6"
-            >
-              {/* Badge Versão 2.0 - Verde claro como no mockup */}
-              <div className="inline-flex items-center rounded-full bg-emerald-100 px-4 py-1.5 dark:bg-emerald-500/10">
-                <span className="text-sm font-medium text-emerald-700 dark:text-emerald-300">
-                  {t("versionBadge")}
-                </span>
-              </div>
-
-              {/* Title - Texto escuro, sem gradiente */}
-              <h1 className="text-4xl leading-tight font-bold text-gray-900 md:text-5xl lg:text-6xl dark:text-white">
-                {t("title")}{" "}
-                <span className="text-4xl text-gray-900 dark:text-emerald-300">
-                  {t("titleHighlight")}
-                </span>
-              </h1>
-
-              {/* Subtitle */}
-              <p className="text-lg text-gray-700 md:text-xl dark:text-gray-300">
-                {t("subtitle")}
-              </p>
-
-              {/* CTA Buttons */}
-              <div className="flex flex-col gap-4 pt-2 sm:flex-row">
-                <Button
-                  onClick={redirectToJourney}
-                  className="rounded-lg bg-emerald-500 px-6 py-5 text-base font-medium text-white shadow-md hover:bg-emerald-600 md:px-8 md:py-6 md:text-lg dark:bg-emerald-500 dark:text-white dark:shadow-emerald-500/30 dark:hover:bg-emerald-600"
-                >
-                  {t("startJourney")}
-                </Button>
-
-                <VideoPreviewModal videoId="VIDEO_ID">
-                  <Button
-                    variant="outline"
-                    className="group rounded-lg border-2 border-blue-300 bg-white px-6 py-5 text-base font-medium text-blue-500 hover:bg-blue-50 md:px-8 md:py-6 md:text-lg dark:border-emerald-500/40 dark:bg-slate-900 dark:text-emerald-300 dark:hover:bg-slate-800"
-                  >
-                    <Play className="mr-2 h-5 w-5 fill-blue-500 transition-transform group-hover:scale-110 dark:fill-emerald-300" />
-                    {t("watchDemo")}
-                  </Button>
-                </VideoPreviewModal>
-              </div>
-
-              {/* Trust indicators - Linha única */}
-              <div className="flex items-center space-x-4 pt-2 text-sm text-gray-600 dark:text-gray-300">
-                <span>{t("trustIndicators.freeToStart")}</span>
-                <span className="text-gray-400 dark:text-gray-500">|</span>
-                <span>{t("trustIndicators.noCard")}</span>
-              </div>
-            </motion.div>
-
-            {/* Illustration - Lado Direito - Tablet 3D */}
-            <motion.div
-              initial={{ opacity: 0, scale: 0.8 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.8, delay: 0.2 }}
-              className="relative"
-            >
-              {/* Tablet Principal */}
-              <div className="relative mx-auto max-w-md">
-                {/* Tablet Frame */}
-                <div className="relative rounded-2xl bg-white p-3 shadow-2xl dark:bg-slate-900 dark:shadow-emerald-900/30">
-                  {/* Screen */}
-                  <div className="aspect-4/3 rounded-xl bg-linear-to-br from-gray-50 to-gray-100 p-4 dark:from-slate-900 dark:to-slate-800">
-                    {/* Header do app */}
-                    <div className="mb-4 flex items-center justify-between">
-                      <h3 className="text-lg font-bold text-gray-900 dark:text-white">
-                        JogaBola
-                      </h3>
-                      <div className="flex space-x-1">
-                        <div className="h-2 w-2 rounded-full bg-gray-300 dark:bg-slate-700" />
-                        <div className="h-2 w-2 rounded-full bg-gray-300 dark:bg-slate-700" />
-                        <div className="h-2 w-2 rounded-full bg-gray-300 dark:bg-slate-700" />
-                      </div>
-                    </div>
-
-                    {/* Grid de cards/icons */}
-                    <div className="grid grid-cols-3 gap-3">
-                      {[...Array(6)].map((_, i) => (
-                        <div
-                          key={i}
-                          className="aspect-square rounded-lg bg-white shadow-sm dark:bg-slate-900/60 dark:shadow-emerald-900/20"
-                        />
-                      ))}
-                    </div>
-                  </div>
-                </div>
-
-                {/* Elementos flutuantes conectados */}
-                {/* Profile Card 1 */}
-                <motion.div
-                  className="absolute top-8 -left-8 rounded-xl bg-white p-3 shadow-lg dark:bg-slate-900/90 dark:shadow-emerald-900/30"
-                  animate={{
-                    y: [0, -8, 0],
-                    rotate: [-2, 2, -2],
-                  }}
-                  transition={{
-                    duration: 4,
-                    repeat: Infinity,
-                    ease: "easeInOut",
-                  }}
-                >
-                  <div className="flex items-center space-x-2">
-                    <div className="h-8 w-8 rounded-full bg-linear-to-br from-blue-400 to-cyan-400 dark:from-emerald-500 dark:to-blue-500" />
-                    <div className="h-2 w-12 rounded bg-gray-200 dark:bg-slate-700" />
-                  </div>
-                </motion.div>
-
-                {/* Profile Card 2 */}
-                <motion.div
-                  className="absolute top-16 -right-6 rounded-xl bg-white p-3 shadow-lg dark:bg-slate-900/90 dark:shadow-emerald-900/30"
-                  animate={{
-                    y: [0, 8, 0],
-                    rotate: [2, -2, 2],
-                  }}
-                  transition={{
-                    duration: 4,
-                    repeat: Infinity,
-                    ease: "easeInOut",
-                    delay: 1,
-                  }}
-                >
-                  <div className="flex items-center space-x-2">
-                    <div className="h-8 w-8 rounded-full bg-linear-to-br from-emerald-400 to-green-400 dark:from-emerald-500 dark:to-green-500" />
-                    <div className="h-2 w-12 rounded bg-gray-200 dark:bg-slate-700" />
-                  </div>
-                </motion.div>
-
-                {/* Document Icon */}
-                <motion.div
-                  className="absolute bottom-12 -left-4 rounded-lg bg-white p-2 shadow-lg dark:bg-slate-900/90 dark:shadow-emerald-900/30"
-                  animate={{
-                    y: [0, -6, 0],
-                  }}
-                  transition={{
-                    duration: 3,
-                    repeat: Infinity,
-                    ease: "easeInOut",
-                    delay: 0.5,
-                  }}
-                >
-                  <div className="h-6 w-6 rounded bg-blue-100 dark:bg-emerald-900/60" />
-                </motion.div>
-
-                {/* Chart Icon */}
-                <motion.div
-                  className="absolute -right-4 bottom-8 rounded-lg bg-white p-2 shadow-lg dark:bg-slate-900/90 dark:shadow-emerald-900/30"
-                  animate={{
-                    y: [0, 6, 0],
-                  }}
-                  transition={{
-                    duration: 3,
-                    repeat: Infinity,
-                    ease: "easeInOut",
-                    delay: 1.5,
-                  }}
-                >
-                  <div className="h-6 w-6 rounded bg-emerald-100 dark:bg-emerald-900/60" />
-                </motion.div>
-
-                {/* Linhas conectando elementos (glow effect) */}
-                <svg
-                  className="pointer-events-none absolute inset-0"
-                  viewBox="0 0 400 300"
-                >
-                  <line
-                    x1="50"
-                    y1="80"
-                    x2="120"
-                    y2="100"
-                    stroke="rgba(59, 130, 246, 0.3)"
-                    strokeWidth="2"
-                    strokeDasharray="4 4"
-                  />
-                  <line
-                    x1="320"
-                    y1="120"
-                    x2="280"
-                    y2="100"
-                    stroke="rgba(16, 185, 129, 0.3)"
-                    strokeWidth="2"
-                    strokeDasharray="4 4"
-                  />
-                  <circle
-                    cx="85"
-                    cy="85"
-                    r="3"
-                    fill="rgba(59, 130, 246, 0.5)"
-                    className="animate-pulse"
-                  />
-                  <circle
-                    cx="300"
-                    cy="110"
-                    r="3"
-                    fill="rgba(16, 185, 129, 0.5)"
-                    className="animate-pulse"
-                  />
-                </svg>
-              </div>
-            </motion.div>
-          </div>
-
-          {/* Scroll Indicator - Bottom Center */}
+      <div className="relative z-10 container mx-auto max-w-7xl px-4 py-10 md:px-6">
+        <div className="grid items-center gap-12 lg:grid-cols-2">
+          {/* Content - Lado Esquerdo */}
           <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 1, delay: 1 }}
-            className="absolute bottom-8 left-1/2 -translate-x-1/2"
+            initial={{ opacity: 0, x: -50 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.8 }}
+            className="space-y-8"
           >
-            <motion.div
-              animate={{ y: [0, 8, 0] }}
-              transition={{
-                duration: 2,
-                repeat: Infinity,
-                ease: "easeInOut",
-              }}
-              className="flex h-10 w-10 items-center justify-center rounded-full bg-white/80 shadow-md backdrop-blur-sm dark:bg-slate-900/80 dark:shadow-emerald-900/40"
-            >
-              <svg
-                width="20"
-                height="20"
-                viewBox="0 0 20 20"
-                fill="none"
-                className="text-gray-400 dark:text-gray-500"
+            {/* Badge GESTÃO 2.0 ATIVADA */}
+            <div className="inline-flex items-center rounded-full border border-blue-500/20 bg-blue-500/10 px-4 py-1.5">
+              <div className="mr-2 h-2 w-2 animate-pulse rounded-full bg-blue-400" />
+              <span className="text-xs font-bold tracking-widest text-blue-400 uppercase">
+                {t("versionBadge")} ATIVADA
+              </span>
+            </div>
+
+            {/* Title */}
+            <h1 className="text-5xl leading-tight font-extrabold text-white md:text-6xl lg:text-7xl">
+              Transforme a<br />
+              Gestão do seu
+              <br />
+              <span className="text-blue-500">Clube</span> com
+              <br />
+              Tecnologia de Elite
+            </h1>
+
+            {/* Subtitle */}
+            <p className="max-w-lg text-lg leading-relaxed text-gray-400 md:text-xl">
+              A plataforma completa para gerenciar times amadores, escolares e
+              semiprofissionais. Do calendário de jogos à saúde dos atletas,
+              tudo em um só lugar.
+            </p>
+
+            {/* CTA Buttons */}
+            <div className="flex flex-col gap-4 pt-4 sm:flex-row">
+              <Button
+                onClick={redirectToJourney}
+                className="rounded-full bg-blue-600 px-8 py-7 text-lg font-bold text-white shadow-xl shadow-blue-600/20 transition-all hover:scale-105 hover:bg-blue-700"
               >
-                <path
-                  d="M5 7.5L10 12.5L15 7.5"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-              </svg>
-            </motion.div>
+                {t("startJourney")}
+              </Button>
+
+              <VideoPreviewModal videoId="VIDEO_ID">
+                <Button
+                  variant="outline"
+                  className="rounded-full border-white/10 bg-white/5 px-8 py-7 text-lg font-bold text-white backdrop-blur-sm transition-all hover:bg-white/10"
+                >
+                  <Play className="mr-3 h-6 w-6 fill-white" />
+                  {t("watchDemo")}
+                </Button>
+              </VideoPreviewModal>
+            </div>
           </motion.div>
+
+          {/* Graphical Illustration - Dashboard Card */}
+          <div className="relative hidden lg:block">
+            <div className="absolute -inset-20 rounded-full bg-blue-500/10 blur-[100px]" />
+            <DashboardCard />
+          </div>
         </div>
       </div>
     </section>
   );
 };
 
-// Demo Section
-const DemoSection = () => {
-  const t = useTranslations("homePage.demo");
+const StatsSection = () => {
+  const t = useTranslations("homePage");
+  return (
+    <section className="bg-background dark:bg-blue-850 relative overflow-hidden">
+      <div className="container mx-auto max-w-7xl border-t border-white/5 px-4 py-10 md:px-6">
+        <h3 className="pb-5 text-center text-4xl font-bold text-white">
+          {t("stats.title")}
+        </h3>
+        <div className="flex flex-wrap items-center justify-center gap-10">
+          {HOME_STATS.map((stat, index) => (
+            <motion.div
+              key={stat.key}
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.5, delay: 0.8 + index * 0.1 }}
+              className="group relative"
+            >
+              <div className="flex flex-col">
+                <div className="flex items-baseline gap-1">
+                  <span className="text-3xl font-black tracking-tighter text-white sm:text-4xl">
+                    {stat.value}
+                  </span>
+                  {stat.isRating && (
+                    <div className="flex items-center gap-1 pb-1">
+                      <Star className="h-4 w-4 fill-blue-500 text-blue-500" />
+                      <span className="text-[10px] font-bold text-blue-400">
+                        {t("stats.averageRating")}
+                      </span>
+                    </div>
+                  )}
+                </div>
+                <span className="text-[10px] font-black tracking-[0.2em] text-gray-500 uppercase transition-colors group-hover:text-blue-500">
+                  {t(`stats.${stat.label}`)}
+                </span>
+              </div>
+              {/* Decorative line */}
+              <div className="absolute -bottom-2 h-0.5 w-0 bg-blue-600 transition-all group-hover:w-full" />
+            </motion.div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+};
+
+// Features/Ecosystem Section - Estilo Glassmorphism do Mockup
+const EcosystemSection = () => {
+  const t = useTranslations("homePage.ecosystem_section");
+
+  const modules = [
+    {
+      icon: Wallet,
+      title: t("modules.finance.title"),
+      description: t("modules.finance.description"),
+      color: "blue",
+    },
+    {
+      icon: Share2,
+      title: t("modules.tactical.title"),
+      description: t("modules.tactical.description"),
+      color: "blue",
+    },
+    {
+      icon: Activity,
+      title: t("modules.health.title"),
+      description: t("modules.health.description"),
+      color: "blue",
+    },
+    {
+      icon: Users,
+      title: t("modules.engagement.title"),
+      description: t("modules.engagement.description"),
+      color: "blue",
+    },
+  ];
 
   return (
-    <section className="bg-white py-20 dark:bg-(--color-blue-850)">
-      <div className="container mx-auto max-w-7xl px-4 md:px-6">
+    <section className="relative overflow-hidden bg-slate-950 py-32">
+      {/* Background Glows */}
+      <div className="absolute top-0 left-1/4 h-96 w-96 rounded-full bg-blue-600/10 blur-[120px]" />
+      <div className="absolute right-1/4 bottom-0 h-96 w-96 rounded-full bg-emerald-600/5 blur-[120px]" />
+
+      <div className="relative z-10 container mx-auto max-w-7xl px-4 md:px-6">
         {/* Header */}
-        <div className="mb-12 text-center">
-          <h2 className="mb-4 text-4xl font-bold text-gray-900 dark:text-white">
-            {t("title")}
+        <div className="mb-20 text-center">
+          <h2 className="mb-4 text-sm font-bold tracking-widest text-blue-500 uppercase">
+            RECURSOS DE ELITE
           </h2>
-          <p className="mx-auto max-w-3xl text-xl text-gray-600 dark:text-gray-300">
+          <h1 className="mx-auto mb-6 max-w-3xl text-4xl font-extrabold text-white md:text-5xl">
+            {t("title")}
+          </h1>
+          <p className="mx-auto max-w-2xl text-lg text-gray-400">
             {t("subtitle")}
           </p>
         </div>
 
-        {/* Stats */}
-        <div className="mb-12 grid gap-8 md:grid-cols-3">
-          <div className="text-center">
-            <div className="mb-2 flex items-center justify-center">
-              <Users className="mr-2 h-8 w-8 text-blue-500 dark:text-emerald-300" />
-              <span className="text-3xl font-bold text-gray-900 dark:text-white">
-                10.000+
-              </span>
-            </div>
-            <p className="text-gray-600 dark:text-gray-300">
-              {t("stats.activePlayers")}
-            </p>
-          </div>
-          <div className="text-center">
-            <div className="mb-2 flex items-center justify-center">
-              <Trophy className="mr-2 h-8 w-8 text-yellow-500 dark:text-yellow-400" />
-              <span className="text-3xl font-bold text-gray-900 dark:text-white">
-                500+
-              </span>
-            </div>
-            <p className="text-gray-600 dark:text-gray-300">
-              {t("stats.championships")}
-            </p>
-          </div>
-          <div className="text-center">
-            <div className="mb-2 flex items-center justify-center">
-              <Star className="mr-2 h-8 w-8 text-emerald-500 dark:text-emerald-300" />
-              <span className="text-3xl font-bold text-gray-900 dark:text-white">
-                4.9
-              </span>
-            </div>
-            <p className="text-gray-600 dark:text-gray-300">
-              {t("stats.averageRating")}
-            </p>
-          </div>
-        </div>
-
-        {/* Device mockups */}
-        <div className="relative">
-          {/* Desktop */}
-          <div className="relative mx-auto max-w-4xl">
-            <div className="rounded-t-2xl bg-gray-900 px-4 py-2 dark:bg-slate-900/80">
-              <div className="flex space-x-2">
-                <div className="h-3 w-3 rounded-full bg-red-500" />
-                <div className="h-3 w-3 rounded-full bg-yellow-500" />
-                <div className="h-3 w-3 rounded-full bg-green-500" />
-              </div>
-            </div>
-            <div className="rounded-b-2xl border-x-4 border-b-4 border-gray-900 bg-white p-8 dark:border-slate-800 dark:bg-slate-900">
-              <div className="flex h-96 items-center justify-center rounded-xl bg-linear-to-br from-gray-50 to-gray-100 dark:from-slate-900 dark:to-slate-800">
-                <Play className="h-16 w-16 text-gray-400 dark:text-gray-500" />
-              </div>
-            </div>
-          </div>
-
-          {/* Mobile mockups */}
-          <motion.div
-            initial={{ opacity: 0, x: -50 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.5 }}
-            className="absolute bottom-0 -left-8 w-48"
-          >
-            <div className="rounded-3xl bg-gray-900 p-2 dark:bg-slate-900">
-              <div className="h-80 rounded-2xl bg-white p-4 dark:bg-slate-900">
-                <div className="h-full rounded-xl bg-linear-to-br from-gray-50 to-gray-100 dark:from-slate-900 dark:to-slate-800" />
-              </div>
-            </div>
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0, x: 50 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.5 }}
-            className="absolute -right-8 bottom-0 w-48"
-          >
-            <div className="rounded-3xl bg-gray-900 p-2 dark:bg-slate-900">
-              <div className="h-80 rounded-2xl bg-white p-4 dark:bg-slate-900">
-                <div className="h-full rounded-xl bg-linear-to-br from-gray-50 to-gray-100 dark:from-slate-900 dark:to-slate-800" />
-              </div>
-            </div>
-          </motion.div>
-        </div>
-      </div>
-    </section>
-  );
-};
-
-// Testimonials Section
-const TestimonialsSection = () => {
-  const t = useTranslations("homePage.testimonials");
-
-  const testimonials = [
-    {
-      name: t("items.coach.name"),
-      role: t("items.coach.role"),
-      rating: 5,
-      text: t("items.coach.text"),
-      avatar: "👨‍💼",
-    },
-    {
-      name: t("items.captain.name"),
-      role: t("items.captain.role"),
-      rating: 5,
-      text: t("items.captain.text"),
-      avatar: "👩‍💼",
-    },
-    {
-      name: t("items.player.name"),
-      role: t("items.player.role"),
-      rating: 5,
-      text: t("items.player.text"),
-      avatar: "👨‍💼",
-    },
-  ];
-
-  return (
-    <section className="bg-gray-50 py-20 dark:bg-(--color-blue-850)">
-      <div className="container mx-auto max-w-7xl px-4 md:px-6">
-        <div className="mb-12 text-center">
-          <h2 className="mb-4 text-4xl font-bold text-gray-900 dark:text-white">
-            {t("title")}
-          </h2>
-        </div>
-
-        <div className="grid gap-8 md:grid-cols-3">
-          {testimonials.map((testimonial, index) => (
+        {/* Grid de módulos */}
+        <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-4">
+          {modules.map((module, index) => (
             <motion.div
               key={index}
-              initial={{ opacity: 0, y: 20 }}
+              initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: index * 0.1 }}
-              className="rounded-2xl bg-white p-6 shadow-lg dark:bg-slate-900/80 dark:shadow-emerald-900/20"
+              viewport={{ once: true }}
+              className="group relative rounded-3xl border border-white/5 bg-white/5 p-8 backdrop-blur-md transition-all hover:border-white/10 hover:bg-white/10"
             >
-              <div className="mb-4 flex items-center space-x-1">
-                {[...Array(testimonial.rating)].map((_, i) => (
-                  <Star
-                    key={i}
-                    className="h-5 w-5 fill-current text-yellow-500"
-                  />
-                ))}
+              <div className="mb-6 flex h-14 w-14 items-center justify-center rounded-2xl bg-blue-600/20 text-blue-400 transition-transform group-hover:scale-110">
+                <module.icon className="h-7 w-7" />
               </div>
-              <p className="mb-4 text-gray-600 dark:text-gray-300">
-                {testimonial.text}
-              </p>
-              <div className="flex items-center space-x-3">
-                <div className="text-3xl">{testimonial.avatar}</div>
-                <div>
-                  <div className="font-semibold text-gray-900 dark:text-white">
-                    {testimonial.name}
-                  </div>
-                  <div className="text-sm text-gray-500 dark:text-gray-400">
-                    {testimonial.role}
-                  </div>
-                </div>
-              </div>
-            </motion.div>
-          ))}
-        </div>
-      </div>
-    </section>
-  );
-};
-
-// Features Section
-const FeaturesSection = () => {
-  const t = useTranslations("homePage.features");
-
-  const features = [
-    {
-      icon: Users,
-      title: t("items.playerManagement.title"),
-      description: t("items.playerManagement.description"),
-    },
-    {
-      icon: Calendar,
-      title: t("items.centralizedSchedule.title"),
-      description: t("items.centralizedSchedule.description"),
-    },
-    {
-      icon: Trophy,
-      title: t("items.championshipOrganization.title"),
-      description: t("items.championshipOrganization.description"),
-    },
-    {
-      icon: MessageSquare,
-      title: t("items.communication.title"),
-      description: t("items.communication.description"),
-    },
-    {
-      icon: Shield,
-      title: t("items.accessControl.title"),
-      description: t("items.accessControl.description"),
-    },
-    {
-      icon: Star,
-      title: t("items.performanceAnalysis.title"),
-      description: t("items.performanceAnalysis.description"),
-    },
-  ];
-
-  return (
-    <section className="bg-white py-20 dark:bg-(--color-blue-850)">
-      <div className="container mx-auto max-w-7xl px-4 md:px-6">
-        <div className="mb-12 text-center">
-          <h2 className="mb-4 text-4xl font-bold text-gray-900 dark:text-white">
-            {t("title")}
-          </h2>
-        </div>
-
-        <div className="grid gap-6 md:grid-cols-3">
-          {features.map((feature, index) => (
-            <motion.div
-              key={index}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: index * 0.1 }}
-              className="rounded-2xl border border-gray-100 bg-linear-to-br from-gray-50 to-white p-6 transition-shadow hover:shadow-lg dark:border-slate-800 dark:from-slate-900/90 dark:to-slate-900"
-            >
-              <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-linear-to-br from-blue-100 to-cyan-100 dark:from-emerald-500/10 dark:to-blue-500/10">
-                <feature.icon className="h-6 w-6 text-blue-600 dark:text-emerald-300" />
-              </div>
-              <h3 className="mb-2 text-xl font-semibold text-gray-900 dark:text-white">
-                {feature.title}
+              <h3 className="mb-4 text-xl font-bold text-white">
+                {module.title}
               </h3>
-              <p className="text-gray-600 dark:text-gray-300">
-                {feature.description}
+              <p className="mb-8 text-sm leading-relaxed text-gray-400">
+                {module.description}
               </p>
+              <button className="flex items-center gap-2 text-xs font-bold tracking-widest text-blue-400 uppercase transition-colors hover:text-blue-300">
+                {t("modules.explore")} <ArrowRight className="h-4 w-4" />
+              </button>
             </motion.div>
           ))}
-        </div>
-      </div>
-    </section>
-  );
-};
-
-// CTA Section
-const CTASection = () => {
-  const { redirectToJourney } = useJourneyRedirect();
-  const t = useTranslations("homePage.cta");
-
-  return (
-    <section className="bg-linear-to-br from-gray-900 to-gray-800 py-20 dark:from-slate-950 dark:to-slate-900">
-      <div className="container mx-auto max-w-7xl px-4 text-center md:px-6">
-        <h2 className="mb-4 text-4xl font-bold text-white">{t("title")}</h2>
-        <p className="mx-auto mb-8 max-w-2xl text-xl text-gray-300 dark:text-gray-300">
-          {t("subtitle")}
-        </p>
-        <div className="flex flex-col justify-center gap-4 sm:flex-row">
-          <Button
-            onClick={redirectToJourney}
-            className="border-2 border-white bg-linear-to-r from-emerald-500 to-green-500 px-8 py-6 text-lg text-white hover:from-emerald-600 hover:to-green-600"
-          >
-            {t("createAccount")}
-          </Button>
-          <Button
-            variant="outline"
-            className="border-2 border-gray-700 px-8 py-6 text-lg text-gray-700 hover:bg-gray-100 hover:text-gray-900 dark:border-emerald-500/40 dark:bg-transparent dark:text-white dark:hover:bg-emerald-500/10"
-          >
-            <Handshake className="mr-2 h-6 w-6 text-gray-700 dark:text-emerald-300" />
-            {t("becomePartner")}
-          </Button>
         </div>
       </div>
     </section>
@@ -599,12 +340,10 @@ const CTASection = () => {
 
 export default function Home() {
   return (
-    <main className="relative">
+    <main className="relative bg-slate-950">
       <HeroSection />
-      <DemoSection />
-      <TestimonialsSection />
-      <FeaturesSection />
-      <CTASection />
+      <StatsSection />
+      <EcosystemSection />
     </main>
   );
 }

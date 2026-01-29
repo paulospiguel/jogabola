@@ -6,15 +6,14 @@ import { useTranslations } from "next-intl";
 import Image, { type StaticImageData } from "next/image";
 import Link from "next/link";
 
-import logoAnimated from "@/assets/animations/jogabola-loop.gif";
-import logoGreen from "@/assets/logos/jogabola-green.svg";
 import logo from "@/assets/logos/jogabola-logo.svg";
 import logoWhite from "@/assets/logos/jogabola-white.svg";
+import newLogoAnimated from "@/assets/logos/logo_animado.gif";
 import React, { ComponentProps } from "react";
 
 const sizes = {
-  mini: "w-20 h-20",
-  small: "h-16 w-24",
+  mini: "w-16 h-20",
+  small: "h-24 w-28",
   medium: "h-28 w-48",
   large: "h-36 w-72",
 } as const;
@@ -23,19 +22,16 @@ type LogoProps = {
   className?: ComponentProps<"div">["className"];
   size?: keyof typeof sizes;
   isAnimate?: boolean;
-  color?: "white" | "default" | "green" | "blue";
+  variant?: "white" | "default";
 };
 
 const imageColors = {
   white: logoWhite,
-  green: logoGreen,
-  blue: logo,
   default: logo,
-  withBorder: logo,
 };
 
 export const Logo: React.FC<LogoProps> = ({
-  color,
+  variant,
   className,
   isAnimate,
   size = "medium",
@@ -45,17 +41,11 @@ export const Logo: React.FC<LogoProps> = ({
   let logotipo: StaticImageData;
 
   if (isAnimate) {
-    logotipo = logoAnimated;
+    logotipo = newLogoAnimated;
   } else {
-    switch (color) {
+    switch (variant) {
       case "white":
         logotipo = imageColors.white;
-        break;
-      case "green":
-        logotipo = imageColors.green;
-        break;
-      case "blue":
-        logotipo = imageColors.blue;
         break;
       default:
         logotipo = imageColors.default;

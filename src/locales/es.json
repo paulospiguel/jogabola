@@ -72,16 +72,79 @@
   "aboutPage": {
     "title": "Acerca de"
   },
+  "teamPage": {
+    "title": "Nuestro <blue>Equipo</blue>",
+    "subtitle": "Uniendo la visión humana a la inteligencia artificial para revolucionar la gestión deportiva global con JOGABOLA.",
+    "badge": "INNOVATION TEAM",
+    "ceoName": "FUNDADOR Y CEO",
+    "aiAgentsTitle": "AGENTES DE IA",
+    "agents": {
+      "dataEngineering": {
+        "title": "Ingeniería de Datos",
+        "description": "Procesamiento masivo de métricas de rendimiento y estructuración de Big Data deportivo."
+      },
+      "tacticalAnalysis": {
+        "title": "Análisis Táctico IA",
+        "description": "Identificación de patrones de juego y simulación de escenarios estratégicos de alta precisión."
+      },
+      "intelligentSupport": {
+        "title": "Soporte Inteligente",
+        "description": "Asistencia 24/7 para gestores y atletas con lenguaje natural y resoluciones inmediatas."
+      }
+    }
+  },
+  "ecosystemPage": {
+    "badge": "HOJA DE RUTA DEL ECOSISTEMA",
+    "title": "El Futuro de la <blue>Gestión Deportiva</blue>",
+    "subtitle": "Explore la próxima generación de módulos tecnológicos de Jogabola, desarrollados para elevar el rendimiento de clubes y atletas.",
+    "status": {
+      "beta": "Prueba Beta",
+      "development": "En Desarrollo",
+      "more": "Saber Más",
+      "joinBeta": "Unirse a la Beta",
+      "learnMore": "Saber Más"
+    },
+    "modules": {
+      "scout": {
+        "title": "Scout Pro IA",
+        "description": "Sistema avanzado de reconocimiento de talentos mediante visión artificial y análisis predictivo del potencial competitivo."
+      },
+      "finance": {
+        "title": "Módulo Financeiro Elite",
+        "description": "Gestión de tesorería deportiva, contratos y cumplimiento automatizado con tecnología blockchain para una transparencia total."
+      },
+      "marketplace": {
+        "title": "Mercado de Atletas",
+        "description": "Conexión directa entre clubes, agentes y talentos en un ambiente seguro con carteras digitales validad por IA."
+      },
+      "health": {
+        "title": "Salud Preventiva IA",
+        "description": "Seguimiento biométrico en tiempo real para la prevención de lesiones y la optimización de cargas de entrenamiento individualizadas."
+      }
+    },
+    "newsletter": {
+      "title": "Mantente Actualizado",
+      "subtitle": "Recibe notificaciones exclusivas sobre el lanzamiento de nuevos módulos e invitaciones para betas cerradas.",
+      "placeholder": "Tu mejor correo electrónico",
+      "button": "Suscribirse al Boletín"
+    },
+    "labels": {
+      "progress": "PROGRESO"
+    }
+  },
   "menu": {
     "home": "Inicio",
+    "team": "Equipo",
     "ecosystem": "Ecosistema",
     "community": "Comunidad",
     "marketplace": "Mercado",
+    "partners": "Socios",
     "academy": "Academia",
     "howItWorks": "Cómo funciona",
     "becomePartner": "Convertirse en Socio",
     "about": "Acerca de",
     "contact": "Contacto",
+    "careers": "Carreras",
     "privacy": "Privacidad",
     "terms": "Términos",
     "blog": "Blog",
@@ -190,8 +253,28 @@
   "footer": {
     "contact": "Contacto",
     "faq": "Preguntas frecuentes",
-    "privacyPolicy": "Política de privacidad",
-    "termsAndConditions": "Términos y condiciones"
+    "privacyPolicy": "Política de Privacidad",
+    "termsAndConditions": "Términos y Condiciones",
+    "description": "¡Encuentra tu equipo ideal o crea el tuyo propio, gestiona a tus atletas y participa en ligas legendarias!",
+    "columns": {
+      "product": "Producto",
+      "institutional": "Institucional",
+      "legal": "Legal"
+    },
+    "links": {
+      "features": "Características",
+      "plans": "Planes",
+      "community": "Comunidad",
+      "about": "Acerca de",
+      "contact": "Contacto",
+      "academy": "Academia",
+      "partners": "Convertirse en Socio",
+      "privacy": "Privacidad",
+      "terms": "Términos",
+      "cookies": "Cookies"
+    },
+    "copyright": "Derechos de autor © {year} {company}. Todos los derechos reservados.",
+    "systems": "SISTEMAS OPERATIVOS"
   },
   "header": {
     "about": "Acerca de nosotros",
@@ -230,6 +313,13 @@
         "freeToStart": "Gratis para empezar",
         "noCard": "Sin tarjeta"
       }
+    },
+    "stats": {
+      "title": "Jogabola en números",
+      "clubs": "Clubes",
+      "players": "Jugadores",
+      "rating": "Rating",
+      "averageRating": "Calificación promedio"
     },
     "demo": {
       "title": "Demostración de la App",
@@ -506,5 +596,69 @@
     "intermediate": "Intermedio",
     "advanced": "Avanzado",
     "professional": "Profesional"
+  },
+  "clubPage": {
+    "stats": {
+      "followers": "Seguidores",
+      "following": "Siguiendo",
+      "matchesWon": "Victorias"
+    },
+    "navigation": {
+      "home": "Inicio",
+      "matches": "Partidos",
+      "squad": "Plantilla",
+      "news": "Notícias",
+      "recruitment": "Reclutamiento",
+      "searchPlaceholder": "Buscar Jugadores..."
+    },
+    "nextMatch": {
+      "title": "PRÓXIMO PARTIDO",
+      "fullSchedule": "VER CALENDARIO",
+      "getTickets": "OBTENER ENTRADAS",
+      "countdown": {
+        "days": "DÍAS",
+        "hrs": "HRS",
+        "mins": "MINS"
+      }
+    },
+    "squad": {
+      "title": "LA ALINEACIÓN",
+      "filters": {
+        "all": "Todos",
+        "attack": "Ataque",
+        "midfield": "Mediocampo",
+        "defense": "Defensa"
+      }
+    },
+    "news": {
+      "title": "BOLETÍN DEL CLUB",
+      "viewAll": "VER TODAS LAS NOTICIAS"
+    },
+    "recruitment": {
+      "title": "ÚNETE AO EQUIPO",
+      "subtitle": "Buscamos talentos de élite para la próxima temporada. Solicítalo a continuación.",
+      "fields": {
+        "name": "NOMBRE COMPLETO",
+        "namePlaceholder": "Introduce tu nombre",
+        "position": "POSICIÓN PREFERIDA",
+        "experience": "MENSAJE / EXPERIENCIA",
+        "experiencePlaceholder": "Cuéntanos sobre tu formación",
+        "submit": "ENVIAR SOLICITUD"
+      }
+    }
+  },
+  "notFound": {
+    "warning": "ERROR DE POSICIONAMIENTO",
+    "title": "404 - ¡FUERA DE JUEGO!",
+    "subtitle": "Formación Incorrecta: Página Desalineada",
+    "description": "El esquema táctico falló. La jugada fue interrumpida por el juez de línea porque el destino que buscas no fue encontrado en el campo.",
+    "refreshButton": "REFRESH (REINICIAR PARTIDA)",
+    "mapButton": "MAPA (VER MAPA DEL SITIO)",
+    "status": {
+      "positioning": "POSICIONAMIENTO: ERRADO",
+      "impediment": "ESTADO: FUERA DE JUEGO",
+      "var": "VAR: CHEQUEANDO..."
+    },
+    "footer": "JOGABOLA @ 2024 • TÁCTICAMENTE PERDIDO"
   }
 }

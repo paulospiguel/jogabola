@@ -1,12 +1,12 @@
 "use client";
 
 import { motion } from "framer-motion";
+import { CheckCircle, Globe, Handshake, Sparkles, Users } from "lucide-react";
 import { useTranslations } from "next-intl";
 import Image from "next/image";
 import Link from "next/link";
-import { CheckCircle, Sparkles, Users, Globe, Handshake } from "lucide-react";
 
-import { partners, partnersByCategory } from "@/data/partners";
+import { partners, partnersByCategory } from "@/constants/partners";
 import { cn } from "@/lib/utils";
 import type { Partner, PartnerCategory } from "@/types/partners";
 
@@ -35,7 +35,13 @@ const categoryStyles = {
   },
 };
 
-const PartnerCard = ({ partner, index }: { partner: Partner; index: number }) => {
+const PartnerCard = ({
+  partner,
+  index,
+}: {
+  partner: Partner;
+  index: number;
+}) => {
   const styles = categoryStyles[partner.category];
 
   return (

@@ -2,6 +2,66 @@
   "aboutPage": {
     "title": "Acerca de"
   },
+  "teamPage": {
+    "title": "Nossa <blue>Equipe</blue>",
+    "subtitle": "Unindo a visão humana à inteligência artificial para revolucionar a gestão esportiva global com JOGABOLA.",
+    "badge": "INNOVATION TEAM",
+    "ceoName": "FUNDADOR & CEO",
+    "aiAgentsTitle": "AGENTES DE IA",
+    "agents": {
+      "dataEngineering": {
+        "title": "Engenharia de Dados",
+        "description": "Processamento massivo de métricas de desempenho e estruturação de Big Data esportivo."
+      },
+      "tacticalAnalysis": {
+        "title": "Análise Tática IA",
+        "description": "Identificação de padrões de jogo e simulação de cenários estratégicos de alta precisão."
+      },
+      "intelligentSupport": {
+        "title": "Suporte Inteligente",
+        "description": "Assistência 24/7 para gestores e atletas com linguagem natural e resoluções imediatas."
+      }
+    }
+  },
+  "ecosystemPage": {
+    "badge": "ECOSYSTEM ROADMAP",
+    "title": "O Futuro da <blue>Gestão Esportiva</blue>",
+    "subtitle": "Explore a próxima geração de módulos tecnológicos do Jogabola, desenvolvidos para elevar a performance de clubes e atletas.",
+    "status": {
+      "beta": "Beta Teste",
+      "development": "Em Desenvolvimento",
+      "more": "Saiba Mais",
+      "joinBeta": "Join Beta",
+      "learnMore": "Saiba Mais"
+    },
+    "modules": {
+      "scout": {
+        "title": "Scout Pro IA",
+        "description": "Sistema avançado de reconhecimento de talentos através de visão computacional e análise preditiva de potencial competitivo."
+      },
+      "finance": {
+        "title": "Módulo Financeiro Elite",
+        "description": "Gestão de tesouraria esportiva, contratos e compliance automatizado com tecnologia blockchain para total transparência."
+      },
+      "marketplace": {
+        "title": "Marketplace de Atletas",
+        "description": "Conexão direta entre clubes, agentes e talentos em um ambiente seguro com portfólios digitais validados por IA."
+      },
+      "health": {
+        "title": "Saúde Preventiva IA",
+        "description": "Monitoramento biométrico em tempo real para prevenção de lesões e otimização de cargas de treinamento individualizadas."
+      }
+    },
+    "newsletter": {
+      "title": "Mantenha-se Atualizado",
+      "subtitle": "Receba notificações exclusivas sobre o lançamento de novos módulos e convites para betas fechados.",
+      "placeholder": "Seu melhor e-mail",
+      "button": "Assinar Newsletter"
+    },
+    "labels": {
+      "progress": "PROGRESSO"
+    }
+  },
   "howItWorksPage": {
     "title": "Como Funciona",
     "subtitle": "Democratizando o Futebol",
@@ -253,8 +313,28 @@
   "footer": {
     "contact": "Contato",
     "faq": "FAQ",
-    "privacyPolicy": "Privacy Policy",
-    "termsAndConditions": "Termos e condições"
+    "privacyPolicy": "Política de Privacidade",
+    "termsAndConditions": "Termos e Condições",
+    "description": "Encontre sua equipe ideal ou crie a sua própria, gerencie seus atletas e participe de ligas lendárias!",
+    "columns": {
+      "product": "Produto",
+      "institutional": "Institucional",
+      "legal": "Legal"
+    },
+    "links": {
+      "features": "Recursos",
+      "plans": "Planos",
+      "community": "Comunidade",
+      "about": "Sobre",
+      "contact": "Contato",
+      "academy": "Academia",
+      "partners": "Tornar-se Parceiro",
+      "privacy": "Privacidade",
+      "terms": "Termos",
+      "cookies": "Cookies"
+    },
+    "copyright": "Direitos autorais © {year} {company}. Todos os direitos reservados.",
+    "systems": "SISTEMAS OPERACIONAIS"
   },
   "header": {
     "about": "Sobre nós",
@@ -262,7 +342,7 @@
     "howItWorks": "Como funciona",
     "plans": "Planos",
     "new": "Novo",
-    "launchJourney": "Iniciar jornada",
+    "launchJourney": "Começar Agora",
     "signIn": "Entrar",
     "arena": "Arena",
     "playZone": "Play Zone",
@@ -272,7 +352,8 @@
   },
   "menu": {
     "home": "Início",
-    "ecosystem": "Ecossistema",
+    "team": "Equipe",
+    "ecosystem": "Recursos",
     "community": "Comunidade",
     "marketplace": "Marketplace",
     "academy": "Academia",
@@ -280,6 +361,7 @@
     "becomePartner": "Tornar-se Parceiro",
     "about": "Sobre",
     "contact": "Contacto",
+    "careers": "Carreiras",
     "privacy": "Privacidade",
     "terms": "Termos",
     "blog": "Blog",
@@ -334,16 +416,23 @@
     "downloadOnGooglePlay": "Baixar no Google Play",
     "appMockupAlt": "Mockup do aplicativo Jogabola",
     "hero": {
-      "versionBadge": "Versão 2.0",
+      "versionBadge": "GESTÃO 2.0",
       "title": "Pronto para gerenciar seu",
       "titleHighlight": "time dos sonhos?",
       "subtitle": "Monte sua equipe profissional, defina táticas e domine o campo digital.",
-      "startJourney": "Iniciar Minha Jornada",
+      "startJourney": "Começar Agora",
       "watchDemo": "Ver Demonstração",
       "trustIndicators": {
         "freeToStart": "Grátis para começar",
         "noCard": "Sem cartão"
       }
+    },
+    "stats": {
+      "title": "Jogabola em números",
+      "clubs": "Clubes",
+      "players": "Jogadores",
+      "rating": "Avaliação",
+      "averageRating": "Avaliação média"
     },
     "demo": {
       "title": "Demonstração do App",
@@ -372,6 +461,29 @@
           "role": "Jogador",
           "text": "Mais tempo para focar no jogo!"
         }
+      }
+    },
+    "ecosystem_section": {
+      "title": "O ecossistema completo para a gestão do seu clube",
+      "subtitle": "Desenvolvemos as ferramentas necessárias para profissionalizar cada departamento da sua organização esportiva.",
+      "modules": {
+        "finance": {
+          "title": "Gestão Financeira",
+          "description": "Controle total de mensalidades, patrocínios e despesas. Relatórios automáticos para uma saúde financeira impecável."
+        },
+        "tactical": {
+          "title": "Planejamento Tático",
+          "description": "Desenhe jogadas, organize escalações e compartilhe vídeos de análise técnica com sua comissão e atletas em tempo real."
+        },
+        "health": {
+          "title": "Saúde do Atleta",
+          "description": "Monitoramento de carga, histórico de lesões e acompanhamento fisiológico para maximizar a performance e reduzir riscos."
+        },
+        "engagement": {
+          "title": "Engajamento de Fãs",
+          "description": "Portal do torcedor, venda de ingressos online e programas de fidelidade para fortalecer o vínculo com sua comunidade."
+        },
+        "explore": "Explorar módulo"
       }
     },
     "features": {
@@ -438,7 +550,7 @@
       "quote": "Acompanhe o desempenho de seus jogadores, monte estatísticas detalhadas e acompanhe o desempenho de sua equipe."
     }
   },
-  "ecosystemPage": {
+  "ecosystemApps": {
     "title": "Ecosistema JogaBola",
     "subtitle": "Uma suite completa de aplicações e plataformas para revolucionar o futebol amador. Desde a descoberta de equipas até à gestão profissional de ligas.",
     "apps": {
@@ -944,5 +1056,69 @@
     "intermediate": "Intermediário",
     "advanced": "Avançado",
     "professional": "Profissional"
+  },
+  "clubPage": {
+    "stats": {
+      "followers": "Seguidores",
+      "following": "Seguindo",
+      "matchesWon": "Vitórias"
+    },
+    "navigation": {
+      "home": "Início",
+      "matches": "Partidas",
+      "squad": "Plantel",
+      "news": "Notícias",
+      "recruitment": "Recrutamento",
+      "searchPlaceholder": "Procurar Jogadores..."
+    },
+    "nextMatch": {
+      "title": "PRÓXIMA PARTIDA",
+      "fullSchedule": "VER CALENDÁRIO",
+      "getTickets": "OBTER BILHETES",
+      "countdown": {
+        "days": "DIAS",
+        "hrs": "HRS",
+        "mins": "MINS"
+      }
+    },
+    "squad": {
+      "title": "A ESCALAÇÃO",
+      "filters": {
+        "all": "Todos",
+        "attack": "Ataque",
+        "midfield": "Meio-Campo",
+        "defense": "Defesa"
+      }
+    },
+    "news": {
+      "title": "BOLETIM DO CLUBE",
+      "viewAll": "VER TODAS AS NOTÍCIAS"
+    },
+    "recruitment": {
+      "title": "JUNTE-SE À EQUIPE",
+      "subtitle": "Procuramos talentos de elite para a próxima temporada. Candidate-se abaixo.",
+      "fields": {
+        "name": "NOME COMPLETO",
+        "namePlaceholder": "Digite o seu nome",
+        "position": "POSIÇÃO PREFERIDA",
+        "experience": "MENSAGEM / EXPERIÊNCIA",
+        "experiencePlaceholder": "Conte-nos sobre o seu percurso",
+        "submit": "ENVIAR CANDIDATURA"
+      }
+    }
+  },
+  "notFound": {
+    "warning": "ERRO DE POSICIONAMENTO",
+    "title": "404 - FORA DE JOGO!",
+    "subtitle": "Formação Incorreta: Página Desalinhada",
+    "description": "O esquema tático falhou. A jogada foi interrompida pelo bandeirinha porque o destino que você procura não foi encontrado no campo.",
+    "refreshButton": "REFRESH (REINICIAR PARTIDA)",
+    "mapButton": "MAP (VER MAPA DE)",
+    "status": {
+      "positioning": "POSICIONAMENTO: ERRADO",
+      "impediment": "STATUS: IMPEDIMENTO",
+      "var": "VAR: CHECANDO..."
+    },
+    "footer": "JOGABOLA @ 2024 • TATICAMENTE PERDIDO"
   }
 }

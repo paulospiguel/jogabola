@@ -1,17 +1,293 @@
-import { Home } from 'lucide-react'
-import Link from 'next/link'
-import { LuBotOff } from 'react-icons/lu'
- 
+"use client";
+
+import { Logo } from "@/components/logo";
+import { Button } from "@/components/ui/button";
+import { motion } from "framer-motion";
+import { HelpCircle, RefreshCw, Share2 } from "lucide-react";
+import { useTranslations } from "next-intl";
+import Link from "next/link";
+
+const TacticalDiagram = () => (
+  <div className="relative h-full w-full">
+    <svg
+      viewBox="0 0 400 300"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      className="h-full w-full"
+    >
+      {/* Field Arc */}
+      <circle
+        cx="200"
+        cy="150"
+        r="60"
+        stroke="white"
+        strokeOpacity="0.05"
+        strokeWidth="2"
+      />
+
+      {/* Movement Path */}
+      <motion.path
+        d="M 50 200 Q 150 180 220 120 T 350 100"
+        stroke="#2563eb"
+        strokeWidth="3"
+        strokeDasharray="8 8"
+        initial={{ pathLength: 0, opacity: 0 }}
+        animate={{ pathLength: 1, opacity: 0.6 }}
+        transition={{ duration: 2, ease: "easeInOut" }}
+      />
+
+      {/* Connection Points */}
+      <motion.circle
+        cx="50"
+        cy="200"
+        r="6"
+        fill="#0f172a"
+        stroke="#2563eb"
+        strokeWidth="2"
+        initial={{ scale: 0 }}
+        animate={{ scale: 1 }}
+        transition={{ delay: 0.5 }}
+      />
+      <text
+        x="40"
+        y="230"
+        className="fill-blue-500 text-[10px] font-black tracking-widest uppercase"
+      >
+        START_ROUTE
+      </text>
+
+      <motion.circle
+        cx="220"
+        cy="120"
+        r="6"
+        fill="#0f172a"
+        stroke="#2563eb"
+        strokeWidth="2"
+        initial={{ scale: 0 }}
+        animate={{ scale: 1 }}
+        transition={{ delay: 1 }}
+      />
+
+      <motion.circle
+        cx="300"
+        cy="150"
+        r="6"
+        fill="#0f172a"
+        stroke="#2563eb"
+        strokeWidth="2"
+        initial={{ scale: 0 }}
+        animate={{ scale: 1 }}
+        transition={{ delay: 1.5 }}
+      />
+
+      {/* Offside Marker */}
+      <g className="translate-x-[350px] translate-y-[100px]">
+        <motion.circle
+          r="40"
+          stroke="#ef4444"
+          strokeWidth="2"
+          strokeDasharray="4 4"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 0.3 }}
+          transition={{ delay: 2 }}
+        />
+        <motion.path
+          d="M -20 -20 L 20 20 M -20 20 L 20 -20"
+          stroke="#ef4444"
+          strokeWidth="6"
+          strokeLinecap="round"
+          initial={{ scale: 0, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          transition={{ type: "spring", delay: 2.2 }}
+        />
+        <text
+          x="0"
+          y="-50"
+          textAnchor="middle"
+          className="fill-red-500 text-[10px] font-black tracking-widest uppercase"
+        >
+          404_OFFSIDE
+        </text>
+      </g>
+    </svg>
+  </div>
+);
+
+const GridBackground = () => (
+  <div className="pointer-events-none absolute inset-0 overflow-hidden">
+    <div className="absolute inset-0 bg-slate-950" />
+    <div
+      className="absolute inset-0 opacity-[0.05]"
+      style={{
+        backgroundImage: `linear-gradient(to right, #ffffff10 1px, transparent 1px), linear-gradient(to bottom, #ffffff10 1px, transparent 1px)`,
+        backgroundSize: "60px 60px",
+      }}
+    />
+    {/* Radial Glow */}
+    <div className="absolute top-1/2 left-1/2 h-[800px] w-[800px] -translate-x-1/2 -translate-y-1/2 bg-blue-600/5 blur-[120px]" />
+  </div>
+);
+
 export default function NotFound() {
+  const t = useTranslations("notFound");
+
   return (
-    <div className='w-full h-screen flex flex-col justify-center items-center gap-4'>
-      <LuBotOff size={84} className='text-[#00cfb1]' />
-      <h2 className='text-2xl font-bold'>Not Found</h2>
-      <p>Could not find requested resource</p>
-      <Link href="/" className='text-[#00cfb1]'>
-      <Home className='inline mb-1 mr-2' />
-        Go Home
-      </Link>
-    </div>
-  )
+    <main className="relative flex min-h-screen w-full flex-col items-center justify-center overflow-hidden p-4">
+      <GridBackground />
+
+      {/* Top Header */}
+      <div className="absolute top-12 left-12 z-20">
+        <Logo size="mini" variant="white" />
+      </div>
+
+      <div className="relative z-10 w-full max-w-6xl">
+        <motion.div
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.8 }}
+          className="overflow-hidden rounded-[40px] border border-white/10 bg-slate-900/60 p-8 backdrop-blur-3xl md:p-16 lg:p-24"
+        >
+          <div className="grid gap-16 lg:grid-cols-2">
+            {/* Left Content */}
+            <div className="flex flex-col justify-center text-left">
+              <motion.div
+                initial={{ x: -20, opacity: 0 }}
+                animate={{ x: 0, opacity: 1 }}
+                transition={{ delay: 0.2 }}
+                className="mb-8 inline-flex"
+              >
+                <div className="rounded-full border border-red-500/20 bg-red-500/10 px-4 py-1">
+                  <span className="text-[10px] font-black tracking-[0.2em] text-red-500 uppercase">
+                    WARNING {t("warning")}
+                  </span>
+                </div>
+              </motion.div>
+
+              <motion.h1
+                initial={{ y: 20, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                transition={{ delay: 0.3 }}
+                className="mb-4 text-5xl font-black tracking-tighter text-white md:text-7xl lg:text-8xl"
+              >
+                404 -{" "}
+                <span className="text-blue-500 italic">
+                  {t("title").split("- ")[1]}
+                </span>
+              </motion.h1>
+
+              <motion.h2
+                initial={{ y: 20, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                transition={{ delay: 0.4 }}
+                className="mb-6 text-xl font-bold tracking-tight text-white md:text-3xl"
+              >
+                {t("subtitle")}
+              </motion.h2>
+
+              <motion.p
+                initial={{ y: 20, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                transition={{ delay: 0.5 }}
+                className="mb-12 max-w-lg text-lg leading-relaxed text-gray-400"
+              >
+                {t("description")}
+              </motion.p>
+
+              <motion.div
+                initial={{ y: 20, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                transition={{ delay: 0.6 }}
+                className="flex flex-wrap gap-4"
+              >
+                <Button
+                  onClick={() => window.location.reload()}
+                  className="group h-16 rounded-2xl bg-blue-600 px-8 text-sm font-black tracking-widest text-white uppercase transition-all hover:bg-blue-700 hover:shadow-[0_0_30px_rgba(37,99,235,0.4)]"
+                >
+                  <RefreshCw
+                    className="mr-3 transition-transform group-hover:rotate-180"
+                    size={18}
+                  />
+                  <div className="flex flex-col items-start leading-none">
+                    <span className="text-[10px] opacity-70">REFRESH</span>
+                    <span>
+                      {t("refreshButton").includes("(")
+                        ? t("refreshButton")
+                            .split("(")[1]
+                            .replace(")", "")
+                            .trim()
+                        : t("refreshButton")}
+                    </span>
+                  </div>
+                </Button>
+
+                <Button
+                  variant="secondary"
+                  asChild
+                  className="h-16 rounded-2xl border border-white/5 bg-white/5 px-8 text-sm font-black tracking-widest text-white uppercase transition-all hover:bg-white/10"
+                >
+                  <Link href="/">
+                    <div className="flex flex-col items-start leading-none">
+                      <span className="text-[10px] opacity-70">MAP</span>
+                      <span>
+                        {t("mapButton").includes("(")
+                          ? t("mapButton").split("(")[1].replace(")", "").trim()
+                          : t("mapButton")}
+                      </span>
+                    </div>
+                  </Link>
+                </Button>
+              </motion.div>
+            </div>
+
+            {/* Right Content - Tactical Diagram */}
+            <div className="relative hidden lg:block">
+              <div className="absolute inset-0 flex items-center justify-center">
+                <TacticalDiagram />
+              </div>
+            </div>
+          </div>
+        </motion.div>
+
+        {/* Status Line */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 1 }}
+          className="mt-8 flex flex-wrap justify-center gap-12"
+        >
+          <div className="flex items-center gap-2">
+            <div className="h-2 w-2 rounded-full bg-blue-500" />
+            <span className="text-[10px] font-black tracking-widest text-gray-500 uppercase">
+              {t("status.positioning")}
+            </span>
+          </div>
+          <div className="flex items-center gap-2">
+            <div className="h-2 w-2 animate-pulse rounded-full bg-red-500" />
+            <span className="text-[10px] font-black tracking-widest text-gray-500 uppercase">
+              {t("status.impediment")}
+            </span>
+          </div>
+          <div className="flex items-center gap-2">
+            <div className="h-2 w-2 rounded-full bg-yellow-500" />
+            <span className="text-[10px] font-black tracking-widest text-gray-500 uppercase">
+              {t("status.var")}
+            </span>
+          </div>
+        </motion.div>
+      </div>
+
+      {/* Footer */}
+      <div className="absolute inset-x-0 bottom-8 px-12 text-gray-600">
+        <div className="flex items-center justify-between">
+          <div className="text-[10px] font-black tracking-[0.2em] uppercase">
+            {t("footer")}
+          </div>
+          <div className="flex items-center gap-6">
+            <HelpCircle size={18} className="cursor-pointer hover:text-white" />
+            <Share2 size={18} className="cursor-pointer hover:text-white" />
+          </div>
+        </div>
+      </div>
+    </main>
+  );
 }

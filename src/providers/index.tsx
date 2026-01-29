@@ -1,12 +1,11 @@
 "use client";
 
-import type { ReactNode } from "react";
-import Cookies from "@/components/cookies";
+import CookieConsent from "@/components/cookie-consent";
+import { Toaster } from "@/components/ui/toaster";
 import QueryClientProvider from "@/providers/query-client.provider";
 import { ThemeProvider } from "@/providers/theme.provider";
-import { Toaster } from "@/components/ui/toaster";
-import { Analytics } from "@vercel/analytics/react"
-
+import { Analytics } from "@vercel/analytics/react";
+import type { ReactNode } from "react";
 
 type ProviderProps = {
   children: ReactNode;
@@ -23,7 +22,7 @@ export function Providers({ children }: ProviderProps) {
         disableTransitionOnChange
       >
         {children}
-        <Cookies />
+        <CookieConsent />
         <Toaster />
         <Analytics />
       </ThemeProvider>
