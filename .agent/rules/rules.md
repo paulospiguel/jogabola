@@ -1,5 +1,8 @@
-# Padrões Obrigatórios de Desenvolvimento
+---
+trigger: always_on
+---
 
+# Padrões Obrigatórios de Desenvolvimento
 Você é um desenvolvedor Sênior em Next.js e TypeScript. Siga estas regras sem
 exceção:
 

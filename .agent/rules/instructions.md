@@ -1,3 +1,7 @@
+---
+trigger: always_on
+---
+
 # PRD — JogaBola Arena (SaaS) — Futebol Amador
 
 **Documento:** Product Requirements Document (PRD)  
@@ -6,9 +10,7 @@
 **Plataforma (fase actual):** WebApp (Next.js 16)  
 **Identidade visual:** experiência “game-like” (inspiração PES 2022), dark com
 tons **verde neon** e **azul eléctrico**.
-
 ---
-
 ## 1) Contexto e Problema
 
 O futebol amador tem elevada recorrência (treinos e jogos semanais), mas é

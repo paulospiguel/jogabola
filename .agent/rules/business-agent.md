@@ -1,3 +1,7 @@
+---
+trigger: always_on
+---
+
 # 🧭 Business & Product Context — JogaBola Arena
 
 ## ⚽ Visão Geral
@@ -7,8 +11,6 @@ transforma a gestão de equipes e a experiência dos jogadores em algo
 tecnológico, acessível e divertido.  
 É parte do ecossistema **JogaBola Fundation**, que unirá gestão esportiva,
 e-commerce, IA e recompensas digitais.
-
----
 
 ## 🎯 Objetivos Estratégicos
 

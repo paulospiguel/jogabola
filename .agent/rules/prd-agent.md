@@ -1,5 +1,8 @@
-# ⚽ JogaBola Arena — Product Requirements Document (PRD)
+---
+trigger: always_on
+---
 
+# ⚽ JogaBola Arena — Product Requirements Document (PRD)
 ## 🧭 Visão Geral
 
 O **JogaBola Arena** é uma plataforma SaaS que digitaliza e eleva a experiência
