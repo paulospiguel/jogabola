@@ -1,11 +1,11 @@
 "use client";
 
 import {
-    createProfileFromOnboarding,
-    getPendingOnboarding,
-    getProfileData,
-    linkOnboardingToUser,
-    saveOnboarding,
+  createProfileFromOnboarding,
+  getPendingOnboarding,
+  getProfileData,
+  linkOnboardingToUser,
+  saveOnboarding,
 } from "@/actions/profile";
 import { Logo } from "@/components/logo";
 import { OnboardNavigation } from "@/components/onboard-navigation";
@@ -483,7 +483,9 @@ export default function OnboardPage() {
             onNationalityChange={value => updateFormData("nationality", value)}
             onCountryChange={value => updateFormData("country", value)}
             onCityChange={value => updateFormData("city", value)}
-            onLocationChange={value => updateFormData("location", value)}
+            onLocationChange={(value: string) =>
+              updateFormData("location", value)
+            }
           />
         );
 
@@ -613,7 +615,7 @@ export default function OnboardPage() {
         <FieldPattern />
         {/* Loading centralizado */}
         <div className="relative z-10 flex min-h-screen items-center justify-center">
-          <Logo size="medium" isAnimate color="green" />
+          <Logo size="medium" isAnimate variant="default" />
         </div>
       </div>
     );

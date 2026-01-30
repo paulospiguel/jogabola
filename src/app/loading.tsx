@@ -7,7 +7,7 @@ import { Loader2 } from "lucide-react";
 
 export default function LoadingPage() {
   return (
-    <div className="relative min-h-screen overflow-hidden bg-gradient-to-br from-background-gradient-start via-background-gradient-mid to-background-gradient-end">
+    <div className="from-background-gradient-start via-background-gradient-mid to-background-gradient-end relative min-h-screen overflow-hidden bg-gradient-to-br">
       {/* Background decorativo com floating orbs */}
       <div className="absolute inset-0 overflow-hidden">
         <FloatingOrb delay={0} size={200} position="top-20 left-10" />
@@ -31,7 +31,7 @@ export default function LoadingPage() {
             transition={{ delay: 0.2, type: "spring", stiffness: 200 }}
             className="relative"
           >
-            <Logo size="large" isAnimate color="white" />
+            <Logo size="large" isAnimate variant="white" />
           </motion.div>
 
           {/* Spinner */}
@@ -41,12 +41,12 @@ export default function LoadingPage() {
             transition={{ delay: 0.4 }}
             className="flex flex-col items-center gap-4"
           >
-            <Loader2 className="h-8 w-8 animate-spin text-brand-green" />
+            <Loader2 className="text-brand-green h-8 w-8 animate-spin" />
             <motion.p
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.6 }}
-              className="bg-gradient-to-r from-brand-green to-[#1effbf] bg-clip-text text-xl font-semibold text-transparent"
+              className="from-brand-green bg-gradient-to-r to-[#1effbf] bg-clip-text text-xl font-semibold text-transparent"
             >
               A carregar...
             </motion.p>

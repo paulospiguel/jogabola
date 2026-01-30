@@ -436,7 +436,7 @@ export default function App() {
       <header className="safe-top sticky top-0 z-40 flex flex-col gap-4 border-b border-slate-800 bg-slate-900/80 p-4 backdrop-blur-md">
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-2">
-            <Logo size="small" color="white" />
+            <Logo size="small" variant="white" />
           </div>
           <div className="flex items-center gap-2">
             <AuthButton user={session?.user || null} />

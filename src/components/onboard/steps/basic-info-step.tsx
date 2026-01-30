@@ -19,6 +19,7 @@ interface BasicInfoStepProps {
   nationality?: string;
   country?: string;
   city?: string;
+  location?: string;
   autoFilledFields: {
     name?: boolean;
     email?: boolean;
@@ -30,6 +31,7 @@ interface BasicInfoStepProps {
   onNationalityChange: (value: string) => void;
   onCountryChange: (value: string) => void;
   onCityChange: (value: string) => void;
+  onLocationChange: (value: string) => void;
 }
 
 export function BasicInfoStep({
@@ -40,6 +42,7 @@ export function BasicInfoStep({
   nationality = "",
   country = "",
   city = "",
+  location = "",
   autoFilledFields,
   onNameChange,
   onEmailChange,
@@ -48,6 +51,7 @@ export function BasicInfoStep({
   onNationalityChange,
   onCountryChange,
   onCityChange,
+  onLocationChange,
 }: BasicInfoStepProps) {
   const [nicknameValue, setNicknameValue] = useState(nickname);
   const [isCheckingNickname, setIsCheckingNickname] = useState(false);
@@ -348,6 +352,22 @@ export function BasicInfoStep({
                 placeholder="A tua cidade"
                 className="mt-2"
               />
+            </div>
+
+            <div className="md:col-span-2">
+              <Label htmlFor="location" className="font-medium text-white">
+                Bairro / Zona
+              </Label>
+              <Input
+                id="location"
+                value={location}
+                onChange={e => onLocationChange(e.target.value)}
+                placeholder="O teu bairro ou zona"
+                className="mt-2"
+              />
+              <p className="mt-1 text-xs text-white/60">
+                Opcional: ajuda-nos a ser ainda mais precisos.
+              </p>
             </div>
           </div>
         </div>
