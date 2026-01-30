@@ -15,6 +15,7 @@ const TacticalDiagram = () => (
       xmlns="http://www.w3.org/2000/svg"
       className="h-full w-full"
     >
+      <title>Tactical Diagram</title>
       {/* Field Arc */}
       <circle
         cx="200"

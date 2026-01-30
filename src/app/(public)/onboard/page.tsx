@@ -1,5 +1,9 @@
 "use client";
 
+import { X } from "lucide-react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useTranslations } from "next-intl";
+import { useEffect, useMemo, useRef, useState } from "react";
 import {
   createProfileFromOnboarding,
   getPendingOnboarding,
@@ -8,8 +12,6 @@ import {
   saveOnboarding,
 } from "@/actions/profile";
 import { Logo } from "@/components/logo";
-import { OnboardNavigation } from "@/components/onboard-navigation";
-import { OnboardProgressHeader } from "@/components/onboard-progress-header";
 import { AdditionalInfoStep } from "@/components/onboard/steps/additional-info-step";
 import { BasicInfoStep } from "@/components/onboard/steps/basic-info-step";
 import { ConfirmationStep } from "@/components/onboard/steps/confirmation-step";
@@ -19,15 +21,13 @@ import { JourneySelectionStep } from "@/components/onboard/steps/journey-selecti
 import { OnboardIntroStep } from "@/components/onboard/steps/onboard-intro-step";
 import { RoleSpecificStep } from "@/components/onboard/steps/role-specific-step";
 import { useOnboardValidation } from "@/components/onboard/use-onboard-validation";
+import { OnboardNavigation } from "@/components/onboard-navigation";
+import { OnboardProgressHeader } from "@/components/onboard-progress-header";
 import { Button } from "@/components/ui/button";
 import { getQuestionsByRole } from "@/constants/onboarding-questions";
 import { useToast } from "@/hooks/use-toast-custom";
 import { useSession } from "@/lib/auth-client";
 import { useProfileStore } from "@/stores/profile";
-import { X } from "lucide-react";
-import { useTranslations } from "next-intl";
-import { useRouter, useSearchParams } from "next/navigation";
-import { useEffect, useMemo, useRef, useState } from "react";
 
 export default function OnboardPage() {
   const router = useRouter();
@@ -113,6 +113,7 @@ export default function OnboardPage() {
 
   // Initialize with search params
   const hasInitializedParamsRef = useRef(false);
+
   useEffect(() => {
     const roleParam = searchParams.get("role");
     const migrateParam = searchParams.get("migrate");
@@ -135,7 +136,7 @@ export default function OnboardPage() {
       hasInitializedParamsRef.current = true;
 
       // Primeiro buscar os dados do onboarding pendente
-      getPendingOnboarding(session.user.email).then(pendingResult => {
+      getPendingOnboarding(session.user.email).then((pendingResult) => {
         if (pendingResult.success && pendingResult.data) {
           // Carregar dados no formulário antes de vincular
           const pendingData = pendingResult.data;
@@ -168,7 +169,7 @@ export default function OnboardPage() {
 
           // Vincular onboarding ao user e criar profile se completo
           linkOnboardingToUser(session.user.id, session.user.email).then(
-            linkResult => {
+            (linkResult) => {
               if (linkResult.success) {
                 toast.success(
                   t("success.recovered"),
@@ -227,6 +228,7 @@ export default function OnboardPage() {
 
   // Preencher nome e email automaticamente quando usuário estiver logado
   const hasLoadedUserDataRef = useRef(false);
+
   useEffect(() => {
     if (!session?.user?.id || hasLoadedUserDataRef.current) return;
 
@@ -245,13 +247,13 @@ export default function OnboardPage() {
         if (session?.user?.name && !currentFormData.name) {
           updates.name = session?.user?.name;
           filledFields.name = true;
-          setOriginalValues(prev => ({ ...prev, name: session?.user?.name }));
+          setOriginalValues((prev) => ({ ...prev, name: session?.user?.name }));
         }
 
         if (session?.user?.email && !currentFormData.email) {
           updates.email = session?.user?.email;
           filledFields.email = true;
-          setOriginalValues(prev => ({
+          setOriginalValues((prev) => ({
             ...prev,
             email: session?.user?.email,
           }));
@@ -266,7 +268,7 @@ export default function OnboardPage() {
             !currentFormData.name
           ) {
             updates.name = profileResult.data.name;
-            setOriginalValues(prev => ({
+            setOriginalValues((prev) => ({
               ...prev,
               name: profileResult.data.name,
             }));
@@ -312,13 +314,13 @@ export default function OnboardPage() {
         if (session?.user?.name && !currentFormData.name) {
           errorUpdates.name = session?.user?.name;
           errorFilledFields.name = true;
-          setOriginalValues(prev => ({ ...prev, name: session.user.name }));
+          setOriginalValues((prev) => ({ ...prev, name: session.user.name }));
         }
 
         if (session?.user?.email && !currentFormData.email) {
           errorUpdates.email = session?.user?.email;
           errorFilledFields.email = true;
-          setOriginalValues(prev => ({
+          setOriginalValues((prev) => ({
             ...prev,
             email: session.user.email,
           }));
@@ -440,7 +442,7 @@ export default function OnboardPage() {
   const toggleGoal = (goal: string) => {
     const currentGoals = formData.goals || [];
     const newGoals = currentGoals.includes(goal)
-      ? currentGoals.filter(g => g !== goal)
+      ? currentGoals.filter((g) => g !== goal)
       : [...currentGoals, goal];
     updateData({ goals: newGoals });
   };
@@ -454,7 +456,7 @@ export default function OnboardPage() {
         return (
           <JourneySelectionStep
             selectedRole={formData.role}
-            onRoleSelect={id => updateFormData("role", id)}
+            onRoleSelect={(id) => updateFormData("role", id)}
           />
         );
 
@@ -476,13 +478,17 @@ export default function OnboardPage() {
             city={formData.city || ""}
             location={formData.location || ""}
             autoFilledFields={autoFilledFields}
-            onNameChange={value => updateFormData("name", value)}
-            onEmailChange={value => updateFormData("email", value)}
-            onNicknameChange={value => updateFormData("nickname", value)}
-            onDateOfBirthChange={value => updateFormData("dateOfBirth", value)}
-            onNationalityChange={value => updateFormData("nationality", value)}
-            onCountryChange={value => updateFormData("country", value)}
-            onCityChange={value => updateFormData("city", value)}
+            onNameChange={(value) => updateFormData("name", value)}
+            onEmailChange={(value) => updateFormData("email", value)}
+            onNicknameChange={(value) => updateFormData("nickname", value)}
+            onDateOfBirthChange={(value) =>
+              updateFormData("dateOfBirth", value)
+            }
+            onNationalityChange={(value) =>
+              updateFormData("nationality", value)
+            }
+            onCountryChange={(value) => updateFormData("country", value)}
+            onCityChange={(value) => updateFormData("city", value)}
             onLocationChange={(value: string) =>
               updateFormData("location", value)
             }
@@ -493,7 +499,7 @@ export default function OnboardPage() {
         return (
           <ExperienceStep
             experience={formData.experience}
-            onExperienceChange={value => updateFormData("experience", value)}
+            onExperienceChange={(value) => updateFormData("experience", value)}
           />
         );
 
@@ -569,9 +575,9 @@ export default function OnboardPage() {
         // Validar campos obrigatórios específicos do role
         if (roleQuestions?.personalInfo) {
           const requiredFields = roleQuestions.personalInfo.filter(
-            q => q.required,
+            (q) => q.required,
           );
-          return requiredFields.every(field => {
+          return requiredFields.every((field) => {
             const value = getCustomFieldValue(field.id);
             return value && (!Array.isArray(value) || value.length > 0);
           });

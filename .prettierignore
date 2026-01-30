@@ -1,8 +1,0 @@
-# Ignorar pastas de build
-.next/
-build/
-dist/
-
-# Outros arquivos/pastas que deseja excluir
-node_modules/
-coverage/
