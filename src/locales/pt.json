@@ -350,9 +350,148 @@
     "palco": "Palco",
     "universo": "Universo"
   },
+  "plansPage": {
+    "hero": {
+      "badge": "SUBSCRIPTION INTERFACE // ACCESS LEVEL 01-03",
+      "title": "Escolha seu Nível de <blue>Comando</blue>",
+      "subtitle": "Selecione a infraestrutura tecnológica ideal para escalar a performance do seu clube, desde a base amadora até a elite profissional."
+    },
+    "tiers": {
+      "base": {
+        "tier": "INITIAL",
+        "name": "Base",
+        "price": "Grátis",
+        "features": [
+          "Cadastro de até 25 atletas",
+          "Calendário básico de treinos",
+          "Gestão de presença simples",
+          "Relatórios financeiros"
+        ],
+        "cta": "COMEÇAR GRÁTIS"
+      },
+      "pro": {
+        "tier": "ADVANCED",
+        "name": "Pro",
+        "badge": "MAIS POPULAR",
+        "price": "149",
+        "period": "/mês",
+        "features": [
+          "Atletas ilimitados",
+          "Gestão financeira completa",
+          "Heatmaps e stats por atleta",
+          "Página customizada do clube",
+          "Suporte prioritário"
+        ],
+        "cta": "ASSINAR AGORA"
+      },
+      "elite": {
+        "tier": "ENTERPRISE",
+        "name": "Elite",
+        "price": "499",
+        "period": "/mês",
+        "features": [
+          "Tudo do Plano Pro",
+          "AI-Driven Tactical Insights",
+          "Módulo de Saúde & Fisiologia",
+          "Múltiplas comissões técnicas",
+          "API de integração externa"
+        ],
+        "cta": "ASSINAR AGORA"
+      }
+    },
+    "comparison": {
+      "title": "Comparativo de Módulos",
+      "subtitle": "SYSTEM_COMPARISON_MATRIX.V2",
+      "modules": {
+        "stats": {
+          "id": "ST-01",
+          "title": "ESTATÍSTICAS IA",
+          "description": "Processamento de dados em tempo real para análise de desempenho coletivo.",
+          "availability": "DISPONÍVEL NO PRO/ELITE"
+        },
+        "finance": {
+          "id": "FN-02",
+          "title": "FINANCEIRO",
+          "description": "Controle automatizado de mensalidades, taxas e patrocínios do clube.",
+          "availability": "DISPONÍVEL NO PRO/ELITE"
+        },
+        "pages": {
+          "id": "WEB-03",
+          "title": "PÁGINAS CUSTOM",
+          "description": "Website oficial integrado com tabelas, elencos e notícias automáticas.",
+          "availability": "DISPONÍVEL NO PRO/ELITE"
+        },
+        "health": {
+          "id": "HL-04",
+          "title": "SAÚDE & PERFORMANCE",
+          "description": "Monitoramento biomecânico e preventivo para redução de lesões.",
+          "availability": "EXCLUSIVO ELITE"
+        }
+      }
+    },
+    "mostPopular": "MAIS POPULAR"
+  },
+  "communityPage": {
+    "hero": {
+      "badge": "MARKETPLACE HUB",
+      "title": "Jogabola <green>Comunidade</green>",
+      "subtitle": "Conecte-se com atletas, clubes e organize partidas amistosas"
+    },
+    "availabilities": {
+      "weekdays": "Dias de semana",
+      "weekends": "Fins de semana",
+      "flexible": "Flexível"
+    },
+    "filters": {
+      "all": "Todos",
+      "category": "Categoria",
+      "location": "Localidade",
+      "availability": "Disponibilidade",
+      "date": "Data",
+      "search": "Filtrar Resultados",
+      "viewAll": "VER TODOS OS PERFIS"
+    },
+    "athletes": {
+      "title": "Atletas em Busca",
+      "cta": "ENTRAR EM CONTATO",
+      "positions": {
+        "all": "Todos",
+        "goalkeeper": "Guarda-redes",
+        "defender": "Defesa",
+        "midfielder": "Meio-campo",
+        "forward": "Avançado"
+      }
+    },
+    "clubs": {
+      "title": "Clubes Recrutando",
+      "cta": "CANDIDATAR-SE",
+      "urgency": "URGENTE",
+      "category": "Categoria"
+    },
+    "friendlyMatches": {
+      "title": "Central de Amistosos",
+      "cta": "ACEITAR DESAFIO",
+      "metadata": {
+        "players": "Jogadores",
+        "matchType": "Tipo de Jogo",
+        "time": "Horário"
+      },
+      "availability": "Disponibilidade do Time"
+    },
+    "matches": {
+      "title": "Partidas",
+      "cta": "ACEITAR DESAFIO",
+      "metadata": {
+        "players": "Jogadores",
+        "matchType": "Tipo de Jogo",
+        "time": "Horário"
+      },
+      "availability": "Disponibilidade do Time"
+    }
+  },
   "menu": {
     "home": "Início",
-    "team": "Equipe",
+    "team": "Quem Somos",
     "ecosystem": "Recursos",
     "community": "Comunidade",
     "marketplace": "Marketplace",
@@ -1120,5 +1259,10 @@
       "var": "VAR: CHECANDO..."
     },
     "footer": "JOGABOLA @ 2024 • TATICAMENTE PERDIDO"
+  },
+  "currency": {
+    "euro": "€",
+    "dollar": "$",
+    "pound": "£"
   }
 }

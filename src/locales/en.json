@@ -273,6 +273,145 @@
     "palco": "Stage",
     "universo": "Universe"
   },
+  "plansPage": {
+    "hero": {
+      "badge": "SUBSCRIPTION INTERFACE // ACCESS LEVEL 01-03",
+      "title": "Choose your <blue>Command</blue> Level",
+      "subtitle": "Select the ideal technological infrastructure to scale your club's performance, from amateur base to professional elite."
+    },
+    "tiers": {
+      "base": {
+        "tier": "INITIAL",
+        "name": "Base",
+        "price": "Free",
+        "features": [
+          "Registration of up to 25 athletes",
+          "Basic training calendar",
+          "Simple attendance management",
+          "Financial reports"
+        ],
+        "cta": "START FOR FREE"
+      },
+      "pro": {
+        "tier": "ADVANCED",
+        "name": "Pro",
+        "badge": "MOST POPULAR",
+        "price": "20",
+        "period": "/month",
+        "features": [
+          "Unlimited athletes",
+          "Complete financial management",
+          "Heatmaps and stats per athlete",
+          "Custom club page",
+          "Priority support"
+        ],
+        "cta": "SUBSCRIBE NOW"
+      },
+      "elite": {
+        "tier": "ENTERPRISE",
+        "name": "Elite",
+        "price": "499",
+        "period": "/month",
+        "features": [
+          "Everything in Pro Plan",
+          "AI-Driven Tactical Insights",
+          "Health & Physiology Module",
+          "Multiple technical staffs",
+          "External integration API"
+        ],
+        "cta": "SUBSCRIBE NOW"
+      }
+    },
+    "comparison": {
+      "title": "Module Comparison",
+      "subtitle": "SYSTEM_COMPARISON_MATRIX.V2",
+      "modules": {
+        "stats": {
+          "id": "ST-01",
+          "title": "AI STATISTICS",
+          "description": "Real-time data processing for collective performance analysis.",
+          "availability": "AVAILABLE IN PRO/ELITE"
+        },
+        "finance": {
+          "id": "FN-02",
+          "title": "FINANCIAL",
+          "description": "Automated control of membership fees, fees, and club sponsorships.",
+          "availability": "AVAILABLE IN PRO/ELITE"
+        },
+        "pages": {
+          "id": "WEB-03",
+          "title": "CUSTOM PAGES",
+          "description": "Official website integrated with tables, rosters, and automatic news.",
+          "availability": "AVAILABLE IN PRO/ELITE"
+        },
+        "health": {
+          "id": "HL-04",
+          "title": "HEALTH & PERFORMANCE",
+          "description": "Biomechanical and preventive monitoring for injury reduction.",
+          "availability": "EXCLUSIVE ELITE"
+        }
+      }
+    },
+    "mostPopular": "MOST POPULAR"
+  },
+  "communityPage": {
+    "availabilities": {
+      "weekdays": "Weekdays",
+      "weekends": "Weekends",
+      "flexible": "Flexible"
+    },
+    "hero": {
+      "badge": "MARKETPLACE HUB",
+      "title": "Jogabola <green>Community</green>",
+      "subtitle": "Connect with athletes, clubs and organize friendly matches"
+    },
+    "filters": {
+      "all": "All",
+      "category": "Category",
+      "location": "Location",
+      "availability": "Availability",
+      "date": "Date",
+      "search": "Filter Results",
+      "viewAll": "VIEW ALL PROFILES"
+    },
+    "athletes": {
+      "title": "Athletes Searching",
+      "cta": "GET IN TOUCH",
+      "positions": {
+        "all": "All",
+        "goalkeeper": "GOALKEEPER",
+        "defender": "DEFENDER",
+        "midfielder": "MIDFIELDER",
+        "forward": "FORWARD"
+      }
+    },
+    "clubs": {
+      "title": "Recruiting Clubs",
+      "cta": "APPLY NOW",
+      "urgency": "URGENT",
+      "category": "Category"
+    },
+    "friendlyMatches": {
+      "title": "Friendly Matches Hub",
+      "cta": "ACCEPT CHALLENGE",
+      "metadata": {
+        "players": "Players",
+        "matchType": "Match Type",
+        "time": "Time"
+      },
+      "availability": "Team Availability"
+    },
+    "matches": {
+      "title": "Matches",
+      "cta": "ACCEPT CHALLENGE",
+      "metadata": {
+        "players": "Players",
+        "matchType": "Match Type",
+        "time": "Time"
+      },
+      "availability": "Team Availability"
+    }
+  },
   "homePage": {
     "createMyTeams": "Create my teams",
     "description": "Build your team, challenge your friends, and conquer glory on the pitch.\nThe field is calling. Victory awaits you!",
@@ -669,5 +808,10 @@
       "var": "VAR: CHECKING..."
     },
     "footer": "JOGABOLA @ 2024 • TACTIQUALLY LOST"
+  },
+  "currency": {
+    "euro": "€",
+    "dollar": "$",
+    "pound": "£"
   }
 }

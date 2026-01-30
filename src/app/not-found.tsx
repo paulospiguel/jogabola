@@ -1,11 +1,11 @@
 "use client";
 
-import { Logo } from "@/components/logo";
-import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
 import { HelpCircle, RefreshCw, Share2 } from "lucide-react";
-import { useTranslations } from "next-intl";
 import Link from "next/link";
+import { useTranslations } from "next-intl";
+import { Logo } from "@/components/logo";
+import { Button } from "@/components/ui/button";
 
 const TacticalDiagram = () => (
   <div className="relative h-full w-full">
@@ -171,7 +171,7 @@ export default function NotFound() {
                 className="mb-4 text-5xl font-black tracking-tighter text-white md:text-7xl lg:text-8xl"
               >
                 404 -{" "}
-                <span className="text-blue-500 italic">
+                <span className="text-neon-primary italic">
                   {t("title").split("- ")[1]}
                 </span>
               </motion.h1>
@@ -202,15 +202,17 @@ export default function NotFound() {
               >
                 <Button
                   onClick={() => window.location.reload()}
-                  className="group h-16 rounded-2xl bg-blue-600 px-8 text-sm font-black tracking-widest text-white uppercase transition-all hover:bg-blue-700 hover:shadow-[0_0_30px_rgba(37,99,235,0.4)]"
+                  className="group h-16 rounded-2xl bg-neon-primary px-8 text-sm font-black tracking-widest text-white uppercase transition-all hover:bg-neon-primary/80 hover:shadow-[0_0_30px_rgba(37,99,235,0.4)]"
                 >
                   <RefreshCw
                     className="mr-3 transition-transform group-hover:rotate-180"
                     size={18}
                   />
                   <div className="flex flex-col items-start leading-none">
-                    <span className="text-[10px] opacity-70">REFRESH</span>
-                    <span>
+                    <span className="text-[10px] text-zinc-800 opacity-70">
+                      REFRESH
+                    </span>
+                    <span className="text-zinc-800">
                       {t("refreshButton").includes("(")
                         ? t("refreshButton")
                             .split("(")[1]
