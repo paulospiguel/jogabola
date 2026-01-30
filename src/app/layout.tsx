@@ -3,7 +3,7 @@ import { fonts } from "../styles/fonts";
 
 import { COMPANY } from "@/constants/app";
 import { Providers } from "@/providers";
-import { cn, getUserLocale } from "@/utils";
+import { cn, getUserLocale } from "@/lib/utils";
 import type { Metadata } from "next";
 import { NextIntlClientProvider } from "next-intl";
 import { getMessages } from "next-intl/server";

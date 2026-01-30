@@ -6,7 +6,7 @@ import {
     PopoverContent,
     PopoverTrigger,
 } from "@/components/ui/popover";
-import { cn } from "@/utils";
+import { cn } from "@/lib/utils";
 import { countries } from "country-data-list";
 import { Check, ChevronsUpDown } from "lucide-react";
 import { useState } from "react";

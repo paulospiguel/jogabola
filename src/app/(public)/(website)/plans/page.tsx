@@ -4,7 +4,7 @@ import { useTranslations } from "next-intl";
 import { ComparisonMatrix } from "@/components/comparison-matrix";
 import { PricingCard } from "@/components/pricing-card";
 
-import { plans } from "@/inputs/plans.json";
+import { plans } from "@/constants/plans.json";
 
 export default function PlanosPage() {
   const t = useTranslations("plansPage");

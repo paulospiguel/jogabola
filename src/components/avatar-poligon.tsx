@@ -3,7 +3,7 @@ import {
   AvatarFallback,
   AvatarImage,
 } from "@/components/ui/avatar";
-import { cn } from "@/utils";
+import { cn } from "@/lib/utils";
 
 export default function AvatarPoligon({
   className,

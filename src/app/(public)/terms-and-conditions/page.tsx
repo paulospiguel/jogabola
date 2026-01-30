@@ -1,6 +1,6 @@
 import Footer from "@/components/footer";
 import HeaderHome from "@/components/header";
-import { getUserLocale } from "@/utils";
+import { getUserLocale } from "@/lib/utils";
 import ReactMarkdown from "react-markdown";
 import { z } from "zod";
 

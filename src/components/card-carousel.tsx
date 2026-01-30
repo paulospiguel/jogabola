@@ -7,7 +7,7 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel";
-import { cn } from "@/utils";
+import { cn } from "@/lib/utils";
 import Autoplay, { type AutoplayOptionsType } from "embla-carousel-autoplay";
 import * as React from "react";
 

@@ -1,6 +1,6 @@
 "use server";
 
-import { getBaseURL } from "@/utils";
+import { getBaseURL } from "@/lib/utils";
 
 export async function forgotPassword(email: string) {
   try {

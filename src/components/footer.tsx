@@ -1,5 +1,5 @@
 import { COMPANY } from "@/constants/app";
-import { cn } from "@/utils";
+import { cn } from "@/lib/utils";
 import { ArrowRight, Instagram, MessageSquare, Twitter } from "lucide-react";
 import { useTranslations } from "next-intl";
 import Link from "next/link";

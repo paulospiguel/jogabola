@@ -11,7 +11,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast-custom";
-import { cn } from "@/utils";
+import { cn } from "@/lib/utils";
 import { Loader2, LocateFixed, MapPin, Search, Settings } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";

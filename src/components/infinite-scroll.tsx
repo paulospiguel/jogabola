@@ -1,6 +1,6 @@
 "use client";
 
-import { cn } from "@/utils";
+import { cn } from "@/lib/utils";
 import Image from "next/image";
 import { v4 as uuidv4 } from "uuid";
 

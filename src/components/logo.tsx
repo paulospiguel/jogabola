@@ -1,7 +1,7 @@
 "use client";
 
 import { COMPANY, TRANSLATION_KEYS } from "@/constants/app";
-import { cn } from "@/utils";
+import { cn } from "@/lib/utils";
 import { useTranslations } from "next-intl";
 import Image, { type StaticImageData } from "next/image";
 import Link from "next/link";

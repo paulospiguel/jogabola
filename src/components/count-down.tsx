@@ -1,6 +1,8 @@
 "use client";
 
-import { supabase } from "@/services/supabase";
+// TODO: Implement Supabase client when countdown feature is needed
+// For now, using a fallback launch date
+
 import { useTranslations } from "next-intl";
 import { useEffect, useRef, useState } from "react";
 import { Text } from "./ui/Text";
@@ -50,26 +52,18 @@ const CountDownTimer = () => {
   };
 
   useEffect(() => {
-    const fetchLaunchDate = async () => {
-      const { data, error } = await supabase
-        .from("countdowns")
-        .select("launch_date")
-        .eq("slug", "launch-countdown")
-        .eq("is_active", true)
-        .maybeSingle();
+    // TODO: Replace with actual Supabase query when configured
+    // const { data, error } = await supabase
+    //   .from("countdowns")
+    //   .select("launch_date")
+    //   .eq("slug", "launch-countdown")
+    //   .eq("is_active", true)
+    //   .maybeSingle();
 
-      if (error) {
-        console.error("Erro a buscar o countdown:", error);
-      } else if (!data) {
-        console.warn(
-          "Nenhum countdown ativo encontrado com o slug 'launch-countdown'.",
-        );
-      } else {
-        setLaunchDate(new Date(data.launch_date));
-      }
-    };
-
-    fetchLaunchDate();
+    // Fallback: Use a date 30 days from now
+    const fallbackDate = new Date();
+    fallbackDate.setDate(fallbackDate.getDate() + 30);
+    setLaunchDate(fallbackDate);
   }, []);
 
   useEffect(() => {

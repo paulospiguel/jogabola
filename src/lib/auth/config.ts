@@ -3,7 +3,7 @@
  * Centraliza todas as configurações de autenticação em um único lugar
  */
 
-import { getBaseURL } from "@/utils";
+import { getBaseURL } from "@/lib/utils";
 
 /**
  * Valida e retorna as variáveis de ambiente necessárias para o Better Auth

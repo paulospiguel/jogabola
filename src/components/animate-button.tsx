@@ -1,7 +1,7 @@
 "use client";
 import { MoveRight }from "@/components/icons";
 
-import { cn } from "@/utils";
+import { cn } from "@/lib/utils";
 
 interface ArrowButtonProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement> {
