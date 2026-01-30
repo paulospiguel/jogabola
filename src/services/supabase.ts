@@ -1,17 +1,19 @@
 // Supabase client - placeholder implementation
 // TODO: Configure Supabase client when needed
 
+interface SupabaseQueryBuilder {
+  select: (columns: string) => SupabaseQueryBuilder;
+  eq: (column: string, value: unknown) => SupabaseQueryBuilder;
+  maybeSingle: () => Promise<{ data: unknown; error: Error | null }>;
+}
+
 interface SupabaseClient {
-  from: (table: string) => {
-    select: (columns: string) => any;
-    eq: (column: string, value: unknown) => any;
-    maybeSingle: () => Promise<{ data: any; error: any }>;
-  };
+  from: (table: string) => SupabaseQueryBuilder;
 }
 
 export const supabase: SupabaseClient = {
   from: (table: string) => {
-    const query = {
+    const query: SupabaseQueryBuilder = {
       select: (columns: string) => query,
       eq: (column: string, value: unknown) => query,
       maybeSingle: async () => {
@@ -20,6 +22,6 @@ export const supabase: SupabaseClient = {
         return { data: null, error: null };
       },
     };
-    return query as any;
+    return query;
   },
 };

@@ -1,23 +1,5 @@
 "use client";
 
-import { checkEventParticipation } from "@/actions/events";
-import { EventImageCarousel } from "@/components/event-image-carousel";
-import ShareDialog from "@/components/share-link-dialog";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
-import { useEvent } from "@/hooks/use-events";
-import { useSafeNavigation } from "@/hooks/use-safe-navigation";
-import { useSession } from "@/lib/auth-client";
 import { useQuery } from "@tanstack/react-query";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
@@ -36,12 +18,29 @@ import {
   Target,
   Trophy,
   UserPlus,
-  Users
+  Users,
 } from "lucide-react";
-import { useTranslations } from "next-intl";
 import { useParams } from "next/navigation";
+import { useTranslations } from "next-intl";
 import { useState } from "react";
-
+import { checkEventParticipation } from "@/actions/events";
+import { EventImageCarousel } from "@/components/event-image-carousel";
+import ShareDialog from "@/components/share-link-dialog";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import { useEvent } from "@/hooks/use-events";
+import { useSafeNavigation } from "@/hooks/use-safe-navigation";
+import { useSession } from "@/lib/auth-client";
 
 const fadeUp = {
   initial: { opacity: 0, y: 24 },
@@ -104,14 +103,20 @@ export default function ArenaEventDetailsPage() {
     queryFn: async () => {
       if (!eventId || !userId) return { isParticipant: false, status: null };
       const result = await checkEventParticipation(eventId, userId);
-      return result.success ? result.data : { isParticipant: false, status: null };
+      return result.success
+        ? result.data
+        : { isParticipant: false, status: null };
     },
     enabled: !!eventId && !!userId && !!event,
     staleTime: 1000 * 60 * 5,
   });
 
   const isParticipant = participationData?.isParticipant || false;
-  const userRole = isOrganizer ? "organizer" : isParticipant ? "participant" : "viewer";
+  const userRole = isOrganizer
+    ? "organizer"
+    : isParticipant
+      ? "participant"
+      : "viewer";
 
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
@@ -145,37 +150,30 @@ export default function ArenaEventDetailsPage() {
 
   const handleJoinEvent = () => {
     // TODO: Implementar ação de participar do evento
-    console.log("Participar do evento");
   };
 
   const handleInvitePeople = () => {
     // TODO: Implementar ação de convidar pessoas
-    console.log("Convidar pessoas");
   };
 
   const handleCreateChat = () => {
     // TODO: Implementar ação de criar chat do evento
-    console.log("Criar chat do evento");
   };
 
   const handleManageParticipants = () => {
     // TODO: Implementar ação de gerenciar participantes
-    console.log("Gerenciar participantes");
   };
 
   const handleBlockParticipant = (participantId: string) => {
     // TODO: Implementar ação de bloquear participante
-    console.log("Bloquear participante", participantId);
   };
 
   const handleAddParticipant = () => {
     // TODO: Implementar ação de adicionar participante
-    console.log("Adicionar participante");
   };
 
   const handleEditEvent = () => {
     // TODO: Implementar ação de editar evento
-    console.log("Editar evento");
   };
 
   const shareLink = event
@@ -316,7 +314,8 @@ export default function ArenaEventDetailsPage() {
                     <div>
                       <p className="font-semibold text-slate-800 dark:text-white">
                         {event.currentParticipants}
-                        {event.maxParticipants && ` / ${event.maxParticipants}`}{" "}
+                        {event.maxParticipants &&
+                          ` / ${event.maxParticipants}`}{" "}
                         {tDetails("participants")}
                       </p>
                     </div>
@@ -415,10 +414,10 @@ export default function ArenaEventDetailsPage() {
 
               {/* Organizador */}
               <Card className="overflow-hidden rounded-3xl border border-emerald-100/70 bg-white shadow-2xl backdrop-blur-xl transition-colors dark:border-white/10 dark:bg-white/6">
-                  <CardContent className="p-6">
-                    <h2 className="mb-3 text-xl font-semibold text-slate-800 dark:text-white">
-                      {tDetails("organizer")}
-                    </h2>
+                <CardContent className="p-6">
+                  <h2 className="mb-3 text-xl font-semibold text-slate-800 dark:text-white">
+                    {tDetails("organizer")}
+                  </h2>
                   <p className="text-slate-600 dark:text-slate-200/80">
                     {event.organizerName}
                   </p>
@@ -457,7 +456,9 @@ export default function ArenaEventDetailsPage() {
                           onClick={handleManageParticipants}
                         >
                           <Users className="mr-2 h-5 w-5" />
-                          {t("events.details.actions.organizer.manageParticipants")}
+                          {t(
+                            "events.details.actions.organizer.manageParticipants",
+                          )}
                         </Button>
 
                         <Button
@@ -515,7 +516,9 @@ export default function ArenaEventDetailsPage() {
                           onClick={handleManageParticipants}
                         >
                           <Users className="mr-2 h-5 w-5" />
-                          {t("events.details.actions.participant.manageParticipants")}
+                          {t(
+                            "events.details.actions.participant.manageParticipants",
+                          )}
                         </Button>
                       </div>
                     </>
@@ -545,7 +548,9 @@ export default function ArenaEventDetailsPage() {
                           <Star
                             className={`mr-2 h-5 w-5 ${isFavorited ? "fill-current" : ""}`}
                           />
-                          {isFavorited ? tDetails("favorited") : tDetails("favorite")}
+                          {isFavorited
+                            ? tDetails("favorited")
+                            : tDetails("favorite")}
                         </Button>
 
                         <Button
@@ -560,7 +565,9 @@ export default function ArenaEventDetailsPage() {
                           <Bell
                             className={`mr-2 h-5 w-5 ${isFollowing ? "fill-current" : ""}`}
                           />
-                          {isFollowing ? tDetails("following") : tDetails("follow")}
+                          {isFollowing
+                            ? tDetails("following")
+                            : tDetails("follow")}
                         </Button>
                       </div>
 
@@ -609,12 +616,14 @@ export default function ArenaEventDetailsPage() {
           </DialogHeader>
           <div className="flex flex-col gap-4 py-4">
             <div className="flex flex-col gap-2">
-              <Label htmlFor="message">{t("events.details.messageModal.label")}</Label>
+              <Label htmlFor="message">
+                {t("events.details.messageModal.label")}
+              </Label>
               <Textarea
                 id="message"
                 placeholder={t("events.details.messageModal.placeholder")}
                 value={message}
-                onChange={e => setMessage(e.target.value)}
+                onChange={(e) => setMessage(e.target.value)}
                 rows={6}
                 className="min-h-[150px]"
               />
@@ -645,4 +654,3 @@ export default function ArenaEventDetailsPage() {
     </div>
   );
 }
-

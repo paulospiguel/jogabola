@@ -1,5 +1,9 @@
 "use client";
 
+import { motion } from "framer-motion";
+import { CheckCircle2, Loader2, XCircle } from "lucide-react";
+import { useTranslations } from "next-intl";
+import { useEffect, useRef, useState } from "react";
 import { checkNicknameAvailability } from "@/actions/profile";
 import { CountrySelector } from "@/components/country-selector";
 import { OnboardStepHeader } from "@/components/onboard-step-header";
@@ -7,9 +11,6 @@ import { DatePicker } from "@/components/ui/date-picker";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { generateNicknameFromName } from "@/schemas/profile";
-import { motion } from "framer-motion";
-import { CheckCircle2, Loader2, XCircle } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
 
 interface BasicInfoStepProps {
   name: string;
@@ -53,6 +54,7 @@ export function BasicInfoStep({
   onCityChange,
   onLocationChange,
 }: BasicInfoStepProps) {
+  const t = useTranslations("onboardingPage.steps.basicInfo");
   const [nicknameValue, setNicknameValue] = useState(nickname);
   const [isCheckingNickname, setIsCheckingNickname] = useState(false);
   const [nicknameStatus, setNicknameStatus] = useState<{
@@ -115,7 +117,7 @@ export function BasicInfoStep({
       if (trimmedNickname.length < 3) {
         setNicknameStatus({
           available: false,
-          message: "O nickname deve ter pelo menos 3 caracteres",
+          message: t("validation.nicknameMin"),
         });
         setIsCheckingNickname(false);
         return;
@@ -124,7 +126,7 @@ export function BasicInfoStep({
       if (trimmedNickname.length > 30) {
         setNicknameStatus({
           available: false,
-          message: "O nickname deve ter no máximo 30 caracteres",
+          message: t("validation.nicknameMax"),
         });
         setIsCheckingNickname(false);
         return;
@@ -134,8 +136,7 @@ export function BasicInfoStep({
       if (!/^[a-z0-9-]+$/.test(trimmedNickname)) {
         setNicknameStatus({
           available: false,
-          message:
-            "O nickname deve conter apenas letras minúsculas, números e traços",
+          message: t("validation.nicknameFormat"),
         });
         setIsCheckingNickname(false);
         return;
@@ -150,18 +151,18 @@ export function BasicInfoStep({
         if (result.available) {
           setNicknameStatus({
             available: true,
-            message: "Nickname disponível",
+            message: t("validation.nicknameAvailable"),
           });
         } else {
           setNicknameStatus({
             available: false,
-            message: "Este nickname já está em uso",
+            message: t("validation.nicknameUnavailable"),
           });
         }
       } else {
         setNicknameStatus({
           available: false,
-          message: result.error || "Erro ao verificar disponibilidade",
+          message: result.error || t("validation.nicknameError"),
         });
       }
     }, 500); // Debounce de 500ms
@@ -189,41 +190,37 @@ export function BasicInfoStep({
       animate={{ opacity: 1, y: 0 }}
       className="space-y-6 sm:space-y-8"
     >
-      <OnboardStepHeader
-        title="Vamos ajustar tudo ao seu perfil."
-        description="Vamos começar com as tuas informações essenciais."
-      />
+      <OnboardStepHeader title={t("title")} description={t("description")} />
 
       <div className="mx-auto max-w-2xl space-y-4 py-4 sm:space-y-6">
         <div>
           <Label htmlFor="name" className="font-medium text-white">
-            Nome Completo *
+            {t("fields.fullName")}
           </Label>
           <Input
             id="name"
             value={name}
-            onChange={e => onNameChange(e.target.value)}
-            placeholder="O teu nome"
+            onChange={(e) => onNameChange(e.target.value)}
+            placeholder={t("placeholders.name")}
             className="mt-2"
           />
           {autoFilledFields.name && (
             <p className="mt-1 text-xs text-white/60">
-              Este campo foi preenchido automaticamente com os dados da tua
-              conta. Podes editar se necessário.
+              {t("hints.autoFilledFromAccount")}
             </p>
           )}
         </div>
 
         <div>
           <Label htmlFor="nickname" className="font-medium text-white">
-            Nickname
+            {t("fields.nickname")}
           </Label>
           <div className="relative">
             <Input
               id="nickname"
               value={nicknameValue}
-              onChange={e => handleNicknameChange(e.target.value)}
-              placeholder="teu-nickname"
+              onChange={(e) => handleNicknameChange(e.target.value)}
+              placeholder={t("placeholders.nickname")}
               className="mt-2 pr-10"
               maxLength={30}
             />
@@ -254,119 +251,116 @@ export function BasicInfoStep({
           )}
           {!nicknameValue && (
             <p className="mt-1 text-xs text-white/60">
-              O teu nickname será usado como identificador único (slug) no
-              perfil
+              {t("hints.nicknameInfo")}
             </p>
           )}
           {isAutoGenerated && nicknameValue && (
             <p className="mt-1 text-xs text-white/60">
-              Nickname gerado automaticamente. Podes editar se necessário.
+              {t("hints.nicknameAutoGenerated")}
             </p>
           )}
         </div>
 
         <div>
           <Label htmlFor="email" className="font-medium text-white">
-            Email *
+            {t("fields.email")}
           </Label>
           <Input
             id="email"
             type="email"
             value={email}
-            onChange={e => {
+            onChange={(e) => {
               if (autoFilledFields.email) return;
               onEmailChange(e.target.value);
             }}
-            placeholder="teu@email.com"
+            placeholder={t("placeholders.email")}
             disabled={!!autoFilledFields.email}
             className="mt-2"
           />
           {autoFilledFields.email && (
             <p className="mt-1 text-xs text-white/60">
-              Este campo foi preenchido automaticamente com os dados da tua
-              conta.
+              {t("hints.autoFilledFromAccount")}
             </p>
           )}
         </div>
 
         <div>
           <Label htmlFor="dateOfBirth" className="font-medium text-white">
-            Data de Nascimento
+            {t("fields.dateOfBirth")}
           </Label>
           <DatePicker
             value={dateOfBirth}
             onChange={onDateOfBirthChange}
             className="mt-2"
-            placeholder="Seleciona a tua data de nascimento"
+            placeholder={t("placeholders.dateOfBirth")}
           />
           <p className="mt-1 text-xs text-white/60">
-            Ajuda-nos a personalizar a tua experiência. Não é possível
-            selecionar datas no futuro.
+            {t("hints.dateOfBirthInfo")}
           </p>
         </div>
 
         <div>
           <Label htmlFor="nationality" className="font-medium text-white">
-            Nacionalidade
+            {t("fields.nationality")}
           </Label>
           <div className="mt-2">
             <CountrySelector
               value={nationality}
               onValueChange={onNationalityChange}
-              placeholder="Seleciona a tua nacionalidade"
+              placeholder={t("placeholders.nationality")}
             />
           </div>
           <p className="mt-1 text-xs text-white/60">
-            Seleciona a tua nacionalidade
+            {t("hints.selectNationality")}
           </p>
         </div>
 
         <div className="space-y-4">
           <div>
             <h3 className="text-base font-medium text-white">
-              Ajuda-nos a mostrar eventos e equipas perto de ti
+              {t("hints.locationHelp")}
             </h3>
           </div>
           <div className="grid grid-cols-1 gap-4 sm:gap-4 md:grid-cols-2">
             <div>
               <Label htmlFor="country" className="font-medium text-white">
-                País
+                {t("fields.country")}
               </Label>
               <div className="mt-2">
                 <CountrySelector
                   value={country}
                   onValueChange={onCountryChange}
-                  placeholder="Seleciona o teu país"
+                  placeholder={t("placeholders.country")}
                 />
               </div>
             </div>
 
             <div>
               <Label htmlFor="city" className="font-medium text-white">
-                Cidade
+                {t("fields.city")}
               </Label>
               <Input
                 id="city"
                 value={city}
-                onChange={e => onCityChange(e.target.value)}
-                placeholder="A tua cidade"
+                onChange={(e) => onCityChange(e.target.value)}
+                placeholder={t("placeholders.city")}
                 className="mt-2"
               />
             </div>
 
             <div className="md:col-span-2">
               <Label htmlFor="location" className="font-medium text-white">
-                Bairro / Zona
+                {t("fields.location")}
               </Label>
               <Input
                 id="location"
                 value={location}
-                onChange={e => onLocationChange(e.target.value)}
-                placeholder="O teu bairro ou zona"
+                onChange={(e) => onLocationChange(e.target.value)}
+                placeholder={t("placeholders.location")}
                 className="mt-2"
               />
               <p className="mt-1 text-xs text-white/60">
-                Opcional: ajuda-nos a ser ainda mais precisos.
+                {t("hints.locationOptional")}
               </p>
             </div>
           </div>

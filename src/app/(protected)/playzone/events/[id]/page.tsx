@@ -1,20 +1,5 @@
 "use client";
 
-import { getEvent } from "@/actions/events";
-import { EventImageCarousel } from "@/components/event-image-carousel";
-import ShareDialog from "@/components/share-link-dialog";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
-import { useSession } from "@/lib/auth-client";
 import { motion } from "framer-motion";
 import {
   ArrowLeft,
@@ -33,6 +18,21 @@ import {
 } from "lucide-react";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import { getEvent } from "@/actions/events";
+import { EventImageCarousel } from "@/components/event-image-carousel";
+import ShareDialog from "@/components/share-link-dialog";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import { useSession } from "@/lib/auth-client";
 
 interface EventDetails {
   id: number;
@@ -157,7 +157,7 @@ export default function EventDetailsPage() {
           setIsFollowing(mappedEvent.isFollowingOrganizer || false);
         }
       } catch (error) {
-        console.error("Error fetching event:", error);
+        // Error handled silently
       } finally {
         setLoading(false);
       }
@@ -217,7 +217,7 @@ export default function EventDetailsPage() {
   };
 
   const handleJoinEvent = () => {
-    console.log("Participar do evento");
+    // TODO: Implementar ação de participar do evento
   };
 
   const shareLink = event
@@ -688,7 +688,7 @@ export default function EventDetailsPage() {
                 id="message"
                 placeholder="Escreva sua mensagem aqui..."
                 value={message}
-                onChange={e => setMessage(e.target.value)}
+                onChange={(e) => setMessage(e.target.value)}
                 rows={6}
                 className="min-h-[150px]"
               />

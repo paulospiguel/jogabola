@@ -1,5 +1,10 @@
 "use client";
 
+import { AnimatePresence, motion } from "framer-motion";
+import { BadgeCheck, Calendar, MapPin, Share2 } from "lucide-react";
+import Image from "next/image";
+import { useTranslations } from "next-intl";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -10,11 +15,6 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { cn } from "@/lib/utils";
-import { AnimatePresence, motion } from "framer-motion";
-import { BadgeCheck, Calendar, MapPin, Share2 } from "lucide-react";
-import { useTranslations } from "next-intl";
-import Image from "next/image";
-import { useState } from "react";
 
 // Mock Data
 const CLUB_DATA = {
@@ -131,13 +131,12 @@ const SectionTitle = ({
 );
 
 export default function ClubSlugPage({ params }: { params: { slug: string } }) {
-  console.log("Loading club page for slug:", params.slug);
   const t = useTranslations("clubPage");
   const [activeTab, setActiveTab] = useState("all");
   const [searchQuery] = useState("");
 
   const filteredSquad = SQUAD.filter(
-    player =>
+    (player) =>
       (activeTab === "all" || player.category === activeTab) &&
       player.name.toLowerCase().includes(searchQuery.toLowerCase()),
   );
@@ -337,7 +336,7 @@ export default function ClubSlugPage({ params }: { params: { slug: string } }) {
               <div className="mb-8 flex flex-col items-center justify-between gap-4 md:flex-row">
                 <SectionTitle className="mb-0">{t("squad.title")}</SectionTitle>
                 <div className="flex rounded-xl border border-white/5 bg-white/5 p-1">
-                  {["all", "attack", "midfield", "defense"].map(tab => (
+                  {["all", "attack", "midfield", "defense"].map((tab) => (
                     <button
                       key={tab}
                       onClick={() => setActiveTab(tab)}
@@ -408,7 +407,7 @@ export default function ClubSlugPage({ params }: { params: { slug: string } }) {
             <section>
               <SectionTitle>{t("news.title")}</SectionTitle>
               <div className="space-y-4">
-                {NEWS.map(item => (
+                {NEWS.map((item) => (
                   <motion.div
                     key={item.id}
                     whileHover={{ x: 5 }}
@@ -448,7 +447,7 @@ export default function ClubSlugPage({ params }: { params: { slug: string } }) {
                 {t("recruitment.subtitle")}
               </p>
 
-              <form className="space-y-6" onSubmit={e => e.preventDefault()}>
+              <form className="space-y-6" onSubmit={(e) => e.preventDefault()}>
                 <div className="space-y-2">
                   <label className="text-[10px] font-black tracking-widest text-gray-500 uppercase">
                     {t("recruitment.fields.name")}

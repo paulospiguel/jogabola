@@ -1,9 +1,9 @@
 "use client";
 
-import { getEvents } from "@/actions/events";
 import { useQuery } from "@tanstack/react-query";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
+import { getEvents } from "@/actions/events";
 
 export interface EventDisplay {
   id: number;
@@ -27,8 +27,20 @@ const eventTypeEmojis: Record<string, string> = {
   evento: "🎉",
 };
 
+// Tipo para evento do banco de dados
+interface DatabaseEvent {
+  id: number;
+  title: string;
+  type: string;
+  startDate: Date | string;
+  status?: string | null;
+  currentParticipants?: string | number | null;
+  maxParticipants?: string | number | null;
+  location: string;
+}
+
 // Função para formatar eventos do banco para o formato da UI
-function formatEventForDisplay(event: any): EventDisplay {
+function formatEventForDisplay(event: DatabaseEvent): EventDisplay {
   const startDate = new Date(event.startDate);
   const formattedDate = format(startDate, "EEE dd/MM", { locale: ptBR });
   const formattedTime = format(startDate, "HH:mm");
@@ -68,13 +80,7 @@ export function useEvents(options?: UseEventsOptions) {
     enabled = true,
   } = options || {};
 
-  const {
-    data,
-    isLoading,
-    error,
-    refetch,
-    isRefetching,
-  } = useQuery({
+  const { data, isLoading, error, refetch, isRefetching } = useQuery({
     queryKey: ["events", { limit, organizerId, status, upcomingOnly }],
     queryFn: async () => {
       const result = await getEvents({
@@ -144,12 +150,7 @@ export interface EventDetails {
 
 // Hook para buscar um único evento (dados completos)
 export function useEvent(eventId: number | null) {
-  const {
-    data,
-    isLoading,
-    error,
-    refetch,
-  } = useQuery({
+  const { data, isLoading, error, refetch } = useQuery({
     queryKey: ["event", eventId],
     queryFn: async () => {
       if (!eventId) return null;
@@ -181,11 +182,8 @@ export function useEvent(eventId: number | null) {
         gender: dbEvent.gender || undefined,
         positionNeeded: dbEvent.positionNeeded || undefined,
         participationCriteria:
-          (dbEvent.participationCriteria as Record<string, any>) || {},
-        currentParticipants: parseInt(
-          dbEvent.currentParticipants || "0",
-          10,
-        ),
+          (dbEvent.participationCriteria as Record<string, unknown>) || {},
+        currentParticipants: parseInt(dbEvent.currentParticipants || "0", 10),
         maxParticipants: dbEvent.maxParticipants
           ? parseInt(dbEvent.maxParticipants, 10)
           : undefined,
@@ -213,4 +211,3 @@ export function useEvent(eventId: number | null) {
     refetch,
   };
 }
-

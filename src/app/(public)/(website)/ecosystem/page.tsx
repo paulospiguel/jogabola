@@ -1,7 +1,5 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
 import {
   ChevronRight,
@@ -12,6 +10,8 @@ import {
   Wallet,
 } from "lucide-react";
 import { useTranslations } from "next-intl";
+import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 
 // Grid Background Pattern
 const GridBackground = () => (
@@ -33,7 +33,7 @@ const GridBackground = () => (
 
 interface ModuleCardProps {
   id: string;
-  icon: any;
+  icon: React.ComponentType<{ size?: number }>;
   title: string;
   description: string;
   progress: number;
@@ -86,7 +86,10 @@ const ModuleCard = ({
       <div className="space-y-6">
         {status === "beta" ? (
           <div className="flex items-center justify-between gap-4">
-            <button className="flex items-center gap-2 text-sm font-bold text-gray-400 transition-colors hover:text-white">
+            <button
+              type="button"
+              className="flex items-center gap-2 text-sm font-bold text-gray-400 transition-colors hover:text-white"
+            >
               {t("status.learnMore")}
               <ChevronRight size={14} />
             </button>
@@ -108,7 +111,10 @@ const ModuleCard = ({
                 className="h-full bg-blue-600 shadow-[0_0_15px_rgba(37,99,235,0.5)]"
               />
             </div>
-            <button className="mt-2 flex items-center gap-2 text-sm font-bold text-gray-400 transition-colors hover:text-white">
+            <button
+              type="button"
+              className="mt-2 flex items-center gap-2 text-sm font-bold text-gray-400 transition-colors hover:text-white"
+            >
               {t("status.learnMore")}
               <ChevronRight size={14} />
             </button>
@@ -182,7 +188,7 @@ export default function EcosystemPage() {
             className="mb-6 text-5xl font-black tracking-tighter text-white md:text-7xl"
           >
             {t.rich("title", {
-              blue: chunks => (
+              blue: (chunks) => (
                 <span className="text-blue-600 drop-shadow-[0_0_20px_rgba(37,99,235,0.3)]">
                   {chunks}
                 </span>
@@ -202,7 +208,7 @@ export default function EcosystemPage() {
 
         {/* Modules Grid */}
         <div className="mb-40 grid gap-6 md:grid-cols-2">
-          {modules.map(module => (
+          {modules.map((module) => (
             <ModuleCard key={module.id} {...module} />
           ))}
         </div>

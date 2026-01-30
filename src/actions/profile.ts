@@ -1,15 +1,15 @@
 "use server";
 
+import { and, eq, isNotNull, isNull } from "drizzle-orm";
+import { z } from "zod";
 import { getPositionLabel } from "@/constants/positions";
 import { onboarding, profile } from "@/drizzle/schema";
 import { db } from "@/lib/db";
 import {
   createSlugFromNickname,
-  onboardingSchema,
   type OnboardingData,
+  onboardingSchema,
 } from "@/schemas/profile";
-import { and, eq, isNotNull, isNull } from "drizzle-orm";
-import { z } from "zod";
 
 // Salvar onboarding (sempre cria registro, com ou sem user_id)
 export async function saveOnboarding(
@@ -17,18 +17,7 @@ export async function saveOnboarding(
   userId?: string,
 ) {
   try {
-    console.log("=== saveOnboarding ===");
-    console.log("User ID:", userId || "null (pendente)");
-    console.log("Email:", data.email);
-    console.log("Nome:", data.name);
-    console.log("Role:", data.role);
-
     if (!data.email || !data.name || !data.role) {
-      console.error("Dados obrigatórios faltando:", {
-        email: data.email,
-        name: data.name,
-        role: data.role,
-      });
       return {
         success: false,
         error: "Email, nome e role são obrigatórios",
@@ -95,10 +84,6 @@ export async function saveOnboarding(
       updatedAt: new Date(),
     };
 
-    console.log(
-      "Buscando onboarding pendente existente para:",
-      validatedData.email,
-    );
     // Buscar onboarding existente pendente (user_id NULL) pelo email
     const existingPending = await db
       .select()
@@ -112,10 +97,6 @@ export async function saveOnboarding(
       .limit(1);
 
     if (existingPending.length > 0) {
-      console.log(
-        "Atualizando onboarding pendente existente, ID:",
-        existingPending[0].id,
-      );
       // Atualizar onboarding pendente existente
       const [updated] = await db
         .update(onboarding)
@@ -126,16 +107,11 @@ export async function saveOnboarding(
         .where(eq(onboarding.id, existingPending[0].id))
         .returning();
 
-      console.log("Onboarding atualizado com sucesso!");
       return { success: true, data: updated };
     }
 
     // Se tem userId, verificar se já existe onboarding vinculado
     if (userId) {
-      console.log(
-        "Verificando onboarding vinculado existente para userId:",
-        userId,
-      );
       const existingLinked = await db
         .select()
         .from(onboarding)
@@ -143,10 +119,6 @@ export async function saveOnboarding(
         .limit(1);
 
       if (existingLinked.length > 0) {
-        console.log(
-          "Atualizando onboarding vinculado existente, ID:",
-          existingLinked[0].id,
-        );
         // Atualizar onboarding vinculado existente
         const [updated] = await db
           .update(onboarding)
@@ -154,23 +126,18 @@ export async function saveOnboarding(
           .where(eq(onboarding.id, existingLinked[0].id))
           .returning();
 
-        console.log("Onboarding vinculado atualizado com sucesso!");
         return { success: true, data: updated };
       }
     }
 
-    console.log("Criando novo onboarding...");
     // Criar novo onboarding
     const [created] = await db
       .insert(onboarding)
       .values(onboardingData)
       .returning();
 
-    console.log("Novo onboarding criado com sucesso! ID:", created.id);
     return { success: true, data: created };
   } catch (error) {
-    console.error("Error saving onboarding:", error);
-
     if (error instanceof Error) {
       return { success: false, error: error.message };
     }
@@ -244,8 +211,6 @@ export async function createProfileFromOnboarding(userId: string) {
       return { success: true, data: created };
     }
   } catch (error) {
-    console.error("Error creating profile from onboarding:", error);
-
     if (error instanceof Error) {
       return { success: false, error: error.message };
     }
@@ -287,7 +252,6 @@ export async function getProfileData(userId: string) {
 
     return { success: true, data: profileData };
   } catch (error) {
-    console.error("Error fetching profile data:", error);
     return { success: false, error: "Erro ao buscar dados do perfil" };
   }
 }
@@ -380,7 +344,7 @@ export async function getPlayerPerformance(
         selectedLeague = "Geral";
       } else {
         // Normalizar cada competição primeiro, depois calcular média
-        const normalizedStats = competitionIds.map(id =>
+        const normalizedStats = competitionIds.map((id) =>
           normalizeStats(competitions[id]),
         );
         selectedStats = {
@@ -459,7 +423,7 @@ export async function getPlayerPerformance(
           halftimeScore: selectedStats.halftimeScore,
           redCards: selectedStats.redCards,
         },
-        competitions: competitionIds.map(id => ({
+        competitions: competitionIds.map((id) => ({
           id,
           name: id,
         })),
@@ -467,7 +431,6 @@ export async function getPlayerPerformance(
       },
     };
   } catch (error) {
-    console.error("Error fetching player performance:", error);
     return {
       success: false,
       error: "Erro ao buscar dados de performance",
@@ -513,7 +476,6 @@ export async function getPendingOnboarding(email: string) {
 
     return { success: true, data: onboardingData };
   } catch (error) {
-    console.error("Error fetching pending onboarding:", error);
     return {
       success: false,
       error: "Erro ao buscar dados do onboarding pendente",
@@ -524,10 +486,6 @@ export async function getPendingOnboarding(email: string) {
 // Vincular onboarding pendente a um usuário quando fizer login/registro
 export async function linkOnboardingToUser(userId: string, email: string) {
   try {
-    console.log("=== linkOnboardingToUser ===");
-    console.log("Buscando onboarding pendente para:", email);
-    console.log("User ID:", userId);
-
     // Buscar onboarding pendente pelo email
     const [pendingOnboarding] = await db
       .select()
@@ -535,51 +493,13 @@ export async function linkOnboardingToUser(userId: string, email: string) {
       .where(and(eq(onboarding.email, email), isNull(onboarding.userId)))
       .limit(1);
 
-    console.log(
-      "Resultado da busca:",
-      pendingOnboarding ? "Encontrado" : "Não encontrado",
-    );
-
-    if (pendingOnboarding) {
-      console.log("Onboarding pendente:", {
-        id: pendingOnboarding.id,
-        email: pendingOnboarding.email,
-        name: pendingOnboarding.name,
-        role: pendingOnboarding.role,
-        completed: pendingOnboarding.completed,
-      });
-    }
-
     if (!pendingOnboarding) {
-      // Buscar TODOS os onboardings para este email (para debug)
-      const allOnboardings = await db
-        .select()
-        .from(onboarding)
-        .where(eq(onboarding.email, email));
-
-      console.log(
-        `Total de onboardings encontrados para ${email}:`,
-        allOnboardings.length,
-      );
-      if (allOnboardings.length > 0) {
-        console.log(
-          "Onboardings existentes:",
-          allOnboardings.map(o => ({
-            id: o.id,
-            userId: o.userId,
-            email: o.email,
-            completed: o.completed,
-          })),
-        );
-      }
-
       return {
         success: false,
         error: "Onboarding pendente não encontrado para este email",
       };
     }
 
-    console.log("Vinculando onboarding ao usuário...");
     // Vincular ao user
     const [updated] = await db
       .update(onboarding)
@@ -590,23 +510,16 @@ export async function linkOnboardingToUser(userId: string, email: string) {
       .where(eq(onboarding.id, pendingOnboarding.id))
       .returning();
 
-    console.log("Onboarding vinculado com sucesso!");
-
     // Se onboarding está completo, criar profile
     if (updated.completed) {
-      console.log("Criando profile a partir do onboarding...");
       const profileResult = await createProfileFromOnboarding(userId);
       if (!profileResult.success) {
-        console.error("Erro ao criar profile:", profileResult.error);
         return profileResult;
       }
-      console.log("Profile criado com sucesso!");
     }
 
     return { success: true, data: updated };
   } catch (error) {
-    console.error("Error linking onboarding to user:", error);
-
     if (error instanceof Error) {
       return { success: false, error: error.message };
     }
@@ -656,7 +569,7 @@ export async function checkNicknameAvailability(
 
     // Se há userId para excluir, filtrar
     const filteredProfiles = excludeUserId
-      ? profiles.filter(p => p.userId !== excludeUserId)
+      ? profiles.filter((p) => p.userId !== excludeUserId)
       : profiles;
 
     if (filteredProfiles.length > 0) {
@@ -673,7 +586,7 @@ export async function checkNicknameAvailability(
 
     // Se há userId para excluir, filtrar
     const filteredOnboardings = excludeUserId
-      ? onboardings.filter(o => o.userId !== excludeUserId)
+      ? onboardings.filter((o) => o.userId !== excludeUserId)
       : onboardings;
 
     if (filteredOnboardings.length > 0) {
@@ -682,7 +595,6 @@ export async function checkNicknameAvailability(
 
     return { success: true, available: true };
   } catch (error) {
-    console.error("Error checking nickname availability:", error);
     return {
       success: false,
       available: false,

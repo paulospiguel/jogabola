@@ -1,12 +1,12 @@
+import { useEffect, useRef, useTransition } from "react";
 import {
-    createProfileFromOnboarding,
-    linkOnboardingToUser,
-    saveOnboarding,
+  createProfileFromOnboarding,
+  linkOnboardingToUser,
+  saveOnboarding,
 } from "@/actions/profile";
 import { useToast } from "@/hooks/use-toast-custom";
 import { useSession } from "@/lib/auth-client";
 import { useProfileStore } from "@/stores/profile";
-import { useEffect, useRef, useTransition } from "react";
 
 export function useProfileSync(
   userId?: string,
@@ -44,19 +44,8 @@ export function useProfileSync(
 
     startTransition(async () => {
       try {
-        console.log("=== useProfileSync: Iniciando sincronização ===");
-        console.log("User ID:", userId);
-        console.log("Email:", session.user.email);
-
         // Verificar dados do store PRIMEIRO
         const storeState = useProfileStore.getState();
-        console.log("Store state:", {
-          completed: storeState.completed,
-          hasRole: !!storeState.data.role,
-          hasEmail: !!storeState.data.email,
-          hasName: !!storeState.data.name,
-          email: storeState.data.email,
-        });
 
         // Se tem dados completos no store, salvar primeiro
         if (
@@ -65,7 +54,6 @@ export function useProfileSync(
           storeState.data.email &&
           storeState.data.name
         ) {
-          console.log("Salvando dados do store no banco de dados...");
           // Salvar onboarding vinculado ao user
           const onboardingResult = await saveOnboarding(
             storeState.data,
@@ -73,7 +61,6 @@ export function useProfileSync(
           );
 
           if (onboardingResult.success) {
-            console.log("Onboarding salvo com sucesso!");
             // Criar profile se onboarding está completo
             const profileResult = await createProfileFromOnboarding(userId);
 
@@ -87,7 +74,6 @@ export function useProfileSync(
               reset();
               return; // Sucesso, não precisa tentar vincular pendente
             } else {
-              console.error("Erro ao criar perfil:", profileResult.error);
               toast.error(
                 "Erro ao Criar Perfil",
                 profileResult.error ||
@@ -95,7 +81,6 @@ export function useProfileSync(
               );
             }
           } else {
-            console.error("Erro ao salvar onboarding:", onboardingResult.error);
             toast.error(
               "Erro ao Guardar",
               onboardingResult.error ||
@@ -105,17 +90,12 @@ export function useProfileSync(
         }
 
         // Se não tem dados no store, tentar vincular onboarding pendente
-        console.log(
-          "Tentando vincular onboarding pendente para:",
-          session.user.email,
-        );
         const linkResult = await linkOnboardingToUser(
           userId,
           session.user.email,
         );
 
         if (linkResult.success) {
-          console.log("Onboarding pendente vinculado com sucesso!");
           hasLinkedRef.current = true;
           toast.success(
             "Onboarding recuperado!",
@@ -124,16 +104,8 @@ export function useProfileSync(
           // Reset store após vinculação bem-sucedida
           reset();
           return;
-        } else {
-          console.log(
-            "Nenhum onboarding pendente encontrado:",
-            "error" in linkResult ? linkResult.error : "Nenhum erro específico",
-          );
         }
-
-        console.log("=== useProfileSync: Nenhuma ação necessária ===");
       } catch (error) {
-        console.error("Error syncing profile:", error);
         toast.error("Erro", "Ocorreu um erro ao sincronizar os teus dados.");
       }
     });

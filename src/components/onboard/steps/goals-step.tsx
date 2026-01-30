@@ -1,9 +1,10 @@
 "use client";
 
+import { motion } from "framer-motion";
+import { useTranslations } from "next-intl";
 import { GoalCard } from "@/components/goal-card";
 import { OnboardStepHeader } from "@/components/onboard-step-header";
 import type { RoleQuestions } from "@/constants/onboarding-questions";
-import { motion } from "framer-motion";
 
 interface GoalsStepProps {
   roleQuestions?: RoleQuestions;
@@ -16,6 +17,7 @@ export function GoalsStep({
   selectedGoals,
   onToggleGoal,
 }: GoalsStepProps) {
+  const t = useTranslations("onboardingPage.steps.goals");
   const goalsToDisplay = roleQuestions?.goals || [];
 
   return (
@@ -24,13 +26,10 @@ export function GoalsStep({
       animate={{ opacity: 1, y: 0 }}
       className="space-y-6 sm:space-y-8"
     >
-      <OnboardStepHeader
-        title="Quais São os Teus Objetivos?"
-        description="Seleciona todos os objetivos que se aplicam a ti. Isto ajuda-nos a sugerir as melhores funcionalidades."
-      />
+      <OnboardStepHeader title={t("title")} description={t("description")} />
 
       <div className="grid grid-cols-1 gap-3 p-4 sm:gap-4 md:grid-cols-2 lg:grid-cols-3">
-        {goalsToDisplay.map(goal => (
+        {goalsToDisplay.map((goal) => (
           <GoalCard
             key={goal.id}
             goal={goal}

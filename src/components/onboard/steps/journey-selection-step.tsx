@@ -1,11 +1,12 @@
 "use client";
 
+import { AnimatePresence, motion } from "framer-motion";
+import { Grid3x3 } from "lucide-react";
+import { useTranslations } from "next-intl";
+import { useState } from "react";
 import { JourneyOptionCard } from "@/components/journey-option-card";
 import { OnboardStepHeader } from "@/components/onboard-step-header";
 import { JOURNEY_OPTIONS } from "@/constants/onboard";
-import { AnimatePresence, motion } from "framer-motion";
-import { Grid3x3 } from "lucide-react";
-import { useState } from "react";
 
 interface JourneySelectionStepProps {
   selectedRole?: string;
@@ -16,6 +17,7 @@ export function JourneySelectionStep({
   selectedRole,
   onRoleSelect,
 }: JourneySelectionStepProps) {
+  const t = useTranslations("onboardingPage.steps.journeySelection");
   const [focusMode, setFocusMode] = useState(false);
 
   const handleCardSelect = (roleId: string) => {
@@ -27,7 +29,7 @@ export function JourneySelectionStep({
     setFocusMode(false);
   };
 
-  const selectedOption = JOURNEY_OPTIONS.find(opt => opt.id === selectedRole);
+  const selectedOption = JOURNEY_OPTIONS.find((opt) => opt.id === selectedRole);
 
   return (
     <motion.div
@@ -37,10 +39,10 @@ export function JourneySelectionStep({
     >
       <div className="flex static md:relative items-center justify-center flex-col">
         <OnboardStepHeader
-          title="Escolhe a Tua Jornada"
-          description={focusMode ? "Revê os detalhes da tua escolha" : "Cada jornada oferece uma experiência única. Seleciona a que melhor se adequa aos teus objetivos."}
+          title={t("title")}
+          description={focusMode ? t("descriptionFocus") : t("descriptionGrid")}
         />
-        
+
         {focusMode && selectedRole && (
           <motion.button
             initial={{ opacity: 0, scale: 0.8 }}
@@ -49,14 +51,13 @@ export function JourneySelectionStep({
             className="md:absolute top-0 left-0 z-10 flex items-center gap-2 rounded-full border border-emerald-500/30 bg-emerald-500/10 px-4 py-2 text-sm font-medium text-emerald-400 transition-all hover:border-emerald-500/50 hover:bg-emerald-500/20"
           >
             <Grid3x3 className="h-4 w-4" />
-            Voltar à lista
+            {t("backToList")}
           </motion.button>
         )}
       </div>
 
       <AnimatePresence mode="wait">
         {focusMode && selectedOption ? (
-          // Focus Mode - Single Card Expanded
           <motion.div
             key="focus-mode"
             initial={{ opacity: 0, scale: 0.95 }}
@@ -77,7 +78,6 @@ export function JourneySelectionStep({
             </div>
           </motion.div>
         ) : (
-          // Grid Mode - All Cards
           <motion.div
             key="grid-mode"
             initial={{ opacity: 0 }}
