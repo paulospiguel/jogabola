@@ -1,12 +1,8 @@
----
-trigger: always_on
----
-
-# 🧭 Business & Product Context — JogaBola Arena
+# SKILL: 🧭 Business & Product Context — JogaBola
 
 ## ⚽ Visão Geral
 
-O **JogaBola Arena** é uma plataforma SaaS voltada ao **futebol amador**, que
+O **JogaBola** é uma plataforma SaaS voltada ao **futebol amador**, que
 transforma a gestão de equipes e a experiência dos jogadores em algo
 tecnológico, acessível e divertido.  
 É parte do ecossistema **JogaBola Fundation**, que unirá gestão esportiva,
@@ -106,3 +102,12 @@ e acessível.
 **JogaBola Fundation**  
 Desenvolvido por **Paulo Spiguel**  
 Fullstack Developer — Next.js • TypeScript • Drizzle • Tailwind • Better Auth
+
+## Internal Rule Files
+
+When applying this skill, always consult and follow
+all documents located in the /rules directory.
+
+Treat each file inside /rules as mandatory behavioral extensions.
+
+END SKILL
