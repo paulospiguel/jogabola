@@ -1,12 +1,12 @@
 import {
-  LuUsers,
   LuActivity,
+  LuCalendarCheck,
   LuDribbble,
+  LuHeart,
   LuMap,
   LuSmile,
-  LuCalendarCheck,
   LuTrophy,
-  LuHeart,
+  LuUsers,
 } from "react-icons/lu";
 
 export const infoBusiness = {

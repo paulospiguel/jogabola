@@ -1,135 +1,187 @@
 "use client";
 
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { cn } from "@/lib/utils";
 import {
+  BarChart2,
   Calendar,
   LayoutDashboard,
-  MessageSquare,
   Settings,
-  Shield,
-  Trophy
+  ShieldCheck,
+  Users,
+  Wallet,
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { FieldSoccerIcon } from "../icons";
+import { cn } from "@/lib/utils";
+import { Logo } from "../logo";
 
 type ArenaSidebarProps = {
   isOpen: boolean;
   onClose: () => void;
 };
 
+const ARENA_COLOR = "var(--color-journey-arena)";
 
-// Mapeamento baseado na imagem visual
-const menuItems = [
-  {
-    title: "Dashboard",
-    href: "/arena", // Ícone de perfil/dashboard
-    icon: LayoutDashboard,
-  },
-  {
-    title: "Agenda",
-    href: "/arena/calendar", // Ícone de calendário
-    icon: Calendar,
-  },
-  {
-    title: "Partidas",
-    href: "/arena/matches", // Ícone de campo/jogo
-    icon: FieldSoccerIcon, // Representando o campo/tabuleiro
-  },
-  {
-    title: "Torneios",
-    href: "/arena/tournaments", // Ícone de troféu
-    icon: Trophy,
-  },
-   {
-    title: "Comunidade",
-    href: "/arena/messages", // Ícone de chat/grupo
-    icon: MessageSquare, 
-  },
+const managementItems = [
+  { title: "Dashboard", href: "/arena", icon: LayoutDashboard },
+  { title: "Active Teams", href: "/arena/teams", icon: Users },
+  { title: "Fixtures", href: "/arena/calendar", icon: Calendar },
+  { title: "Stat Center", href: "/arena/stats", icon: BarChart2 },
+];
+
+const adminItems = [
+  { title: "Finances", href: "/arena/finances", icon: Wallet },
+  { title: "Club Settings", href: "/arena/settings", icon: Settings },
 ];
 
 export default function ArenaSidebar({ isOpen, onClose }: ArenaSidebarProps) {
   const pathname = usePathname();
 
   const sidebarContent = (
-    <div className="flex h-full flex-col items-center py-8">
-      {/* Logo Section - Shield Icon */}
-      <div className="mb-10 flex h-14 w-14 items-center justify-center">
-        <Shield className="h-10 w-10 text-white fill-white" />
+    <div className="flex h-full flex-col py-6 px-4">
+      {/* Logo */}
+      <div className="mb-10 flex items-center justify-center gap-3 px-2">
+        <Logo size={"small"} />
       </div>
 
       {/* Navigation */}
-      <ScrollArea className="flex-1 w-full px-2">
-        <nav className="flex flex-col items-center gap-5">
-          {menuItems.map((item) => {
-            const isActive = pathname === item.href;
-            const Icon = item.icon;
+      <div className="flex-1 overflow-y-auto overflow-x-hidden no-scrollbar">
+        {/* Management Section */}
+        <div className="mb-8">
+          <p className="mb-3 px-3 text-[10px] font-bold uppercase tracking-widest text-white/40">
+            Management
+          </p>
+          <nav className="flex flex-col gap-1">
+            {managementItems.map(item => {
+              const isActive = pathname === item.href;
+              const Icon = item.icon;
 
-            return (
-              <Link
-                key={item.href}
-                href={item.href}
-                onClick={onClose}
-                className="group relative flex items-center justify-center"
-              >
-                <div
+              return (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  onClick={onClose}
                   className={cn(
-                    "flex h-12 w-12 items-center justify-center rounded-full transition-all duration-300",
-                    isActive
-                      ? "bg-[#dcfce7] text-slate-900 shadow-[0_0_15px_rgba(220,252,231,0.4)]" // Estilo ativo (claro/mint)
-                      : "bg-white/10 text-white/60 hover:bg-white/20 hover:text-white" // Estilo inativo (escuro)
+                    "flex items-center gap-3 no-underline rounded-2xl px-3 py-3 w-full transition-all duration-200 font-bold text-sm",
+                    !isActive
+                      ? "text-white/60 hover:bg-white/5 hover:text-white"
+                      : "",
                   )}
+                  style={
+                    isActive
+                      ? {
+                          backgroundColor: ARENA_COLOR,
+                          color: "#000",
+                        }
+                      : undefined
+                  }
                 >
-                  <Icon className="h-5 w-5" strokeWidth={2} />
-                </div>
-                
-                {/* Tooltip on hover (desktop only) */}
-                <span className="absolute left-16 z-50 hidden rounded-md bg-slate-900 px-3 py-1.5 text-xs font-medium text-white opacity-0 shadow-lg transition-opacity group-hover:opacity-100 md:block whitespace-nowrap border border-white/10">
-                  {item.title}
-                </span>
-              </Link>
-            );
-          })}
-        </nav>
-      </ScrollArea>
+                  <Icon
+                    className="h-5 w-5 shrink-0"
+                    strokeWidth={isActive ? 2.5 : 2}
+                  />
+                  <span>{item.title}</span>
+                </Link>
+              );
+            })}
+          </nav>
+        </div>
 
-      {/* Bottom Actions */}
-      <div className="mt-auto flex flex-col gap-6 px-4 pb-4">
-         <Link
-            href="/arena/settings"
-            onClick={onClose}
-            className="group relative flex items-center justify-center"
-          >
-            <div className={cn(
-              "flex h-12 w-12 items-center justify-center rounded-full bg-white/5 text-white/50 transition-all hover:bg-white/10 hover:text-white",
-              pathname === "/arena/settings" && "bg-[#dcfce7] text-slate-900"
-            )}>
-              <Settings className="h-5 w-5" strokeWidth={2} />
+        {/* Club Admin Section */}
+        <div>
+          <p className="mb-3 px-3 text-[10px] font-bold uppercase tracking-widest text-white/40">
+            Club Admin
+          </p>
+          <nav className="flex flex-col gap-1">
+            {adminItems.map(item => {
+              const isActive = pathname === item.href;
+              const Icon = item.icon;
+
+              return (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  onClick={onClose}
+                  className={cn(
+                    "flex items-center gap-3 no-underline rounded-2xl px-3 py-3 w-full transition-all duration-200 font-bold text-sm",
+                    !isActive
+                      ? "text-white/60 hover:bg-white/5 hover:text-white"
+                      : "",
+                  )}
+                  style={
+                    isActive
+                      ? {
+                          backgroundColor: ARENA_COLOR,
+                          color: "#000",
+                        }
+                      : undefined
+                  }
+                >
+                  <Icon
+                    className="h-5 w-5 shrink-0"
+                    strokeWidth={isActive ? 2.5 : 2}
+                  />
+                  <span>{item.title}</span>
+                </Link>
+              );
+            })}
+          </nav>
+        </div>
+      </div>
+
+      {/* Bottom: Pro Plan Card */}
+      <div className="mt-auto pt-6">
+        <div className="rounded-2xl border border-white/8 bg-[#1a1a1a] p-4 flex flex-col gap-3 relative overflow-hidden">
+          <div className="flex items-center gap-3 z-10">
+            <div
+              className="flex h-8 w-8 items-center justify-center rounded-full"
+              style={{ backgroundColor: "rgba(188,255,0,0.15)" }}
+            >
+              <ShieldCheck
+                className="h-4 w-4"
+                style={{ color: ARENA_COLOR }}
+                strokeWidth={3}
+              />
             </div>
-            <span className="absolute left-16 z-50 hidden rounded-md bg-slate-900 px-3 py-1.5 text-xs font-medium text-white opacity-0 shadow-lg transition-opacity group-hover:opacity-100 md:block whitespace-nowrap border border-white/10">
-              Configurações
-            </span>
+            <div>
+              <p className="text-sm font-bold text-white leading-tight">
+                Pro Plan
+              </p>
+              <p className="text-[10px] text-white/40 leading-tight mt-0.5">
+                Active until Dec 2024
+              </p>
+            </div>
+          </div>
+          <Link
+            href="/arena/billing"
+            className="rounded-xl py-2 px-4 text-xs font-bold transition hover:bg-white/5 text-center z-10 w-full"
+            style={{ color: ARENA_COLOR, border: `1px solid ${ARENA_COLOR}` }}
+            onClick={onClose}
+          >
+            Manage Billing
           </Link>
+        </div>
       </div>
     </div>
   );
 
   return (
     <>
-      {/* Mobile Overlay */}
+      {/* Mobile overlay */}
       {isOpen && (
-        <div
-          className="fixed inset-0 z-40 bg-black/60 backdrop-blur-sm md:hidden"
+        <button
+          type="button"
+          aria-label="Fechar menu"
+          className="fixed inset-0 z-40 bg-black/70 backdrop-blur-sm md:hidden w-full cursor-default"
           onClick={onClose}
         />
       )}
 
-      {/* Sidebar Container */}
+      {/* Sidebar */}
       <aside
         className={cn(
-          "fixed top-0 left-0 z-50 h-screen w-[88px] overflow-hidden bg-black shadow-2xl transition-transform duration-300 md:translate-x-0 rounded-r-3xl border-r border-white/5",
-          isOpen ? "translate-x-0" : "-translate-x-full"
+          "fixed top-0 left-0 z-50 h-screen w-64 overflow-hidden transition-transform duration-300 md:translate-x-0",
+          "bg-[#0d0d0d] border-r border-white/5 shadow-2xl",
+          isOpen ? "translate-x-0" : "-translate-x-full",
         )}
       >
         {sidebarContent}

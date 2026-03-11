@@ -1,10 +1,5 @@
 "use client";
 
-import Modal, { ModalRef } from "@/components/modal";
-import { Button } from "@/components/ui/button";
-import { HOME_STATS } from "@/constants/home-stats";
-import { useJourneyRedirect } from "@/hooks/use-journey-redirect";
-import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
 import {
   Activity,
@@ -17,6 +12,11 @@ import {
 } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useRef } from "react";
+import Modal, { ModalRef } from "@/components/modal";
+import { Button } from "@/components/ui/button";
+import { webConfig } from "@/configs";
+import { useJourneyRedirect } from "@/hooks/use-journey-redirect";
+import { cn } from "@/lib/utils";
 
 // Background Pattern Component - Gradiente do mockup
 const FieldPattern = () => {
@@ -220,7 +220,7 @@ const StatsSection = () => {
           {t("stats.title")}
         </h3>
         <div className="flex flex-wrap items-center justify-center gap-10">
-          {HOME_STATS.map((stat, index) => (
+          {Object.values(webConfig.HOME_STATS).map((stat, index) => (
             <motion.div
               key={stat.key}
               initial={{ opacity: 0, scale: 0.9 }}

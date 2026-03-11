@@ -167,4 +167,39 @@
   --color-neon-secondary-high-contrast: #2efff0;
   --color-accent-blue-high-contrast: #1ab8ff;
   --color-brand-green-high-contrast: #00e6c4;
+
+  /* ============================================
+     JOURNEY PRIMARY COLORS
+     Each journey has a distinct primary color.
+     ============================================ */
+
+  /* Arena (Club Manager) - Lime Green */
+  --color-journey-arena: #bcff00;
+  --color-journey-arena-hover: #a8e600;
+  --color-journey-arena-muted: rgba(188, 255, 0, 0.12);
+  --color-journey-arena-glow: rgba(188, 255, 0, 0.35);
+
+  /* Playzone (Player) - Orange */
+  --color-journey-playzone: #ff6b2b;
+  --color-journey-playzone-hover: #e55c20;
+  --color-journey-playzone-muted: rgba(255, 107, 43, 0.12);
+  --color-journey-playzone-glow: rgba(255, 107, 43, 0.35);
+
+  /* Fanzone (Fan) - Purple */
+  --color-journey-fanzone: #a855f7;
+  --color-journey-fanzone-hover: #9333ea;
+  --color-journey-fanzone-muted: rgba(168, 85, 247, 0.12);
+  --color-journey-fanzone-glow: rgba(168, 85, 247, 0.35);
+
+  /* Organizer - Sky Blue */
+  --color-journey-organizer: #0ea5e9;
+  --color-journey-organizer-hover: #0284c7;
+  --color-journey-organizer-muted: rgba(14, 165, 233, 0.12);
+  --color-journey-organizer-glow: rgba(14, 165, 233, 0.35);
+
+  /* Referee - Green */
+  --color-journey-referee: #00cfb1;
+  --color-journey-referee-hover: #00b89a;
+  --color-journey-referee-muted: rgba(0, 207, 177, 0.12);
+  --color-journey-referee-glow: rgba(0, 207, 177, 0.35);
 }
