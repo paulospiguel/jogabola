@@ -3,8 +3,11 @@
 import { Logo } from "@/components/logo";
 import { motion } from "framer-motion";
 import { CheckCircle } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 export function OnboardIntroStep() {
+  const t = useTranslations("onboardingPage.steps.intro");
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -21,12 +24,10 @@ export function OnboardIntroStep() {
           <Logo />
         </motion.div>
         <h1 className="bg-gradient-to-r from-[#00cfb1] to-[#1effbf] bg-clip-text text-3xl font-bold text-transparent sm:text-4xl md:text-5xl">
-          Bem-vindo ao JogaBola!
+          {t("title")}
         </h1>
         <p className="mx-auto max-w-2xl text-base leading-relaxed text-[#ba93ff] sm:text-lg md:text-xl">
-          Estás prestes a embarcar numa jornada épica no mundo do futebol
-          amador. Vamos configurar a tua experiência perfeita em apenas alguns
-          passos.
+          {t("subtitle")}
         </p>
       </div>
 
@@ -38,15 +39,15 @@ export function OnboardIntroStep() {
       >
         <div className="flex items-center gap-2 text-sm text-[#00cfb1] sm:text-base">
           <CheckCircle className="h-4 w-4 sm:h-5 sm:w-5" />
-          <span>Escolha da jornada</span>
+          <span>{t("journeyChoice")}</span>
         </div>
         <div className="flex items-center gap-2 text-sm text-[#00cfb1] sm:text-base">
           <CheckCircle className="h-4 w-4 sm:h-5 sm:w-5" />
-          <span>Configuração personalizada</span>
+          <span>{t("personalSetup")}</span>
         </div>
         <div className="flex items-center gap-2 text-sm text-[#00cfb1] sm:text-base">
           <CheckCircle className="h-4 w-4 sm:h-5 sm:w-5" />
-          <span>Acesso antecipado</span>
+          <span>{t("earlyAccess")}</span>
         </div>
       </motion.div>
     </motion.div>

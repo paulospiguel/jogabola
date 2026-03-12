@@ -13,6 +13,7 @@ import { format } from "date-fns";
 import { pt } from "date-fns/locale";
 import { motion } from "framer-motion";
 import { CheckCircle } from "lucide-react";
+import { useTranslations } from "next-intl";
 import Image from "next/image";
 
 interface ConfirmationStepProps {
@@ -67,13 +68,6 @@ const getCountryName = (code?: string): string => {
   return countryNamesPT[country.name] || country.name;
 };
 
-const experienceLabels: Record<string, string> = {
-  beginner: "Iniciante",
-  intermediate: "Intermédio",
-  advanced: "Avançado",
-  professional: "Profissional",
-};
-
 export function ConfirmationStep({
   name,
   email,
@@ -89,6 +83,8 @@ export function ConfirmationStep({
   roleQuestions,
   getCustomFieldValue,
 }: ConfirmationStepProps) {
+  const t = useTranslations();
+  const tc = useTranslations("onboardingPage.steps.confirmation");
   const journeyOption = JOURNEY_OPTIONS.find(j => j.id === role);
   const selectedGoals = (goals || [])
     .map(goalId => {
@@ -106,8 +102,8 @@ export function ConfirmationStep({
       className="space-y-6 sm:space-y-8"
     >
       <OnboardStepHeader
-        title="Confirma os Teus Dados"
-        description="Revisa todas as informações preenchidas antes de finalizar. Podes voltar para editar qualquer campo."
+        title={tc("title")}
+        description={tc("description")}
       />
 
       <div className="mx-auto max-w-3xl space-y-4 sm:space-y-6">
@@ -115,17 +111,17 @@ export function ConfirmationStep({
         <div className="rounded-xl border border-white/10 bg-white/5 p-4 backdrop-blur sm:rounded-2xl sm:p-6">
           <h3 className="mb-3 flex items-center gap-2 text-base font-semibold text-white sm:mb-4 sm:text-lg">
             <CheckCircle className="h-4 w-4 text-brand-green sm:h-5 sm:w-5" />
-            Informações Básicas
+            {tc("basicInfo")}
           </h3>
           <div className="grid grid-cols-1 gap-3 sm:gap-4 md:grid-cols-2">
             <div>
-              <p className="text-sm text-white/60">Nome</p>
-              <p className="font-medium text-white">{name || "Não preenchido"}</p>
+              <p className="text-sm text-white/60">{t("common.name")}</p>
+              <p className="font-medium text-white">{name || t("common.notFilled")}</p>
             </div>
             <div>
-              <p className="text-sm text-white/60">Email</p>
+              <p className="text-sm text-white/60">{t("common.email")}</p>
               <p className="font-medium text-white">
-                {email || "Não preenchido"}
+                {email || t("common.notFilled")}
               </p>
             </div>
             {nickname && (
@@ -136,7 +132,7 @@ export function ConfirmationStep({
             )}
             {dateOfBirth && (
               <div>
-                <p className="text-sm text-white/60">Data de Nascimento</p>
+                <p className="text-sm text-white/60">{t("onboardingPage.steps.basicInfo.fields.dateOfBirth")}</p>
                 <p className="font-medium text-white">
                   {(() => {
                     try {
@@ -144,10 +140,10 @@ export function ConfirmationStep({
                         dateOfBirth instanceof Date
                           ? dateOfBirth
                           : new Date(dateOfBirth);
-                      if (isNaN(date.getTime())) return "Data inválida";
+                      if (isNaN(date.getTime())) return t("common.invalidDate");
                       return format(date, "PPP", { locale: pt });
                     } catch {
-                      return "Data inválida";
+                      return t("common.invalidDate");
                     }
                   })()}
                 </p>
@@ -155,7 +151,7 @@ export function ConfirmationStep({
             )}
             {nationality && (
               <div>
-                <p className="text-sm text-white/60">Nacionalidade</p>
+                <p className="text-sm text-white/60">{t("onboardingPage.steps.basicInfo.fields.nationality")}</p>
                 <p className="font-medium text-white">
                   {getCountryName(nationality)}
                 </p>
@@ -163,7 +159,7 @@ export function ConfirmationStep({
             )}
             {country && (
               <div>
-                <p className="text-sm text-white/60">País</p>
+                <p className="text-sm text-white/60">{t("onboardingPage.steps.basicInfo.fields.country")}</p>
                 <p className="font-medium text-white">
                   {getCountryName(country)}
                 </p>
@@ -171,13 +167,13 @@ export function ConfirmationStep({
             )}
             {city && (
               <div>
-                <p className="text-sm text-white/60">Cidade</p>
+                <p className="text-sm text-white/60">{t("onboardingPage.steps.basicInfo.fields.city")}</p>
                 <p className="font-medium text-white">{city}</p>
               </div>
             )}
             {location && (
               <div>
-                <p className="text-sm text-white/60">Localização</p>
+                <p className="text-sm text-white/60">{t("onboardingPage.steps.basicInfo.fields.location")}</p>
                 <p className="font-medium text-white">{location}</p>
               </div>
             )}
@@ -188,7 +184,7 @@ export function ConfirmationStep({
         <div className="rounded-xl border border-white/10 bg-white/5 p-4 backdrop-blur sm:rounded-2xl sm:p-6">
           <h3 className="mb-3 flex items-center gap-2 text-base font-semibold text-white sm:mb-4 sm:text-lg">
             <CheckCircle className="h-4 w-4 text-brand-green sm:h-5 sm:w-5" />
-            Jornada Escolhida
+            {tc("selectedJourney")}
           </h3>
           {journeyOption && (
             <div className="flex items-center gap-2.5 sm:gap-3">
@@ -221,10 +217,10 @@ export function ConfirmationStep({
           <div className="rounded-xl border border-white/10 bg-white/5 p-4 backdrop-blur sm:rounded-2xl sm:p-6">
             <h3 className="mb-3 flex items-center gap-2 text-base font-semibold text-white sm:mb-4 sm:text-lg">
               <CheckCircle className="h-4 w-4 text-brand-green sm:h-5 sm:w-5" />
-              Experiência
+              {tc("experience")}
             </h3>
             <p className="text-sm font-medium text-white sm:text-base">
-              {experienceLabels[experience] || experience}
+              {t(`experience.${experience}`) || experience}
             </p>
           </div>
         )}
@@ -235,7 +231,7 @@ export function ConfirmationStep({
             <div className="rounded-xl border border-white/10 bg-white/5 p-4 backdrop-blur sm:rounded-2xl sm:p-6">
               <h3 className="mb-3 flex items-center gap-2 text-base font-semibold text-white sm:mb-4 sm:text-lg">
                 <CheckCircle className="h-4 w-4 text-brand-green sm:h-5 sm:w-5" />
-                Informações Específicas
+                {tc("specificInfo")}
               </h3>
               <div className="grid grid-cols-1 gap-3 sm:gap-4 md:grid-cols-2">
                 {roleQuestions.personalInfo.map(question => {
@@ -297,7 +293,7 @@ export function ConfirmationStep({
           <div className="rounded-xl border border-white/10 bg-white/5 p-4 backdrop-blur sm:rounded-2xl sm:p-6">
             <h3 className="mb-3 flex items-center gap-2 text-base font-semibold text-white sm:mb-4 sm:text-lg">
               <CheckCircle className="h-4 w-4 text-brand-green sm:h-5 sm:w-5" />
-              Objetivos Selecionados
+              {tc("selectedGoals")}
             </h3>
             <div className="flex flex-wrap gap-1.5 sm:gap-2">
               {selectedGoals.map(goal => (
@@ -327,7 +323,7 @@ export function ConfirmationStep({
             <div className="rounded-xl border border-white/10 bg-white/5 p-4 backdrop-blur sm:rounded-2xl sm:p-6">
               <h3 className="mb-3 flex items-center gap-2 text-base font-semibold text-white sm:mb-4 sm:text-lg">
                 <CheckCircle className="h-4 w-4 text-brand-green sm:h-5 sm:w-5" />
-                Informações Adicionais
+                {tc("additionalInfo")}
               </h3>
               <div className="grid grid-cols-1 gap-3 sm:gap-4 md:grid-cols-2">
                 {roleQuestions.customFields.map(question => {
@@ -363,8 +359,8 @@ export function ConfirmationStep({
         {/* Mensagem final */}
         <div className="rounded-xl border border-brand-green/30 bg-gradient-to-br from-brand-green/10 to-transparent p-4 text-center sm:rounded-2xl sm:p-6">
           <p className="text-sm text-white/80 sm:text-base">
-            <span className="font-semibold text-brand-green">Tudo certo?</span>{" "}
-            Avança para finalizar o teu cadastro.
+            <span className="font-semibold text-brand-green">{tc("allGood")}</span>{" "}
+            {tc("proceed")}
           </p>
         </div>
       </div>

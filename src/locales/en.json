@@ -211,7 +211,18 @@
     "toggleTheme": "Toggle theme",
     "search": "Search...",
     "searchCountry": "Search country...",
-    "selectCompetition": "Select a competition"
+    "selectCompetition": "Select a competition",
+    "profile": "Profile",
+    "signOut": "Sign Out",
+    "home": "Home",
+    "notifications": "Notifications",
+    "settings": "Settings",
+    "statistics": "Statistics",
+    "myAccount": "My Account",
+    "inDevelopment": "In Development",
+    "comingSoonDescription": "This area is under development. Soon you will have full access.",
+    "notFilled": "Not filled",
+    "invalidDate": "Invalid date"
   },
   "company": {
     "description": "Find your ideal team or create your own, manage your athletes and participate in legendary leagues!",
@@ -564,7 +575,9 @@
       "subtitle": "Arena Central",
       "title": "Welcome back to the Arena ⚽",
       "description": "Keep track of your team's pace, organize matches and keep the community always active.",
-      "quote": "Track the performance of your players, build detailed statistics and monitor the performance of your team."
+      "quote": "Track the performance of your players, build detailed statistics and monitor the performance of your team.",
+      "searchPlaceholder": "Search matches, players, or stats...",
+      "openMenu": "Open navigation menu"
     },
     "stats": {
       "matchesPlayed": "Matches Played",
@@ -595,6 +608,18 @@
     },
     "activity": {
       "title": "Recent Activity"
+    },
+    "notifications": {
+      "title": "Notifications",
+      "newMatch": "New match available",
+      "teamInvite": "Team invitation",
+      "tournamentStarting": "Tournament starting",
+      "ago5min": "5 minutes ago",
+      "ago1hour": "1 hour ago",
+      "ago2hours": "2 hours ago"
+    },
+    "userMenu": {
+      "myAccount": "My Account"
     }
   },
   "signIn": {
@@ -899,13 +924,28 @@
       },
       "confirmation": {
         "title": "Confirm Your Data",
-        "description": "Review all filled information before finalizing. You can go back to edit any field."
+        "description": "Review all filled information before finalizing. You can go back to edit any field.",
+        "basicInfo": "Basic Information",
+        "selectedJourney": "Selected Journey",
+        "experience": "Experience",
+        "specificInfo": "Specific Information",
+        "selectedGoals": "Selected Goals",
+        "additionalInfo": "Additional Information",
+        "allGood": "All good?",
+        "proceed": "Proceed to finalize your registration."
       },
       "journeySelection": {
         "title": "Choose Your Journey",
         "descriptionGrid": "Each journey offers a unique experience. Select the one that best suits your goals.",
         "descriptionFocus": "Review the details of your choice",
         "backToList": "Back to list"
+      },
+      "intro": {
+        "title": "Welcome to JogaBola!",
+        "subtitle": "You are about to embark on an epic journey in the world of amateur football. Let's set up your perfect experience in just a few steps.",
+        "journeyChoice": "Journey selection",
+        "personalSetup": "Personalized setup",
+        "earlyAccess": "Early access"
       }
     }
   },
@@ -927,6 +967,84 @@
         "location": "E.g.: Club Training Center",
         "description": "Add details about the event..."
       }
+    }
+  },
+  "timer": {
+    "settings": {
+      "title": "Match Settings",
+      "matchFormat": "Match Format",
+      "teamCustomization": "Team Customization",
+      "teamA": "Team A (Home)",
+      "teamB": "Team B (Away)",
+      "teamName": "Team Name",
+      "timerMode": "Timer Mode",
+      "progressive": "Progressive",
+      "regressive": "Regressive",
+      "partDurations": "Part Durations (Minutes)",
+      "timerEndSound": "Timer End Sound",
+      "testSound": "Test Sound",
+      "saveChanges": "Save Changes",
+      "modeDescriptions": {
+        "countUp": "Timer counts up from 00:00.",
+        "countDown": "Timer counts down to 00:00 and plays a sound.",
+        "loop": "Timer counts down, plays a sound, and resets. User must start next round manually."
+      }
+    },
+    "controls": {
+      "pause": "Pause",
+      "start": "Start",
+      "finished": "Finished"
+    },
+    "auth": {
+      "logout": "Logout",
+      "loginSync": "Login / Sync",
+      "login": "Login",
+      "loginFailed": "Login failed. Please try again.",
+      "logoutConfirm": "Are you sure you want to log out?"
+    },
+    "events": {
+      "title": "Match Events",
+      "hint": "Tap time to edit • Tap row for player",
+      "empty": "No events recorded yet.",
+      "assignPlayer": "Assign Player"
+    }
+  },
+  "organizerPage": {
+    "title": "Organizer Area",
+    "subtitle": "Organize tournaments and events",
+    "newTournament": "New Tournament",
+    "stats": {
+      "activeTournaments": "Active Tournaments",
+      "inProgress": "In progress",
+      "scheduledEvents": "Scheduled Events",
+      "next30days": "Next 30 days",
+      "participants": "Participants",
+      "participantsThisMonth": "+42 this month",
+      "venues": "Venues",
+      "registered": "Registered"
+    },
+    "comingSoon": {
+      "title": "In Development",
+      "description": "This area is under development. Soon you will have full access to the event organization panel."
+    }
+  },
+  "fanzonePage": {
+    "title": "Fan Zone",
+    "subtitle": "Follow your favorite teams",
+    "followTeam": "Follow Team",
+    "stats": {
+      "followedTeams": "Followed Teams",
+      "newTeams": "+2 new",
+      "watchedMatches": "Watched Matches",
+      "thisMonth": "This month",
+      "upcomingMatches": "Upcoming Matches",
+      "thisWeek": "This week",
+      "favorites": "Favorites",
+      "preferredTeams": "Preferred teams"
+    },
+    "comingSoon": {
+      "title": "In Development",
+      "description": "This area is under development. Soon you will have full access to the Fan Zone."
     }
   }
 }

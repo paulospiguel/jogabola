@@ -1,5 +1,9 @@
 "use client";
 
+import { Bell, Home, Menu, User } from "lucide-react";
+import { useTranslations } from "next-intl";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 import { getProfileData } from "@/actions/profile";
 import { Logo } from "@/components/logo";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -14,16 +18,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { signOut, useSession } from "@/lib/auth-client";
-import { Experience } from "@/schemas/profile";
-import {
-  Bell,
-  Home,
-  Menu,
-  User
-} from "lucide-react";
-import { useTranslations } from "next-intl";
-import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import type { Experience } from "@/schemas/profile";
 
 type PlayZoneHeaderProps = {
   onMenuToggle: () => void;
@@ -109,7 +104,7 @@ export default function PlayZoneHeader({ onMenuToggle }: PlayZoneHeaderProps) {
           size="icon"
           className="text-white hover:bg-white/10 md:hidden"
           onClick={onMenuToggle}
-          aria-label="Abrir menu de navegação"
+          aria-label={t("arena.header.openMenu")}
         >
           <Menu className="h-6 w-6" />
           <span className="sr-only">Toggle menu</span>
@@ -136,7 +131,7 @@ export default function PlayZoneHeader({ onMenuToggle }: PlayZoneHeaderProps) {
                     {notifications}
                   </Badge>
                 )}
-                <span className="sr-only">Notificações</span>
+                <span className="sr-only">{t("common.notifications")}</span>
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent
@@ -144,21 +139,21 @@ export default function PlayZoneHeader({ onMenuToggle }: PlayZoneHeaderProps) {
               className="w-80 border border-white/10 bg-[#050312]/95 text-white backdrop-blur-xl"
             >
               <DropdownMenuLabel className="text-sm font-semibold text-[#6fffe9]">
-                Notificações
+                {t("common.notifications")}
               </DropdownMenuLabel>
               <DropdownMenuSeparator className="bg-white/10" />
               <div className="max-h-96 space-y-1 overflow-y-auto">
                 <DropdownMenuItem className="flex min-h-[44px] cursor-pointer flex-col gap-1 rounded-lg px-4 py-3 text-base text-white transition-colors hover:bg-white/10 focus:bg-white/10">
-                  <p className="font-semibold">Nova partida disponível</p>
-                  <p className="text-sm text-white/60">Há 5 minutos</p>
+                  <p className="font-semibold">{t("arena.notifications.newMatch")}</p>
+                  <p className="text-sm text-white/60">{t("arena.notifications.ago5min")}</p>
                 </DropdownMenuItem>
                 <DropdownMenuItem className="flex min-h-[44px] cursor-pointer flex-col gap-1 rounded-lg px-4 py-3 text-base text-white transition-colors hover:bg-white/10 focus:bg-white/10">
-                  <p className="font-semibold">Convite de time</p>
-                  <p className="text-sm text-white/60">Há 1 hora</p>
+                  <p className="font-semibold">{t("arena.notifications.teamInvite")}</p>
+                  <p className="text-sm text-white/60">{t("arena.notifications.ago1hour")}</p>
                 </DropdownMenuItem>
                 <DropdownMenuItem className="flex min-h-[44px] cursor-pointer flex-col gap-1 rounded-lg px-4 py-3 text-base text-white transition-colors hover:bg-white/10 focus:bg-white/10">
-                  <p className="font-semibold">Torneio começando</p>
-                  <p className="text-sm text-white/60">Há 2 horas</p>
+                  <p className="font-semibold">{t("arena.notifications.tournamentStarting")}</p>
+                  <p className="text-sm text-white/60">{t("arena.notifications.ago2hours")}</p>
                 </DropdownMenuItem>
               </div>
             </DropdownMenuContent>
@@ -202,27 +197,27 @@ export default function PlayZoneHeader({ onMenuToggle }: PlayZoneHeaderProps) {
                   className="flex min-h-[44px] cursor-pointer items-center gap-3 rounded-lg px-4 py-3 text-base text-white transition-colors hover:bg-white/10 focus:bg-white/10"
                 >
                   <Home className="h-5 w-5 shrink-0" aria-hidden="true" />
-                  <span>Início</span>
+                  <span>{t("common.home")}</span>
                 </DropdownMenuItem>
                 <DropdownMenuItem
                   onClick={() => router.push("/profile")}
                   className="flex min-h-[44px] cursor-pointer items-center gap-3 rounded-lg px-4 py-3 text-base text-white transition-colors hover:bg-white/10 focus:bg-white/10"
                 >
                   <User className="h-5 w-5 shrink-0" aria-hidden="true" />
-                  <span>Perfil</span>
+                  <span>{t("common.profile")}</span>
                 </DropdownMenuItem>
                 <DropdownMenuItem className="min-h-[44px] rounded-lg px-4 py-3 text-base text-white transition-colors hover:bg-white/10 focus:bg-white/10">
-                  Configurações
+                  {t("common.settings")}
                 </DropdownMenuItem>
                 <DropdownMenuItem className="min-h-[44px] rounded-lg px-4 py-3 text-base text-white transition-colors hover:bg-white/10 focus:bg-white/10">
-                  Estatísticas
+                  {t("common.statistics")}
                 </DropdownMenuItem>
                 <DropdownMenuSeparator className="bg-white/10" />
                 <DropdownMenuItem
                   onClick={handleSignOut}
                   className="min-h-[44px] rounded-lg px-4 py-3 text-base font-semibold text-red-400 transition-colors hover:bg-red-500/10 focus:bg-red-500/10"
                 >
-                  Sair
+                  {t("common.signOut")}
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>

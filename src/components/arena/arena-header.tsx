@@ -15,6 +15,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { signOut } from "@/lib/auth-client";
+import { useTranslations } from "next-intl";
 
 const ARENA_COLOR = "var(--color-journey-arena)";
 
@@ -25,6 +26,7 @@ type ArenaHeaderProps = {
 export default function ArenaHeader({ onMenuToggle }: ArenaHeaderProps) {
   const [notifications] = useState(3);
   const router = useRouter();
+  const t = useTranslations();
 
   const handleSignOut = async () => {
     await signOut({
@@ -45,7 +47,7 @@ export default function ArenaHeader({ onMenuToggle }: ArenaHeaderProps) {
           size="icon"
           className="text-white/60 hover:bg-white/8 hover:text-white md:hidden"
           onClick={onMenuToggle}
-          aria-label="Abrir menu de navegação"
+          aria-label={t("arena.header.openMenu")}
         >
           <Menu className="h-5 w-5" />
         </Button>
@@ -55,7 +57,7 @@ export default function ArenaHeader({ onMenuToggle }: ArenaHeaderProps) {
           <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-white/30" />
           <input
             type="search"
-            placeholder="Search matches, players, or stats..."
+            placeholder={t("arena.header.searchPlaceholder")}
             className="w-full rounded-xl border border-white/8 bg-white/5 py-2 pl-9 pr-4 text-sm text-white/80 placeholder:text-white/30 focus:border-white/20 focus:outline-none focus:ring-0 transition"
           />
         </div>
@@ -79,7 +81,7 @@ export default function ArenaHeader({ onMenuToggle }: ArenaHeaderProps) {
                     {notifications}
                   </Badge>
                 )}
-                <span className="sr-only">Notificações</span>
+                <span className="sr-only">{t("common.notifications")}</span>
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent
@@ -90,13 +92,13 @@ export default function ArenaHeader({ onMenuToggle }: ArenaHeaderProps) {
                 className="text-xs font-bold uppercase tracking-widest"
                 style={{ color: ARENA_COLOR }}
               >
-                Notificações
+                {t("arena.notifications.title")}
               </DropdownMenuLabel>
               <DropdownMenuSeparator className="bg-white/8" />
               {[
-                { title: "Nova partida disponível", time: "Há 5 minutos" },
-                { title: "Convite de time", time: "Há 1 hora" },
-                { title: "Torneio começando", time: "Há 2 horas" },
+                { title: t("arena.notifications.newMatch"), time: t("arena.notifications.ago5min") },
+                { title: t("arena.notifications.teamInvite"), time: t("arena.notifications.ago1hour") },
+                { title: t("arena.notifications.tournamentStarting"), time: t("arena.notifications.ago2hours") },
               ].map(n => (
                 <DropdownMenuItem
                   key={n.title}
@@ -146,7 +148,7 @@ export default function ArenaHeader({ onMenuToggle }: ArenaHeaderProps) {
                 className="text-xs font-bold uppercase tracking-widest"
                 style={{ color: ARENA_COLOR }}
               >
-                Minha Conta
+                {t("arena.userMenu.myAccount")}
               </DropdownMenuLabel>
               <DropdownMenuSeparator className="bg-white/8" />
               <DropdownMenuItem
@@ -154,21 +156,21 @@ export default function ArenaHeader({ onMenuToggle }: ArenaHeaderProps) {
                 className="cursor-pointer gap-2 rounded-lg px-4 py-2.5 text-sm focus:bg-white/8"
               >
                 <Home className="h-4 w-4 text-white/50" />
-                Início
+                {t("common.home")}
               </DropdownMenuItem>
               <DropdownMenuItem
                 onClick={() => router.push("/profile")}
                 className="cursor-pointer gap-2 rounded-lg px-4 py-2.5 text-sm focus:bg-white/8"
               >
                 <User className="h-4 w-4 text-white/50" />
-                Perfil
+                {t("common.profile")}
               </DropdownMenuItem>
               <DropdownMenuSeparator className="bg-white/8" />
               <DropdownMenuItem
                 onClick={handleSignOut}
                 className="cursor-pointer rounded-lg px-4 py-2.5 text-sm text-red-400 focus:bg-red-500/10 font-semibold"
               >
-                Sair
+                {t("common.signOut")}
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>

@@ -286,7 +286,18 @@
     "toggleTheme": "Mudar o tema",
     "search": "Pesquisar...",
     "searchCountry": "Pesquisar país...",
-    "selectCompetition": "Selecione uma competição"
+    "selectCompetition": "Selecione uma competição",
+    "profile": "Perfil",
+    "signOut": "Sair",
+    "home": "Início",
+    "notifications": "Notificações",
+    "settings": "Configurações",
+    "statistics": "Estatísticas",
+    "myAccount": "Minha Conta",
+    "inDevelopment": "Em Desenvolvimento",
+    "comingSoonDescription": "Esta área está em desenvolvimento. Em breve você terá acesso completo.",
+    "notFilled": "Não preenchido",
+    "invalidDate": "Data inválida"
   },
   "company": {
     "description": "Encontre sua equipe ideal ou crie a sua própria, gerencie seus atletas e participe de ligas lendárias!",
@@ -908,7 +919,9 @@
     "header": {
       "subtitle": "Central da Arena",
       "title": "Bem-vindo de volta à Arena ⚽",
-      "description": "Acompanha o ritmo da tua equipa, organiza partidas e mantém a comunidade sempre ativa."
+      "description": "Acompanha o ritmo da tua equipa, organiza partidas e mantém a comunidade sempre ativa.",
+      "searchPlaceholder": "Pesquisar partidas, jogadores ou estatísticas...",
+      "openMenu": "Abrir menu de navegação"
     },
     "stats": {
       "matchesPlayed": "Partidas Jogadas",
@@ -978,6 +991,18 @@
     },
     "activity": {
       "title": "Atividade Recente"
+    },
+    "notifications": {
+      "title": "Notificações",
+      "newMatch": "Nova partida disponível",
+      "teamInvite": "Convite de time",
+      "tournamentStarting": "Torneio começando",
+      "ago5min": "Há 5 minutos",
+      "ago1hour": "Há 1 hora",
+      "ago2hours": "Há 2 horas"
+    },
+    "userMenu": {
+      "myAccount": "Minha Conta"
     }
   },
   "signIn": {
@@ -1350,13 +1375,28 @@
       },
       "confirmation": {
         "title": "Confirma os Teus Dados",
-        "description": "Revisa todas as informações preenchidas antes de finalizar. Podes voltar para editar qualquer campo."
+        "description": "Revisa todas as informações preenchidas antes de finalizar. Podes voltar para editar qualquer campo.",
+        "basicInfo": "Informações Básicas",
+        "selectedJourney": "Jornada Escolhida",
+        "experience": "Experiência",
+        "specificInfo": "Informações Específicas",
+        "selectedGoals": "Objetivos Selecionados",
+        "additionalInfo": "Informações Adicionais",
+        "allGood": "Tudo certo?",
+        "proceed": "Avança para finalizar o teu cadastro."
       },
       "journeySelection": {
         "title": "Escolhe a Tua Jornada",
         "descriptionGrid": "Cada jornada oferece uma experiência única. Seleciona a que melhor se adequa aos teus objetivos.",
         "descriptionFocus": "Revê os detalhes da tua escolha",
         "backToList": "Voltar à lista"
+      },
+      "intro": {
+        "title": "Bem-vindo ao JogaBola!",
+        "subtitle": "Estás prestes a embarcar numa jornada épica no mundo do futebol amador. Vamos configurar a tua experiência perfeita em apenas alguns passos.",
+        "journeyChoice": "Escolha da jornada",
+        "personalSetup": "Configuração personalizada",
+        "earlyAccess": "Acesso antecipado"
       }
     }
   },
@@ -1378,6 +1418,84 @@
         "location": "Ex: Centro de Treinos do Clube",
         "description": "Adiciona detalhes sobre o evento..."
       }
+    }
+  },
+  "timer": {
+    "settings": {
+      "title": "Configurações da Partida",
+      "matchFormat": "Formato da Partida",
+      "teamCustomization": "Personalização dos Times",
+      "teamA": "Time A (Casa)",
+      "teamB": "Time B (Fora)",
+      "teamName": "Nome do Time",
+      "timerMode": "Modo do Cronômetro",
+      "progressive": "Progressivo",
+      "regressive": "Regressivo",
+      "partDurations": "Duração das Partes (Minutos)",
+      "timerEndSound": "Som de Fim",
+      "testSound": "Testar Som",
+      "saveChanges": "Salvar Alterações",
+      "modeDescriptions": {
+        "countUp": "Cronômetro conta de 00:00.",
+        "countDown": "Cronômetro conta regressivamente e toca um som.",
+        "loop": "Cronômetro regride, toca um som e reinicia. Usuário deve iniciar a próxima rodada manualmente."
+      }
+    },
+    "controls": {
+      "pause": "Pausar",
+      "start": "Iniciar",
+      "finished": "Finalizado"
+    },
+    "auth": {
+      "logout": "Sair",
+      "loginSync": "Login / Sincronizar",
+      "login": "Login",
+      "loginFailed": "Falha no login. Tente novamente.",
+      "logoutConfirm": "Tem certeza que deseja sair?"
+    },
+    "events": {
+      "title": "Eventos da Partida",
+      "hint": "Toque no tempo para editar • Toque na linha para jogador",
+      "empty": "Nenhum evento registrado ainda.",
+      "assignPlayer": "Atribuir Jogador"
+    }
+  },
+  "organizerPage": {
+    "title": "Área do Organizador",
+    "subtitle": "Organize torneios e eventos",
+    "newTournament": "Novo Torneio",
+    "stats": {
+      "activeTournaments": "Torneios Ativos",
+      "inProgress": "Em andamento",
+      "scheduledEvents": "Eventos Marcados",
+      "next30days": "Próximos 30 dias",
+      "participants": "Participantes",
+      "participantsThisMonth": "+42 este mês",
+      "venues": "Locais",
+      "registered": "Cadastrados"
+    },
+    "comingSoon": {
+      "title": "Em Desenvolvimento",
+      "description": "Esta área está em desenvolvimento. Em breve você terá acesso completo ao painel de organização de eventos."
+    }
+  },
+  "fanzonePage": {
+    "title": "Fan Zone",
+    "subtitle": "Acompanhe seus times favoritos",
+    "followTeam": "Seguir Time",
+    "stats": {
+      "followedTeams": "Times Seguidos",
+      "newTeams": "+2 novos",
+      "watchedMatches": "Partidas Assistidas",
+      "thisMonth": "Este mês",
+      "upcomingMatches": "Próximas Partidas",
+      "thisWeek": "Esta semana",
+      "favorites": "Favoritos",
+      "preferredTeams": "Times preferidos"
+    },
+    "comingSoon": {
+      "title": "Em Desenvolvimento",
+      "description": "Esta área está em desenvolvimento. Em breve você terá acesso completo à Fan Zone."
     }
   }
 }

@@ -1,5 +1,8 @@
+"use client";
+
 import { signIn, signOut } from "@/lib/auth-client";
 import { LogIn, LogOut } from "lucide-react";
+import { useTranslations } from "next-intl";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import React from "react";
@@ -18,6 +21,7 @@ interface AuthButtonProps {
 
 export const AuthButton: React.FC<AuthButtonProps> = ({ user }) => {
   const router = useRouter();
+  const t = useTranslations("timer.auth");
 
   const handleLogin = async () => {
     try {
@@ -27,12 +31,12 @@ export const AuthButton: React.FC<AuthButtonProps> = ({ user }) => {
       });
     } catch (error) {
       console.error("Login failed:", error);
-      alert("Login failed. Please try again.");
+      alert(t("loginFailed"));
     }
   };
 
   const handleLogout = async () => {
-    if (confirm("Are you sure you want to log out?")) {
+    if (confirm(t("logoutConfirm"))) {
       await signOut({
         fetchOptions: {
           onSuccess: () => {
@@ -70,7 +74,7 @@ export const AuthButton: React.FC<AuthButtonProps> = ({ user }) => {
             onClick={handleLogout}
             className="flex items-center gap-1 text-left text-[10px] leading-tight text-red-400 hover:text-red-300"
           >
-            Logout <LogOut size={8} />
+            {t("logout")} <LogOut size={8} />
           </button>
         </div>
       </div>
@@ -83,8 +87,8 @@ export const AuthButton: React.FC<AuthButtonProps> = ({ user }) => {
       className="flex items-center gap-2 rounded-lg bg-blue-600 px-3 py-1.5 text-xs font-bold text-white shadow-lg shadow-blue-900/20 transition-colors hover:bg-blue-500"
     >
       <LogIn size={14} />
-      <span className="hidden sm:inline">Login / Sync</span>
-      <span className="sm:hidden">Login</span>
+      <span className="hidden sm:inline">{t("loginSync")}</span>
+      <span className="sm:hidden">{t("login")}</span>
     </button>
   );
 };

@@ -1,6 +1,7 @@
 "use client";
 
 import { Pause, Play, RotateCcw, Share2 } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { TimerMode } from "@/types/timer";
 
 interface TimerControlBarProps {
@@ -24,6 +25,7 @@ export function TimerControlBar({
   onPressEnd,
   onPressCancel,
 }: TimerControlBarProps) {
+  const t = useTranslations("timer.controls");
   return (
     <div className="pb-safe fixed right-0 bottom-0 left-0 z-30 border-t border-slate-800 bg-slate-900/90 p-4 backdrop-blur-xl select-none">
       <div className="mx-auto flex max-w-lg items-center justify-between gap-3">
@@ -53,7 +55,7 @@ export function TimerControlBar({
             {isActive ? (
               <>
                 <Pause size={24} fill="currentColor" />
-                <span>Pause</span>
+                <span>{t("pause")}</span>
               </>
             ) : (
               <>
@@ -62,8 +64,8 @@ export function TimerControlBar({
                   {(timerMode === TimerMode.COUNT_DOWN ||
                     timerMode === TimerMode.LOOP) &&
                   time === 0
-                    ? "Finished"
-                    : "Start"}
+                    ? t("finished")
+                    : t("start")}
                 </span>
               </>
             )}

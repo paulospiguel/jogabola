@@ -1,5 +1,8 @@
+"use client";
+
 import { EventType, GameEvent } from "@/types/timer";
 import { Clock, Pencil, Trash2 } from "lucide-react";
+import { useTranslations } from "next-intl";
 import React from "react";
 
 interface EventLogProps {
@@ -15,20 +18,21 @@ export const EventLog: React.FC<EventLogProps> = ({
   onEdit,
   onEditTime,
 }) => {
+  const t = useTranslations("timer.events");
   const reversedEvents = [...events].reverse();
 
   return (
     <div className="custom-scrollbar h-64 overflow-y-auto rounded-2xl border border-slate-700 bg-slate-800/50 p-4">
       <div className="sticky top-0 z-10 mb-4 flex items-center justify-between bg-slate-800/95 py-2 text-xs font-bold tracking-wider text-slate-400 uppercase backdrop-blur">
-        <span>Match Events</span>
+        <span>{t("title")}</span>
         <span className="text-[10px] font-normal text-slate-500">
-          Tap time to edit • Tap row for player
+          {t("hint")}
         </span>
       </div>
 
       {events.length === 0 ? (
         <div className="flex h-full items-center justify-center text-sm text-slate-600 italic">
-          No events recorded yet.
+          {t("empty")}
         </div>
       ) : (
         <div className="space-y-2">
@@ -92,7 +96,7 @@ export const EventLog: React.FC<EventLogProps> = ({
                 ) : (
                   <div className="mt-1 ml-1 flex items-center gap-1 opacity-0 transition-opacity group-hover:opacity-100">
                     <span className="flex items-center gap-1 text-[10px] text-slate-500">
-                      <Pencil size={10} /> Assign Player
+                      <Pencil size={10} /> {t("assignPlayer")}
                     </span>
                   </div>
                 )}
