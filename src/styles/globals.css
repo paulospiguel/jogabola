@@ -272,14 +272,9 @@
     min-height: 20px;
   }
 
-  /* Improved link contrast */
+  /* Plain links by default; underline is opt-in */
   a {
-    text-decoration: underline;
-    text-underline-offset: 3px;
-  }
-
-  a:hover {
-    text-decoration-thickness: 2px;
+    text-decoration: none;
   }
 }
 

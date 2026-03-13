@@ -3,7 +3,8 @@
 import { Bell, Home, Menu, Search, User } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { getProfileData } from "@/actions/profile";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -15,7 +16,8 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { signOut } from "@/lib/auth-client";
+import { signOut, useSession } from "@/lib/auth-client";
+import { resolveProfileImage } from "@/lib/profile-image";
 
 type ArenaHeaderProps = {
   onMenuToggle: () => void;
@@ -23,8 +25,38 @@ type ArenaHeaderProps = {
 
 export default function ArenaHeader({ onMenuToggle }: ArenaHeaderProps) {
   const [notifications] = useState(3);
+  const [profileImage, setProfileImage] = useState<string | undefined>();
   const router = useRouter();
   const t = useTranslations();
+  const { data: session } = useSession();
+
+  useEffect(() => {
+    async function loadProfileImage() {
+      if (!session?.user?.id) {
+        setProfileImage(undefined);
+        return;
+      }
+
+      try {
+        const result = await getProfileData(session.user.id);
+        if (result.success) {
+          setProfileImage(
+            resolveProfileImage(
+              result.data?.customFields,
+              result.data?.authImage || session.user.image,
+            ),
+          );
+          return;
+        }
+      } catch (error) {
+        console.error("Error loading profile image:", error);
+      }
+
+      setProfileImage(resolveProfileImage(undefined, session?.user?.image));
+    }
+
+    loadProfileImage();
+  }, [session?.user?.id, session?.user?.image]);
 
   const handleSignOut = async () => {
     await signOut({
@@ -122,9 +154,11 @@ export default function ArenaHeader({ onMenuToggle }: ArenaHeaderProps) {
                 <div className="relative">
                   <div className="absolute inset-0 rounded-full bg-[#6fffe9]/20 blur-lg" />
                   <Avatar className="relative h-8 w-8 border-2 border-[#6fffe9]/60">
-                    <AvatarImage src="" alt="User" />
+                    <AvatarImage src={profileImage} alt="User" />
                     <AvatarFallback className="bg-[#080a25] text-xs font-black text-[#6fffe9]">
-                      <User className="h-4 w-4" />
+                      {session?.user?.name?.[0]?.toUpperCase() || (
+                        <User className="h-4 w-4" />
+                      )}
                     </AvatarFallback>
                   </Avatar>
                 </div>

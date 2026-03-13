@@ -57,20 +57,18 @@ export default function Header() {
       animate={{ y: 0, opacity: 1 }}
       transition={{ duration: 0.8, delay: 0.2 }}
       className={cn(
-        "fixed top-0 right-0 left-0 z-50 flex w-full items-center justify-between px-4 py-4 transition-all duration-300",
-        "bg-transparent",
+        "fixed top-0 right-0 left-0 z-50 px-4 py-4 transition-all duration-300",
       )}
     >
-      {/* Header Container */}
       <div
         className={cn(
-          "flex w-full items-center justify-between px-6 py-2 transition-all duration-300",
-          isScrolled ? "bg-slate-900/80 backdrop-blur-md" : "bg-transparent",
+          "mx-auto flex w-full max-w-7xl items-center justify-between rounded-[28px] border px-5 py-3 transition-all duration-300 md:px-6",
+          isScrolled
+            ? "border-white/10 bg-[#050312]/80 shadow-[0_18px_45px_-28px_rgba(2,167,255,0.35)] backdrop-blur-xl"
+            : "border-transparent bg-transparent",
         )}
       >
-        {/* Left side: Logo + Menu */}
         <div className="flex items-center space-x-6">
-          {/* Logo */}
           <div className="flex items-center space-x-2">
             <Logo size="small" isAnimate />
           </div>
@@ -79,17 +77,15 @@ export default function Header() {
         </div>
 
         <div className="flex items-center space-x-4">
-          {/* Language Selector */}
           <div
             className={cn(
-              "hidden items-center gap-2 rounded-full bg-transparent px-3 py-1 text-sm transition-colors duration-300 md:visible md:flex",
+              "hidden items-center gap-2 rounded-full border border-white/8 bg-white/4 px-3 py-1 text-sm transition-colors duration-300 md:visible md:flex",
               "text-text-primary",
             )}
           >
             <LanguageSelector />
           </div>
 
-          {/* Botões dinâmicos baseados no role */}
           {!isLoading &&
             buttons.map((button, index) => {
               if (button.href) {
@@ -98,10 +94,10 @@ export default function Header() {
                     key={index}
                     href={button.href}
                     className={cn(
-                      "hidden rounded-full px-6 py-2 font-bold no-underline transition-all duration-300 hover:scale-105 md:visible md:block",
+                      "hidden rounded-full px-5 py-2.5 no-underline transition-colors duration-300 md:visible md:block",
                       button.variant === "primary"
-                        ? "bg-blue-600 px-6 py-2.5 text-white shadow-lg hover:bg-blue-700"
-                        : "font-medium text-white hover:text-blue-400",
+                        ? "bg-neon-primary font-semibold text-[#050312] hover:bg-neon-primary/90"
+                        : "border border-white/8 bg-white/4 font-medium text-white/72 hover:text-white",
                     )}
                   >
                     {button.label.includes("header.")
@@ -115,10 +111,10 @@ export default function Header() {
                   key={index}
                   onClick={button.onClick || redirectToJourney}
                   className={cn(
-                    "hidden rounded-full px-6 py-2 font-bold no-underline transition-all duration-300 hover:scale-105 md:visible md:block",
+                    "hidden rounded-full px-5 py-2.5 no-underline transition-colors duration-300 md:visible md:block",
                     button.variant === "primary"
-                      ? "bg-blue-600 px-6 py-2.5 text-white shadow-lg hover:bg-blue-700"
-                      : "font-medium text-white hover:text-blue-400",
+                      ? "bg-neon-primary font-semibold text-[#050312] hover:bg-neon-primary/90"
+                      : "border border-white/8 bg-white/4 font-medium text-white/72 hover:text-white",
                   )}
                 >
                   {button.label.includes("header.")
@@ -128,13 +124,12 @@ export default function Header() {
               );
             })}
 
-          {/* Mobile menu button */}
           <Sheet>
             <SheetTrigger asChild>
               <button
                 onClick={() => setIsMenuOpen(!isMenuOpen)}
                 className={cn(
-                  "transition-all duration-300 hover:scale-110 md:hidden",
+                  "rounded-2xl border border-white/8 bg-white/4 p-2 transition-colors duration-300 hover:bg-white/10 md:hidden",
                   "text-text-primary",
                 )}
               >
@@ -143,16 +138,14 @@ export default function Header() {
             </SheetTrigger>
             <SheetContent
               side={"right"}
-              className="border-border-default bg-overlay-light text-text-primary h-screen w-full max-w-sm border-l shadow-[0_25px_60px_-40px_var(--color-shadow-neon-secondary)] backdrop-blur-xl"
+              className="border-border-default bg-[#050312]/96 text-text-primary h-screen w-full max-w-sm border-l shadow-[0_25px_60px_-40px_rgba(2,167,255,0.35)] backdrop-blur-xl"
             >
-              {/* Header do Menu */}
               <div className="border-border-default flex items-center justify-between border-b pb-4">
-                <SheetTitle className="from-neon-secondary to-accent-blue bg-linear-to-r bg-clip-text text-xl font-bold text-transparent">
-                  ⚽ Menu
+                <SheetTitle className="text-xl font-semibold text-white">
+                  Menu
                 </SheetTitle>
               </div>
 
-              {/* Navegação */}
               <div className="flex-1 overflow-y-auto py-6">
                 <Navbar
                   className="flex-col items-start space-y-3 text-base font-medium"
@@ -160,9 +153,7 @@ export default function Header() {
                 />
               </div>
 
-              {/* Footer com ações */}
               <SheetFooter className="border-border-default flex-col gap-3 border-t pt-4">
-                {/* Botões dinâmicos baseados no role */}
                 {!isLoading &&
                   buttons.map((button, index) => {
                     if (button.href) {
@@ -171,10 +162,10 @@ export default function Header() {
                           <Link
                             href={button.href}
                             className={cn(
-                              "w-full rounded-full px-4 py-3 text-center text-sm font-bold no-underline transition-all duration-300 hover:scale-105",
+                              "w-full rounded-full px-4 py-3 text-center text-sm no-underline transition-colors duration-300",
                               button.variant === "primary"
-                                ? "from-brand-green to-active-text shadow-brand-green/20 bg-linear-to-r text-[#21005a] shadow-lg"
-                                : "border border-white/20 bg-white/5 text-white hover:bg-white/10",
+                                ? "bg-neon-primary font-semibold text-[#050312] hover:bg-neon-primary/90"
+                                : "border border-white/10 bg-white/5 text-white hover:bg-white/10",
                             )}
                           >
                             {button.label.includes("header.")
@@ -189,10 +180,10 @@ export default function Header() {
                         <button
                           onClick={button.onClick || redirectToJourney}
                           className={cn(
-                            "w-full rounded-full px-4 py-3 text-sm font-bold transition-all duration-300 hover:scale-105",
+                            "w-full rounded-full px-4 py-3 text-sm transition-colors duration-300",
                             button.variant === "primary"
-                              ? "from-brand-green to-active-text shadow-brand-green/20 bg-linear-to-r text-[#21005a] shadow-lg"
-                              : "border border-white/20 bg-white/5 text-white hover:bg-white/10",
+                              ? "bg-neon-primary font-semibold text-[#050312] hover:bg-neon-primary/90"
+                              : "border border-white/10 bg-white/5 text-white hover:bg-white/10",
                           )}
                         >
                           {button.label.includes("header.")
@@ -229,7 +220,7 @@ const Navbar = ({
   // Define as cores baseado na página e estado de scroll
   const getTextColors = () => {
     return {
-      default: "text-gray-200 font-medium",
+      default: "text-white/72 font-medium",
       hover: "hover:text-white transition-colors",
     };
   };
@@ -258,9 +249,9 @@ const Navbar = ({
               href={href}
               onClick={onItemClick}
               className={cn(
-                "relative flex w-full cursor-pointer items-center gap-2 rounded-xl border border-transparent px-4 py-3 text-left no-underline transition-all duration-300",
+                "relative flex w-full cursor-pointer items-center gap-2 rounded-2xl border border-transparent px-4 py-3 text-left no-underline transition-colors duration-300",
                 isActive
-                  ? "border-neon-secondary/40 bg-overlay-medium text-text-primary shadow-[0_25px_60px_-35px_var(--color-shadow-neon-primary)]"
+                  ? "border-neon-primary/25 bg-white/6 text-text-primary"
                   : "text-text-secondary hover:border-border-hover hover:bg-overlay-light hover:text-text-primary",
               )}
             >
@@ -285,7 +276,8 @@ const Navbar = ({
             key={item.label}
             href={href}
             className={cn(
-              "relative flex cursor-pointer items-center gap-1 no-underline transition-all duration-300 hover:scale-105",
+              "relative flex items-center gap-1 rounded-full px-3 py-2 no-underline transition-colors duration-300",
+              isActive && "bg-white/6 text-neon-primary",
               colors.hover,
             )}
           >

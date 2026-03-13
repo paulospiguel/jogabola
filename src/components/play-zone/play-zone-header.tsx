@@ -18,6 +18,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { signOut, useSession } from "@/lib/auth-client";
+import { resolveProfileImage } from "@/lib/profile-image";
 import type { Experience } from "@/schemas/profile";
 
 type PlayZoneHeaderProps = {
@@ -48,7 +49,10 @@ export default function PlayZoneHeader({ onMenuToggle }: PlayZoneHeaderProps) {
         if (result.success && result.data) {
           setUserProfile({
             name: result.data.name || session.user.name || "Jogador",
-            image: session.user.image || null,
+            image: resolveProfileImage(
+              result.data.customFields,
+              result.data.authImage || session.user.image,
+            ) || null,
             level: result.data.level || 1,
             experience: result.data.experience as Experience,
             position: result.data.customFields?.position || "",

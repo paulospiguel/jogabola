@@ -3,7 +3,7 @@
 import { and, eq, isNotNull, isNull } from "drizzle-orm";
 import { z } from "zod";
 import { getPositionLabel } from "@/constants/positions";
-import { onboarding, profile } from "@/drizzle/schema";
+import { onboarding, profile, user } from "@/drizzle/schema";
 import { db } from "@/lib/db";
 import {
   createSlugFromNickname,
@@ -237,16 +237,21 @@ export async function saveProfileData(
 
 export async function getProfileData(userId: string) {
   try {
-    const [data] = await db
-      .select()
+    const [result] = await db
+      .select({
+        profile,
+        authImage: user.image,
+      })
       .from(profile)
+      .leftJoin(user, eq(user.id, profile.userId))
       .where(eq(profile.userId, userId))
       .limit(1);
 
     const profileLevel = await calculateProfileLevel(userId);
 
     const profileData = {
-      ...data,
+      ...result?.profile,
+      authImage: result?.authImage,
       level: profileLevel,
     };
 
