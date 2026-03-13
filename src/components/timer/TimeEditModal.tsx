@@ -1,6 +1,7 @@
-
-import React, { useState, useEffect } from 'react';
-import { X, Clock, Save } from 'lucide-react';
+import { Clock, Save, X } from "lucide-react";
+import type React from "react";
+import { useEffect, useState } from "react";
+import { Label } from "@/components/ui/label";
 
 interface TimeEditModalProps {
   isOpen: boolean;
@@ -13,7 +14,7 @@ export const TimeEditModal: React.FC<TimeEditModalProps> = ({
   isOpen,
   onClose,
   initialSeconds,
-  onSave
+  onSave,
 }) => {
   const [minutes, setMinutes] = useState(0);
   const [seconds, setSeconds] = useState(0);
@@ -28,7 +29,7 @@ export const TimeEditModal: React.FC<TimeEditModalProps> = ({
   if (!isOpen) return null;
 
   const handleSave = () => {
-    const totalSeconds = (minutes * 60) + seconds;
+    const totalSeconds = minutes * 60 + seconds;
     onSave(totalSeconds);
     onClose();
   };
@@ -36,7 +37,7 @@ export const TimeEditModal: React.FC<TimeEditModalProps> = ({
   return (
     <div className="fixed inset-0 z-[70] flex items-center justify-center p-4">
       {/* Backdrop */}
-      <div 
+      <div
         className="absolute inset-0 bg-slate-950/80 backdrop-blur-sm transition-opacity"
         onClick={onClose}
       />
@@ -48,7 +49,7 @@ export const TimeEditModal: React.FC<TimeEditModalProps> = ({
             <Clock size={20} className="text-blue-500" />
             Edit Time
           </h3>
-          <button 
+          <button
             onClick={onClose}
             className="text-slate-500 hover:text-white transition-colors"
           >
@@ -58,25 +59,43 @@ export const TimeEditModal: React.FC<TimeEditModalProps> = ({
 
         <div className="flex items-center justify-center gap-2 mb-6">
           <div className="flex flex-col items-center">
-            <label className="text-[10px] uppercase font-bold text-slate-500 mb-1">Min</label>
+            <Label
+              htmlFor="time-edit-minutes"
+              className="mb-1 text-[10px] font-bold uppercase text-slate-500"
+            >
+              Min
+            </Label>
             <input
+              id="time-edit-minutes"
               type="number"
               min="0"
               max="150"
               value={minutes}
-              onChange={(e) => setMinutes(Math.max(0, parseInt(e.target.value) || 0))}
+              onChange={e =>
+                setMinutes(Math.max(0, parseInt(e.target.value) || 0))
+              }
               className="w-20 h-16 text-3xl font-mono text-center bg-slate-800 border border-slate-700 rounded-xl text-white focus:border-blue-500 focus:outline-none"
             />
           </div>
           <span className="text-2xl font-bold text-slate-600 mt-4">:</span>
           <div className="flex flex-col items-center">
-            <label className="text-[10px] uppercase font-bold text-slate-500 mb-1">Sec</label>
+            <Label
+              htmlFor="time-edit-seconds"
+              className="mb-1 text-[10px] font-bold uppercase text-slate-500"
+            >
+              Sec
+            </Label>
             <input
+              id="time-edit-seconds"
               type="number"
               min="0"
               max="59"
               value={seconds}
-              onChange={(e) => setSeconds(Math.min(59, Math.max(0, parseInt(e.target.value) || 0)))}
+              onChange={e =>
+                setSeconds(
+                  Math.min(59, Math.max(0, parseInt(e.target.value) || 0)),
+                )
+              }
               className="w-20 h-16 text-3xl font-mono text-center bg-slate-800 border border-slate-700 rounded-xl text-white focus:border-blue-500 focus:outline-none"
             />
           </div>

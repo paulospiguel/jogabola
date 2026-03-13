@@ -1,5 +1,9 @@
 import { loadDataFromCloud, saveDataToCloud } from "@/actions/timer";
 import { useEffect, useRef, useState } from "react";
+import {
+  readPersistedTimerValue,
+  writePersistedTimerValue,
+} from "@/features/timer/lib/timer-utils";
 
 // Better Auth user type - simple object with essential properties
 type BetterAuthUser =
@@ -17,26 +21,25 @@ export function useTimer<T>(
   initialValue: T,
   user: BetterAuthUser,
 ) {
-  // 1. Initialize state from LocalStorage (Offline/Refresh capability)
-  const [state, setState] = useState<T>(() => {
-    try {
-      const item = window.localStorage.getItem(key);
-      return item ? JSON.parse(item) : initialValue;
-    } catch (error) {
-      console.error(`Error reading localStorage key "${key}":`, error);
-      return initialValue;
-    }
-  });
+  const [state, setState] = useState<T>(initialValue);
 
   const isFirstLoad = useRef(true);
+  const hasHydratedFromStorage = useRef(false);
+
+  // 1. Hydrate from LocalStorage only on the client.
+  useEffect(() => {
+    const persistedValue = readPersistedTimerValue(key, initialValue);
+    setState(persistedValue);
+    hasHydratedFromStorage.current = true;
+  }, [initialValue, key]);
 
   // 2. Save to LocalStorage whenever state changes (Immediate persistence)
   useEffect(() => {
-    try {
-      window.localStorage.setItem(key, JSON.stringify(state));
-    } catch (error) {
-      console.error(`Error setting localStorage key "${key}":`, error);
+    if (!hasHydratedFromStorage.current) {
+      return;
     }
+
+    writePersistedTimerValue(key, state);
   }, [key, state]);
 
   // 3. Sync with Cloud when User logs in

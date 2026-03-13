@@ -741,8 +741,9 @@ export default function ProfilePage() {
                   </h3>
                   <div className="grid gap-4 sm:grid-cols-2">
                     <div className="space-y-1.5">
-                      <Label className="text-xs text-white/50">Nome</Label>
+                      <Label htmlFor="profile-name" className="text-xs text-white/50">Nome</Label>
                       <Input
+                        id="profile-name"
                         value={profileData.name}
                         onChange={(e) =>
                           setProfileData((p) => ({
@@ -754,18 +755,20 @@ export default function ProfilePage() {
                       />
                     </div>
                     <div className="space-y-1.5">
-                      <Label className="text-xs text-white/50">Email</Label>
+                      <Label htmlFor="profile-email" className="text-xs text-white/50">Email</Label>
                       <Input
+                        id="profile-email"
                         value={profileData.email}
                         disabled
                         className="border-white/10 bg-white/5 text-white/40 placeholder:text-white/30"
                       />
                     </div>
                     <div className="space-y-1.5">
-                      <Label className="text-xs text-white/50">
+                      <Label htmlFor="profile-location" className="text-xs text-white/50">
                         Localização
                       </Label>
                       <Input
+                        id="profile-location"
                         value={profileData.location || ""}
                         placeholder="Cidade, País"
                         onChange={(e) =>
@@ -778,10 +781,11 @@ export default function ProfilePage() {
                       />
                     </div>
                     <div className="space-y-1.5">
-                      <Label className="text-xs text-white/50">
+                      <Label htmlFor="profile-availability" className="text-xs text-white/50">
                         Disponibilidade
                       </Label>
                       <Input
+                        id="profile-availability"
                         value={profileData.availability || ""}
                         placeholder="Ex: Fins de semana"
                         onChange={(e) =>
@@ -794,8 +798,9 @@ export default function ProfilePage() {
                       />
                     </div>
                     <div className="space-y-1.5 sm:col-span-2">
-                      <Label className="text-xs text-white/50">Bio</Label>
+                      <Label htmlFor="profile-bio" className="text-xs text-white/50">Bio</Label>
                       <Textarea
+                        id="profile-bio"
                         value={profileData.bio || ""}
                         placeholder="Conta um pouco sobre ti..."
                         rows={3}

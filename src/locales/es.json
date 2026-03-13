@@ -526,6 +526,18 @@
       "recovered": "¡Onboarding recuperado!",
       "recoveredMessage": "Tus datos del onboarding han sido aplicados a tu perfil."
     },
+    "validation": {
+      "title": "Error de validación",
+      "nameMin": "El nombre debe tener al menos 2 caracteres",
+      "invalidEmail": "Correo electrónico inválido",
+      "nicknameMin": "El apodo debe tener al menos 3 caracteres",
+      "nicknameMax": "El apodo debe tener como máximo 30 caracteres",
+      "nicknamePattern": "El apodo debe contener solo letras minúsculas, números y guiones",
+      "birthDateFuture": "La fecha de nacimiento no puede estar en el futuro",
+      "birthDateMin": "La fecha de nacimiento debe ser posterior a 1900",
+      "requiredField": "{field} es obligatorio",
+      "generic": "Error de validación"
+    },
     "close": "Cerrar onboarding"
   },
   "playZone": {
@@ -581,6 +593,144 @@
         "description": "Completa misiones especiales y sube en el ranking de PlayZone.",
         "button": "Ver desafíos disponibles"
       }
+    },
+    "createEventDialog": {
+      "trigger": "Nuevo evento",
+      "title": "Crear nuevo evento",
+      "description": "Completa los detalles para programar un nuevo evento en tu agenda.",
+      "submit": "Crear evento",
+      "submitting": "Creando evento...",
+      "fields": {
+        "title": {
+          "label": "Título del evento",
+          "placeholder": "Ej.: Entrenamiento técnico"
+        },
+        "type": {
+          "label": "Tipo de evento"
+        },
+        "status": {
+          "label": "Estado"
+        },
+        "date": {
+          "label": "Fecha"
+        },
+        "time": {
+          "label": "Hora"
+        },
+        "location": {
+          "label": "Ubicación",
+          "placeholder": "Ej.: Centro de entrenamiento del club"
+        },
+        "description": {
+          "label": "Descripción (opcional)",
+          "placeholder": "Agrega detalles sobre el evento..."
+        },
+        "isRecurring": {
+          "label": "Evento recurrente",
+          "description": "Crear múltiples eventos automáticamente"
+        },
+        "recurrenceType": {
+          "label": "Frecuencia"
+        },
+        "confirmationMode": {
+          "label": "Modo de confirmación"
+        },
+        "advanceNoticeDays": {
+          "label": "Días de antelación para confirmar"
+        }
+      },
+      "typeOptions": {
+        "jogo": {
+          "label": "Partidos",
+          "description": "Partidos oficiales y amistosos competitivos"
+        },
+        "treino": {
+          "label": "Entrenamientos",
+          "description": "Sesiones técnicas y físicas"
+        },
+        "amistoso": {
+          "label": "Amistosos",
+          "description": "Partidos de preparación y eventos sociales"
+        },
+        "reuniao": {
+          "label": "Reuniones",
+          "description": "Planificación estratégica y alineamientos"
+        },
+        "outro": {
+          "label": "Otros",
+          "description": "Eventos generales y recordatorios"
+        }
+      },
+      "statusOptions": {
+        "confirmado": "Confirmado",
+        "pendente": "Pendiente",
+        "cancelado": "Cancelado"
+      },
+      "recurrenceLabels": {
+        "daily": "diarios",
+        "weekly": "semanales",
+        "monthly": "mensuales"
+      },
+      "confirmationModeOptions": {
+        "automatic": "Confirmación automática",
+        "manual": "Confirmación manual"
+      },
+      "feedback": {
+        "errorTitle": "Error",
+        "invalidDate": "Selecciona una fecha válida para el evento.",
+        "createdTitle": "Evento creado",
+        "createdDescription": "El nuevo evento fue añadido al calendario.",
+        "recurringCreatedTitle": "Eventos recurrentes creados",
+        "recurringCreatedDescription": "Se crearon {count} eventos ({recurrence})."
+      }
+    }
+  },
+  "timer": {
+    "settings": {
+      "title": "Configuración del partido",
+      "matchFormat": "Formato del partido",
+      "teamCustomization": "Personalización de equipos",
+      "teamA": "Equipo A (Local)",
+      "teamB": "Equipo B (Visitante)",
+      "teamName": "Nombre del equipo",
+      "teamColorPicker": "Elegir color del equipo {team}",
+      "timerMode": "Modo del temporizador",
+      "progressive": "Progresivo",
+      "regressive": "Regresivo",
+      "loop": "Loop",
+      "partDurations": "Duración de las partes (minutos)",
+      "timerEndSound": "Sonido de finalización",
+      "testSound": "Probar sonido",
+      "saveChanges": "Guardar cambios",
+      "gameParts": {
+        "firstHalf": "1.ª parte",
+        "secondHalf": "2.ª parte",
+        "extraTime": "Tiempo extra",
+        "training": "Entrenamiento"
+      },
+      "modeDescriptions": {
+        "countUp": "El temporizador cuenta desde 00:00.",
+        "countDown": "El temporizador cuenta regresivamente hasta 00:00 y reproduce un sonido.",
+        "loop": "El temporizador cuenta hacia atrás, reproduce un sonido y se reinicia. El usuario debe iniciar manualmente la siguiente ronda."
+      }
+    },
+    "controls": {
+      "pause": "Pausar",
+      "start": "Iniciar",
+      "finished": "Finalizado"
+    },
+    "auth": {
+      "logout": "Salir",
+      "loginSync": "Iniciar sesión / Sincronizar",
+      "login": "Iniciar sesión",
+      "loginFailed": "Error al iniciar sesión. Inténtalo de nuevo.",
+      "logoutConfirm": "¿Seguro que quieres salir?"
+    },
+    "events": {
+      "title": "Eventos del partido",
+      "hint": "Toca el tiempo para editar • Toca la fila para jugador",
+      "empty": "Aún no hay eventos registrados.",
+      "assignPlayer": "Asignar jugador"
     }
   },
   "positions": {

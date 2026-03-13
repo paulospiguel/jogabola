@@ -1085,6 +1085,18 @@
       "recovered": "Onboarding recuperado!",
       "recoveredMessage": "Os teus dados do onboarding foram aplicados ao teu perfil."
     },
+    "validation": {
+      "title": "Erro de Validação",
+      "nameMin": "Nome deve ter pelo menos 2 caracteres",
+      "invalidEmail": "Email inválido",
+      "nicknameMin": "O nickname deve ter pelo menos 3 caracteres",
+      "nicknameMax": "O nickname deve ter no máximo 30 caracteres",
+      "nicknamePattern": "O nickname deve conter apenas letras minúsculas, números e traços",
+      "birthDateFuture": "A data de nascimento não pode ser no futuro",
+      "birthDateMin": "A data de nascimento deve ser após 1900",
+      "requiredField": "{field} é obrigatório",
+      "generic": "Erro de validação"
+    },
     "close": "Fechar onboarding"
   },
   "playZone": {
@@ -1139,6 +1151,96 @@
         "title": "Explorar desafios semanais",
         "description": "Complete missões especiais e suba no ranking da PlayZone.",
         "button": "Ver desafios disponíveis"
+      }
+    },
+    "createEventDialog": {
+      "trigger": "Novo evento",
+      "title": "Criar novo evento",
+      "description": "Preenche os detalhes para agendar um novo evento na tua agenda.",
+      "submit": "Criar evento",
+      "submitting": "A criar evento...",
+      "fields": {
+        "title": {
+          "label": "Título do evento",
+          "placeholder": "Ex: Treino técnico"
+        },
+        "type": {
+          "label": "Tipo de evento"
+        },
+        "status": {
+          "label": "Estado"
+        },
+        "date": {
+          "label": "Data"
+        },
+        "time": {
+          "label": "Hora"
+        },
+        "location": {
+          "label": "Localização",
+          "placeholder": "Ex: Centro de Treinos do Clube"
+        },
+        "description": {
+          "label": "Descrição (opcional)",
+          "placeholder": "Adiciona detalhes sobre o evento..."
+        },
+        "isRecurring": {
+          "label": "Evento recorrente",
+          "description": "Criar múltiplos eventos automaticamente"
+        },
+        "recurrenceType": {
+          "label": "Frequência"
+        },
+        "confirmationMode": {
+          "label": "Modo de confirmação"
+        },
+        "advanceNoticeDays": {
+          "label": "Dias de antecedência para confirmação"
+        }
+      },
+      "typeOptions": {
+        "jogo": {
+          "label": "Jogos",
+          "description": "Partidas oficiais e amistosos competitivos"
+        },
+        "treino": {
+          "label": "Treinos",
+          "description": "Sessões técnicas e físicas"
+        },
+        "amistoso": {
+          "label": "Amistosos",
+          "description": "Jogos preparatórios e eventos sociais"
+        },
+        "reuniao": {
+          "label": "Reuniões",
+          "description": "Planeamento estratégico e alinhamentos"
+        },
+        "outro": {
+          "label": "Outros",
+          "description": "Eventos gerais e lembretes"
+        }
+      },
+      "statusOptions": {
+        "confirmado": "Confirmado",
+        "pendente": "Pendente",
+        "cancelado": "Cancelado"
+      },
+      "recurrenceLabels": {
+        "daily": "diários",
+        "weekly": "semanais",
+        "monthly": "mensais"
+      },
+      "confirmationModeOptions": {
+        "automatic": "Confirmação automática",
+        "manual": "Confirmação manual"
+      },
+      "feedback": {
+        "errorTitle": "Erro",
+        "invalidDate": "Seleciona uma data válida para o evento.",
+        "createdTitle": "Evento criado",
+        "createdDescription": "O novo evento foi adicionado à agenda.",
+        "recurringCreatedTitle": "Eventos recorrentes criados",
+        "recurringCreatedDescription": "Foram criados {count} eventos ({recurrence})."
       }
     },
     "eventSearch": {
@@ -1428,13 +1530,21 @@
       "teamA": "Time A (Casa)",
       "teamB": "Time B (Fora)",
       "teamName": "Nome do Time",
+      "teamColorPicker": "Escolher cor da equipa {team}",
       "timerMode": "Modo do Cronômetro",
       "progressive": "Progressivo",
       "regressive": "Regressivo",
+      "loop": "Loop",
       "partDurations": "Duração das Partes (Minutos)",
       "timerEndSound": "Som de Fim",
       "testSound": "Testar Som",
       "saveChanges": "Salvar Alterações",
+      "gameParts": {
+        "firstHalf": "1.ª Parte",
+        "secondHalf": "2.ª Parte",
+        "extraTime": "Prolongamento",
+        "training": "Treino"
+      },
       "modeDescriptions": {
         "countUp": "Cronômetro conta de 00:00.",
         "countDown": "Cronômetro conta regressivamente e toca um som.",

@@ -44,24 +44,33 @@ const INITIAL_FORM: FormState = {
 
 function Field({
   label,
+  htmlFor,
   required,
   error,
   children,
 }: {
   label: string;
+  htmlFor?: string;
   required?: boolean;
   error?: string;
   children: React.ReactNode;
 }) {
   return (
     <div className="space-y-1.5">
-      <label
-        htmlFor={label}
-        className="block text-xs font-bold uppercase tracking-[0.2em] text-white/60"
-      >
-        {label}
-        {required && <span className="ml-1 text-[#6fffe9]">*</span>}
-      </label>
+      {htmlFor ? (
+        <label
+          htmlFor={htmlFor}
+          className="block text-xs font-bold uppercase tracking-[0.2em] text-white/60"
+        >
+          {label}
+          {required && <span className="ml-1 text-[#6fffe9]">*</span>}
+        </label>
+      ) : (
+        <p className="block text-xs font-bold uppercase tracking-[0.2em] text-white/60">
+          {label}
+          {required && <span className="ml-1 text-[#6fffe9]">*</span>}
+        </p>
+      )}
       {children}
       {error && <p className="text-xs text-rose-400">{error}</p>}
     </div>
@@ -211,8 +220,14 @@ export function AddPlayerModal({
 
             {/* ── Identity ───────────────────────────────────────────────── */}
             <div className="grid gap-4 sm:grid-cols-2">
-              <Field label="Nome completo" required error={errors.name}>
+              <Field
+                label="Nome completo"
+                htmlFor="player-name"
+                required
+                error={errors.name}
+              >
                 <input
+                  id="player-name"
                   type="text"
                   value={form.name}
                   onChange={set("name")}
@@ -224,8 +239,14 @@ export function AddPlayerModal({
                   )}
                 />
               </Field>
-              <Field label="Email" required error={errors.email}>
+              <Field
+                label="Email"
+                htmlFor="player-email"
+                required
+                error={errors.email}
+              >
                 <input
+                  id="player-email"
                   type="email"
                   value={form.email}
                   onChange={set("email")}
@@ -240,8 +261,13 @@ export function AddPlayerModal({
             </div>
 
             <div className="grid gap-4 sm:grid-cols-2">
-              <Field label="Nº Camisola" error={errors.jerseyNumber}>
+              <Field
+                label="Nº Camisola"
+                htmlFor="player-jersey-number"
+                error={errors.jerseyNumber}
+              >
                 <input
+                  id="player-jersey-number"
                   type="number"
                   min={1}
                   max={99}
@@ -251,8 +277,9 @@ export function AddPlayerModal({
                   className={inputClass}
                 />
               </Field>
-              <Field label="Data de Nascimento">
+              <Field label="Data de Nascimento" htmlFor="player-date-of-birth">
                 <input
+                  id="player-date-of-birth"
                   type="date"
                   value={form.dateOfBirth}
                   onChange={set("dateOfBirth")}

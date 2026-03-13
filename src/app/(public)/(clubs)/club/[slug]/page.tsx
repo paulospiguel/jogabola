@@ -449,21 +449,22 @@ export default function ClubSlugPage({ params }: { params: { slug: string } }) {
 
               <form className="space-y-6" onSubmit={(e) => e.preventDefault()}>
                 <div className="space-y-2">
-                  <label className="text-[10px] font-black tracking-widest text-gray-500 uppercase">
+                  <label htmlFor="recruitment-name" className="text-[10px] font-black tracking-widest text-gray-500 uppercase">
                     {t("recruitment.fields.name")}
                   </label>
                   <Input
+                    id="recruitment-name"
                     placeholder={t("recruitment.fields.namePlaceholder")}
                     className="h-14 rounded-2xl border-white/5 bg-slate-900/50 px-6 font-bold text-white focus:border-(--primary-club)/50 focus:ring-(--primary-club)/20"
                   />
                 </div>
 
                 <div className="space-y-2">
-                  <label className="text-[10px] font-black tracking-widest text-gray-500 uppercase">
+                  <label htmlFor="recruitment-position" className="text-[10px] font-black tracking-widest text-gray-500 uppercase">
                     {t("recruitment.fields.position")}
                   </label>
                   <Select defaultValue="forward">
-                    <SelectTrigger className="h-14 rounded-2xl border-white/5 bg-slate-900/50 px-6 font-bold text-white focus:ring-(--primary-club)/20">
+                    <SelectTrigger id="recruitment-position" className="h-14 rounded-2xl border-white/5 bg-slate-900/50 px-6 font-bold text-white focus:ring-(--primary-club)/20">
                       <SelectValue placeholder="Position" />
                     </SelectTrigger>
                     <SelectContent className="rounded-xl border-white/10 bg-slate-900 text-white">
@@ -476,10 +477,11 @@ export default function ClubSlugPage({ params }: { params: { slug: string } }) {
                 </div>
 
                 <div className="space-y-2">
-                  <label className="text-[10px] font-black tracking-widest text-gray-500 uppercase">
+                  <label htmlFor="recruitment-experience" className="text-[10px] font-black tracking-widest text-gray-500 uppercase">
                     {t("recruitment.fields.experience")}
                   </label>
                   <textarea
+                    id="recruitment-experience"
                     placeholder={t("recruitment.fields.experiencePlaceholder")}
                     className="min-h-[120px] w-full resize-none rounded-2xl border border-white/5 bg-slate-900/50 px-6 py-4 font-bold text-white outline-hidden transition-all focus:border-(--primary-club)/50 focus:ring-2 focus:ring-(--primary-club)/20"
                   />

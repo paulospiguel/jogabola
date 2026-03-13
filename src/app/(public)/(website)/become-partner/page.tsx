@@ -1,19 +1,18 @@
 "use client";
 
-import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
 import {
-    Award,
-    CheckCircle,
-    Globe,
-    Heart,
-    Sparkles,
-    TrendingUp,
-    Users,
-    Zap,
+  Award,
+  CheckCircle,
+  Globe,
+  Heart,
+  Sparkles,
+  TrendingUp,
+  Users,
+  Zap,
 } from "lucide-react";
-import { useTranslations } from "next-intl";
 import { useState } from "react";
+import { cn } from "@/lib/utils";
 
 interface FormData {
   companyName: string;
@@ -147,7 +146,6 @@ const CategoryCard = ({
 );
 
 export default function BecomePartnerPage() {
-  const t = useTranslations();
   const [formData, setFormData] = useState<FormData>({
     companyName: "",
     contactName: "",
@@ -447,10 +445,14 @@ export default function BecomePartnerPage() {
             >
               <div className="mb-6 grid grid-cols-1 gap-6 md:grid-cols-2">
                 <div>
-                  <label className="mb-2 block font-semibold text-white">
+                  <label
+                    htmlFor="companyName"
+                    className="mb-2 block font-semibold text-white"
+                  >
                     Nome da Empresa *
                   </label>
                   <input
+                    id="companyName"
                     type="text"
                     name="companyName"
                     value={formData.companyName}
@@ -461,10 +463,14 @@ export default function BecomePartnerPage() {
                   />
                 </div>
                 <div>
-                  <label className="mb-2 block font-semibold text-white">
+                  <label
+                    htmlFor="contactName"
+                    className="mb-2 block font-semibold text-white"
+                  >
                     Nome de Contacto *
                   </label>
                   <input
+                    id="contactName"
                     type="text"
                     name="contactName"
                     value={formData.contactName}
@@ -478,10 +484,14 @@ export default function BecomePartnerPage() {
 
               <div className="mb-6 grid grid-cols-1 gap-6 md:grid-cols-2">
                 <div>
-                  <label className="mb-2 block font-semibold text-white">
+                  <label
+                    htmlFor="email"
+                    className="mb-2 block font-semibold text-white"
+                  >
                     Email *
                   </label>
                   <input
+                    id="email"
                     type="email"
                     name="email"
                     value={formData.email}
@@ -492,10 +502,14 @@ export default function BecomePartnerPage() {
                   />
                 </div>
                 <div>
-                  <label className="mb-2 block font-semibold text-white">
+                  <label
+                    htmlFor="phone"
+                    className="mb-2 block font-semibold text-white"
+                  >
                     Telefone
                   </label>
                   <input
+                    id="phone"
                     type="tel"
                     name="phone"
                     value={formData.phone}
@@ -507,10 +521,14 @@ export default function BecomePartnerPage() {
               </div>
 
               <div className="mb-6">
-                <label className="mb-2 block font-semibold text-white">
+                <label
+                  htmlFor="website"
+                  className="mb-2 block font-semibold text-white"
+                >
                   Website da Empresa
                 </label>
                 <input
+                  id="website"
                   type="url"
                   name="website"
                   value={formData.website}
@@ -521,10 +539,14 @@ export default function BecomePartnerPage() {
               </div>
 
               <div className="mb-6">
-                <label className="mb-2 block font-semibold text-white">
+                <label
+                  htmlFor="message"
+                  className="mb-2 block font-semibold text-white"
+                >
                   Mensagem
                 </label>
                 <textarea
+                  id="message"
                   name="message"
                   value={formData.message}
                   onChange={handleInputChange}

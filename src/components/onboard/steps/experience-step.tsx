@@ -34,9 +34,9 @@ export function ExperienceStep({
 
       <div className="mx-auto max-w-xl space-y-6 sm:space-y-8">
         <div>
-          <Label className="text-sm font-medium text-white sm:text-base">
+          <p className="text-sm font-medium text-white sm:text-base">
             {t("label")}
-          </Label>
+          </p>
           <RadioGroup
             value={experience}
             onValueChange={onExperienceChange}

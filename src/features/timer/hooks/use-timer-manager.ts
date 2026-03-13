@@ -1,13 +1,21 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { startTransition, useEffect, useRef, useState } from "react";
+import {
+  createGameEventId,
+  formatTimerValue,
+  getElapsedSeconds,
+  getTimerColor,
+  getTimerValueForPart,
+  updateEventTimestamp,
+} from "@/features/timer/lib/timer-utils";
 import { useTimer } from "@/hooks/use-timer";
 import { useSession } from "@/lib/auth-client";
 import { playWhistle } from "@/services/audioService";
 import { generateMatchSummary } from "@/services/geminiService";
 import {
   type AppSettings,
-  EventType,
+  type EventType,
   type GameEvent,
   GamePart,
   GameType,
@@ -80,16 +88,9 @@ export function useTimerManager() {
   const isLongPressTriggered = useRef(false);
   const isPressing = useRef(false);
   const intervalRef = useRef<number | null>(null);
-
-  const getInitialTime = () => {
-    if (partTimes[gamePart] !== undefined) return partTimes[gamePart];
-    return settings.timerMode === TimerMode.COUNT_DOWN ||
-      settings.timerMode === TimerMode.LOOP
-      ? settings.durations[gamePart]
-      : 0;
-  };
-
-  const [time, setTime] = useState(getInitialTime());
+  const [time, setTime] = useState(() =>
+    getTimerValueForPart(settings, partTimes, gamePart),
+  );
 
   // Restore/Sync Time when Game Part or Settings change
   useEffect(() => {
@@ -97,15 +98,10 @@ export function useTimerManager() {
       if (partTimes[gamePart] !== undefined) {
         setTime(partTimes[gamePart]);
       } else {
-        const target =
-          settings.timerMode === TimerMode.COUNT_DOWN ||
-          settings.timerMode === TimerMode.LOOP
-            ? settings.durations[gamePart]
-            : 0;
-        setTime(target);
+        setTime(getTimerValueForPart(settings, partTimes, gamePart));
       }
     }
-  }, [gamePart, settings.timerMode, settings.durations, partTimes, isActive]);
+  }, [gamePart, settings.durations, partTimes, isActive]);
 
   // Timer Logic
   useEffect(() => {
@@ -161,13 +157,7 @@ export function useTimerManager() {
     setPartTimes,
   ]);
 
-  const formatTime = (seconds: number) => {
-    const m = Math.floor(seconds / 60);
-    const s = seconds % 60;
-    return `${m.toString().padStart(2, "0")}:${s.toString().padStart(2, "0")}`;
-  };
-
-  const handleStartPause = () => setIsActive(!isActive);
+  const handleStartPause = () => setIsActive(currentValue => !currentValue);
 
   const handleResetClick = () => setIsResetModalOpen(true);
 
@@ -201,11 +191,7 @@ export function useTimerManager() {
 
     if (modeChanged) {
       setPartTimes({});
-      const target =
-        newSettings.timerMode === TimerMode.COUNT_DOWN ||
-        newSettings.timerMode === TimerMode.LOOP
-          ? newSettings.durations[gamePart]
-          : 0;
+      const target = getTimerValueForPart(newSettings, {}, gamePart);
       setTime(target);
     }
   };
@@ -230,15 +216,7 @@ export function useTimerManager() {
     if (!timeEditEvent) return;
 
     setEvents(prev =>
-      prev.map(e =>
-        e.id === timeEditEvent.id
-          ? {
-              ...e,
-              timestamp: newTotalSeconds,
-              formattedTime: formatTime(newTotalSeconds),
-            }
-          : e,
-      ),
+      updateEventTimestamp(prev, timeEditEvent.id, newTotalSeconds),
     );
 
     setTimeEditEvent(null);
@@ -252,15 +230,18 @@ export function useTimerManager() {
 
   const logEvent = (type: EventType, player: Player | null = null) => {
     const duration = settings.durations[gamePart];
-    const elapsedSeconds =
-      settings.timerMode === TimerMode.COUNT_UP ? time : duration - time;
+    const elapsedSeconds = getElapsedSeconds(
+      settings.timerMode,
+      duration,
+      time,
+    );
 
     const newEvent: GameEvent = {
-      id: Math.random().toString(36).substr(2, 9),
+      id: createGameEventId(),
       type,
       timestamp: elapsedSeconds,
       gamePart: gamePart,
-      formattedTime: formatTime(elapsedSeconds),
+      formattedTime: formatTimerValue(elapsedSeconds),
       playerId: player?.id,
       playerName: player?.name,
       playerTeam: player?.team,
@@ -295,8 +276,11 @@ export function useTimerManager() {
   const handleGenerateSummary = async () => {
     setIsGeneratingSummary(true);
     const duration = settings.durations[gamePart];
-    const elapsedSeconds =
-      settings.timerMode === TimerMode.COUNT_UP ? time : duration - time;
+    const elapsedSeconds = getElapsedSeconds(
+      settings.timerMode,
+      duration,
+      time,
+    );
 
     try {
       const result = await generateMatchSummary(
@@ -304,7 +288,9 @@ export function useTimerManager() {
         gamePart,
         elapsedSeconds,
       );
-      setSummary(result);
+      startTransition(() => {
+        setSummary(result);
+      });
     } catch (error) {
       console.error("Error generating summary:", error);
     } finally {
@@ -366,14 +352,6 @@ export function useTimerManager() {
     }
   };
 
-  const getTimerColor = () => {
-    const targetDuration = settings.durations[gamePart];
-    if (settings.timerMode === TimerMode.COUNT_UP) {
-      return time > targetDuration ? "#ef4444" : "#3b82f6";
-    }
-    return time < 60 ? "#ef4444" : "#3b82f6";
-  };
-
   return {
     // State
     session,
@@ -396,7 +374,11 @@ export function useTimerManager() {
     timeEditEvent,
 
     // Computed
-    timerColor: getTimerColor(),
+    timerColor: getTimerColor(
+      settings.timerMode,
+      settings.durations[gamePart],
+      time,
+    ),
     targetDuration: settings.durations[gamePart],
 
     // Actions

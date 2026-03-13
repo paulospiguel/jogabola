@@ -1,7 +1,5 @@
 "use client";
 
-import { playWhistle } from "@/services/audioService";
-import { AppSettings, GamePart, GameType, TimerMode } from "@/types/timer";
 import {
   ArrowDownCircle,
   ArrowUpCircle,
@@ -14,7 +12,9 @@ import {
   X,
 } from "lucide-react";
 import { useTranslations } from "next-intl";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { playWhistle } from "@/services/audioService";
+import { AppSettings, GamePart, GameType, TimerMode } from "@/types/timer";
 
 interface SettingsModalProps {
   isOpen: boolean;
@@ -32,6 +32,12 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
   const [localSettings, setLocalSettings] = useState<AppSettings>(settings);
   const t = useTranslations("timer");
 
+  useEffect(() => {
+    if (isOpen) {
+      setLocalSettings(settings);
+    }
+  }, [isOpen, settings]);
+
   if (!isOpen) return null;
 
   const handleDurationChange = (part: GamePart, minutes: string) => {
@@ -48,6 +54,19 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
   const handleSave = () => {
     onSave(localSettings);
     onClose();
+  };
+
+  const gamePartLabels: Record<GamePart, string> = {
+    [GamePart.FIRST_HALF]: t("settings.gameParts.firstHalf"),
+    [GamePart.SECOND_HALF]: t("settings.gameParts.secondHalf"),
+    [GamePart.EXTRA_TIME]: t("settings.gameParts.extraTime"),
+    [GamePart.TRAINING]: t("settings.gameParts.training"),
+  };
+
+  const timerModeLabels: Record<TimerMode, string> = {
+    [TimerMode.COUNT_UP]: t("settings.progressive"),
+    [TimerMode.COUNT_DOWN]: t("settings.regressive"),
+    [TimerMode.LOOP]: t("settings.loop"),
   };
 
   return (
@@ -77,9 +96,9 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
         <div className="custom-scrollbar space-y-8 overflow-y-auto p-6">
           {/* Match Mode Section */}
           <div>
-            <label className="mb-3 flex items-center gap-2 text-xs font-bold tracking-wider text-slate-500 uppercase">
+            <div className="mb-3 flex items-center gap-2 text-xs font-bold tracking-wider text-slate-500 uppercase">
               <LayoutGrid size={14} /> {t("settings.matchFormat")}
-            </label>
+            </div>
             <div className="grid grid-cols-3 gap-2">
               {Object.values(GameType).map(type => (
                 <button
@@ -101,9 +120,9 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
 
           {/* Team Customization */}
           <div>
-            <label className="mb-3 flex items-center gap-2 text-xs font-bold tracking-wider text-slate-500 uppercase">
+            <div className="mb-3 flex items-center gap-2 text-xs font-bold tracking-wider text-slate-500 uppercase">
               <Palette size={14} /> {t("settings.teamCustomization")}
-            </label>
+            </div>
             <div className="space-y-4">
               {/* Team A */}
               <div className="rounded-xl border border-slate-700/50 bg-slate-800/50 p-3">
@@ -121,7 +140,9 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
                       }))
                     }
                     className="h-10 w-10 cursor-pointer rounded border-0 bg-transparent"
-                    title="Choose Team Color"
+                    title={t("settings.teamColorPicker", {
+                      team: t("settings.teamA"),
+                    })}
                   />
                   <input
                     type="text"
@@ -154,7 +175,9 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
                       }))
                     }
                     className="h-10 w-10 cursor-pointer rounded border-0 bg-transparent"
-                    title="Choose Team Color"
+                    title={t("settings.teamColorPicker", {
+                      team: t("settings.teamB"),
+                    })}
                   />
                   <input
                     type="text"
@@ -175,9 +198,9 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
 
           {/* Timer Mode Section */}
           <div>
-            <label className="mb-3 block text-xs font-bold tracking-wider text-slate-500 uppercase">
+            <p className="mb-3 block text-xs font-bold tracking-wider text-slate-500 uppercase">
               {t("settings.timerMode")}
-            </label>
+            </p>
             <div className="grid grid-cols-3 gap-3">
               <button
                 onClick={() =>
@@ -226,7 +249,9 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
                 }`}
               >
                 <Repeat size={24} />
-                <span className="text-[10px] font-bold sm:text-xs">Loop</span>
+                <span className="text-[10px] font-bold sm:text-xs">
+                  {timerModeLabels[TimerMode.LOOP]}
+                </span>
               </button>
             </div>
             <p className="mt-2 text-xs text-slate-500">
@@ -240,9 +265,9 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
 
           {/* Durations Section */}
           <div>
-            <label className="mb-3 block text-xs font-bold tracking-wider text-slate-500 uppercase">
+            <p className="mb-3 block text-xs font-bold tracking-wider text-slate-500 uppercase">
               {t("settings.partDurations")}
-            </label>
+            </p>
             <div className="space-y-3">
               {Object.values(GamePart).map(part => (
                 <div
@@ -250,7 +275,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
                   className="flex items-center justify-between rounded-lg border border-slate-700 bg-slate-800 p-3"
                 >
                   <span className="text-sm font-medium text-slate-300">
-                    {part}
+                    {gamePartLabels[part]}
                   </span>
                   <input
                     type="number"
@@ -267,7 +292,9 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
 
           {/* Sound Test */}
           <div className="flex items-center justify-between rounded-lg border border-slate-700 bg-slate-800/50 p-3">
-            <span className="text-sm text-slate-400">{t("settings.timerEndSound")}</span>
+            <span className="text-sm text-slate-400">
+              {t("settings.timerEndSound")}
+            </span>
             <button
               onClick={playWhistle}
               className="flex items-center gap-2 rounded-full bg-slate-700 px-3 py-1.5 text-xs text-white transition-colors hover:bg-slate-600"

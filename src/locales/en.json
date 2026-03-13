@@ -702,6 +702,18 @@
       "recovered": "Onboarding recovered!",
       "recoveredMessage": "Your onboarding data has been applied to your profile."
     },
+    "validation": {
+      "title": "Validation Error",
+      "nameMin": "Name must have at least 2 characters",
+      "invalidEmail": "Invalid email",
+      "nicknameMin": "Nickname must have at least 3 characters",
+      "nicknameMax": "Nickname must have at most 30 characters",
+      "nicknamePattern": "Nickname must contain only lowercase letters, numbers and hyphens",
+      "birthDateFuture": "Birth date cannot be in the future",
+      "birthDateMin": "Birth date must be after 1900",
+      "requiredField": "{field} is required",
+      "generic": "Validation error"
+    },
     "close": "Close onboarding"
   },
   "playZone": {
@@ -756,6 +768,96 @@
         "title": "Explore weekly challenges",
         "description": "Complete special missions and climb the PlayZone ranking.",
         "button": "View available challenges"
+      }
+    },
+    "createEventDialog": {
+      "trigger": "New event",
+      "title": "Create new event",
+      "description": "Fill in the details to schedule a new event in your calendar.",
+      "submit": "Create event",
+      "submitting": "Creating event...",
+      "fields": {
+        "title": {
+          "label": "Event title",
+          "placeholder": "Example: Technical training"
+        },
+        "type": {
+          "label": "Event type"
+        },
+        "status": {
+          "label": "Status"
+        },
+        "date": {
+          "label": "Date"
+        },
+        "time": {
+          "label": "Time"
+        },
+        "location": {
+          "label": "Location",
+          "placeholder": "Example: Club Training Center"
+        },
+        "description": {
+          "label": "Description (optional)",
+          "placeholder": "Add details about the event..."
+        },
+        "isRecurring": {
+          "label": "Recurring event",
+          "description": "Create multiple events automatically"
+        },
+        "recurrenceType": {
+          "label": "Frequency"
+        },
+        "confirmationMode": {
+          "label": "Confirmation mode"
+        },
+        "advanceNoticeDays": {
+          "label": "Days in advance for confirmation"
+        }
+      },
+      "typeOptions": {
+        "jogo": {
+          "label": "Matches",
+          "description": "Official matches and competitive friendlies"
+        },
+        "treino": {
+          "label": "Training",
+          "description": "Technical and physical sessions"
+        },
+        "amistoso": {
+          "label": "Friendlies",
+          "description": "Preparation matches and social events"
+        },
+        "reuniao": {
+          "label": "Meetings",
+          "description": "Strategic planning and alignment sessions"
+        },
+        "outro": {
+          "label": "Other",
+          "description": "General events and reminders"
+        }
+      },
+      "statusOptions": {
+        "confirmado": "Confirmed",
+        "pendente": "Pending",
+        "cancelado": "Cancelled"
+      },
+      "recurrenceLabels": {
+        "daily": "daily",
+        "weekly": "weekly",
+        "monthly": "monthly"
+      },
+      "confirmationModeOptions": {
+        "automatic": "Automatic confirmation",
+        "manual": "Manual confirmation"
+      },
+      "feedback": {
+        "errorTitle": "Error",
+        "invalidDate": "Select a valid date for the event.",
+        "createdTitle": "Event created",
+        "createdDescription": "The new event was added to the calendar.",
+        "recurringCreatedTitle": "Recurring events created",
+        "recurringCreatedDescription": "{count} events were created ({recurrence})."
       }
     }
   },
@@ -977,13 +1079,21 @@
       "teamA": "Team A (Home)",
       "teamB": "Team B (Away)",
       "teamName": "Team Name",
+      "teamColorPicker": "Choose team color for {team}",
       "timerMode": "Timer Mode",
       "progressive": "Progressive",
       "regressive": "Regressive",
+      "loop": "Loop",
       "partDurations": "Part Durations (Minutes)",
       "timerEndSound": "Timer End Sound",
       "testSound": "Test Sound",
       "saveChanges": "Save Changes",
+      "gameParts": {
+        "firstHalf": "1st Half",
+        "secondHalf": "2nd Half",
+        "extraTime": "Extra Time",
+        "training": "Training"
+      },
       "modeDescriptions": {
         "countUp": "Timer counts up from 00:00.",
         "countDown": "Timer counts down to 00:00 and plays a sound.",

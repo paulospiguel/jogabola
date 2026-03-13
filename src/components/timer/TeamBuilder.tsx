@@ -29,6 +29,7 @@ import {
     X,
 } from "lucide-react";
 import React, { useEffect, useState } from "react";
+import { Label } from "@/components/ui/label";
 import { PlayerStatsChart } from "./PlayerStatsChart";
 
 interface TeamBuilderProps {
@@ -451,10 +452,14 @@ export const TeamBuilder: React.FC<TeamBuilderProps> = ({
                   (Object.keys(editData.stats) as Array<keyof PlayerStats>).map(
                     stat => (
                       <div key={stat}>
-                        <label className="mb-1 block truncate text-[10px] font-bold tracking-wider text-slate-500 uppercase">
+                        <Label
+                          htmlFor={`edit-stat-${stat}`}
+                          className="mb-1 block truncate text-[10px] font-bold tracking-wider text-slate-500 uppercase"
+                        >
                           {stat.slice(0, 3)}
-                        </label>
+                        </Label>
                         <input
+                          id={`edit-stat-${stat}`}
                           type="number"
                           value={editData.stats![stat]}
                           onChange={e => {
@@ -843,10 +848,14 @@ export const TeamBuilder: React.FC<TeamBuilderProps> = ({
             {(Object.keys(customStats) as Array<keyof PlayerStats>).map(
               stat => (
                 <div key={stat}>
-                  <label className="mb-1 block text-[10px] font-bold tracking-wider text-slate-500 uppercase">
+                  <Label
+                    htmlFor={`custom-stat-${stat}`}
+                    className="mb-1 block text-[10px] font-bold tracking-wider text-slate-500 uppercase"
+                  >
                     {stat.slice(0, 3)}
-                  </label>
+                  </Label>
                   <input
+                    id={`custom-stat-${stat}`}
                     type="number"
                     value={customStats[stat]}
                     onChange={e => {

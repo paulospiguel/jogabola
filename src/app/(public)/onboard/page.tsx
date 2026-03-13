@@ -25,6 +25,11 @@ import { OnboardNavigation } from "@/components/onboard-navigation";
 import { OnboardProgressHeader } from "@/components/onboard-progress-header";
 import { Button } from "@/components/ui/button";
 import { getQuestionsByRole } from "@/constants/onboarding-questions";
+import {
+  canProceedToNextOnboardStep,
+  getJourneyDashboardRoute,
+  normalizeOptionalDate,
+} from "@/features/onboard/lib/onboard-utils";
 import { useToast } from "@/hooks/use-toast-custom";
 import { useSession } from "@/lib/auth-client";
 import { useProfileStore } from "@/stores/profile";
@@ -136,7 +141,7 @@ export default function OnboardPage() {
       hasInitializedParamsRef.current = true;
 
       // Primeiro buscar os dados do onboarding pendente
-      getPendingOnboarding(session.user.email).then((pendingResult) => {
+      getPendingOnboarding(session.user.email).then(pendingResult => {
         if (pendingResult.success && pendingResult.data) {
           // Carregar dados no formulário antes de vincular
           const pendingData = pendingResult.data;
@@ -145,11 +150,7 @@ export default function OnboardPage() {
             name: pendingData.name,
             email: pendingData.email,
             nickname: pendingData.nickname || "",
-            dateOfBirth: pendingData.dateOfBirth
-              ? typeof pendingData.dateOfBirth === "string"
-                ? new Date(pendingData.dateOfBirth)
-                : pendingData.dateOfBirth
-              : null,
+            dateOfBirth: normalizeOptionalDate(pendingData.dateOfBirth),
             nationality: pendingData.nationality || "",
             country: pendingData.country || "",
             city: pendingData.city || "",
@@ -169,7 +170,7 @@ export default function OnboardPage() {
 
           // Vincular onboarding ao user e criar profile se completo
           linkOnboardingToUser(session.user.id, session.user.email).then(
-            (linkResult) => {
+            linkResult => {
               if (linkResult.success) {
                 toast.success(
                   t("success.recovered"),
@@ -199,15 +200,7 @@ export default function OnboardPage() {
         if (profileResult.success && profileResult.data?.completed) {
           const role = profileResult.data.role;
           if (role) {
-            // Redirecionar para dashboard da jornada
-            const journeyRoutes: Record<string, string> = {
-              PLAYER: "/playzone",
-              MANAGER: "/arena",
-              FAN: "/fan-zone",
-              ORGANIZER: "/organizer",
-            };
-            const dashboardRoute = journeyRoutes[role] || "/arena";
-            router.push(dashboardRoute);
+            router.push(getJourneyDashboardRoute(role));
             return; // Não definir isCheckingOnboarding como false, pois vai redirecionar
           } else {
             router.push("/arena");
@@ -247,13 +240,13 @@ export default function OnboardPage() {
         if (session?.user?.name && !currentFormData.name) {
           updates.name = session?.user?.name;
           filledFields.name = true;
-          setOriginalValues((prev) => ({ ...prev, name: session?.user?.name }));
+          setOriginalValues(prev => ({ ...prev, name: session?.user?.name }));
         }
 
         if (session?.user?.email && !currentFormData.email) {
           updates.email = session?.user?.email;
           filledFields.email = true;
-          setOriginalValues((prev) => ({
+          setOriginalValues(prev => ({
             ...prev,
             email: session?.user?.email,
           }));
@@ -268,7 +261,7 @@ export default function OnboardPage() {
             !currentFormData.name
           ) {
             updates.name = profileResult.data.name;
-            setOriginalValues((prev) => ({
+            setOriginalValues(prev => ({
               ...prev,
               name: profileResult.data.name,
             }));
@@ -314,13 +307,13 @@ export default function OnboardPage() {
         if (session?.user?.name && !currentFormData.name) {
           errorUpdates.name = session?.user?.name;
           errorFilledFields.name = true;
-          setOriginalValues((prev) => ({ ...prev, name: session.user.name }));
+          setOriginalValues(prev => ({ ...prev, name: session.user.name }));
         }
 
         if (session?.user?.email && !currentFormData.email) {
           errorUpdates.email = session?.user?.email;
           errorFilledFields.email = true;
-          setOriginalValues((prev) => ({
+          setOriginalValues(prev => ({
             ...prev,
             email: session.user.email,
           }));
@@ -442,7 +435,7 @@ export default function OnboardPage() {
   const toggleGoal = (goal: string) => {
     const currentGoals = formData.goals || [];
     const newGoals = currentGoals.includes(goal)
-      ? currentGoals.filter((g) => g !== goal)
+      ? currentGoals.filter(g => g !== goal)
       : [...currentGoals, goal];
     updateData({ goals: newGoals });
   };
@@ -456,7 +449,7 @@ export default function OnboardPage() {
         return (
           <JourneySelectionStep
             selectedRole={formData.role}
-            onRoleSelect={(id) => updateFormData("role", id)}
+            onRoleSelect={id => updateFormData("role", id)}
           />
         );
 
@@ -466,29 +459,19 @@ export default function OnboardPage() {
             name={formData.name || ""}
             email={formData.email || ""}
             nickname={formData.nickname || ""}
-            dateOfBirth={
-              formData.dateOfBirth
-                ? typeof formData.dateOfBirth === "string"
-                  ? new Date(formData.dateOfBirth)
-                  : formData.dateOfBirth
-                : null
-            }
+            dateOfBirth={normalizeOptionalDate(formData.dateOfBirth)}
             nationality={formData.nationality || ""}
             country={formData.country || ""}
             city={formData.city || ""}
             location={formData.location || ""}
             autoFilledFields={autoFilledFields}
-            onNameChange={(value) => updateFormData("name", value)}
-            onEmailChange={(value) => updateFormData("email", value)}
-            onNicknameChange={(value) => updateFormData("nickname", value)}
-            onDateOfBirthChange={(value) =>
-              updateFormData("dateOfBirth", value)
-            }
-            onNationalityChange={(value) =>
-              updateFormData("nationality", value)
-            }
-            onCountryChange={(value) => updateFormData("country", value)}
-            onCityChange={(value) => updateFormData("city", value)}
+            onNameChange={value => updateFormData("name", value)}
+            onEmailChange={value => updateFormData("email", value)}
+            onNicknameChange={value => updateFormData("nickname", value)}
+            onDateOfBirthChange={value => updateFormData("dateOfBirth", value)}
+            onNationalityChange={value => updateFormData("nationality", value)}
+            onCountryChange={value => updateFormData("country", value)}
+            onCityChange={value => updateFormData("city", value)}
             onLocationChange={(value: string) =>
               updateFormData("location", value)
             }
@@ -499,7 +482,7 @@ export default function OnboardPage() {
         return (
           <ExperienceStep
             experience={formData.experience}
-            onExperienceChange={(value) => updateFormData("experience", value)}
+            onExperienceChange={value => updateFormData("experience", value)}
           />
         );
 
@@ -537,13 +520,7 @@ export default function OnboardPage() {
             name={formData.name || ""}
             email={formData.email || ""}
             nickname={formData.nickname}
-            dateOfBirth={
-              formData.dateOfBirth
-                ? typeof formData.dateOfBirth === "string"
-                  ? new Date(formData.dateOfBirth)
-                  : formData.dateOfBirth
-                : null
-            }
+            dateOfBirth={normalizeOptionalDate(formData.dateOfBirth)}
             nationality={formData.nationality}
             country={formData.country}
             city={formData.city}
@@ -562,36 +539,12 @@ export default function OnboardPage() {
   };
 
   const canProceed = () => {
-    switch (currentStep) {
-      case 0:
-        return true; // Boas-vindas sempre pode avançar
-      case 1:
-        return !!formData.role; // Precisa escolher role
-      case 2:
-        return !!formData.name && !!formData.email; // Precisa nome e email
-      case 3:
-        return true; // Experiência e disponibilidade são opcionais
-      case 4:
-        // Validar campos obrigatórios específicos do role
-        if (roleQuestions?.personalInfo) {
-          const requiredFields = roleQuestions.personalInfo.filter(
-            (q) => q.required,
-          );
-          return requiredFields.every((field) => {
-            const value = getCustomFieldValue(field.id);
-            return value && (!Array.isArray(value) || value.length > 0);
-          });
-        }
-        return true;
-      case 5:
-        return (formData.goals || []).length > 0; // Precisa selecionar pelo menos 1 objetivo
-      case 6:
-        return true; // Campos adicionais geralmente são opcionais
-      case 7:
-        return true; // Confirmação sempre pode avançar
-      default:
-        return true;
-    }
+    return canProceedToNextOnboardStep({
+      currentStep,
+      formData,
+      roleQuestions,
+      getCustomFieldValue,
+    });
   };
 
   const handleClose = () => {

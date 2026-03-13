@@ -1,115 +1,65 @@
 "use client";
 
+import { Loader2, Plus } from "lucide-react";
+import { useTranslations } from "next-intl";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
-    Dialog,
-    DialogContent,
-    DialogDescription,
-    DialogFooter,
-    DialogHeader,
-    DialogTitle,
-    DialogTrigger,
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
 } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
+import type {
+  ConfirmationMode,
+  CreateEventFormValues,
+  CreateEventType,
+  EventStatus,
+  RecurrenceType,
+} from "@/features/events/create-event-dialog.types";
+import {
+  buildDateFromInputs,
+  EVENT_TYPE_META,
+  getDefaultEventFormValues,
+  getEventConfirmationStatus,
+  getNextRecurringDate,
+  getRecurrenceLabelKey,
+  RECURRENCE_OCCURRENCES,
+} from "@/features/events/create-event-dialog.utils";
 import { useToast } from "@/hooks/use-toast-custom";
-import { addDays, addMonths, addWeeks, format } from "date-fns";
-import { Loader2, Plus } from "lucide-react";
-import { useState } from "react";
-
-type EventType = "jogo" | "treino" | "amistoso" | "reuniao" | "outro";
-type RecurrenceType = "none" | "daily" | "weekly" | "monthly";
-type ConfirmationMode = "automatic" | "manual";
-
-type FormValues = {
-  title: string;
-  type: EventType;
-  date: string;
-  time: string;
-  location: string;
-  description: string;
-  status: "confirmado" | "pendente" | "cancelado";
-  isRecurring: boolean;
-  recurrenceType: RecurrenceType;
-  confirmationMode: ConfirmationMode;
-  advanceNoticeDays: number;
-};
-
-const typeMeta: Record<
-  EventType,
-  {
-    label: string;
-    emoji: string;
-    description: string;
-  }
-> = {
-  jogo: {
-    label: "Jogos",
-    emoji: "🏆",
-    description: "Partidas oficiais e amistosos competitivos",
-  },
-  treino: {
-    label: "Treinos",
-    emoji: "🏋️",
-    description: "Sessões técnicas e físicas",
-  },
-  amistoso: {
-    label: "Amistosos",
-    emoji: "🤝",
-    description: "Jogos preparatórios e eventos sociais",
-  },
-  reuniao: {
-    label: "Reuniões",
-    emoji: "🗣️",
-    description: "Planeamento estratégico e alinhamentos",
-  },
-  outro: {
-    label: "Outros",
-    emoji: "📌",
-    description: "Eventos gerais e lembretes",
-  },
-};
-
-const toDateInputValue = (date: Date) => format(date, "yyyy-MM-dd");
-
-const getDefaultFormValues = (date?: Date): FormValues => ({
-  title: "",
-  type: "treino",
-  date: toDateInputValue(date ?? new Date()),
-  time: "18:00",
-  location: "",
-  description: "",
-  status: "confirmado",
-  isRecurring: false,
-  recurrenceType: "none",
-  confirmationMode: "automatic",
-  advanceNoticeDays: 7,
-});
-
-const buildDateFromInputs = (date: string, time: string) => {
-  if (!date) {
-    return null;
-  }
-  const isoString = `${date}T${time || "12:00"}`;
-  return new Date(isoString);
-};
 
 export function CreateEventDialog() {
+  const t = useTranslations("playZone.createEventDialog");
   const { toast } = useToast();
   const [open, setOpen] = useState(false);
-  const [formValues, setFormValues] = useState<FormValues>(
-    getDefaultFormValues(),
+  const [formValues, setFormValues] = useState<CreateEventFormValues>(
+    getDefaultEventFormValues(),
   );
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const updateFormValue = <K extends keyof CreateEventFormValues>(
+    field: K,
+    value: CreateEventFormValues[K],
+  ) => {
+    setFormValues(currentValues => ({
+      ...currentValues,
+      [field]: value,
+    }));
+  };
 
   const handleFormSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -117,7 +67,7 @@ export function CreateEventDialog() {
 
     const eventDate = buildDateFromInputs(formValues.date, formValues.time);
     if (!eventDate) {
-      toast.error("Erro", "Seleciona uma data válida para o evento.");
+      toast.error(t("feedback.errorTitle"), t("feedback.invalidDate"));
       setIsSubmitting(false);
       return;
     }
@@ -135,52 +85,41 @@ export function CreateEventDialog() {
 
     // Se for recorrente, gerar eventos futuros
     if (formValues.isRecurring && formValues.recurrenceType !== "none") {
-      const occurrences = 12;
       let currentDate = new Date(eventDate);
 
-      for (let i = 0; i < occurrences; i++) {
-        switch (formValues.recurrenceType) {
-          case "daily":
-            currentDate = addDays(currentDate, 1);
-            break;
-          case "weekly":
-            currentDate = addWeeks(currentDate, 1);
-            break;
-          case "monthly":
-            currentDate = addMonths(currentDate, 1);
-            break;
-        }
+      for (let i = 0; i < RECURRENCE_OCCURRENCES; i++) {
+        currentDate = getNextRecurringDate(
+          currentDate,
+          formValues.recurrenceType,
+        );
 
         eventsToCreate.push({
           id: crypto.randomUUID(),
           ...formValues,
           date: new Date(currentDate),
-          status:
-            formValues.confirmationMode === "automatic"
-              ? "confirmado"
-              : "pendente",
+          status: getEventConfirmationStatus(formValues.confirmationMode),
           createdBy: "Equipa Jogabola",
           responses: [],
         });
       }
 
       toast.success(
-        "Eventos recorrentes criados",
-        `Foram criados ${eventsToCreate.length} eventos (${
-          formValues.recurrenceType === "daily"
-            ? "diários"
-            : formValues.recurrenceType === "weekly"
-              ? "semanais"
-              : "mensais"
-        }).`,
+        t("feedback.recurringCreatedTitle"),
+        t("feedback.recurringCreatedDescription", {
+          count: eventsToCreate.length,
+          recurrence: t(getRecurrenceLabelKey(formValues.recurrenceType)),
+        }),
       );
     } else {
-      toast.success("Evento criado", "O novo evento foi adicionado à agenda.");
+      toast.success(
+        t("feedback.createdTitle"),
+        t("feedback.createdDescription"),
+      );
     }
 
     setIsSubmitting(false);
     setOpen(false);
-    setFormValues(getDefaultFormValues());
+    setFormValues(getDefaultEventFormValues());
   };
 
   return (
@@ -188,31 +127,32 @@ export function CreateEventDialog() {
       <DialogTrigger asChild>
         <Button className="group min-w-[180px] bg-neon-secondary font-semibold text-slate-900 shadow-[0_16px_45px_-20px_rgba(36,255,230,0.9)] transition-all duration-300 hover:-translate-y-1 hover:bg-neon-secondary/90">
           <Plus className="mr-2 h-4 w-4" />
-          Novo evento
+          {t("trigger")}
         </Button>
       </DialogTrigger>
       <DialogContent className="max-h-[90vh] overflow-y-auto border-white/10 bg-[#0a1628]/95 text-white backdrop-blur-xl sm:max-w-[600px]">
         <DialogHeader>
           <DialogTitle className="text-2xl font-bold text-neon-secondary">
-            {typeMeta[formValues.type].emoji} Criar novo evento
+            {EVENT_TYPE_META[formValues.type].emoji} {t("title")}
           </DialogTitle>
           <DialogDescription className="text-base text-white/70">
-            Preenche os detalhes para agendar um novo evento na tua agenda.
+            {t("description")}
           </DialogDescription>
         </DialogHeader>
         <form onSubmit={handleFormSubmit} className="space-y-6">
           <div className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="title" className="text-sm font-semibold text-white">
-                Título do evento
+              <Label
+                htmlFor="title"
+                className="text-sm font-semibold text-white"
+              >
+                {t("fields.title.label")}
               </Label>
               <Input
                 id="title"
                 value={formValues.title}
-                onChange={e =>
-                  setFormValues({ ...formValues, title: e.target.value })
-                }
-                placeholder="Ex: Treino técnico"
+                onChange={event => updateFormValue("title", event.target.value)}
+                placeholder={t("fields.title.placeholder")}
                 required
                 className="border-white/10 bg-white/5 text-white placeholder:text-white/40"
               />
@@ -220,22 +160,25 @@ export function CreateEventDialog() {
 
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="type" className="text-sm font-semibold text-white">
-                  Tipo de evento
+                <Label
+                  htmlFor="type"
+                  className="text-sm font-semibold text-white"
+                >
+                  {t("fields.type.label")}
                 </Label>
                 <Select
                   value={formValues.type}
-                  onValueChange={(value: EventType) =>
-                    setFormValues({ ...formValues, type: value })
+                  onValueChange={(value: CreateEventType) =>
+                    updateFormValue("type", value)
                   }
                 >
                   <SelectTrigger className="border-white/10 bg-white/5 text-white">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent className="border-white/10 bg-[#0a1628] text-white">
-                    {Object.entries(typeMeta).map(([key, meta]) => (
+                    {Object.entries(EVENT_TYPE_META).map(([key, meta]) => (
                       <SelectItem key={key} value={key}>
-                        {meta.emoji} {meta.label}
+                        {meta.emoji} {t(meta.labelKey)}
                       </SelectItem>
                     ))}
                   </SelectContent>
@@ -243,22 +186,31 @@ export function CreateEventDialog() {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="status" className="text-sm font-semibold text-white">
-                  Estado
+                <Label
+                  htmlFor="status"
+                  className="text-sm font-semibold text-white"
+                >
+                  {t("fields.status.label")}
                 </Label>
                 <Select
                   value={formValues.status}
-                  onValueChange={(value: "confirmado" | "pendente" | "cancelado") =>
-                    setFormValues({ ...formValues, status: value })
+                  onValueChange={(value: EventStatus) =>
+                    updateFormValue("status", value)
                   }
                 >
                   <SelectTrigger className="border-white/10 bg-white/5 text-white">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent className="border-white/10 bg-[#0a1628] text-white">
-                    <SelectItem value="confirmado">✅ Confirmado</SelectItem>
-                    <SelectItem value="pendente">⏳ Pendente</SelectItem>
-                    <SelectItem value="cancelado">❌ Cancelado</SelectItem>
+                    <SelectItem value="confirmado">
+                      ✅ {t("statusOptions.confirmado")}
+                    </SelectItem>
+                    <SelectItem value="pendente">
+                      ⏳ {t("statusOptions.pendente")}
+                    </SelectItem>
+                    <SelectItem value="cancelado">
+                      ❌ {t("statusOptions.cancelado")}
+                    </SelectItem>
                   </SelectContent>
                 </Select>
               </div>
@@ -266,15 +218,18 @@ export function CreateEventDialog() {
 
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="date" className="text-sm font-semibold text-white">
-                  Data
+                <Label
+                  htmlFor="date"
+                  className="text-sm font-semibold text-white"
+                >
+                  {t("fields.date.label")}
                 </Label>
                 <Input
                   id="date"
                   type="date"
                   value={formValues.date}
-                  onChange={e =>
-                    setFormValues({ ...formValues, date: e.target.value })
+                  onChange={event =>
+                    updateFormValue("date", event.target.value)
                   }
                   required
                   className="border-white/10 bg-white/5 text-white"
@@ -282,15 +237,18 @@ export function CreateEventDialog() {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="time" className="text-sm font-semibold text-white">
-                  Hora
+                <Label
+                  htmlFor="time"
+                  className="text-sm font-semibold text-white"
+                >
+                  {t("fields.time.label")}
                 </Label>
                 <Input
                   id="time"
                   type="time"
                   value={formValues.time}
-                  onChange={e =>
-                    setFormValues({ ...formValues, time: e.target.value })
+                  onChange={event =>
+                    updateFormValue("time", event.target.value)
                   }
                   required
                   className="border-white/10 bg-white/5 text-white"
@@ -299,31 +257,37 @@ export function CreateEventDialog() {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="location" className="text-sm font-semibold text-white">
-                Localização
+              <Label
+                htmlFor="location"
+                className="text-sm font-semibold text-white"
+              >
+                {t("fields.location.label")}
               </Label>
               <Input
                 id="location"
                 value={formValues.location}
-                onChange={e =>
-                  setFormValues({ ...formValues, location: e.target.value })
+                onChange={event =>
+                  updateFormValue("location", event.target.value)
                 }
-                placeholder="Ex: Centro de Treinos do Clube"
+                placeholder={t("fields.location.placeholder")}
                 className="border-white/10 bg-white/5 text-white placeholder:text-white/40"
               />
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="description" className="text-sm font-semibold text-white">
-                Descrição (opcional)
+              <Label
+                htmlFor="description"
+                className="text-sm font-semibold text-white"
+              >
+                {t("fields.description.label")}
               </Label>
               <Textarea
                 id="description"
                 value={formValues.description}
-                onChange={e =>
-                  setFormValues({ ...formValues, description: e.target.value })
+                onChange={event =>
+                  updateFormValue("description", event.target.value)
                 }
-                placeholder="Adiciona detalhes sobre o evento..."
+                placeholder={t("fields.description.placeholder")}
                 rows={3}
                 className="border-white/10 bg-white/5 text-white placeholder:text-white/40"
               />
@@ -332,17 +296,21 @@ export function CreateEventDialog() {
             <div className="space-y-4 rounded-2xl border border-white/10 bg-white/5 p-4">
               <div className="flex items-center justify-between">
                 <div className="space-y-0.5">
-                  <Label className="text-sm font-semibold text-white">
-                    Evento recorrente
+                  <Label
+                    htmlFor="isRecurring"
+                    className="text-sm font-semibold text-white"
+                  >
+                    {t("fields.isRecurring.label")}
                   </Label>
                   <p className="text-xs text-white/60">
-                    Criar múltiplos eventos automaticamente
+                    {t("fields.isRecurring.description")}
                   </p>
                 </div>
                 <Switch
+                  id="isRecurring"
                   checked={formValues.isRecurring}
                   onCheckedChange={checked =>
-                    setFormValues({ ...formValues, isRecurring: checked })
+                    updateFormValue("isRecurring", checked)
                   }
                 />
               </div>
@@ -350,45 +318,63 @@ export function CreateEventDialog() {
               {formValues.isRecurring && (
                 <div className="space-y-4 pt-2">
                   <div className="space-y-2">
-                    <Label className="text-sm font-semibold text-white">
-                      Frequência
+                    <Label
+                      htmlFor="recurrenceType"
+                      className="text-sm font-semibold text-white"
+                    >
+                      {t("fields.recurrenceType.label")}
                     </Label>
                     <Select
                       value={formValues.recurrenceType}
                       onValueChange={(value: RecurrenceType) =>
-                        setFormValues({ ...formValues, recurrenceType: value })
+                        updateFormValue("recurrenceType", value)
                       }
                     >
-                      <SelectTrigger className="border-white/10 bg-white/5 text-white">
+                      <SelectTrigger
+                        id="recurrenceType"
+                        className="border-white/10 bg-white/5 text-white"
+                      >
                         <SelectValue />
                       </SelectTrigger>
                       <SelectContent className="border-white/10 bg-[#0a1628] text-white">
-                        <SelectItem value="daily">📅 Diário</SelectItem>
-                        <SelectItem value="weekly">📆 Semanal</SelectItem>
-                        <SelectItem value="monthly">🗓️ Mensal</SelectItem>
+                        <SelectItem value="daily">
+                          📅 {t("recurrenceLabels.daily")}
+                        </SelectItem>
+                        <SelectItem value="weekly">
+                          📆 {t("recurrenceLabels.weekly")}
+                        </SelectItem>
+                        <SelectItem value="monthly">
+                          🗓️ {t("recurrenceLabels.monthly")}
+                        </SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
 
                   <div className="space-y-2">
-                    <Label className="text-sm font-semibold text-white">
-                      Modo de confirmação
+                    <Label
+                      htmlFor="confirmationMode"
+                      className="text-sm font-semibold text-white"
+                    >
+                      {t("fields.confirmationMode.label")}
                     </Label>
                     <Select
                       value={formValues.confirmationMode}
                       onValueChange={(value: ConfirmationMode) =>
-                        setFormValues({ ...formValues, confirmationMode: value })
+                        updateFormValue("confirmationMode", value)
                       }
                     >
-                      <SelectTrigger className="border-white/10 bg-white/5 text-white">
+                      <SelectTrigger
+                        id="confirmationMode"
+                        className="border-white/10 bg-white/5 text-white"
+                      >
                         <SelectValue />
                       </SelectTrigger>
                       <SelectContent className="border-white/10 bg-[#0a1628] text-white">
                         <SelectItem value="automatic">
-                          ✅ Confirmação automática
+                          ✅ {t("confirmationModeOptions.automatic")}
                         </SelectItem>
                         <SelectItem value="manual">
-                          ⏳ Confirmação manual
+                          ⏳ {t("confirmationModeOptions.manual")}
                         </SelectItem>
                       </SelectContent>
                     </Select>
@@ -396,19 +382,23 @@ export function CreateEventDialog() {
 
                   {formValues.confirmationMode === "manual" && (
                     <div className="space-y-2">
-                      <Label className="text-sm font-semibold text-white">
-                        Dias de antecedência para confirmação
+                      <Label
+                        htmlFor="advanceNoticeDays"
+                        className="text-sm font-semibold text-white"
+                      >
+                        {t("fields.advanceNoticeDays.label")}
                       </Label>
                       <Input
+                        id="advanceNoticeDays"
                         type="number"
                         min="1"
                         max="30"
                         value={formValues.advanceNoticeDays}
-                        onChange={e =>
-                          setFormValues({
-                            ...formValues,
-                            advanceNoticeDays: parseInt(e.target.value) || 7,
-                          })
+                        onChange={event =>
+                          updateFormValue(
+                            "advanceNoticeDays",
+                            parseInt(event.target.value, 10) || 7,
+                          )
                         }
                         className="border-white/10 bg-white/5 text-white"
                       />
@@ -428,12 +418,12 @@ export function CreateEventDialog() {
               {isSubmitting ? (
                 <>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  A criar evento...
+                  {t("submitting")}
                 </>
               ) : (
                 <>
                   <Plus className="mr-2 h-4 w-4" />
-                  Criar evento
+                  {t("submit")}
                 </>
               )}
             </Button>

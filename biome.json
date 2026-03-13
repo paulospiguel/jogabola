@@ -28,7 +28,9 @@
     "rules": {
       "recommended": true,
       "a11y": {
-        "useButtonType": "off"
+        "useButtonType": "off",
+        "useKeyWithClickEvents": "warn",
+        "noStaticElementInteractions": "warn"
       },
       "suspicious": {
         "noArrayIndexKey": "warn"
