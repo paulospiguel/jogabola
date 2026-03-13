@@ -57,5 +57,7 @@ tailwind.css
 .branches
 .temp
 
-*.lockb*
-*-lock*
+# lockfiles
+package-lock.json
+yarn.lock
+bun.lockb
