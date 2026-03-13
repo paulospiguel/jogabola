@@ -1,54 +1,45 @@
 "use client";
 
 import { getProfileData, saveProfileData } from "@/actions/profile";
-import { CountrySelector } from "@/components/country-selector";
-import { GoalCard } from "@/components/goal-card";
-import { getJourneyRoute } from "@/components/journey-router";
-import { DashboardWidgets } from "@/components/profile/dashboard-widgets";
-import { PerformanceTab } from "@/components/profile/performance-radar-chart";
-import { ProfileHeader } from "@/components/profile/profile-header";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { Separator } from "@/components/ui/separator";
 import { Switch } from "@/components/ui/switch";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Textarea } from "@/components/ui/textarea";
-import { getQuestionsByRole } from "@/constants/onboarding-questions";
 import { useToast } from "@/hooks/use-toast-custom";
-import { useSession } from "@/lib/auth-client";
-import type { Availability, Role } from "@/schemas/profile";
+import { signOut, useSession } from "@/lib/auth-client";
+import { cn } from "@/lib/utils";
+import type { Availability } from "@/schemas/profile";
+import { motion } from "framer-motion";
 import {
-  ArrowLeft,
+  Activity,
+  ArrowRight,
   Bell,
-  Globe,
-  Mail,
+  CalendarDays,
+  ChevronRight,
+  Cog,
+  Edit2,
+  Info,
+  Loader2,
+  LogOut,
   MapPin,
-  Newspaper,
   Save,
-  Sparkles,
+  Settings,
+  Shield,
+  Star,
+  Swords,
   Target,
-  User,
-  UserCircle,
+  TrendingUp,
+  Users,
+  Zap,
 } from "lucide-react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
+
+// ─── Types ────────────────────────────────────────────────────────────────────
 
 interface ProfileData {
   name: string;
@@ -63,38 +54,131 @@ interface ProfileData {
   newsletterEnabled: boolean;
   earlyAccessEnabled: boolean;
   goals: string[];
-  customFields: Record<string, unknown>;
+  role: string;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  customFields: Record<string, any>;
 }
 
-const languages = [
-  { value: "pt-BR", label: "Português (Brasil)" },
-  { value: "pt-PT", label: "Português (Portugal)" },
-  { value: "en-US", label: "English (US)" },
-  { value: "es-ES", label: "Español" },
+type Tab = "overview" | "teams" | "activities" | "settings";
+
+// ─── Mock data helpers ────────────────────────────────────────────────────────
+
+const mockTeams = [
+  {
+    id: "1",
+    name: "Real Vila FC",
+    role: "Capitão",
+    players: 12,
+    color: "bg-blue-600",
+  },
+  {
+    id: "2",
+    name: "Galáticos da Noite",
+    role: "Atleta",
+    players: 18,
+    color: "bg-red-600",
+  },
 ];
 
-const experienceLevels = [
-  { value: "beginner", label: "Iniciante" },
-  { value: "intermediate", label: "Intermediário" },
-  { value: "advanced", label: "Avançado" },
-  { value: "professional", label: "Profissional" },
+const mockActivities = [
+  {
+    id: "1",
+    icon: <Swords className="h-5 w-5 text-[#02a7ff]" />,
+    bg: "bg-[#02a7ff]/10",
+    text: (
+      <>
+        Marcou <strong className="text-white">2 gols</strong> na partida contra
+        União Futebol.
+      </>
+    ),
+    time: "Ontem às 19:30",
+    location: "Arena Central",
+  },
+  {
+    id: "2",
+    icon: <Star className="h-5 w-5 text-emerald-400" />,
+    bg: "bg-emerald-500/10",
+    text: (
+      <>
+        Eleito <strong className="text-white">Homem do Jogo</strong> no
+        confronto semanal.
+      </>
+    ),
+    time: "3 dias atrás",
+    location: "Liga Amadora",
+  },
+  {
+    id: "3",
+    icon: <Users className="h-5 w-5 text-[#02a7ff]" />,
+    bg: "bg-[#02a7ff]/10",
+    text: (
+      <>
+        Entrou para a equipe{" "}
+        <strong className="text-white">Galáticos da Noite.</strong>
+      </>
+    ),
+    time: "1 semana atrás",
+    location: "",
+  },
 ];
 
-const availabilityOptions = [
-  { value: "weekends", label: "Finais de semana" },
-  { value: "evenings", label: "Noites" },
-  { value: "flexible", label: "Flexível" },
-  { value: "specific", label: "Horários específicos" },
-];
+// ─── Stat Card ────────────────────────────────────────────────────────────────
+
+function StatItem({
+  value,
+  label,
+}: {
+  value: number | string;
+  label: string;
+}) {
+  return (
+    <div>
+      <div className="text-2xl font-bold text-white">{value}</div>
+      <div className="text-[10px] tracking-widest text-white/40 uppercase">
+        {label}
+      </div>
+    </div>
+  );
+}
+
+// ─── Attribute Bar ────────────────────────────────────────────────────────────
+
+function AttributeBar({
+  label,
+  value,
+}: {
+  label: string;
+  value: number;
+}) {
+  return (
+    <div className="space-y-1">
+      <div className="flex items-center justify-between text-xs">
+        <span className="tracking-wider text-white/50 uppercase">{label}</span>
+        <span className="font-semibold text-[#02a7ff]">{value}%</span>
+      </div>
+      <div className="h-1.5 w-full overflow-hidden rounded-full bg-white/10">
+        <motion.div
+          initial={{ width: 0 }}
+          animate={{ width: `${value}%` }}
+          transition={{ duration: 0.8, ease: "easeOut" }}
+          className="h-full rounded-full bg-[#02a7ff]"
+        />
+      </div>
+    </div>
+  );
+}
+
+// ─── Page ─────────────────────────────────────────────────────────────────────
 
 export default function ProfilePage() {
   const router = useRouter();
-  const { toast } = useToast();
   const { data: session } = useSession();
+  const { toast } = useToast();
+  const [activeTab, setActiveTab] = useState<Tab>("overview");
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
-  const [userRole, setUserRole] = useState<string>("");
-  const loadedUserIdRef = useRef<string | null>(null);
+  const loadedRef = useRef<string | null>(null);
+
   const [profileData, setProfileData] = useState<ProfileData>({
     name: "",
     email: "",
@@ -108,83 +192,65 @@ export default function ProfilePage() {
     newsletterEnabled: true,
     earlyAccessEnabled: true,
     goals: [],
+    role: "",
     customFields: {},
   });
 
-  const journeyRoute = getJourneyRoute(userRole as Role);
+  // ── Load profile ───────────────────────────────────────────────────────────
 
   useEffect(() => {
-    async function loadProfile() {
-      const userId = session?.user?.id;
-      if (!userId) return;
+    const userId = session?.user?.id;
+    if (!userId || loadedRef.current === userId) return;
+    loadedRef.current = userId;
 
-      // Evitar múltiplas chamadas para o mesmo usuário
-      if (loadedUserIdRef.current === userId) return;
-      loadedUserIdRef.current = userId;
-
-      setLoading(true);
-      try {
-        const result = await getProfileData(userId);
+    setLoading(true);
+    getProfileData(userId)
+      .then((result) => {
         if (result.success && result.data) {
-          setUserRole(result.data.role || "");
+          const d = result.data;
           setProfileData({
-            name: result.data.name || "",
+            name: d.name || session.user.name || "",
             email: session.user.email || "",
-            nationality: result.data.nationality || "",
-            location: result.data.location || "",
-            experience: result.data.experience || "",
-            availability: result.data.availability || "",
-            bio: (result.data.customFields?.bio as string) || "",
-            language: (result.data.customFields?.language as string) || "pt-BR",
-            notificationsEnabled: result.data.notificationsEnabled ?? true,
-            newsletterEnabled: result.data.newsletterEnabled ?? true,
-            earlyAccessEnabled: result.data.earlyAccessEnabled ?? true,
-            goals: result.data.goals || [],
-            customFields: result.data.customFields || {},
+            nationality: d.nationality || "",
+            location: d.location || "",
+            experience: d.experience || "",
+            availability: d.availability || "",
+            bio: (d.customFields?.bio as string) || "",
+            language: (d.customFields?.language as string) || "pt-BR",
+            notificationsEnabled: d.notificationsEnabled ?? true,
+            newsletterEnabled: d.newsletterEnabled ?? true,
+            earlyAccessEnabled: d.earlyAccessEnabled ?? true,
+            goals: d.goals || [],
+            role: d.role || "",
+            customFields: d.customFields || {},
           });
         } else {
-          // Se não tem perfil, usar dados da sessão
-          setProfileData(prev => ({
+          setProfileData((prev) => ({
             ...prev,
             name: session.user.name || "",
             email: session.user.email || "",
           }));
         }
-      } catch (error) {
-        console.error("Error loading profile:", error);
-        toast.error("Erro", "Erro ao carregar perfil");
-      } finally {
-        setLoading(false);
-      }
-    }
-
-    loadProfile();
+      })
+      .catch(() => toast.error("Erro", "Erro ao carregar perfil"))
+      .finally(() => setLoading(false));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [session?.user?.id]);
 
-  const handleSave = async () => {
-    if (!session?.user?.id) return;
+  // ── Save profile ───────────────────────────────────────────────────────────
 
-    if (!userRole) {
-      toast.error("Erro", "Role do usuário não encontrado");
-      return;
-    }
-
+  async function handleSave() {
+    if (!session?.user?.id || !profileData.role) return;
     setSaving(true);
     try {
-      // Validar campos obrigatórios
-      if (!profileData.name || !profileData.email || !userRole) {
-        toast.error("Erro", "Nome, email e role são obrigatórios");
-        setSaving(false);
-        return;
-      }
-
       const result = await saveProfileData(session.user.id, {
-        role: userRole as any,
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        role: profileData.role as any,
         name: profileData.name,
         email: profileData.email,
         nationality: profileData.nationality || undefined,
         location: profileData.location || undefined,
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         experience: (profileData.experience as any) || undefined,
         availability:
           (profileData.availability as Availability | "" | undefined) ||
@@ -193,7 +259,7 @@ export default function ProfilePage() {
         waitlistApps: [],
         customFields: {
           ...profileData.customFields,
-          ...(profileData.bio && { bio: profileData.bio }),
+          bio: profileData.bio,
           language: profileData.language,
         },
         preferences: {
@@ -204,811 +270,644 @@ export default function ProfilePage() {
       });
 
       if (result.success) {
-        toast.success("Perfil atualizado com sucesso!");
+        toast.success("Perfil atualizado", "As alterações foram guardadas.");
       } else {
-        toast.error("Erro", result.error || "Erro ao salvar perfil");
+        toast.error("Erro", result.error || "Não foi possível guardar.");
       }
-    } catch (error) {
-      console.error("Error saving profile:", error);
-      toast.error("Erro", "Erro ao salvar perfil");
+    } catch {
+      toast.error("Erro", "Não foi possível guardar.");
     } finally {
       setSaving(false);
     }
-  };
-
-  const handleInputChange = (field: keyof ProfileData, value: unknown) => {
-    setProfileData(prev => ({
-      ...prev,
-      [field]: value,
-    }));
-  };
-
-  const handleCustomFieldChange = (id: string, value: unknown) => {
-    // Check if it maps to a top-level field
-    if (id === "experience" || id === "availability" || id === "location") {
-      handleInputChange(id as keyof ProfileData, value);
-    } else {
-      // Otherwise update customFields
-      setProfileData(prev => ({
-        ...prev,
-        customFields: {
-          ...prev.customFields,
-          [id]: value,
-        },
-      }));
-    }
-  };
-
-  const toggleGoal = (goalId: string) => {
-    setProfileData(prev => {
-      const currentGoals = prev.goals || [];
-      if (currentGoals.includes(goalId)) {
-        return {
-          ...prev,
-          goals: currentGoals.filter(g => g !== goalId),
-        };
-      } else {
-        if (currentGoals.length >= 10) return prev; // Max 10 goals
-        return {
-          ...prev,
-          goals: [...currentGoals, goalId],
-        };
-      }
-    });
-  };
-
-  const roleQuestions = getQuestionsByRole(userRole as Role);
-
-  const handleCancel = () => {
-    // Verificar se há um referrer válido (página anterior no mesmo domínio)
-    const referrer = document.referrer;
-    const currentOrigin = window.location.origin;
-    const hasValidReferrer =
-      referrer &&
-      referrer.startsWith(currentOrigin) &&
-      !referrer.includes("/profile");
-
-    if (hasValidReferrer) {
-      // Se houver referrer válido, usar router.back()
-      router.back();
-    } else {
-      // Se não houver histórico válido, redirecionar para a rota padrão da jornada
-      if (userRole) {
-        const defaultRoute = getJourneyRoute(userRole as Role);
-        router.push(defaultRoute);
-      } else {
-        // Fallback: se não tiver role ainda, usar playzone como padrão
-        router.push("/playzone");
-      }
-    }
-  };
-
-  if (loading) {
-    return (
-      <div className="relative flex h-screen items-center justify-center overflow-hidden">
-        <div className="absolute inset-0 -z-10 bg-[linear-gradient(135deg,var(--color-background-gradient-start)_0%,var(--color-background-gradient-mid)_45%,var(--color-background-gradient-end)_100%)]" />
-        <div className="absolute inset-0 -z-20 bg-[radial-gradient(90%_90%_at_50%_0%,var(--color-radial-glow)_0%,rgba(5,3,18,0)_72%)]" />
-        <div className="text-center">
-          <div className="border-neon-primary/30 border-t-neon-primary mx-auto mb-4 h-10 w-10 animate-spin rounded-full border-4 shadow-[0_0_15px_rgba(36,255,230,0.5)]" />
-          <p className="text-text-secondary animate-pulse text-lg font-medium">
-            Carregando perfil...
-          </p>
-        </div>
-      </div>
-    );
   }
 
+  // ── Sign out ───────────────────────────────────────────────────────────────
+
+  async function handleSignOut() {
+    await signOut({
+      fetchOptions: { onSuccess: () => router.push("/auth") },
+    });
+  }
+
+  // ── Derived ────────────────────────────────────────────────────────────────
+
+  const initials = profileData.name
+    ? profileData.name
+        .split(" ")
+        .map((n) => n[0])
+        .slice(0, 2)
+        .join("")
+        .toUpperCase()
+    : "?";
+
+  const roleLabel: Record<string, string> = {
+    PLAYER: "Atleta Amador",
+    MANAGER: "Gestor",
+    ORGANIZER: "Organizador",
+    FAN: "Adepto",
+  };
+
+  const attributes = [
+    {
+      label: "Velocidade",
+      value: (profileData.customFields?.speed as number) ?? 85,
+    },
+    {
+      label: "Finalização",
+      value: (profileData.customFields?.finishing as number) ?? 78,
+    },
+    {
+      label: "Passe",
+      value: (profileData.customFields?.passing as number) ?? 72,
+    },
+  ];
+
+  const tabs: { id: Tab; label: string; icon: React.ReactNode }[] = [
+    {
+      id: "overview",
+      label: "Visão Geral",
+      icon: <Target className="h-4 w-4" />,
+    },
+    {
+      id: "teams",
+      label: "Minhas Equipes",
+      icon: <Users className="h-4 w-4" />,
+    },
+    {
+      id: "activities",
+      label: "Atividades",
+      icon: <Activity className="h-4 w-4" />,
+    },
+    {
+      id: "settings",
+      label: "Configurações",
+      icon: <Settings className="h-4 w-4" />,
+    },
+  ];
+
+  // ── Render ─────────────────────────────────────────────────────────────────
+
   return (
-    <div className="text-text-primary relative min-h-screen overflow-hidden bg-[linear-gradient(135deg,var(--color-background-gradient-start)_0%,var(--color-background-gradient-mid)_45%,var(--color-background-gradient-end)_100%)] transition-colors">
-      <div className="absolute inset-0 -z-10 bg-[linear-gradient(135deg,var(--color-background-gradient-start)_0%,var(--color-background-gradient-mid)_45%,var(--color-background-gradient-end)_100%)]" />
-      <div className="absolute inset-0 -z-20 bg-[radial-gradient(90%_90%_at_50%_0%,var(--color-radial-glow)_0%,rgba(5,3,18,0)_72%)]" />
-      <div className="container mx-auto max-w-4xl px-4 py-8 sm:px-6 md:px-8 lg:px-12">
-        {/* Back Button & Header */}
-        <div className="mb-6">
-          <Button
-            variant="ghost"
-            onClick={() => router.push(journeyRoute)}
-            className="text-text-secondary hover:text-neon-primary -ml-2 gap-2 hover:bg-white/5"
-          >
-            <ArrowLeft className="h-4 w-4" />
-            Voltar para Arena
-          </Button>
+    <div className="min-h-screen bg-[#0e1117] text-white">
+      {/* ── Navbar ─────────────────────────────────────────────────────────── */}
+      <nav className="sticky top-0 z-50 border-b border-white/8 bg-[#0e1117]/95 backdrop-blur-xl">
+        <div className="mx-auto flex h-14 max-w-6xl items-center justify-between px-4 md:px-6">
+          {/* Logo */}
+          <Link href="/arena" className="flex items-center gap-2">
+            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-[#02a7ff]">
+              <Swords className="h-4 w-4 text-white" />
+            </div>
+            <span className="font-bold text-white">Jogabola</span>
+          </Link>
+
+          {/* Nav links */}
+          <div className="hidden items-center gap-6 md:flex">
+            <Link
+              href="/arena"
+              className="text-sm text-white/60 transition-colors hover:text-white"
+            >
+              Explorar
+            </Link>
+            <Link
+              href="/arena/calendar"
+              className="text-sm text-white/60 transition-colors hover:text-white"
+            >
+              Partidas
+            </Link>
+            <Link
+              href="/profile"
+              className="text-sm font-medium text-[#02a7ff] transition-colors hover:text-[#02a7ff]/80"
+            >
+              Meu Perfil
+            </Link>
+          </div>
+
+          {/* Actions */}
+          <div className="flex items-center gap-2">
+            <button
+              type="button"
+              className="relative flex h-9 w-9 items-center justify-center rounded-xl border border-white/10 bg-white/5 text-white/60 transition-colors hover:bg-white/10 hover:text-white"
+              aria-label="Notificações"
+            >
+              <Bell className="h-4 w-4" />
+              <span className="absolute -top-0.5 -right-0.5 flex h-4 w-4 items-center justify-center rounded-full bg-[#02a7ff] text-[9px] font-bold text-white">
+                3
+              </span>
+            </button>
+            <Link
+              href="/arena"
+              className="flex h-9 w-9 items-center justify-center rounded-xl border border-white/10 bg-white/5 text-white/60 transition-colors hover:bg-white/10 hover:text-white"
+              aria-label="Configurações"
+            >
+              <Cog className="h-4 w-4" />
+            </Link>
+            <Avatar className="h-9 w-9 cursor-pointer ring-2 ring-[#02a7ff]/40">
+              <AvatarImage src={session?.user?.image || undefined} />
+              <AvatarFallback className="bg-[#02a7ff]/20 text-sm font-semibold text-[#02a7ff]">
+                {initials}
+              </AvatarFallback>
+            </Avatar>
+          </div>
         </div>
+      </nav>
 
-        <ProfileHeader
-          name={profileData.name}
-          role={userRole}
-          image={session?.user?.image || ""}
-          level={5} // Mock level
-          nationality={profileData.nationality}
-          onEditImage={() => {
-            // Implement image upload logic or open modal
-            toast.info("Info", "Funcionalidade de upload em breve!");
-          }}
-        />
+      {/* ── Content ────────────────────────────────────────────────────────── */}
+      <main className="mx-auto max-w-6xl px-4 py-8 md:px-6">
+        {loading ? (
+          <div className="flex h-64 items-center justify-center">
+            <Loader2 className="h-8 w-8 animate-spin text-[#02a7ff]" />
+          </div>
+        ) : (
+          <>
+            {/* ── Profile Hero ─────────────────────────────────────────────── */}
+            <div className="mb-6 rounded-2xl border border-white/8 bg-[#131928] p-6">
+              <div className="flex flex-col items-start gap-6 sm:flex-row">
+                {/* Avatar */}
+                <div className="relative shrink-0">
+                  <div className="rounded-full p-1 ring-2 ring-[#02a7ff]/60">
+                    <Avatar className="h-20 w-20 sm:h-24 sm:w-24">
+                      <AvatarImage src={session?.user?.image || undefined} />
+                      <AvatarFallback className="bg-[#1e2a45] text-2xl font-bold text-[#02a7ff]">
+                        {initials}
+                      </AvatarFallback>
+                    </Avatar>
+                  </div>
+                  <button
+                    type="button"
+                    className="absolute right-0 bottom-1 flex h-7 w-7 items-center justify-center rounded-full bg-[#02a7ff] text-white shadow-lg transition-transform hover:scale-110"
+                    aria-label="Editar foto"
+                  >
+                    <Edit2 className="h-3.5 w-3.5" />
+                  </button>
+                </div>
 
-        <Tabs defaultValue="overview" className="space-y-8">
-          <TabsList className="w-full justify-start overflow-x-auto rounded-xl border-white/10 bg-black/20 p-1 backdrop-blur-xl">
-            <TabsTrigger
-              value="overview"
-              className="text-text-muted data-[state=active]:bg-neon-primary rounded-lg px-6 py-2.5 text-sm font-medium transition-all data-[state=active]:text-black data-[state=active]:shadow-[0_0_20px_rgba(111,255,233,0.3)]"
-            >
-              Overview
-            </TabsTrigger>
-            {userRole === "PLAYER" && (
-              <TabsTrigger
-                value="performance"
-                className="text-text-muted data-[state=active]:bg-neon-primary rounded-lg px-6 py-2.5 text-sm font-medium transition-all data-[state=active]:text-black data-[state=active]:shadow-[0_0_20px_rgba(111,255,233,0.3)]"
-              >
-                Performance
-              </TabsTrigger>
-            )}
-            <TabsTrigger
-              value="details"
-              className="text-text-muted data-[state=active]:bg-neon-primary rounded-lg px-6 py-2.5 text-sm font-medium transition-all data-[state=active]:text-black data-[state=active]:shadow-[0_0_20px_rgba(111,255,233,0.3)]"
-            >
-              Profile Details
-            </TabsTrigger>
-            <TabsTrigger
-              value="account"
-              className="text-text-muted data-[state=active]:bg-neon-primary rounded-lg px-6 py-2.5 text-sm font-medium transition-all data-[state=active]:text-black data-[state=active]:shadow-[0_0_20px_rgba(111,255,233,0.3)]"
-            >
-              Account
-            </TabsTrigger>
-            <TabsTrigger
-              value="language"
-              className="text-text-muted data-[state=active]:bg-neon-primary rounded-lg px-6 py-2.5 text-sm font-medium transition-all data-[state=active]:text-black data-[state=active]:shadow-[0_0_20px_rgba(111,255,233,0.3)]"
-            >
-              Settings
-            </TabsTrigger>
-          </TabsList>
-
-          {/* Tab: Overview */}
-          <TabsContent
-            value="overview"
-            className="animate-in fade-in slide-in-from-bottom-4 space-y-8 duration-500"
-          >
-            <div className="grid gap-6">
-              <div className="flex items-center justify-between">
-                <h2 className="text-2xl font-bold text-white">Dashboard</h2>
-              </div>
-              <DashboardWidgets role={userRole} />
-
-              {/* Quick Stats / Summary for all roles */}
-              <div className="grid gap-6 md:grid-cols-2">
-                <Card className="border-white/10 bg-white/5 backdrop-blur">
-                  <CardHeader>
-                    <CardTitle className="text-white">Bio</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <p className="text-text-secondary italic">
-                      {profileData.bio ||
-                        "No bio yet. Go to Profile Details to add one!"}
-                    </p>
-                  </CardContent>
-                </Card>
-
-                <Card className="border-white/10 bg-white/5 backdrop-blur">
-                  <CardHeader>
-                    <CardTitle className="text-white">My Goals</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="flex flex-wrap gap-2">
-                      {profileData.goals.length > 0 ? (
-                        profileData.goals.map(goal => (
-                          <span
-                            key={goal}
-                            className="bg-neon-primary/10 text-neon-primary border-neon-primary/20 rounded-full border px-3 py-1 text-xs font-medium"
-                          >
-                            {roleQuestions?.goals.find(g => g.id === goal)
-                              ?.label || goal}
-                          </span>
-                        ))
-                      ) : (
-                        <span className="text-text-muted text-sm">
-                          No goals selected yet.
-                        </span>
-                      )}
+                {/* Info */}
+                <div className="flex flex-1 flex-col gap-4 sm:flex-row sm:items-start">
+                  <div className="flex-1">
+                    {/* Name + badge */}
+                    <div className="mb-1 flex flex-wrap items-center gap-2">
+                      <h1 className="text-2xl font-bold text-white sm:text-3xl">
+                        {profileData.name || "Utilizador"}
+                      </h1>
+                      <Badge className="border-[#02a7ff]/30 bg-[#02a7ff]/15 text-xs text-[#02a7ff]">
+                        <Shield className="mr-1 h-3 w-3" />
+                        Premium Member
+                      </Badge>
                     </div>
-                  </CardContent>
-                </Card>
+
+                    {/* Subtitle */}
+                    <p className="mb-4 text-sm text-white/50">
+                      {roleLabel[profileData.role] || "Atleta"}
+                      {profileData.location && ` • ${profileData.location}`}
+                    </p>
+
+                    {/* Stats */}
+                    <div className="flex gap-8">
+                      <StatItem
+                        value={
+                          (profileData.customFields?.matches as number) ?? 24
+                        }
+                        label="Partidas"
+                      />
+                      <StatItem
+                        value={
+                          (profileData.customFields?.goals as number) ?? 12
+                        }
+                        label="Gols"
+                      />
+                      <StatItem
+                        value={
+                          (profileData.customFields?.assists as number) ?? 8
+                        }
+                        label="Assistências"
+                      />
+                    </div>
+                  </div>
+
+                  {/* Edit button */}
+                  <div className="shrink-0">
+                    <Button
+                      onClick={() => setActiveTab("settings")}
+                      className="border border-[#02a7ff]/40 bg-[#02a7ff]/15 text-[#02a7ff] hover:bg-[#02a7ff]/25 hover:text-white"
+                      variant="outline"
+                    >
+                      Editar Perfil
+                    </Button>
+                  </div>
+                </div>
               </div>
             </div>
-          </TabsContent>
 
-          {/* Tab: Detalhes da Conta */}
-          <TabsContent value="account" className="space-y-6">
-            <Card className="border-border-default bg-overlay-light rounded-3xl border shadow-[0_35px_80px_-45px_var(--color-shadow-neon-soft)] backdrop-blur transition-colors">
-              <CardHeader>
-                <CardTitle className="text-text-primary flex items-center gap-2">
-                  <UserCircle className="text-neon-primary h-5 w-5" />
-                  Detalhes da Conta
-                </CardTitle>
-                <CardDescription className="text-text-secondary">
-                  Atualize suas informações básicas e foto de perfil
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-6">
-                {/* Foto de Perfil - Removed from here as it is in header now, but kept structure for other fields */}
-                <div className="hidden">
-                  {/* Hidden old avatar section to preserve structure if needed, or just remove */}
-                </div>
+            {/* ── Tabs ─────────────────────────────────────────────────────── */}
+            <div className="mb-6 flex gap-1 overflow-x-auto border-b border-white/8 pb-px">
+              {tabs.map((tab) => (
+                <button
+                  key={tab.id}
+                  type="button"
+                  onClick={() => setActiveTab(tab.id)}
+                  className={cn(
+                    "flex shrink-0 items-center gap-1.5 px-4 py-2.5 text-sm font-medium transition-all",
+                    activeTab === tab.id
+                      ? "border-b-2 border-[#02a7ff] text-[#02a7ff]"
+                      : "text-white/50 hover:text-white/80",
+                  )}
+                >
+                  {tab.icon}
+                  {tab.label}
+                </button>
+              ))}
+            </div>
 
-                <Separator className="bg-border-default" />
+            {/* ── Tab Content ──────────────────────────────────────────────── */}
 
-                {/* Nome */}
-                <div className="space-y-2">
-                  <Label
-                    htmlFor="name"
-                    className="text-text-primary flex flex-row items-center gap-2"
-                  >
-                    <User className="text-neon-primary h-4 w-4" />
-                    Nome completo
-                  </Label>
-                  <Input
-                    id="name"
-                    value={profileData.name}
-                    onChange={e => handleInputChange("name", e.target.value)}
-                    placeholder="Seu nome completo"
-                    className="text-text-primary placeholder:text-text-muted focus:border-neon-primary/50 focus:ring-neon-primary/20 rounded-xl border-white/10 bg-white/5 backdrop-blur transition-all"
-                  />
-                </div>
+            {/* Overview */}
+            {activeTab === "overview" && (
+              <div className="grid grid-cols-1 gap-6 lg:grid-cols-[320px_1fr]">
+                {/* Left column */}
+                <div className="space-y-4">
+                  {/* Bio */}
+                  <div className="rounded-2xl border border-white/8 bg-[#131928] p-5">
+                    <div className="mb-3 flex items-center gap-2">
+                      <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-[#02a7ff]/15">
+                        <Info className="h-4 w-4 text-[#02a7ff]" />
+                      </div>
+                      <h3 className="font-semibold text-white">Bio</h3>
+                    </div>
+                    <p className="text-sm leading-relaxed text-white/60">
+                      {profileData.bio ||
+                        "Apaixonado por futebol desde pequeno. Atleta amador buscando sempre melhorar o condicionamento físico e técnica."}
+                    </p>
+                  </div>
 
-                {/* Email */}
-                <div className="space-y-2">
-                  <Label
-                    htmlFor="email"
-                    className="text-text-primary flex flex-row items-center gap-2"
-                  >
-                    <Mail className="text-neon-primary h-4 w-4" />
-                    Email
-                  </Label>
-                  <Input
-                    id="email"
-                    type="email"
-                    value={profileData.email}
-                    onChange={e => handleInputChange("email", e.target.value)}
-                    placeholder="seu@email.com"
-                    disabled
-                    className="text-text-muted cursor-not-allowed rounded-xl border-white/10 bg-white/5 backdrop-blur"
-                  />
-                  <p className="text-text-muted text-xs">
-                    O email não pode ser alterado.
-                  </p>
-                </div>
-
-                {/* Localização */}
-                <div className="space-y-2">
-                  <Label
-                    htmlFor="location"
-                    className="text-text-primary flex flex-row items-center gap-2"
-                  >
-                    <MapPin className="text-neon-primary h-4 w-4" />
-                    Localização
-                  </Label>
-                  <Input
-                    id="location"
-                    value={profileData.location}
-                    onChange={e =>
-                      handleInputChange("location", e.target.value)
-                    }
-                    placeholder="Cidade, Estado ou País"
-                    className="text-text-primary placeholder:text-text-muted focus:border-neon-primary/50 focus:ring-neon-primary/20 rounded-xl border-white/10 bg-white/5 backdrop-blur transition-all"
-                  />
-                </div>
-
-                {/* Nacionalidade */}
-                <div className="space-y-2">
-                  <Label
-                    htmlFor="nationality"
-                    className="text-text-primary flex flex-row items-center gap-2"
-                  >
-                    <Globe className="text-neon-primary h-4 w-4" />
-                    Nacionalidade
-                  </Label>
-                  <CountrySelector
-                    value={profileData.nationality}
-                    onValueChange={value =>
-                      handleInputChange("nationality", value)
-                    }
-                    placeholder="Selecione sua nacionalidade"
-                    className="text-text-primary placeholder:text-text-muted focus:border-neon-primary/50 focus:ring-neon-primary/20 rounded-xl border-white/10 bg-white/5 backdrop-blur transition-all"
-                  />
-                </div>
-              </CardContent>
-            </Card>
-          </TabsContent>
-
-          {/* Tab: Idioma */}
-          <TabsContent value="language" className="space-y-6">
-            <Card className="border-border-default bg-overlay-light rounded-3xl border shadow-[0_35px_80px_-45px_var(--color-shadow-neon-soft)] backdrop-blur transition-colors">
-              <CardHeader>
-                <CardTitle className="text-text-primary flex items-center gap-2">
-                  <Globe className="text-neon-primary h-5 w-5" />
-                  Configurações de Idioma
-                </CardTitle>
-                <CardDescription className="text-text-secondary">
-                  Escolha seu idioma preferido para a interface
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-6">
-                <div className="space-y-2">
-                  <Label htmlFor="language" className="text-text-primary">
-                    Idioma da Interface
-                  </Label>
-                  <Select
-                    value={profileData.language}
-                    onValueChange={value =>
-                      handleInputChange("language", value)
-                    }
-                  >
-                    <SelectTrigger
-                      id="language"
-                      className="border-border-default bg-overlay-light text-text-primary placeholder:text-text-muted hover:bg-overlay-medium focus:border-border-focus focus:ring-border-focus backdrop-blur"
-                    >
-                      <SelectValue placeholder="Selecione um idioma" />
-                    </SelectTrigger>
-                    <SelectContent className="border-border-default bg-background-surface text-text-primary backdrop-blur">
-                      {languages.map(lang => (
-                        <SelectItem
-                          key={lang.value}
-                          value={lang.value}
-                          className="text-text-primary hover:bg-overlay-medium focus:bg-overlay-medium"
-                        >
-                          {lang.label}
-                        </SelectItem>
+                  {/* Attributes */}
+                  <div className="rounded-2xl border border-white/8 bg-[#131928] p-5">
+                    <div className="mb-4 flex items-center gap-2">
+                      <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-[#02a7ff]/15">
+                        <TrendingUp className="h-4 w-4 text-[#02a7ff]" />
+                      </div>
+                      <h3 className="font-semibold text-white">Atributos</h3>
+                    </div>
+                    <div className="space-y-3">
+                      {attributes.map((attr) => (
+                        <AttributeBar
+                          key={attr.label}
+                          label={attr.label}
+                          value={attr.value}
+                        />
                       ))}
-                    </SelectContent>
-                  </Select>
-                  <p className="text-text-muted text-xs">
-                    Esta configuração altera o idioma de todos os textos da
-                    interface.
-                  </p>
+                    </div>
+                  </div>
                 </div>
 
-                <Separator className="bg-border-default" />
-
-                <div className="border-neon-secondary/25 bg-neon-secondary/10 rounded-2xl border p-4 backdrop-blur">
-                  <p className="text-neon-primary text-sm">
-                    <strong className="text-text-primary">Nota:</strong> Alguns
-                    conteúdos podem continuar em seus idiomas originais,
-                    dependendo da disponibilidade.
-                  </p>
-                </div>
-              </CardContent>
-            </Card>
-          </TabsContent>
-
-          {/* Tab: Dados Fundamentais */}
-          <TabsContent value="details" className="space-y-6">
-            {/* Informações Pessoais */}
-            <Card className="border-border-default bg-overlay-light rounded-3xl border shadow-[0_35px_80px_-45px_var(--color-shadow-neon-soft)] backdrop-blur transition-colors">
-              <CardHeader>
-                <CardTitle className="text-text-primary">
-                  Informações Pessoais
-                </CardTitle>
-                <CardDescription className="text-text-secondary">
-                  Complete seu perfil com informações adicionais
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-6">
-                {/* Bio */}
-                <div className="space-y-2">
-                  <Label htmlFor="bio" className="text-text-primary">
-                    Sobre você
-                  </Label>
-                  <Textarea
-                    id="bio"
-                    value={profileData.bio}
-                    onChange={e => handleInputChange("bio", e.target.value)}
-                    placeholder="Conte um pouco sobre você..."
-                    rows={4}
-                    className="border-border-default bg-overlay-light text-text-primary placeholder:text-text-muted focus:border-border-focus focus:ring-border-focus backdrop-blur"
-                  />
-                  <p className="text-text-muted text-xs">
-                    Compartilhe suas experiências, objetivos ou interesses.
-                  </p>
-                </div>
-
-                <Separator className="bg-border-default" />
-
-                {/* Dynamic Fields based on Role */}
-                {roleQuestions && (
-                  <div className="space-y-6">
-                    {/* Personal Info Questions */}
-                    {roleQuestions.personalInfo.map(question => (
-                      <div key={question.id} className="space-y-2">
-                        <Label
-                          htmlFor={question.id}
-                          className="text-text-primary flex items-center gap-2"
+                {/* Right column */}
+                <div className="space-y-6">
+                  {/* Teams */}
+                  <div>
+                    <div className="mb-3 flex items-center justify-between">
+                      <h3 className="text-lg font-semibold text-white">
+                        Equipes Atuais
+                      </h3>
+                      <button
+                        type="button"
+                        className="text-sm font-medium text-[#02a7ff] hover:underline"
+                      >
+                        Ver todas
+                      </button>
+                    </div>
+                    <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+                      {mockTeams.map((team) => (
+                        <div
+                          key={team.id}
+                          className="flex items-center gap-3 rounded-xl border border-white/8 bg-[#131928] p-4 transition-colors hover:border-white/15"
                         >
-                          {question.icon && (
-                            <question.icon className="text-neon-primary h-4 w-4" />
-                          )}
-                          {question.label}
-                        </Label>
-
-                        {question.type === "select" && question.options && (
-                          <Select
-                            value={
-                              (question.id === "experience"
-                                ? profileData.experience
-                                : question.id === "availability"
-                                  ? profileData.availability
-                                  : (profileData.customFields[question.id] as string)) || ""
-                            }
-                            onValueChange={value =>
-                              handleCustomFieldChange(question.id, value)
-                            }
+                          <div
+                            className={cn(
+                              "flex h-10 w-10 shrink-0 items-center justify-center rounded-xl",
+                              team.color,
+                            )}
                           >
-                            <SelectTrigger
-                              id={question.id}
-                              className="border-border-default bg-overlay-light text-text-primary placeholder:text-text-muted hover:bg-overlay-medium focus:border-border-focus focus:ring-border-focus backdrop-blur"
-                            >
-                              <SelectValue
-                                placeholder={
-                                  question.placeholder || "Selecione"
-                                }
-                              />
-                            </SelectTrigger>
-                            <SelectContent className="border-border-default bg-background-surface text-text-primary backdrop-blur">
-                              {question.options.map(option => (
-                                <SelectItem
-                                  key={option.value}
-                                  value={option.value}
-                                  className="text-text-primary hover:bg-overlay-medium focus:bg-overlay-medium"
-                                >
-                                  {option.label}
-                                </SelectItem>
-                              ))}
-                            </SelectContent>
-                          </Select>
-                        )}
-
-                        {question.type === "text" && (
-                          <Input
-                            id={question.id}
-                            value={(profileData.customFields[question.id] as string) || ""}
-                            onChange={e =>
-                              handleCustomFieldChange(
-                                question.id,
-                                e.target.value,
-                              )
-                            }
-                            placeholder={question.placeholder}
-                            className="border-border-default bg-overlay-light text-text-primary placeholder:text-text-muted focus:border-border-focus focus:ring-border-focus backdrop-blur"
-                          />
-                        )}
-
-                        {question.type === "radio" && question.options && (
-                          <RadioGroup
-                            value={
-                              (question.id === "availability"
-                                ? profileData.availability
-                                : (profileData.customFields[question.id] as string)) || ""
-                            }
-                            onValueChange={value =>
-                              handleCustomFieldChange(question.id, value)
-                            }
-                            className="flex flex-col space-y-2"
-                          >
-                            {question.options.map(option => (
-                              <div
-                                key={option.value}
-                                className="flex items-center space-x-2"
-                              >
-                                <RadioGroupItem
-                                  value={option.value}
-                                  id={`${question.id}-${option.value}`}
-                                  className="border-neon-primary text-neon-primary"
-                                />
-                                <Label
-                                  htmlFor={`${question.id}-${option.value}`}
-                                  className="text-text-secondary cursor-pointer"
-                                >
-                                  {option.label}
-                                </Label>
-                              </div>
-                            ))}
-                          </RadioGroup>
-                        )}
-
-                        {question.type === "multiselect" &&
-                          question.options && (
-                            <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
-                              {question.options.map(option => {
-                                const currentValues =
-                                  (profileData.customFields[
-                                    question.id
-                                  ] as string[]) || [];
-                                const isSelected = currentValues.includes(
-                                  option.value,
-                                );
-
-                                return (
-                                  <div
-                                    key={option.value}
-                                    className={`flex cursor-pointer items-center gap-2 rounded-lg border p-3 transition-all ${
-                                      isSelected
-                                        ? "border-neon-primary bg-neon-primary/10"
-                                        : "border-border-default bg-overlay-light hover:border-neon-primary/50"
-                                    }`}
-                                    onClick={() => {
-                                      const newValues = isSelected
-                                        ? currentValues.filter(
-                                            v => v !== option.value,
-                                          )
-                                        : [...currentValues, option.value];
-                                      handleCustomFieldChange(
-                                        question.id,
-                                        newValues,
-                                      );
-                                    }}
-                                  >
-                                    <Checkbox
-                                      checked={isSelected}
-                                      className="border-neon-primary data-[state=checked]:bg-neon-primary data-[state=checked]:text-slate-900"
-                                    />
-                                    <span className="text-text-primary text-sm">
-                                      {option.label}
-                                    </span>
-                                  </div>
-                                );
-                              })}
+                            <Shield className="h-5 w-5 text-white" />
+                          </div>
+                          <div className="min-w-0 flex-1">
+                            <div className="truncate text-sm font-semibold text-white">
+                              {team.name}
                             </div>
-                          )}
-                      </div>
-                    ))}
+                            <div className="text-xs text-white/40">
+                              {team.role} • {team.players} Jogadores
+                            </div>
+                          </div>
+                          <ChevronRight className="h-4 w-4 shrink-0 text-white/30" />
+                        </div>
+                      ))}
+                    </div>
+                  </div>
 
-                    {/* Custom Fields Questions */}
-                    {roleQuestions.customFields.map(question => (
-                      <div key={question.id} className="space-y-2">
-                        <Label
-                          htmlFor={question.id}
-                          className="text-text-primary flex items-center gap-2"
+                  {/* Recent Activity */}
+                  <div>
+                    <h3 className="mb-3 text-lg font-semibold text-white">
+                      Atividade Recente
+                    </h3>
+                    <div className="overflow-hidden rounded-2xl border border-white/8 bg-[#131928]">
+                      {mockActivities.map((activity, i) => (
+                        <div
+                          key={activity.id}
+                          className={cn(
+                            "flex items-start gap-3 px-5 py-4",
+                            i < mockActivities.length - 1 &&
+                              "border-b border-white/5",
+                          )}
                         >
-                          {question.icon && (
-                            <question.icon className="text-neon-primary h-4 w-4" />
-                          )}
-                          {question.label}
-                        </Label>
-
-                        {question.type === "select" && question.options && (
-                          <Select
-                            value={
-                              (question.id === "experience"
-                                ? profileData.experience
-                                : question.id === "availability"
-                                  ? profileData.availability
-                                  : (profileData.customFields[question.id] as string)) || ""
-                            }
-                            onValueChange={value =>
-                              handleCustomFieldChange(question.id, value)
-                            }
+                          <div
+                            className={cn(
+                              "mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-xl",
+                              activity.bg,
+                            )}
                           >
-                            <SelectTrigger
-                              id={question.id}
-                              className="border-border-default bg-overlay-light text-text-primary placeholder:text-text-muted hover:bg-overlay-medium focus:border-border-focus focus:ring-border-focus backdrop-blur"
-                            >
-                              <SelectValue
-                                placeholder={
-                                  question.placeholder || "Selecione"
-                                }
-                              />
-                            </SelectTrigger>
-                            <SelectContent className="border-border-default bg-background-surface text-text-primary backdrop-blur">
-                              {question.options.map(option => (
-                                <SelectItem
-                                  key={option.value}
-                                  value={option.value}
-                                  className="text-text-primary hover:bg-overlay-medium focus:bg-overlay-medium"
-                                >
-                                  {option.label}
-                                </SelectItem>
-                              ))}
-                            </SelectContent>
-                          </Select>
-                        )}
+                            {activity.icon}
+                          </div>
+                          <div>
+                            <p className="text-sm text-white/70">
+                              {activity.text}
+                            </p>
+                            <p className="mt-0.5 text-xs text-white/35">
+                              {activity.time}
+                              {activity.location && ` • ${activity.location}`}
+                            </p>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
 
-                        {question.type === "text" && (
-                          <Input
-                            id={question.id}
-                            value={(profileData.customFields[question.id] as string) || ""}
-                            onChange={e =>
-                              handleCustomFieldChange(
-                                question.id,
-                                e.target.value,
-                              )
-                            }
-                            placeholder={question.placeholder}
-                            className="border-border-default bg-overlay-light text-text-primary placeholder:text-text-muted focus:border-border-focus focus:ring-border-focus backdrop-blur"
-                          />
-                        )}
-
-                        {question.type === "radio" && question.options && (
-                          <RadioGroup
-                            value={
-                              (question.id === "availability"
-                                ? profileData.availability
-                                : (profileData.customFields[question.id] as string)) || ""
-                            }
-                            onValueChange={value =>
-                              handleCustomFieldChange(question.id, value)
-                            }
-                            className="flex flex-col space-y-2"
-                          >
-                            {question.options.map(option => (
-                              <div
-                                key={option.value}
-                                className="flex items-center space-x-2"
-                              >
-                                <RadioGroupItem
-                                  value={option.value}
-                                  id={`${question.id}-${option.value}`}
-                                  className="border-neon-primary text-neon-primary"
-                                />
-                                <Label
-                                  htmlFor={`${question.id}-${option.value}`}
-                                  className="text-text-secondary cursor-pointer"
-                                >
-                                  {option.label}
-                                </Label>
-                              </div>
-                            ))}
-                          </RadioGroup>
-                        )}
+                  {/* Next Match */}
+                  <div>
+                    <h3 className="mb-3 text-lg font-semibold text-white">
+                      Próxima Partida
+                    </h3>
+                    <div className="relative overflow-hidden rounded-2xl border border-white/8">
+                      {/* Map placeholder */}
+                      <div className="h-48 bg-[linear-gradient(135deg,#1a2a1a_0%,#2a3a2a_50%,#1a2a1a_100%)]">
+                        <div className="flex h-full items-center justify-center">
+                          <MapPin className="h-8 w-8 text-white/20" />
+                        </div>
                       </div>
-                    ))}
-
-                    <Separator className="bg-border-default" />
-
-                    {/* Goals Section */}
-                    <div className="space-y-4">
-                      <Label className="text-text-primary flex items-center gap-2">
-                        <Target className="text-neon-primary h-4 w-4" />
-                        Objetivos
-                      </Label>
-                      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-                        {roleQuestions.goals.map(goal => (
-                          <GoalCard
-                            key={goal.id}
-                            goal={goal as any}
-                            isSelected={profileData.goals.includes(goal.id)}
-                            onToggle={toggleGoal}
-                          />
-                        ))}
+                      {/* Overlay info */}
+                      <div className="absolute right-0 bottom-0 left-0 flex items-center justify-between bg-[#0e1117]/90 px-5 py-4 backdrop-blur-sm">
+                        <div>
+                          <p className="mb-0.5 text-xs font-semibold tracking-wider text-[#02a7ff] uppercase">
+                            Sábado, 15:00
+                          </p>
+                          <p className="text-sm font-semibold text-white">
+                            Arena Ibirapuera • Campo 2
+                          </p>
+                        </div>
+                        <Button
+                          size="sm"
+                          className="bg-[#02a7ff] text-white hover:bg-[#0290e6]"
+                          onClick={() => router.push("/arena/calendar")}
+                        >
+                          Ver Detalhes
+                        </Button>
                       </div>
                     </div>
                   </div>
-                )}
-              </CardContent>
-            </Card>
-
-            {/* Preferências */}
-            <Card className="border-border-default bg-overlay-light rounded-3xl border shadow-[0_35px_80px_-45px_var(--color-shadow-neon-soft)] backdrop-blur transition-colors">
-              <CardHeader>
-                <CardTitle className="text-text-primary">
-                  Preferências
-                </CardTitle>
-                <CardDescription className="text-text-secondary">
-                  Configure suas preferências de notificações e comunicação
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-6">
-                <div className="flex items-center justify-between">
-                  <div className="space-y-0.5">
-                    <Label
-                      htmlFor="notifications"
-                      className="text-text-primary flex items-center gap-2"
-                    >
-                      <Bell className="text-neon-primary h-4 w-4" />
-                      Notificações
-                    </Label>
-                    <p className="text-text-secondary text-sm">
-                      Receba notificações sobre atividades e atualizações
-                    </p>
-                  </div>
-                  <Switch
-                    id="notifications"
-                    checked={profileData.notificationsEnabled}
-                    onCheckedChange={checked =>
-                      handleInputChange("notificationsEnabled", checked)
-                    }
-                  />
                 </div>
-
-                <Separator className="bg-border-default" />
-
-                <div className="flex items-center justify-between">
-                  <div className="space-y-0.5">
-                    <Label
-                      htmlFor="newsletter"
-                      className="text-text-primary flex items-center gap-2"
-                    >
-                      <Newspaper className="text-neon-primary h-4 w-4" />
-                      Newsletter
-                    </Label>
-                    <p className="text-text-secondary text-sm">
-                      Receba emails com novidades e dicas
-                    </p>
-                  </div>
-                  <Switch
-                    id="newsletter"
-                    checked={profileData.newsletterEnabled}
-                    onCheckedChange={checked =>
-                      handleInputChange("newsletterEnabled", checked)
-                    }
-                  />
-                </div>
-
-                <Separator className="bg-border-default" />
-
-                <div className="flex items-center justify-between">
-                  <div className="space-y-0.5">
-                    <Label
-                      htmlFor="earlyAccess"
-                      className="text-text-primary flex items-center gap-2"
-                    >
-                      <Sparkles className="text-neon-primary h-4 w-4" />
-                      Acesso Antecipado
-                    </Label>
-                    <p className="text-text-secondary text-sm">
-                      Receba acesso a novos recursos antes do lançamento
-                    </p>
-                  </div>
-                  <Switch
-                    id="earlyAccess"
-                    checked={profileData.earlyAccessEnabled}
-                    onCheckedChange={checked =>
-                      handleInputChange("earlyAccessEnabled", checked)
-                    }
-                  />
-                </div>
-              </CardContent>
-            </Card>
-          </TabsContent>
-
-          {/* Tab: Performance - Apenas para Jogadores */}
-          {userRole === "PLAYER" && (
-            <TabsContent value="performance" className="space-y-6">
-              <Card className="border-border-default bg-overlay-light rounded-3xl border shadow-[0_35px_80px_-45px_var(--color-shadow-neon-soft)] backdrop-blur transition-colors">
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2 text-slate-900 dark:text-white">
-                    Performance
-                  </CardTitle>
-                  <CardDescription className="text-text-secondary">
-                    Visualize suas estatísticas de desempenho
-                  </CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <PerformanceTab />
-                </CardContent>
-              </Card>
-            </TabsContent>
-          )}
-        </Tabs>
-
-        {/* Botão de Salvar */}
-        <div className="mt-8 flex justify-end gap-4">
-          <Button
-            onClick={handleSave}
-            disabled={saving}
-            className="group bg-emerald-500 font-semibold text-white shadow-[0_16px_45px_-20px_rgba(16,185,129,0.45)] transition-all duration-300 hover:-translate-y-1 hover:bg-emerald-600 disabled:opacity-50 disabled:hover:translate-y-0 dark:bg-[#24ffe6] dark:text-slate-900 dark:shadow-[0_16px_45px_-20px_rgba(36,255,230,0.9)] dark:hover:bg-[#24ffe6]/90"
-          >
-            {saving ? (
-              <>
-                <div className="mr-2 h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent dark:border-slate-900" />
-                Salvando...
-              </>
-            ) : (
-              <>
-                <Save className="mr-2 h-4 w-4 transition-transform group-hover:scale-110" />
-                Salvar Alterações
-              </>
+              </div>
             )}
-          </Button>
+
+            {/* Teams Tab */}
+            {activeTab === "teams" && (
+              <div className="rounded-2xl border border-white/8 bg-[#131928] p-8 text-center">
+                <Users className="mx-auto mb-3 h-12 w-12 text-white/20" />
+                <h3 className="mb-1 text-lg font-semibold text-white">
+                  Minhas Equipes
+                </h3>
+                <p className="mb-4 text-sm text-white/40">
+                  Gere as tuas equipas e convites pendentes.
+                </p>
+                <Button
+                  onClick={() => router.push("/arena")}
+                  className="bg-[#02a7ff] text-white hover:bg-[#0290e6]"
+                >
+                  Explorar Equipes
+                  <ArrowRight className="ml-2 h-4 w-4" />
+                </Button>
+              </div>
+            )}
+
+            {/* Activities Tab */}
+            {activeTab === "activities" && (
+              <div className="overflow-hidden rounded-2xl border border-white/8 bg-[#131928]">
+                <div className="border-b border-white/5 px-5 py-4">
+                  <h3 className="font-semibold text-white">
+                    Histórico de Atividades
+                  </h3>
+                </div>
+                {mockActivities.map((activity, i) => (
+                  <div
+                    key={activity.id}
+                    className={cn(
+                      "flex items-start gap-3 px-5 py-4",
+                      i < mockActivities.length - 1 && "border-b border-white/5",
+                    )}
+                  >
+                    <div
+                      className={cn(
+                        "mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-xl",
+                        activity.bg,
+                      )}
+                    >
+                      {activity.icon}
+                    </div>
+                    <div>
+                      <p className="text-sm text-white/70">{activity.text}</p>
+                      <p className="mt-0.5 text-xs text-white/35">
+                        {activity.time}
+                        {activity.location && ` • ${activity.location}`}
+                      </p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {/* Settings Tab */}
+            {activeTab === "settings" && (
+              <div className="space-y-4">
+                {/* Personal info */}
+                <div className="rounded-2xl border border-white/8 bg-[#131928] p-6">
+                  <h3 className="mb-5 font-semibold text-white">
+                    Informações Pessoais
+                  </h3>
+                  <div className="grid gap-4 sm:grid-cols-2">
+                    <div className="space-y-1.5">
+                      <Label className="text-xs text-white/50">Nome</Label>
+                      <Input
+                        value={profileData.name}
+                        onChange={(e) =>
+                          setProfileData((p) => ({
+                            ...p,
+                            name: e.target.value,
+                          }))
+                        }
+                        className="border-white/10 bg-white/5 text-white placeholder:text-white/30 focus:border-[#02a7ff]/50"
+                      />
+                    </div>
+                    <div className="space-y-1.5">
+                      <Label className="text-xs text-white/50">Email</Label>
+                      <Input
+                        value={profileData.email}
+                        disabled
+                        className="border-white/10 bg-white/5 text-white/40 placeholder:text-white/30"
+                      />
+                    </div>
+                    <div className="space-y-1.5">
+                      <Label className="text-xs text-white/50">
+                        Localização
+                      </Label>
+                      <Input
+                        value={profileData.location || ""}
+                        placeholder="Cidade, País"
+                        onChange={(e) =>
+                          setProfileData((p) => ({
+                            ...p,
+                            location: e.target.value,
+                          }))
+                        }
+                        className="border-white/10 bg-white/5 text-white placeholder:text-white/30 focus:border-[#02a7ff]/50"
+                      />
+                    </div>
+                    <div className="space-y-1.5">
+                      <Label className="text-xs text-white/50">
+                        Disponibilidade
+                      </Label>
+                      <Input
+                        value={profileData.availability || ""}
+                        placeholder="Ex: Fins de semana"
+                        onChange={(e) =>
+                          setProfileData((p) => ({
+                            ...p,
+                            availability: e.target.value,
+                          }))
+                        }
+                        className="border-white/10 bg-white/5 text-white placeholder:text-white/30 focus:border-[#02a7ff]/50"
+                      />
+                    </div>
+                    <div className="space-y-1.5 sm:col-span-2">
+                      <Label className="text-xs text-white/50">Bio</Label>
+                      <Textarea
+                        value={profileData.bio || ""}
+                        placeholder="Conta um pouco sobre ti..."
+                        rows={3}
+                        onChange={(e) =>
+                          setProfileData((p) => ({
+                            ...p,
+                            bio: e.target.value,
+                          }))
+                        }
+                        className="border-white/10 bg-white/5 text-white placeholder:text-white/30 focus:border-[#02a7ff]/50"
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                {/* Notifications */}
+                <div className="rounded-2xl border border-white/8 bg-[#131928] p-6">
+                  <h3 className="mb-5 font-semibold text-white">
+                    Notificações & Privacidade
+                  </h3>
+                  <div className="space-y-4">
+                    {[
+                      {
+                        key: "notificationsEnabled" as keyof ProfileData,
+                        label: "Notificações push",
+                        desc: "Receber alertas de partidas e convites",
+                      },
+                      {
+                        key: "newsletterEnabled" as keyof ProfileData,
+                        label: "Newsletter",
+                        desc: "Receber novidades e dicas por email",
+                      },
+                      {
+                        key: "earlyAccessEnabled" as keyof ProfileData,
+                        label: "Acesso antecipado",
+                        desc: "Testar novas funcionalidades em primeira mão",
+                      },
+                    ].map((item) => (
+                      <div
+                        key={item.key}
+                        className="flex items-center justify-between gap-4"
+                      >
+                        <div>
+                          <div className="text-sm font-medium text-white">
+                            {item.label}
+                          </div>
+                          <div className="text-xs text-white/40">
+                            {item.desc}
+                          </div>
+                        </div>
+                        <Switch
+                          checked={profileData[item.key] as boolean}
+                          onCheckedChange={(v) =>
+                            setProfileData((p) => ({ ...p, [item.key]: v }))
+                          }
+                        />
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Actions */}
+                <div className="flex flex-col gap-3 sm:flex-row sm:justify-between">
+                  <Button
+                    onClick={handleSave}
+                    disabled={saving}
+                    className="bg-[#02a7ff] text-white hover:bg-[#0290e6]"
+                  >
+                    {saving ? (
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    ) : (
+                      <Save className="mr-2 h-4 w-4" />
+                    )}
+                    {saving ? "A guardar..." : "Guardar Alterações"}
+                  </Button>
+                  <Button
+                    variant="outline"
+                    onClick={handleSignOut}
+                    className="border-red-500/30 bg-red-500/10 text-red-400 hover:bg-red-500/20 hover:text-red-300"
+                  >
+                    <LogOut className="mr-2 h-4 w-4" />
+                    Terminar Sessão
+                  </Button>
+                </div>
+              </div>
+            )}
+          </>
+        )}
+      </main>
+
+      {/* ── Footer ─────────────────────────────────────────────────────────── */}
+      <footer className="mt-16 border-t border-white/8 bg-[#0e1117]">
+        <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-3 px-4 py-6 text-xs text-white/30 sm:flex-row md:px-6">
+          <div className="flex items-center gap-1.5">
+            <div className="flex h-5 w-5 items-center justify-center rounded bg-[#02a7ff]/20">
+              <Swords className="h-3 w-3 text-[#02a7ff]/60" />
+            </div>
+            <span>© 2024 Jogabola. Todos os direitos reservados.</span>
+          </div>
+          <div className="flex items-center gap-4">
+            <Link href="/terms" className="hover:text-white/60">
+              Termos
+            </Link>
+            <Link href="/privacy" className="hover:text-white/60">
+              Privacidade
+            </Link>
+            <Link href="/support" className="hover:text-white/60">
+              Suporte
+            </Link>
+          </div>
         </div>
-      </div>
+      </footer>
     </div>
   );
 }

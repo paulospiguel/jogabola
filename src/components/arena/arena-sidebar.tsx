@@ -1,14 +1,6 @@
 "use client";
 
-import {
-  BarChart2,
-  Calendar,
-  LayoutDashboard,
-  Settings,
-  ShieldCheck,
-  Users,
-  Wallet,
-} from "lucide-react";
+import { BarChart2, Calendar, LayoutDashboard, Settings, ShieldCheck, Users, Wallet } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
@@ -18,8 +10,6 @@ type ArenaSidebarProps = {
   isOpen: boolean;
   onClose: () => void;
 };
-
-const ARENA_COLOR = "var(--color-journey-arena)";
 
 const managementItems = [
   { title: "Dashboard", href: "/arena", icon: LayoutDashboard },
@@ -37,48 +27,36 @@ export default function ArenaSidebar({ isOpen, onClose }: ArenaSidebarProps) {
   const pathname = usePathname();
 
   const sidebarContent = (
-    <div className="flex h-full flex-col py-6 px-4">
+    <div className="flex h-full flex-col px-4 py-6">
       {/* Logo */}
       <div className="mb-10 flex items-center justify-center gap-3 px-2">
-        <Logo size={"small"} />
+        <Logo size="small" />
       </div>
 
       {/* Navigation */}
-      <div className="flex-1 overflow-y-auto overflow-x-hidden no-scrollbar">
+      <div className="no-scrollbar flex-1 overflow-y-auto overflow-x-hidden">
         {/* Management Section */}
         <div className="mb-8">
-          <p className="mb-3 px-3 text-[10px] font-bold uppercase tracking-widest text-white/40">
+          <p className="mb-3 px-3 text-[10px] font-bold uppercase tracking-[0.3em] text-[#6fffe9]/50">
             Management
           </p>
           <nav className="flex flex-col gap-1">
             {managementItems.map(item => {
               const isActive = pathname === item.href;
               const Icon = item.icon;
-
               return (
                 <Link
                   key={item.href}
                   href={item.href}
                   onClick={onClose}
                   className={cn(
-                    "flex items-center gap-3 no-underline rounded-2xl px-3 py-3 w-full transition-all duration-200 font-bold text-sm",
-                    !isActive
-                      ? "text-white/60 hover:bg-white/5 hover:text-white"
-                      : "",
-                  )}
-                  style={
+                    "flex w-full items-center gap-3 rounded-2xl px-3 py-3 text-sm font-bold no-underline transition-all duration-200",
                     isActive
-                      ? {
-                          backgroundColor: ARENA_COLOR,
-                          color: "#000",
-                        }
-                      : undefined
-                  }
+                      ? "bg-neon-secondary text-black shadow-[0_8px_25px_-8px_rgba(36,255,230,0.6)]"
+                      : "text-white/60 hover:bg-white/8 hover:text-white",
+                  )}
                 >
-                  <Icon
-                    className="h-5 w-5 shrink-0"
-                    strokeWidth={isActive ? 2.5 : 2}
-                  />
+                  <Icon className="h-5 w-5 shrink-0" strokeWidth={isActive ? 2.5 : 2} />
                   <span>{item.title}</span>
                 </Link>
               );
@@ -88,38 +66,26 @@ export default function ArenaSidebar({ isOpen, onClose }: ArenaSidebarProps) {
 
         {/* Club Admin Section */}
         <div>
-          <p className="mb-3 px-3 text-[10px] font-bold uppercase tracking-widest text-white/40">
+          <p className="mb-3 px-3 text-[10px] font-bold uppercase tracking-[0.3em] text-[#6fffe9]/50">
             Club Admin
           </p>
           <nav className="flex flex-col gap-1">
             {adminItems.map(item => {
               const isActive = pathname === item.href;
               const Icon = item.icon;
-
               return (
                 <Link
                   key={item.href}
                   href={item.href}
                   onClick={onClose}
                   className={cn(
-                    "flex items-center gap-3 no-underline rounded-2xl px-3 py-3 w-full transition-all duration-200 font-bold text-sm",
-                    !isActive
-                      ? "text-white/60 hover:bg-white/5 hover:text-white"
-                      : "",
-                  )}
-                  style={
+                    "flex w-full items-center gap-3 rounded-2xl px-3 py-3 text-sm font-bold no-underline transition-all duration-200",
                     isActive
-                      ? {
-                          backgroundColor: ARENA_COLOR,
-                          color: "#000",
-                        }
-                      : undefined
-                  }
+                      ? "bg-neon-secondary text-black shadow-[0_8px_25px_-8px_rgba(36,255,230,0.6)]"
+                      : "text-white/60 hover:bg-white/8 hover:text-white",
+                  )}
                 >
-                  <Icon
-                    className="h-5 w-5 shrink-0"
-                    strokeWidth={isActive ? 2.5 : 2}
-                  />
+                  <Icon className="h-5 w-5 shrink-0" strokeWidth={isActive ? 2.5 : 2} />
                   <span>{item.title}</span>
                 </Link>
               );
@@ -130,32 +96,24 @@ export default function ArenaSidebar({ isOpen, onClose }: ArenaSidebarProps) {
 
       {/* Bottom: Pro Plan Card */}
       <div className="mt-auto pt-6">
-        <div className="rounded-2xl border border-white/8 bg-[#1a1a1a] p-4 flex flex-col gap-3 relative overflow-hidden">
-          <div className="flex items-center gap-3 z-10">
-            <div
-              className="flex h-8 w-8 items-center justify-center rounded-full"
-              style={{ backgroundColor: "rgba(188,255,0,0.15)" }}
-            >
-              <ShieldCheck
-                className="h-4 w-4"
-                style={{ color: ARENA_COLOR }}
-                strokeWidth={3}
-              />
+        <div className="relative overflow-hidden rounded-2xl border border-[#6fffe9]/20 bg-white/5 p-4 backdrop-blur">
+          {/* Glow accent */}
+          <div className="pointer-events-none absolute -top-6 -right-6 h-20 w-20 rounded-full bg-neon-secondary/15 blur-2xl" />
+          <div className="relative z-10 flex items-center gap-3">
+            <div className="flex h-8 w-8 items-center justify-center rounded-full bg-neon-secondary/15">
+              <ShieldCheck className="h-4 w-4 text-[#6fffe9]" strokeWidth={2.5} />
             </div>
             <div>
-              <p className="text-sm font-bold text-white leading-tight">
-                Pro Plan
-              </p>
-              <p className="text-[10px] text-white/40 leading-tight mt-0.5">
+              <p className="text-sm font-bold leading-tight text-white">Pro Plan</p>
+              <p className="mt-0.5 text-[10px] leading-tight text-white/40">
                 Active until Dec 2024
               </p>
             </div>
           </div>
           <Link
             href="/arena/billing"
-            className="rounded-xl py-2 px-4 text-xs font-bold transition hover:bg-white/5 text-center z-10 w-full"
-            style={{ color: ARENA_COLOR, border: `1px solid ${ARENA_COLOR}` }}
             onClick={onClose}
+            className="relative z-10 mt-3 flex w-full items-center justify-center rounded-xl border border-[#6fffe9]/40 py-2 px-4 text-xs font-bold text-[#6fffe9] transition-all duration-200 hover:border-[#6fffe9]/70 hover:bg-[#6fffe9]/10"
           >
             Manage Billing
           </Link>
@@ -171,7 +129,7 @@ export default function ArenaSidebar({ isOpen, onClose }: ArenaSidebarProps) {
         <button
           type="button"
           aria-label="Fechar menu"
-          className="fixed inset-0 z-40 bg-black/70 backdrop-blur-sm md:hidden w-full cursor-default"
+          className="fixed inset-0 z-40 w-full cursor-default bg-black/70 backdrop-blur-sm md:hidden"
           onClick={onClose}
         />
       )}
@@ -179,8 +137,8 @@ export default function ArenaSidebar({ isOpen, onClose }: ArenaSidebarProps) {
       {/* Sidebar */}
       <aside
         className={cn(
-          "fixed top-0 left-0 z-50 h-screen w-64 overflow-hidden transition-transform duration-300 md:translate-x-0",
-          "bg-[#0d0d0d] border-r border-white/5 shadow-2xl",
+          "fixed top-0 left-0 z-50 h-screen w-64 overflow-hidden border-r border-white/8 shadow-2xl transition-transform duration-300 md:translate-x-0",
+          "bg-[#050312]",
           isOpen ? "translate-x-0" : "-translate-x-full",
         )}
       >

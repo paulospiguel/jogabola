@@ -357,7 +357,7 @@ export function ConfirmationStep({
           )}
 
         {/* Mensagem final */}
-        <div className="rounded-xl border border-brand-green/30 bg-gradient-to-br from-brand-green/10 to-transparent p-4 text-center sm:rounded-2xl sm:p-6">
+        <div className="rounded-xl border border-brand-green/30 bg-linear-to-br from-brand-green/10 to-transparent p-4 text-center sm:rounded-2xl sm:p-6">
           <p className="text-sm text-white/80 sm:text-base">
             <span className="font-semibold text-brand-green">{tc("allGood")}</span>{" "}
             {tc("proceed")}

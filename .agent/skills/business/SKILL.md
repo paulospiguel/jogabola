@@ -103,11 +103,8 @@ e acessível.
 Desenvolvido por **Paulo Spiguel**  
 Fullstack Developer — Next.js • TypeScript • Drizzle • Tailwind • Better Auth
 
-## Internal Rule Files
+## references
 
-When applying this skill, always consult and follow
-all documents located in the /rules directory.
-
-Treat each file inside /rules as mandatory behavioral extensions.
+- [PRD](.agent/skills/business/references/prd-agent.md)
 
 END SKILL

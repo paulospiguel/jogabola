@@ -23,10 +23,10 @@ export function OnboardIntroStep() {
         >
           <Logo />
         </motion.div>
-        <h1 className="bg-gradient-to-r from-[#00cfb1] to-[#1effbf] bg-clip-text text-3xl font-bold text-transparent sm:text-4xl md:text-5xl">
+        <h1 className="bg-linear-to-r from-[#00cfb1] to-active-text bg-clip-text text-3xl font-bold text-transparent sm:text-4xl md:text-5xl">
           {t("title")}
         </h1>
-        <p className="mx-auto max-w-2xl text-base leading-relaxed text-[#ba93ff] sm:text-lg md:text-xl">
+        <p className="mx-auto max-w-2xl text-base leading-relaxed text-secondary-text sm:text-lg md:text-xl">
           {t("subtitle")}
         </p>
       </div>

@@ -2,6 +2,7 @@
 
 import { Bell, Home, Menu, Search, User } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
 import { useState } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
@@ -15,9 +16,6 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { signOut } from "@/lib/auth-client";
-import { useTranslations } from "next-intl";
-
-const ARENA_COLOR = "var(--color-journey-arena)";
 
 type ArenaHeaderProps = {
   onMenuToggle: () => void;
@@ -39,7 +37,7 @@ export default function ArenaHeader({ onMenuToggle }: ArenaHeaderProps) {
   };
 
   return (
-    <header className="w-full border-b border-white/6 bg-[#111111]/95 backdrop-blur-xl">
+    <header className="w-full border-b border-white/8 bg-[#050312]/95 backdrop-blur-xl">
       <div className="flex h-16 items-center gap-4 px-4 md:px-6">
         {/* Mobile menu toggle */}
         <Button
@@ -58,7 +56,7 @@ export default function ArenaHeader({ onMenuToggle }: ArenaHeaderProps) {
           <input
             type="search"
             placeholder={t("arena.header.searchPlaceholder")}
-            className="w-full rounded-xl border border-white/8 bg-white/5 py-2 pl-9 pr-4 text-sm text-white/80 placeholder:text-white/30 focus:border-white/20 focus:outline-none focus:ring-0 transition"
+            className="w-full rounded-xl border border-white/8 bg-white/5 py-2 pl-9 pr-4 text-sm text-white/80 placeholder:text-white/30 backdrop-blur transition focus:border-[#6fffe9]/40 focus:outline-none focus:ring-0"
           />
         </div>
 
@@ -74,10 +72,7 @@ export default function ArenaHeader({ onMenuToggle }: ArenaHeaderProps) {
               >
                 <Bell className="h-5 w-5" />
                 {notifications > 0 && (
-                  <Badge
-                    className="absolute -top-0.5 -right-0.5 flex h-4 w-4 items-center justify-center rounded-full border-0 p-0 text-[9px] font-black text-black animate-pulse"
-                    style={{ backgroundColor: ARENA_COLOR }}
-                  >
+                  <Badge className="absolute -top-0.5 -right-0.5 flex h-4 w-4 animate-pulse items-center justify-center rounded-full border-0 bg-neon-secondary p-0 text-[9px] font-black text-black">
                     {notifications}
                   </Badge>
                 )}
@@ -86,19 +81,25 @@ export default function ArenaHeader({ onMenuToggle }: ArenaHeaderProps) {
             </DropdownMenuTrigger>
             <DropdownMenuContent
               align="end"
-              className="w-72 border border-white/10 bg-[#1a1a1a] text-white"
+              className="w-72 border border-white/10 bg-[#080a25]/95 text-white backdrop-blur-xl"
             >
-              <DropdownMenuLabel
-                className="text-xs font-bold uppercase tracking-widest"
-                style={{ color: ARENA_COLOR }}
-              >
+              <DropdownMenuLabel className="text-xs font-bold uppercase tracking-[0.3em] text-[#6fffe9]">
                 {t("arena.notifications.title")}
               </DropdownMenuLabel>
               <DropdownMenuSeparator className="bg-white/8" />
               {[
-                { title: t("arena.notifications.newMatch"), time: t("arena.notifications.ago5min") },
-                { title: t("arena.notifications.teamInvite"), time: t("arena.notifications.ago1hour") },
-                { title: t("arena.notifications.tournamentStarting"), time: t("arena.notifications.ago2hours") },
+                {
+                  title: t("arena.notifications.newMatch"),
+                  time: t("arena.notifications.ago5min"),
+                },
+                {
+                  title: t("arena.notifications.teamInvite"),
+                  time: t("arena.notifications.ago1hour"),
+                },
+                {
+                  title: t("arena.notifications.tournamentStarting"),
+                  time: t("arena.notifications.ago2hours"),
+                },
               ].map(n => (
                 <DropdownMenuItem
                   key={n.title}
@@ -118,36 +119,22 @@ export default function ArenaHeader({ onMenuToggle }: ArenaHeaderProps) {
                 variant="ghost"
                 className="flex h-auto items-center gap-2 rounded-xl px-2 py-1.5 hover:bg-white/8"
               >
-                <Avatar
-                  className="h-8 w-8 border-2"
-                  style={{ borderColor: ARENA_COLOR }}
-                >
-                  <AvatarImage src="" alt="User" />
-                  <AvatarFallback
-                    className="text-xs font-black text-black"
-                    style={{ backgroundColor: ARENA_COLOR }}
-                  >
-                    <User className="h-4 w-4" />
-                  </AvatarFallback>
-                </Avatar>
-                <div className="hidden text-left md:block">
-                  <p className="text-xs font-bold text-white leading-tight">
-                    Coach Marcus
-                  </p>
-                  <p className="text-[10px] text-white/40 leading-tight">
-                    Head of Operations
-                  </p>
+                <div className="relative">
+                  <div className="absolute inset-0 rounded-full bg-[#6fffe9]/20 blur-lg" />
+                  <Avatar className="relative h-8 w-8 border-2 border-[#6fffe9]/60">
+                    <AvatarImage src="" alt="User" />
+                    <AvatarFallback className="bg-[#080a25] text-xs font-black text-[#6fffe9]">
+                      <User className="h-4 w-4" />
+                    </AvatarFallback>
+                  </Avatar>
                 </div>
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent
               align="end"
-              className="w-52 border border-white/10 bg-[#1a1a1a] text-white"
+              className="w-52 border border-white/10 bg-[#080a25]/95 text-white backdrop-blur-xl"
             >
-              <DropdownMenuLabel
-                className="text-xs font-bold uppercase tracking-widest"
-                style={{ color: ARENA_COLOR }}
-              >
+              <DropdownMenuLabel className="text-xs font-bold uppercase tracking-[0.3em] text-[#6fffe9]">
                 {t("arena.userMenu.myAccount")}
               </DropdownMenuLabel>
               <DropdownMenuSeparator className="bg-white/8" />

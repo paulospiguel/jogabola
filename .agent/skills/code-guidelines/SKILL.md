@@ -188,11 +188,10 @@ src/
 - Tipos duplicados em múltiplas camadas sem mapper
 - Imports cruzados entre features
 
-## Internal Rule Files
+## references
 
-When applying this skill, always consult and follow
-all documents located in the /rules directory.
-
-Treat each file inside /rules as mandatory behavioral extensions.
+- [ui-agent](.agent/skills/code-guidelines/references/ui-agent.md)
+- [instructions](.agent/skills/code-guidelines/references/instructions.md)
+- [coder-agent](.agent/skills/code-guidelines/references/coder-agent.md)
 
 END SKILL

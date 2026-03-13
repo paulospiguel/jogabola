@@ -13,7 +13,10 @@ export default function ArenaLayout({
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   return (
-    <div className="relative min-h-screen bg-[#111111] text-white">
+    <div className="relative min-h-screen bg-[linear-gradient(135deg,#050312_0%,#080a25_45%,#0f163f_100%)] text-white">
+      {/* Radial neon glow overlay */}
+      <div className="pointer-events-none fixed inset-0 z-0 bg-[radial-gradient(90%_90%_at_50%_0%,rgba(0,255,213,0.12)_0%,transparent_70%)]" />
+
       {/* Sidebar (Fixed Full Height) */}
       <ArenaSidebar
         isOpen={isSidebarOpen}
@@ -21,7 +24,7 @@ export default function ArenaLayout({
       />
 
       {/* Fixed header (offset for sidebar on desktop) */}
-      <div className="fixed top-0 left-0 right-0 z-40 md:left-64">
+      <div className="fixed top-0 right-0 left-0 z-40 md:left-64">
         <ArenaHeader onMenuToggle={() => setIsSidebarOpen(!isSidebarOpen)} />
       </div>
 

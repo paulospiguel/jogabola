@@ -1,138 +1,181 @@
 "use client";
 
+import { zodResolver } from "@hookform/resolvers/zod";
+import { WalletPhantom } from "@web3icons/react";
+import { AnimatePresence, motion } from "framer-motion";
+import { ArrowRight, Eye, EyeOff, Loader2, Mail, X } from "lucide-react";
+import Image from "next/image";
+import Link from "next/link";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useTranslations } from "next-intl";
+import { useEffect, useRef, useState } from "react";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
 import { saveProfileData } from "@/actions/profile";
-import { GoogleIcon } from "@/components/icons";
-import { Logo } from "@/components/logo";
-import { Button } from "@/components/ui/button";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
+import abstractIcon from "@/assets/icons/abstract.png";
+import { Google, GoogleIcon } from "@/components/icons";
 import { useProfileSync } from "@/hooks/use-profile-sync";
 import { useToast } from "@/hooks/use-toast-custom";
 import { signIn, signUp, useSession } from "@/lib/auth-client";
-import {
-  loginSchema,
-  registerSchema,
-  type LoginInput,
-  type RegisterInput,
-} from "@/schemas/auth";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { motion } from "framer-motion";
-import {
-  ArrowLeft,
-  Eye,
-  EyeOff,
-  Loader2,
-  Lock,
-  Mail,
-  User
-} from "lucide-react";
-import { useTranslations } from "next-intl";
-import Link from "next/link";
-import { useRouter, useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
+import { loginSchema, registerSchema } from "@/schemas/auth";
+
+// --- Wallet icons (inline SVGs) ---
+
+function AbstractWalletIcon() {
+  return (
+    <div className="flex h-10 w-10 items-center justify-center">
+      <Image src={abstractIcon} alt="Abstract" width={22} height={22} />
+    </div>
+  );
+}
+
+function PhantomIcon() {
+  return (
+    <div className="flex h-10 w-10 items-center justify-center rounded-xl">
+      <WalletPhantom variant="branded" size={64} />
+    </div>
+  );
+}
+
+function SocialLoginIcon() {
+  return (
+    <div className="relative flex h-10 w-10 items-center justify-center rounded-xl bg-white/10">
+      <div className="absolute p-1 -right-1 -bottom-1 flex h-6 w-6 items-center justify-center rounded-full bg-white/10 ring-1 ring-white/20">
+        <Mail className="h-3 w-3 p-0.5" />
+      </div>
+      <Google />
+    </div>
+  );
+}
+
+// --- Login methods config ---
+
+type LoginMethod = {
+  id: string;
+  label: string;
+  sublabel?: string;
+  icon: React.ReactNode;
+  comingSoon?: boolean;
+};
+
+const loginMethods: LoginMethod[] = [
+  {
+    id: "social",
+    label: "Social Login",
+    icon: <SocialLoginIcon />,
+  },
+  {
+    id: "abstract",
+    label: "Abstract Global Wallet",
+    sublabel: "Recommended",
+    icon: <AbstractWalletIcon />,
+    comingSoon: true,
+  },
+  {
+    id: "phantom",
+    label: "Phantom",
+    icon: <PhantomIcon />,
+    comingSoon: true,
+  },
+];
+
+// --- Email step schemas ---
+
+const emailSchema = z.object({ email: z.string().email() });
+type EmailInput = z.infer<typeof emailSchema>;
+
+type AuthStep = "email" | "password" | "register";
+
+// --- Main page ---
 
 export default function LoginPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const [tab, setTab] = useState<"login" | "register">("login");
-  const [loading, setLoading] = useState(false);
-  const [showLoginPassword, setShowLoginPassword] = useState(false);
-  const [showPassword, setShowPassword] = useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const { data } = useSession();
   const { toast } = useToast();
   const t = useTranslations("signIn.page");
 
-  // Sync profile data when user logs in
+  const [selectedMethod, setSelectedMethod] = useState("social");
+  const [step, setStep] = useState<AuthStep>("email");
+  const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+
+  // email collected in step 1
+  const [collectedEmail, setCollectedEmail] = useState(
+    searchParams.get("email") || "",
+  );
+  const [collectedName, _setCollectedName] = useState(
+    searchParams.get("name") || "",
+  );
+
+  // Sync profile when user logs in
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   useProfileSync(data?.user?.id, (uid, d) => saveProfileData(uid, d as any));
 
-  // Preencher formulários com dados do query params (vindo do onboarding)
-  const emailParam = searchParams.get("email");
-  const nameParam = searchParams.get("name");
+  useEffect(() => {
+    if (data?.user?.id) {
+      router.push("/arena");
+    }
+  }, [data?.user?.id, router]);
 
-  const loginForm = useForm<LoginInput>({
-    resolver: zodResolver(loginSchema),
-    defaultValues: {
-      email: emailParam || "",
-      password: "",
-    },
+  // Email form (step 1)
+  const emailForm = useForm<EmailInput>({
+    resolver: zodResolver(emailSchema),
+    defaultValues: { email: collectedEmail },
   });
 
-  const registerForm = useForm<RegisterInput>({
+  // Login form (step 2 — existing user)
+  const loginForm = useForm({
+    resolver: zodResolver(loginSchema),
+    defaultValues: { email: collectedEmail, password: "" },
+  });
+
+  // Register form (step 2 — new user)
+  const registerForm = useForm({
     resolver: zodResolver(registerSchema),
     defaultValues: {
-      name: nameParam || "",
-      email: emailParam || "",
+      name: collectedName,
+      email: collectedEmail,
       password: "",
       confirmPassword: "",
     },
   });
 
-  // Atualizar formulários quando os params mudarem
-  useEffect(() => {
-    if (emailParam) {
-      loginForm.setValue("email", emailParam);
-      registerForm.setValue("email", emailParam);
-    }
-    if (nameParam) {
-      registerForm.setValue("name", nameParam);
-    }
-  }, [emailParam, nameParam, loginForm, registerForm]);
+  const passwordRef = useRef<HTMLInputElement>(null);
 
-  // Verificar se usuário está logado - permitir login direto
-  useEffect(() => {
-    if (data?.user?.id) {
-      // Usuário está logado - redirecionar para arena (onboarding é opcional)
-      router.push("/arena");
-    }
-  }, [data?.user?.id, router]);
+  function handleEmailSubmit(values: EmailInput) {
+    setCollectedEmail(values.email);
+    loginForm.setValue("email", values.email);
+    registerForm.setValue("email", values.email);
+    setStep("password");
+    setTimeout(() => passwordRef.current?.focus(), 100);
+  }
 
   async function handleGoogleLogin() {
     setLoading(true);
     try {
-      // Redirecionar para arena após login (onboarding é opcional)
-      const callbackURL = "/arena";
-
       const result = await signIn.social({
         provider: "google",
-        callbackURL,
+        callbackURL: "/arena",
       });
-
-      // O login social pode retornar um redirect URL ou um erro
-      if (result.error) {
+      if (result.error)
         throw new Error(result.error.message || t("errors.googleAuthFailed"));
-      }
-
-      // Se houver redirect URL, o navegador será redirecionado automaticamente
       if (result.data?.url) {
-        // O Better Auth redireciona automaticamente, mas podemos garantir
         window.location.href = result.data.url;
         return;
       }
-
-      // Se não houver erro nem URL, pode ser que a autenticação esteja em progresso
-      // Não definir loading como false aqui, pois o redirecionamento pode estar ocorrendo
     } catch (err: unknown) {
-      console.error("Google login error:", err);
-      const errorMessage = err instanceof Error ? err.message : t("errors.loginFailed");
-      toast.error(
-        t("errors.loginError"),
-        errorMessage,
-      );
+      const errorMessage =
+        err instanceof Error ? err.message : t("errors.loginFailed");
+      toast.error(t("errors.loginError"), errorMessage);
       setLoading(false);
     }
   }
 
-  async function onLoginSubmit(values: LoginInput) {
+  async function handleLoginSubmit(values: {
+    email: string;
+    password: string;
+  }) {
     setLoading(true);
     try {
       const result = await signIn.email({
@@ -140,26 +183,25 @@ export default function LoginPage() {
         password: values.password,
         callbackURL: "/arena",
       });
-
-      if (result.error) {
+      if (result.error)
         throw new Error(result.error.message || t("errors.invalidCredentials"));
-      }
-
       toast.success(t("success.login"), t("success.loginMessage"));
-
-      // A migração será feita pelo hook useProfileSync que monitora a sessão
     } catch (err: unknown) {
-      console.error("Login error:", err);
-      const errorMessage = err instanceof Error ? err.message : t("errors.invalidCredentialsDetails");
-      toast.error(
-        t("errors.loginError"),
-        errorMessage,
-      );
+      const errorMessage =
+        err instanceof Error
+          ? err.message
+          : t("errors.invalidCredentialsDetails");
+      toast.error(t("errors.loginError"), errorMessage);
       setLoading(false);
     }
   }
 
-  async function onRegisterSubmit(values: RegisterInput) {
+  async function handleRegisterSubmit(values: {
+    name: string;
+    email: string;
+    password: string;
+    confirmPassword: string;
+  }) {
     setLoading(true);
     try {
       const result = await signUp.email({
@@ -168,481 +210,361 @@ export default function LoginPage() {
         name: values.name,
         callbackURL: "/arena",
       });
-
-      if (result.error) {
+      if (result.error)
         throw new Error(result.error.message || t("errors.registerFailed"));
-      }
-
       toast.success(t("success.register"), t("success.registerMessage"));
-
-      // A migração será feita pelo hook useProfileSync que monitora a sessão
     } catch (err: unknown) {
-      console.error("Register error:", err);
-      const errorMessage = err instanceof Error ? err.message : t("errors.registerFailedDetails");
-      toast.error(
-        t("errors.registerError"),
-        errorMessage,
-      );
+      const errorMessage =
+        err instanceof Error ? err.message : t("errors.registerFailedDetails");
+      toast.error(t("errors.registerError"), errorMessage);
       setLoading(false);
     }
   }
 
-  // Background Pattern Component - Gradiente do mockup (Igual da Home)
-  const FieldPattern = () => {
-    return (
-      <div className="pointer-events-none absolute inset-0 overflow-hidden">
-        {/* Gradiente base: azul claro top-left para verde claro bottom-right */}
-        <div className="absolute inset-0 bg-linear-to-br from-blue-100 via-cyan-50 to-emerald-100 dark:from-slate-900/80 dark:via-emerald-900/40 dark:to-slate-950/80" />
-      </div>
-    );
-  };
+  function handleMethodSelect(method: LoginMethod) {
+    if (method.comingSoon) {
+      toast.info?.("Em breve", `${method.label} estará disponível em breve.`);
+      return;
+    }
+    setSelectedMethod(method.id);
+    setStep("email");
+  }
 
   return (
-    <div className="bg-background relative min-h-screen overflow-hidden dark:bg-(--color-blue-850)">
-      <FieldPattern />
+    <div className="relative min-h-screen overflow-hidden bg-[#0d0d1a]">
+      {/* Bokeh background */}
+      <div className="pointer-events-none absolute inset-0">
+        <div className="absolute top-1/4 left-1/4 h-64 w-64 rounded-full bg-purple-600/20 blur-3xl" />
+        <div className="absolute top-1/3 right-1/4 h-96 w-96 rounded-full bg-blue-500/10 blur-3xl" />
+        <div className="absolute bottom-1/4 left-1/3 h-72 w-72 rounded-full bg-emerald-500/10 blur-3xl" />
+        <div className="absolute right-10 bottom-10 h-48 w-48 rounded-full bg-pink-500/10 blur-3xl" />
+      </div>
 
-      {/* Back to Home Button */}
-      <Link
-        href="/"
-        aria-label="Voltar ao início"
-        className="absolute top-4 left-4 z-50 flex items-center gap-2 rounded-full border border-white/10 bg-white/5 p-3 text-sm font-medium text-gray-700 backdrop-blur-sm transition-all hover:border-emerald-500/50 hover:bg-emerald-500/10 hover:text-emerald-600 sm:px-4 sm:py-2 lg:top-8 lg:left-8 dark:text-white/80 dark:hover:text-emerald-400"
-      >
-        <ArrowLeft className="h-4 w-4" />
-        <span className="hidden sm:inline">Voltar ao início</span>
-      </Link>
-
-      <div className="relative z-10 flex min-h-screen flex-col items-center justify-center p-4 sm:p-6 lg:p-8">
+      {/* Modal container */}
+      <div className="relative z-10 flex min-h-screen items-center justify-center p-4">
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-          className="w-full max-w-md"
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.3 }}
+          className="relative flex w-full max-w-2xl overflow-hidden rounded-2xl border border-white/10 bg-[#111827]/90 shadow-2xl backdrop-blur-md"
+          style={{ minHeight: "460px" }}
         >
-          <div className="overflow-hidden rounded-3xl bg-linear-to-br from-blue-50/80 via-cyan-50/80 to-emerald-50/80 p-6 shadow-xl backdrop-blur-sm sm:p-8 dark:from-slate-900/90 dark:via-slate-900/70 dark:to-emerald-900/40">
-            {/* Header */}
-            <div className="mb-6 space-y-2 text-center lg:mb-8">
-              <motion.div
-                initial={{ scale: 0 }}
-                animate={{ scale: 1 }}
-                transition={{ delay: 0.2, type: "spring" }}
-                className="mx-auto flex items-center justify-center"
-              >
-                <Logo size="medium" />
-              </motion.div>
-              <h2 className="text-2xl font-bold text-gray-900 sm:text-3xl dark:text-white">
-                {tab === "login"
-                  ? t("form.title.login")
-                  : t("form.title.register")}
-              </h2>
-              <p className="text-sm text-gray-600 sm:text-base dark:text-gray-300">
-                {tab === "login"
-                  ? t("form.subtitle.login")
-                  : t("form.subtitle.register")}
-              </p>
-            </div>
+          {/* Close button */}
+          <Link
+            href="/"
+            className="absolute top-4 right-4 z-20 flex h-8 w-8 items-center justify-center rounded-full bg-white/10 text-white/60 transition-colors hover:bg-white/20 hover:text-white"
+            aria-label="Fechar"
+          >
+            <X className="h-4 w-4" />
+          </Link>
 
-            {/* Tabs */}
-            <div className="mb-6 flex gap-2 rounded-xl bg-white/50 p-1 dark:bg-slate-800/50">
+          {/* Left panel — method list */}
+          <div className="flex w-56 shrink-0 flex-col gap-1 border-r border-white/10 p-4">
+            <h2 className="mb-3 px-2 text-lg font-semibold text-white">
+              Sign in
+            </h2>
+            {loginMethods.map(method => (
               <button
-                onClick={() => {
-                  setTab("login");
-                  registerForm.reset();
-                }}
-                className={`flex-1 rounded-lg py-2 text-xs font-semibold transition-all sm:py-2.5 sm:text-sm ${
-                  tab === "login"
-                    ? "bg-white text-emerald-600 shadow-sm dark:bg-slate-700 dark:text-emerald-400"
-                    : "text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
-                }`}
+                key={method.id}
+                type="button"
+                onClick={() => handleMethodSelect(method)}
+                className={`flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-left transition-all ${
+                  selectedMethod === method.id && !method.comingSoon
+                    ? "bg-white/15 text-white"
+                    : "text-white/70 hover:bg-white/8 hover:text-white"
+                } ${method.comingSoon ? "opacity-70" : ""}`}
               >
-                {t("form.tabs.login")}
-              </button>
-              <button
-                onClick={() => {
-                  setTab("register");
-                  loginForm.reset();
-                }}
-                className={`flex-1 rounded-lg py-2 text-xs font-semibold transition-all sm:py-2.5 sm:text-sm ${
-                  tab === "register"
-                    ? "bg-white text-emerald-600 shadow-sm dark:bg-slate-700 dark:text-emerald-400"
-                    : "text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
-                }`}
-              >
-                {t("form.tabs.register")}
-              </button>
-            </div>
-
-            {/* Login Form */}
-            {tab === "login" && (
-              <Form {...loginForm}>
-                <form
-                  className="space-y-4"
-                  onSubmit={loginForm.handleSubmit(onLoginSubmit)}
-                >
-                  <FormField
-                    control={loginForm.control}
-                    name="email"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel className="text-sm font-medium text-gray-700 dark:text-gray-300">
-                          {t("form.fields.email")}
-                        </FormLabel>
-                        <FormControl>
-                          <div className="relative">
-                            <Input
-                              icon={Mail}
-                              {...field}
-                              type="email"
-                              placeholder={t("form.fields.emailPlaceholder")}
-                              disabled={loading}
-                              className="relative z-10 border-gray-200 bg-white/50 !pl-10 text-gray-900 placeholder:text-gray-400 focus:border-emerald-500 focus:ring-emerald-500 dark:border-slate-700 dark:bg-slate-800/50 dark:text-white dark:placeholder:text-gray-500"
-                            />
-                          </div>
-                        </FormControl>
-                        <FormMessage className="text-red-500 dark:text-red-400" />
-                      </FormItem>
-                    )}
-                  />
-
-                  <FormField
-                    control={loginForm.control}
-                    name="password"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel className="text-sm font-medium text-gray-700 dark:text-gray-300">
-                          {t("form.fields.password")}
-                        </FormLabel>
-                        <FormControl>
-                          <div className="relative">
-                            <Input
-                              icon={Lock}
-                              {...field}
-                              type={showLoginPassword ? "text" : "password"}
-                              placeholder={t(
-                                "form.fields.passwordPlaceholder",
-                              )}
-                              disabled={loading}
-                              className="relative z-10 border-gray-200 bg-white/50 pr-10 !pl-10 text-gray-900 placeholder:text-gray-400 focus:border-emerald-500 focus:ring-emerald-500 dark:border-slate-700 dark:bg-slate-800/50 dark:text-white dark:placeholder:text-gray-500"
-                            />
-                            <button
-                              type="button"
-                              onClick={() =>
-                                setShowLoginPassword(!showLoginPassword)
-                              }
-                              className="absolute top-1/2 right-3 z-10 -translate-y-1/2 text-gray-400 transition-colors hover:text-emerald-600 dark:text-gray-500 dark:hover:text-emerald-400"
-                              aria-label={
-                                showLoginPassword
-                                  ? "Ocultar senha"
-                                  : "Mostrar senha"
-                              }
-                            >
-                              {showLoginPassword ? (
-                                <EyeOff className="h-5 w-5" />
-                              ) : (
-                                <Eye className="h-5 w-5" />
-                              )}
-                            </button>
-                          </div>
-                        </FormControl>
-                        <FormMessage className="text-red-500 dark:text-red-400" />
-                      </FormItem>
-                    )}
-                  />
-
-                  <div className="flex justify-end">
-                    <Link
-                      href="/forgot-password"
-                      className="text-xs text-emerald-600 transition-colors hover:text-emerald-700 dark:text-emerald-400 dark:hover:text-emerald-300"
-                    >
-                      {t("form.forgotPassword")}
-                    </Link>
+                <div className="shrink-0">{method.icon}</div>
+                <div className="min-w-0">
+                  <div className="truncate text-sm font-medium">
+                    {method.label}
                   </div>
-
-                  {/* Buttons */}
-                  <div className="space-y-3 pt-2">
-                    <Button
-                      type="submit"
-                      disabled={loading}
-                      className="w-full rounded-lg bg-emerald-500 py-6 text-base font-medium text-white shadow-md hover:bg-emerald-600 disabled:opacity-50 dark:bg-emerald-500 dark:hover:bg-emerald-600"
-                    >
-                      {loading ? (
-                        <>
-                          <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                          {t("form.buttons.logging")}
-                        </>
-                      ) : (
-                        t("form.buttons.login")
-                      )}
-                    </Button>
-
-                    <div className="relative">
-                      <div className="absolute inset-0 flex items-center">
-                        <div className="w-full border-t border-gray-200 dark:border-slate-700" />
-                      </div>
-                      <div className="relative flex justify-center text-xs">
-                        <span className="bg-white/50 px-3 py-1 text-gray-500 backdrop-blur-sm dark:bg-slate-800/50 dark:text-gray-400">
-                          {t("form.continueWith")}
-                        </span>
-                      </div>
+                  {method.sublabel && (
+                    <div className="text-xs text-white/50">
+                      {method.sublabel}
                     </div>
+                  )}
+                </div>
+              </button>
+            ))}
+          </div>
 
-                    <Button
+          {/* Right panel — auth form */}
+          <div className="flex flex-1 flex-col justify-between p-8">
+            <div className="flex flex-1 flex-col justify-center">
+              <AnimatePresence mode="wait">
+                {selectedMethod === "social" && (
+                  <motion.div
+                    key="social"
+                    initial={{ opacity: 0, x: 16 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    exit={{ opacity: 0, x: -16 }}
+                    transition={{ duration: 0.2 }}
+                    className="space-y-4"
+                  >
+                    {/* Google button */}
+                    <button
                       type="button"
                       onClick={handleGoogleLogin}
                       disabled={loading}
-                      variant="outline"
-                      className="w-full border-gray-200 bg-white text-gray-700 hover:bg-gray-50 dark:border-slate-700 dark:bg-slate-800 dark:text-white dark:hover:bg-slate-700"
+                      className="flex w-full items-center justify-center gap-3 rounded-xl border border-white/20 bg-white/10 px-4 py-3 text-sm font-medium text-white transition-all hover:bg-white/20 disabled:opacity-50"
                     >
                       {loading ? (
-                        <>
-                          <Loader2 className="mr-2 h-5 w-5 animate-spin" />A
-                          entrar...
-                        </>
+                        <Loader2 className="h-4 w-4 animate-spin" />
                       ) : (
-                        <>
-                          <GoogleIcon className="mr-2 h-5 w-5" />
-                          {t("form.buttons.google")}
-                        </>
+                        <GoogleIcon className="h-5 w-5" />
                       )}
-                    </Button>
-                  </div>
-                </form>
-              </Form>
-            )}
+                      Continue with Google
+                    </button>
 
-            {/* Register Form */}
-            {tab === "register" && (
-              <Form {...registerForm}>
-                <form
-                  className="space-y-4"
-                  onSubmit={registerForm.handleSubmit(onRegisterSubmit)}
-                >
-                  <FormField
-                    control={registerForm.control}
-                    name="name"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel className="text-sm font-medium text-gray-700 dark:text-gray-300">
-                          {t("form.fields.name")}
-                        </FormLabel>
-                        <FormControl>
-                          <div className="relative">
-                            <Input
-                              icon={User}
-                              {...field}
-                              type="text"
-                              placeholder={t("form.fields.namePlaceholder")}
-                              disabled={loading}
-                              className="border-gray-200 bg-white/50 !pl-10 text-gray-900 placeholder:text-gray-400 focus:border-emerald-500 focus:ring-emerald-500 dark:border-slate-700 dark:bg-slate-800/50 dark:text-white dark:placeholder:text-gray-500"
-                            />
-                          </div>
-                        </FormControl>
-                        <FormMessage className="text-red-500 dark:text-red-400" />
-                      </FormItem>
-                    )}
-                  />
+                    {/* Divider */}
+                    <div className="flex items-center gap-3">
+                      <div className="h-px flex-1 bg-white/15" />
+                      <span className="text-xs text-white/40">or</span>
+                      <div className="h-px flex-1 bg-white/15" />
+                    </div>
 
-                  <FormField
-                    control={registerForm.control}
-                    name="email"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel className="text-sm font-medium text-gray-700 dark:text-gray-300">
-                          {t("form.fields.email")}
-                        </FormLabel>
-                        <FormControl>
+                    {/* Email step */}
+                    <AnimatePresence mode="wait">
+                      {step === "email" && (
+                        <motion.form
+                          key="email-step"
+                          initial={{ opacity: 0, y: 8 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          exit={{ opacity: 0, y: -8 }}
+                          transition={{ duration: 0.2 }}
+                          onSubmit={emailForm.handleSubmit(handleEmailSubmit)}
+                        >
                           <div className="relative">
-                            <Input
-                              icon={Mail}
-                              {...field}
+                            <input
+                              {...emailForm.register("email")}
                               type="email"
-                              placeholder={t("form.fields.emailPlaceholder")}
-                              disabled={loading}
-                              className="border-gray-200 bg-white/50 !pl-10 text-gray-900 placeholder:text-gray-400 focus:border-emerald-500 focus:ring-emerald-500 dark:border-slate-700 dark:bg-slate-800/50 dark:text-white dark:placeholder:text-gray-500"
+                              placeholder="Email address"
+                              autoComplete="email"
+                              className="w-full rounded-xl border border-white/20 bg-white/8 px-4 py-3 pr-12 text-sm text-white placeholder-white/40 outline-none transition-all focus:border-white/40 focus:bg-white/12"
                             />
+                            <button
+                              type="submit"
+                              className="absolute top-1/2 right-3 flex h-7 w-7 -translate-y-1/2 items-center justify-center rounded-lg bg-white/20 text-white transition-colors hover:bg-white/30"
+                              aria-label="Continuar"
+                            >
+                              <ArrowRight className="h-4 w-4" />
+                            </button>
                           </div>
-                        </FormControl>
-                        <FormMessage className="text-red-500 dark:text-red-400" />
-                      </FormItem>
-                    )}
-                  />
+                          {emailForm.formState.errors.email && (
+                            <p className="mt-1 text-xs text-red-400">
+                              {emailForm.formState.errors.email.message}
+                            </p>
+                          )}
+                        </motion.form>
+                      )}
 
-                  <FormField
-                    control={registerForm.control}
-                    name="password"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel className="text-sm font-medium text-gray-700 dark:text-gray-300">
-                          {t("form.fields.password")}
-                        </FormLabel>
-                        <FormControl>
+                      {step === "password" && (
+                        <motion.form
+                          key="password-step"
+                          initial={{ opacity: 0, y: 8 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          exit={{ opacity: 0, y: -8 }}
+                          transition={{ duration: 0.2 }}
+                          onSubmit={loginForm.handleSubmit(handleLoginSubmit)}
+                          className="space-y-3"
+                        >
+                          {/* Email display */}
+                          <button
+                            type="button"
+                            onClick={() => setStep("email")}
+                            className="flex items-center gap-2 text-xs text-white/50 hover:text-white/70"
+                          >
+                            <span className="truncate">{collectedEmail}</span>
+                            <span className="shrink-0 text-white/30">
+                              · alterar
+                            </span>
+                          </button>
                           <div className="relative">
-                            <Input
-                              icon={Lock}
-                              {...field}
+                            <input
+                              {...loginForm.register("password")}
+                              ref={el => {
+                                loginForm.register("password").ref(el);
+                                (
+                                  passwordRef as React.MutableRefObject<HTMLInputElement | null>
+                                ).current = el;
+                              }}
                               type={showPassword ? "text" : "password"}
-                              placeholder={t(
-                                "form.fields.passwordPlaceholder",
-                              )}
-                              disabled={loading}
-                              className="border-gray-200 bg-white/50 pr-10 !pl-10 text-gray-900 placeholder:text-gray-400 focus:border-emerald-500 focus:ring-emerald-500 dark:border-slate-700 dark:bg-slate-800/50 dark:text-white dark:placeholder:text-gray-500"
+                              placeholder="Palavra-passe"
+                              autoComplete="current-password"
+                              className="w-full rounded-xl border border-white/20 bg-white/8 px-4 py-3 pr-12 text-sm text-white placeholder-white/40 outline-none transition-all focus:border-white/40 focus:bg-white/12"
                             />
                             <button
                               type="button"
                               onClick={() => setShowPassword(!showPassword)}
-                              className="absolute top-1/2 right-3 -translate-y-1/2 text-gray-400 transition-colors hover:text-emerald-600 dark:text-gray-500 dark:hover:text-emerald-400"
-                              aria-label={
-                                showPassword
-                                  ? "Ocultar senha"
-                                  : "Mostrar senha"
-                              }
+                              className="absolute top-1/2 right-3 -translate-y-1/2 text-white/40 transition-colors hover:text-white/70"
                             >
                               {showPassword ? (
-                                <EyeOff className="h-5 w-5" />
+                                <EyeOff className="h-4 w-4" />
                               ) : (
-                                <Eye className="h-5 w-5" />
+                                <Eye className="h-4 w-4" />
                               )}
                             </button>
                           </div>
-                        </FormControl>
-                        <FormMessage className="text-red-500 dark:text-red-400" />
-                      </FormItem>
-                    )}
-                  />
-
-                  <FormField
-                    control={registerForm.control}
-                    name="confirmPassword"
-                    render={({ field }) => {
-                      const passwordValue =
-                        registerForm.watch("password") || "";
-                      const confirmPasswordValue = field.value || "";
-                      const passwordsMatch =
-                        passwordValue &&
-                        confirmPasswordValue &&
-                        passwordValue === confirmPasswordValue;
-                      const passwordsDontMatch =
-                        passwordValue &&
-                        confirmPasswordValue &&
-                        passwordValue !== confirmPasswordValue;
-
-                      return (
-                        <FormItem>
-                          <FormLabel className="text-sm font-medium text-gray-700 dark:text-gray-300">
-                            {t("form.fields.confirmPassword")}
-                          </FormLabel>
-                          <FormControl>
-                            <div className="relative">
-                              <Lock className="pointer-events-none absolute top-1/2 left-3 h-5 w-5 -translate-y-1/2 text-gray-400 dark:text-gray-500" />
-                              <Input
-                                {...field}
-                                type={
-                                  showConfirmPassword ? "text" : "password"
-                                }
-                                placeholder={t(
-                                  "form.fields.passwordPlaceholder",
-                                )}
-                                disabled={loading}
-                                className={`border-gray-200 bg-white/50 pr-10 !pl-10 text-gray-900 placeholder:text-gray-400 focus:border-emerald-500 focus:ring-emerald-500 dark:border-slate-700 dark:bg-slate-800/50 dark:text-white dark:placeholder:text-gray-500 ${
-                                  passwordsDontMatch
-                                    ? "border-red-500 focus:border-red-500 focus:ring-red-500"
-                                    : passwordsMatch
-                                      ? "border-green-500 focus:border-green-500 focus:ring-green-500"
-                                      : ""
-                                }`}
-                              />
-                              <button
-                                type="button"
-                                onClick={() =>
-                                  setShowConfirmPassword(!showConfirmPassword)
-                                }
-                                className="absolute top-1/2 right-3 -translate-y-1/2 text-gray-400 transition-colors hover:text-emerald-600 dark:text-gray-500 dark:hover:text-emerald-400"
-                                aria-label={
-                                  showConfirmPassword
-                                    ? "Ocultar senha"
-                                    : "Mostrar senha"
-                                }
-                              >
-                                {showConfirmPassword ? (
-                                  <EyeOff className="h-5 w-5" />
-                                ) : (
-                                  <Eye className="h-5 w-5" />
-                                )}
-                              </button>
-                            </div>
-                          </FormControl>
-                          {passwordsDontMatch && (
-                            <p className="mt-1 text-sm text-red-500 dark:text-red-400">
-                              As palavras-passe não coincidem
+                          {loginForm.formState.errors.password && (
+                            <p className="text-xs text-red-400">
+                              {String(
+                                loginForm.formState.errors.password.message,
+                              )}
                             </p>
                           )}
-                          {passwordsMatch && confirmPasswordValue && (
-                            <p className="mt-1 text-sm text-green-500 dark:text-green-400">
-                              As palavras-passe coincidem
+                          <div className="flex items-center justify-between">
+                            <Link
+                              href="/forgot-password"
+                              className="text-xs text-white/40 hover:text-white/70"
+                            >
+                              {t("form.forgotPassword")}
+                            </Link>
+                          </div>
+                          <button
+                            type="submit"
+                            disabled={loading}
+                            className="flex w-full items-center justify-center gap-2 rounded-xl bg-white/15 py-3 text-sm font-medium text-white transition-all hover:bg-white/25 disabled:opacity-50"
+                          >
+                            {loading ? (
+                              <Loader2 className="h-4 w-4 animate-spin" />
+                            ) : null}
+                            {loading
+                              ? t("form.buttons.logging")
+                              : t("form.buttons.login")}
+                          </button>
+                          <p className="text-center text-xs text-white/40">
+                            Não tens conta?{" "}
+                            <button
+                              type="button"
+                              onClick={() => setStep("register")}
+                              className="text-white/70 hover:text-white underline underline-offset-2"
+                            >
+                              Criar conta
+                            </button>
+                          </p>
+                        </motion.form>
+                      )}
+
+                      {step === "register" && (
+                        <motion.form
+                          key="register-step"
+                          initial={{ opacity: 0, y: 8 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          exit={{ opacity: 0, y: -8 }}
+                          transition={{ duration: 0.2 }}
+                          onSubmit={registerForm.handleSubmit(
+                            handleRegisterSubmit,
+                          )}
+                          className="space-y-3"
+                        >
+                          <button
+                            type="button"
+                            onClick={() => setStep("email")}
+                            className="flex items-center gap-2 text-xs text-white/50 hover:text-white/70"
+                          >
+                            <span className="truncate">{collectedEmail}</span>
+                            <span className="shrink-0 text-white/30">
+                              · alterar
+                            </span>
+                          </button>
+                          <input
+                            {...registerForm.register("name")}
+                            type="text"
+                            placeholder="O teu nome"
+                            autoComplete="name"
+                            className="w-full rounded-xl border border-white/20 bg-white/8 px-4 py-3 text-sm text-white placeholder-white/40 outline-none transition-all focus:border-white/40 focus:bg-white/12"
+                          />
+                          {registerForm.formState.errors.name && (
+                            <p className="text-xs text-red-400">
+                              {String(
+                                registerForm.formState.errors.name.message,
+                              )}
                             </p>
                           )}
-                          <FormMessage className="text-red-500 dark:text-red-400" />
-                        </FormItem>
-                      );
-                    }}
-                  />
-
-                  {/* Buttons */}
-                  <div className="space-y-3 pt-2">
-                    <Button
-                      type="submit"
-                      disabled={loading}
-                      className="w-full rounded-lg bg-emerald-500 py-6 text-base font-medium text-white shadow-md hover:bg-emerald-600 disabled:opacity-50 dark:bg-emerald-500 dark:hover:bg-emerald-600"
-                    >
-                      {loading ? (
-                        <>
-                          <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                          {t("form.buttons.registering")}
-                        </>
-                      ) : (
-                        t("form.buttons.register")
+                          <div className="relative">
+                            <input
+                              {...registerForm.register("password")}
+                              type={showPassword ? "text" : "password"}
+                              placeholder="Palavra-passe"
+                              autoComplete="new-password"
+                              className="w-full rounded-xl border border-white/20 bg-white/8 px-4 py-3 pr-12 text-sm text-white placeholder-white/40 outline-none transition-all focus:border-white/40 focus:bg-white/12"
+                            />
+                            <button
+                              type="button"
+                              onClick={() => setShowPassword(!showPassword)}
+                              className="absolute top-1/2 right-3 -translate-y-1/2 text-white/40 transition-colors hover:text-white/70"
+                            >
+                              {showPassword ? (
+                                <EyeOff className="h-4 w-4" />
+                              ) : (
+                                <Eye className="h-4 w-4" />
+                              )}
+                            </button>
+                          </div>
+                          <input
+                            {...registerForm.register("confirmPassword")}
+                            type={showPassword ? "text" : "password"}
+                            placeholder="Confirmar palavra-passe"
+                            autoComplete="new-password"
+                            className="w-full rounded-xl border border-white/20 bg-white/8 px-4 py-3 text-sm text-white placeholder-white/40 outline-none transition-all focus:border-white/40 focus:bg-white/12"
+                          />
+                          {registerForm.formState.errors.confirmPassword && (
+                            <p className="text-xs text-red-400">
+                              {String(
+                                registerForm.formState.errors.confirmPassword
+                                  .message,
+                              )}
+                            </p>
+                          )}
+                          <button
+                            type="submit"
+                            disabled={loading}
+                            className="flex w-full items-center justify-center gap-2 rounded-xl bg-white/15 py-3 text-sm font-medium text-white transition-all hover:bg-white/25 disabled:opacity-50"
+                          >
+                            {loading ? (
+                              <Loader2 className="h-4 w-4 animate-spin" />
+                            ) : null}
+                            {loading
+                              ? t("form.buttons.registering")
+                              : t("form.buttons.register")}
+                          </button>
+                          <p className="text-center text-xs text-white/40">
+                            Já tens conta?{" "}
+                            <button
+                              type="button"
+                              onClick={() => setStep("password")}
+                              className="text-white/70 hover:text-white underline underline-offset-2"
+                            >
+                              Entrar
+                            </button>
+                          </p>
+                        </motion.form>
                       )}
-                    </Button>
+                    </AnimatePresence>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
 
-                    <div className="relative">
-                      <div className="absolute inset-0 flex items-center">
-                        <div className="w-full border-t border-gray-200 dark:border-slate-700" />
-                      </div>
-                      <div className="relative flex justify-center text-xs">
-                        <span className="bg-white/50 px-3 py-1 text-gray-500 backdrop-blur-sm dark:bg-slate-800/50 dark:text-gray-400">
-                          {t("form.continueWith")}
-                        </span>
-                      </div>
-                    </div>
-
-                    <Button
-                      type="button"
-                      onClick={handleGoogleLogin}
-                      disabled={loading}
-                      variant="outline"
-                      className="w-full border-gray-200 bg-white text-gray-700 hover:bg-gray-50 dark:border-slate-700 dark:bg-slate-800 dark:text-white dark:hover:bg-slate-700"
-                    >
-                      {loading ? (
-                        <>
-                          <Loader2 className="mr-2 h-5 w-5 animate-spin" />A
-                          entrar...
-                        </>
-                      ) : (
-                        <>
-                          <GoogleIcon className="mr-2 h-5 w-5" />
-                          {t("form.buttons.google")}
-                        </>
-                      )}
-                    </Button>
-                  </div>
-                </form>
-              </Form>
-            )}
+            {/* Footer */}
+            <p className="mt-6 text-center text-xs text-white/30">
+              By connecting, you agree to the{" "}
+              <Link
+                href="/terms"
+                className="text-white/50 hover:text-white/80 underline underline-offset-2"
+              >
+                Terms of Service
+              </Link>{" "}
+              &{" "}
+              <Link
+                href="/privacy"
+                className="text-white/50 hover:text-white/80 underline underline-offset-2"
+              >
+                Privacy Policy
+              </Link>
+            </p>
           </div>
-
-          {/* Footer */}
-          <p className="mt-4 text-center text-xs text-gray-500 dark:text-gray-400">
-            {t("footer", { year: new Date().getFullYear() })}
-          </p>
         </motion.div>
       </div>
     </div>
