@@ -57,5 +57,5 @@ tailwind.css
 .branches
 .temp
 
-*.lockb
-*-lock
+*.lockb*
+*-lock*
