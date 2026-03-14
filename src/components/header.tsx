@@ -1,4 +1,10 @@
 "use client";
+import { motion } from "framer-motion";
+import { Badge, Menu } from "lucide-react";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { useTranslations } from "next-intl";
+import { useEffect, useState } from "react";
 import {
   Sheet,
   SheetClose,
@@ -10,19 +16,15 @@ import {
 import menuHome from "@/constants/menu-home";
 import { useHeaderButtons } from "@/hooks/use-header-buttons";
 import { useJourneyRedirect } from "@/hooks/use-journey-redirect";
+import { useSession } from "@/lib/auth-client";
 import { cn } from "@/lib/utils";
-import { motion } from "framer-motion";
-import { Badge, Menu } from "lucide-react";
-import { useTranslations } from "next-intl";
-import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { useEffect, useState } from "react";
 import LanguageSelector from "./language-selector";
 import { Logo } from "./logo";
 
 const MAIN_DOMAIN = "jogabola.fun";
 
 export default function Header() {
+  const { data: session } = useSession();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const pathname = usePathname();
@@ -31,6 +33,13 @@ export default function Header() {
   const { buttons, isLoading } = useHeaderButtons();
 
   const t = useTranslations();
+
+  // Determine o link do logo: se logado, vai para a dashboard (primeiro botão)
+  // Se não logado ou ainda carregando, vai para a homepage
+  const logoHref =
+    session?.user?.id && !isLoading && buttons.length > 0 && buttons[0].href
+      ? buttons[0].href
+      : "/";
 
   useEffect(() => {
     const handleScroll = () => {
@@ -64,34 +73,30 @@ export default function Header() {
         className={cn(
           "mx-auto flex w-full max-w-7xl items-center justify-between rounded-[28px] border px-5 py-3 transition-all duration-300 md:px-6",
           isScrolled
-            ? "border-white/10 bg-[#050312]/80 shadow-[0_18px_45px_-28px_rgba(2,167,255,0.35)] backdrop-blur-xl"
+            ? "border-white/10 bg-[#0a0b1e]/80 shadow-[0_18px_45px_-28px_rgba(2,167,255,0.35)] backdrop-blur-xl"
             : "border-transparent bg-transparent",
         )}
       >
         <div className="flex items-center space-x-6">
           <div className="flex items-center space-x-2">
-            <Logo size="small" isAnimate />
+            <Logo size="small" isAnimate href={logoHref} />
           </div>
 
           <Navbar className="hidden md:flex" />
         </div>
 
         <div className="flex items-center space-x-4">
-          <div
-            className={cn(
-              "hidden items-center gap-2 rounded-full border border-white/8 bg-white/4 px-3 py-1 text-sm transition-colors duration-300 md:visible md:flex",
-              "text-text-primary",
-            )}
-          >
+          <div className="hidden md:flex items-center">
             <LanguageSelector />
           </div>
 
           {!isLoading &&
-            buttons.map((button, index) => {
+            buttons.map(button => {
+              const key = button.href || button.label;
               if (button.href) {
                 return (
                   <Link
-                    key={index}
+                    key={key}
                     href={button.href}
                     className={cn(
                       "hidden rounded-full px-5 py-2.5 no-underline transition-colors duration-300 md:visible md:block",
@@ -108,7 +113,7 @@ export default function Header() {
               }
               return (
                 <button
-                  key={index}
+                  key={key}
                   onClick={button.onClick || redirectToJourney}
                   className={cn(
                     "hidden rounded-full px-5 py-2.5 no-underline transition-colors duration-300 md:visible md:block",
@@ -138,7 +143,7 @@ export default function Header() {
             </SheetTrigger>
             <SheetContent
               side={"right"}
-              className="border-border-default bg-[#050312]/96 text-text-primary h-screen w-full max-w-sm border-l shadow-[0_25px_60px_-40px_rgba(2,167,255,0.35)] backdrop-blur-xl"
+              className="border-border-default bg-[#0a0b1e]/96 text-text-primary h-screen w-full max-w-sm border-l shadow-[0_25px_60px_-40px_rgba(2,167,255,0.35)] backdrop-blur-xl"
             >
               <div className="border-border-default flex items-center justify-between border-b pb-4">
                 <SheetTitle className="text-xl font-semibold text-white">
@@ -155,10 +160,11 @@ export default function Header() {
 
               <SheetFooter className="border-border-default flex-col gap-3 border-t pt-4">
                 {!isLoading &&
-                  buttons.map((button, index) => {
+                  buttons.map(button => {
+                    const key = button.href || button.label;
                     if (button.href) {
                       return (
-                        <SheetClose key={index} asChild>
+                        <SheetClose key={key} asChild>
                           <Link
                             href={button.href}
                             className={cn(
@@ -176,7 +182,7 @@ export default function Header() {
                       );
                     }
                     return (
-                      <SheetClose key={index} asChild>
+                      <SheetClose key={key} asChild>
                         <button
                           onClick={button.onClick || redirectToJourney}
                           className={cn(
@@ -237,15 +243,15 @@ const Navbar = ({
       )}
     >
       {menuHome.header.map(item => {
+        const key = item.label;
         const href = item.isExternal
           ? `https://${item.href}.${MAIN_DOMAIN}`
           : item.href;
         const isActive = pathname === item.href;
 
         const LinkComponent = isMobile ? (
-          <SheetClose asChild>
+          <SheetClose key={key} asChild>
             <Link
-              key={item.label}
               href={href}
               onClick={onItemClick}
               className={cn(
@@ -273,7 +279,7 @@ const Navbar = ({
           </SheetClose>
         ) : (
           <Link
-            key={item.label}
+            key={key}
             href={href}
             className={cn(
               "relative flex items-center gap-1 rounded-full px-3 py-2 no-underline transition-colors duration-300",

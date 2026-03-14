@@ -66,18 +66,18 @@ export default function LanguageSelector({
       defaultValue={locale}
       onValueChange={onLanguageChange}
     >
-      <SelectTrigger className="h-10 w-auto min-w-[80px] gap-2 rounded-full border border-white/20 bg-white/5 px-3 text-sm font-medium text-white backdrop-blur-sm transition-all hover:border-white/40 hover:bg-white/10 focus:ring-0 focus:ring-offset-0">
-        <div className="flex items-center gap-2">
+      <SelectTrigger className="h-10 w-auto min-w-[90px] gap-3 rounded-full border border-white/15 bg-white/5 px-4 text-sm font-medium text-white backdrop-blur-md transition-all hover:border-neon-primary/40 hover:bg-white/10 focus:ring-neon-primary/20 focus:ring-1">
+        <div className="flex items-center gap-2.5">
           {isPending ? (
-            <Globe className="text-brand-green h-4 w-4 animate-spin" />
+            <Globe className="text-neon-primary h-4 w-4 animate-spin shrink-0" style={{ minWidth: "16px", minHeight: "16px" }} />
           ) : (
-            <Globe className="text-brand-green h-4 w-4" />
+            <Globe className="text-neon-primary h-4 w-4 shrink-0" style={{ minWidth: "16px", minHeight: "16px" }} />
           )}
           <span className="text-base leading-none">
             {LANGUAGES[locale]?.icon}
           </span>
           {!onlyIcon && (
-            <span className="text-xs font-bold text-white/90">
+            <span className="text-xs font-bold tracking-tight text-white/90">
               {LANGUAGES[locale]?.code}
             </span>
           )}

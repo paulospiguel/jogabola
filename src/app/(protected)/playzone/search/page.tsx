@@ -1,26 +1,32 @@
 "use client";
 
-import { EventImageCarousel } from "@/components/event-image-carousel";
-import { EventSearch } from "@/components/event-search";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
 import { motion } from "framer-motion";
 import {
   ArrowLeft,
+  Award,
+  Bell,
   CalendarDays,
   Clock,
+  Euro,
   MapPin,
+  Star,
   Target,
   Trophy,
   Users,
-  Euro,
-  Award,
-  Star,
-  Bell,
 } from "lucide-react";
 import Link from "next/link";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
 import { useEffect, useState } from "react";
+import { EventImageCarousel } from "@/components/event-image-carousel";
+import { EventSearch } from "@/components/event-search";
+import {
+  ProtectedDashboardShell,
+  ProtectedSectionCard,
+} from "@/components/protected/protected-dashboard-shell";
+import { ProtectedPageHeader } from "@/components/protected-page-header";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
 
 interface EventResult {
   id: number;
@@ -49,7 +55,8 @@ const fadeUp = {
 
 export default function SearchResultsPage() {
   const router = useRouter();
-  const searchParams = useSearchParams();
+  const t = useTranslations("searchResults");
+  const globalT = useTranslations();
   const [results, setResults] = useState<EventResult[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -115,13 +122,13 @@ export default function SearchResultsPage() {
       ]);
       setLoading(false);
     }, 500);
-  }, [searchParams]);
+  }, []);
 
   const getTypeLabel = (type: string) => {
     const labels: Record<string, string> = {
-      partida: "Partida",
-      treino: "Treino",
-      grupo: "Grupo",
+      partida: t("eventTypes.partida"),
+      treino: t("eventTypes.treino"),
+      grupo: t("eventTypes.grupo"),
     };
     return labels[type] || type;
   };
@@ -144,11 +151,13 @@ export default function SearchResultsPage() {
   };
 
   return (
-    <div className="relative min-h-screen overflow-hidden bg-[#050312] text-white">
-      <div className="absolute inset-0 -z-10 bg-[radial-gradient(90%_90%_at_50%_0%,rgba(0,255,213,0.22)_0%,rgba(5,3,18,0)_72%)]" />
-      <div className="absolute inset-0 -z-20 bg-[linear-gradient(135deg,#050312_0%,#080a25_45%,#0f163f_100%)]" />
-
-      <main className="container mx-auto px-4 py-12 md:px-8 lg:px-12">
+    <div className="relative flex flex-col overflow-hidden">
+      <ProtectedPageHeader
+        eyebrow={globalT("header.playZone")}
+        title={t("title")}
+        description={t("resultsFound", { count: results.length })}
+      />
+      <ProtectedDashboardShell contentClassName="space-y-6">
         {/* Header */}
         <motion.header
           className="mb-8 flex items-center gap-4"
@@ -162,38 +171,38 @@ export default function SearchResultsPage() {
             className="text-white hover:bg-white/10"
           >
             <ArrowLeft className="mr-2 h-5 w-5" />
-            Voltar
+            {t("back")}
           </Button>
           <div>
-            <h1 className="text-3xl font-bold text-white">
-              Resultados da busca
-            </h1>
+            <h1 className="text-3xl font-bold text-white">{t("title")}</h1>
             <p className="text-text-secondary mt-1 text-sm">
-              {results.length}{" "}
-              {results.length === 1
-                ? "resultado encontrado"
-                : "resultados encontrados"}
+              {t("resultsFound", { count: results.length })}
             </p>
           </div>
         </motion.header>
 
         {/* Busca */}
-        <motion.div
-          className="mb-8"
-          variants={fadeUp}
-          initial="initial"
-          animate="animate"
-          transition={{ delay: 0.1 }}
+        <ProtectedSectionCard
+          title={t("title")}
+          description={t("searchPrompt")}
+          bodyClassName="px-6 py-6"
         >
-          <EventSearch />
-        </motion.div>
+          <motion.div
+            variants={fadeUp}
+            initial="initial"
+            animate="animate"
+            transition={{ delay: 0.1 }}
+          >
+            <EventSearch />
+          </motion.div>
+        </ProtectedSectionCard>
 
         {/* Resultados */}
         {loading ? (
           <div className="flex min-h-[400px] items-center justify-center">
             <div className="text-center">
               <div className="mx-auto mb-4 h-8 w-8 animate-spin rounded-full border-4 border-[#6fffe9] border-t-transparent" />
-              <p className="text-text-secondary">Buscando eventos...</p>
+              <p className="text-text-secondary">{t("loading")}</p>
             </div>
           </div>
         ) : results.length === 0 ? (
@@ -203,11 +212,9 @@ export default function SearchResultsPage() {
             initial="initial"
             animate="animate"
           >
-            <p className="text-text-secondary text-lg">
-              Nenhum resultado encontrado
-            </p>
+            <p className="text-text-secondary text-lg">{t("noResults")}</p>
             <p className="text-text-secondary mt-2 text-sm">
-              Tente ajustar os filtros de busca
+              {t("noResultsDescription")}
             </p>
           </motion.div>
         ) : (
@@ -233,7 +240,7 @@ export default function SearchResultsPage() {
 
                     <div className="absolute top-3 right-3 z-20 flex gap-2">
                       <button
-                        onClick={(e) => {
+                        onClick={e => {
                           e.preventDefault();
                           e.stopPropagation();
                         }}
@@ -242,14 +249,18 @@ export default function SearchResultsPage() {
                             ? "bg-neon-secondary/20 border-neon-secondary text-neon-secondary"
                             : "bg-black/40 border-white/20 text-white hover:bg-black/60"
                         }`}
-                        aria-label={event.isFavorited ? "Remover dos favoritos" : "Adicionar aos favoritos"}
+                        aria-label={
+                          event.isFavorited
+                            ? "Remover dos favoritos"
+                            : "Adicionar aos favoritos"
+                        }
                       >
                         <Star
                           className={`h-5 w-5 mx-auto ${event.isFavorited ? "fill-current" : ""}`}
                         />
                       </button>
                       <button
-                        onClick={(e) => {
+                        onClick={e => {
                           e.preventDefault();
                           e.stopPropagation();
                         }}
@@ -292,7 +303,9 @@ export default function SearchResultsPage() {
                               <MapPin className="h-4 w-4 text-neon-secondary flex-shrink-0" />
                               <span className="truncate">{event.location}</span>
                               {event.city && (
-                                <span className="text-white/50">• {event.city}</span>
+                                <span className="text-white/50">
+                                  • {event.city}
+                                </span>
                               )}
                             </div>
 
@@ -305,35 +318,49 @@ export default function SearchResultsPage() {
                               <Users className="h-4 w-4 text-neon-secondary flex-shrink-0" />
                               <span>
                                 {event.currentParticipants}
-                                {event.maxParticipants && ` / ${event.maxParticipants}`} participantes
+                                {event.maxParticipants &&
+                                  ` / ${event.maxParticipants}`}{" "}
+                                participantes
                               </span>
                             </div>
 
                             {event.gameStyle && (
                               <div className="flex items-center gap-2 text-white/70">
                                 <Clock className="h-4 w-4 text-neon-secondary flex-shrink-0" />
-                                <span className="capitalize">{event.gameStyle}</span>
+                                <span className="capitalize">
+                                  {event.gameStyle}
+                                </span>
                               </div>
                             )}
                           </div>
 
                           <div className="flex items-center justify-between border-t border-white/10 pt-4">
                             <div>
-                              <p className="text-xs text-white/50">Organizado por</p>
-                              <p className="text-sm font-semibold text-white">{event.organizerName}</p>
+                              <p className="text-xs text-white/50">
+                                Organizado por
+                              </p>
+                              <p className="text-sm font-semibold text-white">
+                                {event.organizerName}
+                              </p>
                             </div>
 
                             <div className="text-right">
                               {event.isFree ? (
                                 <div className="rounded-lg bg-green-500/10 px-3 py-1.5 border border-green-500/20">
-                                  <span className="text-sm font-bold text-green-400">GRÁTIS</span>
+                                  <span className="text-sm font-bold text-green-400">
+                                    GRÁTIS
+                                  </span>
                                 </div>
                               ) : event.price ? (
                                 <div>
-                                  <p className="text-xs text-white/50">Participação</p>
+                                  <p className="text-xs text-white/50">
+                                    Participação
+                                  </p>
                                   <div className="flex items-center gap-1">
                                     <Euro className="h-4 w-4 text-neon-secondary" />
-                                    <span className="text-lg font-bold text-white">{event.price}</span>
+                                    <span className="text-lg font-bold text-white">
+                                      {event.price}
+                                    </span>
                                   </div>
                                 </div>
                               ) : null}
@@ -359,7 +386,7 @@ export default function SearchResultsPage() {
             })}
           </div>
         )}
-      </main>
+      </ProtectedDashboardShell>
     </div>
   );
 }

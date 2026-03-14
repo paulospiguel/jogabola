@@ -8,12 +8,19 @@ import { db } from "./db";
 const env = authConfig.getEnv();
 const trustedOrigins = authConfig.getTrustedOrigins();
 
+function normalizeImage(value: string | null | undefined) {
+  const trimmed = value?.trim();
+  return trimmed ? trimmed : null;
+}
+
 // Configurar provedores sociais apenas se as credenciais estiverem disponíveis
 const socialProviders = env.google.enabled
   ? {
       google: {
         clientId: env.google.clientId!,
         clientSecret: env.google.clientSecret!,
+        scopes: ["openid", "email", "profile"],
+        overrideUserInfoOnSignIn: true,
       },
     }
   : undefined;
@@ -40,6 +47,12 @@ export const auth = betterAuth({
   databaseHooks: {
     user: {
       create: {
+        before: async user => ({
+          data: {
+            ...user,
+            image: normalizeImage(user.image),
+          },
+        }),
         after: async user => {
           try {
             const { sendEmail } = await import("@/lib/email");
@@ -58,6 +71,16 @@ export const auth = betterAuth({
             console.error("Failed to send welcome email:", error);
           }
         },
+      },
+      update: {
+        before: async user => ({
+          data: {
+            ...user,
+            ...(Object.prototype.hasOwnProperty.call(user, "image")
+              ? { image: normalizeImage(user.image) }
+              : {}),
+          },
+        }),
       },
     },
   },

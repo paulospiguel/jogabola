@@ -1,15 +1,15 @@
 "use client";
 
-import { COMPANY, TRANSLATION_KEYS } from "@/constants/app";
-import { cn } from "@/lib/utils";
-import { useTranslations } from "next-intl";
 import Image, { type StaticImageData } from "next/image";
 import Link from "next/link";
-
+import { useTranslations } from "next-intl";
+import type React from "react";
+import type { ComponentProps } from "react";
 import logo from "@/assets/logos/jogabola-logo.svg";
 import logoWhite from "@/assets/logos/jogabola-white.svg";
 import newLogoAnimated from "@/assets/logos/logo_animado.gif";
-import React, { ComponentProps } from "react";
+import { COMPANY, TRANSLATION_KEYS } from "@/constants/app";
+import { cn } from "@/lib/utils";
 
 const sizes = {
   mini: "w-16 h-20",
@@ -23,6 +23,7 @@ type LogoProps = {
   size?: keyof typeof sizes;
   isAnimate?: boolean;
   variant?: "white" | "default";
+  href?: string;
 };
 
 const imageColors = {
@@ -35,6 +36,7 @@ export const Logo: React.FC<LogoProps> = ({
   className,
   isAnimate,
   size = "medium",
+  href = "/",
 }) => {
   const t = useTranslations();
   const logoSize = sizes[size];
@@ -54,7 +56,7 @@ export const Logo: React.FC<LogoProps> = ({
   }
 
   return (
-    <Link href="/" className={cn("relative flex", logoSize, className)}>
+    <Link href={href} className={cn("relative flex", logoSize, className)}>
       <Image
         unoptimized
         src={logotipo}

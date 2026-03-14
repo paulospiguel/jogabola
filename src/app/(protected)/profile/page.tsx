@@ -1,29 +1,13 @@
 "use client";
 
-import { getProfileData, saveProfileData } from "@/actions/profile";
-import { Logo } from "@/components/logo";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Switch } from "@/components/ui/switch";
-import { Textarea } from "@/components/ui/textarea";
-import { useToast } from "@/hooks/use-toast-custom";
-import { signOut, useSession } from "@/lib/auth-client";
-import { resolveProfileImage } from "@/lib/profile-image";
-import { cn } from "@/lib/utils";
-import type { Availability } from "@/schemas/profile";
 import { motion } from "framer-motion";
 import {
   Activity,
   ArrowRight,
-  Bell,
   ChevronRight,
   Edit2,
   Info,
   Loader2,
-  LogOut,
   MapPin,
   Save,
   Settings,
@@ -34,9 +18,24 @@ import {
   TrendingUp,
   Users,
 } from "lucide-react";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
 import { useEffect, useRef, useState } from "react";
+import { getProfileData, saveProfileData } from "@/actions/profile";
+import { FooterDashboard } from "@/components/footer-dashboad";
+import { ProtectedPageHeader } from "@/components/protected-page-header";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Switch } from "@/components/ui/switch";
+import { Textarea } from "@/components/ui/textarea";
+import { useToast } from "@/hooks/use-toast-custom";
+import { useSession } from "@/lib/auth-client";
+import { resolveProfileImage } from "@/lib/profile-image";
+import { cn } from "@/lib/utils";
+import type { Availability, Experience, Role } from "@/schemas/profile";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -55,8 +54,7 @@ interface ProfileData {
   earlyAccessEnabled: boolean;
   goals: string[];
   role: string;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  customFields: Record<string, any>;
+  customFields: Record<string, unknown>;
 }
 
 type Tab = "overview" | "teams" | "activities" | "settings";
@@ -124,13 +122,7 @@ const mockActivities = [
 
 // ─── Stat Card ────────────────────────────────────────────────────────────────
 
-function StatItem({
-  value,
-  label,
-}: {
-  value: number | string;
-  label: string;
-}) {
+function StatItem({ value, label }: { value: number | string; label: string }) {
   return (
     <div className="rounded-2xl border border-white/8 bg-white/4 px-4 py-3">
       <div className="text-2xl font-semibold text-white">{value}</div>
@@ -143,13 +135,7 @@ function StatItem({
 
 // ─── Attribute Bar ────────────────────────────────────────────────────────────
 
-function AttributeBar({
-  label,
-  value,
-}: {
-  label: string;
-  value: number;
-}) {
+function AttributeBar({ label, value }: { label: string; value: number }) {
   return (
     <div className="space-y-1">
       <div className="flex items-center justify-between text-xs">
@@ -176,6 +162,7 @@ export default function ProfilePage() {
   const router = useRouter();
   const { data: session } = useSession();
   const { toast } = useToast();
+  const t = useTranslations("profilePage");
   const [activeTab, setActiveTab] = useState<Tab>("overview");
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -207,7 +194,7 @@ export default function ProfilePage() {
 
     setLoading(true);
     getProfileData(userId)
-      .then((result) => {
+      .then(result => {
         if (result.success && result.data) {
           const d = result.data;
           setProfileData({
@@ -228,17 +215,25 @@ export default function ProfilePage() {
             customFields: d.customFields || {},
           });
         } else {
-          setProfileData((prev) => ({
+          setProfileData(prev => ({
             ...prev,
             name: session.user.name || "",
             email: session.user.email || "",
           }));
         }
       })
-      .catch(() => toast.error("Erro", "Erro ao carregar perfil"))
+      .catch(() =>
+        toast.error(t("feedback.errorTitle"), t("feedback.loadError")),
+      )
       .finally(() => setLoading(false));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [session?.user?.id]);
+  }, [
+    session?.user?.id,
+    session?.user?.name,
+    session?.user?.email,
+    session?.user?.image,
+    toast,
+    t,
+  ]);
 
   // ── Save profile ───────────────────────────────────────────────────────────
 
@@ -247,17 +242,13 @@ export default function ProfilePage() {
     setSaving(true);
     try {
       const result = await saveProfileData(session.user.id, {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        role: profileData.role as any,
+        role: profileData.role as Role,
         name: profileData.name,
         email: profileData.email,
         nationality: profileData.nationality || undefined,
         location: profileData.location || undefined,
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        experience: (profileData.experience as any) || undefined,
-        availability:
-          (profileData.availability as Availability | "" | undefined) ||
-          undefined,
+        experience: (profileData.experience as Experience) || undefined,
+        availability: (profileData.availability as Availability) || undefined,
         goals: profileData.goals,
         waitlistApps: [],
         customFields: {
@@ -273,23 +264,21 @@ export default function ProfilePage() {
       });
 
       if (result.success) {
-        toast.success("Perfil atualizado", "As alterações foram guardadas.");
+        toast.success(
+          t("feedback.updatedTitle"),
+          t("feedback.updatedDescription"),
+        );
       } else {
-        toast.error("Erro", result.error || "Não foi possível guardar.");
+        toast.error(
+          t("feedback.errorTitle"),
+          result.error || t("feedback.saveError"),
+        );
       }
     } catch {
-      toast.error("Erro", "Não foi possível guardar.");
+      toast.error(t("feedback.errorTitle"), t("feedback.saveError"));
     } finally {
       setSaving(false);
     }
-  }
-
-  // ── Sign out ───────────────────────────────────────────────────────────────
-
-  async function handleSignOut() {
-    await signOut({
-      fetchOptions: { onSuccess: () => router.push("/auth") },
-    });
   }
 
   // ── Derived ────────────────────────────────────────────────────────────────
@@ -297,30 +286,30 @@ export default function ProfilePage() {
   const initials = profileData.name
     ? profileData.name
         .split(" ")
-        .map((n) => n[0])
+        .map(n => n[0])
         .slice(0, 2)
         .join("")
         .toUpperCase()
     : "?";
 
   const roleLabel: Record<string, string> = {
-    PLAYER: "Atleta Amador",
-    MANAGER: "Gestor",
-    ORGANIZER: "Organizador",
-    FAN: "Adepto",
+    PLAYER: t("roles.player"),
+    MANAGER: t("roles.manager"),
+    ORGANIZER: t("roles.organizer"),
+    FAN: t("roles.fan"),
   };
 
   const attributes = [
     {
-      label: "Velocidade",
+      label: t("attributes.speed"),
       value: (profileData.customFields?.speed as number) ?? 85,
     },
     {
-      label: "Finalização",
+      label: t("attributes.finishing"),
       value: (profileData.customFields?.finishing as number) ?? 78,
     },
     {
-      label: "Passe",
+      label: t("attributes.passing"),
       value: (profileData.customFields?.passing as number) ?? 72,
     },
   ];
@@ -328,22 +317,22 @@ export default function ProfilePage() {
   const tabs: { id: Tab; label: string; icon: React.ReactNode }[] = [
     {
       id: "overview",
-      label: "Visão Geral",
+      label: t("tabs.overview"),
       icon: <Target className="h-4 w-4" />,
     },
     {
       id: "teams",
-      label: "Minhas Equipes",
+      label: t("tabs.teams"),
       icon: <Users className="h-4 w-4" />,
     },
     {
       id: "activities",
-      label: "Atividades",
+      label: t("tabs.activities"),
       icon: <Activity className="h-4 w-4" />,
     },
     {
       id: "settings",
-      label: "Configurações",
+      label: t("tabs.settings"),
       icon: <Settings className="h-4 w-4" />,
     },
   ];
@@ -357,38 +346,12 @@ export default function ProfilePage() {
 
   return (
     <div className="min-h-screen bg-[radial-gradient(circle_at_top,rgba(2,167,255,0.14),transparent_28%),linear-gradient(180deg,#050312_0%,#080a25_42%,#050312_100%)] text-white">
-      <header className="sticky top-0 z-40 border-b border-white/8 bg-[#050312]/88 backdrop-blur-xl">
-        <div className="mx-auto flex max-w-7xl items-center gap-4 px-4 py-4 md:px-6">
-          <div className="flex min-w-0 flex-1 items-center gap-4">
-            <Logo size="small" className="h-12 w-20 shrink-0" />
-            <div className="min-w-0">
-              <p className="text-[11px] font-semibold tracking-[0.24em] text-white/45 uppercase">
-                Workspace
-              </p>
-              <h1 className="truncate font-heading text-2xl tracking-[0.08em] text-white">
-                Profile Center
-              </h1>
-            </div>
-          </div>
-
-          <div className="flex items-center gap-2">
-            <button
-              type="button"
-              className="relative flex h-11 w-11 items-center justify-center rounded-2xl border border-white/10 bg-white/5 text-white/70 transition-colors hover:bg-white/10 hover:text-white"
-              aria-label="Notificações"
-            >
-              <Bell className="h-4 w-4" />
-              <span className="absolute top-1 right-1 h-2.5 w-2.5 rounded-full bg-neon-primary" />
-            </button>
-            <Avatar className="h-11 w-11 border border-white/10 bg-white/5">
-              <AvatarImage src={profileImage} />
-              <AvatarFallback className="bg-white/8 text-sm font-semibold text-neon-primary">
-                {initials}
-              </AvatarFallback>
-            </Avatar>
-          </div>
-        </div>
-      </header>
+      <ProtectedPageHeader
+        eyebrow={t("header.eyebrow")}
+        title={t("header.title")}
+        description={t("header.description")}
+        showLogo
+      />
 
       <main className="mx-auto max-w-7xl px-4 py-8 md:px-6 md:py-10">
         {loading ? (
@@ -402,7 +365,7 @@ export default function ProfilePage() {
                 <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
                   <div>
                     <p className="text-[11px] font-semibold tracking-[0.24em] text-white/45 uppercase">
-                      Identity
+                      {t("identity.eyebrow")}
                     </p>
                     <h2 className="mt-1 font-heading text-3xl tracking-[0.08em] text-white sm:text-4xl">
                       O teu posto no jogo
@@ -410,10 +373,10 @@ export default function ProfilePage() {
                   </div>
                   <div className="flex flex-wrap items-center gap-2">
                     <Badge className="border-white/10 bg-white/6 px-3 py-1 text-xs font-semibold tracking-[0.18em] text-white/60 uppercase">
-                      {roleLabel[profileData.role] || "Atleta"}
+                      {roleLabel[profileData.role] || t("fallbacks.player")}
                     </Badge>
                     <Badge className="border-neon-primary/20 bg-neon-primary/10 px-3 py-1 text-xs font-semibold tracking-[0.18em] text-neon-primary uppercase">
-                      Perfil ativo
+                      {t("identity.activeProfile")}
                     </Badge>
                   </div>
                 </div>
@@ -432,7 +395,7 @@ export default function ProfilePage() {
                   <button
                     type="button"
                     className="absolute right-2 bottom-2 flex h-9 w-9 items-center justify-center rounded-full border border-white/10 bg-[#050312]/90 text-neon-primary transition-colors hover:bg-[#101b46]"
-                    aria-label="Editar foto"
+                    aria-label={t("identity.editPhoto")}
                   >
                     <Edit2 className="h-3.5 w-3.5" />
                   </button>
@@ -442,15 +405,15 @@ export default function ProfilePage() {
                   <div className="flex-1">
                     <div className="mb-2 flex flex-wrap items-center gap-3">
                       <h3 className="text-3xl font-semibold text-white sm:text-4xl">
-                        {profileData.name || "Utilizador"}
+                        {profileData.name || t("fallbacks.user")}
                       </h3>
                       <Badge className="border-white/10 bg-white/6 text-xs text-white/62">
                         <Shield className="mr-1 h-3 w-3" />
-                        Member since 2024
+                        {t("identity.memberSince", { year: 2024 })}
                       </Badge>
                     </div>
                     <p className="max-w-2xl text-sm leading-7 text-white/60">
-                      {roleLabel[profileData.role] || "Atleta"}
+                      {roleLabel[profileData.role] || t("fallbacks.player")}
                       {profileData.location && ` • ${profileData.location}`}
                     </p>
                     <div className="mt-5 flex flex-wrap gap-3">
@@ -458,13 +421,13 @@ export default function ProfilePage() {
                         value={
                           (profileData.customFields?.matches as number) ?? 24
                         }
-                        label="Partidas"
+                        label={t("stats.matches")}
                       />
                       <StatItem
                         value={
                           (profileData.customFields?.goals as number) ?? 12
                         }
-                        label="Gols"
+                        label={t("stats.goals")}
                       />
                       <StatItem
                         value={
@@ -482,13 +445,67 @@ export default function ProfilePage() {
                     >
                       Editar Perfil
                     </Button>
-                    <div className="rounded-2xl border border-white/8 bg-[#050312]/55 px-4 py-3">
-                      <p className="text-[11px] font-semibold tracking-[0.22em] text-white/45 uppercase">
-                        Disponibilidade
-                      </p>
-                      <p className="mt-1 text-sm text-white/70">
-                        {profileData.availability || "Atualiza quando podes jogar"}
-                      </p>
+                    <div className="flex items-center justify-between rounded-2xl border border-white/8 bg-[#050312]/55 px-4 py-3">
+                      <div>
+                        <p className="text-[11px] font-semibold tracking-[0.22em] text-white/45 uppercase">
+                          Disponibilidade
+                        </p>
+                        <p className="mt-1 text-sm text-white/70">
+                          {profileData.availability ||
+                            "Atualiza quando podes jogar"}
+                        </p>
+                      </div>
+                      <Switch
+                        checked={Boolean(
+                          profileData.customFields?.isAvailable ?? true,
+                        )}
+                        onCheckedChange={async checked => {
+                          const updated = {
+                            ...profileData,
+                            customFields: {
+                              ...profileData.customFields,
+                              isAvailable: checked,
+                            },
+                          };
+                          setProfileData(updated);
+                          if (session?.user?.id && profileData.role) {
+                            try {
+                              await saveProfileData(session.user.id, {
+                                role: updated.role as Role,
+                                name: updated.name,
+                                email: updated.email,
+                                nationality: updated.nationality || undefined,
+                                location: updated.location || undefined,
+                                experience:
+                                  (updated.experience as Experience) ||
+                                  undefined,
+                                availability:
+                                  (updated.availability as Availability) ||
+                                  undefined,
+                                goals: updated.goals,
+                                waitlistApps: [],
+                                customFields: {
+                                  ...updated.customFields,
+                                  bio: updated.bio,
+                                  language: updated.language,
+                                },
+                                preferences: {
+                                  notifications: updated.notificationsEnabled,
+                                  newsletter: updated.newsletterEnabled,
+                                  earlyAccess: updated.earlyAccessEnabled,
+                                },
+                              });
+                            } catch {
+                              toast.error(
+                                "Erro",
+                                "Não foi possível atualizar a disponibilidade.",
+                              );
+                            }
+                          }
+                        }}
+                        className="data-[state=checked]:bg-neon-primary"
+                        aria-label="Alternar disponibilidade"
+                      />
                     </div>
                   </div>
                 </div>
@@ -496,7 +513,7 @@ export default function ProfilePage() {
             </section>
 
             <div className="mb-6 flex gap-2 overflow-x-auto rounded-full border border-white/8 bg-white/4 p-1">
-              {tabs.map((tab) => (
+              {tabs.map(tab => (
                 <button
                   key={tab.id}
                   type="button"
@@ -541,7 +558,7 @@ export default function ProfilePage() {
                       <h3 className="font-semibold text-white">Atributos</h3>
                     </div>
                     <div className="space-y-3">
-                      {attributes.map((attr) => (
+                      {attributes.map(attr => (
                         <AttributeBar
                           key={attr.label}
                           label={attr.label}
@@ -558,12 +575,15 @@ export default function ProfilePage() {
                       <h3 className="text-lg font-semibold text-white">
                         Equipes Atuais
                       </h3>
-                      <button type="button" className="text-sm font-medium text-neon-primary hover:text-white">
+                      <button
+                        type="button"
+                        className="text-sm font-medium text-neon-primary hover:text-white"
+                      >
                         Ver todas
                       </button>
                     </div>
                     <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-                      {mockTeams.map((team) => (
+                      {mockTeams.map(team => (
                         <div
                           key={team.id}
                           className="flex items-center gap-3 rounded-[22px] border border-white/8 bg-white/5 p-4 transition-colors hover:border-white/15"
@@ -607,11 +627,10 @@ export default function ProfilePage() {
                         >
                           <div
                             className={cn(
-                            "mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-xl",
-                            "mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-2xl",
-                            activity.bg,
-                          )}
-                        >
+                              "mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-xl",
+                              activity.bg,
+                            )}
+                          >
                             {activity.icon}
                           </div>
                           <div>
@@ -695,7 +714,8 @@ export default function ProfilePage() {
                     key={activity.id}
                     className={cn(
                       "flex items-start gap-3 px-5 py-4",
-                      i < mockActivities.length - 1 && "border-b border-white/5",
+                      i < mockActivities.length - 1 &&
+                        "border-b border-white/5",
                     )}
                   >
                     <div
@@ -727,12 +747,17 @@ export default function ProfilePage() {
                   </h3>
                   <div className="grid gap-4 sm:grid-cols-2">
                     <div className="space-y-1.5">
-                      <Label htmlFor="profile-name" className="text-xs tracking-[0.18em] text-white/50 uppercase">Nome</Label>
+                      <Label
+                        htmlFor="profile-name"
+                        className="text-xs tracking-[0.18em] text-white/50 uppercase"
+                      >
+                        Nome
+                      </Label>
                       <Input
                         id="profile-name"
                         value={profileData.name}
-                        onChange={(e) =>
-                          setProfileData((p) => ({
+                        onChange={e =>
+                          setProfileData(p => ({
                             ...p,
                             name: e.target.value,
                           }))
@@ -741,7 +766,12 @@ export default function ProfilePage() {
                       />
                     </div>
                     <div className="space-y-1.5">
-                      <Label htmlFor="profile-email" className="text-xs tracking-[0.18em] text-white/50 uppercase">Email</Label>
+                      <Label
+                        htmlFor="profile-email"
+                        className="text-xs tracking-[0.18em] text-white/50 uppercase"
+                      >
+                        Email
+                      </Label>
                       <Input
                         id="profile-email"
                         value={profileData.email}
@@ -750,15 +780,18 @@ export default function ProfilePage() {
                       />
                     </div>
                     <div className="space-y-1.5">
-                      <Label htmlFor="profile-location" className="text-xs tracking-[0.18em] text-white/50 uppercase">
+                      <Label
+                        htmlFor="profile-location"
+                        className="text-xs tracking-[0.18em] text-white/50 uppercase"
+                      >
                         Localização
                       </Label>
                       <Input
                         id="profile-location"
                         value={profileData.location || ""}
                         placeholder="Cidade, País"
-                        onChange={(e) =>
-                          setProfileData((p) => ({
+                        onChange={e =>
+                          setProfileData(p => ({
                             ...p,
                             location: e.target.value,
                           }))
@@ -767,15 +800,18 @@ export default function ProfilePage() {
                       />
                     </div>
                     <div className="space-y-1.5">
-                      <Label htmlFor="profile-availability" className="text-xs tracking-[0.18em] text-white/50 uppercase">
+                      <Label
+                        htmlFor="profile-availability"
+                        className="text-xs tracking-[0.18em] text-white/50 uppercase"
+                      >
                         Disponibilidade
                       </Label>
                       <Input
                         id="profile-availability"
                         value={profileData.availability || ""}
                         placeholder="Ex: Fins de semana"
-                        onChange={(e) =>
-                          setProfileData((p) => ({
+                        onChange={e =>
+                          setProfileData(p => ({
                             ...p,
                             availability: e.target.value,
                           }))
@@ -784,14 +820,19 @@ export default function ProfilePage() {
                       />
                     </div>
                     <div className="space-y-1.5 sm:col-span-2">
-                      <Label htmlFor="profile-bio" className="text-xs tracking-[0.18em] text-white/50 uppercase">Bio</Label>
+                      <Label
+                        htmlFor="profile-bio"
+                        className="text-xs tracking-[0.18em] text-white/50 uppercase"
+                      >
+                        Bio
+                      </Label>
                       <Textarea
                         id="profile-bio"
                         value={profileData.bio || ""}
                         placeholder="Conta um pouco sobre ti..."
                         rows={3}
-                        onChange={(e) =>
-                          setProfileData((p) => ({
+                        onChange={e =>
+                          setProfileData(p => ({
                             ...p,
                             bio: e.target.value,
                           }))
@@ -823,7 +864,7 @@ export default function ProfilePage() {
                         label: "Acesso antecipado",
                         desc: "Testar novas funcionalidades em primeira mão",
                       },
-                    ].map((item) => (
+                    ].map(item => (
                       <div
                         key={item.key}
                         className="flex items-center justify-between gap-4"
@@ -838,8 +879,8 @@ export default function ProfilePage() {
                         </div>
                         <Switch
                           checked={profileData[item.key] as boolean}
-                          onCheckedChange={(v) =>
-                            setProfileData((p) => ({ ...p, [item.key]: v }))
+                          onCheckedChange={v =>
+                            setProfileData(p => ({ ...p, [item.key]: v }))
                           }
                         />
                       </div>
@@ -847,7 +888,7 @@ export default function ProfilePage() {
                   </div>
                 </div>
 
-                <div className="flex flex-col gap-3 sm:flex-row sm:justify-between">
+                <div className="flex flex-col gap-3 sm:flex-row sm:justify-start">
                   <Button
                     onClick={handleSave}
                     disabled={saving}
@@ -860,14 +901,6 @@ export default function ProfilePage() {
                     )}
                     {saving ? "A guardar..." : "Guardar Alterações"}
                   </Button>
-                  <Button
-                    variant="outline"
-                    onClick={handleSignOut}
-                    className="border-red-500/30 bg-red-500/10 text-red-400 hover:bg-red-500/20 hover:text-red-300"
-                  >
-                    <LogOut className="mr-2 h-4 w-4" />
-                    Terminar Sessão
-                  </Button>
                 </div>
               </div>
             )}
@@ -875,31 +908,7 @@ export default function ProfilePage() {
         )}
       </main>
 
-      <footer className="mt-14 border-t border-white/8 bg-[#050312]/80">
-        <div className="mx-auto flex max-w-7xl flex-col gap-5 px-4 py-6 md:px-6">
-          <div className="flex flex-col gap-2 border-t border-white/8 pt-4 text-xs text-white/32 sm:flex-row sm:items-center sm:justify-between">
-            <div className="flex items-center gap-3">
-              <Logo size="small" className="h-8 w-12" />
-              <span>© {new Date().getFullYear()} Jogabola. Todos os direitos reservados.</span>
-            </div>
-            <div className="flex flex-wrap items-center gap-4">
-              {[
-                { href: "/terms-and-conditions", label: "Termos" },
-                { href: "/privacy-policy", label: "Privacidade" },
-                { href: "/contact", label: "Suporte" },
-              ].map((item) => (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  className="text-xs font-medium text-white/55 transition-colors hover:text-white"
-                >
-                  {item.label}
-                </Link>
-              ))}
-            </div>
-          </div>
-        </div>
-      </footer>
+      <FooterDashboard />
     </div>
   );
 }

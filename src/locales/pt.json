@@ -37,19 +37,35 @@
     "modules": {
       "scout": {
         "title": "Scout Pro IA",
-        "description": "Sistema avançado de reconhecimento de talentos através de visão computacional e análise preditiva de potencial competitivo."
+        "description": "Prospecção inteligente de talentos com IA. Identifique padrões de jogo e potencial futuro através de análise de dados avançada e visão computacional."
       },
       "finance": {
         "title": "Módulo Financeiro Elite",
-        "description": "Gestão de tesouraria esportiva, contratos e compliance automatizado com tecnologia blockchain para total transparência."
+        "description": "Controle financeiro automatizado com transparência máxima. Gestão de contratos, tesouraria e conformidade via blockchain."
       },
       "marketplace": {
         "title": "Marketplace de Atletas",
-        "description": "Conexão direta entre clubes, agentes e talentos em um ambiente seguro com portfólios digitais validados por IA."
+        "description": "A vitrine digital do futebol. Conecte atletas, agentes e clubes em um ecossistema seguro com perfis verificados por IA."
       },
       "health": {
         "title": "Saúde Preventiva IA",
-        "description": "Monitoramento biométrico em tempo real para prevenção de lesões e otimização de cargas de treinamento individualizadas."
+        "description": "Gestão biológica e preventiva 24/7. Reduza lesões e otimize a performance física através de biometria em tempo real e IA."
+      },
+      "depin": {
+        "title": "DEPIN Esportivo",
+        "description": "Descentralização de infraestrutura física. Tokenização de espaços comunitários e incentivos para manutenção de campos de bairro."
+      },
+      "monetization": {
+        "title": "Monetização Web3",
+        "description": "Novos horizontes de receita para o futebol amador. Tokenização de ativos, programas de fidelidade e economia circular esportiva."
+      },
+      "coaching": {
+        "title": "Centro de Gestão de Equipes",
+        "description": "Controle total da sua equipe em um único lugar. Organize treinos, gerencie atletas e defina táticas com ferramentas profissionais."
+      },
+      "timer": {
+        "title": "JogaBola Timer",
+        "description": "Cronometragem avançada e registro de estatísticas em tempo real. Transforme cada partida em uma experiência profissional."
       }
     },
     "newsletter": {
@@ -1247,6 +1263,8 @@
       "title": "Encontre sua próxima partida",
       "description": "Busque por partidas, treinos ou grupos próximos a você. Filtre por localização, estilo de jogo ou intervalo de datas.",
       "location": "Localização",
+      "useCurrentLocation": "Usar localização atual",
+      "dateRange": "Selecione as datas",
       "gameStyle": "Estilo de jogo",
       "gameStyleOptions": {
         "competitivo": "Competitivo",
@@ -1257,6 +1275,33 @@
       "endDate": "Data final",
       "search": "Buscar",
       "filters": "Filtros",
+      "advancedFilters": "Filtros avançados",
+      "locationStatus": {
+        "unsupported": {
+          "title": "Geolocalização não suportada",
+          "description": "Seu navegador não suporta geolocalização."
+        },
+        "success": {
+          "title": "Localização obtida",
+          "description": "Sua localização atual foi definida com sucesso."
+        },
+        "permissionDenied": {
+          "title": "Permissão negada",
+          "description": "Permita o acesso à localização nas configurações do navegador."
+        },
+        "unavailable": {
+          "title": "Localização não disponível",
+          "description": "Verifique se o GPS está ativado."
+        },
+        "timeout": {
+          "title": "Tempo esgotado",
+          "description": "Tente novamente para obter sua localização."
+        },
+        "error": {
+          "title": "Erro ao obter localização",
+          "description": "Ocorreu um erro ao tentar obter sua localização. Tente novamente."
+        }
+      },
       "filtersModal": {
         "title": "Configurações de Filtros",
         "description": "Configure os filtros avançados para refinar sua busca",
@@ -1276,6 +1321,7 @@
     },
     "searchResults": {
       "title": "Resultados da busca",
+      "searchPrompt": "Refine a pesquisa por localização, data e estilo de jogo antes de abrir um evento.",
       "resultsFound": "{count} {count, plural, =1 {resultado encontrado} other {resultados encontrados}}",
       "noResults": "Nenhum resultado encontrado",
       "noResultsDescription": "Tente ajustar os filtros de busca",
@@ -1570,10 +1616,157 @@
       "assignPlayer": "Atribuir Jogador"
     }
   },
+  "playzonePage": {
+    "loading": "Carregando sua jornada...",
+    "header": {
+      "title": "Central do atleta",
+      "description": "Próximos jogos, progresso e oportunidades num só fluxo.",
+      "welcome": "Olá, seja bem-vindo ao Jogabola!",
+      "greeting": "👋 Olá, {name}!",
+      "subtitle": "Pronto para o próximo jogo?",
+      "level": "Nível {level}"
+    },
+    "fallbacks": {
+      "player": "Jogador"
+    },
+    "experience": {
+      "beginner": "Iniciante",
+      "intermediate": "Intermediário",
+      "advanced": "Avançado",
+      "professional": "Profissional"
+    },
+    "nextMatch": {
+      "label": "Próximo jogo",
+      "datetime": "Dom 10/11 — 19:30",
+      "location": "Arena Centenário"
+    },
+    "quickStats": {
+      "matchesPlayed": "Jogos disputados",
+      "averageRating": "Nota média"
+    },
+    "achievements": {
+      "hatTrickHero": {
+        "title": "Hat-trick hero",
+        "description": "3 gols no mesmo jogo"
+      },
+      "precision": {
+        "title": "100 passes certos",
+        "description": "Precisão máxima em 4 partidas"
+      },
+      "defensiveMvp": {
+        "title": "MVP defensivo",
+        "description": "Domínio total do meio-campo"
+      }
+    },
+    "feedUpdates": {
+      "first": "⚽ Lucas marcou 3 gols no treino de ontem.",
+      "second": "🔥 Nova partida marcada para domingo!",
+      "third": "🧠 Review tático liberado para a equipe."
+    }
+  },
+  "arenaPage": {
+    "header": {
+      "title": "Central do clube",
+      "description": "Visão operacional do plantel, agenda e gestão rápida."
+    },
+    "hero": {
+      "eyebrow": "Arena · gestão do clube",
+      "title": "VISÃO DO CLUBE",
+      "description": "Indicadores operacionais para acompanhar a época amadora em curso.",
+      "exportStats": "Exportar estatísticas",
+      "quickManagement": "Gestão rápida"
+    },
+    "stats": {
+      "winRatio": {
+        "title": "Taxa de vitórias",
+        "detail": "+5,4% face ao último mês"
+      },
+      "activePlayers": {
+        "title": "Atletas ativos",
+        "detail": "8 equipas registadas"
+      },
+      "totalGoals": {
+        "title": "Golos marcados",
+        "detail": "Média de 2,4 por partida"
+      },
+      "nextMatch": {
+        "title": "Próximo jogo",
+        "value": "Em 4h 22m",
+        "detail": "ESTÁDIO A · CAMPO 4"
+      }
+    },
+    "quickActions": {
+      "addPlayer": "Adicionar atleta",
+      "feesStatus": "Estado de quotas",
+      "assignKit": "Atribuir kit",
+      "announce": "Comunicar"
+    },
+    "teamStatus": {
+      "training": "Treino",
+      "active": "Ativo",
+      "rest": "Descanso"
+    }
+  },
+  "profilePage": {
+    "header": {
+      "eyebrow": "Workspace",
+      "title": "Centro de perfil",
+      "description": "Conta, identidade e preferências num único ponto."
+    },
+    "feedback": {
+      "errorTitle": "Erro",
+      "loadError": "Erro ao carregar perfil",
+      "updatedTitle": "Perfil atualizado",
+      "updatedDescription": "As alterações foram guardadas.",
+      "saveError": "Não foi possível guardar."
+    },
+    "roles": {
+      "player": "Atleta amador",
+      "manager": "Gestor",
+      "organizer": "Organizador",
+      "fan": "Adepto"
+    },
+    "attributes": {
+      "speed": "Velocidade",
+      "finishing": "Finalização",
+      "passing": "Passe"
+    },
+    "tabs": {
+      "overview": "Visão geral",
+      "teams": "Minhas equipas",
+      "activities": "Atividades",
+      "settings": "Configurações"
+    },
+    "identity": {
+      "eyebrow": "Identidade",
+      "activeProfile": "Perfil ativo",
+      "editPhoto": "Editar foto",
+      "memberSince": "Membro desde {year}"
+    },
+    "fallbacks": {
+      "player": "Atleta",
+      "user": "Utilizador"
+    },
+    "stats": {
+      "matches": "Partidas",
+      "goals": "Golos"
+    }
+  },
   "organizerPage": {
+    "eyebrow": "Organizer",
     "title": "Área do Organizador",
     "subtitle": "Organize torneios e eventos",
     "newTournament": "Novo Torneio",
+    "hero": {
+      "eyebrow": "Orquestração de calendário",
+      "title": "Planeie competições com menos ruído",
+      "description": "Centralize jogos, inscrições e locais com o mesmo shell operacional das restantes áreas protegidas."
+    },
+    "roadmap": {
+      "eyebrow": "Próximo módulo",
+      "title": "Fluxos de organização em expansão",
+      "description": "A próxima entrega vai ligar calendário, participantes e confirmações automáticas num só painel."
+    },
     "stats": {
       "activeTournaments": "Torneios Ativos",
       "inProgress": "Em andamento",
@@ -1590,9 +1783,20 @@
     }
   },
   "fanzonePage": {
+    "eyebrow": "Fan Zone",
     "title": "Fan Zone",
     "subtitle": "Acompanhe seus times favoritos",
     "followTeam": "Seguir Time",
+    "hero": {
+      "eyebrow": "Radar da comunidade",
+      "title": "Siga jogos, clubes e momentos em tempo real",
+      "description": "A Fan Zone passa a usar o mesmo sistema visual das áreas autenticadas, mantendo destaque para o que merece atenção."
+    },
+    "community": {
+      "eyebrow": "Próximos recursos",
+      "title": "Camada social em construção",
+      "description": "Alertas personalizados, favoritos e trilhas de conteúdo vão entrar aqui sem quebrar o shell principal."
+    },
     "stats": {
       "followedTeams": "Times Seguidos",
       "newTeams": "+2 novos",

@@ -3,10 +3,14 @@
 import { motion } from "framer-motion";
 import {
   ChevronRight,
+  Coins,
   Eye,
   PlusSquare,
   Send,
+  Share2,
   ShoppingBag,
+  Timer,
+  Users,
   Wallet,
 } from "lucide-react";
 import { useTranslations } from "next-intl";
@@ -130,19 +134,35 @@ export default function EcosystemPage() {
 
   const modules: ModuleCardProps[] = [
     {
+      id: "coaching",
+      icon: Users,
+      title: t("modules.coaching.title"),
+      description: t("modules.coaching.description"),
+      progress: 80,
+      status: "development",
+    },
+    {
+      id: "timer",
+      icon: Timer,
+      title: t("modules.timer.title"),
+      description: t("modules.timer.description"),
+      progress: 75,
+      status: "development",
+    },
+    {
       id: "scout",
       icon: Eye,
       title: t("modules.scout.title"),
       description: t("modules.scout.description"),
-      progress: 0,
-      status: "beta",
+      progress: 10,
+      status: "development",
     },
     {
       id: "finance",
       icon: Wallet,
       title: t("modules.finance.title"),
       description: t("modules.finance.description"),
-      progress: 75,
+      progress: 15,
       status: "development",
     },
     {
@@ -150,7 +170,7 @@ export default function EcosystemPage() {
       icon: ShoppingBag,
       title: t("modules.marketplace.title"),
       description: t("modules.marketplace.description"),
-      progress: 40,
+      progress: 15,
       status: "development",
     },
     {
@@ -159,6 +179,22 @@ export default function EcosystemPage() {
       title: t("modules.health.title"),
       description: t("modules.health.description"),
       progress: 15,
+      status: "development",
+    },
+    {
+      id: "depin",
+      icon: Share2,
+      title: t("modules.depin.title"),
+      description: t("modules.depin.description"),
+      progress: 5,
+      status: "development",
+    },
+    {
+      id: "monetization",
+      icon: Coins,
+      title: t("modules.monetization.title"),
+      description: t("modules.monetization.description"),
+      progress: 5,
       status: "development",
     },
   ];
@@ -188,7 +224,7 @@ export default function EcosystemPage() {
             className="mb-6 text-5xl font-black tracking-tighter text-white md:text-7xl"
           >
             {t.rich("title", {
-              blue: (chunks) => (
+              blue: chunks => (
                 <span className="text-blue-600 drop-shadow-[0_0_20px_rgba(37,99,235,0.3)]">
                   {chunks}
                 </span>
@@ -208,7 +244,7 @@ export default function EcosystemPage() {
 
         {/* Modules Grid */}
         <div className="mb-40 grid gap-6 md:grid-cols-2">
-          {modules.map((module) => (
+          {modules.map(module => (
             <ModuleCard key={module.id} {...module} />
           ))}
         </div>

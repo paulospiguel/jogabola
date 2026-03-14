@@ -1,13 +1,5 @@
 "use client";
 
-import { getProfileData } from "@/actions/profile";
-import { CreateEventDialog } from "@/components/create-event-dialog";
-import { EventSearch } from "@/components/event-search";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
-import { getPositionConfig, getPositionLabel } from "@/constants/positions";
-import { useSession } from "@/lib/auth-client";
-import { Experience } from "@/schemas/profile";
 import { motion } from "framer-motion";
 import {
   ArrowRight,
@@ -24,65 +16,17 @@ import {
   Trophy,
 } from "lucide-react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
 import { useEffect, useMemo, useState } from "react";
-
-const nextMatch = {
-  label: "Próximo jogo",
-  datetime: "Dom 10/11 — 19:30",
-  location: "Arena Centenário",
-};
-
-const quickStats = [
-  {
-    title: "Jogos disputados",
-    value: "24",
-    icon: Trophy,
-    progress: 75, // 24/32 jogos possíveis
-    maxValue: 32,
-  },
-  // {
-  //   title: "Gols",
-  //   value: "18",
-  //   icon: Goal,
-  //   progress: 60, // 18/30 gols meta
-  //   maxValue: 30,
-  // },
-  // {
-  //   title: "Assistências",
-  //   value: "11",
-  //   icon: Target,
-  //   progress: 55, // 11/20 assistências meta
-  //   maxValue: 20,
-  // },
-  {
-    title: "Nota média",
-    value: "8.7",
-    icon: TrendingUp,
-    progress: 87, // 8.7/10
-    maxValue: 10,
-  },
-];
-
-const achievements = [
-  { emoji: "🔥", title: "Hat-trick Hero", description: "3 gols no mesmo jogo" },
-  {
-    emoji: "🎯",
-    title: "100 passes certos",
-    description: "Precisão máxima em 4 partidas",
-  },
-  {
-    emoji: "🛡️",
-    title: "MVP defensivo",
-    description: "Domínio total do meio-campo",
-  },
-];
-
-const feedUpdates = [
-  "⚽ Lucas marcou 3 gols no treino de ontem.",
-  "🔥 Nova partida marcada para domingo!",
-  "🧠 Review tático liberado para a equipe.",
-];
+import { getProfileData } from "@/actions/profile";
+import { CreateEventDialog } from "@/components/create-event-dialog";
+import { EventSearch } from "@/components/event-search";
+import { ProtectedPageHeader } from "@/components/protected-page-header";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { getPositionConfig, getPositionLabel } from "@/constants/positions";
+import { useSession } from "@/lib/auth-client";
+import type { Experience } from "@/schemas/profile";
 
 const fadeUp = {
   initial: { opacity: 0, y: 24 },
@@ -97,21 +41,65 @@ interface ProfileData {
   image: string | null;
   level: number;
   experience: string;
-  customFields: Record<string, any>;
+  customFields: Record<string, unknown>;
 }
 
 export default function PlayZonePage() {
-  const router = useRouter();
   const { data: session } = useSession();
+  const t = useTranslations("playzonePage");
+  const globalT = useTranslations();
   const [profileData, setProfileData] = useState<ProfileData | null>(null);
   const [loading, setLoading] = useState(true);
-  const [hasTeam, setHasTeam] = useState(false); // TODO: Verificar se usuário está em uma equipe
+  const [hasTeam] = useState(false); // TODO: Verificar se usuário está em uma equipe
 
   // Estado para controlar visibilidade de painéis secundários
   const [showAchievements, setShowAchievements] = useState(true);
   const [showInsights, setShowInsights] = useState(true);
   const [showFeed, setShowFeed] = useState(true);
   const [showActions, setShowActions] = useState(true);
+  const nextMatch = {
+    label: t("nextMatch.label"),
+    datetime: t("nextMatch.datetime"),
+    location: t("nextMatch.location"),
+  };
+  const quickStats = [
+    {
+      title: t("quickStats.matchesPlayed"),
+      value: "24",
+      icon: Trophy,
+      progress: 75,
+      maxValue: 32,
+    },
+    {
+      title: t("quickStats.averageRating"),
+      value: "8.7",
+      icon: TrendingUp,
+      progress: 87,
+      maxValue: 10,
+    },
+  ];
+  const achievements = [
+    {
+      emoji: "🔥",
+      title: t("achievements.hatTrickHero.title"),
+      description: t("achievements.hatTrickHero.description"),
+    },
+    {
+      emoji: "🎯",
+      title: t("achievements.precision.title"),
+      description: t("achievements.precision.description"),
+    },
+    {
+      emoji: "🛡️",
+      title: t("achievements.defensiveMvp.title"),
+      description: t("achievements.defensiveMvp.description"),
+    },
+  ];
+  const feedUpdates = [
+    t("feedUpdates.first"),
+    t("feedUpdates.second"),
+    t("feedUpdates.third"),
+  ];
 
   // Buscar dados do perfil
   useEffect(() => {
@@ -127,7 +115,7 @@ export default function PlayZonePage() {
           setProfileData({
             name: result.data.name,
             fullName: result.data.name,
-            greeting: "Olá, seja bem-vindo ao Jogabola!",
+            greeting: t("header.welcome"),
             position: result.data.customFields?.position || "",
             image: session?.user?.image || null,
             level: result.data.level || 1,
@@ -143,19 +131,22 @@ export default function PlayZonePage() {
     }
 
     loadProfile();
-  }, [session]);
+  }, [session, t]);
 
-  // Mapear experiência para labels
-  const experienceLabels: Record<string, string> = {
-    beginner: "Iniciante",
-    intermediate: "Intermediário",
-    advanced: "Avançado",
-    professional: "Profissional",
-  };
+  const experienceLabels = useMemo<Record<string, string>>(
+    () => ({
+      beginner: t("experience.beginner"),
+      intermediate: t("experience.intermediate"),
+      advanced: t("experience.advanced"),
+      professional: t("experience.professional"),
+    }),
+    [t],
+  );
 
   // Calcular dados do jogador
   const player = useMemo(() => {
-    const userName = session?.user?.name || profileData?.name || "Jogador";
+    const userName =
+      session?.user?.name || profileData?.name || t("fallbacks.player");
     const firstName = userName.split(" ")[0];
 
     // Buscar posição dos customFields (definida no onboarding)
@@ -169,28 +160,29 @@ export default function PlayZonePage() {
       : null;
 
     // Combinação: posição + experiência (se houver)
-    const positionDisplay = positionLabel || experienceLabel || "Jogador";
+    const positionDisplay =
+      positionLabel || experienceLabel || t("fallbacks.player");
 
     return {
       name: firstName,
-      fullName: userName || profileData?.name || "Jogador",
-      greeting: `👋 Olá, ${firstName}!`,
-      subtitle: `Pronto para o próximo jogo?`,
+      fullName: userName || profileData?.name || t("fallbacks.player"),
+      greeting: t("header.greeting", { name: firstName }),
+      subtitle: t("header.subtitle"),
       position: positionDisplay,
       positionValue: positionValue,
       image: session?.user?.image || null,
-      level: profileData?.level,
+      level: profileData?.level ?? 1,
       experience: profileData?.experience as Experience,
       experienceLabel: experienceLabel,
     };
-  }, [session, profileData]);
+  }, [experienceLabels, profileData, session, t]);
 
   if (loading) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-[#050312] text-white">
         <div className="text-center">
           <div className="mx-auto mb-4 h-8 w-8 animate-spin rounded-full border-4 border-[#6fffe9] border-t-transparent" />
-          <p className="text-text-secondary">Carregando sua jornada...</p>
+          <p className="text-text-secondary">{t("loading")}</p>
         </div>
       </div>
     );
@@ -198,6 +190,11 @@ export default function PlayZonePage() {
 
   return (
     <div className="relative min-h-screen overflow-hidden bg-[#050312] text-white">
+      <ProtectedPageHeader
+        eyebrow={globalT("header.playZone")}
+        title={t("header.title")}
+        description={t("header.description")}
+      />
       <div className="absolute inset-0 -z-10 bg-[radial-gradient(90%_90%_at_50%_0%,rgba(0,255,213,0.22)_0%,rgba(5,3,18,0)_72%)]" />
       <div className="absolute inset-0 -z-20 bg-[linear-gradient(135deg,#050312_0%,#080a25_45%,#0f163f_100%)]" />
 
@@ -211,7 +208,7 @@ export default function PlayZonePage() {
         >
           <div className="space-y-3">
             <p className="text-2xl tracking-[0.35em] text-[#6fffe9] uppercase">
-              Play Zone
+              {globalT("header.playZone")}
             </p>
             <h2 className="text-2xl font-semibold text-white md:text-3xl lg:text-[34px]">
               {player.greeting}
@@ -241,7 +238,8 @@ export default function PlayZonePage() {
               </span>
             )}
             <span className="flex items-center gap-2 text-sm text-[#6fffe9]">
-              <Star className="h-4 w-4" /> Nível {player.level}
+              <Star className="h-4 w-4" />{" "}
+              {t("header.level", { level: player.level })}
             </span>
           </div>
         </motion.header>
@@ -359,10 +357,12 @@ export default function PlayZonePage() {
                         <div className="mt-0 flex flex-1 flex-col justify-between">
                           {/* Título */}
                           <p className="mb-4 text-[10px] leading-tight font-semibold tracking-[0.15em] text-[#6fffe9] uppercase">
-                            {stat.title.split(" ").map((word, i) => (
-                              <span key={i}>
+                            {stat.title.split(" ").map(word => (
+                              <span
+                                key={`${stat.title}-${word}`}
+                                className="block"
+                              >
                                 {word}
-                                {i < stat.title.split(" ").length - 1 && <br />}
                               </span>
                             ))}
                           </p>

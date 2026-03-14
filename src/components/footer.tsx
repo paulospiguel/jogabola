@@ -1,8 +1,12 @@
-import { COMPANY } from "@/constants/app";
-import { cn } from "@/lib/utils";
+"use client";
+
 import { Instagram, MessageSquare, Twitter } from "lucide-react";
-import { useTranslations } from "next-intl";
 import Link from "next/link";
+import { useTranslations } from "next-intl";
+import { COMPANY } from "@/constants/app";
+import { useHeaderButtons } from "@/hooks/use-header-buttons";
+import { useSession } from "@/lib/auth-client";
+import { cn } from "@/lib/utils";
 import { Logo } from "./logo";
 
 type FooterProps = {
@@ -10,8 +14,16 @@ type FooterProps = {
 };
 
 export default function Footer({ className }: FooterProps) {
+  const { data: session } = useSession();
+  const { buttons, isLoading } = useHeaderButtons();
   const t = useTranslations("footer");
   const currentYear = new Date().getFullYear();
+
+  // Se logado, vai para a dashboard (primeiro botão)
+  const logoHref =
+    session?.user?.id && !isLoading && buttons.length > 0 && buttons[0].href
+      ? buttons[0].href
+      : "/";
 
   const footerLinks = [
     {
@@ -50,7 +62,7 @@ export default function Footer({ className }: FooterProps) {
   return (
     <footer
       className={cn(
-        "border-t border-white/8 bg-[linear-gradient(180deg,#050312_0%,#080a25_100%)] pt-20 pb-10",
+        "border-t border-white/8 bg-[linear-gradient(180deg,#0a0b1e_0%,#080a25_100%)] pt-20 pb-10",
         className,
       )}
     >
@@ -58,15 +70,15 @@ export default function Footer({ className }: FooterProps) {
         <div className="mb-20 grid gap-16 lg:grid-cols-12">
           <div className="space-y-8 lg:col-span-5">
             <div className="flex items-center gap-3">
-              <Logo variant="white" className="h-16 w-28" />
+              <Logo variant="white" className="h-16 w-28" href={logoHref} />
             </div>
             <p className="max-w-sm text-base leading-8 text-white/62">
               {t("description")}
             </p>
             <div className="flex gap-4">
-              {socialLinks.map((social, index) => (
+              {socialLinks.map(social => (
                 <a
-                  key={index}
+                  key={social.label}
                   href={social.href}
                   target="_blank"
                   rel="noopener noreferrer"
@@ -80,14 +92,14 @@ export default function Footer({ className }: FooterProps) {
           </div>
 
           <div className="grid grid-cols-2 gap-8 sm:grid-cols-3 lg:col-span-7">
-            {footerLinks.map((column, index) => (
-              <div key={index} className="space-y-8">
+            {footerLinks.map(column => (
+              <div key={column.title} className="space-y-8">
                 <h4 className="text-xs font-bold tracking-[0.2em] text-white/38 uppercase">
                   {column.title}
                 </h4>
                 <ul className="space-y-4">
-                  {column.links.map((link, linkIndex) => (
-                    <li key={linkIndex}>
+                  {column.links.map(link => (
+                    <li key={link.href}>
                       <Link
                         href={link.href}
                         className="text-sm font-medium text-white/58 transition-colors hover:text-white"

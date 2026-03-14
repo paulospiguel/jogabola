@@ -1,5 +1,7 @@
 "use client";
 
+import { usePathname } from "next/navigation";
+import { useTranslations } from "next-intl";
 import { useState } from "react";
 import ArenaFooter from "@/components/arena/arena-footer";
 import ArenaHeader from "@/components/arena/arena-header";
@@ -11,6 +13,17 @@ export default function ArenaLayout({
   children: React.ReactNode;
 }) {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const pathname = usePathname();
+  const t = useTranslations("arenaPage");
+
+  const isArenaHome = pathname === "/arena";
+  const headerCopy = isArenaHome
+    ? {
+        eyebrow: "Arena",
+        title: t("header.title"),
+        description: t("header.description"),
+      }
+    : {};
 
   return (
     <div className="relative min-h-screen bg-[linear-gradient(135deg,#050312_0%,#080a25_45%,#0f163f_100%)] text-white">
@@ -25,12 +38,17 @@ export default function ArenaLayout({
 
       {/* Fixed header (offset for sidebar on desktop) */}
       <div className="fixed top-0 right-0 left-0 z-40 md:left-64">
-        <ArenaHeader onMenuToggle={() => setIsSidebarOpen(!isSidebarOpen)} />
+        <ArenaHeader
+          onMenuToggle={() => setIsSidebarOpen(!isSidebarOpen)}
+          eyebrow={headerCopy.eyebrow}
+          title={headerCopy.title}
+          description={headerCopy.description}
+        />
       </div>
 
       {/* Scrollable content */}
-      <div className="relative z-10 flex pt-16">
-        <main className="min-h-[calc(100vh-4rem)] flex-1 pb-12 md:ml-64">
+      <div className="relative z-10 flex pt-36">
+        <main className="min-h-[calc(100vh-9rem)] flex-1 pb-12 md:ml-64">
           {children}
         </main>
       </div>

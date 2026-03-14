@@ -61,3 +61,5 @@ tailwind.css
 package-lock.json
 yarn.lock
 bun.lockb
+
+.playwright-cli

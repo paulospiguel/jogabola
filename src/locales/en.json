@@ -37,19 +37,35 @@
     "modules": {
       "scout": {
         "title": "Scout Pro IA",
-        "description": "Advanced talent recognition system through computer vision and predictive analysis of competitive potential."
+        "description": "Intelligent talent scouting with AI. Identify game patterns and future potential through advanced data analysis and computer vision."
       },
       "finance": {
         "title": "Elite Financial Module",
-        "description": "Sports treasury management, contracts and automated compliance with blockchain technology for total transparency."
+        "description": "Automated financial control with maximum transparency. Contract management, treasury, and compliance via blockchain."
       },
       "marketplace": {
         "title": "Athletes Marketplace",
-        "description": "Direct connection between clubs, agents and talents in a secure environment with AI-validated digital portfolios."
+        "description": "The digital showcase of football. Connect athletes, agents, and clubs in a secure ecosystem with AI-verified profiles."
       },
       "health": {
         "title": "AI Preventive Health",
-        "description": "Real-time biometric monitoring for injury prevention and optimization of individualized training loads."
+        "description": "24/7 biological and preventive management. Reduce injuries and optimize physical performance through real-time biometrics and AI."
+      },
+      "depin": {
+        "title": "Sports DEPIN",
+        "description": "Decentralization of physical physical infrastructure. Tokenization of community spaces and incentives for neighborhood field maintenance."
+      },
+      "monetization": {
+        "title": "Web3 Monetization",
+        "description": "New revenue horizons for amateur football. Asset tokenization, loyalty programs, and sports circular economy."
+      },
+      "coaching": {
+        "title": "Team Management Center",
+        "description": "Total control of your team in one place. Organize training, manage athletes, and define tactics with professional tools."
+      },
+      "timer": {
+        "title": "JogaBola Timer",
+        "description": "Advanced timing and real-time statistics recording. Transform every match into a professional experience."
       }
     },
     "newsletter": {
@@ -1119,10 +1135,187 @@
       "assignPlayer": "Assign Player"
     }
   },
+  "fanzonePage": {
+    "eyebrow": "Fan Zone",
+    "title": "Fan Zone",
+    "subtitle": "Follow your favorite teams",
+    "followTeam": "Follow Team",
+    "hero": {
+      "eyebrow": "Community radar",
+      "title": "Track matches, clubs, and moments in real time",
+      "description": "The Fan Zone now shares the same protected-shell system while keeping attention on the signals that matter."
+    },
+    "community": {
+      "eyebrow": "Next features",
+      "title": "Social layer under construction",
+      "description": "Personalized alerts, favorites, and content trails will land here without breaking the main shell."
+    },
+    "stats": {
+      "followedTeams": "Followed Teams",
+      "newTeams": "+2 new",
+      "watchedMatches": "Watched Matches",
+      "thisMonth": "This month",
+      "upcomingMatches": "Upcoming Matches",
+      "thisWeek": "This week",
+      "favorites": "Favorites",
+      "preferredTeams": "Preferred teams"
+    },
+    "comingSoon": {
+      "title": "In Development",
+      "description": "This area is under development. Soon you will have full access to the Fan Zone."
+    }
+  },
+  "playzonePage": {
+    "loading": "Loading your journey...",
+    "header": {
+      "title": "Player hub",
+      "description": "Next matches, progress, and opportunities in one flow.",
+      "welcome": "Hello, welcome to Jogabola!",
+      "greeting": "👋 Hello, {name}!",
+      "subtitle": "Ready for the next match?",
+      "level": "Level {level}"
+    },
+    "fallbacks": {
+      "player": "Player"
+    },
+    "experience": {
+      "beginner": "Beginner",
+      "intermediate": "Intermediate",
+      "advanced": "Advanced",
+      "professional": "Professional"
+    },
+    "nextMatch": {
+      "label": "Next match",
+      "datetime": "Sun 11/10 — 19:30",
+      "location": "Centenary Arena"
+    },
+    "quickStats": {
+      "matchesPlayed": "Matches played",
+      "averageRating": "Average rating"
+    },
+    "achievements": {
+      "hatTrickHero": {
+        "title": "Hat-trick hero",
+        "description": "3 goals in the same match"
+      },
+      "precision": {
+        "title": "100 accurate passes",
+        "description": "Top precision across 4 matches"
+      },
+      "defensiveMvp": {
+        "title": "Defensive MVP",
+        "description": "Total control of midfield"
+      }
+    },
+    "feedUpdates": {
+      "first": "⚽ Lucas scored 3 goals in yesterday's training.",
+      "second": "🔥 New match scheduled for Sunday!",
+      "third": "🧠 Tactical review released for the squad."
+    }
+  },
+  "arenaPage": {
+    "header": {
+      "title": "Club hub",
+      "description": "Operational overview of squad, schedule, and quick management."
+    },
+    "hero": {
+      "eyebrow": "Arena · club management",
+      "title": "CLUB OVERVIEW",
+      "description": "Operational indicators to track the current amateur season.",
+      "exportStats": "Export stats",
+      "quickManagement": "Quick management"
+    },
+    "stats": {
+      "winRatio": {
+        "title": "Win ratio",
+        "detail": "+5.4% from last month"
+      },
+      "activePlayers": {
+        "title": "Active players",
+        "detail": "8 registered teams"
+      },
+      "totalGoals": {
+        "title": "Total goals",
+        "detail": "Avg 2.4 per match"
+      },
+      "nextMatch": {
+        "title": "Next match",
+        "value": "In 4h 22m",
+        "detail": "STADIUM A · PITCH 4"
+      }
+    },
+    "quickActions": {
+      "addPlayer": "Add player",
+      "feesStatus": "Fees status",
+      "assignKit": "Assign kit",
+      "announce": "Announce"
+    },
+    "teamStatus": {
+      "training": "Training",
+      "active": "Active",
+      "rest": "Rest"
+    }
+  },
+  "profilePage": {
+    "header": {
+      "eyebrow": "Workspace",
+      "title": "Profile center",
+      "description": "Account, identity, and preferences in one place."
+    },
+    "feedback": {
+      "errorTitle": "Error",
+      "loadError": "Failed to load profile",
+      "updatedTitle": "Profile updated",
+      "updatedDescription": "Changes have been saved.",
+      "saveError": "Could not save changes."
+    },
+    "roles": {
+      "player": "Amateur athlete",
+      "manager": "Manager",
+      "organizer": "Organizer",
+      "fan": "Fan"
+    },
+    "attributes": {
+      "speed": "Speed",
+      "finishing": "Finishing",
+      "passing": "Passing"
+    },
+    "tabs": {
+      "overview": "Overview",
+      "teams": "My teams",
+      "activities": "Activities",
+      "settings": "Settings"
+    },
+    "identity": {
+      "eyebrow": "Identity",
+      "activeProfile": "Active profile",
+      "editPhoto": "Edit photo",
+      "memberSince": "Member since {year}"
+    },
+    "fallbacks": {
+      "player": "Athlete",
+      "user": "User"
+    },
+    "stats": {
+      "matches": "Matches",
+      "goals": "Goals"
+    }
+  },
   "organizerPage": {
+    "eyebrow": "Organizer",
     "title": "Organizer Area",
     "subtitle": "Organize tournaments and events",
     "newTournament": "New Tournament",
+    "hero": {
+      "eyebrow": "Calendar orchestration",
+      "title": "Plan competitions with less friction",
+      "description": "Centralize matches, entries, and venues using the same operational shell as the other protected areas."
+    },
+    "roadmap": {
+      "eyebrow": "Next module",
+      "title": "Organization flows are expanding",
+      "description": "The next delivery will connect calendar, participants, and confirmations in a single panel."
+    },
     "stats": {
       "activeTournaments": "Active Tournaments",
       "inProgress": "In progress",
@@ -1138,23 +1331,64 @@
       "description": "This area is under development. Soon you will have full access to the event organization panel."
     }
   },
-  "fanzonePage": {
-    "title": "Fan Zone",
-    "subtitle": "Follow your favorite teams",
-    "followTeam": "Follow Team",
-    "stats": {
-      "followedTeams": "Followed Teams",
-      "newTeams": "+2 new",
-      "watchedMatches": "Watched Matches",
-      "thisMonth": "This month",
-      "upcomingMatches": "Upcoming Matches",
-      "thisWeek": "This week",
-      "favorites": "Favorites",
-      "preferredTeams": "Preferred teams"
+  "eventSearch": {
+    "title": "Find your next match",
+    "description": "Search for matches, training sessions, or groups near you. Filter by location, game style, or date range.",
+    "location": "Location",
+    "useCurrentLocation": "Use current location",
+    "dateRange": "Select dates",
+    "gameStyle": "Game style",
+    "gameStyleOptions": {
+      "competitivo": "Competitive",
+      "recreativo": "Casual",
+      "misto": "Mixed"
     },
-    "comingSoon": {
-      "title": "In Development",
-      "description": "This area is under development. Soon you will have full access to the Fan Zone."
+    "startDate": "Start date",
+    "endDate": "End date",
+    "search": "Search",
+    "filters": "Filters",
+    "advancedFilters": "Advanced filters",
+    "locationStatus": {
+      "unsupported": {
+        "title": "Geolocation unsupported",
+        "description": "Your browser does not support geolocation."
+      },
+      "success": {
+        "title": "Location captured",
+        "description": "Your current location has been set successfully."
+      },
+      "permissionDenied": {
+        "title": "Permission denied",
+        "description": "Allow location access in your browser settings."
+      },
+      "unavailable": {
+        "title": "Location unavailable",
+        "description": "Check whether GPS is enabled."
+      },
+      "timeout": {
+        "title": "Timed out",
+        "description": "Try again to get your location."
+      },
+      "error": {
+        "title": "Location error",
+        "description": "An error occurred while getting your location. Please try again."
+      }
     }
+  },
+  "searchResults": {
+    "title": "Search results",
+    "searchPrompt": "Refine the search by location, date, and game style before opening an event.",
+    "resultsFound": "{count} {count, plural, =1 {result found} other {results found}}",
+    "noResults": "No results found",
+    "noResultsDescription": "Try adjusting the search filters",
+    "loading": "Searching events...",
+    "back": "Back",
+    "eventTypes": {
+      "partida": "Match",
+      "treino": "Training",
+      "grupo": "Group"
+    },
+    "participants": "participants",
+    "organizedBy": "Organized by"
   }
 }

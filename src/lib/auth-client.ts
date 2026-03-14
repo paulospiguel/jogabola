@@ -9,23 +9,25 @@ function getClientBaseURL(): string {
   // No cliente, sempre usar NEXT_PUBLIC_APP_URL se disponível
   if (typeof window !== "undefined") {
     const publicUrl = process.env.NEXT_PUBLIC_APP_URL;
-    
+
     if (!publicUrl) {
       console.warn(
-        "NEXT_PUBLIC_APP_URL não está definido. Usando window.location.origin como fallback."
+        "NEXT_PUBLIC_APP_URL não está definido. Usando window.location.origin como fallback.",
       );
       return window.location.origin;
     }
-    
+
     return publicUrl;
   }
-  
+
   // No servidor (SSR), usar a mesma lógica
   return (
     process.env.NEXT_PUBLIC_APP_URL ||
     process.env.NEXT_PUBLIC_URL ||
     process.env.NEXTAUTH_URL ||
-    (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : "http://localhost:3000")
+    (process.env.VERCEL_URL
+      ? `https://${process.env.VERCEL_URL}`
+      : "http://localhost:3000")
   );
 }
 

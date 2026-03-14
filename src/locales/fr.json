@@ -37,19 +37,35 @@
     "modules": {
       "scout": {
         "title": "Scout Pro IA",
-        "description": "Système avancé de reconnaissance des talents grâce à la vision par ordinateur et à l'analyse prédictive du potentiel compétitif."
+        "description": "Scouting intelligent des talents avec l'IA. Identifiez les modèles de jeu et le potentiel futur grâce à l'analyse avancée des données et à la vision par ordinateur."
       },
       "finance": {
         "title": "Module Financier Élite",
-        "description": "Gestion de la trésorerie sportive, contrats et conformité automatisés avec la technologie blockchain pour une transparence totale."
+        "description": "Contrôle financier automatisé avec une transparence maximale. Gestion des contrats, de la trésorerie et de la conformité via la blockchain."
       },
       "marketplace": {
         "title": "Marché des Athlètes",
-        "description": "Connexion directe entre clubs, agents et talents dans un environnement sécurisé avec des portefeuilles numériques validés par l'IA."
+        "description": "La vitrine numérique du football. Connectez athlètes, agents et clubs dans un écosystème sécurisé avec des profils vérifiés par l'IA."
       },
       "health": {
-        "title": "Santé Préventive IA",
-        "description": "Suivi biométrique en temps réel pour la prévention des blessures et l'optimisation des charges d'entraînement individualisées."
+        "title": "Santé Préventiva IA",
+        "description": "Gestion biologique et préventive 24/7. Réduisez les blessures et optimisez les performances physiques grâce à la biométrie en temps réel et à l'IA."
+      },
+      "depin": {
+        "title": "DEPIN Sportif",
+        "description": "Décentralisation de l'infrastructure physique. Tokenisation des espaces communautaires et incitations à l'entretien des terrains de quartier."
+      },
+      "monetization": {
+        "title": "Monétisation Web3",
+        "description": "Nouveaux horizons de revenus pour le football amateur. Tokenisation des actifs, programmes de fidélité et économie circulaire sportive."
+      },
+      "coaching": {
+        "title": "Centre de Gestion d'Équipes",
+        "description": "Contrôle total de votre équipe en um seul endroit. Organisez les entraînements, gérez les athlètes et définissez les tactiques avec des outils professionnels."
+      },
+      "timer": {
+        "title": "JogaBola Timer",
+        "description": "Chronométrage avancé et enregistrement des statistiques en temps réel. Transformez chaque match en une expérience professionnelle."
       }
     },
     "newsletter": {
@@ -809,6 +825,256 @@
         "experiencePlaceholder": "Parlez-nous de votre parcours",
         "submit": "ENVIAR CANDIDATURE"
       }
+    }
+  }
+  ,
+  "eventSearch": {
+    "location": "Lieu",
+    "useCurrentLocation": "Utiliser la position actuelle",
+    "dateRange": "Sélectionnez les dates",
+    "gameStyle": "Style de jeu",
+    "gameStyleOptions": {
+      "competitivo": "Compétitif",
+      "recreativo": "Loisir",
+      "misto": "Mixte"
+    },
+    "search": "Rechercher",
+    "advancedFilters": "Filtres avancés",
+    "locationStatus": {
+      "unsupported": {
+        "title": "Géolocalisation non prise en charge",
+        "description": "Votre navigateur ne prend pas en charge la géolocalisation."
+      },
+      "success": {
+        "title": "Position récupérée",
+        "description": "Votre position actuelle a bien été définie."
+      },
+      "permissionDenied": {
+        "title": "Permission refusée",
+        "description": "Autorisez l'accès à la position dans le navigateur."
+      },
+      "unavailable": {
+        "title": "Position indisponible",
+        "description": "Vérifiez si le GPS est activé."
+      },
+      "timeout": {
+        "title": "Temps écoulé",
+        "description": "Réessayez pour récupérer votre position."
+      },
+      "error": {
+        "title": "Erreur de localisation",
+        "description": "Une erreur s'est produite lors de la récupération de votre position."
+      }
+    }
+  },
+  "searchResults": {
+    "title": "Résultats de recherche",
+    "searchPrompt": "Affinez la recherche par lieu, date et style avant d'ouvrir un événement.",
+    "resultsFound": "{count} {count, plural, =1 {résultat trouvé} other {résultats trouvés}}",
+    "noResults": "Aucun résultat trouvé",
+    "noResultsDescription": "Essayez d'ajuster les filtres de recherche",
+    "loading": "Recherche des événements...",
+    "back": "Retour",
+    "eventTypes": {
+      "partida": "Match",
+      "treino": "Entraînement",
+      "grupo": "Groupe"
+    }
+  },
+  "organizerPage": {
+    "eyebrow": "Organizer",
+    "title": "Espace organisateur",
+    "subtitle": "Organisez tournois et événements",
+    "newTournament": "Nouveau tournoi",
+    "hero": {
+      "eyebrow": "Orchestration du calendrier",
+      "title": "Planifiez les compétitions avec moins de friction",
+      "description": "Centralisez matchs, inscriptions et lieux avec le même shell opérationnel."
+    },
+    "roadmap": {
+      "eyebrow": "Prochain module",
+      "title": "Les flux d'organisation s'étendent",
+      "description": "La prochaine livraison réunira calendrier, participants et confirmations."
+    },
+    "stats": {
+      "activeTournaments": "Tournois actifs",
+      "inProgress": "En cours",
+      "scheduledEvents": "Événements planifiés",
+      "next30days": "30 prochains jours",
+      "participants": "Participants",
+      "participantsThisMonth": "+42 ce mois-ci",
+      "venues": "Lieux",
+      "registered": "Enregistrés"
+    },
+    "comingSoon": {
+      "title": "En développement",
+      "description": "Cette zone est en cours de développement."
+    }
+  },
+  "fanzonePage": {
+    "eyebrow": "Fan Zone",
+    "title": "Fan Zone",
+    "subtitle": "Suivez vos équipes favorites",
+    "followTeam": "Suivre l'équipe",
+    "hero": {
+      "eyebrow": "Radar communautaire",
+      "title": "Suivez matchs, clubs et moments en temps réel",
+      "description": "La Fan Zone utilise maintenant le même système visuel que les autres zones protégées."
+    },
+    "community": {
+      "eyebrow": "Prochaines fonctionnalités",
+      "title": "Couche sociale en construction",
+      "description": "Alertes, favoris et parcours de contenu arriveront ici."
+    },
+    "stats": {
+      "followedTeams": "Équipes suivies",
+      "newTeams": "+2 nouvelles",
+      "watchedMatches": "Matchs suivis",
+      "thisMonth": "Ce mois-ci",
+      "upcomingMatches": "Matchs à venir",
+      "thisWeek": "Cette semaine",
+      "favorites": "Favoris",
+      "preferredTeams": "Équipes préférées"
+    },
+    "comingSoon": {
+      "title": "En développement",
+      "description": "Cette zone est en cours de développement."
+    }
+  },
+  "arenaPage": {
+    "header": {
+      "title": "Centre du club",
+      "description": "Vue opérationnelle de l'effectif et du calendrier."
+    },
+    "hero": {
+      "eyebrow": "Arena · gestion du club",
+      "title": "VUE DU CLUB",
+      "description": "Indicateurs opérationnels pour suivre la saison actuelle.",
+      "exportStats": "Exporter les statistiques",
+      "quickManagement": "Gestion rapide"
+    },
+    "stats": {
+      "winRatio": {
+        "title": "Taux de victoire",
+        "detail": "+5,4 % par rapport au mois dernier"
+      },
+      "activePlayers": {
+        "title": "Athlètes actifs",
+        "detail": "8 équipes enregistrées"
+      },
+      "totalGoals": {
+        "title": "Buts marqués",
+        "detail": "Moyenne de 2,4 par match"
+      },
+      "nextMatch": {
+        "title": "Prochain match",
+        "value": "Dans 4h 22m",
+        "detail": "STADE A · TERRAIN 4"
+      }
+    },
+    "quickActions": {
+      "addPlayer": "Ajouter un athlète",
+      "feesStatus": "État des cotisations",
+      "assignKit": "Attribuer le kit",
+      "announce": "Annoncer"
+    },
+    "teamStatus": {
+      "training": "Entraînement",
+      "active": "Actif",
+      "rest": "Repos"
+    }
+  },
+  "profilePage": {
+    "header": {
+      "eyebrow": "Workspace",
+      "title": "Centre de profil",
+      "description": "Compte, identité et préférences en un seul endroit."
+    },
+    "feedback": {
+      "errorTitle": "Erreur",
+      "loadError": "Erreur lors du chargement du profil",
+      "updatedTitle": "Profil mis à jour",
+      "updatedDescription": "Les modifications ont été enregistrées.",
+      "saveError": "Impossible d'enregistrer."
+    },
+    "roles": {
+      "player": "Athlète amateur",
+      "manager": "Manager",
+      "organizer": "Organisateur",
+      "fan": "Supporter"
+    },
+    "attributes": {
+      "speed": "Vitesse",
+      "finishing": "Finition",
+      "passing": "Passe"
+    },
+    "tabs": {
+      "overview": "Vue générale",
+      "teams": "Mes équipes",
+      "activities": "Activités",
+      "settings": "Paramètres"
+    },
+    "identity": {
+      "eyebrow": "Identité",
+      "activeProfile": "Profil actif",
+      "editPhoto": "Modifier la photo",
+      "memberSince": "Membre depuis {year}"
+    },
+    "fallbacks": {
+      "player": "Athlète",
+      "user": "Utilisateur"
+    },
+    "stats": {
+      "matches": "Matchs",
+      "goals": "Buts"
+    }
+  },
+  "playzonePage": {
+    "loading": "Chargement de votre parcours...",
+    "header": {
+      "title": "Centre du joueur",
+      "description": "Prochains matchs, progression et opportunités dans un seul flux.",
+      "welcome": "Bonjour, bienvenue sur Jogabola !",
+      "greeting": "👋 Bonjour, {name} !",
+      "subtitle": "Prêt pour le prochain match ?",
+      "level": "Niveau {level}"
+    },
+    "fallbacks": {
+      "player": "Joueur"
+    },
+    "experience": {
+      "beginner": "Débutant",
+      "intermediate": "Intermédiaire",
+      "advanced": "Avancé",
+      "professional": "Professionnel"
+    },
+    "nextMatch": {
+      "label": "Prochain match",
+      "datetime": "Dim 10/11 — 19:30",
+      "location": "Arena Centenary"
+    },
+    "quickStats": {
+      "matchesPlayed": "Matchs joués",
+      "averageRating": "Note moyenne"
+    },
+    "achievements": {
+      "hatTrickHero": {
+        "title": "Héros du triplé",
+        "description": "3 buts dans le même match"
+      },
+      "precision": {
+        "title": "100 passes réussies",
+        "description": "Précision maximale sur 4 matchs"
+      },
+      "defensiveMvp": {
+        "title": "MVP défensif",
+        "description": "Contrôle total du milieu de terrain"
+      }
+    },
+    "feedUpdates": {
+      "first": "⚽ Lucas a marqué 3 buts à l'entraînement d'hier.",
+      "second": "🔥 Nouveau match programmé pour dimanche !",
+      "third": "🧠 Analyse tactique disponible pour l'équipe."
     }
   }
 }

@@ -1,5 +1,9 @@
 "use client";
 
+import { Loader2, LocateFixed, MapPin, Search, Settings } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { DateRangePicker } from "@/components/ui/date-range-picker";
 import { Input } from "@/components/ui/input";
@@ -12,9 +16,6 @@ import {
 } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast-custom";
 import { cn } from "@/lib/utils";
-import { Loader2, LocateFixed, MapPin, Search, Settings } from "lucide-react";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
 import { EventFiltersModal } from "./event-filters-modal";
 
 type DateRange = {
@@ -48,6 +49,7 @@ export function EventSearch({
 }: EventSearchProps) {
   const router = useRouter();
   const { toast } = useToast();
+  const t = useTranslations("eventSearch");
   const [location, setLocation] = useState("");
   const [gameStyle, setGameStyle] = useState<string | undefined>();
   const [dateRange, setDateRange] = useState<DateRange | undefined>();
@@ -116,8 +118,8 @@ export function EventSearch({
   const handleGetCurrentLocation = async () => {
     if (!navigator.geolocation) {
       toast.error(
-        "Geolocalização não suportada",
-        "Seu navegador não suporta geolocalização.",
+        t("locationStatus.unsupported.title"),
+        t("locationStatus.unsupported.description"),
       );
       return;
     }
@@ -149,7 +151,7 @@ export function EventSearch({
       );
 
       if (!response.ok) {
-        throw new Error("Erro ao obter endereço");
+        throw new Error(t("locationStatus.error.title"));
       }
 
       const data = await response.json();
@@ -177,32 +179,31 @@ export function EventSearch({
 
       setLocation(address);
       toast.success(
-        "Localização obtida",
-        "Sua localização atual foi definida com sucesso.",
+        t("locationStatus.success.title"),
+        t("locationStatus.success.description"),
       );
     } catch (error: unknown) {
       console.error("Erro ao obter localização:", error);
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const geoError = error as any; // GeolocationPositionError might not be globally available or has different shape
+      const geoError = error as { code?: number };
       if (geoError.code === 1) {
         toast.error(
-          "Permissão negada",
-          "Por favor, permita o acesso à localização nas configurações do navegador.",
+          t("locationStatus.permissionDenied.title"),
+          t("locationStatus.permissionDenied.description"),
         );
       } else if (geoError.code === 2) {
         toast.error(
-          "Localização não disponível",
-          "Verifique se o GPS está ativado.",
+          t("locationStatus.unavailable.title"),
+          t("locationStatus.unavailable.description"),
         );
       } else if (geoError.code === 3) {
         toast.error(
-          "Tempo esgotado",
-          "Tente novamente para obter sua localização.",
+          t("locationStatus.timeout.title"),
+          t("locationStatus.timeout.description"),
         );
       } else {
         toast.error(
-          "Erro ao obter localização",
-          "Ocorreu um erro ao tentar obter sua localização. Tente novamente.",
+          t("locationStatus.error.title"),
+          t("locationStatus.error.description"),
         );
       }
     } finally {
@@ -216,7 +217,7 @@ export function EventSearch({
         <div className="relative">
           <MapPin className="text-muted-foreground pointer-events-none absolute top-1/2 left-3 h-5 w-5 -translate-y-1/2" />
           <Input
-            placeholder="Localização"
+            placeholder={t("location")}
             value={location}
             onChange={e => setLocation(e.target.value)}
             className="relative z-10 h-12 bg-white/5 pr-10 !pl-10 text-white"
@@ -229,8 +230,8 @@ export function EventSearch({
               "text-muted-foreground hover:text-foreground absolute top-1/2 right-0 z-20 -translate-y-1/2 transition-colors disabled:cursor-not-allowed disabled:opacity-50",
               !location && "animate-pulse",
             )}
-            aria-label="Usar localização atual"
-            title="Usar localização atual"
+            aria-label={t("useCurrentLocation")}
+            title={t("useCurrentLocation")}
           >
             {isGettingLocation ? (
               <Loader2 className="h-5 w-5 animate-spin" />
@@ -243,19 +244,25 @@ export function EventSearch({
         <DateRangePicker
           date={dateRange}
           onDateChange={setDateRange}
-          placeholder="Selecione as datas"
+          placeholder={t("dateRange")}
           className="h-12"
         />
 
         {showTeamFilters && (
           <Select value={gameStyle} onValueChange={setGameStyle}>
             <SelectTrigger className="h-12 bg-white/5 text-white">
-              <SelectValue placeholder="Estilo de jogo" />
+              <SelectValue placeholder={t("gameStyle")} />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="competitivo">Competitivo</SelectItem>
-              <SelectItem value="recreativo">Recreativo</SelectItem>
-              <SelectItem value="misto">Misto</SelectItem>
+              <SelectItem value="competitivo">
+                {t("gameStyleOptions.competitivo")}
+              </SelectItem>
+              <SelectItem value="recreativo">
+                {t("gameStyleOptions.recreativo")}
+              </SelectItem>
+              <SelectItem value="misto">
+                {t("gameStyleOptions.misto")}
+              </SelectItem>
             </SelectContent>
           </Select>
         )}
@@ -267,7 +274,7 @@ export function EventSearch({
           className="bg-neon-secondary hover:bg-neon-secondary/90 min-w-[200px] font-semibold text-slate-900"
         >
           <Search className="mr-2 h-5 w-5" />
-          Buscar
+          {t("search")}
         </Button>
 
         <Button
@@ -276,7 +283,7 @@ export function EventSearch({
           className="border-2 border-white/25 bg-white/10 text-white hover:bg-white/20"
         >
           <Settings className="mr-2 h-5 w-5" />
-          Filtros Avançados
+          {t("advancedFilters")}
         </Button>
       </div>
 

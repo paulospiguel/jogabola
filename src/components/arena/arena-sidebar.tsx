@@ -1,6 +1,14 @@
 "use client";
 
-import { BarChart2, Calendar, LayoutDashboard, Settings, ShieldCheck, Users, Wallet } from "lucide-react";
+import {
+  BarChart2,
+  Calendar,
+  LayoutDashboard,
+  Settings,
+  ShieldCheck,
+  Users,
+  Wallet,
+} from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
@@ -30,7 +38,7 @@ export default function ArenaSidebar({ isOpen, onClose }: ArenaSidebarProps) {
     <div className="flex h-full flex-col px-4 py-6">
       {/* Logo */}
       <div className="mb-10 flex items-center justify-center gap-3 px-2">
-        <Logo size="small" />
+        <Logo size="small" href="/arena" />
       </div>
 
       {/* Navigation */}
@@ -56,7 +64,10 @@ export default function ArenaSidebar({ isOpen, onClose }: ArenaSidebarProps) {
                       : "text-white/60 hover:bg-white/8 hover:text-white",
                   )}
                 >
-                  <Icon className="h-5 w-5 shrink-0" strokeWidth={isActive ? 2.5 : 2} />
+                  <Icon
+                    className="h-5 w-5 shrink-0"
+                    strokeWidth={isActive ? 2.5 : 2}
+                  />
                   <span>{item.title}</span>
                 </Link>
               );
@@ -85,7 +96,10 @@ export default function ArenaSidebar({ isOpen, onClose }: ArenaSidebarProps) {
                       : "text-white/60 hover:bg-white/8 hover:text-white",
                   )}
                 >
-                  <Icon className="h-5 w-5 shrink-0" strokeWidth={isActive ? 2.5 : 2} />
+                  <Icon
+                    className="h-5 w-5 shrink-0"
+                    strokeWidth={isActive ? 2.5 : 2}
+                  />
                   <span>{item.title}</span>
                 </Link>
               );
@@ -101,10 +115,15 @@ export default function ArenaSidebar({ isOpen, onClose }: ArenaSidebarProps) {
           <div className="pointer-events-none absolute -top-6 -right-6 h-20 w-20 rounded-full bg-neon-secondary/15 blur-2xl" />
           <div className="relative z-10 flex items-center gap-3">
             <div className="flex h-8 w-8 items-center justify-center rounded-full bg-neon-secondary/15">
-              <ShieldCheck className="h-4 w-4 text-[#6fffe9]" strokeWidth={2.5} />
+              <ShieldCheck
+                className="h-4 w-4 text-[#6fffe9]"
+                strokeWidth={2.5}
+              />
             </div>
             <div>
-              <p className="text-sm font-bold leading-tight text-white">Pro Plan</p>
+              <p className="text-sm font-bold leading-tight text-white">
+                Pro Plan
+              </p>
               <p className="mt-0.5 text-[10px] leading-tight text-white/40">
                 Active until Dec 2024
               </p>
@@ -138,7 +157,7 @@ export default function ArenaSidebar({ isOpen, onClose }: ArenaSidebarProps) {
       <aside
         className={cn(
           "fixed top-0 left-0 z-50 h-screen w-64 overflow-hidden border-r border-white/8 shadow-2xl transition-transform duration-300 md:translate-x-0",
-          "bg-[#050312]",
+          "bg-[#0a0b1e]",
           isOpen ? "translate-x-0" : "-translate-x-full",
         )}
       >
