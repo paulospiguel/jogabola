@@ -22,6 +22,7 @@ import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { useEffect, useRef, useState } from "react";
 import { getProfileData, saveProfileData } from "@/actions/profile";
+import { getUserWallets } from "@/actions/wallet";
 import { FooterDashboard } from "@/components/footer-dashboad";
 import { ProtectedPageHeader } from "@/components/protected-page-header";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -31,6 +32,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
+import { WalletConnectSection } from "@/components/wallet/wallet-connect-section";
 import { useToast } from "@/hooks/use-toast-custom";
 import { useSession } from "@/lib/auth-client";
 import { resolveProfileImage } from "@/lib/profile-image";
@@ -167,6 +169,9 @@ export default function ProfilePage() {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const loadedRef = useRef<string | null>(null);
+  const [userWallets, setUserWallets] = useState<
+    { id: number; address: string; provider: string | null }[]
+  >([]);
 
   const [profileData, setProfileData] = useState<ProfileData>({
     name: "",
@@ -193,8 +198,8 @@ export default function ProfilePage() {
     loadedRef.current = userId;
 
     setLoading(true);
-    getProfileData(userId)
-      .then(result => {
+    Promise.all([getProfileData(userId), getUserWallets(userId)])
+      .then(([result, walletsResult]) => {
         if (result.success && result.data) {
           const d = result.data;
           setProfileData({
@@ -220,6 +225,9 @@ export default function ProfilePage() {
             name: session.user.name || "",
             email: session.user.email || "",
           }));
+        }
+        if (walletsResult.success && walletsResult.data) {
+          setUserWallets(walletsResult.data);
         }
       })
       .catch(() =>
@@ -887,6 +895,20 @@ export default function ProfilePage() {
                     ))}
                   </div>
                 </div>
+
+                {/* Wallet Solana */}
+                <WalletConnectSection
+                  variant="profile"
+                  existingWalletId={userWallets[0]?.id}
+                  existingAddress={userWallets[0]?.address}
+                  onLinked={address =>
+                    setUserWallets(prev => [
+                      ...prev,
+                      { id: Date.now(), address, provider: null },
+                    ])
+                  }
+                  onUnlinked={() => setUserWallets([])}
+                />
 
                 <div className="flex flex-col gap-3 sm:flex-row sm:justify-start">
                   <Button

@@ -242,7 +242,7 @@ export default function ArenaPage() {
         managerId={session?.user?.id}
         onSuccess={handlePlayerAdded}
       />
-      <div className="min-h-screen px-6 mt-8 py-8 text-white">
+      <div className="min-h-screen px-4 sm:px-6 mt-8 py-8 text-white">
         {/* ── Page Header ─────────────────────────────────────────────────── */}
         <motion.div
           className="mb-8 flex justify-end"
@@ -250,7 +250,7 @@ export default function ArenaPage() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.45 }}
         >
-          <div className="flex shrink-0 items-center gap-3">
+          <div className="flex flex-col gap-2 sm:flex-row sm:shrink-0 sm:items-center sm:gap-3">
             <button
               type="button"
               className="flex items-center gap-2 rounded-2xl border border-white/20 bg-white/5 px-4 py-2.5 text-sm font-semibold text-white/80 backdrop-blur transition-all duration-300 hover:border-white/30 hover:text-white"
@@ -336,22 +336,26 @@ export default function ArenaPage() {
                 <div className="flex items-center gap-2.5">
                   <BarChart2 className="h-5 w-5 text-[#6fffe9]" />
                   <h2 className="text-base font-bold text-white">
-                    Performance Analytics
+                    {t("analytics.title")}
                   </h2>
                 </div>
                 <div className="flex gap-1 rounded-xl bg-white/5 p-1">
-                  {["Week", "Month", "Year"].map(period => (
+                  {[
+                    { id: "Week", label: t("analytics.periods.week") },
+                    { id: "Month", label: t("analytics.periods.month") },
+                    { id: "Year", label: t("analytics.periods.year") },
+                  ].map(period => (
                     <button
-                      key={period}
+                      key={period.id}
                       type="button"
                       className="rounded-lg px-3 py-1 text-xs font-semibold transition-all duration-200"
                       style={
-                        period === "Month"
+                        period.id === "Month"
                           ? { backgroundColor: "#24ffe6", color: "#000" }
                           : { color: "rgba(255,255,255,0.45)" }
                       }
                     >
-                      {period}
+                      {period.label}
                     </button>
                   ))}
                 </div>
@@ -399,20 +403,19 @@ export default function ArenaPage() {
               transition={{ duration: 0.45, delay: 0.25 }}
             >
               <div className="mb-5 flex items-center justify-between">
-                <h2 className="text-base font-bold text-white">Active Teams</h2>
+                <h2 className="text-base font-bold text-white">{t("activeTeams.title")}</h2>
                 <Link
                   href="/arena/teams"
                   className="text-xs font-bold uppercase tracking-[0.2em] text-[#6fffe9] transition-opacity hover:opacity-70"
                 >
-                  View All →
+                  {t("activeTeams.viewAll")}
                 </Link>
               </div>
 
-              {/* Table header */}
               <div className="mb-3 grid grid-cols-4 gap-4 text-[10px] font-bold uppercase tracking-[0.25em] text-white/30">
-                <span className="col-span-2">Team Name</span>
-                <span>Status</span>
-                <span>Form</span>
+                <span className="col-span-2">{t("activeTeams.columns.name")}</span>
+                <span>{t("activeTeams.columns.status")}</span>
+                <span>{t("activeTeams.columns.form")}</span>
               </div>
 
               <div className="space-y-2">
@@ -467,10 +470,10 @@ export default function ArenaPage() {
               transition={{ duration: 0.45, delay: 0.2 }}
             >
               <p className="mb-1 text-[10px] font-bold uppercase tracking-[0.3em] text-[#6fffe9]">
-                ⚡ Quick Actions
+                {t("management.quickActions")}
               </p>
               <h2 className="mb-5 text-base font-bold text-white">
-                Management
+                {t("management.title")}
               </h2>
               <div className="grid grid-cols-2 gap-3">
                 {quickActions.map(({ label, icon: Icon, href, action }) => {
@@ -521,9 +524,9 @@ export default function ArenaPage() {
               transition={{ duration: 0.45, delay: 0.3 }}
             >
               <p className="mb-1 text-[10px] font-bold uppercase tracking-[0.3em] text-[#6fffe9]">
-                Season
+                {t("mvp.season")}
               </p>
-              <h2 className="mb-5 text-base font-bold text-white">MVP Race</h2>
+              <h2 className="mb-5 text-base font-bold text-white">{t("mvp.title")}</h2>
               <div className="space-y-4">
                 {mvpPlayers.map(player => (
                   <div key={player.rank} className="flex items-center gap-3">
@@ -552,7 +555,7 @@ export default function ArenaPage() {
                         {player.rating}
                       </p>
                       <p className="text-[9px] font-semibold uppercase tracking-[0.2em] text-white/30">
-                        Rating
+                        {t("mvp.rating")}
                       </p>
                     </div>
                   </div>
@@ -563,7 +566,7 @@ export default function ArenaPage() {
                 type="button"
                 className="mt-5 w-full text-center text-xs font-bold uppercase tracking-[0.2em] text-[#6fffe9] transition-opacity hover:opacity-70"
               >
-                View Leaderboards →
+                {t("mvp.viewLeaderboards")}
               </button>
             </motion.div>
           </div>

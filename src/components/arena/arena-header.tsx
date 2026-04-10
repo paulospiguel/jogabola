@@ -25,8 +25,8 @@ export default function ArenaHeader({
   const notifications = buildDefaultNotifications(t);
 
   return (
-    <header className="w-full border-b border-white/8 bg-[#050312]/92 backdrop-blur-xl">
-      <div className="border-b border-white/8 px-4 py-4 md:px-6">
+    <header className="w-full border-b border-white/10 bg-[#0a0b1e]/60 backdrop-blur-xl">
+      <div className="border-b border-white/10 px-4 py-4 md:px-6">
         <div className="flex items-start gap-4">
           <Button
             variant="ghost"

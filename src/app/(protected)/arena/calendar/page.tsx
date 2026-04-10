@@ -1,5 +1,7 @@
 "use client";
 
+import { useTranslations } from "next-intl";
+
 import {
   EventCalendar,
   type CalendarEvent,
@@ -123,36 +125,36 @@ const typeMeta: Record<
   jogo: {
     label: "Jogos",
     emoji: "🏆",
-    highlight: "text-red-500",
-    badgeBg: "bg-red-100",
+    highlight: "text-rose-400",
+    badgeBg: "bg-rose-400/15",
     description: "Partidas oficiais e amistosos competitivos",
   },
   treino: {
     label: "Treinos",
     emoji: "🏋️",
-    highlight: "text-emerald-500",
-    badgeBg: "bg-emerald-100",
+    highlight: "text-[#6fffe9]",
+    badgeBg: "bg-[#6fffe9]/15",
     description: "Sessões técnicas e físicas",
   },
   amistoso: {
     label: "Amistosos",
     emoji: "🤝",
-    highlight: "text-purple-500",
-    badgeBg: "bg-purple-100",
+    highlight: "text-purple-400",
+    badgeBg: "bg-purple-400/15",
     description: "Jogos preparatórios e eventos sociais",
   },
   reuniao: {
     label: "Reuniões",
     emoji: "🗣️",
-    highlight: "text-amber-500",
-    badgeBg: "bg-amber-100",
+    highlight: "text-amber-300",
+    badgeBg: "bg-amber-400/15",
     description: "Planeamento estratégico e alinhamentos",
   },
   outro: {
     label: "Outros",
     emoji: "📌",
-    highlight: "text-slate-500",
-    badgeBg: "bg-slate-100",
+    highlight: "text-white/50",
+    badgeBg: "bg-white/10",
     description: "Eventos gerais e lembretes",
   },
 };
@@ -163,15 +165,15 @@ const statusStyles: Record<
 > = {
   confirmado: {
     label: "Confirmado",
-    className: "bg-emerald-100 text-emerald-700 border-emerald-200",
+    className: "border-[#6fffe9]/30 bg-[#6fffe9]/10 text-[#6fffe9]",
   },
   pendente: {
     label: "Pendente",
-    className: "bg-amber-100 text-amber-700 border-amber-200",
+    className: "border-amber-400/30 bg-amber-400/10 text-amber-300",
   },
   cancelado: {
     label: "Cancelado",
-    className: "bg-red-100 text-red-700 border-red-200",
+    className: "border-rose-400/30 bg-rose-400/10 text-rose-300",
   },
 };
 
@@ -334,6 +336,8 @@ const initialEvents: AgendaEvent[] = sortEvents([
 ]);
 
 export default function AgendaPage() {
+  const t = useTranslations("arenaPage.calendar");
+  const tForm = useTranslations("playZone.createEventDialog");
   const { toast } = useToast();
   const [events, setEvents] = useState<AgendaEvent[]>(initialEvents);
   const [selectedDate, setSelectedDate] = useState<Date>(new Date());
@@ -593,38 +597,37 @@ export default function AgendaPage() {
   const renderResponseBadge = (status: ResponseStatus) => {
     if (status === "aceito") {
       return (
-        <Badge className="border-emerald-200 bg-emerald-100 text-emerald-700">
+        <Badge className="border-[#6fffe9]/30 bg-[#6fffe9]/10 text-[#6fffe9]">
           Aceite
         </Badge>
       );
     }
     if (status === "pendente") {
       return (
-        <Badge className="border-amber-200 bg-amber-100 text-amber-700">
+        <Badge className="border-amber-400/30 bg-amber-400/10 text-amber-300">
           Pendente
         </Badge>
       );
     }
     return (
-      <Badge className="border-red-200 bg-red-100 text-red-700">Recusado</Badge>
+      <Badge className="border-rose-400/30 bg-rose-400/10 text-rose-300">Recusado</Badge>
     );
   };
 
   return (
-    <div className="space-y-8 p-8">
-      <section className="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
+    <div className="space-y-6 p-4 sm:p-6 lg:p-8">
+      <section className="flex flex-col gap-4 sm:gap-6 lg:flex-row lg:items-center lg:justify-between">
         <div className="space-y-2">
           <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.3em] text-[#6fffe9]">
             <CalendarClock className="h-4 w-4" />
-            Agenda inteligente
+            {t("smartSchedule")}
           </div>
           <h1 className="text-3xl font-bold tracking-tight text-white lg:text-4xl">
-            Agenda da equipa
+            {tForm("title").replace("Criar n", "N")} 
+            {/* Fallback while we don't have a specific title key */}
           </h1>
           <p className="max-w-2xl text-base text-white/70">
-            Organiza treinos, jogos e reuniões num só lugar. Acompanha
-            confirmações de presença, gere alterações e integra tudo com o
-            Google Calendar para manter a equipa alinhada.
+            {t("subtitle")}
           </p>
         </div>
         <div className="flex flex-col gap-3 sm:flex-row">
@@ -640,15 +643,15 @@ export default function AgendaPage() {
               <RefreshCw className="mr-2 h-4 w-4" />
             )}
             {isSyncingGCal
-              ? "A sincronizar..."
-              : "Sincronizar com Google Calendar"}
+              ? t("syncing")
+              : t("syncGcal")}
           </Button>
           <Button
             onClick={() => handleCreateClick(selectedDate)}
             className="group min-w-[180px] bg-[#24ffe6] font-semibold text-slate-900 shadow-[0_16px_45px_-20px_rgba(36,255,230,0.9)] transition-all duration-300 hover:-translate-y-1 hover:bg-[#24ffe6]/90"
           >
             <Plus className="mr-2 h-4 w-4" />
-            Novo evento
+            {t("newEvent")}
           </Button>
         </div>
       </section>
@@ -658,11 +661,10 @@ export default function AgendaPage() {
           <CardHeader className="border-b border-white/8 pb-4">
             <CardTitle className="flex items-center gap-2 text-lg font-semibold text-white">
               <CalendarDays className="h-4 w-4 text-[#6fffe9]" />
-              Calendário da temporada
+              {t("seasonCalendar")}
             </CardTitle>
             <CardDescription className="text-base text-white/60">
-              Seleciona um dia para ver os eventos agendados ou clicando em um
-              marcador para detalhes rápidos.
+              {t("seasonCalendarSub")}
             </CardDescription>
           </CardHeader>
           <CardContent className="pt-6">
@@ -684,7 +686,7 @@ export default function AgendaPage() {
                   {formatDateLabel(selectedDate)}
                 </CardTitle>
                 <CardDescription className="text-sm text-white/60">
-                  {selectedDateEvents.length} evento(s) agendados
+                  {selectedDateEvents.length} {t("scheduledEvents")}
                 </CardDescription>
               </div>
               <Button
@@ -693,7 +695,7 @@ export default function AgendaPage() {
                 onClick={() => handleCreateClick(selectedDate)}
                 className="border-white/25 bg-white/10 text-white backdrop-blur hover:border-[#24ffe6]/60 hover:bg-[#24ffe6]/15"
               >
-                <Plus className="mr-2 h-4 w-4" /> novo evento
+                <Plus className="mr-2 h-4 w-4" /> {t("newEvent").toLowerCase()}
               </Button>
             </CardHeader>
             <CardContent className="space-y-4">
@@ -702,11 +704,10 @@ export default function AgendaPage() {
                   <CalendarDays className="h-8 w-8 text-[#6fffe9]" />
                   <div className="space-y-1">
                     <p className="text-sm font-semibold text-white">
-                      Nenhum compromisso aqui ainda
+                      {t("noAppointments")}
                     </p>
                     <p className="text-sm text-white/60">
-                      Cria eventos para treinos, jogos ou reuniões diretamente
-                      nesta data.
+                      {t("noAppointmentsSub")}
                     </p>
                   </div>
                   <Button
@@ -714,7 +715,7 @@ export default function AgendaPage() {
                     onClick={() => handleCreateClick(selectedDate)}
                     className="bg-[#24ffe6] text-slate-900 hover:bg-[#24ffe6]/90"
                   >
-                    Agendar agora
+                    {t("scheduleNow")}
                   </Button>
                 </div>
               ) : (

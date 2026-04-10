@@ -11,6 +11,9 @@ import newLogoAnimated from "@/assets/logos/logo_animado.gif";
 import { COMPANY, TRANSLATION_KEYS } from "@/constants/app";
 import { cn } from "@/lib/utils";
 
+import { useSession } from "@/lib/auth-client";
+import { useJourneyRedirect } from "@/hooks/use-journey-redirect";
+
 const sizes = {
   mini: "w-16 h-20",
   small: "h-24 w-28",
@@ -39,6 +42,8 @@ export const Logo: React.FC<LogoProps> = ({
   href = "/",
 }) => {
   const t = useTranslations();
+  const { data: session } = useSession();
+  const { redirectToJourney } = useJourneyRedirect();
   const logoSize = sizes[size];
   let logotipo: StaticImageData;
 
@@ -55,8 +60,19 @@ export const Logo: React.FC<LogoProps> = ({
     }
   }
 
+  const handleClick = (e: React.MouseEvent) => {
+    if (session?.user?.id && href === "/") {
+      e.preventDefault();
+      redirectToJourney();
+    }
+  };
+
   return (
-    <Link href={href} className={cn("relative flex", logoSize, className)}>
+    <Link 
+      href={href} 
+      onClick={handleClick}
+      className={cn("relative flex", logoSize, className)}
+    >
       <Image
         unoptimized
         src={logotipo}

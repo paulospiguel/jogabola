@@ -1,11 +1,12 @@
 "use client";
 
+import { Analytics } from "@vercel/analytics/react";
+import type { ReactNode } from "react";
 import CookieConsent from "@/components/cookie-consent";
 import { Toaster } from "@/components/ui/toaster";
 import QueryClientProvider from "@/providers/query-client.provider";
+import { SolanaWalletProvider } from "@/providers/solana-wallet-provider";
 import { ThemeProvider } from "@/providers/theme.provider";
-import { Analytics } from "@vercel/analytics/react";
-import type { ReactNode } from "react";
 
 type ProviderProps = {
   children: ReactNode;
@@ -21,10 +22,12 @@ export function Providers({ children }: ProviderProps) {
         enableSystem={false}
         disableTransitionOnChange
       >
-        {children}
-        <CookieConsent />
-        <Toaster />
-        <Analytics />
+        <SolanaWalletProvider>
+          {children}
+          <CookieConsent />
+          <Toaster />
+          <Analytics />
+        </SolanaWalletProvider>
       </ThemeProvider>
     </QueryClientProvider>
   );

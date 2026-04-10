@@ -1665,9 +1665,50 @@
     }
   },
   "arenaPage": {
+    "eyebrows": {
+      "arena": "Arena",
+      "teams": "Equipas",
+      "calendar": "Agenda",
+      "club": "Clube",
+      "events": "Eventos",
+      "billing": "Faturamento"
+    },
     "header": {
       "title": "Central do clube",
       "description": "Visão operacional do plantel, agenda e gestão rápida."
+    },
+    "teamsHeader": {
+      "title": "Equipas Ativas",
+      "description": "Faz a gestão do teu plantel, acompanha a forma dos jogadores e controla os teus limites de equipa conforme o plano."
+    },
+    "calendarHeader": {
+      "title": "Agenda da equipa",
+      "description": "Organizar treinos, jogos e compromissos da equipa."
+    },
+    "calendar": {
+      "smartSchedule": "Agenda inteligente",
+      "subtitle": "Organiza treinos, jogos e reuniões num só lugar. Acompanha confirmações de presença, gere alterações e integra tudo com o Google Calendar para manter a equipa alinhada.",
+      "seasonCalendar": "Calendário da temporada",
+      "seasonCalendarSub": "Seleciona um dia para ver os eventos agendados ou clica num marcador para detalhes rápidos.",
+      "scheduledEvents": "evento(s) agendados",
+      "noAppointments": "Nenhum compromisso aqui ainda",
+      "noAppointmentsSub": "Cria eventos para treinos, jogos ou reuniões diretamente nesta data.",
+      "scheduleNow": "Agendar agora",
+      "syncing": "A sincronizar...",
+      "syncGcal": "Sincronizar GCal",
+      "newEvent": "Novo evento"
+    },
+    "clubHeader": {
+      "title": "Página do Clube",
+      "description": "Personalizar a presença e gerir a identidade da equipa."
+    },
+    "eventsHeader": {
+      "title": "Eventos e Torneios",
+      "description": "Gerir competições, bilhetes e jogos ativamente."
+    },
+    "billingHeader": {
+      "title": "Faturamento e Planos",
+      "description": "Faz a gestão da tua subscrição, faz upgrade ou consulta faturas."
     },
     "hero": {
       "eyebrow": "Arena · gestão do clube",
@@ -1705,6 +1746,33 @@
       "training": "Treino",
       "active": "Ativo",
       "rest": "Descanso"
+    },
+    "analytics": {
+      "title": "Performance Analytics",
+      "periods": {
+        "week": "Semana",
+        "month": "Mês",
+        "year": "Ano"
+      }
+    },
+    "activeTeams": {
+      "title": "Equipas Ativas",
+      "viewAll": "Ver Todas →",
+      "columns": {
+        "name": "Nome da Equipa",
+        "status": "Estado",
+        "form": "Forma"
+      }
+    },
+    "management": {
+      "title": "Gestão",
+      "quickActions": "⚡ Ações Rápidas"
+    },
+    "mvp": {
+      "season": "Temporada",
+      "title": "Corrida MVP",
+      "rating": "Classificação",
+      "viewLeaderboards": "Ver Tabelas →"
     }
   },
   "profilePage": {
@@ -1810,6 +1878,43 @@
     "comingSoon": {
       "title": "Em Desenvolvimento",
       "description": "Esta área está em desenvolvimento. Em breve você terá acesso completo à Fan Zone."
+    }
+  },
+  "sidebar": {
+    "management": "Gestão",
+    "clubAdmin": "Administração do Clube",
+    "dashboard": "Dashboard",
+    "activeTeams": "Equipas Ativas",
+    "fixtures": "Calendário",
+    "statCenter": "Centro de Estatísticas",
+    "finances": "Finanças",
+    "clubPage": "Página do Clube",
+    "clubSettings": "Configurações do Clube",
+    "proPlan": "Plano Pro",
+    "activeUntil": "Ativo até {date}",
+    "manageBilling": "Gerir Faturação"
+  },
+  "activeTeamsPage": {
+    "planUsage": {
+      "title": "Limite do Plano PRO",
+      "used": "{used} de {total} equipas utilizadas",
+      "upgrade": "Fazer Upgrade"
+    },
+    "teamCard": {
+      "players": "{count} atletas",
+      "status": {
+        "active": "ATIVA",
+        "suspended": "SUSPENSA",
+        "onboarding": "EM AVALIAÇÃO"
+      },
+      "manage": "Gerir Equipa",
+      "performance": "Performance",
+      "lastGames": "Últimos jogos"
+    },
+    "createTeam": {
+      "title": "Nova Equipa",
+      "description": "Tem slots disponíveis. Crie uma nova equipa e comece a competir.",
+      "button": "Criar Equipa"
     }
   }
 }

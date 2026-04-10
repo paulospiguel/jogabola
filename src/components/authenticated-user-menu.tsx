@@ -143,13 +143,13 @@ export function AuthenticatedUserMenu({
             variant="ghost"
             size={compact ? "icon-sm" : "icon"}
             className={cn(
-              "relative rounded-2xl border border-white/8 bg-white/5 text-white/70 transition-colors hover:bg-white/10 hover:text-white",
-              compact ? "h-12 w-12" : "h-14 w-14 rounded-[20px] bg-white/4",
+              "relative rounded-2xl border border-white/8 bg-transparent text-white/70 transition-colors hover:bg-white/10 hover:text-white",
+              compact ? "h-10 w-10" : "h-12 w-12 rounded-[18px] bg-white/4",
             )}
           >
-            <Bell className={cn(compact ? "h-5 w-5" : "h-6 w-6")} />
+            <Bell className={cn(compact ? "h-4 w-4" : "h-5 w-5")} />
             {notificationCount > 0 && (
-              <span className="absolute top-2 right-2 h-3 w-3 rounded-full border-2 border-[#0a0b1e] bg-[#6fffe9]" />
+              <span className="absolute top-1.5 right-1.5 h-2.5 w-2.5 rounded-full border-2 border-[#0a0b1e] bg-[#6fffe9]" />
             )}
             <span className="sr-only">{t("common.notifications")}</span>
           </Button>
@@ -178,54 +178,73 @@ export function AuthenticatedUserMenu({
         </DropdownMenuContent>
       </DropdownMenu>
 
-      {!compact && <div className="h-10 w-px bg-white/10" aria-hidden="true" />}
+      {!compact && <div className="h-8 w-px bg-white/10" aria-hidden="true" />}
 
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <button
             className={cn(
-              "group flex items-center rounded-[22px] border border-transparent text-left transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#6fffe9]/35",
+              "group flex items-center rounded-[20px] border border-transparent text-left transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#6fffe9]/35",
               compact
-                ? "h-12 w-12 justify-center bg-white/7 hover:bg-white/10"
-                : "gap-4 bg-white/[0.03] px-3 py-2.5 hover:bg-white/[0.05]",
+                ? "h-10 w-10 justify-center bg-white/7 hover:bg-white/10"
+                : "gap-4 bg-white/[0.03] px-2 py-2 hover:bg-white/[0.05]",
             )}
             aria-label={t("arena.userMenu.myAccount")}
           >
             {!compact && (
               <div className="min-w-0">
-                <p className="truncate text-base font-extrabold text-white">
+                <p className="truncate text-sm font-extrabold text-white leading-tight">
                   {resolvedProfile.name}
                 </p>
-                <p className="truncate text-sm text-[#7d8fb2]">
+                <p className="truncate text-xs text-[#7d8fb2] leading-tight">
                   {resolvedProfile.subtitle || t("common.profile")}
                 </p>
               </div>
             )}
 
-            <Avatar
+            <div 
               className={cn(
-                "shrink-0 border-2 border-[#c7ff3f] bg-[#1d2334]",
-                compact ? "h-12 w-12 border-white/8" : "h-14 w-14",
+                "relative shrink-0 flex items-center justify-center",
+                compact ? "h-10 w-10" : "h-12 w-12"
               )}
             >
-              <AvatarImage
-                src={resolvedProfile.image}
-                alt={resolvedProfile.name}
-                className="object-cover"
+              {/* Outer Glow / Border for Shield Shape */}
+              <div 
+                className="absolute inset-0 bg-[#24ffe6]/20 blur-md opacity-50 group-hover:opacity-100 transition-opacity"
+                style={{ clipPath: "polygon(0% 0%, 100% 0%, 100% 80%, 50% 100%, 0% 80%)" }}
               />
-              <AvatarFallback
+
+              <Avatar
                 className={cn(
-                  "bg-[#1d2334] font-black",
-                  compact ? "text-base text-white" : "text-base text-[#f4f7ff]",
+                  "h-full w-full border-2 border-white/10 bg-[#1d2334] rounded-none",
+                  !compact && "border-[#c7ff3f]/50"
                 )}
+                style={{ clipPath: "polygon(0% 0%, 100% 0%, 100% 80%, 50% 100%, 0% 80%)" }}
               >
-                {compact ? (
-                  <UserCircle2 className="h-6 w-6 text-white/80" />
-                ) : (
-                  getInitials(resolvedProfile.name)
-                )}
-              </AvatarFallback>
-            </Avatar>
+                {/* Background Club Logo Layer (Optional effect mentioned in audio) */}
+                <AvatarImage
+                  src={resolvedProfile.image}
+                  alt={resolvedProfile.name}
+                  className="object-cover z-20 relative"
+                />
+                
+                {/* Fallback pattern / background logo placeholder */}
+                <div className="absolute inset-0 bg-gradient-to-br from-[#1d2334] to-[#0a0b1e] z-10" />
+
+                <AvatarFallback
+                  className={cn(
+                    "bg-[#1d2334] font-black z-30",
+                    compact ? "text-sm text-white" : "text-base text-[#f4f7ff]",
+                  )}
+                >
+                  {compact ? (
+                    <UserCircle2 className="h-5 w-5 text-white/80" />
+                  ) : (
+                    getInitials(resolvedProfile.name)
+                  )}
+                </AvatarFallback>
+              </Avatar>
+            </div>
           </button>
         </DropdownMenuTrigger>
         <DropdownMenuContent

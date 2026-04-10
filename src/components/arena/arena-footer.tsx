@@ -12,42 +12,42 @@ export default function ArenaFooter({ className }: ArenaFooterProps) {
   return (
     <footer
       className={cn(
-        "border-t border-emerald-100/70 bg-white/80 text-slate-600 backdrop-blur transition-colors md:ml-[88px] dark:border-white/10 dark:bg-white/5 dark:text-white/70",
+        "border-t border-white/8 bg-[#050312]/80 backdrop-blur-xl",
         className,
       )}
     >
-      <div className="w-full px-4 py-6">
+      <div className="w-full px-4 py-5">
         <div className="flex flex-col items-center justify-between gap-4 md:flex-row">
           {/* Copyright */}
-          <div className="text-center text-sm text-slate-500 md:text-left dark:text-white/60">
+          <div className="text-center text-xs text-white/40 md:text-left">
             <p>
               © {currentYear} {COMPANY.NAME}. Todos os direitos reservados.
             </p>
           </div>
 
           {/* Links */}
-          <div className="flex flex-wrap items-center justify-center gap-4 text-sm">
+          <div className="flex flex-wrap items-center justify-center gap-4 text-xs">
             <Link
               href="/terms-and-conditions"
-              className="text-slate-500 transition-colors hover:text-emerald-600 dark:text-white/60 dark:hover:text-neon-secondary"
+              className="text-white/40 transition-colors hover:text-[#6fffe9]"
             >
               Termos de Uso
             </Link>
             <Link
               href="/privacy"
-              className="text-slate-500 transition-colors hover:text-emerald-600 dark:text-white/60 dark:hover:text-neon-secondary"
+              className="text-white/40 transition-colors hover:text-[#6fffe9]"
             >
               Privacidade
             </Link>
             <Link
               href="/support"
-              className="text-slate-500 transition-colors hover:text-emerald-600 dark:text-white/60 dark:hover:text-neon-secondary"
+              className="text-white/40 transition-colors hover:text-[#6fffe9]"
             >
               Suporte
             </Link>
             <Link
               href="/about"
-              className="text-slate-500 transition-colors hover:text-emerald-600 dark:text-white/60 dark:hover:text-neon-secondary"
+              className="text-white/40 transition-colors hover:text-[#6fffe9]"
             >
               Sobre
             </Link>
@@ -59,10 +59,11 @@ export default function ArenaFooter({ className }: ArenaFooterProps) {
               href="https://twitter.com/jogabola"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-slate-500 transition-colors hover:text-emerald-600 dark:text-white/60 dark:hover:text-neon-secondary"
+              className="text-white/40 transition-colors hover:text-[#6fffe9]"
+              aria-label="JogaBola no Twitter"
             >
               <svg
-                className="h-5 w-5"
+                className="h-4 w-4"
                 fill="currentColor"
                 viewBox="0 0 24 24"
                 aria-hidden="true"
@@ -74,10 +75,11 @@ export default function ArenaFooter({ className }: ArenaFooterProps) {
               href="https://instagram.com/jogabola"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-slate-500 transition-colors hover:text-emerald-600 dark:text-white/60 dark:hover:text-neon-secondary"
+              className="text-white/40 transition-colors hover:text-[#6fffe9]"
+              aria-label="JogaBola no Instagram"
             >
               <svg
-                className="h-5 w-5"
+                className="h-4 w-4"
                 fill="currentColor"
                 viewBox="0 0 24 24"
                 aria-hidden="true"

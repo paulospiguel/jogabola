@@ -4,6 +4,7 @@ import {
   BarChart2,
   Calendar,
   LayoutDashboard,
+  LayoutTemplate,
   Settings,
   ShieldCheck,
   Users,
@@ -11,6 +12,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useTranslations } from "next-intl";
 import { cn } from "@/lib/utils";
 import { Logo } from "../logo";
 
@@ -19,20 +21,21 @@ type ArenaSidebarProps = {
   onClose: () => void;
 };
 
-const managementItems = [
-  { title: "Dashboard", href: "/arena", icon: LayoutDashboard },
-  { title: "Active Teams", href: "/arena/teams", icon: Users },
-  { title: "Fixtures", href: "/arena/calendar", icon: Calendar },
-  { title: "Stat Center", href: "/arena/stats", icon: BarChart2 },
-];
-
-const adminItems = [
-  { title: "Finances", href: "/arena/finances", icon: Wallet },
-  { title: "Club Settings", href: "/arena/settings", icon: Settings },
-];
-
 export default function ArenaSidebar({ isOpen, onClose }: ArenaSidebarProps) {
   const pathname = usePathname();
+  const t = useTranslations("sidebar");
+
+  const managementItems = [
+    { title: t("dashboard"), href: "/arena", icon: LayoutDashboard },
+    { title: t("activeTeams"), href: "/arena/teams", icon: Users },
+    { title: t("fixtures"), href: "/arena/calendar", icon: Calendar },
+    { title: t("statCenter"), href: "/arena/stats", icon: BarChart2 },
+  ];
+
+  const adminItems = [
+    { title: t("finances"), href: "/arena/finances", icon: Wallet },
+    { title: t("clubPage"), href: "/arena/club", icon: LayoutTemplate },
+  ];
 
   const sidebarContent = (
     <div className="flex h-full flex-col px-4 py-6">
@@ -46,7 +49,7 @@ export default function ArenaSidebar({ isOpen, onClose }: ArenaSidebarProps) {
         {/* Management Section */}
         <div className="mb-8">
           <p className="mb-3 px-3 text-[10px] font-bold uppercase tracking-[0.3em] text-[#6fffe9]/50">
-            Management
+            {t("management")}
           </p>
           <nav className="flex flex-col gap-1">
             {managementItems.map(item => {
@@ -78,7 +81,7 @@ export default function ArenaSidebar({ isOpen, onClose }: ArenaSidebarProps) {
         {/* Club Admin Section */}
         <div>
           <p className="mb-3 px-3 text-[10px] font-bold uppercase tracking-[0.3em] text-[#6fffe9]/50">
-            Club Admin
+            {t("clubAdmin")}
           </p>
           <nav className="flex flex-col gap-1">
             {adminItems.map(item => {
@@ -122,10 +125,10 @@ export default function ArenaSidebar({ isOpen, onClose }: ArenaSidebarProps) {
             </div>
             <div>
               <p className="text-sm font-bold leading-tight text-white">
-                Pro Plan
+                {t("proPlan")}
               </p>
               <p className="mt-0.5 text-[10px] leading-tight text-white/40">
-                Active until Dec 2024
+                {t("activeUntil", { date: "Dec 2024" })}
               </p>
             </div>
           </div>
@@ -134,7 +137,7 @@ export default function ArenaSidebar({ isOpen, onClose }: ArenaSidebarProps) {
             onClick={onClose}
             className="relative z-10 mt-3 flex w-full items-center justify-center rounded-xl border border-[#6fffe9]/40 py-2 px-4 text-xs font-bold text-[#6fffe9] transition-all duration-200 hover:border-[#6fffe9]/70 hover:bg-[#6fffe9]/10"
           >
-            Manage Billing
+            {t("manageBilling")}
           </Link>
         </div>
       </div>

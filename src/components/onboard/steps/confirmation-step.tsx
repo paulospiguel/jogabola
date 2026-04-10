@@ -1,20 +1,18 @@
 "use client";
 
-import { OnboardStepHeader } from "@/components/onboard-step-header";
-import { translateFieldValue } from "@/constants/field-translations";
-import { JOURNEY_OPTIONS } from "@/constants/onboard";
-import type { RoleQuestions } from "@/constants/onboarding-questions";
-import {
-  getPositionConfig,
-  getPositionLabel,
-} from "@/constants/positions";
 import { countries } from "country-data-list";
 import { format } from "date-fns";
 import { pt } from "date-fns/locale";
 import { motion } from "framer-motion";
 import { CheckCircle } from "lucide-react";
-import { useTranslations } from "next-intl";
 import Image from "next/image";
+import { useTranslations } from "next-intl";
+import { OnboardStepHeader } from "@/components/onboard-step-header";
+import { WalletConnectSection } from "@/components/wallet/wallet-connect-section";
+import { translateFieldValue } from "@/constants/field-translations";
+import { JOURNEY_OPTIONS } from "@/constants/onboard";
+import type { RoleQuestions } from "@/constants/onboarding-questions";
+import { getPositionConfig, getPositionLabel } from "@/constants/positions";
 
 interface ConfirmationStepProps {
   name: string;
@@ -29,35 +27,37 @@ interface ConfirmationStepProps {
   experience?: string;
   goals: string[];
   roleQuestions?: RoleQuestions;
-  getCustomFieldValue: (fieldId: string) => string | string[] | number | boolean | null;
+  getCustomFieldValue: (
+    fieldId: string,
+  ) => string | string[] | number | boolean | null;
 }
 
 // Mapeamento de nomes em inglês para português (principais países)
 const countryNamesPT: Record<string, string> = {
-  "Portugal": "Portugal",
-  "Brazil": "Brasil",
-  "Angola": "Angola",
-  "Mozambique": "Moçambique",
+  Portugal: "Portugal",
+  Brazil: "Brasil",
+  Angola: "Angola",
+  Mozambique: "Moçambique",
   "Cape Verde": "Cabo Verde",
   "Guinea-Bissau": "Guiné-Bissau",
   "São Tomé and Príncipe": "São Tomé e Príncipe",
-  "Spain": "Espanha",
-  "France": "França",
-  "Italy": "Itália",
-  "Germany": "Alemanha",
+  Spain: "Espanha",
+  France: "França",
+  Italy: "Itália",
+  Germany: "Alemanha",
   "United Kingdom": "Reino Unido",
   "United States": "Estados Unidos",
-  "Canada": "Canadá",
-  "Argentina": "Argentina",
-  "Mexico": "México",
-  "Chile": "Chile",
-  "Colombia": "Colômbia",
-  "Peru": "Peru",
-  "Uruguay": "Uruguai",
-  "Venezuela": "Venezuela",
-  "Ecuador": "Equador",
-  "Paraguay": "Paraguai",
-  "Bolivia": "Bolívia",
+  Canada: "Canadá",
+  Argentina: "Argentina",
+  Mexico: "México",
+  Chile: "Chile",
+  Colombia: "Colômbia",
+  Peru: "Peru",
+  Uruguay: "Uruguai",
+  Venezuela: "Venezuela",
+  Ecuador: "Equador",
+  Paraguay: "Paraguai",
+  Bolivia: "Bolívia",
 };
 
 // Função para obter o nome do país a partir do código
@@ -91,9 +91,7 @@ export function ConfirmationStep({
       const allGoals = roleQuestions?.goals || [];
       return allGoals.find(g => g.id === goalId);
     })
-    .filter(
-      (goal): goal is NonNullable<typeof goal> => goal !== undefined,
-    );
+    .filter((goal): goal is NonNullable<typeof goal> => goal !== undefined);
 
   return (
     <motion.div
@@ -101,10 +99,7 @@ export function ConfirmationStep({
       animate={{ opacity: 1, y: 0 }}
       className="space-y-6 sm:space-y-8"
     >
-      <OnboardStepHeader
-        title={tc("title")}
-        description={tc("description")}
-      />
+      <OnboardStepHeader title={tc("title")} description={tc("description")} />
 
       <div className="mx-auto max-w-3xl space-y-4 sm:space-y-6">
         {/* Informações Básicas */}
@@ -116,7 +111,9 @@ export function ConfirmationStep({
           <div className="grid grid-cols-1 gap-3 sm:gap-4 md:grid-cols-2">
             <div>
               <p className="text-sm text-white/60">{t("common.name")}</p>
-              <p className="font-medium text-white">{name || t("common.notFilled")}</p>
+              <p className="font-medium text-white">
+                {name || t("common.notFilled")}
+              </p>
             </div>
             <div>
               <p className="text-sm text-white/60">{t("common.email")}</p>
@@ -132,7 +129,9 @@ export function ConfirmationStep({
             )}
             {dateOfBirth && (
               <div>
-                <p className="text-sm text-white/60">{t("onboardingPage.steps.basicInfo.fields.dateOfBirth")}</p>
+                <p className="text-sm text-white/60">
+                  {t("onboardingPage.steps.basicInfo.fields.dateOfBirth")}
+                </p>
                 <p className="font-medium text-white">
                   {(() => {
                     try {
@@ -151,7 +150,9 @@ export function ConfirmationStep({
             )}
             {nationality && (
               <div>
-                <p className="text-sm text-white/60">{t("onboardingPage.steps.basicInfo.fields.nationality")}</p>
+                <p className="text-sm text-white/60">
+                  {t("onboardingPage.steps.basicInfo.fields.nationality")}
+                </p>
                 <p className="font-medium text-white">
                   {getCountryName(nationality)}
                 </p>
@@ -159,7 +160,9 @@ export function ConfirmationStep({
             )}
             {country && (
               <div>
-                <p className="text-sm text-white/60">{t("onboardingPage.steps.basicInfo.fields.country")}</p>
+                <p className="text-sm text-white/60">
+                  {t("onboardingPage.steps.basicInfo.fields.country")}
+                </p>
                 <p className="font-medium text-white">
                   {getCountryName(country)}
                 </p>
@@ -167,13 +170,17 @@ export function ConfirmationStep({
             )}
             {city && (
               <div>
-                <p className="text-sm text-white/60">{t("onboardingPage.steps.basicInfo.fields.city")}</p>
+                <p className="text-sm text-white/60">
+                  {t("onboardingPage.steps.basicInfo.fields.city")}
+                </p>
                 <p className="font-medium text-white">{city}</p>
               </div>
             )}
             {location && (
               <div>
-                <p className="text-sm text-white/60">{t("onboardingPage.steps.basicInfo.fields.location")}</p>
+                <p className="text-sm text-white/60">
+                  {t("onboardingPage.steps.basicInfo.fields.location")}
+                </p>
                 <p className="font-medium text-white">{location}</p>
               </div>
             )}
@@ -236,10 +243,7 @@ export function ConfirmationStep({
               <div className="grid grid-cols-1 gap-3 sm:gap-4 md:grid-cols-2">
                 {roleQuestions.personalInfo.map(question => {
                   const value = getCustomFieldValue(question.id);
-                  if (
-                    !value ||
-                    (Array.isArray(value) && value.length === 0)
-                  )
+                  if (!value || (Array.isArray(value) && value.length === 0))
                     return null;
 
                   // Se for a posição, exibir com ícone e tradução
@@ -250,13 +254,17 @@ export function ConfirmationStep({
 
                     return (
                       <div key={question.id}>
-                        <p className="text-sm text-white/60">{question.label}</p>
+                        <p className="text-sm text-white/60">
+                          {question.label}
+                        </p>
                         <div className="flex items-center gap-2">
                           {PositionIcon && (
                             <PositionIcon className="h-4 w-4 text-brand-green" />
                           )}
                           {positionConfig?.emoji && (
-                            <span className="text-base">{positionConfig.emoji}</span>
+                            <span className="text-base">
+                              {positionConfig.emoji}
+                            </span>
                           )}
                           <p className="font-medium text-white">
                             {positionLabel}
@@ -267,19 +275,21 @@ export function ConfirmationStep({
                   }
 
                   // Traduzir o valor se necessário
-                  const translatedValue = translateFieldValue(question.id, String(value));
+                  const translatedValue = translateFieldValue(
+                    question.id,
+                    String(value),
+                  );
 
                   return (
                     <div key={question.id}>
                       <p className="text-sm text-white/60">{question.label}</p>
                       <p className="font-medium text-white">
-                        {translatedValue || (
-                          Array.isArray(value)
+                        {translatedValue ||
+                          (Array.isArray(value)
                             ? value.join(", ")
                             : typeof value === "object"
                               ? JSON.stringify(value)
-                              : String(value)
-                        )}
+                              : String(value))}
                       </p>
                     </div>
                   );
@@ -328,26 +338,25 @@ export function ConfirmationStep({
               <div className="grid grid-cols-1 gap-3 sm:gap-4 md:grid-cols-2">
                 {roleQuestions.customFields.map(question => {
                   const value = getCustomFieldValue(question.id);
-                  if (
-                    !value ||
-                    (Array.isArray(value) && value.length === 0)
-                  )
+                  if (!value || (Array.isArray(value) && value.length === 0))
                     return null;
 
                   // Traduzir o valor se necessário
-                  const translatedValue = translateFieldValue(question.id, String(value));
+                  const translatedValue = translateFieldValue(
+                    question.id,
+                    String(value),
+                  );
 
                   return (
                     <div key={question.id}>
                       <p className="text-sm text-white/60">{question.label}</p>
                       <p className="font-medium text-white">
-                        {translatedValue || (
-                          Array.isArray(value)
+                        {translatedValue ||
+                          (Array.isArray(value)
                             ? value.join(", ")
                             : typeof value === "object"
                               ? JSON.stringify(value)
-                              : String(value)
-                        )}
+                              : String(value))}
                       </p>
                     </div>
                   );
@@ -356,10 +365,15 @@ export function ConfirmationStep({
             </div>
           )}
 
+        {/* Wallet Solana — secção opcional, não bloqueia o onboarding */}
+        <WalletConnectSection variant="onboarding" />
+
         {/* Mensagem final */}
         <div className="rounded-xl border border-brand-green/30 bg-linear-to-br from-brand-green/10 to-transparent p-4 text-center sm:rounded-2xl sm:p-6">
           <p className="text-sm text-white/80 sm:text-base">
-            <span className="font-semibold text-brand-green">{tc("allGood")}</span>{" "}
+            <span className="font-semibold text-brand-green">
+              {tc("allGood")}
+            </span>{" "}
             {tc("proceed")}
           </p>
         </div>
@@ -367,4 +381,3 @@ export function ConfirmationStep({
     </motion.div>
   );
 }
-

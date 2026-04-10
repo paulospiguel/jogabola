@@ -16,14 +16,45 @@ export default function ArenaLayout({
   const pathname = usePathname();
   const t = useTranslations("arenaPage");
 
-  const isArenaHome = pathname === "/arena";
-  const headerCopy = isArenaHome
-    ? {
-        eyebrow: "Arena",
-        title: t("header.title"),
-        description: t("header.description"),
-      }
-    : {};
+  let headerCopy: { eyebrow?: string; title?: string; description?: string } = {};
+
+  if (pathname === "/arena") {
+    headerCopy = {
+      eyebrow: t("eyebrows.arena"),
+      title: t("header.title"),
+      description: t("header.description"),
+    };
+  } else if (pathname === "/arena/teams" || pathname.includes("/teams")) {
+    headerCopy = {
+      eyebrow: t("eyebrows.teams"),
+      title: t("teamsHeader.title"),
+      description: t("teamsHeader.description"),
+    };
+  } else if (pathname.includes("/calendar")) {
+    headerCopy = {
+      eyebrow: t("eyebrows.calendar"),
+      title: t("calendarHeader.title"),
+      description: t("calendarHeader.description"),
+    };
+  } else if (pathname.includes("/club")) {
+    headerCopy = {
+      eyebrow: t("eyebrows.club"),
+      title: t("clubHeader.title"),
+      description: t("clubHeader.description"),
+    };
+  } else if (pathname.includes("/events")) {
+    headerCopy = {
+      eyebrow: t("eyebrows.events"),
+      title: t("eventsHeader.title"),
+      description: t("eventsHeader.description"),
+    };
+  } else if (pathname.includes("/billing")) {
+    headerCopy = {
+      eyebrow: t("eyebrows.billing"),
+      title: t("billingHeader.title"),
+      description: t("billingHeader.description"),
+    };
+  }
 
   return (
     <div className="relative min-h-screen bg-[linear-gradient(135deg,#050312_0%,#080a25_45%,#0f163f_100%)] text-white">
@@ -47,8 +78,8 @@ export default function ArenaLayout({
       </div>
 
       {/* Scrollable content */}
-      <div className="relative z-10 flex pt-36">
-        <main className="min-h-[calc(100vh-9rem)] flex-1 pb-12 md:ml-64">
+      <div className="relative z-10 flex pt-44 md:pt-48">
+        <main className="min-h-[calc(100vh-8rem)] flex-1 pb-12 md:ml-64">
           {children}
         </main>
       </div>

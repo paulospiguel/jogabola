@@ -941,9 +941,45 @@
     }
   },
   "arenaPage": {
+    "eyebrows": {
+      "arena": "Arena",
+      "calendar": "Agenda",
+      "club": "Club",
+      "events": "Eventos",
+      "billing": "Facturación"
+    },
     "header": {
       "title": "Centro del club",
       "description": "Visión operativa de la plantilla y la agenda."
+    },
+    "calendarHeader": {
+      "title": "Agenda del equipo",
+      "description": "Organizar entrenamientos, partidos y compromisos del equipo."
+    },
+    "calendar": {
+      "smartSchedule": "Agenda inteligente",
+      "subtitle": "Organiza entrenamientos, partidos y reuniones en un solo lugar. Sigue las confirmaciones de asistencia, gestiona cambios e integra todo con Google Calendar para mantener al equipo alineado.",
+      "seasonCalendar": "Calendario de la temporada",
+      "seasonCalendarSub": "Selecciona un día para ver los eventos programados o haz clic en un marcador para detalles rápidos.",
+      "scheduledEvents": "evento(s) programados",
+      "noAppointments": "No hay compromisos aquí todavía",
+      "noAppointmentsSub": "Crea eventos para entrenamientos, partidos o reuniones directamente en esta fecha.",
+      "scheduleNow": "Programar ahora",
+      "syncing": "Sincronizando...",
+      "syncGcal": "Sincronizar GCal",
+      "newEvent": "Nuevo evento"
+    },
+    "clubHeader": {
+      "title": "Página del Club",
+      "description": "Personalizar tu presencia y gestionar la identidad del equipo."
+    },
+    "eventsHeader": {
+      "title": "Eventos y Torneos",
+      "description": "Gestionar competiciones, tickets y partidos activamente."
+    },
+    "billingHeader": {
+      "title": "Facturación y Planes",
+      "description": "Gestiona tu suscripción, actualiza tu plan o consulta facturas."
     },
     "hero": {
       "eyebrow": "Arena · gestión del club",
@@ -981,6 +1017,33 @@
       "training": "Entreno",
       "active": "Activo",
       "rest": "Descanso"
+    },
+    "analytics": {
+      "title": "Análisis de Rendimiento",
+      "periods": {
+        "week": "Semana",
+        "month": "Mes",
+        "year": "Año"
+      }
+    },
+    "activeTeams": {
+      "title": "Equipos Activos",
+      "viewAll": "Ver Todos →",
+      "columns": {
+        "name": "Equipo",
+        "status": "Estado",
+        "form": "Forma"
+      }
+    },
+    "management": {
+      "title": "Gestión",
+      "quickActions": "⚡ Acciones Rápidas"
+    },
+    "mvp": {
+      "season": "Temporada",
+      "title": "Carrera MVP",
+      "rating": "Clasif.",
+      "viewLeaderboards": "Ver Tablas →"
     }
   },
   "profilePage": {

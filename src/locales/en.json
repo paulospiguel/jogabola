@@ -1214,9 +1214,50 @@
     }
   },
   "arenaPage": {
+    "eyebrows": {
+      "arena": "Arena",
+      "teams": "Teams",
+      "calendar": "Calendar",
+      "club": "Club",
+      "events": "Events",
+      "billing": "Billing"
+    },
     "header": {
       "title": "Club hub",
       "description": "Operational overview of squad, schedule, and quick management."
+    },
+    "teamsHeader": {
+      "title": "Active Teams",
+      "description": "Manage your squad, track player form, and control team limits according to your plan."
+    },
+    "calendarHeader": {
+      "title": "Team Schedule",
+      "description": "Organize training sessions, matches, and team commitments."
+    },
+    "calendar": {
+      "smartSchedule": "Smart schedule",
+      "subtitle": "Organize training sessions, matches, and meetings in one place. Track attendance confirmations, manage changes, and integrate everything with Google Calendar to keep the team aligned.",
+      "seasonCalendar": "Season calendar",
+      "seasonCalendarSub": "Select a day to see scheduled events or click on a marker for quick details.",
+      "scheduledEvents": "scheduled event(s)",
+      "noAppointments": "No appointments here yet",
+      "noAppointmentsSub": "Create events for training, matches, or meetings directly on this date.",
+      "scheduleNow": "Schedule now",
+      "syncing": "Syncing...",
+      "syncGcal": "Sync GCal",
+      "newEvent": "New event"
+    },
+    "clubHeader": {
+      "title": "Club Page",
+      "description": "Customize your presence and manage team identity."
+    },
+    "eventsHeader": {
+      "title": "Events & Tournaments",
+      "description": "Manage competitions, ticketing, and matches."
+    },
+    "billingHeader": {
+      "title": "Billing & Plans",
+      "description": "Manage your subscription, upgrade, or view invoices."
     },
     "hero": {
       "eyebrow": "Arena · club management",
@@ -1254,6 +1295,33 @@
       "training": "Training",
       "active": "Active",
       "rest": "Rest"
+    },
+    "analytics": {
+      "title": "Performance Analytics",
+      "periods": {
+        "week": "Week",
+        "month": "Month",
+        "year": "Year"
+      }
+    },
+    "activeTeams": {
+      "title": "Active Teams",
+      "viewAll": "View All →",
+      "columns": {
+        "name": "Team Name",
+        "status": "Status",
+        "form": "Form"
+      }
+    },
+    "management": {
+      "title": "Management",
+      "quickActions": "⚡ Quick Actions"
+    },
+    "mvp": {
+      "season": "Season",
+      "title": "MVP Race",
+      "rating": "Rating",
+      "viewLeaderboards": "View Leaderboards →"
     }
   },
   "profilePage": {
@@ -1390,5 +1458,42 @@
     },
     "participants": "participants",
     "organizedBy": "Organized by"
+  },
+  "sidebar": {
+    "management": "Management",
+    "clubAdmin": "Club Admin",
+    "dashboard": "Dashboard",
+    "activeTeams": "Active Teams",
+    "fixtures": "Fixtures",
+    "statCenter": "Stat Center",
+    "finances": "Finances",
+    "clubPage": "Club Page",
+    "clubSettings": "Club Settings",
+    "proPlan": "Pro Plan",
+    "activeUntil": "Active until {date}",
+    "manageBilling": "Manage Billing"
+  },
+  "activeTeamsPage": {
+    "planUsage": {
+      "title": "PRO Plan Limit",
+      "used": "{used} of {total} teams used",
+      "upgrade": "Upgrade Plan"
+    },
+    "teamCard": {
+      "players": "{count} players",
+      "status": {
+        "active": "ACTIVE",
+        "suspended": "SUSPENDED",
+        "onboarding": "ONBOARDING"
+      },
+      "manage": "Manage Team",
+      "performance": "Performance",
+      "lastGames": "Last games"
+    },
+    "createTeam": {
+      "title": "New Team",
+      "description": "You have available slots. Create a new team and start competing.",
+      "button": "Create Team"
+    }
   }
 }
