@@ -1,10 +1,8 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { WalletPhantom } from "@web3icons/react";
 import { AnimatePresence, motion } from "framer-motion";
-import { ArrowRight, Eye, EyeOff, Loader2, Mail, X } from "lucide-react";
-import Image from "next/image";
+import { ArrowRight, Eye, EyeOff, Loader2, Mail, Wallet, X } from "lucide-react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useTranslations } from "next-intl";
@@ -12,27 +10,16 @@ import { useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { saveProfileData } from "@/actions/profile";
-import abstractIcon from "@/assets/icons/abstract.png";
-import { Google, GoogleIcon } from "@/components/icons";
+import { AppleIcon, Google, GoogleIcon } from "@/components/icons";
 import { useProfileSync } from "@/hooks/use-profile-sync";
 import { useToast } from "@/hooks/use-toast-custom";
 import { signIn, signUp, useSession } from "@/lib/auth-client";
 import { loginSchema, registerSchema } from "@/schemas/auth";
 
-// --- Wallet icons (inline SVGs) ---
-
-function AbstractWalletIcon() {
+function SolanaIcon() {
   return (
-    <div className="flex h-10 w-10 items-center justify-center">
-      <Image src={abstractIcon} alt="Abstract" width={22} height={22} />
-    </div>
-  );
-}
-
-function PhantomIcon() {
-  return (
-    <div className="flex h-10 w-10 items-center justify-center rounded-xl">
-      <WalletPhantom variant="branded" size={64} />
+    <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-white/10">
+      <Wallet className="h-5 w-5 text-white" />
     </div>
   );
 }
@@ -65,16 +52,9 @@ const loginMethods: LoginMethod[] = [
     icon: <SocialLoginIcon />,
   },
   {
-    id: "abstract",
-    label: "Abstract Global Wallet",
-    sublabel: "Recommended",
-    icon: <AbstractWalletIcon />,
-    comingSoon: true,
-  },
-  {
-    id: "phantom",
-    label: "Phantom",
-    icon: <PhantomIcon />,
+    id: "solana",
+    label: "Conectar carteira Solana",
+    icon: <SolanaIcon />,
     comingSoon: true,
   },
 ];
@@ -172,6 +152,27 @@ export default function LoginPage() {
     }
   }
 
+  async function handleAppleLogin() {
+    setLoading(true);
+    try {
+      const result = await signIn.social({
+        provider: "apple",
+        callbackURL: "/arena",
+      });
+      if (result.error)
+        throw new Error(result.error.message || t("errors.appleAuthFailed"));
+      if (result.data?.url) {
+        window.location.href = result.data.url;
+        return;
+      }
+    } catch (err: unknown) {
+      const errorMessage =
+        err instanceof Error ? err.message : t("errors.loginFailed");
+      toast.error(t("errors.loginError"), errorMessage);
+      setLoading(false);
+    }
+  }
+
   async function handleLoginSubmit(values: {
     email: string;
     password: string;
@@ -246,7 +247,7 @@ export default function LoginPage() {
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.3 }}
-          className="relative flex w-full max-w-2xl overflow-hidden rounded-2xl border border-white/10 bg-[#111827]/90 shadow-2xl backdrop-blur-md"
+          className="relative flex w-full max-w-2xl flex-col md:flex-row overflow-hidden rounded-2xl border border-white/10 bg-[#111827]/90 shadow-2xl backdrop-blur-md"
           style={{ minHeight: "460px" }}
         >
           {/* Close button */}
@@ -259,7 +260,7 @@ export default function LoginPage() {
           </Link>
 
           {/* Left panel — method list */}
-          <div className="flex w-56 shrink-0 flex-col gap-1 border-r border-white/10 p-4">
+          <div className="flex w-full md:w-56 shrink-0 flex-col gap-1 border-b md:border-b-0 md:border-r border-white/10 p-4">
             <h2 className="mb-3 px-2 text-lg font-semibold text-white">
               Sign in
             </h2>
@@ -290,7 +291,7 @@ export default function LoginPage() {
           </div>
 
           {/* Right panel — auth form */}
-          <div className="flex flex-1 flex-col justify-between p-8">
+          <div className="flex flex-1 flex-col justify-between p-6 md:p-8">
             <div className="flex flex-1 flex-col justify-center">
               <AnimatePresence mode="wait">
                 {selectedMethod === "social" && (
@@ -315,6 +316,21 @@ export default function LoginPage() {
                         <GoogleIcon className="h-5 w-5" />
                       )}
                       Continue with Google
+                    </button>
+
+                    {/* Apple button */}
+                    <button
+                      type="button"
+                      onClick={handleAppleLogin}
+                      disabled={loading}
+                      className="flex w-full items-center justify-center gap-3 rounded-xl border border-white/20 bg-white/10 px-4 py-3 text-sm font-medium text-white transition-all hover:bg-white/20 disabled:opacity-50"
+                    >
+                      {loading ? (
+                        <Loader2 className="h-4 w-4 animate-spin" />
+                      ) : (
+                        <AppleIcon className="h-5 w-5" />
+                      )}
+                      Continue with Apple
                     </button>
 
                     {/* Divider */}

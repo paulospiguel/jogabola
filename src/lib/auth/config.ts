@@ -20,7 +20,20 @@ function getAuthEnv() {
   const googleClientId = process.env.GOOGLE_CLIENT_ID;
   const googleClientSecret = process.env.GOOGLE_CLIENT_SECRET;
   
+  const appleClientId = process.env.APPLE_CLIENT_ID;
+  const appleClientSecret = process.env.APPLE_CLIENT_SECRET;
+  const appleTeamId = process.env.APPLE_TEAM_ID;
+  const appleKeyId = process.env.APPLE_KEY_ID;
+  const applePrivateKey = process.env.APPLE_PRIVATE_KEY;
+
   const hasGoogleCredentials = Boolean(googleClientId && googleClientSecret);
+  const hasAppleCredentials = Boolean(
+    appleClientId && 
+    appleClientSecret && 
+    appleTeamId && 
+    appleKeyId && 
+    applePrivateKey
+  );
 
   const baseURL = getBaseURL();
   
@@ -38,6 +51,14 @@ function getAuthEnv() {
       enabled: hasGoogleCredentials,
       clientId: googleClientId,
       clientSecret: googleClientSecret,
+    },
+    apple: {
+      enabled: hasAppleCredentials,
+      clientId: appleClientId,
+      clientSecret: appleClientSecret,
+      teamId: appleTeamId,
+      keyId: appleKeyId,
+      privateKey: applePrivateKey,
     },
   };
 }

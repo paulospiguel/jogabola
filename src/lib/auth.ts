@@ -14,16 +14,26 @@ function normalizeImage(value: string | null | undefined) {
 }
 
 // Configurar provedores sociais apenas se as credenciais estiverem disponíveis
-const socialProviders = env.google.enabled
-  ? {
-      google: {
-        clientId: env.google.clientId!,
-        clientSecret: env.google.clientSecret!,
-        scopes: ["openid", "email", "profile"],
-        overrideUserInfoOnSignIn: true,
-      },
-    }
-  : undefined;
+const socialProviders = {
+  ...(env.google.enabled && {
+    google: {
+      clientId: env.google.clientId!,
+      clientSecret: env.google.clientSecret!,
+      scopes: ["openid", "email", "profile"],
+      overrideUserInfoOnSignIn: true,
+    },
+  }),
+  ...(env.apple.enabled && {
+    apple: {
+      clientId: env.apple.clientId!,
+      clientSecret: env.apple.clientSecret!,
+      teamId: env.apple.teamId!,
+      keyId: env.apple.keyId!,
+      privateKey: env.apple.privateKey!,
+    },
+  }),
+};
+
 
 export const auth = betterAuth({
   baseURL: env.baseURL,
