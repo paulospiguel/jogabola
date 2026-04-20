@@ -1,12 +1,11 @@
 "use client";
 
 import { cn } from "@/lib/utils";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
 import { Building2, FileText, MapPin, Calendar, Tag } from "lucide-react";
+import { useTranslations } from "next-intl";
 import type { ClubPageConfig } from "../_contracts/types";
 
-// ─── Field helpers ─────────────────────────────────────────────────────────────
+// ─── Field helper ─────────────────────────────────────────────────────────────
 
 interface FieldProps {
   label: string;
@@ -38,6 +37,8 @@ interface ClubInfoFormProps {
 }
 
 export function ClubInfoForm({ config, onChange }: ClubInfoFormProps) {
+  const t = useTranslations("clubInfoForm");
+
   const inputClass = cn(
     "w-full rounded-2xl border border-white/12 bg-white/5",
     "px-4 py-3 text-white placeholder-white/30 backdrop-blur",
@@ -49,41 +50,39 @@ export function ClubInfoForm({ config, onChange }: ClubInfoFormProps) {
     <div className="space-y-6">
       <div className="mb-6">
         <p className="mb-1 text-[10px] font-bold uppercase tracking-[0.3em] text-[#6fffe9]">
-          Passo 2 de 3
+          {t("step")}
         </p>
-        <h2 className="text-xl font-black text-white">Informações do Clube</h2>
-        <p className="mt-1 text-sm text-white/50">
-          Preencha os dados do seu clube. Estes serão exibidos na sua página pública.
-        </p>
+        <h2 className="text-xl font-black text-white">{t("title")}</h2>
+        <p className="mt-1 text-sm text-white/50">{t("description")}</p>
       </div>
 
-      <Field label="Nome do Clube" icon={Building2}>
+      <Field label={t("name")} icon={Building2}>
         <input
           type="text"
           value={config.clubName}
           onChange={e => onChange({ clubName: e.target.value })}
-          placeholder="Ex: Sporting FC, Eagles United..."
+          placeholder={t("namePlaceholder")}
           className={inputClass}
           maxLength={50}
         />
       </Field>
 
-      <Field label="Slogan" hint="Opcional" icon={FileText}>
+      <Field label={t("slogan")} hint={t("optional")} icon={FileText}>
         <input
           type="text"
           value={config.clubSlogan}
           onChange={e => onChange({ clubSlogan: e.target.value })}
-          placeholder="Ex: Juntos somos mais fortes"
+          placeholder={t("sloganPlaceholder")}
           className={inputClass}
           maxLength={80}
         />
       </Field>
 
-      <Field label="Descrição" hint="Máx. 300 caracteres" icon={FileText}>
+      <Field label={t("descriptionLabel")} hint={t("descriptionMax")} icon={FileText}>
         <textarea
           value={config.clubDescription}
           onChange={e => onChange({ clubDescription: e.target.value })}
-          placeholder="Apresenta o teu clube. Fala sobre a história, valores e o que torna a vossa comunidade especial..."
+          placeholder={t("descriptionPlaceholder")}
           className={cn(inputClass, "min-h-[100px] resize-none leading-relaxed")}
           maxLength={300}
           rows={4}
@@ -94,43 +93,43 @@ export function ClubInfoForm({ config, onChange }: ClubInfoFormProps) {
       </Field>
 
       <div className="grid grid-cols-2 gap-4">
-        <Field label="Cidade" hint="Opcional" icon={MapPin}>
+        <Field label={t("city")} hint={t("optional")} icon={MapPin}>
           <input
             type="text"
             value={config.city ?? ""}
             onChange={e => onChange({ city: e.target.value })}
-            placeholder="Ex: Lisboa"
+            placeholder={t("cityPlaceholder")}
             className={inputClass}
           />
         </Field>
 
-        <Field label="Fundado em" hint="Opcional" icon={Calendar}>
+        <Field label={t("founded")} hint={t("optional")} icon={Calendar}>
           <input
             type="text"
             value={config.founded ?? ""}
             onChange={e => onChange({ founded: e.target.value })}
-            placeholder="Ex: 2015"
+            placeholder={t("foundedPlaceholder")}
             className={inputClass}
             maxLength={4}
           />
         </Field>
       </div>
 
-      <Field label="Modalidade / Categoria" icon={Tag}>
+      <Field label={t("category")} icon={Tag}>
         <select
           value={config.category ?? ""}
           onChange={e => onChange({ category: e.target.value })}
           className={cn(inputClass, "cursor-pointer appearance-none")}
         >
-          <option value="" className="bg-[#0a0b1e]">Selecionar modalidade...</option>
-          <option value="Futebol 11" className="bg-[#0a0b1e]">Futebol 11</option>
-          <option value="Futebol 7" className="bg-[#0a0b1e]">Futebol 7</option>
-          <option value="Futebol 5" className="bg-[#0a0b1e]">Futebol 5</option>
-          <option value="Futsal" className="bg-[#0a0b1e]">Futsal</option>
-          <option value="Beach Soccer" className="bg-[#0a0b1e]">Beach Soccer</option>
-          <option value="Futebol Feminino" className="bg-[#0a0b1e]">Futebol Feminino</option>
-          <option value="Futebol Sénior" className="bg-[#0a0b1e]">Futebol Sénior</option>
-          <option value="Futebol Juvenil" className="bg-[#0a0b1e]">Futebol Juvenil</option>
+          <option value="" className="bg-[#0a0b1e]">{t("categoryPlaceholder")}</option>
+          <option value={t("categories.football11")} className="bg-[#0a0b1e]">{t("categories.football11")}</option>
+          <option value={t("categories.football7")} className="bg-[#0a0b1e]">{t("categories.football7")}</option>
+          <option value={t("categories.football5")} className="bg-[#0a0b1e]">{t("categories.football5")}</option>
+          <option value={t("categories.futsal")} className="bg-[#0a0b1e]">{t("categories.futsal")}</option>
+          <option value={t("categories.beachSoccer")} className="bg-[#0a0b1e]">{t("categories.beachSoccer")}</option>
+          <option value={t("categories.womens")} className="bg-[#0a0b1e]">{t("categories.womens")}</option>
+          <option value={t("categories.seniors")} className="bg-[#0a0b1e]">{t("categories.seniors")}</option>
+          <option value={t("categories.youth")} className="bg-[#0a0b1e]">{t("categories.youth")}</option>
         </select>
       </Field>
     </div>

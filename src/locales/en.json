@@ -948,6 +948,7 @@
     "description": "The tactical scheme failed. The play was interrupted by the linesman because the destination you are looking for was not found on the field.",
     "refreshButton": "REFRESH (RESTART MATCH)",
     "mapButton": "MAP (VIEW SITE MAP)",
+    "callVARButton": "CALL VAR (GO TO HOME)",
     "status": {
       "positioning": "POSITIONING: WRONG",
       "impediment": "STATUS: OFFSIDE",
@@ -1494,6 +1495,216 @@
       "title": "New Team",
       "description": "You have available slots. Create a new team and start competing.",
       "button": "Create Team"
+    }
+  },
+  "clubManagementPage": {
+    "backToPanel": "Back to Panel",
+    "tabs": {
+      "page": "Club Page",
+      "config": "Configuration",
+      "settings": "Club Settings"
+    }
+  },
+  "clubPageHub": {
+    "pageStatus": "Page Status",
+    "public": "Public",
+    "private": "Private",
+    "visibleDescription": "Your club is visible to the entire JogaBola community.",
+    "hiddenDescription": "Your club page is currently hidden from the public.",
+    "visibility": "Visibility",
+    "configureButton": "Set Up My Page",
+    "notConfiguredTitle": "You haven't configured your page yet",
+    "notConfiguredDescription": "Create a professional page for your club in just a few minutes and start attracting new athletes.",
+    "viewPublicPage": "View Public Page",
+    "almostThere": "Almost there!",
+    "completeFields": "Complete all fields to have an elite-level page.",
+    "continueEditing": "Continue Editing"
+  },
+  "clubPageFeatureSettings": {
+    "title": "Page Settings",
+    "subtitle": "Choose which sections you want to keep visible on your public page.",
+    "autoSaved": "Changes saved automatically",
+    "proTip": "Pro Tip",
+    "proTipText": "Keeping sections like <bold>News</bold> and <bold>Calendar</bold> updated increases fan engagement and transparency. Sections without content are automatically hidden to maintain a clean look.",
+    "features": {
+      "convocations": {
+        "label": "Squads",
+        "description": "Display the list of called-up athletes for upcoming matches."
+      },
+      "calendar": {
+        "label": "Calendar",
+        "description": "Show the full schedule of games and training sessions."
+      },
+      "news": {
+        "label": "News",
+        "description": "Publish club newsletters and updates."
+      },
+      "gallery": {
+        "label": "Gallery",
+        "description": "Showcase photos from games, events and facilities."
+      },
+      "stats": {
+        "label": "Statistics",
+        "description": "Performance charts and historical records."
+      }
+    }
+  },
+  "clubPageBuilderPage": {
+    "subtitle": "Club Page Builder",
+    "title": "Create Club Page",
+    "steps": {
+      "template": "Template",
+      "info": "Information",
+      "customizer": "Visual Identity"
+    },
+    "goToStep": "Go to {step}",
+    "preview": {
+      "show": "Preview",
+      "hide": "Hide",
+      "live": "Live Preview",
+      "liveLabel": "Live"
+    },
+    "customizerStep": {
+      "step": "Step 3 of 3",
+      "title": "Visual Identity",
+      "description": "Upload your logo and define the colors that represent your club."
+    },
+    "nav": {
+      "back": "Back",
+      "next": "Continue",
+      "publish": "Publish Page",
+      "publishing": "Publishing..."
+    },
+    "published": {
+      "title": "Page Published!",
+      "subtitle": "Your club is now visible on the JogaBola platform.",
+      "copy": "Copy",
+      "viewPage": "View My Page",
+      "dashboard": "Go to Dashboard"
+    }
+  },
+  "clubSettingsPage": {
+    "title": "Club Settings",
+    "description": "Manage basic administrative information, contact details and critical settings for your sports club.",
+    "tabs": {
+      "general": "General",
+      "danger": "Danger Zone"
+    },
+    "general": {
+      "title": "General Information"
+    }
+  },
+  "generalSettingsForm": {
+    "officialName": "Official Name",
+    "nif": "Tax ID / Registration",
+    "email": "Club Email",
+    "location": "Headquarters Location",
+    "publicListing": "Public Listing",
+    "publicListingDescription": "Allow the club to appear in global search results. Players will be able to view the page and request to join the squad.",
+    "saving": "Saving...",
+    "saved": "Saved",
+    "save": "Save Changes"
+  },
+  "dangerZone": {
+    "title": "Warning: Irreversible Actions",
+    "description": "Actions in this section may result in permanent loss of statistics, players and squad history. Make sure to create backups and be absolutely certain before proceeding.",
+    "transfer": {
+      "title": "Transfer Club Management",
+      "description": "Transfer full control, financial administration access and team configuration to another existing user in the squad.",
+      "button": "Transfer Management"
+    },
+    "delete": {
+      "title": "Delete Club",
+      "description": "This action will permanently remove the club, players, schedule and all recorded data. Recovery is not possible after confirmation.",
+      "confirmLabel": "Type \"{clubName}\" to confirm",
+      "button": "Yes, Delete Permanently"
+    }
+  },
+  "templateSelector": {
+    "step": "Step 1 of 3",
+    "title": "Choose your club template",
+    "description": "Each template can be fully customized with your club's colors and logo.",
+    "templates": {
+      "classic": {
+        "description": "Classic and elegant design. Ideal for clubs with tradition and history."
+      },
+      "modern": {
+        "description": "Modern and dynamic design with bold visual elements.",
+        "badge": "Popular"
+      },
+      "ultra": {
+        "description": "Immersive experience with neon effects and game atmosphere.",
+        "badge": "New"
+      }
+    }
+  },
+  "clubInfoForm": {
+    "step": "Step 2 of 3",
+    "title": "Club Information",
+    "description": "Fill in your club's details. These will be displayed on your public page.",
+    "name": "Club Name",
+    "namePlaceholder": "e.g. Sporting FC, Eagles United...",
+    "slogan": "Slogan",
+    "sloganPlaceholder": "e.g. Together we are stronger",
+    "optional": "Optional",
+    "descriptionLabel": "Description",
+    "descriptionMax": "Max. 300 characters",
+    "descriptionPlaceholder": "Introduce your club. Talk about the history, values and what makes your community special...",
+    "city": "City",
+    "cityPlaceholder": "e.g. Lisbon",
+    "founded": "Founded in",
+    "foundedPlaceholder": "e.g. 2015",
+    "category": "Sport / Category",
+    "categoryPlaceholder": "Select sport...",
+    "categories": {
+      "football11": "Football 11",
+      "football7": "Football 7",
+      "football5": "Football 5",
+      "futsal": "Futsal",
+      "beachSoccer": "Beach Soccer",
+      "womens": "Women's Football",
+      "seniors": "Senior Football",
+      "youth": "Youth Football"
+    }
+  },
+  "customizerPanel": {
+    "logo": "Club Logo",
+    "removeLogoLabel": "Remove logo",
+    "uploadAriaLabel": "Upload club logo",
+    "uploadText": "Drag or",
+    "uploadLink": "click to upload",
+    "uploadHint": "PNG, SVG, WEBP · Max 2MB",
+    "colors": "Club Colors",
+    "resetColors": "Restore default colors",
+    "quickPalettes": "Quick Palettes",
+    "applyPalette": "Apply palette {name}",
+    "quickSelection": "Quick Selection — Primary Color",
+    "primary": "Primary Color",
+    "secondary": "Secondary Color",
+    "textColor": "Text Color"
+  },
+  "livePreview": {
+    "joinClub": "Join the Club",
+    "joinClubShort": "Join",
+    "viewMore": "View More",
+    "aboutClub": "About the Club",
+    "officialClub": "Official Club · {category}",
+    "foundedIn": "Founded in {year}",
+    "liveLabel": "Live",
+    "stats": {
+      "players": "Players",
+      "titles": "Titles",
+      "rating": "Rating",
+      "victories": "Victories",
+      "thisEpoch": "This Season",
+      "winRate": "Win Rate"
+    },
+    "links": {
+      "viewTeam": "View Team",
+      "nextEvents": "Upcoming Events",
+      "achievements": "Achievements",
+      "nextGames": "Upcoming Games",
+      "schedule": "Schedule"
     }
   }
 }

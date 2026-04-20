@@ -123,6 +123,7 @@
     "description": "Le schéma tactique a échoué. L'action a été interrompue par le juge de touche car la destination que vous recherchez n'a pas été trouvée sur le terrain.",
     "refreshButton": "REFRESH (REDÉMARRER LE MATCH)",
     "mapButton": "CARTE (VOIR LE PLAN DU SITE)",
+    "callVARButton": "APPEL VAR (ALLER À LA PAGE D'ACCUEIL)",
     "status": {
       "positioning": "POSITIONNEMENT : ERRONE",
       "impediment": "STATUT : HORS-JEU",
@@ -1075,6 +1076,216 @@
       "first": "⚽ Lucas a marqué 3 buts à l'entraînement d'hier.",
       "second": "🔥 Nouveau match programmé pour dimanche !",
       "third": "🧠 Analyse tactique disponible pour l'équipe."
+    }
+  },
+  "clubManagementPage": {
+    "backToPanel": "Retour au Panneau",
+    "tabs": {
+      "page": "Page du Club",
+      "config": "Configuration",
+      "settings": "Paramètres du Club"
+    }
+  },
+  "clubPageHub": {
+    "pageStatus": "Statut de la Page",
+    "public": "Publique",
+    "private": "Privée",
+    "visibleDescription": "Votre club est visible pour toute la communauté JogaBola.",
+    "hiddenDescription": "La page de votre club est actuellement masquée au public.",
+    "visibility": "Visibilité",
+    "configureButton": "Configurer Ma Page",
+    "notConfiguredTitle": "Vous n'avez pas encore configuré votre page",
+    "notConfiguredDescription": "Créez une page professionnelle pour votre club en quelques minutes et commencez à attirer de nouveaux athlètes.",
+    "viewPublicPage": "Voir la Page Publique",
+    "almostThere": "Presque là !",
+    "completeFields": "Complétez tous les champs pour avoir une page de niveau élite.",
+    "continueEditing": "Continuer l'Édition"
+  },
+  "clubPageFeatureSettings": {
+    "title": "Paramètres de la Page",
+    "subtitle": "Choisissez les sections que vous souhaitez garder visibles sur votre page publique.",
+    "autoSaved": "Modifications sauvegardées automatiquement",
+    "proTip": "Conseil Pro",
+    "proTipText": "Garder les sections <bold>Actualités</bold> et <bold>Calendrier</bold> à jour augmente l'engagement des supporters. Les sections sans contenu sont automatiquement masquées.",
+    "features": {
+      "convocations": {
+        "label": "Convocations",
+        "description": "Afficher la liste des athlètes convoqués pour les prochains matchs."
+      },
+      "calendar": {
+        "label": "Calendrier",
+        "description": "Afficher le calendrier complet des matchs et entraînements."
+      },
+      "news": {
+        "label": "Actualités",
+        "description": "Publier des bulletins d'information et des mises à jour du club."
+      },
+      "gallery": {
+        "label": "Galerie",
+        "description": "Exposition de photos de matchs, événements et installations."
+      },
+      "stats": {
+        "label": "Statistiques",
+        "description": "Graphiques de performance et records historiques de l'équipe."
+      }
+    }
+  },
+  "clubPageBuilderPage": {
+    "subtitle": "Club Page Builder",
+    "title": "Créer la Page du Club",
+    "steps": {
+      "template": "Modèle",
+      "info": "Informations",
+      "customizer": "Identité Visuelle"
+    },
+    "goToStep": "Aller à {step}",
+    "preview": {
+      "show": "Aperçu",
+      "hide": "Masquer",
+      "live": "Aperçu en Direct",
+      "liveLabel": "Live"
+    },
+    "customizerStep": {
+      "step": "Étape 3 sur 3",
+      "title": "Identité Visuelle",
+      "description": "Téléchargez votre logo et définissez les couleurs qui représentent votre club."
+    },
+    "nav": {
+      "back": "Retour",
+      "next": "Continuer",
+      "publish": "Publier la Page",
+      "publishing": "Publication..."
+    },
+    "published": {
+      "title": "Page Publiée !",
+      "subtitle": "Votre club est maintenant visible sur la plateforme JogaBola.",
+      "copy": "Copier",
+      "viewPage": "Voir Ma Page",
+      "dashboard": "Aller au Tableau de Bord"
+    }
+  },
+  "clubSettingsPage": {
+    "title": "Paramètres du Club",
+    "description": "Gérez les informations administratives de base, les coordonnées et les paramètres critiques de votre club sportif.",
+    "tabs": {
+      "general": "Général",
+      "danger": "Zone Dangereuse"
+    },
+    "general": {
+      "title": "Informations Générales"
+    }
+  },
+  "generalSettingsForm": {
+    "officialName": "Nom Officiel",
+    "nif": "Numéro Fiscal / Enregistrement",
+    "email": "Email du Club",
+    "location": "Siège Social",
+    "publicListing": "Référencement Public",
+    "publicListingDescription": "Permettez au club d'apparaître dans les résultats de recherche. Les joueurs pourront voir la page et demander à rejoindre l'effectif.",
+    "saving": "Enregistrement...",
+    "saved": "Enregistré",
+    "save": "Enregistrer les Modifications"
+  },
+  "dangerZone": {
+    "title": "Attention : Actions Irréversibles",
+    "description": "Les actions dans cette section peuvent entraîner la perte définitive de données statistiques, de joueurs et d'historique. Assurez-vous de créer des sauvegardes avant de procéder.",
+    "transfer": {
+      "title": "Transférer la Gestion du Club",
+      "description": "Transférez le contrôle total à un autre utilisateur existant dans l'effectif.",
+      "button": "Transférer la Gestion"
+    },
+    "delete": {
+      "title": "Supprimer le Club",
+      "description": "Cette action supprimera définitivement le club, les joueurs, l'agenda et toutes les données enregistrées.",
+      "confirmLabel": "Tapez \"{clubName}\" pour confirmer",
+      "button": "Oui, Supprimer Définitivement"
+    }
+  },
+  "templateSelector": {
+    "step": "Étape 1 sur 3",
+    "title": "Choisissez le modèle de votre club",
+    "description": "Chaque modèle peut être entièrement personnalisé avec les couleurs et le logo de votre club.",
+    "templates": {
+      "classic": {
+        "description": "Design classique et élégant. Idéal pour les clubs avec tradition et histoire."
+      },
+      "modern": {
+        "description": "Design moderne et dynamique avec des éléments visuels audacieux.",
+        "badge": "Populaire"
+      },
+      "ultra": {
+        "description": "Expérience immersive avec effets néon et atmosphère de jeu.",
+        "badge": "Nouveau"
+      }
+    }
+  },
+  "clubInfoForm": {
+    "step": "Étape 2 sur 3",
+    "title": "Informations du Club",
+    "description": "Remplissez les données de votre club. Elles seront affichées sur votre page publique.",
+    "name": "Nom du Club",
+    "namePlaceholder": "Ex : Sporting FC, Eagles United...",
+    "slogan": "Slogan",
+    "sloganPlaceholder": "Ex : Ensemble nous sommes plus forts",
+    "optional": "Optionnel",
+    "descriptionLabel": "Description",
+    "descriptionMax": "Max. 300 caractères",
+    "descriptionPlaceholder": "Présentez votre club. Parlez de l'histoire, des valeurs et de ce qui rend votre communauté spéciale...",
+    "city": "Ville",
+    "cityPlaceholder": "Ex : Paris",
+    "founded": "Fondé en",
+    "foundedPlaceholder": "Ex : 2015",
+    "category": "Sport / Catégorie",
+    "categoryPlaceholder": "Sélectionner un sport...",
+    "categories": {
+      "football11": "Football 11",
+      "football7": "Football 7",
+      "football5": "Football 5",
+      "futsal": "Futsal",
+      "beachSoccer": "Beach Soccer",
+      "womens": "Football Féminin",
+      "seniors": "Football Vétérans",
+      "youth": "Football Jeunes"
+    }
+  },
+  "customizerPanel": {
+    "logo": "Logo du Club",
+    "removeLogoLabel": "Supprimer le logo",
+    "uploadAriaLabel": "Télécharger le logo du club",
+    "uploadText": "Glissez ou",
+    "uploadLink": "cliquez pour télécharger",
+    "uploadHint": "PNG, SVG, WEBP · Max 2Mo",
+    "colors": "Couleurs du Club",
+    "resetColors": "Restaurer les couleurs par défaut",
+    "quickPalettes": "Palettes Rapides",
+    "applyPalette": "Appliquer la palette {name}",
+    "quickSelection": "Sélection Rapide — Couleur Principale",
+    "primary": "Couleur Principale",
+    "secondary": "Couleur Secondaire",
+    "textColor": "Couleur du Texte"
+  },
+  "livePreview": {
+    "joinClub": "Rejoindre le Club",
+    "joinClubShort": "Rejoindre",
+    "viewMore": "Voir Plus",
+    "aboutClub": "À Propos du Club",
+    "officialClub": "Club Officiel · {category}",
+    "foundedIn": "Fondé en {year}",
+    "liveLabel": "En Direct",
+    "stats": {
+      "players": "Joueurs",
+      "titles": "Titres",
+      "rating": "Note",
+      "victories": "Victoires",
+      "thisEpoch": "Cette Saison",
+      "winRate": "Taux de Victoire"
+    },
+    "links": {
+      "viewTeam": "Voir l'Équipe",
+      "nextEvents": "Prochains Événements",
+      "achievements": "Palmarès",
+      "nextGames": "Prochains Matchs",
+      "schedule": "Calendrier"
     }
   }
 }

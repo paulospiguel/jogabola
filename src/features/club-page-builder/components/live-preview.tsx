@@ -11,6 +11,7 @@ import {
   Globe,
   Swords,
 } from "lucide-react";
+import { useTranslations } from "next-intl";
 import type { ClubPageConfig } from "../_contracts/types";
 
 // ─── Shared helper ────────────────────────────────────────────────────────────
@@ -44,7 +45,7 @@ function ClubLogo({
         <img src={config.logoUrl} alt={config.clubName} className="h-full w-full object-cover rounded-[14px]" />
       ) : (
         <span style={{ color: config.colors.primary }}>
-          {config.clubName.slice(0, 2).toUpperCase()}
+          {config.clubName.slice(0, 2).toUpperCase() || "JB"}
         </span>
       )}
     </div>
@@ -54,6 +55,8 @@ function ClubLogo({
 // ─── Template: Classic ────────────────────────────────────────────────────────
 
 function ClassicTemplate({ config }: { config: ClubPageConfig }) {
+  const t = useTranslations("livePreview");
+
   return (
     <div className="min-h-full bg-neutral-950 text-white">
       {/* Hero banner */}
@@ -64,7 +67,6 @@ function ClassicTemplate({ config }: { config: ClubPageConfig }) {
           borderBottom: `2px solid ${config.colors.primary}33`,
         }}
       >
-        {/* Background texture lines */}
         <div className="pointer-events-none absolute inset-0 opacity-5"
           style={{
             backgroundImage: `repeating-linear-gradient(0deg, ${config.colors.primary} 0px, ${config.colors.primary} 1px, transparent 1px, transparent 24px)`,
@@ -74,7 +76,7 @@ function ClassicTemplate({ config }: { config: ClubPageConfig }) {
           <ClubLogo config={config} size="lg" />
           <div className="flex-1">
             <p className="mb-1 text-xs font-bold uppercase tracking-[0.3em]" style={{ color: config.colors.primary }}>
-              Clube Oficial · {config.category}
+              {t("officialClub", { category: config.category })}
             </p>
             <h1 className="text-3xl font-black text-white leading-tight">{config.clubName}</h1>
             <p className="mt-1 text-base italic text-white/60">&quot;{config.clubSlogan}&quot;</p>
@@ -86,7 +88,7 @@ function ClassicTemplate({ config }: { config: ClubPageConfig }) {
               )}
               {config.founded && (
                 <span className="flex items-center gap-1.5 text-xs text-white/50">
-                  <Calendar className="h-3.5 w-3.5" /> Fundado em {config.founded}
+                  <Calendar className="h-3.5 w-3.5" /> {t("foundedIn", { year: config.founded })}
                 </span>
               )}
             </div>
@@ -100,7 +102,7 @@ function ClassicTemplate({ config }: { config: ClubPageConfig }) {
               boxShadow: `0 12px 30px -10px ${config.colors.primary}88`,
             }}
           >
-            Juntar-me ao Clube
+            {t("joinClub")}
           </button>
         </div>
       </div>
@@ -108,12 +110,12 @@ function ClassicTemplate({ config }: { config: ClubPageConfig }) {
       {/* Stats bar */}
       <div
         className="grid grid-cols-3 divide-x"
-        style={{ borderBottom: `1px solid ${config.colors.primary}22`, divideColor: `${config.colors.primary}22` } as any}
+        style={{ borderBottom: `1px solid ${config.colors.primary}22`, divideColor: `${config.colors.primary}22` } as React.CSSProperties}
       >
         {[
-          { icon: Users, label: "Jogadores", value: "142" },
-          { icon: Trophy, label: "Títulos", value: "12" },
-          { icon: Star, label: "Rating", value: "98%" },
+          { icon: Users, label: t("stats.players"), value: "142" },
+          { icon: Trophy, label: t("stats.titles"),  value: "12" },
+          { icon: Star,   label: t("stats.rating"),  value: "98%" },
         ].map(({ icon: Icon, label, value }) => (
           <div key={label} className="flex flex-col items-center py-5 gap-1">
             <Icon className="h-5 w-5 mb-1" style={{ color: config.colors.primary }} />
@@ -132,7 +134,7 @@ function ClassicTemplate({ config }: { config: ClubPageConfig }) {
             style={{ borderColor: `${config.colors.primary}22`, background: `${config.colors.primary}08` }}
           >
             <h2 className="mb-3 text-sm font-bold uppercase tracking-[0.2em]" style={{ color: config.colors.primary }}>
-              Sobre o Clube
+              {t("aboutClub")}
             </h2>
             <p className="text-sm text-white/70 leading-relaxed">{config.clubDescription}</p>
           </div>
@@ -140,9 +142,9 @@ function ClassicTemplate({ config }: { config: ClubPageConfig }) {
           {/* Quick links */}
           <div className="space-y-2">
             {[
-              { label: "Ver Equipa", icon: Users },
-              { label: "Próximos Eventos", icon: Calendar },
-              { label: "Conquistas", icon: Trophy },
+              { label: t("links.viewTeam"),   icon: Users },
+              { label: t("links.nextEvents"), icon: Calendar },
+              { label: t("links.achievements"), icon: Trophy },
             ].map(({ label, icon: Icon }) => (
               <button
                 key={label}
@@ -167,6 +169,8 @@ function ClassicTemplate({ config }: { config: ClubPageConfig }) {
 // ─── Template: Modern ─────────────────────────────────────────────────────────
 
 function ModernTemplate({ config }: { config: ClubPageConfig }) {
+  const t = useTranslations("livePreview");
+
   return (
     <div
       className="min-h-full text-white"
@@ -174,15 +178,12 @@ function ModernTemplate({ config }: { config: ClubPageConfig }) {
         background: `radial-gradient(ellipse 120% 60% at 50% -20%, ${config.colors.primary}28 0%, #050312 60%)`,
       }}
     >
-      {/* Floating hero */}
       <div className="relative flex flex-col items-center pt-12 pb-8 px-6 text-center">
-        {/* Neon glow */}
         <div
           className="pointer-events-none absolute top-0 left-1/2 h-48 w-48 -translate-x-1/2 -translate-y-1/2 rounded-full blur-3xl opacity-30"
           style={{ background: config.colors.primary }}
         />
 
-        {/* Club badge with ring */}
         <div className="relative mb-6">
           <div
             className="absolute inset-0 rounded-[28px] blur-2xl opacity-40"
@@ -191,11 +192,9 @@ function ModernTemplate({ config }: { config: ClubPageConfig }) {
           <ClubLogo config={config} size="lg" />
         </div>
 
-        {/* Club name */}
         <h1 className="text-4xl font-black tracking-tight text-white leading-none">{config.clubName}</h1>
         <p className="mt-2 text-sm" style={{ color: config.colors.primary }}>{config.clubSlogan}</p>
 
-        {/* Meta info */}
         <div className="mt-3 flex flex-wrap justify-center gap-3">
           {config.city && (
             <span className="flex items-center gap-1.5 rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs text-white/60 backdrop-blur">
@@ -212,7 +211,6 @@ function ModernTemplate({ config }: { config: ClubPageConfig }) {
           </span>
         </div>
 
-        {/* CTA */}
         <button
           type="button"
           className="mt-6 rounded-2xl px-8 py-3 text-sm font-black transition-all duration-300 hover:-translate-y-1"
@@ -222,16 +220,16 @@ function ModernTemplate({ config }: { config: ClubPageConfig }) {
             boxShadow: `0 16px 40px -12px ${config.colors.primary}88`,
           }}
         >
-          Juntar-me ao Clube
+          {t("joinClub")}
         </button>
       </div>
 
       {/* Stats strip */}
       <div className="mx-6 mb-6 grid grid-cols-3 gap-3">
         {[
-          { label: "Jogadores", value: "142", icon: Users },
-          { label: "Vitórias", value: "89", icon: Trophy },
-          { label: "Esta Época", value: "94%", icon: Star },
+          { label: t("stats.players"),    value: "142", icon: Users },
+          { label: t("stats.victories"),  value: "89",  icon: Trophy },
+          { label: t("stats.thisEpoch"),  value: "94%", icon: Star },
         ].map(({ label, value, icon: Icon }) => (
           <div
             key={label}
@@ -251,7 +249,7 @@ function ModernTemplate({ config }: { config: ClubPageConfig }) {
       {/* Description card */}
       <div className="mx-6 mb-6 rounded-3xl border border-white/8 bg-white/5 p-6 backdrop-blur">
         <p className="mb-4 text-[10px] font-bold uppercase tracking-[0.3em]" style={{ color: config.colors.primary }}>
-          Sobre o Clube
+          {t("aboutClub")}
         </p>
         <p className="text-sm text-white/70 leading-relaxed">{config.clubDescription}</p>
       </div>
@@ -259,10 +257,10 @@ function ModernTemplate({ config }: { config: ClubPageConfig }) {
       {/* Action cards */}
       <div className="mx-6 mb-8 grid grid-cols-2 gap-3">
         {[
-          { label: "Equipa", icon: Users },
-          { label: "Próximos Jogos", icon: Swords },
-          { label: "Agenda", icon: Calendar },
-          { label: "Conquistas", icon: Trophy },
+          { label: t("links.viewTeam"),   icon: Users },
+          { label: t("links.nextGames"),  icon: Swords },
+          { label: t("links.schedule"),   icon: Calendar },
+          { label: t("links.achievements"), icon: Trophy },
         ].map(({ label, icon: Icon }) => (
           <button
             key={label}
@@ -287,12 +285,13 @@ function ModernTemplate({ config }: { config: ClubPageConfig }) {
 // ─── Template: Ultra ─────────────────────────────────────────────────────────
 
 function UltraTemplate({ config }: { config: ClubPageConfig }) {
+  const t = useTranslations("livePreview");
+
   return (
     <div
       className="relative min-h-full overflow-hidden text-white"
       style={{ background: "#050312" }}
     >
-      {/* Animated neon rings (CSS) */}
       <div className="pointer-events-none absolute inset-0 overflow-hidden">
         <div
           className="absolute left-1/2 top-1/3 h-[400px] w-[400px] -translate-x-1/2 -translate-y-1/2 rounded-full border opacity-10"
@@ -312,46 +311,41 @@ function UltraTemplate({ config }: { config: ClubPageConfig }) {
         />
       </div>
 
-      {/* Hero area */}
       <div className="relative flex flex-col items-center px-6 pt-10 pb-6 text-center">
-        {/* Badge: category */}
         <div
           className="mb-5 inline-flex items-center gap-1.5 rounded-full border px-3 py-1"
           style={{ borderColor: `${config.colors.primary}44`, background: `${config.colors.primary}11` }}
         >
           <span className="h-1.5 w-1.5 rounded-full animate-pulse" style={{ background: config.colors.primary }} />
           <span className="text-[10px] font-bold uppercase tracking-[0.3em]" style={{ color: config.colors.primary }}>
-            {config.category} · Ao Vivo
+            {config.category} · {t("liveLabel")}
           </span>
         </div>
 
-        {/* Logo with ring glow */}
         <div className="relative mb-5">
           <div
             className="absolute inset-0 animate-pulse rounded-full blur-2xl opacity-50"
             style={{ background: config.colors.primary, margin: "-8px" }}
           />
           <div
-            className="relative flex h-28 w-28 items-center justify-center rounded-full font-black text-4xl ring-4"
+            className="relative flex h-28 w-28 items-center justify-center rounded-full font-black text-4xl"
             style={{
-              ringColor: `${config.colors.primary}66`,
               background: `linear-gradient(135deg, ${config.colors.primary}33, ${config.colors.secondary}44)`,
               boxShadow: `0 0 60px ${config.colors.primary}66, 0 0 120px ${config.colors.primary}22`,
               border: `2px solid ${config.colors.primary}66`,
-            } as any}
+            }}
           >
             {config.logoUrl ? (
               // biome-ignore lint/performance/noImgElement: controlled blob URL
               <img src={config.logoUrl} alt={config.clubName} className="h-full w-full object-cover rounded-full" />
             ) : (
               <span style={{ color: config.colors.primary }}>
-                {config.clubName.slice(0, 2).toUpperCase()}
+                {config.clubName.slice(0, 2).toUpperCase() || "JB"}
               </span>
             )}
           </div>
         </div>
 
-        {/* Club name — ultra style */}
         <h1
           className="text-5xl font-black uppercase tracking-tight leading-none"
           style={{
@@ -367,7 +361,6 @@ function UltraTemplate({ config }: { config: ClubPageConfig }) {
           {config.clubSlogan}
         </p>
 
-        {/* Location + founded */}
         <div className="mt-4 flex gap-4">
           {config.city && (
             <span className="text-xs text-white/40 flex items-center gap-1">
@@ -382,15 +375,13 @@ function UltraTemplate({ config }: { config: ClubPageConfig }) {
         </div>
       </div>
 
-      {/* Neon divider */}
       <div className="mx-6 h-px" style={{ background: `linear-gradient(90deg, transparent, ${config.colors.primary}66, transparent)` }} />
 
-      {/* Stats grid */}
       <div className="mx-6 my-6 grid grid-cols-3 gap-3">
         {[
-          { label: "Jogadores", value: "142", suffix: "" },
-          { label: "Win Rate", value: "89", suffix: "%" },
-          { label: "Rating", value: "9.8", suffix: "" },
+          { label: t("stats.players"),  value: "142", suffix: "" },
+          { label: t("stats.winRate"),  value: "89",  suffix: "%" },
+          { label: t("stats.rating"),   value: "9.8", suffix: "" },
         ].map(({ label, value, suffix }) => (
           <div
             key={label}
@@ -412,7 +403,6 @@ function UltraTemplate({ config }: { config: ClubPageConfig }) {
         ))}
       </div>
 
-      {/* Description */}
       <div
         className="mx-6 mb-6 rounded-3xl border p-6"
         style={{ borderColor: `${config.colors.primary}22`, background: `${config.colors.primary}08` }}
@@ -420,7 +410,6 @@ function UltraTemplate({ config }: { config: ClubPageConfig }) {
         <p className="text-sm text-white/70 leading-relaxed">{config.clubDescription}</p>
       </div>
 
-      {/* CTA row */}
       <div className="mx-6 mb-8 flex gap-3">
         <button
           type="button"
@@ -431,14 +420,14 @@ function UltraTemplate({ config }: { config: ClubPageConfig }) {
             boxShadow: `0 16px 40px -12px ${config.colors.primary}99`,
           }}
         >
-          Juntar-me
+          {t("joinClubShort")}
         </button>
         <button
           type="button"
           className="rounded-2xl border px-5 text-sm font-bold text-white/70 transition-all duration-200 hover:text-white"
           style={{ borderColor: `${config.colors.primary}33`, background: `${config.colors.primary}0a` }}
         >
-          Ver Mais
+          {t("viewMore")}
         </button>
       </div>
     </div>
@@ -447,15 +436,15 @@ function UltraTemplate({ config }: { config: ClubPageConfig }) {
 
 // ─── Preview Wrapper ──────────────────────────────────────────────────────────
 
-interface LivePreviewProps {
-  config: ClubPageConfig;
-}
-
 export const TEMPLATE_COMPONENTS = {
   classic: ClassicTemplate,
   modern: ModernTemplate,
   ultra: UltraTemplate,
 };
+
+interface LivePreviewProps {
+  config: ClubPageConfig;
+}
 
 export function LivePreview({ config }: LivePreviewProps) {
   const TemplateComponent = TEMPLATE_COMPONENTS[config.template];
@@ -470,7 +459,7 @@ export function LivePreview({ config }: LivePreviewProps) {
           <div className="h-2.5 w-2.5 rounded-full bg-white/20" />
         </div>
         <div className="flex-1 mx-4 rounded-lg bg-white/5 px-3 py-1 text-[10px] text-white/30 font-mono">
-          jogabola.com/clube/{config.clubName.toLowerCase().replace(/\s+/g, "-")}
+          jogabola.com/clube/{config.clubName.toLowerCase().replace(/\s+/g, "-") || "meu-clube"}
         </div>
       </div>
       {/* Preview content */}

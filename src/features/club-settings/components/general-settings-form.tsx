@@ -1,19 +1,25 @@
 "use client";
 
 import { cn } from "@/lib/utils";
+import { Switch } from "@/components/ui/switch";
 import { Building2, Save, Mail, Globe, MapPin, Hash, Check } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { useState } from "react";
 
 export function GeneralSettingsForm() {
+  const t = useTranslations("generalSettingsForm");
   const [isSaving, setIsSaving] = useState(false);
   const [success, setSuccess] = useState(false);
+  const [isPublic, setIsPublic] = useState(true);
 
-  const handleSave = async (e: React.FormEvent) => {
+  const handleSave = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsSaving(true);
     setSuccess(false);
-    // simulate save
-    await new Promise((r) => setTimeout(r, 1200));
+    const data = new FormData(e.currentTarget);
+    // TODO: Replace with real API call — data.get("club-name"), etc.
+    void data;
+    await new Promise<void>((r) => setTimeout(r, 1200));
     setIsSaving(false);
     setSuccess(true);
     setTimeout(() => setSuccess(false), 3000);
@@ -35,28 +41,28 @@ export function GeneralSettingsForm() {
         <div>
           <label className={labelClass} htmlFor="club-name">
             <span className="flex items-center gap-2">
-              <Building2 className="h-3.5 w-3.5 text-[#6fffe9]" /> Nome Oficial
+              <Building2 className="h-3.5 w-3.5 text-[#6fffe9]" /> {t("officialName")}
             </span>
           </label>
           <input
             id="club-name"
-            defaultValue="Sporting FC"
+            name="club-name"
             className={inputClass}
             required
             maxLength={60}
           />
         </div>
 
-        {/* CNPJ / ID */}
+        {/* NIF */}
         <div>
           <label className={labelClass} htmlFor="club-id">
             <span className="flex items-center gap-2">
-              <Hash className="h-3.5 w-3.5 text-[#6fffe9]" /> NIF / Registro
+              <Hash className="h-3.5 w-3.5 text-[#6fffe9]" /> {t("nif")}
             </span>
           </label>
           <input
             id="club-id"
-            defaultValue="123456789"
+            name="club-id"
             className={inputClass}
           />
         </div>
@@ -65,13 +71,13 @@ export function GeneralSettingsForm() {
         <div>
           <label className={labelClass} htmlFor="club-email">
             <span className="flex items-center gap-2">
-              <Mail className="h-3.5 w-3.5 text-[#6fffe9]" /> Email do Clube
+              <Mail className="h-3.5 w-3.5 text-[#6fffe9]" /> {t("email")}
             </span>
           </label>
           <input
             id="club-email"
+            name="club-email"
             type="email"
-            defaultValue="contato@sportingfc.pt"
             className={inputClass}
             required
           />
@@ -81,12 +87,12 @@ export function GeneralSettingsForm() {
         <div>
           <label className={labelClass} htmlFor="club-location">
             <span className="flex items-center gap-2">
-              <MapPin className="h-3.5 w-3.5 text-[#6fffe9]" /> Localidade Sede
+              <MapPin className="h-3.5 w-3.5 text-[#6fffe9]" /> {t("location")}
             </span>
           </label>
           <input
             id="club-location"
-            defaultValue="Lisboa, PT"
+            name="club-location"
             className={inputClass}
           />
         </div>
@@ -96,22 +102,20 @@ export function GeneralSettingsForm() {
       <div className="flex items-start justify-between gap-4 rounded-2xl border border-white/8 bg-white/3 p-5 backdrop-blur">
         <div>
           <h4 className="flex items-center gap-2 text-sm font-bold text-white">
-            <Globe className="h-4 w-4 text-[#6fffe9]" /> Listagem Pública
+            <Globe className="h-4 w-4 text-[#6fffe9]" /> {t("publicListing")}
           </h4>
           <p className="mt-1 text-xs text-white/50 leading-relaxed md:max-w-[75%]">
-            Permite que o clube apareça nos resultados de pesquisa globais. 
-            Jogadores poderão visualizar a página e pedir para ingressar no plantel.
+            {t("publicListingDescription")}
           </p>
         </div>
-        
-        {/* CSS Only Toggle Switch Match JogaBola Style */}
-        <label className="relative inline-flex cursor-pointer items-center shrink-0">
-          <input type="checkbox" className="peer sr-only" defaultChecked />
-          <div className="peer h-6 w-11 rounded-full bg-white/10 border border-white/20 transition-all after:absolute after:top-[2px] after:left-[2px] after:h-5 after:w-5 after:rounded-full after:border after:border-white/30 after:bg-white/80 after:transition-all after:content-[''] peer-checked:bg-[#24ffe6]/20 peer-checked:border-[#24ffe6]/50 peer-checked:after:translate-x-full peer-checked:after:border-white peer-checked:after:bg-[#24ffe6] peer-focus:outline-none focus-visible:ring-[3px] focus-visible:ring-[#6fffe9]/40" />
-        </label>
+        <Switch
+          checked={isPublic}
+          onCheckedChange={setIsPublic}
+          className="shrink-0 data-[state=checked]:bg-[#24ffe6]"
+        />
       </div>
 
-      {/* Submit Button Area */}
+      {/* Submit */}
       <div className="pt-4 flex items-center gap-4 border-t border-white/8">
         <button
           type="submit"
@@ -122,14 +126,14 @@ export function GeneralSettingsForm() {
           )}
         >
           {isSaving ? (
-            <span className="animate-pulse">Guardando...</span>
+            <span className="animate-pulse">{t("saving")}</span>
           ) : success ? (
             <>
-              <Check className="h-4 w-4" /> Guardado
+              <Check className="h-4 w-4" /> {t("saved")}
             </>
           ) : (
             <>
-              <Save className="h-4 w-4" /> Guardar Alterações
+              <Save className="h-4 w-4" /> {t("save")}
             </>
           )}
         </button>

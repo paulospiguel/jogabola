@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { motion, AnimatePresence } from "framer-motion";
 import {
@@ -14,6 +15,7 @@ import {
   Palette,
   Sliders,
 } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { useState } from "react";
 import { DEFAULT_CONFIG, type ClubPageConfig, type ClubTemplate } from "../_contracts/types";
 import { ClubInfoForm } from "../components/club-info-form";
@@ -25,11 +27,13 @@ import { TemplateSelector } from "../components/template-selector";
 
 type Step = "template" | "info" | "customizer";
 
-const STEPS: { id: Step; label: string; icon: React.ElementType }[] = [
-  { id: "template", label: "Template", icon: Layers },
-  { id: "info", label: "Informações", icon: Sliders },
-  { id: "customizer", label: "Identidade Visual", icon: Palette },
-];
+const STEP_IDS: Step[] = ["template", "info", "customizer"];
+
+const STEP_ICONS: Record<Step, React.ElementType> = {
+  template: Layers,
+  info: Sliders,
+  customizer: Palette,
+};
 
 const STEP_INDICES: Record<Step, number> = {
   template: 0,
@@ -42,28 +46,31 @@ const STEP_INDICES: Record<Step, number> = {
 function StepProgress({
   currentStep,
   onStepClick,
+  labels,
 }: {
   currentStep: Step;
   onStepClick: (step: Step) => void;
+  labels: Record<Step, string>;
+  goToStepLabel: (step: string) => string;
 }) {
   const currentIdx = STEP_INDICES[currentStep];
 
   return (
     <div className="flex items-center gap-0">
-      {STEPS.map((step, i) => {
+      {STEP_IDS.map((id, i) => {
         const isCompleted = i < currentIdx;
-        const isActive = step.id === currentStep;
-        const Icon = step.icon;
+        const isActive = id === currentStep;
+        const Icon = STEP_ICONS[id];
 
         return (
-          <div key={step.id} className="flex items-center">
+          <div key={id} className="flex items-center">
             <button
               type="button"
               onClick={() => {
-                // Only allow going back to completed steps
-                if (i <= currentIdx) onStepClick(step.id);
+                if (i <= currentIdx) onStepClick(id);
               }}
-              aria-label={`Ir para ${step.label}`}
+              aria-label={labels[id]}
+              disabled={i > currentIdx}
               className={cn(
                 "group flex items-center gap-2 rounded-2xl px-3 py-2 text-xs font-bold transition-all duration-200",
                 isActive
@@ -85,9 +92,9 @@ function StepProgress({
               >
                 {isCompleted ? <Check className="h-3 w-3" /> : i + 1}
               </span>
-              <span className="hidden sm:block">{step.label}</span>
+              <span className="hidden sm:block">{labels[id]}</span>
             </button>
-            {i < STEPS.length - 1 && (
+            {i < STEP_IDS.length - 1 && (
               <div
                 className={cn(
                   "h-px w-6 mx-1 transition-all duration-500",
@@ -104,10 +111,15 @@ function StepProgress({
 
 // ─── Publish Success Screen ────────────────────────────────────────────────────
 
-import Link from "next/link";
-
-function PublishSuccess({ config }: { config: ClubPageConfig }) {
+function PublishSuccess({ config, t }: { config: ClubPageConfig; t: ReturnType<typeof useTranslations> }) {
   const slug = config.clubName.toLowerCase().replace(/\s+/g, "-");
+  const url = `https://jogabola.com/clube/${slug}`;
+
+  const handleCopy = () => {
+    navigator.clipboard?.writeText(url).catch(() => {
+      // Clipboard access denied — silently ignore (no toast available here)
+    });
+  };
 
   return (
     <motion.div
@@ -119,10 +131,8 @@ function PublishSuccess({ config }: { config: ClubPageConfig }) {
         <div className="absolute inset-0 rounded-full bg-[#24ffe6]/20 blur-2xl" />
         <CheckCircle2 className="relative h-20 w-20 text-[#24ffe6]" />
       </div>
-      <h2 className="text-3xl font-black text-white">Página Publicada! 🎉</h2>
-      <p className="mt-2 text-base text-white/60">
-        O teu clube está agora visível na plataforma JogaBola.
-      </p>
+      <h2 className="text-3xl font-black text-white">{t("published.title")}</h2>
+      <p className="mt-2 text-base text-white/60">{t("published.subtitle")}</p>
       <div className="mt-6 flex items-center gap-2 rounded-2xl border border-[#24ffe6]/30 bg-[#24ffe6]/10 px-5 py-3">
         <span className="font-mono text-sm text-[#6fffe9]">
           jogabola.com/clube/{slug}
@@ -130,9 +140,9 @@ function PublishSuccess({ config }: { config: ClubPageConfig }) {
         <button
           type="button"
           className="ml-2 rounded-lg border border-white/20 bg-white/10 px-2 py-1 text-[10px] font-bold text-white/70 hover:text-white transition-colors"
-          onClick={() => navigator.clipboard?.writeText(`https://jogabola.com/clube/${slug}`)}
+          onClick={handleCopy}
         >
-          Copiar
+          {t("published.copy")}
         </button>
       </div>
       <div className="mt-8 flex flex-wrap justify-center gap-3">
@@ -140,13 +150,13 @@ function PublishSuccess({ config }: { config: ClubPageConfig }) {
           href={`/clube/${slug}`}
           className="rounded-2xl bg-[#24ffe6] px-6 py-3 text-sm font-black text-black shadow-[0_16px_45px_-20px_rgba(36,255,230,0.9)] transition-all duration-300 hover:-translate-y-0.5"
         >
-          Ver a Minha Página
+          {t("published.viewPage")}
         </Link>
         <Link
           href="/arena"
           className="rounded-2xl border border-white/20 bg-white/8 px-6 py-3 text-sm font-bold text-white hover:bg-white/12 transition-all duration-200"
         >
-          Ir para o Dashboard
+          {t("published.dashboard")}
         </Link>
       </div>
     </motion.div>
@@ -168,19 +178,26 @@ interface ClubPageBuilderPageProps {
 }
 
 export function ClubPageBuilderPage({ onComplete, initialConfig, onConfigChange }: ClubPageBuilderPageProps) {
-  const [config, setConfig] = useState<ClubPageConfig>(initialConfig || DEFAULT_CONFIG);
+  const t = useTranslations("clubPageBuilderPage");
+  const [config, setConfig] = useState<ClubPageConfig>(initialConfig ?? DEFAULT_CONFIG);
   const [currentStep, setCurrentStep] = useState<Step>("template");
   const [showPreview, setShowPreview] = useState(false);
   const [isPublishing, setIsPublishing] = useState(false);
   const [isPublished, setIsPublished] = useState(false);
 
   const currentIdx = STEP_INDICES[currentStep];
-  const isLastStep = currentIdx === STEPS.length - 1;
+  const isLastStep = currentIdx === STEP_IDS.length - 1;
+
+  const stepLabels: Record<Step, string> = {
+    template: t("steps.template"),
+    info: t("steps.info"),
+    customizer: t("steps.customizer"),
+  };
 
   const patchConfig = (patch: Partial<ClubPageConfig>) => {
     const newConfig = { ...config, ...patch };
     setConfig(newConfig);
-    if (onConfigChange) onConfigChange(patch);
+    onConfigChange?.(patch);
   };
 
   const handleNext = () => {
@@ -188,27 +205,21 @@ export function ClubPageBuilderPage({ onComplete, initialConfig, onConfigChange 
       handlePublish();
       return;
     }
-    const nextStep = STEPS[currentIdx + 1].id;
-    setCurrentStep(nextStep);
+    setCurrentStep(STEP_IDS[currentIdx + 1]);
   };
 
   const handleBack = () => {
     if (currentIdx === 0) return;
-    const prevStep = STEPS[currentIdx - 1].id;
-    setCurrentStep(prevStep);
+    setCurrentStep(STEP_IDS[currentIdx - 1]);
   };
 
   const handlePublish = async () => {
     setIsPublishing(true);
-    // Simulate API call
-    await new Promise(r => setTimeout(r, 1800));
+    // TODO: Replace with real API call to persist club page config
+    await new Promise<void>(r => setTimeout(r, 1800));
     setIsPublishing(false);
-    
-    // Save to localStorage for demo purposes
-    if (typeof window !== "undefined") {
-      localStorage.setItem("club_page_config", JSON.stringify(config));
-    }
-    
+    localStorage.setItem("club_page_config", JSON.stringify(config));
+
     if (onComplete) {
       onComplete();
     } else {
@@ -219,7 +230,7 @@ export function ClubPageBuilderPage({ onComplete, initialConfig, onConfigChange 
   if (isPublished) {
     return (
       <div className="min-h-screen px-6 py-8 text-white">
-        <PublishSuccess config={config} />
+        <PublishSuccess config={config} t={t} />
       </div>
     );
   }
@@ -230,14 +241,19 @@ export function ClubPageBuilderPage({ onComplete, initialConfig, onConfigChange 
       <div className="mb-8 flex items-center justify-between">
         <div>
           <p className="mb-1 text-[10px] font-bold uppercase tracking-[0.3em] text-[#6fffe9]">
-            ⚽ Club Page Builder
+            {t("subtitle")}
           </p>
-          <h1 className="text-2xl font-black text-white">Criar Página do Clube</h1>
+          <h1 className="text-2xl font-black text-white">{t("title")}</h1>
         </div>
 
         {/* Step progress */}
         <div className="hidden md:flex">
-          <StepProgress currentStep={currentStep} onStepClick={setCurrentStep} />
+          <StepProgress
+            currentStep={currentStep}
+            onStepClick={setCurrentStep}
+            labels={stepLabels}
+            goToStepLabel={(step) => t("goToStep", { step })}
+          />
         </div>
 
         {/* Preview toggle */}
@@ -247,13 +263,20 @@ export function ClubPageBuilderPage({ onComplete, initialConfig, onConfigChange 
           className="flex items-center gap-2 rounded-2xl border border-white/15 bg-white/5 px-4 py-2.5 text-xs font-bold text-white/70 backdrop-blur transition-all duration-200 hover:border-white/25 hover:text-white"
         >
           {showPreview ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-          <span className="hidden sm:block">{showPreview ? "Ocultar" : "Pré-visualizar"}</span>
+          <span className="hidden sm:block">
+            {showPreview ? t("preview.hide") : t("preview.show")}
+          </span>
         </button>
       </div>
 
       {/* Mobile step progress */}
       <div className="mb-6 flex md:hidden">
-        <StepProgress currentStep={currentStep} onStepClick={setCurrentStep} />
+        <StepProgress
+          currentStep={currentStep}
+          onStepClick={setCurrentStep}
+          labels={stepLabels}
+          goToStepLabel={(step) => t("goToStep", { step })}
+        />
       </div>
 
       {/* ── Main content grid ── */}
@@ -285,11 +308,11 @@ export function ClubPageBuilderPage({ onComplete, initialConfig, onConfigChange 
               <motion.div key="customizer" {...fadeSlide} transition={{ duration: 0.3 }}>
                 <div className="mb-6">
                   <p className="mb-1 text-[10px] font-bold uppercase tracking-[0.3em] text-[#6fffe9]">
-                    Passo 3 de 3
+                    {t("customizerStep.step")}
                   </p>
-                  <h2 className="text-xl font-black text-white">Identidade Visual</h2>
+                  <h2 className="text-xl font-black text-white">{t("customizerStep.title")}</h2>
                   <p className="mt-1 text-sm text-white/50">
-                    Faça upload do logo e defina as cores que representam o vosso clube.
+                    {t("customizerStep.description")}
                   </p>
                 </div>
                 <div className="rounded-3xl border border-white/8 bg-white/3 p-6 backdrop-blur">
@@ -313,12 +336,12 @@ export function ClubPageBuilderPage({ onComplete, initialConfig, onConfigChange 
               )}
             >
               <ArrowLeft className="h-4 w-4" />
-              Voltar
+              {t("nav.back")}
             </button>
 
             {/* Progress dots (mobile) */}
             <div className="flex gap-2 md:hidden">
-              {STEPS.map((_, i) => (
+              {STEP_IDS.map((_, i) => (
                 <div
                   // biome-ignore lint/suspicious/noArrayIndexKey: static steps
                   key={i}
@@ -335,26 +358,23 @@ export function ClubPageBuilderPage({ onComplete, initialConfig, onConfigChange 
               onClick={handleNext}
               disabled={isPublishing}
               className={cn(
-                "flex items-center gap-2 rounded-2xl px-6 py-3 text-sm font-black transition-all duration-300 hover:-translate-y-0.5",
-                isLastStep
-                  ? "bg-[#24ffe6] text-black shadow-[0_16px_45px_-20px_rgba(36,255,230,0.9)]"
-                  : "bg-[#24ffe6] text-black shadow-[0_16px_45px_-20px_rgba(36,255,230,0.9)]",
+                "flex items-center gap-2 rounded-2xl px-6 py-3 text-sm font-black transition-all duration-300 hover:-translate-y-0.5 bg-[#24ffe6] text-black shadow-[0_16px_45px_-20px_rgba(36,255,230,0.9)]",
                 isPublishing && "opacity-80 cursor-not-allowed",
               )}
             >
               {isPublishing ? (
                 <>
                   <Loader2 className="h-4 w-4 animate-spin" />
-                  Publicando...
+                  {t("nav.publishing")}
                 </>
               ) : isLastStep ? (
                 <>
                   <Check className="h-4 w-4" />
-                  Publicar Página
+                  {t("nav.publish")}
                 </>
               ) : (
                 <>
-                  Continuar
+                  {t("nav.next")}
                   <ArrowRight className="h-4 w-4" />
                 </>
               )}
@@ -375,10 +395,10 @@ export function ClubPageBuilderPage({ onComplete, initialConfig, onConfigChange 
               <div className="mb-3 flex items-center gap-2">
                 <Eye className="h-3.5 w-3.5 text-[#6fffe9]" />
                 <p className="text-xs font-bold uppercase tracking-[0.2em] text-[#6fffe9]/70">
-                  Pré-visualização ao Vivo
+                  {t("preview.live")}
                 </p>
                 <span className="ml-auto rounded-full border border-[#24ffe6]/30 bg-[#24ffe6]/10 px-2 py-0.5 text-[9px] font-bold uppercase text-[#24ffe6]">
-                  Live
+                  {t("preview.liveLabel")}
                 </span>
               </div>
               <LivePreview config={config} />
@@ -387,7 +407,7 @@ export function ClubPageBuilderPage({ onComplete, initialConfig, onConfigChange 
         )}
       </div>
 
-      {/* ── Mobile inline preview toggle feedback ── */}
+      {/* ── Mobile inline preview ── */}
       {showPreview && (
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -397,7 +417,7 @@ export function ClubPageBuilderPage({ onComplete, initialConfig, onConfigChange 
           <div className="mb-3 flex items-center gap-2">
             <Eye className="h-3.5 w-3.5 text-[#6fffe9]" />
             <p className="text-xs font-bold uppercase tracking-[0.2em] text-[#6fffe9]/70">
-              Pré-visualização
+              {t("preview.show")}
             </p>
           </div>
           <LivePreview config={config} />

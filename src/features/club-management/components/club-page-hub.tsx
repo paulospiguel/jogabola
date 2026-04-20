@@ -1,13 +1,14 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { 
-  Eye, 
-  Settings as SettingsIcon, 
+import {
+  Eye,
+  Settings as SettingsIcon,
   ExternalLink,
   Plus,
-  Rocket
+  Rocket,
 } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { Switch } from "@/components/ui/switch";
 import { cn } from "@/lib/utils";
 import type { ClubPageConfig } from "../../club-page-builder/_contracts/types";
@@ -20,6 +21,8 @@ interface ClubPageHubProps {
 }
 
 export function ClubPageHub({ config, onConfigChange, onEditClick, isConfigured }: ClubPageHubProps) {
+  const t = useTranslations("clubPageHub");
+
   const toggleVisibility = () => {
     onConfigChange({ isVisible: !config.isVisible });
   };
@@ -43,27 +46,27 @@ export function ClubPageHub({ config, onConfigChange, onEditClick, isConfigured 
           </div>
           <div>
             <div className="flex items-center gap-2">
-              <h2 className="text-xl font-black text-white">Status da Página</h2>
+              <h2 className="text-xl font-black text-white">{t("pageStatus")}</h2>
               <span className={cn(
                 "px-2 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider",
                 config.isVisible ? "bg-[#24ffe6] text-black" : "bg-white/10 text-white/40"
               )}>
-                {config.isVisible ? "Pública" : "Privada"}
+                {config.isVisible ? t("public") : t("private")}
               </span>
             </div>
             <p className="text-sm text-white/50 mt-1">
-              {config.isVisible 
-                ? "Teu clube está visível para toda a comunidade JogaBola." 
-                : "A tua página do clube está atualmente oculta do público."}
+              {config.isVisible ? t("visibleDescription") : t("hiddenDescription")}
             </p>
           </div>
         </div>
 
         <div className="flex items-center gap-4 border-l border-white/10 md:pl-6">
           <div className="flex flex-col items-end mr-2">
-            <span className="text-[10px] font-bold uppercase tracking-widest text-white/30 mb-1">Visibilidade</span>
-            <Switch 
-              checked={config.isVisible} 
+            <span className="text-[10px] font-bold uppercase tracking-widest text-white/30 mb-1">
+              {t("visibility")}
+            </span>
+            <Switch
+              checked={config.isVisible}
               onCheckedChange={toggleVisibility}
               className="data-[state=checked]:bg-[#24ffe6]"
             />
@@ -73,7 +76,7 @@ export function ClubPageHub({ config, onConfigChange, onEditClick, isConfigured 
 
       {/* ── Main Dashboard ───────────────────────────────────────────────── */}
       {!isConfigured ? (
-        <motion.div 
+        <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           className="flex flex-col items-center justify-center py-20 text-center rounded-3xl border border-dashed border-white/10 bg-white/2"
@@ -81,17 +84,17 @@ export function ClubPageHub({ config, onConfigChange, onEditClick, isConfigured 
           <div className="h-20 w-20 rounded-full bg-white/5 flex items-center justify-center mb-6 border border-white/5">
             <Rocket className="h-10 w-10 text-white/20" />
           </div>
-          <h3 className="text-2xl font-black text-white">Ainda não configuraste a tua página</h3>
+          <h3 className="text-2xl font-black text-white">{t("notConfiguredTitle")}</h3>
           <p className="text-white/40 mt-2 max-w-sm mx-auto">
-            Cria uma página profissional para o teu clube em poucos minutos e começa a atrair novos atletas.
+            {t("notConfiguredDescription")}
           </p>
-          <button 
+          <button
             type="button"
             onClick={onEditClick}
             className="mt-8 flex items-center gap-2 rounded-2xl bg-[#24ffe6] px-8 py-4 text-sm font-black text-black shadow-[0_16px_45px_-20px_rgba(36,255,230,0.9)] transition-all duration-300 hover:-translate-y-1 active:scale-95"
           >
             <Plus className="h-5 w-5" />
-            Configurar Minha Página
+            {t("configureButton")}
           </button>
         </motion.div>
       ) : (
@@ -103,7 +106,8 @@ export function ClubPageHub({ config, onConfigChange, onEditClick, isConfigured 
                 <div className="h-10 w-10 rounded-xl bg-[#24ffe6]/10 flex items-center justify-center">
                   <ExternalLink className="h-5 w-5 text-[#24ffe6]" />
                 </div>
-                <button 
+                <button
+                  type="button"
                   onClick={onEditClick}
                   className="p-2 rounded-xl border border-white/10 hover:bg-white/5 transition-colors"
                 >
@@ -112,26 +116,30 @@ export function ClubPageHub({ config, onConfigChange, onEditClick, isConfigured 
               </div>
               <h3 className="text-lg font-bold text-white mb-2">{config.clubName}</h3>
               <p className="text-sm text-white/50 line-clamp-2 italic mb-4">
-                "{config.clubSlogan}"
+                &quot;{config.clubSlogan}&quot;
               </p>
               <div className="flex flex-wrap gap-2 mb-6">
-                <span className="text-[10px] font-bold px-2 py-1 rounded-lg bg-white/5 border border-white/10 text-white/60">
-                  {config.category}
-                </span>
-                <span className="text-[10px] font-bold px-2 py-1 rounded-lg bg-white/5 border border-white/10 text-white/60">
-                  {config.city}
-                </span>
+                {config.category && (
+                  <span className="text-[10px] font-bold px-2 py-1 rounded-lg bg-white/5 border border-white/10 text-white/60">
+                    {config.category}
+                  </span>
+                )}
+                {config.city && (
+                  <span className="text-[10px] font-bold px-2 py-1 rounded-lg bg-white/5 border border-white/10 text-white/60">
+                    {config.city}
+                  </span>
+                )}
                 <span className="text-[10px] font-bold px-2 py-1 rounded-lg bg-white/5 border border-white/10 text-white/60 uppercase">
                   Template {config.template}
                 </span>
               </div>
             </div>
 
-            <button 
+            <button
               type="button"
               className="w-full flex items-center justify-center gap-2 rounded-2xl bg-white/5 border border-white/10 py-4 text-sm font-black text-white hover:bg-[#24ffe6] hover:text-black hover:border-transparent transition-all duration-300"
             >
-              Ver Página Pública
+              {t("viewPublicPage")}
               <ExternalLink className="h-4 w-4" />
             </button>
           </div>
@@ -141,15 +149,16 @@ export function ClubPageHub({ config, onConfigChange, onEditClick, isConfigured 
             <div className="h-16 w-16 rounded-full border-4 border-[#24ffe6]/20 border-t-[#24ffe6] flex items-center justify-center mb-6">
               <span className="text-xl font-black text-white">85%</span>
             </div>
-            <h3 className="text-base font-bold text-white mb-2">Quase lá!</h3>
+            <h3 className="text-base font-bold text-white mb-2">{t("almostThere")}</h3>
             <p className="text-xs text-white/40 max-w-[200px] mb-6">
-              Completa todos os campos para teres uma página de nível elite.
+              {t("completeFields")}
             </p>
-            <button 
+            <button
+              type="button"
               onClick={onEditClick}
               className="text-sm font-black text-[#24ffe6] hover:underline transition-all"
             >
-              Continuar Edição
+              {t("continueEditing")}
             </button>
           </div>
         </div>

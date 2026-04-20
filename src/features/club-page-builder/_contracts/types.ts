@@ -32,7 +32,7 @@ export interface TemplateOption {
   id: ClubTemplate;
   label: string;
   description: string;
-  badge?: string; // e.g. "Popular", "Novo"
+  badge?: string;
 }
 
 export const DEFAULT_CLUB_COLORS: ClubColors = {
@@ -43,14 +43,14 @@ export const DEFAULT_CLUB_COLORS: ClubColors = {
 
 export const DEFAULT_CONFIG: ClubPageConfig = {
   template: "modern",
-  clubName: "Meu Clube",
-  clubSlogan: "Juntos somos mais fortes",
-  clubDescription: "Uma comunidade apaixonada pelo futebol.",
+  clubName: "",
+  clubSlogan: "",
+  clubDescription: "",
   logoUrl: null,
   colors: DEFAULT_CLUB_COLORS,
-  founded: "2024",
-  city: "Lisboa",
-  category: "Futebol 11",
+  founded: "",
+  city: "",
+  category: "",
   features: {
     convocations: true,
     calendar: true,
@@ -61,23 +61,13 @@ export const DEFAULT_CONFIG: ClubPageConfig = {
   isVisible: true,
 };
 
-export const TEMPLATE_OPTIONS: TemplateOption[] = [
-  {
-    id: "classic",
-    label: "Classic",
-    description: "Visual clássico e elegante. Ideal para clubes com tradição e história.",
-    badge: undefined,
-  },
-  {
-    id: "modern",
-    label: "Modern",
-    description: "Design moderno e dinâmico com elementos visuais arrojados.",
-    badge: "Popular",
-  },
-  {
-    id: "ultra",
-    label: "Ultra",
-    description: "Experiência imersiva com efeitos neon e atmosfera de jogo.",
-    badge: "Novo",
-  },
-];
+// Template options use i18n keys for label/description — see templateSelector locale keys.
+// The label here is the design token name (not translated), descriptions are resolved
+// via t("templateSelector.templates.<id>.description") at the call site.
+export const TEMPLATE_OPTION_IDS: ClubTemplate[] = ["classic", "modern", "ultra"];
+
+export const TEMPLATE_LABELS: Record<ClubTemplate, string> = {
+  classic: "Classic",
+  modern: "Modern",
+  ultra: "Ultra",
+};

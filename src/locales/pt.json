@@ -1429,6 +1429,7 @@
     "description": "O esquema tático falhou. A jogada foi interrompida pelo bandeirinha porque o destino que você procura não foi encontrado no campo.",
     "refreshButton": "REFRESH (REINICIAR PARTIDA)",
     "mapButton": "MAP (VER MAPA DE)",
+    "callVARButton": "VAR (IR PARA A PÁGINA INICIAL)",
     "status": {
       "positioning": "POSICIONAMENTO: ERRADO",
       "impediment": "STATUS: IMPEDIMENTO",
@@ -1915,6 +1916,216 @@
       "title": "Nova Equipa",
       "description": "Tem slots disponíveis. Crie uma nova equipa e comece a competir.",
       "button": "Criar Equipa"
+    }
+  },
+  "clubManagementPage": {
+    "backToPanel": "Voltar ao Painel",
+    "tabs": {
+      "page": "Página do Clube",
+      "config": "Configurações",
+      "settings": "Definições do Clube"
+    }
+  },
+  "clubPageHub": {
+    "pageStatus": "Status da Página",
+    "public": "Pública",
+    "private": "Privada",
+    "visibleDescription": "Teu clube está visível para toda a comunidade JogaBola.",
+    "hiddenDescription": "A tua página do clube está atualmente oculta do público.",
+    "visibility": "Visibilidade",
+    "configureButton": "Configurar Minha Página",
+    "notConfiguredTitle": "Ainda não configuraste a tua página",
+    "notConfiguredDescription": "Cria uma página profissional para o teu clube em poucos minutos e começa a atrair novos atletas.",
+    "viewPublicPage": "Ver Página Pública",
+    "almostThere": "Quase lá!",
+    "completeFields": "Completa todos os campos para teres uma página de nível elite.",
+    "continueEditing": "Continuar Edição"
+  },
+  "clubPageFeatureSettings": {
+    "title": "Configurações da Página",
+    "subtitle": "Escolhe as secções que queres manter visíveis na tua página pública.",
+    "autoSaved": "Alterações guardadas automaticamente",
+    "proTip": "Dica de Pro",
+    "proTipText": "Manter secções atualizadas como <bold>Notícias</bold> e <bold>Calendário</bold> aumenta o engajamento dos adeptos e a transparência do teu clube. Secções sem conteúdo são automaticamente ocultadas para manter um visual limpo.",
+    "features": {
+      "convocations": {
+        "label": "Convocatórias",
+        "description": "Exibir lista de atletas convocados para os próximos jogos."
+      },
+      "calendar": {
+        "label": "Calendário",
+        "description": "Mostrar a agenda completa de jogos e treinos do clube."
+      },
+      "news": {
+        "label": "Notícias",
+        "description": "Publicar boletins informativos e atualizações do clube."
+      },
+      "gallery": {
+        "label": "Galeria",
+        "description": "Exposição de fotos de jogos, eventos e instalações."
+      },
+      "stats": {
+        "label": "Estatísticas",
+        "description": "Gráficos de performance e recordes históricos da equipe."
+      }
+    }
+  },
+  "clubPageBuilderPage": {
+    "subtitle": "Club Page Builder",
+    "title": "Criar Página do Clube",
+    "steps": {
+      "template": "Template",
+      "info": "Informações",
+      "customizer": "Identidade Visual"
+    },
+    "goToStep": "Ir para {step}",
+    "preview": {
+      "show": "Pré-visualizar",
+      "hide": "Ocultar",
+      "live": "Pré-visualização ao Vivo",
+      "liveLabel": "Live"
+    },
+    "customizerStep": {
+      "step": "Passo 3 de 3",
+      "title": "Identidade Visual",
+      "description": "Faça upload do logo e defina as cores que representam o vosso clube."
+    },
+    "nav": {
+      "back": "Voltar",
+      "next": "Continuar",
+      "publish": "Publicar Página",
+      "publishing": "Publicando..."
+    },
+    "published": {
+      "title": "Página Publicada!",
+      "subtitle": "O teu clube está agora visível na plataforma JogaBola.",
+      "copy": "Copiar",
+      "viewPage": "Ver a Minha Página",
+      "dashboard": "Ir para o Dashboard"
+    }
+  },
+  "clubSettingsPage": {
+    "title": "Definições do Clube",
+    "description": "Gere as informações administrativas básicas, detalhes de contacto e configurações críticas do teu clube desportivo.",
+    "tabs": {
+      "general": "Geral",
+      "danger": "Zona de Perigo"
+    },
+    "general": {
+      "title": "Informações Gerais"
+    }
+  },
+  "generalSettingsForm": {
+    "officialName": "Nome Oficial",
+    "nif": "NIF / Registro",
+    "email": "Email do Clube",
+    "location": "Localidade Sede",
+    "publicListing": "Listagem Pública",
+    "publicListingDescription": "Permite que o clube apareça nos resultados de pesquisa globais. Jogadores poderão visualizar a página e pedir para ingressar no plantel.",
+    "saving": "Guardando...",
+    "saved": "Guardado",
+    "save": "Guardar Alterações"
+  },
+  "dangerZone": {
+    "title": "Atenção: Ações Irreversíveis",
+    "description": "As ações nesta secção podem resultar na perda definitiva de dados estatísticos, jogadores, e histórico de plantel. Certifique-se de realizar backups e ter a certeza absoluta antes de proceder.",
+    "transfer": {
+      "title": "Transferir Gestão do Clube",
+      "description": "Transfere o controlo total, acesso de administração financeira e definição de equipas para outro utilizador existente no plantel.",
+      "button": "Transferir Gestão"
+    },
+    "delete": {
+      "title": "Eliminar Clube",
+      "description": "Esta ação removerá para sempre o clube, jogadores, agenda e todos os dados registados. Não é possível recuperar após confirmação.",
+      "confirmLabel": "Digita \"{clubName}\" para confirmar",
+      "button": "Sim, Eliminar Permanentemente"
+    }
+  },
+  "templateSelector": {
+    "step": "Passo 1 de 3",
+    "title": "Escolha o template do seu clube",
+    "description": "Cada template pode ser totalmente personalizado com as cores e logo do seu clube.",
+    "templates": {
+      "classic": {
+        "description": "Visual clássico e elegante. Ideal para clubes com tradição e história."
+      },
+      "modern": {
+        "description": "Design moderno e dinâmico com elementos visuais arrojados.",
+        "badge": "Popular"
+      },
+      "ultra": {
+        "description": "Experiência imersiva com efeitos neon e atmosfera de jogo.",
+        "badge": "Novo"
+      }
+    }
+  },
+  "clubInfoForm": {
+    "step": "Passo 2 de 3",
+    "title": "Informações do Clube",
+    "description": "Preencha os dados do seu clube. Estes serão exibidos na sua página pública.",
+    "name": "Nome do Clube",
+    "namePlaceholder": "Ex: Sporting FC, Eagles United...",
+    "slogan": "Slogan",
+    "sloganPlaceholder": "Ex: Juntos somos mais fortes",
+    "optional": "Opcional",
+    "descriptionLabel": "Descrição",
+    "descriptionMax": "Máx. 300 caracteres",
+    "descriptionPlaceholder": "Apresenta o teu clube. Fala sobre a história, valores e o que torna a vossa comunidade especial...",
+    "city": "Cidade",
+    "cityPlaceholder": "Ex: Lisboa",
+    "founded": "Fundado em",
+    "foundedPlaceholder": "Ex: 2015",
+    "category": "Modalidade / Categoria",
+    "categoryPlaceholder": "Selecionar modalidade...",
+    "categories": {
+      "football11": "Futebol 11",
+      "football7": "Futebol 7",
+      "football5": "Futebol 5",
+      "futsal": "Futsal",
+      "beachSoccer": "Beach Soccer",
+      "womens": "Futebol Feminino",
+      "seniors": "Futebol Sénior",
+      "youth": "Futebol Juvenil"
+    }
+  },
+  "customizerPanel": {
+    "logo": "Logo do Clube",
+    "removeLogoLabel": "Remover logo",
+    "uploadAriaLabel": "Upload logo do clube",
+    "uploadText": "Arraste ou",
+    "uploadLink": "clique para carregar",
+    "uploadHint": "PNG, SVG, WEBP · Máx 2MB",
+    "colors": "Cores do Clube",
+    "resetColors": "Restaurar cores padrão",
+    "quickPalettes": "Paletas Rápidas",
+    "applyPalette": "Aplicar paleta {name}",
+    "quickSelection": "Seleção Rápida — Cor Principal",
+    "primary": "Cor Principal",
+    "secondary": "Cor Secundária",
+    "textColor": "Cor do Texto"
+  },
+  "livePreview": {
+    "joinClub": "Juntar-me ao Clube",
+    "joinClubShort": "Juntar-me",
+    "viewMore": "Ver Mais",
+    "aboutClub": "Sobre o Clube",
+    "officialClub": "Clube Oficial · {category}",
+    "foundedIn": "Fundado em {year}",
+    "liveLabel": "Ao Vivo",
+    "stats": {
+      "players": "Jogadores",
+      "titles": "Títulos",
+      "rating": "Rating",
+      "victories": "Vitórias",
+      "thisEpoch": "Esta Época",
+      "winRate": "Win Rate"
+    },
+    "links": {
+      "viewTeam": "Ver Equipa",
+      "nextEvents": "Próximos Eventos",
+      "achievements": "Conquistas",
+      "nextGames": "Próximos Jogos",
+      "schedule": "Agenda"
     }
   }
 }

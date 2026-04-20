@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { HelpCircle, RefreshCw, Share2 } from "lucide-react";
+import { RefreshCw, Tv2Icon } from "lucide-react";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
 import { Logo } from "@/components/logo";
@@ -136,19 +136,22 @@ export default function NotFound() {
     <main className="relative flex min-h-screen w-full flex-col items-center justify-center overflow-hidden p-4">
       <GridBackground />
 
-      {/* Top Header */}
-      <div className="absolute top-12 left-12 z-20">
-        <Logo size="mini" variant="white" />
-      </div>
-
       <div className="relative z-10 w-full max-w-6xl">
         <motion.div
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.8 }}
-          className="overflow-hidden rounded-[40px] border border-white/10 bg-slate-900/60 p-8 backdrop-blur-3xl md:p-16 lg:p-24"
+          className="overflow-hidden rounded-[40px] border border-white/10 bg-slate-900/60 p-4 backdrop-blur-3xl md:p-8 lg:p-12"
         >
-          <div className="grid gap-16 lg:grid-cols-2">
+          <div className="grid gap-8 lg:grid-cols-2">
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.3 }}
+              className="mb-8 flex justify-center md:absolute md:top-12 md:right-12 md:z-20">
+              <Logo size="small" variant="white" />
+            </motion.div>
+
             {/* Left Content */}
             <div className="flex flex-col justify-center text-left">
               <motion.div
@@ -193,53 +196,6 @@ export default function NotFound() {
               >
                 {t("description")}
               </motion.p>
-
-              <motion.div
-                initial={{ y: 20, opacity: 0 }}
-                animate={{ y: 0, opacity: 1 }}
-                transition={{ delay: 0.6 }}
-                className="flex flex-wrap gap-4"
-              >
-                <Button
-                  onClick={() => window.location.reload()}
-                  className="group h-16 rounded-2xl bg-neon-primary px-8 text-sm font-black tracking-widest text-white uppercase transition-all hover:bg-neon-primary/80 hover:shadow-[0_0_30px_rgba(37,99,235,0.4)]"
-                >
-                  <RefreshCw
-                    className="mr-3 transition-transform group-hover:rotate-180"
-                    size={18}
-                  />
-                  <div className="flex flex-col items-start leading-none">
-                    <span className="text-[10px] text-zinc-800 opacity-70">
-                      REFRESH
-                    </span>
-                    <span className="text-zinc-800">
-                      {t("refreshButton").includes("(")
-                        ? t("refreshButton")
-                            .split("(")[1]
-                            .replace(")", "")
-                            .trim()
-                        : t("refreshButton")}
-                    </span>
-                  </div>
-                </Button>
-
-                <Button
-                  variant="secondary"
-                  asChild
-                  className="h-16 rounded-2xl border border-white/5 bg-white/5 px-8 text-sm font-black tracking-widest text-white uppercase transition-all hover:bg-white/10"
-                >
-                  <Link href="/">
-                    <div className="flex flex-col items-start leading-none">
-                      <span className="text-[10px] opacity-70">MAP</span>
-                      <span>
-                        {t("mapButton").includes("(")
-                          ? t("mapButton").split("(")[1].replace(")", "").trim()
-                          : t("mapButton")}
-                      </span>
-                    </div>
-                  </Link>
-                </Button>
-              </motion.div>
             </div>
 
             {/* Right Content - Tactical Diagram */}
@@ -249,47 +205,56 @@ export default function NotFound() {
               </div>
             </div>
           </div>
-        </motion.div>
 
-        {/* Status Line */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 1 }}
-          className="mt-8 flex flex-wrap justify-center gap-12"
-        >
-          <div className="flex items-center gap-2">
-            <div className="h-2 w-2 rounded-full bg-blue-500" />
-            <span className="text-[10px] font-black tracking-widest text-gray-500 uppercase">
-              {t("status.positioning")}
-            </span>
-          </div>
-          <div className="flex items-center gap-2">
-            <div className="h-2 w-2 animate-pulse rounded-full bg-red-500" />
-            <span className="text-[10px] font-black tracking-widest text-gray-500 uppercase">
-              {t("status.impediment")}
-            </span>
-          </div>
-          <div className="flex items-center gap-2">
-            <div className="h-2 w-2 rounded-full bg-yellow-500" />
-            <span className="text-[10px] font-black tracking-widest text-gray-500 uppercase">
-              {t("status.var")}
-            </span>
-          </div>
-        </motion.div>
-      </div>
+          <motion.div
+            initial={{ y: 20, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ delay: 0.6 }}
+            className="flex flex-wrap gap-4"
+          >
+            <Button
+              onClick={() => window.location.reload()}
+              className="group h-16 rounded-2xl bg-neon-primary px-8 text-sm font-black tracking-widest text-white uppercase transition-all hover:bg-neon-primary/80 hover:shadow-[0_0_30px_rgba(37,99,235,0.4)]"
+            >
+              <RefreshCw
+                className="mr-3 transition-transform group-hover:rotate-180"
+                size={18}
+              />
+              <div className="flex flex-col items-start leading-none">
+                <span className="text-[10px] text-zinc-800 opacity-70">
+                  REFRESH
+                </span>
+                <span className="text-zinc-800">
+                  {t("refreshButton").includes("(")
+                    ? t("refreshButton")
+                      .split("(")[1]
+                      .replace(")", "")
+                      .trim()
+                    : t("refreshButton")}
+                </span>
+              </div>
+            </Button>
 
-      {/* Footer */}
-      <div className="absolute inset-x-0 bottom-8 px-12 text-gray-600">
-        <div className="flex items-center justify-between">
-          <div className="text-[10px] font-black tracking-[0.2em] uppercase">
-            {t("footer")}
-          </div>
-          <div className="flex items-center gap-6">
-            <HelpCircle size={18} className="cursor-pointer hover:text-white" />
-            <Share2 size={18} className="cursor-pointer hover:text-white" />
-          </div>
-        </div>
+            <Button
+              variant="secondary"
+              asChild
+              className="h-16 rounded-2xl border border-white/5 bg-white/5 px-8 text-sm font-black tracking-widest text-white uppercase transition-all hover:bg-white/10"
+            >
+              <Link href="/">
+                <Tv2Icon />
+                <div className="flex flex-col items-start leading-none">
+                  <span className="text-[10px] opacity-70">VAR</span>
+                  <span>
+                    {t("callVARButton").includes("(")
+                      ? t("callVARButton").split("(")[1].replace(")", "").trim()
+                      : t("callVARButton")}
+                  </span>
+                </div>
+              </Link>
+            </Button>
+
+          </motion.div>
+        </motion.div>
       </div>
     </main>
   );
