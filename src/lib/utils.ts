@@ -1,41 +1,26 @@
-import { clsx, type ClassValue } from "clsx";
+import { type ClassValue, clsx } from "clsx";
 import { format } from "date-fns";
 import { pt } from "date-fns/locale";
 import { twMerge } from "tailwind-merge";
 import { defaultLocale, locales } from "@/i18n/configs";
 
-/**
- * Merge Tailwind CSS classes with clsx
- */
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
-/**
- * Format date with locale support
- */
 export const formatDate = (date: Date, locale?: string) => {
   return format(date, "dd/MM/yyyy", { locale: locale ? pt : undefined });
 };
 
-/**
- * File type enumeration for preview detection
- */
 export enum FileType {
   Pdf = "application/pdf",
   Heic = "image/heic",
 }
 
-/**
- * Strip special characters from string (keep alphanumeric, hyphen, space, dot, parentheses)
- */
 export function stripSpecialCharacters(inputString: string) {
   return inputString?.replace(/[^a-zA-Z0-9\s.()-]/g, "");
 }
 
-/**
- * Fisher-Yates shuffle algorithm
- */
 export function shuffle(array: unknown[]) {
   for (let i = array.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
@@ -44,9 +29,6 @@ export function shuffle(array: unknown[]) {
   return array;
 }
 
-/**
- * Check if file type supports preview
- */
 export const isSupportedFilePreview = (type: FileType) => {
   if (!type) {
     return false;
@@ -68,9 +50,6 @@ export const isSupportedFilePreview = (type: FileType) => {
   }
 };
 
-/**
- * Generate OTP code with specified number of digits
- */
 export function generateOTP(numberOfDigits: number) {
   const digits = "0123456789";
   let OTP = "";
@@ -82,9 +61,6 @@ export function generateOTP(numberOfDigits: number) {
   return OTP;
 }
 
-/**
- * Get search params with type safety
- */
 export const getSearchParams = <T = unknown>(
   search: Record<string, string>,
 ) => {
@@ -94,11 +70,7 @@ export const getSearchParams = <T = unknown>(
   };
 };
 
-/**
- * Get user locale from cookie or browser
- */
 const getUserLocale = async (): Promise<string> => {
-  // Server-side: honor cookie set by server action
   try {
     if (typeof window === "undefined") {
       const { cookies } = await import("next/headers");
@@ -111,11 +83,8 @@ const getUserLocale = async (): Promise<string> => {
         return fromCookie;
       }
     }
-  } catch {
-    // no-op: fallback below
-  }
+  } catch {}
 
-  // Client-side fallback: navigator.language narrowed to supported locales
   if (typeof window !== "undefined") {
     const nav = (navigator.language || defaultLocale).slice(0, 2);
     return locales.includes(nav as (typeof locales)[number])
@@ -126,9 +95,6 @@ const getUserLocale = async (): Promise<string> => {
   return defaultLocale;
 };
 
-/**
- * Get base URL for the application (works in both client and server)
- */
 const getBaseURL = () => {
   if (typeof window !== "undefined") {
     return (

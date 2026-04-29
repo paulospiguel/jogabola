@@ -25,8 +25,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
             "focus:rounded-full! focus-visible:rounded-full! focus-within:rounded-full!",
             className,
             {
-              "border-red-500 focus-visible:ring-red-500":
-                isError,
+              "border-red-500 focus-visible:ring-red-500": isError,
             },
           )}
           style={{ borderRadius: "9999px" }}

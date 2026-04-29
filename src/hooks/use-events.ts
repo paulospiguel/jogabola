@@ -3,7 +3,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
-import { getEvents } from "@/actions/events";
+import { getEvents } from "@/actions/match-sessions.actions";
 
 export interface EventDisplay {
   id: number;
@@ -91,7 +91,7 @@ export function useEvents(options?: UseEventsOptions) {
       });
 
       if (!result.success) {
-        throw new Error(result.error || "Failed to fetch events");
+        throw new Error("Failed to fetch events");
       }
 
       // Formatar eventos para o formato da UI
@@ -134,7 +134,7 @@ export interface EventDetails {
   maxAge?: string;
   gender?: string;
   positionNeeded?: string;
-  participationCriteria: Record<string, any>;
+  participationCriteria: Record<string, unknown>;
   currentParticipants: number;
   maxParticipants?: number;
   organizerId: string;
@@ -155,11 +155,11 @@ export function useEvent(eventId: number | null) {
     queryFn: async () => {
       if (!eventId) return null;
 
-      const { getEvent } = await import("@/actions/events");
+      const { getEvent } = await import("@/actions/match-sessions.actions");
       const result = await getEvent(eventId);
 
       if (!result.success || !result.data) {
-        throw new Error(result.error || "Failed to fetch event");
+        throw new Error("Failed to fetch event");
       }
 
       const dbEvent = result.data;
@@ -169,7 +169,7 @@ export function useEvent(eventId: number | null) {
         id: dbEvent.id,
         title: dbEvent.title,
         description: dbEvent.description || undefined,
-        type: dbEvent.type as any,
+        type: dbEvent.type as EventDetails["type"],
         location: dbEvent.location,
         city: dbEvent.city || undefined,
         country: dbEvent.country || undefined,
@@ -188,8 +188,8 @@ export function useEvent(eventId: number | null) {
           ? parseInt(dbEvent.maxParticipants, 10)
           : undefined,
         organizerId: dbEvent.organizerId,
-        organizerName: dbEvent.organizer?.name || "Organizador",
-        organizerEmail: dbEvent.organizer?.email,
+        organizerName: "Organizador",
+        organizerEmail: undefined,
         language: dbEvent.language || undefined,
         images: (dbEvent.images as string[]) || [],
         isFree: true, // TODO: Add to schema

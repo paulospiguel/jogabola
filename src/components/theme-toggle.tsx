@@ -1,8 +1,8 @@
 "use client";
 
-import { LuMoon as Moon, LuSun as Sun } from "@/components/icons";
+import { useTranslations } from "next-intl";
 import { useTheme } from "next-themes";
-
+import { LuMoon as Moon, LuSun as Sun } from "@/components/icons";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -10,7 +10,6 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { useTranslations } from "next-intl";
 
 export function ThemeToggle() {
   const { setTheme } = useTheme();

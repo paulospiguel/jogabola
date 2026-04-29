@@ -1,10 +1,10 @@
 "use client";
 
-import { LuX as X } from "@/components/icons";
-import cn from "@/components/ui/lib/cn";
 import * as ToastPrimitives from "@radix-ui/react-toast";
 import { cva, type VariantProps } from "class-variance-authority";
 import * as React from "react";
+import { LuX as X } from "@/components/icons";
+import cn from "@/components/ui/lib/cn";
 
 const ToastProvider = ToastPrimitives.Provider;
 

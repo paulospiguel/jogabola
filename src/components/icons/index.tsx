@@ -1,5 +1,5 @@
 import { createLucideIcon } from "lucide-react";
-import { type SVGProps } from "react";
+import type { SVGProps } from "react";
 
 export * from "react-icons/lu";
 
@@ -778,7 +778,6 @@ export const FieldSoccerIcon = createLucideIcon("FieldIcon", [
     },
   ],
 
-  // 2. Linha central (Horizontal, de ponta a ponta da nova largura)
   [
     "line",
     {
@@ -790,7 +789,6 @@ export const FieldSoccerIcon = createLucideIcon("FieldIcon", [
     },
   ],
 
-  // 3. Círculo central
   [
     "path",
     {
@@ -799,8 +797,6 @@ export const FieldSoccerIcon = createLucideIcon("FieldIcon", [
     },
   ],
 
-  // 4. Área superior (Alargada para acompanhar o campo)
-  // x=7 com width=10 centraliza perfeitamente no campo de largura 18
   [
     "path",
     {
@@ -809,7 +805,6 @@ export const FieldSoccerIcon = createLucideIcon("FieldIcon", [
     },
   ],
 
-  // 5. Área inferior
   [
     "path",
     {

@@ -1,9 +1,9 @@
 /**
  * Design System Color Tokens
- * 
+ *
  * Centralized color tokens for the Jogabola design system.
  * All colors should be referenced through these tokens using Tailwind v4.
- * 
+ *
  * Usage:
  * - In Tailwind classes: bg-neon-primary, text-accent-blue, etc.
  * - In CSS: var(--color-neon-primary)
@@ -202,4 +202,23 @@
   --color-journey-referee-hover: #00b89a;
   --color-journey-referee-muted: rgba(0, 207, 177, 0.12);
   --color-journey-referee-glow: rgba(0, 207, 177, 0.35);
+
+  /* ============================================
+     JOGABOLA V2 — Football App Design System
+     ============================================ */
+
+  --jb-bg: #0b0f14;
+  --jb-bg-sec: #111827;
+  --jb-surface: #151c26;
+  --jb-surface-el: #1b2430;
+  --jb-border: #263244;
+  --jb-text: #f5f7fa;
+  --jb-text-sec: #a7b0be;
+  --jb-text-muted: #6b7280;
+  --jb-primary: #7cff4f;
+  --jb-success: #22c55e;
+  --jb-warning: #f59e0b;
+  --jb-danger: #ef4444;
+  --jb-info: #38bdf8;
+  --jb-highlight: #facc15;
 }

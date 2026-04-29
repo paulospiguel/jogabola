@@ -140,10 +140,9 @@ const countriesList = [
 
 // Remover duplicatas e ordenar
 const uniqueCountries = Array.from(
-  new Map(countriesList.map(item => [item.value, item])).values()
+  new Map(countriesList.map(item => [item.value, item])).values(),
 );
 
 export const COUNTRIES = uniqueCountries.sort((a, b) =>
-  a.label.localeCompare(b.label, "pt")
+  a.label.localeCompare(b.label, "pt"),
 );
-

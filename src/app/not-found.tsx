@@ -16,7 +16,6 @@ const TacticalDiagram = () => (
       className="h-full w-full"
     >
       <title>Tactical Diagram</title>
-      {/* Field Arc */}
       <circle
         cx="200"
         cy="150"
@@ -26,7 +25,6 @@ const TacticalDiagram = () => (
         strokeWidth="2"
       />
 
-      {/* Movement Path */}
       <motion.path
         d="M 50 200 Q 150 180 220 120 T 350 100"
         stroke="#2563eb"
@@ -37,7 +35,6 @@ const TacticalDiagram = () => (
         transition={{ duration: 2, ease: "easeInOut" }}
       />
 
-      {/* Connection Points */}
       <motion.circle
         cx="50"
         cy="200"
@@ -54,7 +51,7 @@ const TacticalDiagram = () => (
         y="230"
         className="fill-blue-500 text-[10px] font-black tracking-widest uppercase"
       >
-        START_ROUTE
+        {t("startRoute")}
       </text>
 
       <motion.circle
@@ -81,7 +78,6 @@ const TacticalDiagram = () => (
         transition={{ delay: 1.5 }}
       />
 
-      {/* Offside Marker */}
       <g className="translate-x-[350px] translate-y-[100px]">
         <motion.circle
           r="40"
@@ -107,7 +103,7 @@ const TacticalDiagram = () => (
           textAnchor="middle"
           className="fill-red-500 text-[10px] font-black tracking-widest uppercase"
         >
-          404_OFFSIDE
+          {t("offside404")}
         </text>
       </g>
     </svg>
@@ -124,7 +120,6 @@ const GridBackground = () => (
         backgroundSize: "60px 60px",
       }}
     />
-    {/* Radial Glow */}
     <div className="absolute top-1/2 left-1/2 h-[800px] w-[800px] -translate-x-1/2 -translate-y-1/2 bg-blue-600/5 blur-[120px]" />
   </div>
 );
@@ -148,11 +143,11 @@ export default function NotFound() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.3 }}
-              className="mb-8 flex justify-center md:absolute md:top-12 md:right-12 md:z-20">
+              className="mb-8 flex justify-center md:absolute md:top-12 md:right-12 md:z-20"
+            >
               <Logo size="small" variant="white" />
             </motion.div>
 
-            {/* Left Content */}
             <div className="flex flex-col justify-center text-left">
               <motion.div
                 initial={{ x: -20, opacity: 0 }}
@@ -162,7 +157,7 @@ export default function NotFound() {
               >
                 <div className="rounded-full border border-red-500/20 bg-red-500/10 px-4 py-1">
                   <span className="text-[10px] font-black tracking-[0.2em] text-red-500 uppercase">
-                    WARNING {t("warning")}
+                    {t("warning")}
                   </span>
                 </div>
               </motion.div>
@@ -198,7 +193,6 @@ export default function NotFound() {
               </motion.p>
             </div>
 
-            {/* Right Content - Tactical Diagram */}
             <div className="relative hidden lg:block">
               <div className="absolute inset-0 flex items-center justify-center">
                 <TacticalDiagram />
@@ -222,14 +216,11 @@ export default function NotFound() {
               />
               <div className="flex flex-col items-start leading-none">
                 <span className="text-[10px] text-zinc-800 opacity-70">
-                  REFRESH
+                  {t("labelRefresh")}
                 </span>
                 <span className="text-zinc-800">
                   {t("refreshButton").includes("(")
-                    ? t("refreshButton")
-                      .split("(")[1]
-                      .replace(")", "")
-                      .trim()
+                    ? t("refreshButton").split("(")[1].replace(")", "").trim()
                     : t("refreshButton")}
                 </span>
               </div>
@@ -243,7 +234,9 @@ export default function NotFound() {
               <Link href="/">
                 <Tv2Icon />
                 <div className="flex flex-col items-start leading-none">
-                  <span className="text-[10px] opacity-70">VAR</span>
+                  <span className="text-[10px] opacity-70">
+                    {t("labelVAR")}
+                  </span>
                   <span>
                     {t("callVARButton").includes("(")
                       ? t("callVARButton").split("(")[1].replace(")", "").trim()
@@ -252,7 +245,6 @@ export default function NotFound() {
                 </div>
               </Link>
             </Button>
-
           </motion.div>
         </motion.div>
       </div>

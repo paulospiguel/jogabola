@@ -1,6 +1,6 @@
+import Image from "next/image";
 import ballLoading from "@/assets/animations/ball-loading.gif";
 import { cn } from "@/lib/utils";
-import Image from "next/image";
 
 const sizes = {
   small: "w-10 h-10",

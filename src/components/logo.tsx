@@ -9,10 +9,10 @@ import logo from "@/assets/logos/jogabola-logo.svg";
 import logoWhite from "@/assets/logos/jogabola-white.svg";
 import newLogoAnimated from "@/assets/logos/logo_animado.gif";
 import { COMPANY, TRANSLATION_KEYS } from "@/constants/app";
-import { cn } from "@/lib/utils";
+import { useJourneyRedirect } from "@/hooks/use-journey-redirect";
 
 import { useSession } from "@/lib/auth-client";
-import { useJourneyRedirect } from "@/hooks/use-journey-redirect";
+import { cn } from "@/lib/utils";
 
 const sizes = {
   mini: "w-16 h-20",
@@ -39,7 +39,7 @@ export const Logo: React.FC<LogoProps> = ({
   className,
   isAnimate,
   size = "medium",
-  href = "/",
+  href,
 }) => {
   const t = useTranslations();
   const { data: session } = useSession();
@@ -67,12 +67,8 @@ export const Logo: React.FC<LogoProps> = ({
     }
   };
 
-  return (
-    <Link 
-      href={href} 
-      onClick={handleClick}
-      className={cn("relative flex", logoSize, className)}
-    >
+  const content = (
+    <>
       <Image
         unoptimized
         src={logotipo}
@@ -83,6 +79,24 @@ export const Logo: React.FC<LogoProps> = ({
       <span className="sr-only">
         {COMPANY.NAME} - {t(TRANSLATION_KEYS.COMPANY.SLOGAN)}
       </span>
+    </>
+  );
+
+  if (!href) {
+    return (
+      <div className={cn("relative flex", logoSize, className)}>
+        {content}
+      </div>
+    );
+  }
+
+  return (
+    <Link
+      href={href}
+      onClick={handleClick}
+      className={cn("relative flex", logoSize, className)}
+    >
+      {content}
     </Link>
   );
 };

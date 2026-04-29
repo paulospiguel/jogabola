@@ -1,12 +1,7 @@
+import { emailOTPClient } from "better-auth/client/plugins";
 import { createAuthClient } from "better-auth/react";
 
-/**
- * Obtém a baseURL para o cliente React
- * IMPORTANTE: Deve usar NEXT_PUBLIC_APP_URL obrigatoriamente no cliente
- * para garantir consistência com a configuração do servidor
- */
 function getClientBaseURL(): string {
-  // No cliente, sempre usar NEXT_PUBLIC_APP_URL se disponível
   if (typeof window !== "undefined") {
     const publicUrl = process.env.NEXT_PUBLIC_APP_URL;
 
@@ -20,7 +15,6 @@ function getClientBaseURL(): string {
     return publicUrl;
   }
 
-  // No servidor (SSR), usar a mesma lógica
   return (
     process.env.NEXT_PUBLIC_APP_URL ||
     process.env.NEXT_PUBLIC_URL ||
@@ -33,6 +27,8 @@ function getClientBaseURL(): string {
 
 const authClient = createAuthClient({
   baseURL: getClientBaseURL(),
+  plugins: [emailOTPClient()],
 });
 
 export const { signIn, signOut, signUp, getSession, useSession } = authClient;
+export const emailOtp = authClient.emailOtp;

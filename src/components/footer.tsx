@@ -19,7 +19,6 @@ export default function Footer({ className }: FooterProps) {
   const t = useTranslations("footer");
   const currentYear = new Date().getFullYear();
 
-  // Se logado, vai para a dashboard (primeiro botão)
   const logoHref =
     session?.user?.id && !isLoading && buttons.length > 0 && buttons[0].href
       ? buttons[0].href
@@ -28,26 +27,16 @@ export default function Footer({ className }: FooterProps) {
   const footerLinks = [
     {
       title: t("columns.product"),
-      links: [
-        { label: t("links.features"), href: "/ecosystem" },
-        { label: t("links.plans"), href: "/plans" },
-        { label: t("links.community"), href: "/community" },
-      ],
+      links: [{ label: t("links.features"), href: "/" }],
     },
     {
       title: t("columns.institutional"),
-      links: [
-        { label: t("links.about"), href: "/about" },
-        { label: t("links.contact"), href: "/contact" },
-        { label: t("links.academy"), href: "/academy" },
-        { label: t("links.partners"), href: "/become-partner" },
-      ],
+      links: [{ label: t("links.terms"), href: "/" }],
     },
     {
       title: t("columns.legal"),
       links: [
-        { label: t("links.privacy"), href: "/privacy-policy" },
-        { label: t("links.terms"), href: "/terms-and-conditions" },
+        { label: t("links.terms"), href: "/" },
         { label: t("links.cookies"), href: "#" },
       ],
     },

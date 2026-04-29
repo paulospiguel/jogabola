@@ -35,33 +35,3 @@ export async function sendEmail({
     return { success: false, error };
   }
 }
-
-export async function sendNotification({
-  to,
-  title,
-  message,
-  actionLabel,
-  actionUrl,
-}: {
-  to: string;
-  title: string;
-  message: string;
-  actionLabel?: string;
-  actionUrl?: string;
-}) {
-  const { NotificationEmail } = await import(
-    "@/components/emails/notification-email"
-  );
-  const React = await import("react");
-
-  return sendEmail({
-    to,
-    subject: title,
-    react: React.createElement(NotificationEmail, {
-      title,
-      message,
-      actionLabel,
-      actionUrl,
-    }),
-  });
-}

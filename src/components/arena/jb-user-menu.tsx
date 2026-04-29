@@ -1,0 +1,97 @@
+"use client";
+
+import { LogOut, Settings, UserRound } from "lucide-react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
+import { signOut, useSession } from "@/lib/auth-client";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { JbAvatar } from "./jb-avatar";
+
+interface JbUserMenuProps {
+  collapsed?: boolean;
+}
+
+export function JbUserMenu({ collapsed = false }: JbUserMenuProps) {
+  const { data: session } = useSession();
+  const router = useRouter();
+  const t = useTranslations("arenaNav");
+
+  const name = session?.user?.name ?? "User";
+  const email = session?.user?.email ?? "";
+  const id = session?.user?.id ?? "1";
+
+  async function handleSignOut() {
+    await signOut();
+    router.push("/");
+  }
+
+  return (
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <button
+          type="button"
+          className="flex w-full items-center gap-3 rounded-[10px] px-3 py-2.5 text-sm transition-colors hover:bg-arena-surface/60 focus-visible:outline-none"
+        >
+          <JbAvatar id={id} name={name} size={32} className="shrink-0" />
+          {!collapsed && (
+            <div className="grid flex-1 text-left leading-tight overflow-hidden">
+              <span className="truncate font-semibold text-arena-text">{name}</span>
+              <span className="truncate text-xs text-arena-text-muted">{email}</span>
+            </div>
+          )}
+        </button>
+      </DropdownMenuTrigger>
+
+      <DropdownMenuContent
+        side="right"
+        align="end"
+        sideOffset={8}
+        className="w-52 bg-arena-bg-sec border-arena-border text-arena-text"
+      >
+        <div className="px-3 py-2">
+          <p className="truncate text-sm font-semibold">{name}</p>
+          <p className="truncate text-xs text-arena-text-muted">{email}</p>
+        </div>
+
+        <DropdownMenuSeparator className="bg-arena-border" />
+
+        <DropdownMenuItem asChild>
+          <Link
+            href="/arena/profile"
+            className="flex items-center gap-2 cursor-pointer text-arena-text-sec hover:text-arena-text"
+          >
+            <UserRound size={15} />
+            {t("profile")}
+          </Link>
+        </DropdownMenuItem>
+
+        <DropdownMenuItem asChild>
+          <Link
+            href="/arena/settings"
+            className="flex items-center gap-2 cursor-pointer text-arena-text-sec hover:text-arena-text"
+          >
+            <Settings size={15} />
+            {t("settings")}
+          </Link>
+        </DropdownMenuItem>
+
+        <DropdownMenuSeparator className="bg-arena-border" />
+
+        <DropdownMenuItem
+          onClick={handleSignOut}
+          className="flex items-center gap-2 cursor-pointer text-red-400 hover:text-red-300 focus:text-red-300"
+        >
+          <LogOut size={15} />
+          {t("signOut")}
+        </DropdownMenuItem>
+      </DropdownMenuContent>
+    </DropdownMenu>
+  );
+}

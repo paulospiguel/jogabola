@@ -15,7 +15,6 @@ import {
 } from "@/components/ui/sheet";
 import menuHome from "@/constants/menu-home";
 import { useHeaderButtons } from "@/hooks/use-header-buttons";
-import { useJourneyRedirect } from "@/hooks/use-journey-redirect";
 import { useSession } from "@/lib/auth-client";
 import { cn } from "@/lib/utils";
 import LanguageSelector from "./language-selector";
@@ -29,13 +28,10 @@ export default function Header() {
   const [isScrolled, setIsScrolled] = useState(false);
   const pathname = usePathname();
   const isHome = pathname === "/";
-  const { redirectToJourney } = useJourneyRedirect();
   const { buttons, isLoading } = useHeaderButtons();
 
   const t = useTranslations();
 
-  // Determine o link do logo: se logado, vai para a dashboard (primeiro botão)
-  // Se não logado ou ainda carregando, vai para a homepage
   const logoHref =
     session?.user?.id && !isLoading && buttons.length > 0 && buttons[0].href
       ? buttons[0].href
@@ -44,16 +40,13 @@ export default function Header() {
   useEffect(() => {
     const handleScroll = () => {
       if (isHome) {
-        // Na home, muda de cor apenas quando passar da altura completa da viewport
         const viewportHeight = window.innerHeight;
         setIsScrolled(window.scrollY > viewportHeight);
       } else {
-        // Em outras páginas, considera sempre como "scrolled" para manter o estilo verde
         setIsScrolled(true);
       }
     };
 
-    // Executa imediatamente para páginas que não são home
     handleScroll();
 
     window.addEventListener("scroll", handleScroll);
@@ -114,7 +107,7 @@ export default function Header() {
               return (
                 <button
                   key={key}
-                  onClick={button.onClick || redirectToJourney}
+                  onClick={button.onClick}
                   className={cn(
                     "hidden rounded-full px-5 py-2.5 no-underline transition-colors duration-300 md:visible md:block",
                     button.variant === "primary"
@@ -184,7 +177,7 @@ export default function Header() {
                     return (
                       <SheetClose key={key} asChild>
                         <button
-                          onClick={button.onClick || redirectToJourney}
+                          onClick={button.onClick}
                           className={cn(
                             "w-full rounded-full px-4 py-3 text-sm transition-colors duration-300",
                             button.variant === "primary"
@@ -200,7 +193,6 @@ export default function Header() {
                     );
                   })}
 
-                {/* Opções de idioma */}
                 <div className="flex w-full items-center justify-center gap-4 pt-2">
                   <LanguageSelector />
                 </div>
@@ -223,7 +215,6 @@ const Navbar = ({
   const t = useTranslations();
   const pathname = usePathname();
 
-  // Define as cores baseado na página e estado de scroll
   const getTextColors = () => {
     return {
       default: "text-white/72 font-medium",

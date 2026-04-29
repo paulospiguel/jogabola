@@ -1,5 +1,5 @@
 "use client";
-import { MoveRight }from "@/components/icons";
+import { MoveRight } from "@/components/icons";
 
 import { cn } from "@/lib/utils";
 

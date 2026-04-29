@@ -1,0 +1,32 @@
+import { integer, pgTable, serial, text, timestamp } from "drizzle-orm/pg-core";
+import { teams } from "./teams";
+import { user } from "./users";
+
+export const matchSessions = pgTable("match_sessions", {
+  id: serial("id").primaryKey(),
+  teamId: integer("team_id")
+    .notNull()
+    .references(() => teams.id, { onDelete: "cascade" }),
+  title: text("title").notNull(),
+  location: text("location").notNull(),
+  startsAt: timestamp("starts_at").notNull(),
+  endsAt: timestamp("ends_at"),
+  capacity: integer("capacity"),
+  priceCents: integer("price_cents").default(0),
+  currency: text("currency").notNull().default("EUR"),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
+export const matchReservations = pgTable("match_reservations", {
+  id: serial("id").primaryKey(),
+  matchSessionId: integer("match_session_id")
+    .notNull()
+    .references(() => matchSessions.id, { onDelete: "cascade" }),
+  playerId: text("player_id")
+    .notNull()
+    .references(() => user.id, { onDelete: "cascade" }),
+  status: text("status").notNull().default("reserved_unpaid"),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});

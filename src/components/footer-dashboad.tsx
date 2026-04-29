@@ -9,7 +9,6 @@ export const FooterDashboard = () => {
   const { buttons, isLoading } = useHeaderButtons();
   const t = useTranslations();
 
-  // Se logado, vai para a dashboard (primeiro botão)
   const logoHref =
     session?.user?.id && !isLoading && buttons.length > 0 && buttons[0].href
       ? buttons[0].href
@@ -31,11 +30,9 @@ export const FooterDashboard = () => {
           <div className="flex flex-wrap items-center gap-4">
             {[
               {
-                href: "/terms-and-conditions",
+                href: "/",
                 label: t("footer.links.terms"),
               },
-              { href: "/privacy-policy", label: t("footer.links.privacy") },
-              { href: "/contact", label: t("footer.contact") },
             ].map(item => (
               <Link
                 key={item.href}

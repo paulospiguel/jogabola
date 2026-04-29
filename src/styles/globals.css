@@ -31,14 +31,14 @@
   --chart-3: oklch(0.769 0.188 70.08);
   --chart-4: oklch(0.627 0.265 303.9);
   --chart-5: oklch(0.645 0.246 16.439);
-  --sidebar: oklch(0.205 0 0);
-  --sidebar-foreground: oklch(0.985 0 0);
-  --sidebar-primary: oklch(0.488 0.243 264.376);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.269 0 0);
-  --sidebar-accent-foreground: oklch(0.985 0 0);
-  --sidebar-border: oklch(1 0 0 / 10%);
-  --sidebar-ring: oklch(0.556 0 0);
+  --sidebar: var(--color-arena-bg-sec);
+  --sidebar-foreground: var(--color-arena-text);
+  --sidebar-primary: var(--color-arena-primary);
+  --sidebar-primary-foreground: var(--color-arena-bg);
+  --sidebar-accent: var(--color-arena-surface-el);
+  --sidebar-accent-foreground: var(--color-arena-primary);
+  --sidebar-border: var(--color-arena-border);
+  --sidebar-ring: var(--color-arena-primary);
 }
 
 :root {
@@ -68,14 +68,14 @@
   --chart-4: oklch(0.627 0.265 303.9);
   --chart-5: oklch(0.645 0.246 16.439);
   --radius: 0.625rem;
-  --sidebar: oklch(0.205 0 0);
-  --sidebar-foreground: oklch(0.985 0 0);
-  --sidebar-primary: oklch(0.488 0.243 264.376);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.269 0 0);
-  --sidebar-accent-foreground: oklch(0.985 0 0);
-  --sidebar-border: oklch(1 0 0 / 10%);
-  --sidebar-ring: oklch(0.556 0 0);
+  --sidebar: var(--color-arena-bg-sec);
+  --sidebar-foreground: var(--color-arena-text);
+  --sidebar-primary: var(--color-arena-primary);
+  --sidebar-primary-foreground: var(--color-arena-bg);
+  --sidebar-accent: var(--color-arena-surface-el);
+  --sidebar-accent-foreground: var(--color-arena-primary);
+  --sidebar-border: var(--color-arena-border);
+  --sidebar-ring: var(--color-arena-primary);
 
   /* Variáveis customizadas */
   --background-primary: hsl(151, 100%, 32%);
@@ -124,6 +124,22 @@
 
   /* Popover colors */
   --color-popover-dark: #0b1933;
+
+  /* JogaBola Arena v2 */
+  --color-arena-bg: #0b0f14;
+  --color-arena-bg-sec: #111827;
+  --color-arena-surface: #151c26;
+  --color-arena-surface-el: #1b2430;
+  --color-arena-border: #263244;
+  --color-arena-text: #f5f7fa;
+  --color-arena-text-sec: #a7b0be;
+  --color-arena-text-muted: #6b7280;
+  --color-arena-primary: #7cff4f;
+  --color-arena-success: #22c55e;
+  --color-arena-warning: #f59e0b;
+  --color-arena-danger: #ef4444;
+  --color-arena-info: #38bdf8;
+  --color-arena-highlight: #facc15;
 
   /* Transition durations */
   --duration-75: 75ms;
@@ -278,6 +294,291 @@
   }
 }
 
+@layer components {
+  .jb-arena {
+    background: var(--color-arena-bg);
+    color: var(--color-arena-text);
+    min-height: 100vh;
+    position: relative;
+  }
+
+  .jb-arena::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    background:
+      radial-gradient(
+        circle at 18% 12%,
+        rgba(124, 255, 79, 0.05),
+        transparent 28%
+      ),
+      radial-gradient(
+        circle at 92% 18%,
+        rgba(56, 189, 248, 0.06),
+        transparent 30%
+      ),
+      linear-gradient(180deg, rgba(11, 15, 20, 0.2), rgba(11, 15, 20, 0.82));
+    z-index: 0;
+  }
+
+  .jb-arena-bg {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    opacity: 0.72;
+  }
+
+  .jb-arena-shell {
+    position: relative;
+    z-index: 1;
+    min-height: 100vh;
+    padding-bottom: 84px;
+  }
+
+  .jb-page {
+    width: 100%;
+    min-height: 100%;
+    padding: 16px 20px 24px;
+  }
+
+  .jb-page-flush {
+    padding: 0 0 24px;
+  }
+
+  .jb-page-inner {
+    width: min(100%, 1180px);
+    margin-inline: auto;
+  }
+
+  .jb-topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 16px;
+  }
+
+  .jb-kicker {
+    color: var(--color-arena-text-muted);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+
+  .jb-title {
+    color: var(--color-arena-text);
+    font-family: var(--font-sora), var(--font-inter), sans-serif;
+    font-size: 22px;
+    font-weight: 800;
+    letter-spacing: 0;
+    line-height: 1.1;
+  }
+
+  .jb-section-label {
+    color: var(--color-arena-text-muted);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1.2px;
+    text-transform: uppercase;
+    padding: 12px 0 6px;
+  }
+
+  .jb-panel,
+  .jb-card {
+    background: var(--color-arena-surface);
+    border: 1px solid var(--color-arena-border);
+    border-radius: 14px;
+  }
+
+  .jb-hero-card {
+    display: block;
+    padding: 16px;
+    border-radius: 18px;
+    border: 1px solid rgba(124, 255, 79, 0.2);
+    background:
+      radial-gradient(
+        circle at 88% 12%,
+        rgba(56, 189, 248, 0.16),
+        transparent 32%
+      ),
+      linear-gradient(135deg, var(--color-arena-surface-el), #1e2b3c);
+    box-shadow: 0 4px 24px rgba(124, 255, 79, 0.05);
+    text-decoration: none;
+  }
+
+  .jb-icon-tile {
+    width: 42px;
+    height: 42px;
+    border-radius: 12px;
+    display: grid;
+    place-items: center;
+    flex-shrink: 0;
+  }
+
+  .jb-action {
+    min-height: 44px;
+    border-radius: 12px;
+    border: 1px solid rgba(124, 255, 79, 0.27);
+    background: rgba(124, 255, 79, 0.04);
+    color: var(--color-arena-primary);
+    font-size: 15px;
+    font-weight: 700;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding-inline: 16px;
+    transition:
+      transform 0.1s ease,
+      opacity 0.15s ease,
+      border-color 0.15s ease;
+  }
+
+  .jb-action:hover {
+    opacity: 0.92;
+    border-color: rgba(124, 255, 79, 0.45);
+  }
+
+  .jb-action:active {
+    transform: scale(0.98);
+  }
+
+  .jb-action-primary {
+    border-color: transparent;
+    background: var(--color-arena-primary);
+    color: #0b0f14;
+  }
+
+  .jb-dashboard-grid {
+    display: grid;
+    gap: 14px;
+  }
+
+  .jb-stack {
+    display: grid;
+    gap: 8px;
+  }
+
+  .jb-stat-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 8px;
+  }
+
+  .jb-list-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 14px;
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .jb-toolbar {
+    display: flex;
+    gap: 8px;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+
+  .jb-toolbar::-webkit-scrollbar {
+    display: none;
+  }
+
+  .jb-chip {
+    white-space: nowrap;
+    border-radius: 8px;
+    border: 1px solid var(--color-arena-border);
+    background: var(--color-arena-surface);
+    color: var(--color-arena-text-sec);
+    padding: 5px 12px;
+    font-size: 12px;
+    font-weight: 600;
+  }
+
+  .jb-chip-active {
+    border-color: rgba(124, 255, 79, 0.4);
+    background: rgba(124, 255, 79, 0.08);
+    color: var(--color-arena-primary);
+  }
+
+  @media (min-width: 768px) {
+    .jb-arena-shell {
+      padding-bottom: 0;
+    }
+
+    .jb-page {
+      padding: 28px;
+    }
+
+    .jb-page-flush {
+      padding: 28px;
+    }
+
+    .jb-dashboard-grid {
+      grid-template-columns: minmax(0, 1.5fr) minmax(320px, 0.85fr);
+      align-items: start;
+      gap: 18px;
+    }
+
+    .jb-title {
+      font-size: 28px;
+    }
+  }
+}
+
+@keyframes jb-pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.4;
+  }
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: none;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes badgePop {
+  0% {
+    transform: scale(1);
+  }
+  40% {
+    transform: scale(1.35);
+  }
+  70% {
+    transform: scale(0.9);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
 @theme inline {
   --color-background: #18193b;
   --color-foreground: var(--foreground);
@@ -338,4 +639,45 @@
   syntax: "<angle>";
   initial-value: 0deg;
   inherits: false;
+}
+
+/* JogaBola v2 animations */
+@keyframes slideUp {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: none;
+  }
+}
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@keyframes badgePop {
+  0% {
+    transform: scale(1);
+  }
+  40% {
+    transform: scale(1.35);
+  }
+  70% {
+    transform: scale(0.9);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+@keyframes pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.4;
+  }
 }

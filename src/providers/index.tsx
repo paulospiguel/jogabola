@@ -5,7 +5,6 @@ import type { ReactNode } from "react";
 import CookieConsent from "@/components/cookie-consent";
 import { Toaster } from "@/components/ui/toaster";
 import QueryClientProvider from "@/providers/query-client.provider";
-import { SolanaWalletProvider } from "@/providers/solana-wallet-provider";
 import { ThemeProvider } from "@/providers/theme.provider";
 
 type ProviderProps = {
@@ -22,12 +21,10 @@ export function Providers({ children }: ProviderProps) {
         enableSystem={false}
         disableTransitionOnChange
       >
-        <SolanaWalletProvider>
-          {children}
-          <CookieConsent />
-          <Toaster />
-          <Analytics />
-        </SolanaWalletProvider>
+        {children}
+        <CookieConsent />
+        <Toaster />
+        <Analytics />
       </ThemeProvider>
     </QueryClientProvider>
   );

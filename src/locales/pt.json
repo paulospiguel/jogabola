@@ -245,14 +245,16 @@
     "accept": "Aceitar",
     "actions": "Ações",
     "back": "Voltar",
-    "cancel": "Cancel",
+    "cancel": "Cancelar",
     "city": "Cidade",
     "confirm": "Confirme",
-    "close": "Close",
+    "close": "Fechar",
     "confirmPassword": "Confirme a password",
     "copyright": "Direitos autorais ©{year}. Todos os direitos reservados.",
     "create": "Criar",
     "date": "Data",
+    "hour": "Hora",
+    "dateTime": "Data e hora",
     "decline": "Recusar",
     "delete": "Excluir",
     "description": "Descriçao",
@@ -321,23 +323,23 @@
     "slogan": "O melhor lugar para encontrar sua equipe e jogar futebol."
   },
   "contact": {
-    "title": "Contact",
-    "subtitle": "Get in touch with us",
-    "name_required": "Name is required",
-    "email_invalid": "Invalid email",
+    "title": "Contacto",
+    "subtitle": "Entre em contacto connosco",
+    "name_required": "O nome é obrigatório",
+    "email_invalid": "Email inválido",
     "email": "Email",
-    "message": "Message",
-    "name": "Name",
-    "phone": "Phone",
-    "send": "Send",
-    "subject": "Subject",
-    "send_error": "Error sending message",
-    "message_required": "Message is required",
-    "send_success": "Message sent successfully",
-    "suggestion": "Suggestion",
-    "complaint": "Complaint",
-    "question": "Question",
-    "other": "Other",
+    "message": "Mensagem",
+    "name": "Nome",
+    "phone": "Telefone",
+    "send": "Enviar",
+    "subject": "Assunto",
+    "send_error": "Erro ao enviar mensagem",
+    "message_required": "A mensagem é obrigatória",
+    "send_success": "Mensagem enviada com sucesso",
+    "suggestion": "Sugestão",
+    "complaint": "Reclamação",
+    "question": "Questão",
+    "other": "Outro",
     "bug": "Bug"
   },
   "footer": {
@@ -557,6 +559,12 @@
     }
   },
   "homePage": {
+    "dashboard": {
+      "title": "Painel da Equipa",
+      "kicker": "JOGO SEMANAL",
+      "confirmed": "PRESENÇAS CONFIRMADAS",
+      "players": "jogadores"
+    },
     "createMyTeams": "Criar equipa",
     "description": "Monte a tua equipa, desafia os teus amigos e conquista a glória nos relvados. O campo chama-te. A vitória espera por ti!",
     "sponsors": "Patrocinadores",
@@ -586,14 +594,43 @@
     "appMockupAlt": "Mockup do aplicativo Jogabola",
     "hero": {
       "versionBadge": "GESTÃO 2.0",
+      "titlePart1": "Organize o",
+      "titlePart2": "Jogo da sua",
+      "titleHighlight": "Equipa",
+      "titlePart3": "com",
+      "titlePart4": "Menos Trabalho",
+      "description": "Equipas, jogos semanais, confirmações de presença, lista de espera e pagamentos MBWay num fluxo simples para futebol amador.",
+      "startJourney": "Começar Jornada",
+      "watchDemo": "Ver Demo",
       "title": "Pronto para gerenciar seu",
-      "titleHighlight": "time dos sonhos?",
       "subtitle": "Monte sua equipe profissional, defina táticas e domine o campo digital.",
-      "startJourney": "Começar Agora",
-      "watchDemo": "Ver Demonstração",
       "trustIndicators": {
         "freeToStart": "Grátis para começar",
         "noCard": "Sem cartão"
+      }
+    },
+    "ecosystem_section": {
+      "kicker": "MVP JOGABOLA",
+      "title": "O essencial para gerir jogos semanais",
+      "subtitle": "Sem módulos futuristas: apenas equipas, reservas, presenças, pagamentos e comprovativos.",
+      "modules": {
+        "teams": {
+          "title": "Equipas e jogadores",
+          "description": "Gerir plantel, membros da equipa e jogadores convidados para os jogos semanais."
+        },
+        "attendance": {
+          "title": "Presenças e espera",
+          "description": "Confirmar presença, acompanhar reservas e manter a lista de espera organizada."
+        },
+        "payments": {
+          "title": "Pagamentos MBWay",
+          "description": "Registar pagamentos semanais e acompanhar valores pendentes por jogador."
+        },
+        "proofs": {
+          "title": "Comprovativos",
+          "description": "Receber comprovativos e preparar a pré-validação automática sem confirmar pagamentos reais."
+        },
+        "explore": "Explorar"
       }
     },
     "stats": {
@@ -632,7 +669,7 @@
         }
       }
     },
-    "ecosystem_section": {
+    "ecosystem_full_section": {
       "title": "O ecossistema completo para a gestão do seu clube",
       "subtitle": "Desenvolvemos as ferramentas necessárias para profissionalizar cada departamento da sua organização esportiva.",
       "modules": {
@@ -936,6 +973,7 @@
       "subtitle": "Central da Arena",
       "title": "Bem-vindo de volta à Arena ⚽",
       "description": "Acompanha o ritmo da tua equipa, organiza partidas e mantém a comunidade sempre ativa.",
+      "quote": "Acompanha o desempenho dos teus jogadores, cria estatísticas detalhadas e monitoriza a performance da tua equipa.",
       "searchPlaceholder": "Pesquisar partidas, jogadores ou estatísticas...",
       "openMenu": "Abrir menu de navegação"
     },
@@ -1430,6 +1468,10 @@
     "refreshButton": "REFRESH (REINICIAR PARTIDA)",
     "mapButton": "MAP (VER MAPA DE)",
     "callVARButton": "VAR (IR PARA A PÁGINA INICIAL)",
+    "labelRefresh": "REFRESH",
+    "labelVAR": "VAR",
+    "startRoute": "INÍCIO_ROTA",
+    "offside404": "404_IMPEDIMENTO",
     "status": {
       "positioning": "POSICIONAMENTO: ERRADO",
       "impediment": "STATUS: IMPEDIMENTO",
@@ -1778,9 +1820,9 @@
   },
   "profilePage": {
     "header": {
-      "eyebrow": "Workspace",
-      "title": "Centro de perfil",
-      "description": "Conta, identidade e preferências num único ponto."
+      "eyebrow": "Perfil",
+      "title": "O teu perfil",
+      "description": "Mantém os dados básicos da tua conta actualizados para equipas, jogos e pagamentos."
     },
     "feedback": {
       "errorTitle": "Erro",
@@ -1788,6 +1830,39 @@
       "updatedTitle": "Perfil atualizado",
       "updatedDescription": "As alterações foram guardadas.",
       "saveError": "Não foi possível guardar."
+    },
+    "form": {
+      "title": "Dados públicos",
+      "description": "Usados no plantel, confirmações de presença e pagamentos."
+    },
+    "fields": {
+      "name": "Nome",
+      "email": "E-mail",
+      "image": "URL da fotografia",
+      "emailReadOnly": "O e-mail é gerido pela autenticação.",
+      "memberSince": "Membro desde",
+      "emailStatus": "Estado do e-mail"
+    },
+    "cards": {
+      "account": "Conta",
+      "mvpScope": "Âmbito MVP",
+      "mvpScopeDescription": "Este perfil guarda apenas identidade básica. Estatísticas avançadas, scouting e redes sociais ficam fora desta fase."
+    },
+    "actions": {
+      "save": "Guardar perfil",
+      "saving": "A guardar..."
+    },
+    "status": {
+      "verified": "Verificado",
+      "unverified": "Por verificar"
+    },
+    "errors": {
+      "UNAUTHORIZED": "Inicia sessão para actualizar o perfil.",
+      "VALIDATION_ERROR": "Confirma os campos destacados.",
+      "VALIDATION_NAME_TOO_SHORT": "O nome deve ter pelo menos 2 caracteres.",
+      "VALIDATION_IMAGE_URL_INVALID": "Usa um URL válido para a fotografia.",
+      "PROFILE_NOT_FOUND": "Não foi possível encontrar o perfil.",
+      "PROFILE_UPDATE_FAILED": "Não foi possível actualizar o perfil."
     },
     "roles": {
       "player": "Atleta amador",
@@ -1820,6 +1895,18 @@
       "matches": "Partidas",
       "goals": "Golos"
     }
+  },
+  "arenaNav": {
+    "dashboard": "Equipa",
+    "teams": "Plantel",
+    "events": "Jogos",
+    "payments": "Pagamentos",
+    "profile": "Perfil",
+    "notifications": "Notificações",
+    "settings": "Configurações",
+    "expand": "Expandir",
+    "collapse": "Recolher Menu",
+    "signOut": "Sair"
   },
   "organizerPage": {
     "eyebrow": "Organizer",
@@ -2127,5 +2214,305 @@
       "nextGames": "Próximos Jogos",
       "schedule": "Agenda"
     }
+  },
+  "cookieConsent": {
+    "title": "Controle de Cookies",
+    "description": "Utilizamos cookies para melhorar sua experiência em nosso site. Ao navegar você concorda com nossa",
+    "privacyPolicy": "Política de Privacidade",
+    "decline": "Recusar",
+    "accept": "Aceitar"
+  },
+  "arenaPayments": {
+    "kicker": "Pagamentos",
+    "title": "MBWay semanal",
+    "stats": {
+      "method": "Método",
+      "methodValue": "MBWay manual",
+      "proofs": "Comprovativos",
+      "proofsValue": "Upload ativo",
+      "validation": "Pré-validação",
+      "validationValue": "Preparada"
+    },
+    "table": {
+      "title": "Pagamentos desta semana",
+      "mockMatch": "Jogo semanal",
+      "mockStatusPending": "Comprovativo pendente",
+      "mockStatusValidating": "Pago por validar"
+    }
+  },
+  "arenaDashboard": {
+    "defaultUser": "Utilizador",
+    "kicker": "A tua equipa",
+    "actions": {
+      "player": "Jogador",
+      "event": "Evento",
+      "createEvent": "Criar Evento"
+    },
+    "hero": {
+      "nextMatch": "Próximo Jogo",
+      "view": "Ver"
+    },
+    "stats": {
+      "confirmed": "Confirmados",
+      "reserves": "Reservas",
+      "pending": "Pendentes"
+    },
+    "sections": {
+      "thisWeek": "Esta semana",
+      "squad": "Plantel",
+      "viewFullSquad": "Ver plantel completo"
+    }
+  },
+  "arenaSquad": {
+    "kicker": "Equipa",
+    "title": "Plantel",
+    "actions": {
+      "add": "Adicionar",
+      "addPlayer": "Adicionar jogador"
+    },
+    "search": {
+      "placeholder": "Pesquisar jogador...",
+      "noResults": "Nenhum jogador encontrado"
+    },
+    "filters": {
+      "all": "Todos",
+      "confirmed": "Confirm.",
+      "reserves": "Reservas",
+      "pending": "Pendentes"
+    },
+    "stats": {
+      "playerCount": "{count} Jogador{count, plural, =1 {} other {es}}"
+    }
+  },
+  "arenaEvents": {
+    "kicker": "Agenda",
+    "title": "Eventos",
+    "actions": {
+      "create": "Criar",
+      "createEvent": "Criar evento"
+    },
+    "types": {
+      "match": "Jogo",
+      "training": "Treino"
+    },
+    "sections": {
+      "upcoming": "Próximos",
+      "past": "Anteriores"
+    },
+    "empty": {
+      "title": "Sem eventos",
+      "subtitle": "Cria o primeiro evento da tua equipa.",
+      "noPast": "Sem histórico ainda."
+    }
+  },
+  "arenaEventDetail": {
+    "titleJogo": "Detalhe do Jogo",
+    "titleTreino": "Treino",
+    "officialMatch": "Jogo Oficial",
+    "training": "Treino",
+    "spots": "Vagas",
+    "tabs": {
+      "call": "Convocatória",
+      "local": "Local"
+    },
+    "lists": {
+      "main": "Lista Principal ({count})",
+      "reserves": "Reservas / Pendentes ({count})"
+    },
+    "actions": {
+      "confirm": "Confirmar Presença",
+      "cancel": "Cancelar Presença"
+    }
+  },
+  "arenaAddPlayer": {
+    "title": "Adicionar Jogador",
+    "success": "{name} adicionado!",
+    "successSubtitle": "Jogador registado no plantel.",
+    "placeholderName": "Nome do jogador",
+    "labels": {
+      "fullName": "Nome completo *",
+      "position": "Posição",
+      "email": "Email *",
+      "phone": "Telemóvel"
+    },
+    "placeholders": {
+      "name": "Ex: Pedro Silva",
+      "email": "jogador@email.com",
+      "phone": "9XX XXX XXX"
+    },
+    "actions": {
+      "add": "Adicionar Jogador"
+    }
+  },
+  "arenaCreateEvent": {
+    "steps": ["Tipo de evento", "Detalhes", "Convocar", "Confirmar"],
+    "success": "Evento criado!",
+    "successSubtitle": "Convocatória enviada com sucesso.",
+    "error": "Erro ao criar evento. Tente novamente.",
+    "labels": {
+      "title": "Título *",
+      "date": "Data",
+      "time": "Hora",
+      "location": "Local",
+      "maxPlayers": "Máx. jogadores"
+    },
+    "placeholders": {
+      "match": "Ex: FC Bairro Alto vs Benfica B",
+      "training": "Ex: Treino Técnico",
+      "location": "Ex: Campo 5, Bairro Alto",
+      "time": "Ex: 18:00",
+      "dateTime": "dd/mm/aaaa, hh:mm"
+    },
+    "types": {
+      "game": {
+        "label": "Jogo",
+        "desc": "Oficial ou particular"
+      },
+      "training": {
+        "label": "Treino",
+        "desc": "Sessão de treino"
+      },
+      "challenge": {
+        "label": "Desafio",
+        "desc": "Desafie outras equipas"
+      }
+    },
+    "info": "Após criar o evento, pode adicionar jogadores e gerir a convocatória a partir da página do evento.",
+    "noTitle": "Sem título",
+    "playersCount": "{count} jogadores",
+    "actions": {
+      "back": "Voltar",
+      "continue": "Continuar",
+      "create": "Criar Evento"
+    }
+  },
+  "settingsPage": {
+    "header": {
+      "eyebrow": "Configurações",
+      "title": "Preferências",
+      "description": "Personaliza a tua experiência no JogaBola Arena e gere as tuas notificações."
+    },
+    "sections": {
+      "language": {
+        "title": "Idioma da Interface",
+        "description": "Escolhe o idioma que preferes usar na plataforma."
+      },
+      "notifications": {
+        "title": "Notificações",
+        "description": "Gere como e quando queres receber avisos da equipa."
+      }
+    },
+    "fields": {
+      "pushNotifications": "Notificações Push",
+      "pushNotificationsHelp": "Receber alertas sobre novos jogos, convocatórias e pagamentos."
+    },
+    "messages": {
+      "success": "Configurações guardadas com sucesso!",
+      "error": "Erro ao guardar configurações. Tenta novamente."
+    }
+  },
+  "notificationsPage": {
+    "header": {
+      "eyebrow": "Avisos",
+      "title": "Notificações",
+      "description": "Fica a par de tudo o que acontece na tua equipa e nos teus jogos."
+    },
+    "empty": {
+      "title": "Tudo em dia",
+      "description": "Não tens notificações pendentes de momento. Volta mais tarde para novidades."
+    },
+    "unreadCount": "{count, plural, =1 {Uma notificação por ler} other {# notificações por ler}}",
+    "allRead": "Todas as notificações lidas",
+    "actions": {
+      "markAllRead": "Marcar todas como lidas"
+    }
+  },
+  "eventSearch": {
+    "title": "Encontre a sua próxima partida",
+    "description": "Pesquise partidas, treinos ou grupos perto de si. Filtre por localização, estilo de jogo ou intervalo de datas.",
+    "location": "Localização",
+    "useCurrentLocation": "Usar localização atual",
+    "dateRange": "Selecione as datas",
+    "gameStyle": "Estilo de jogo",
+    "gameStyleOptions": {
+      "competitivo": "Competitivo",
+      "recreativo": "Recreativo",
+      "misto": "Misto"
+    },
+    "startDate": "Data inicial",
+    "endDate": "Data final",
+    "search": "Pesquisar",
+    "filters": "Filtros",
+    "advancedFilters": "Filtros avançados",
+    "locationStatus": {
+      "unsupported": {
+        "title": "Geolocalização não suportada",
+        "description": "O seu navegador não suporta geolocalização."
+      },
+      "success": {
+        "title": "Localização obtida",
+        "description": "A sua localização atual foi definida com sucesso."
+      },
+      "permissionDenied": {
+        "title": "Permissão negada",
+        "description": "Permita o acesso à localização nas definições do navegador."
+      },
+      "unavailable": {
+        "title": "Localização indisponível",
+        "description": "Verifique se o GPS está ativado."
+      },
+      "timeout": {
+        "title": "Tempo esgotado",
+        "description": "Tente novamente para obter a sua localização."
+      },
+      "error": {
+        "title": "Erro de localização",
+        "description": "Ocorreu um erro ao obter a sua localização. Tente novamente."
+      }
+    }
+  },
+  "searchResults": {
+    "title": "Resultados da pesquisa",
+    "searchPrompt": "Refine a pesquisa por localização, data e estilo de jogo antes de abrir um evento.",
+    "resultsFound": "{count} {count, plural, =1 {resultado encontrado} other {resultados encontrados}}",
+    "noResults": "Sem resultados",
+    "noResultsDescription": "Tente ajustar os filtros de pesquisa",
+    "loading": "A pesquisar eventos...",
+    "back": "Voltar",
+    "eventTypes": {
+      "partida": "Partida",
+      "treino": "Treino",
+      "grupo": "Grupo"
+    },
+    "participants": "participantes",
+    "organizedBy": "Organizado por"
+  },
+  "validation": {
+    "VALIDATION_AMOUNT_REQUIRED": "O montante é obrigatório.",
+    "VALIDATION_CONFIRM_PASSWORD_REQUIRED": "Confirma a tua palavra-passe.",
+    "VALIDATION_EMAIL_INVALID": "Email inválido.",
+    "VALIDATION_EMAIL_REQUIRED": "O email é obrigatório.",
+    "VALIDATION_LOCATION_REQUIRED": "A localização é obrigatória.",
+    "VALIDATION_MATCH_SESSION_REQUIRED": "A sessão da partida é obrigatória.",
+    "VALIDATION_NAME_MIN": "O nome deve ter no mínimo 3 caracteres.",
+    "VALIDATION_NAME_REQUIRED": "O nome é obrigatório.",
+    "VALIDATION_NOTES_TOO_LONG": "As notas são demasiado longas (máx. 500 caracteres).",
+    "VALIDATION_NOTE_TOO_LONG": "A nota é demasiado longa (máx. 500 caracteres).",
+    "VALIDATION_OWNER_REQUIRED": "O proprietário é obrigatório.",
+    "VALIDATION_PASSWORDS_DONT_MATCH": "As palavras-passe não coincidem.",
+    "VALIDATION_PASSWORD_COMPLEXITY": "A palavra-passe deve conter pelo menos uma letra maiúscula, uma minúscula e um número.",
+    "VALIDATION_PASSWORD_MIN": "A palavra-passe deve ter no mínimo 8 caracteres.",
+    "VALIDATION_PASSWORD_REQUIRED": "A palavra-passe é obrigatória.",
+    "VALIDATION_PAYMENT_PROOF_REQUIRED": "O comprovativo de pagamento é obrigatório.",
+    "VALIDATION_PAYMENT_REQUIRED": "O pagamento é obrigatório.",
+    "VALIDATION_PLAYER_REQUIRED": "O jogador é obrigatório.",
+    "VALIDATION_PROOF_URL_INVALID": "O URL do comprovativo é inválido.",
+    "VALIDATION_RESERVATION_REQUIRED": "A reserva é obrigatória.",
+    "VALIDATION_STARTS_AT_INVALID": "A data de início é inválida.",
+    "VALIDATION_TEAM_NAME_TOO_SHORT": "O nome da equipa deve ter pelo menos 2 caracteres.",
+    "VALIDATION_TEAM_REQUIRED": "A equipa é obrigatória.",
+    "VALIDATION_TEAM_SLUG_INVALID": "O slug da equipa é inválido (apenas letras minúsculas, números e traços).",
+    "VALIDATION_TEAM_SLUG_TOO_SHORT": "O slug da equipa deve ter pelo menos 3 caracteres.",
+    "VALIDATION_TITLE_TOO_SHORT": "O título deve ter pelo menos 3 caracteres."
   }
 }

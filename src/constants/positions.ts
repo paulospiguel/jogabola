@@ -1,10 +1,5 @@
-import {
-  Shield,
-  Target,
-  Star,
-  Goal,
-} from "lucide-react";
 import type { LucideIcon } from "lucide-react";
+import { Goal, Shield, Star, Target } from "lucide-react";
 
 export interface PositionConfig {
   value: string;
@@ -48,7 +43,9 @@ export const POSITIONS: Record<string, PositionConfig> = {
 };
 
 // Função helper para obter a configuração da posição
-export function getPositionConfig(positionValue?: string): PositionConfig | null {
+export function getPositionConfig(
+  positionValue?: string,
+): PositionConfig | null {
   if (!positionValue) return null;
   return POSITIONS[positionValue] || null;
 }
@@ -70,4 +67,3 @@ export function getPositionEmoji(positionValue?: string): string {
   const config = getPositionConfig(positionValue);
   return config?.emoji || "⚽";
 }
-

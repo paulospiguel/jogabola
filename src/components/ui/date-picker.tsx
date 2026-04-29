@@ -1,18 +1,17 @@
 "use client";
 
+import { format } from "date-fns";
+import { ptBR } from "date-fns/locale";
 import { CalendarIcon } from "lucide-react";
 import * as React from "react";
-
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import {
-    Popover,
-    PopoverContent,
-    PopoverTrigger,
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
 } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
-import { format } from "date-fns";
-import { ptBR } from "date-fns/locale";
 
 type DatePickerProps = {
   placeholder?: string;
@@ -48,6 +47,7 @@ export function DatePicker({
         <PopoverTrigger asChild>
           <button
             type="button"
+            id={id}
             className={cn(
               "mt-2 flex h-10 w-full items-center justify-between rounded-full border border-white/8 bg-white/5 backdrop-blur-sm px-3 py-2 text-sm text-white placeholder:text-white/60 transition-all duration-300 hover:border-neon-primary/50 hover:bg-white/10 focus-visible:outline-hidden focus-visible:ring-[3px] focus-visible:ring-neon-primary/40 disabled:cursor-not-allowed disabled:opacity-50",
               !value && "text-white/60",
@@ -89,16 +89,15 @@ export function DatePicker({
               if (date) {
                 const today = new Date();
                 today.setHours(23, 59, 59, 999);
-                // Validar que a data não é no futuro
                 if (date > today) {
-                  return; // Não permitir selecionar
+                  return;
                 }
               }
               handleDateChange(date ?? null);
             }}
             disabled={date => {
               const today = new Date();
-              today.setHours(23, 59, 59, 999); // Fim do dia de hoje
+              today.setHours(23, 59, 59, 999);
               return date > today || date < new Date("1900-01-01");
             }}
             fromDate={new Date("1900-01-01")}
@@ -110,40 +109,18 @@ export function DatePicker({
             className="bg-transparent p-0"
             classNames={{
               root: "text-white [&_*]:text-white",
-              // months: "flex flex-col space-y-4",
-              // month: "space-y-4",
-              // months_dropdown: "bg-red-500",
-              // month_caption:
-              //   "flex justify-center pt-1 relative items-center mb-4 ",
-              // caption_label: "text-sm font-medium text-white",
-              // nav: "space-x-1 flex items-center",
-              // button_previous: cn(
-              //   "h-7 w-7 bg-transparent p-0 opacity-50 hover:opacity-100 text-white border border-white/20 rounded-full hover:bg-white/10 transition-colors absolute left-1 [&>svg]:text-white",
-              // ),
-              // button_next: cn(
-              //   "h-7 w-7 bg-transparent p-0 opacity-50 hover:opacity-100 text-white border border-white/20 rounded-full hover:bg-white/10 transition-colors absolute right-1 [&>svg]:text-white",
-              // ),
-              // table: "w-full border-collapse",
-              // weekdays: "flex mb-2",
-              // weekday:
-              //   "text-white/60 w-9 font-normal text-[0.8rem] text-center",
-              // week: "flex w-full mt-1",
-              // day: cn(
-              //   "h-9 w-9 p-0 font-normal rounded-full [&_button]:text-white [&_button]:hover:bg-white/10 [&_button]:transition-colors",
-              // ),
-              // range_end: "day-range-end",
               selected:
                 "[&_button]:bg-neon-primary [&_button]:text-slate-900 [&_button]:font-semibold [&_button]:hover:bg-neon-primary/90 [&_button]:focus:bg-neon-primary",
               today:
                 "[&_button]:bg-white/10 [&_button]:text-white [&_button]:font-semibold",
-              // outside: "[&_button]:text-white/30 [&_button]:opacity-50",
-              // disabled:
-              //   "[&_button]:text-white/20 [&_button]:opacity-50 [&_button]:cursor-not-allowed",
-              // range_middle: "[&_button]:bg-white/10 [&_button]:text-white",
               hidden: "invisible",
             }}
             components={{
-              DayButton: ({ className, children, ...props }: React.ComponentProps<typeof Button>) => {
+              DayButton: ({
+                className,
+                children,
+                ...props
+              }: React.ComponentProps<typeof Button>) => {
                 return (
                   <Button
                     variant="ghost"
