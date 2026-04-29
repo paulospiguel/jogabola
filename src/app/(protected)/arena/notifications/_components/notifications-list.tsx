@@ -10,6 +10,7 @@ import {
   markNotificationAsRead,
 } from "@/actions/notifications.actions";
 import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
 
 interface Notification {
   id: string;
@@ -74,13 +75,13 @@ export function NotificationsList({
   if (initialNotifications.length === 0) {
     return (
       <div className="jb-card flex flex-col items-center justify-center p-12 text-center">
-        <div className="h-16 w-16 rounded-full bg-arena-surface-el flex items-center justify-center text-arena-text-muted mb-4">
+        <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-arena-surface-el text-arena-text-muted">
           <Bell size={32} />
         </div>
         <h3 className="text-lg font-bold text-arena-text">
           {t("empty.title")}
         </h3>
-        <p className="text-sm text-arena-text-sec mt-1 max-w-xs">
+        <p className="mt-1 max-w-xs text-sm text-arena-text-sec">
           {t("empty.description")}
         </p>
       </div>
@@ -100,14 +101,16 @@ export function NotificationsList({
           )}
         </div>
         {unreadCount > 0 && (
-          <button
+          <Button
             onClick={handleMarkAllAsRead}
             disabled={isPending}
-            className="text-xs font-bold text-arena-primary hover:underline flex items-center gap-1.5"
+            variant="ghost"
+            size="sm"
+            className="h-auto gap-1.5 p-0 text-xs font-bold text-arena-primary hover:bg-transparent hover:underline"
           >
             <Check size={14} />
             {t("actions.markAllRead")}
-          </button>
+          </Button>
         )}
       </div>
 
@@ -120,7 +123,7 @@ export function NotificationsList({
               !notification.read && handleMarkAsRead(notification.id)
             }
             className={cn(
-              "jb-card group relative p-4 flex gap-4 text-left w-full transition-all duration-200 border-l-4",
+              "jb-card group relative flex w-full gap-4 border-l-4 p-4 text-left transition-all duration-200",
               notification.read
                 ? "border-transparent opacity-70"
                 : "border-arena-primary bg-arena-surface-el/20 hover:bg-arena-surface-el/30",
@@ -128,18 +131,18 @@ export function NotificationsList({
           >
             <div
               className={cn(
-                "h-10 w-10 shrink-0 rounded-xl flex items-center justify-center",
+                "flex h-10 w-10 shrink-0 items-center justify-center rounded-xl",
                 TypeColor(notification.type),
               )}
             >
               <TypeIcon type={notification.type} />
             </div>
 
-            <div className="flex-1 min-w-0">
+            <div className="min-w-0 flex-1">
               <div className="flex items-start justify-between gap-2">
                 <h4
                   className={cn(
-                    "text-sm font-bold truncate transition-colors",
+                    "truncate text-sm font-bold transition-colors",
                     notification.read
                       ? "text-arena-text-sec"
                       : "text-arena-text",
@@ -147,7 +150,7 @@ export function NotificationsList({
                 >
                   {notification.title}
                 </h4>
-                <span className="text-[10px] whitespace-nowrap text-arena-text-muted uppercase font-bold tracking-wider">
+                <span className="whitespace-nowrap text-[10px] font-bold uppercase tracking-wider text-arena-text-muted">
                   {formatDistanceToNow(new Date(notification.createdAt), {
                     addSuffix: true,
                     locale: dateLocales[locale] || pt,
@@ -167,7 +170,7 @@ export function NotificationsList({
             </div>
 
             {!notification.read && (
-              <div className="absolute top-4 right-4 flex items-center">
+              <div className="absolute right-4 top-4 flex items-center">
                 <div className="h-2 w-2 rounded-full bg-arena-primary shadow-[0_0_8px_rgba(124,255,79,0.5)]" />
               </div>
             )}

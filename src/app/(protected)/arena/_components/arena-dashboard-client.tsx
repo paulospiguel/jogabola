@@ -17,7 +17,7 @@ import { AddPlayerSheet } from "@/components/arena/add-player-sheet";
 import { CreateEventSheet } from "@/components/arena/create-event-sheet";
 import { JbAvatar } from "@/components/arena/jb-avatar";
 import { JbBadge } from "@/components/arena/jb-badge";
-import { C } from "@/components/arena/tokens";
+import { Button } from "@/components/ui/button";
 
 const MOCK_EVENTS = [
   {
@@ -99,22 +99,26 @@ export function ArenaDashboardClient({
             </div>
 
             <div className="flex items-center gap-2">
-              <button
+              <Button
                 className="jb-action hidden md:inline-flex"
                 onClick={() => setSheet("add-player")}
                 type="button"
+                variant="ghost"
+                size="sm"
               >
                 <Users size={15} />
                 {t("actions.player")}
-              </button>
-              <button
+              </Button>
+              <Button
                 className="jb-action jb-action-primary hidden md:inline-flex"
                 onClick={() => setSheet("create-event")}
                 type="button"
+                variant="ghost"
+                size="sm"
               >
                 <Plus size={15} />
                 {t("actions.event")}
-              </button>
+              </Button>
               <JbAvatar id={userId} name={userName} size={40} />
             </div>
           </header>
@@ -127,27 +131,21 @@ export function ArenaDashboardClient({
               >
                 <div className="mb-3 flex items-center justify-between gap-3">
                   <div className="flex items-center gap-2">
-                    <span
-                      className="grid size-[26px] place-items-center rounded-[7px]"
-                      style={{ background: `${C.primary}22` }}
-                    >
-                      <Zap size={13} color={C.primary} strokeWidth={2} />
+                    <span className="grid size-[26px] place-items-center rounded-[7px] bg-arena-primary/[0.13]">
+                      <Zap size={13} className="text-arena-primary" strokeWidth={2} />
                     </span>
-                    <span className="jb-kicker" style={{ color: C.primary }}>
+                    <span className="jb-kicker text-arena-primary">
                       {t("hero.nextMatch")}
                     </span>
                     <span
-                      className="size-[5px] rounded-full"
-                      style={{
-                        background: C.primary,
-                        animation: "jb-pulse 2s infinite",
-                      }}
+                      className="size-[5px] rounded-full bg-arena-primary"
+                      style={{ animation: "jb-pulse 2s infinite" }}
                     />
                   </div>
                   <JbBadge status="confirmed" />
                 </div>
 
-                <h2 className="mb-3 text-base font-bold leading-tight text-[#F5F7FA] md:text-xl">
+                <h2 className="mb-3 text-base font-bold leading-tight text-arena-text md:text-xl">
                   {nextEvent.title}
                 </h2>
 
@@ -158,8 +156,8 @@ export function ArenaDashboardClient({
                     { Icon: MapPin, t: nextEvent.location },
                   ].map(({ Icon, t }) => (
                     <span className="flex items-center gap-1.5" key={t}>
-                      <Icon size={12} color={C.textMuted} />
-                      <span className="text-xs text-[#A7B0BE]">{t}</span>
+                      <Icon size={12} className="text-arena-text-muted" />
+                      <span className="text-xs text-arena-text-sec">{t}</span>
                     </span>
                   ))}
                 </div>
@@ -176,10 +174,7 @@ export function ArenaDashboardClient({
                       />
                     ))}
                   </div>
-                  <span
-                    className="flex items-center gap-1 text-sm font-semibold"
-                    style={{ color: C.primary }}
-                  >
+                  <span className="flex items-center gap-1 text-sm font-semibold text-arena-primary">
                     {t("hero.view")}
                     <ChevronRight size={14} />
                   </span>
@@ -187,33 +182,32 @@ export function ArenaDashboardClient({
               </Link>
 
               <div className="jb-stat-grid">
-                {[
-                  { l: t("stats.confirmed"), v: confirmedCount, c: C.success },
-                  { l: t("stats.reserves"), v: reserveCount, c: C.warning },
-                  { l: t("stats.pending"), v: pendingCount, c: C.textMuted },
-                ].map(s => (
+                {([
+                  { l: t("stats.confirmed"), v: confirmedCount, cls: "text-arena-success" },
+                  { l: t("stats.reserves"), v: reserveCount, cls: "text-arena-warning" },
+                  { l: t("stats.pending"), v: pendingCount, cls: "text-arena-text-muted" },
+                ] as const).map(s => (
                   <div className="jb-card px-2 py-3 text-center" key={s.l}>
-                    <div
-                      className="text-[22px] font-extrabold"
-                      style={{ color: s.c }}
-                    >
+                    <div className={`text-[22px] font-extrabold ${s.cls}`}>
                       {s.v}
                     </div>
-                    <div className="mt-0.5 text-[10px] font-semibold text-[#6B7280]">
+                    <div className="mt-0.5 text-[10px] font-semibold text-arena-text-muted">
                       {s.l}
                     </div>
                   </div>
                 ))}
               </div>
 
-              <button
+              <Button
                 className="jb-action jb-action-primary md:hidden"
                 onClick={() => setSheet("create-event")}
                 type="button"
+                variant="ghost"
+                size="sm"
               >
                 <Plus size={16} strokeWidth={2.5} />
                 {t("actions.createEvent")}
-              </button>
+              </Button>
             </section>
 
             <aside className="jb-stack">
@@ -229,24 +223,19 @@ export function ArenaDashboardClient({
                         key={e.id}
                       >
                         <span
-                          className="jb-icon-tile"
-                          style={{
-                            background: isGame
-                              ? `${C.primary}15`
-                              : `${C.info}15`,
-                          }}
+                          className={`jb-icon-tile ${isGame ? "bg-arena-primary/[0.08]" : "bg-arena-info/[0.08]"}`}
                         >
                           {isGame ? (
-                            <Trophy size={20} color={C.primary} />
+                            <Trophy size={20} className="text-arena-primary" />
                           ) : (
-                            <Calendar size={20} color={C.info} />
+                            <Calendar size={20} className="text-arena-info" />
                           )}
                         </span>
                         <span className="min-w-0 flex-1">
-                          <span className="block truncate text-sm font-semibold text-[#F5F7FA]">
+                          <span className="block truncate text-sm font-semibold text-arena-text">
                             {e.title}
                           </span>
-                          <span className="mt-0.5 block text-[11px] text-[#6B7280]">
+                          <span className="mt-0.5 block text-[11px] text-arena-text-muted">
                             {e.date} · {e.time}
                           </span>
                         </span>
@@ -268,10 +257,10 @@ export function ArenaDashboardClient({
                     >
                       <JbAvatar id={p.id} name={p.name} size={34} />
                       <span className="min-w-0 flex-1">
-                        <span className="block truncate text-sm font-semibold text-[#F5F7FA]">
+                        <span className="block truncate text-sm font-semibold text-arena-text">
                           {p.name}
                         </span>
-                        <span className="mt-0.5 block text-[11px] text-[#6B7280]">
+                        <span className="mt-0.5 block text-[11px] text-arena-text-muted">
                           {p.role}
                         </span>
                       </span>

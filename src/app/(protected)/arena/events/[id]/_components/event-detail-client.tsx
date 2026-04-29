@@ -1,12 +1,14 @@
 "use client";
 
 import { Calendar, Check, Clock, List, MapPin, Trophy, X } from "lucide-react";
+import Link from "next/link";
 import { useTranslations } from "next-intl";
 import { useState } from "react";
 import { JbAvatar } from "@/components/arena/jb-avatar";
 import { JbBadge } from "@/components/arena/jb-badge";
 import { JbScreenHeader } from "@/components/arena/jb-screen-header";
-import { C } from "@/components/arena/tokens";
+import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 
 const MOCK_CONFIRMED = [
   { id: 1, name: "Diogo Ferreira", role: "GR" },
@@ -73,300 +75,172 @@ export function EventDetailClient({ event }: EventDetailClientProps) {
   ];
 
   return (
-    <div
-      style={{
-        background: C.bg,
-        display: "flex",
-        flexDirection: "column",
-        minHeight: "100vh",
-      }}
-    >
+    <div className="flex min-h-screen flex-col bg-arena-bg">
       <JbScreenHeader title={isJogo ? t("titleJogo") : t("titleTreino")} />
 
+      {/* ── Event header card ──────────────────────────────── */}
       <div
+        className="border-b border-arena-border px-5 py-3.5"
         style={{
-          padding: "14px 20px",
-          background: `linear-gradient(180deg,#0F1E2E 0%,${C.bg} 100%)`,
-          borderBottom: `1px solid ${C.border}`,
+          background: "linear-gradient(180deg,#0F1E2E 0%,var(--color-arena-bg) 100%)",
         }}
       >
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            gap: 10,
-            marginBottom: 12,
-          }}
-        >
+        {/* Title row */}
+        <div className="mb-3 flex items-center gap-2.5">
           <div
-            style={{
-              width: 38,
-              height: 38,
-              borderRadius: 11,
-              background: isJogo ? `${C.primary}22` : `${C.info}22`,
-              border: `1px solid ${isJogo ? `${C.primary}44` : `${C.info}44`}`,
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              flexShrink: 0,
-            }}
+            className={cn(
+              "flex size-[38px] shrink-0 items-center justify-center rounded-[11px] border",
+              isJogo
+                ? "border-arena-primary/27 bg-arena-primary/[0.13]"
+                : "border-arena-info/27 bg-arena-info/[0.13]",
+            )}
           >
-            <Trophy size={18} color={isJogo ? C.primary : C.info} />
+            <Trophy
+              size={18}
+              className={isJogo ? "text-arena-primary" : "text-arena-info"}
+            />
           </div>
-          <div style={{ flex: 1 }}>
+          <div className="flex-1">
             <div
-              style={{
-                color: isJogo ? C.primary : C.info,
-                fontSize: 10,
-                fontWeight: 700,
-                letterSpacing: 1,
-                textTransform: "uppercase",
-              }}
+              className={cn(
+                "text-[10px] font-bold uppercase tracking-[1px]",
+                isJogo ? "text-arena-primary" : "text-arena-info",
+              )}
             >
               {isJogo ? t("officialMatch") : t("training")}
             </div>
-            <div
-              style={{
-                color: C.text,
-                fontSize: 15,
-                fontWeight: 700,
-                lineHeight: 1.2,
-              }}
-            >
+            <div className="text-[15px] font-bold leading-snug text-arena-text">
               {event.title}
             </div>
           </div>
         </div>
 
-        <div
-          style={{
-            display: "flex",
-            flexWrap: "wrap",
-            gap: 10,
-            marginBottom: 12,
-          }}
-        >
+        {/* Meta row */}
+        <div className="mb-3 flex flex-wrap gap-2.5">
           {[
-            { Icon: Calendar, key: "date", t: formatDate(event.startDate) },
-            { Icon: Clock, key: "time", t: formatTime(event.startDate) },
-            { Icon: MapPin, key: "location", t: event.location },
-          ].map(({ Icon, key, t: label }) => (
-            <div
-              key={key}
-              style={{ display: "flex", alignItems: "center", gap: 5 }}
-            >
-              <Icon size={12} color={C.textMuted} />
-              <span style={{ color: C.textSec, fontSize: 12 }}>{label}</span>
+            { Icon: Calendar, label: formatDate(event.startDate) },
+            { Icon: Clock, label: formatTime(event.startDate) },
+            { Icon: MapPin, label: event.location },
+          ].map(({ Icon, label }) => (
+            <div key={label} className="flex items-center gap-1.5">
+              <Icon size={12} className="text-arena-text-muted" />
+              <span className="text-[12px] text-arena-text-sec">{label}</span>
             </div>
           ))}
         </div>
 
-        <div
-          style={{
-            background: C.surface,
-            border: `1px solid ${C.border}`,
-            borderRadius: 12,
-            padding: "10px 12px",
-          }}
-        >
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "space-between",
-              marginBottom: 6,
-            }}
-          >
-            <span style={{ color: C.textSec, fontSize: 12 }}>{t("spots")}</span>
-            <span style={{ color: C.text, fontSize: 12, fontWeight: 700 }}>
-              <span style={{ color: C.success }}>{MOCK_CONFIRMED.length}</span>{" "}
-              / {total}
+        {/* Attendance bar */}
+        <div className="rounded-[12px] border border-arena-border bg-arena-surface px-3 py-2.5">
+          <div className="mb-1.5 flex items-center justify-between">
+            <span className="text-xs text-arena-text-sec">{t("spots")}</span>
+            <span className="text-xs font-bold text-arena-text">
+              <span className="text-arena-success">{MOCK_CONFIRMED.length}</span>
+              {" "}/ {total}
             </span>
           </div>
-          <div
-            style={{
-              height: 5,
-              background: C.border,
-              borderRadius: 99,
-              overflow: "hidden",
-            }}
-          >
+          <div className="h-[5px] overflow-hidden rounded-full bg-arena-border">
             <div
-              style={{
-                height: "100%",
-                width: `${Math.min(fillPct, 100)}%`,
-                background: fillPct >= 100 ? C.danger : C.success,
-                borderRadius: 99,
-              }}
+              className={cn(
+                "h-full rounded-full transition-all",
+                fillPct >= 100 ? "bg-arena-danger" : "bg-arena-success",
+              )}
+              style={{ width: `${Math.min(fillPct, 100)}%` }}
             />
           </div>
         </div>
       </div>
 
-      <div
-        style={{
-          display: "flex",
-          borderBottom: `1px solid ${C.border}`,
-          flexShrink: 0,
-        }}
-      >
-        {TABS_DATA.map(t_item => {
-          const Icon = t_item.icon;
-          const isActive = tab === t_item.id;
+      {/* ── Tabs ───────────────────────────────────────────── */}
+      <div className="flex shrink-0 border-b border-arena-border">
+        {TABS_DATA.map(tab_item => {
+          const Icon = tab_item.icon;
+          const isActive = tab === tab_item.id;
           return (
             <button
-              key={t_item.id}
-              onClick={() => setTab(t_item.id)}
-              style={{
-                flex: 1,
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                gap: 5,
-                padding: "11px 0",
-                border: "none",
-                background: "transparent",
-                color: isActive ? C.primary : C.textMuted,
-                fontSize: 12,
-                fontWeight: isActive ? 700 : 500,
-                borderBottom: `2px solid ${isActive ? C.primary : "transparent"}`,
-                marginBottom: -1,
-                cursor: "pointer",
-              }}
+              key={tab_item.id}
+              onClick={() => setTab(tab_item.id)}
+              type="button"
+              className={cn(
+                "flex flex-1 items-center justify-center gap-1.5 border-b-2 py-[11px] text-[12px] transition-colors",
+                isActive
+                  ? "border-arena-primary font-bold text-arena-primary"
+                  : "border-transparent font-medium text-arena-text-muted hover:text-arena-text-sec",
+              )}
+              style={{ marginBottom: -1 }}
             >
-              <Icon size={13} color={isActive ? C.primary : C.textMuted} />
-              {t_item.label}
+              <Icon size={13} />
+              {tab_item.label}
             </button>
           );
         })}
       </div>
 
-      <div
-        style={{
-          flex: 1,
-          overflow: "auto",
-          paddingBottom: 80,
-        }}
-      >
+      {/* ── Scrollable content ─────────────────────────────── */}
+      <div className="flex-1 overflow-auto pb-20">
         {tab === "conv" && (
-          <div style={{ padding: "14px 20px" }}>
-            <div
-              style={{
-                color: C.textMuted,
-                fontSize: 11,
-                fontWeight: 700,
-                letterSpacing: 1.2,
-                textTransform: "uppercase",
-                paddingBottom: 8,
-              }}
-            >
+          <div className="px-5 py-3.5">
+            {/* Confirmed list */}
+            <div className="jb-section-label pb-2">
               {t("lists.main", { count: MOCK_CONFIRMED.length })}
             </div>
-            <div
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                gap: 1,
-                marginBottom: 14,
-              }}
-            >
+            <div className="mb-3.5 flex flex-col">
               {MOCK_CONFIRMED.map((p, i) => (
                 <div
                   key={p.id}
-                  style={{
-                    background: C.surface,
-                    borderRadius:
-                      i === 0
-                        ? "14px 14px 4px 4px"
-                        : i === MOCK_CONFIRMED.length - 1
-                          ? "4px 4px 14px 14px"
-                          : 4,
-                    border: `1px solid ${C.border}`,
-                    borderTop: i > 0 ? "none" : undefined,
-                    padding: "9px 14px",
-                    display: "flex",
-                    alignItems: "center",
-                    gap: 10,
-                  }}
+                  className={cn(
+                    "flex items-center gap-2.5 border border-arena-border bg-arena-surface px-3.5 py-2.5",
+                    i === 0
+                      ? "rounded-t-[14px] rounded-b-[4px]"
+                      : i === MOCK_CONFIRMED.length - 1
+                        ? "rounded-t-[4px] rounded-b-[14px] border-t-0"
+                        : "rounded-[4px] border-t-0",
+                  )}
                 >
-                  <span
-                    style={{
-                      color: C.textMuted,
-                      fontSize: 11,
-                      fontWeight: 700,
-                      width: 20,
-                      textAlign: "center",
-                    }}
-                  >
+                  <span className="w-5 text-center text-[11px] font-bold text-arena-text-muted">
                     {i + 1}
                   </span>
                   <JbAvatar name={p.name} size={30} id={p.id} />
-                  <div style={{ flex: 1 }}>
-                    <div
-                      style={{ color: C.text, fontSize: 13, fontWeight: 600 }}
-                    >
+                  <div className="flex-1">
+                    <div className="text-[13px] font-semibold text-arena-text">
                       {p.name}
                     </div>
-                    <div style={{ color: C.textMuted, fontSize: 10 }}>
+                    <div className="text-[10px] text-arena-text-muted">
                       {p.role}
                     </div>
                   </div>
-                  <Check size={15} color={C.success} strokeWidth={2.5} />
+                  <Check size={15} className="text-arena-success" strokeWidth={2.5} />
                 </div>
               ))}
             </div>
 
-            <div
-              style={{
-                color: C.textMuted,
-                fontSize: 11,
-                fontWeight: 700,
-                letterSpacing: 1.2,
-                textTransform: "uppercase",
-                paddingBottom: 8,
-              }}
-            >
+            {/* Reserves + Pending list */}
+            <div className="jb-section-label pb-2">
               {t("lists.reserves", {
                 count: MOCK_RESERVES.length + MOCK_PENDING.length,
               })}
             </div>
-            <div style={{ display: "flex", flexDirection: "column", gap: 1 }}>
+            <div className="flex flex-col">
               {[
-                ...MOCK_RESERVES.map(p => ({
-                  ...p,
-                  status: "reserve" as const,
-                })),
-                ...MOCK_PENDING.map(p => ({
-                  ...p,
-                  status: "pending" as const,
-                })),
+                ...MOCK_RESERVES.map(p => ({ ...p, status: "reserve" as const })),
+                ...MOCK_PENDING.map(p => ({ ...p, status: "pending" as const })),
               ].map((p, i, arr) => (
                 <div
                   key={p.id}
-                  style={{
-                    background: C.surface,
-                    borderRadius:
-                      i === 0
-                        ? "14px 14px 4px 4px"
-                        : i === arr.length - 1
-                          ? "4px 4px 14px 14px"
-                          : 4,
-                    border: `1px solid ${C.border}`,
-                    borderTop: i > 0 ? "none" : undefined,
-                    padding: "9px 14px",
-                    display: "flex",
-                    alignItems: "center",
-                    gap: 10,
-                    opacity: 0.8,
-                  }}
+                  className={cn(
+                    "flex items-center gap-2.5 border border-arena-border bg-arena-surface px-3.5 py-2.5 opacity-80",
+                    i === 0
+                      ? "rounded-t-[14px] rounded-b-[4px]"
+                      : i === arr.length - 1
+                        ? "rounded-t-[4px] rounded-b-[14px] border-t-0"
+                        : "rounded-[4px] border-t-0",
+                  )}
                 >
                   <JbAvatar name={p.name} size={30} id={p.id} />
-                  <div style={{ flex: 1 }}>
-                    <div
-                      style={{ color: C.text, fontSize: 13, fontWeight: 600 }}
-                    >
+                  <div className="flex-1">
+                    <div className="text-[13px] font-semibold text-arena-text">
                       {p.name}
                     </div>
-                    <div style={{ color: C.textMuted, fontSize: 10 }}>
+                    <div className="text-[10px] text-arena-text-muted">
                       {p.role}
                     </div>
                   </div>
@@ -378,82 +252,33 @@ export function EventDetailClient({ event }: EventDetailClientProps) {
         )}
 
         {tab === "local" && (
-          <div style={{ padding: "14px 20px" }}>
-            <div
-              style={{
-                background: C.surface,
-                border: `1px solid ${C.border}`,
-                borderRadius: 16,
-                overflow: "hidden",
-                marginBottom: 14,
-              }}
-            >
-              <div
-                style={{
-                  height: 100,
-                  background: C.bgSec,
-                  position: "relative",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                }}
-              >
-                <MapPin size={32} color={C.primary} />
+          <div className="px-5 py-3.5">
+            <div className="mb-3.5 overflow-hidden rounded-[16px] border border-arena-border bg-arena-surface">
+              {/* Map placeholder */}
+              <div className="flex h-24 items-center justify-center bg-arena-bg-sec">
+                <MapPin size={32} className="text-arena-primary" />
               </div>
-              <div style={{ padding: "12px 14px" }}>
-                <div
-                  style={{
-                    color: C.text,
-                    fontSize: 13,
-                    fontWeight: 600,
-                    marginBottom: 2,
-                  }}
-                >
+              <div className="px-3.5 py-3">
+                <div className="mb-2.5 text-[13px] font-semibold text-arena-text">
                   {event.location}
                 </div>
-                <div style={{ display: "flex", gap: 6, marginTop: 10 }}>
-                  <a
+                <div className="flex gap-1.5">
+                  <Link
                     href={`https://www.google.com/maps/search/${encodeURIComponent(event.location)}`}
                     target="_blank"
                     rel="noreferrer"
-                    style={{
-                      flex: 1,
-                      height: 36,
-                      borderRadius: 10,
-                      background: C.surfaceEl,
-                      border: `1px solid ${C.border}`,
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      textDecoration: "none",
-                      color: C.textSec,
-                      fontSize: 12,
-                      fontWeight: 600,
-                    }}
+                    className="flex h-9 flex-1 items-center justify-center rounded-[10px] border border-arena-border bg-arena-surface-el text-[12px] font-semibold text-arena-text-sec no-underline transition-colors hover:bg-arena-surface hover:text-arena-text"
                   >
                     Google Maps
-                  </a>
-                  <a
+                  </Link>
+                  <Link
                     href={`https://maps.apple.com/?q=${encodeURIComponent(event.location)}`}
                     target="_blank"
                     rel="noreferrer"
-                    style={{
-                      flex: 1,
-                      height: 36,
-                      borderRadius: 10,
-                      background: C.surfaceEl,
-                      border: `1px solid ${C.border}`,
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      textDecoration: "none",
-                      color: C.textSec,
-                      fontSize: 12,
-                      fontWeight: 600,
-                    }}
+                    className="flex h-9 flex-1 items-center justify-center rounded-[10px] border border-arena-border bg-arena-surface-el text-[12px] font-semibold text-arena-text-sec no-underline transition-colors hover:bg-arena-surface hover:text-arena-text"
                   >
                     Apple Maps
-                  </a>
+                  </Link>
                 </div>
               </div>
             </div>
@@ -461,49 +286,38 @@ export function EventDetailClient({ event }: EventDetailClientProps) {
         )}
       </div>
 
+      {/* ── Mobile CTA ─────────────────────────────────────── */}
       <div
+        className="fixed bottom-[72px] left-0 right-0 px-5 pb-3.5 pt-2.5 md:hidden"
         style={{
-          position: "fixed",
-          bottom: 72,
-          left: 0,
-          right: 0,
-          padding: "10px 20px 14px",
-          background: `linear-gradient(0deg,${C.bg} 60%,transparent)`,
+          background:
+            "linear-gradient(0deg,var(--color-arena-bg) 60%,transparent)",
         }}
-        className="md:hidden"
       >
-        <button
+        <Button
           onClick={() =>
             setMyStatus(s => (s === "confirmed" ? "pending" : "confirmed"))
           }
-          style={{
-            width: "100%",
-            height: 50,
-            borderRadius: 14,
-            background: myStatus === "confirmed" ? C.surfaceEl : C.primary,
-            border: myStatus === "confirmed" ? `1px solid ${C.border}` : "none",
-            color: myStatus === "confirmed" ? C.textSec : "#0B0F14",
-            fontSize: 15,
-            fontWeight: 700,
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            gap: 8,
-            cursor: "pointer",
-          }}
+          type="button"
+          className={cn(
+            "h-[50px] w-full rounded-[14px] text-[15px] font-bold",
+            myStatus === "confirmed"
+              ? "border border-arena-border bg-arena-surface-el text-arena-text-sec hover:bg-arena-surface"
+              : "bg-arena-primary text-arena-bg hover:bg-arena-primary/90",
+          )}
         >
           {myStatus === "confirmed" ? (
             <>
-              <X size={18} color={C.textSec} strokeWidth={2.5} />{" "}
+              <X size={18} strokeWidth={2.5} />
               {t("actions.cancel")}
             </>
           ) : (
             <>
-              <Check size={18} color="#0B0F14" strokeWidth={2.5} />{" "}
+              <Check size={18} strokeWidth={2.5} />
               {t("actions.confirm")}
             </>
           )}
-        </button>
+        </Button>
       </div>
     </div>
   );

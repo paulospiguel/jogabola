@@ -6,7 +6,8 @@ import { useState } from "react";
 import { AddPlayerSheet } from "@/components/arena/add-player-sheet";
 import { JbAvatar } from "@/components/arena/jb-avatar";
 import { JbBadge } from "@/components/arena/jb-badge";
-import { C } from "@/components/arena/tokens";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 
 const PLAYERS = [
   {
@@ -210,59 +211,43 @@ export function SquadClient({ userId }: { userId: string }) {
               <div className="jb-kicker">{t("kicker")}</div>
               <h1 className="jb-title">{t("title")}</h1>
             </div>
-            <button
+            <Button
               className="jb-action jb-action-primary hidden md:inline-flex"
               onClick={() => setShowAdd(true)}
               type="button"
+              variant="ghost"
+              size="sm"
             >
               <Plus size={15} strokeWidth={2.5} />
               {t("actions.add")}
-            </button>
+            </Button>
           </header>
 
           <div>
-            <div
-              style={{
-                height: 44,
-                background: C.surface,
-                border: `1px solid ${C.border}`,
-                borderRadius: 12,
-                display: "flex",
-                alignItems: "center",
-                gap: 10,
-                padding: "0 14px",
-              }}
-            >
-              <Search size={16} color={C.textMuted} />
+            {/* Search bar */}
+            <div className="flex h-11 items-center gap-2.5 rounded-[12px] border border-arena-border bg-arena-surface px-3.5">
+              <Search size={16} className="shrink-0 text-arena-text-muted" />
               <input
                 value={search}
                 onChange={e => setSearch(e.target.value)}
                 placeholder={t("search.placeholder")}
-                style={{
-                  flex: 1,
-                  background: "none",
-                  border: "none",
-                  color: C.text,
-                  fontSize: 14,
-                  fontFamily: "inherit",
-                  outline: "none",
-                }}
+                className="flex-1 bg-transparent text-sm text-arena-text placeholder:text-arena-text-muted/70 outline-none"
               />
               {search && (
-                <button
+                <Button
                   onClick={() => setSearch("")}
-                  style={{
-                    background: "none",
-                    border: "none",
-                    display: "flex",
-                    cursor: "pointer",
-                  }}
+                  variant="ghost"
+                  size="icon-sm"
+                  type="button"
+                  className="h-6 w-6 min-h-0 min-w-0 text-arena-text-muted hover:text-arena-text"
+                  aria-label="Limpar pesquisa"
                 >
-                  <X size={14} color={C.textMuted} strokeWidth={2} />
-                </button>
+                  <X size={14} strokeWidth={2} />
+                </Button>
               )}
             </div>
 
+            {/* Filter chips */}
             <div className="jb-toolbar mt-2.5 pb-1">
               {FILTERS_DATA.map(f => (
                 <button
@@ -278,50 +263,20 @@ export function SquadClient({ userId }: { userId: string }) {
           </div>
 
           {filtered.length === 0 ? (
-            <div
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-                justifyContent: "center",
-                gap: 12,
-                padding: "40px 24px",
-                textAlign: "center",
-              }}
-            >
-              <div
-                style={{
-                  width: 56,
-                  height: 56,
-                  borderRadius: 18,
-                  background: C.surface,
-                  border: `1px solid ${C.border}`,
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                }}
-              >
-                <Search size={24} color={C.textMuted} strokeWidth={1.5} />
+            <div className="flex flex-col items-center justify-center gap-3 px-6 py-10 text-center">
+              <div className="flex size-14 items-center justify-center rounded-[18px] border border-arena-border bg-arena-surface">
+                <Search size={24} className="text-arena-text-muted" strokeWidth={1.5} />
               </div>
-              <div style={{ color: C.text, fontSize: 15, fontWeight: 600 }}>
+              <div className="text-[15px] font-semibold text-arena-text">
                 {t("search.noResults")}
               </div>
-              <button
+              <Button
                 onClick={() => setShowAdd(true)}
-                style={{
-                  height: 42,
-                  padding: "0 20px",
-                  borderRadius: 12,
-                  background: C.primary,
-                  border: "none",
-                  color: "#0B0F14",
-                  fontSize: 13,
-                  fontWeight: 700,
-                  cursor: "pointer",
-                }}
+                className="h-[42px] rounded-[12px] bg-arena-primary px-5 text-[13px] font-bold text-arena-bg hover:bg-arena-primary/90"
+                type="button"
               >
                 {t("actions.addPlayer")}
-              </button>
+              </Button>
             </div>
           ) : (
             <>
@@ -332,64 +287,26 @@ export function SquadClient({ userId }: { userId: string }) {
                 {filtered.map(p => (
                   <div
                     key={p.id}
-                    style={{
-                      background: C.surface,
-                      border: `1px solid ${C.border}`,
-                      borderRadius: 14,
-                      padding: "12px 14px",
-                      display: "flex",
-                      alignItems: "center",
-                      gap: 12,
-                    }}
+                    className="flex items-center gap-3 rounded-[14px] border border-arena-border bg-arena-surface px-3.5 py-3"
                   >
                     <JbAvatar name={p.name} size={40} id={p.id} />
-                    <div style={{ flex: 1 }}>
-                      <div
-                        style={{
-                          display: "flex",
-                          alignItems: "center",
-                          gap: 5,
-                          marginBottom: 3,
-                        }}
-                      >
-                        <span
-                          style={{
-                            color: C.text,
-                            fontSize: 14,
-                            fontWeight: 600,
-                          }}
-                        >
+                    <div className="flex-1">
+                      <div className="mb-1 flex items-center gap-1.5">
+                        <span className="text-sm font-semibold text-arena-text">
                           {p.name}
                         </span>
                         {p.highlight && (
                           <Star
                             size={12}
-                            color={C.highlight}
-                            fill={C.highlight}
+                            className="text-arena-highlight fill-arena-highlight"
                           />
                         )}
                       </div>
-                      <div
-                        style={{
-                          display: "flex",
-                          alignItems: "center",
-                          gap: 6,
-                        }}
-                      >
-                        <span
-                          style={{
-                            background: C.surfaceEl,
-                            border: `1px solid ${C.border}`,
-                            color: C.textMuted,
-                            fontSize: 10,
-                            fontWeight: 700,
-                            padding: "2px 6px",
-                            borderRadius: 5,
-                          }}
-                        >
+                      <div className="flex items-center gap-1.5">
+                        <span className="rounded-[5px] border border-arena-border bg-arena-surface-el px-1.5 py-0.5 text-[10px] font-bold text-arena-text-muted">
                           {p.role}
                         </span>
-                        <span style={{ color: C.textMuted, fontSize: 11 }}>
+                        <span className="text-[11px] text-arena-text-muted">
                           ⭐ {p.rating}
                         </span>
                       </div>
@@ -402,35 +319,16 @@ export function SquadClient({ userId }: { userId: string }) {
           )}
         </div>
 
-        <button
+        {/* FAB — mobile only */}
+        <Button
           onClick={() => setShowAdd(true)}
-          className="md:hidden"
-          style={{
-            position: "fixed",
-            bottom: 90,
-            right: 24,
-            width: 52,
-            height: 52,
-            borderRadius: "50%",
-            background: C.primary,
-            border: "none",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            boxShadow: `0 4px 20px ${C.primary}55`,
-            cursor: "pointer",
-            zIndex: 100,
-          }}
+          className="fixed bottom-[90px] right-6 z-[100] flex size-[52px] items-center justify-center rounded-full bg-arena-primary text-arena-bg shadow-[0_4px_20px_color-mix(in_srgb,var(--color-arena-primary)_33%,transparent)] hover:bg-arena-primary/90 md:hidden"
+          type="button"
+          aria-label={t("actions.add")}
         >
-          <Plus size={22} color="#0B0F14" strokeWidth={2.5} />
-        </button>
+          <Plus size={22} strokeWidth={2.5} />
+        </Button>
       </div>
-
-      <style>{`
-        @keyframes slideUp { from{transform:translateY(100%)} to{transform:none} }
-        @keyframes fadeIn { from{opacity:0} to{opacity:1} }
-        @keyframes spin { to{transform:rotate(360deg)} }
-      `}</style>
     </>
   );
 }

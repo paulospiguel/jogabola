@@ -5,7 +5,8 @@ import Link from "next/link";
 import { useTranslations } from "next-intl";
 import { useMemo, useState } from "react";
 import { CreateEventSheet } from "@/components/arena/create-event-sheet";
-import { C } from "@/components/arena/tokens";
+import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 
 interface EventItem {
   id: number;
@@ -56,45 +57,51 @@ function EventCard({ event }: { event: EventItem }) {
       <div className="mb-2 flex items-center justify-between gap-3">
         <div className="flex items-center gap-2">
           <span
-            className="grid size-[26px] place-items-center rounded-[7px]"
-            style={{ background: isGame ? `${C.primary}20` : `${C.info}20` }}
+            className={cn(
+              "grid size-[26px] place-items-center rounded-[7px]",
+              isGame ? "bg-arena-primary/[0.13]" : "bg-arena-info/[0.13]",
+            )}
           >
             {isGame ? (
-              <Trophy size={13} color={C.primary} />
+              <Trophy size={13} className="text-arena-primary" />
             ) : (
-              <Calendar size={13} color={C.info} />
+              <Calendar size={13} className="text-arena-info" />
             )}
           </span>
           <span
-            className="text-[10px] font-bold uppercase tracking-[0.8px]"
-            style={{ color: isGame ? C.primary : C.info }}
+            className={cn(
+              "text-[10px] font-bold uppercase tracking-[0.8px]",
+              isGame ? "text-arena-primary" : "text-arena-info",
+            )}
           >
             {isGame ? t("types.match") : t("types.training")}
           </span>
         </div>
       </div>
 
-      <div className="mb-2 text-sm font-semibold leading-snug text-[#F5F7FA] md:text-base">
+      <div className="mb-2 text-sm font-semibold leading-snug text-arena-text md:text-base">
         {event.title}
       </div>
 
       <div className="flex flex-wrap gap-x-3 gap-y-1.5">
         <span className="flex items-center gap-1">
-          <Calendar size={11} color={C.textMuted} />
-          <span className="text-[11px] text-[#6B7280]">
+          <Calendar size={11} className="text-arena-text-muted" />
+          <span className="text-[11px] text-arena-text-muted">
             {formatDate(event.startDate)}
           </span>
         </span>
         <span className="flex items-center gap-1">
-          <Clock size={11} color={C.textMuted} />
-          <span className="text-[11px] text-[#6B7280]">
+          <Clock size={11} className="text-arena-text-muted" />
+          <span className="text-[11px] text-arena-text-muted">
             {formatTime(event.startDate)}
           </span>
         </span>
         {event.location ? (
           <span className="flex items-center gap-1">
-            <MapPin size={11} color={C.textMuted} />
-            <span className="text-[11px] text-[#6B7280]">{event.location}</span>
+            <MapPin size={11} className="text-arena-text-muted" />
+            <span className="text-[11px] text-arena-text-muted">
+              {event.location}
+            </span>
           </span>
         ) : null}
       </div>
@@ -130,34 +137,38 @@ export function EventsListClient({ events, userId }: EventsListClientProps) {
               <div className="jb-kicker">{t("kicker")}</div>
               <h1 className="jb-title">{t("title")}</h1>
             </div>
-            <button
+            <Button
               className="jb-action jb-action-primary"
               onClick={() => setSheet(true)}
               type="button"
+              variant="ghost"
+              size="sm"
             >
               <Plus size={14} strokeWidth={2.5} />
               {t("actions.create")}
-            </button>
+            </Button>
           </header>
 
           {events.length === 0 ? (
             <div className="jb-card mx-auto grid max-w-md place-items-center px-6 py-14 text-center">
-              <div className="mb-4 grid size-14 place-items-center rounded-[18px] border border-[#263244] bg-[#151C26]">
-                <Calendar size={24} color={C.textMuted} strokeWidth={1.5} />
+              <div className="mb-4 grid size-14 place-items-center rounded-[18px] border border-arena-border bg-arena-surface">
+                <Calendar size={24} className="text-arena-text-muted" strokeWidth={1.5} />
               </div>
-              <div className="text-[15px] font-semibold text-[#F5F7FA]">
+              <div className="text-[15px] font-semibold text-arena-text">
                 {t("empty.title")}
               </div>
-              <div className="mt-1 text-sm text-[#6B7280]">
+              <div className="mt-1 text-sm text-arena-text-muted">
                 {t("empty.subtitle")}
               </div>
-              <button
+              <Button
                 className="jb-action jb-action-primary mt-5 px-5"
                 onClick={() => setSheet(true)}
                 type="button"
+                variant="ghost"
+                size="sm"
               >
                 {t("actions.createEvent")}
-              </button>
+              </Button>
             </div>
           ) : (
             <div className="grid gap-4 md:grid-cols-[minmax(0,1.35fr)_minmax(300px,0.75fr)]">
@@ -178,7 +189,7 @@ export function EventsListClient({ events, userId }: EventsListClientProps) {
                       <EventCard event={event} key={event.id} />
                     ))
                   ) : (
-                    <div className="jb-card p-4 text-sm text-[#6B7280]">
+                    <div className="jb-card p-4 text-sm text-arena-text-muted">
                       {t("empty.noPast")}
                     </div>
                   )}

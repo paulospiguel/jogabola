@@ -13,6 +13,7 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
+import { Button } from "@/components/ui/button";
 import menuHome from "@/constants/menu-home";
 import { useHeaderButtons } from "@/hooks/use-header-buttons";
 import { useSession } from "@/lib/auth-client";
@@ -105,11 +106,12 @@ export default function Header() {
                 );
               }
               return (
-                <button
+                <Button
                   key={key}
                   onClick={button.onClick}
+                  variant="ghost"
                   className={cn(
-                    "hidden rounded-full px-5 py-2.5 no-underline transition-colors duration-300 md:visible md:block",
+                    "hidden rounded-full px-5 py-2.5 no-underline transition-colors duration-300 md:visible md:flex",
                     button.variant === "primary"
                       ? "bg-neon-primary font-semibold text-[#050312] hover:bg-neon-primary/90"
                       : "border border-white/8 bg-white/4 font-medium text-white/72 hover:text-white",
@@ -118,21 +120,24 @@ export default function Header() {
                   {button.label.includes("header.")
                     ? t(button.label)
                     : button.label}
-                </button>
+                </Button>
               );
             })}
 
           <Sheet>
             <SheetTrigger asChild>
-              <button
+              <Button
                 onClick={() => setIsMenuOpen(!isMenuOpen)}
+                variant="ghost"
+                size="icon"
                 className={cn(
                   "rounded-2xl border border-white/8 bg-white/4 p-2 transition-colors duration-300 hover:bg-white/10 md:hidden",
                   "text-text-primary",
                 )}
+                aria-label="Abrir menu"
               >
                 <Menu size={24} />
-              </button>
+              </Button>
             </SheetTrigger>
             <SheetContent
               side={"right"}
@@ -176,8 +181,9 @@ export default function Header() {
                     }
                     return (
                       <SheetClose key={key} asChild>
-                        <button
+                        <Button
                           onClick={button.onClick}
+                          variant="ghost"
                           className={cn(
                             "w-full rounded-full px-4 py-3 text-sm transition-colors duration-300",
                             button.variant === "primary"
@@ -188,7 +194,7 @@ export default function Header() {
                           {button.label.includes("header.")
                             ? t(button.label)
                             : button.label}
-                        </button>
+                        </Button>
                       </SheetClose>
                     );
                   })}

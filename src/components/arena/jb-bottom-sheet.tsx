@@ -3,6 +3,7 @@
 import { X } from "lucide-react";
 import { useEffect, useRef } from "react";
 import { createPortal } from "react-dom";
+import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
 interface JbBottomSheetProps {
@@ -45,13 +46,16 @@ export function JbBottomSheet({
         {title && (
           <div className="flex items-center justify-between border-arena-border border-b px-5 pt-3 pb-2.5">
             <span className="text-base font-bold text-arena-text">{title}</span>
-            <button
-              className="grid size-[30px] place-items-center rounded-[9px] border border-arena-border bg-arena-surface text-arena-text-sec"
+            <Button
+              className="size-[30px] min-h-0 min-w-0 rounded-[9px] border border-arena-border bg-arena-surface text-arena-text-sec hover:bg-arena-surface-el"
               onClick={onClose}
               type="button"
+              variant="ghost"
+              size="icon-sm"
+              aria-label="Fechar"
             >
               <X size={14} strokeWidth={2} />
-            </button>
+            </Button>
           </div>
         )}
 

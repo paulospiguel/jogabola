@@ -6,6 +6,8 @@ import { useState, useTransition } from "react";
 import { updateUserSettings } from "@/actions/settings.actions";
 import { locales } from "@/i18n/configs";
 import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
+import { Switch } from "@/components/ui/switch";
 
 interface SettingsFormProps {
   initialSettings: {
@@ -43,8 +45,8 @@ export function SettingsForm({ initialSettings }: SettingsFormProps) {
     <div className="jb-stack space-y-6">
       {/* Language Section */}
       <section className="jb-card overflow-hidden">
-        <div className="border-b border-arena-border bg-arena-surface-el/30 p-4 flex items-center gap-3">
-          <div className="h-8 w-8 rounded-lg bg-arena-primary/10 flex items-center justify-center text-arena-primary">
+        <div className="flex items-center gap-3 border-b border-arena-border bg-arena-surface-el/30 p-4">
+          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-arena-primary/10 text-arena-primary">
             <Languages size={18} />
           </div>
           <div>
@@ -57,30 +59,31 @@ export function SettingsForm({ initialSettings }: SettingsFormProps) {
           </div>
         </div>
 
-        <div className="p-4 grid gap-3 sm:grid-cols-3">
+        <div className="grid gap-3 p-4 sm:grid-cols-3">
           {locales.map(loc => (
-            <button
+            <Button
               key={loc}
               onClick={() => handleUpdate({ locale: loc })}
               disabled={isPending}
+              variant="ghost"
               className={cn(
-                "flex items-center justify-between px-4 py-3 rounded-xl border transition-all duration-200",
+                "flex items-center justify-between rounded-xl border px-4 py-3 transition-all duration-200",
                 settings.locale === loc
-                  ? "bg-arena-primary/10 border-arena-primary/30 text-arena-primary"
-                  : "bg-arena-surface-el/50 border-arena-border text-arena-text-sec hover:bg-arena-surface-el hover:border-arena-border/80",
+                  ? "border-arena-primary/30 bg-arena-primary/10 text-arena-primary"
+                  : "border-arena-border bg-arena-surface-el/50 text-arena-text-sec hover:border-arena-border/80 hover:bg-arena-surface-el",
               )}
             >
               <span className="font-medium uppercase">{loc}</span>
               {settings.locale === loc && <Check size={16} />}
-            </button>
+            </Button>
           ))}
         </div>
       </section>
 
       {/* Notifications Section */}
       <section className="jb-card overflow-hidden">
-        <div className="border-b border-arena-border bg-arena-surface-el/30 p-4 flex items-center gap-3">
-          <div className="h-8 w-8 rounded-lg bg-arena-info/10 flex items-center justify-center text-arena-info">
+        <div className="flex items-center gap-3 border-b border-arena-border bg-arena-surface-el/30 p-4">
+          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-arena-info/10 text-arena-info">
             <Bell size={18} />
           </div>
           <div>
@@ -94,43 +97,24 @@ export function SettingsForm({ initialSettings }: SettingsFormProps) {
         </div>
 
         <div className="p-4">
-          <div className="flex items-center justify-between group">
+          <div className="group flex items-center justify-between">
             <div className="space-y-0.5">
-              <span className="text-sm font-medium text-arena-text group-hover:text-arena-primary transition-colors">
+              <span className="text-sm font-medium text-arena-text transition-colors group-hover:text-arena-primary">
                 {t("fields.pushNotifications")}
               </span>
               <p className="text-xs text-arena-text-muted">
                 {t("fields.pushNotificationsHelp")}
               </p>
             </div>
-            <button
-              type="button"
-              role="switch"
-              aria-checked={settings.notificationsEnabled}
-              onClick={() =>
-                handleUpdate({
-                  notificationsEnabled: !settings.notificationsEnabled,
-                })
+            <Switch
+              checked={settings.notificationsEnabled}
+              onCheckedChange={checked =>
+                handleUpdate({ notificationsEnabled: checked })
               }
-              className="relative focus:outline-none focus-visible:ring-2 focus-visible:ring-arena-primary focus-visible:ring-offset-2 focus-visible:ring-offset-arena-bg rounded-full"
-            >
-              <div
-                className={cn(
-                  "w-12 h-6 rounded-full transition-colors duration-200",
-                  settings.notificationsEnabled
-                    ? "bg-arena-primary"
-                    : "bg-arena-border",
-                )}
-              />
-              <div
-                className={cn(
-                  "absolute top-1 left-1 w-4 h-4 bg-white rounded-full transition-transform duration-200",
-                  settings.notificationsEnabled
-                    ? "translate-x-6"
-                    : "translate-x-0",
-                )}
-              />
-            </button>
+              disabled={isPending}
+              aria-label={t("fields.pushNotifications")}
+              className="data-[state=checked]:bg-arena-primary data-[state=unchecked]:bg-arena-border border-transparent"
+            />
           </div>
         </div>
       </section>
@@ -139,10 +123,10 @@ export function SettingsForm({ initialSettings }: SettingsFormProps) {
       {message && (
         <div
           className={cn(
-            "fixed bottom-24 right-6 left-6 md:left-auto md:w-80 p-4 rounded-2xl border shadow-2xl animate-in fade-in slide-in-from-bottom-4 duration-300 z-50",
+            "fixed bottom-24 left-6 right-6 z-50 animate-in fade-in slide-in-from-bottom-4 duration-300 rounded-2xl border p-4 shadow-2xl md:left-auto md:w-80",
             message.type === "success"
-              ? "bg-arena-surface border-arena-success/50 text-arena-success"
-              : "bg-arena-surface border-arena-danger/50 text-arena-danger",
+              ? "border-arena-success/50 bg-arena-surface text-arena-success"
+              : "border-arena-danger/50 bg-arena-surface text-arena-danger",
           )}
         >
           <div className="flex items-center gap-3">

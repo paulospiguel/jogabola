@@ -4,7 +4,7 @@ import { LogOut, Settings, UserRound } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
-import { signOut, useSession } from "@/lib/auth-client";
+import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -12,6 +12,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { signOut, useSession } from "@/lib/auth-client";
 import { JbAvatar } from "./jb-avatar";
 
 interface JbUserMenuProps {
@@ -35,18 +36,23 @@ export function JbUserMenu({ collapsed = false }: JbUserMenuProps) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <button
+        <Button
           type="button"
-          className="flex w-full items-center gap-3 rounded-[10px] px-3 py-2.5 text-sm transition-colors hover:bg-arena-surface/60 focus-visible:outline-none"
+          variant="ghost"
+          className="flex h-auto w-full items-center gap-3 rounded-[10px] px-3 py-2.5 text-sm hover:bg-arena-surface/60 focus-visible:ring-0"
         >
           <JbAvatar id={id} name={name} size={32} className="shrink-0" />
           {!collapsed && (
-            <div className="grid flex-1 text-left leading-tight overflow-hidden">
-              <span className="truncate font-semibold text-arena-text">{name}</span>
-              <span className="truncate text-xs text-arena-text-muted">{email}</span>
+            <div className="grid flex-1 overflow-hidden text-left leading-tight">
+              <span className="truncate font-semibold text-arena-text">
+                {name}
+              </span>
+              <span className="truncate text-xs text-arena-text-muted">
+                {email}
+              </span>
             </div>
           )}
-        </button>
+        </Button>
       </DropdownMenuTrigger>
 
       <DropdownMenuContent
