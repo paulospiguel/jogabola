@@ -8,6 +8,10 @@ import { JbAvatar } from "@/components/arena/jb-avatar";
 import { JbBadge } from "@/components/arena/jb-badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import {
+  ToggleGroup,
+  ToggleGroupItem,
+} from "@/components/ui/toggle-group";
 
 const PLAYERS = [
   {
@@ -227,11 +231,11 @@ export function SquadClient({ userId }: { userId: string }) {
             {/* Search bar */}
             <div className="flex h-11 items-center gap-2.5 rounded-[12px] border border-arena-border bg-arena-surface px-3.5">
               <Search size={16} className="shrink-0 text-arena-text-muted" />
-              <input
+              <Input
                 value={search}
                 onChange={e => setSearch(e.target.value)}
                 placeholder={t("search.placeholder")}
-                className="flex-1 bg-transparent text-sm text-arena-text placeholder:text-arena-text-muted/70 outline-none"
+                className="flex-1 border-none bg-transparent p-0 text-sm text-arena-text shadow-none placeholder:text-arena-text-muted/70 focus-visible:ring-0"
               />
               {search && (
                 <Button
@@ -248,18 +252,22 @@ export function SquadClient({ userId }: { userId: string }) {
             </div>
 
             {/* Filter chips */}
-            <div className="jb-toolbar mt-2.5 pb-1">
+            <ToggleGroup
+              type="single"
+              value={filter}
+              onValueChange={v => v && setFilter(v)}
+              className="jb-toolbar mt-2.5 pb-1 justify-start"
+            >
               {FILTERS_DATA.map(f => (
-                <button
+                <ToggleGroupItem
                   key={f.id}
-                  onClick={() => setFilter(f.id)}
-                  className={`jb-chip ${filter === f.id ? "jb-chip-active" : ""}`}
-                  type="button"
+                  value={f.id}
+                  className="jb-chip h-auto data-[state=on]:border-arena-primary/40 data-[state=on]:bg-arena-primary/8 data-[state=on]:text-arena-primary"
                 >
                   {t(f.l)}
-                </button>
+                </ToggleGroupItem>
               ))}
-            </div>
+            </ToggleGroup>
           </div>
 
           {filtered.length === 0 ? (
