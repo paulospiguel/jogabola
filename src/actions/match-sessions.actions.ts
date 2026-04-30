@@ -8,53 +8,29 @@ import {
   createMatchReservationSchema,
   createMatchSessionSchema,
 } from "@/schemas/match-sessions.schema";
-import type { ActionResult } from "@/types/common";
+import { withAction } from "@/lib/action-helpers";
 
-export async function createMatchSessionAction(
-  input: unknown,
-): Promise<ActionResult<typeof matchSessions.$inferSelect>> {
-  return createMatchSession(input);
-}
+export const createMatchSession = withAction(
+  createMatchSessionSchema,
+  async (data) => {
+    const [matchSession] = await db
+      .insert(matchSessions)
+      .values(data)
+      .returning();
+    return { success: true, data: matchSession };
+  },
+);
 
-export async function createMatchSession(
-  input: unknown,
-): Promise<ActionResult<typeof matchSessions.$inferSelect>> {
-  const parsed = createMatchSessionSchema.safeParse(input);
-
-  if (!parsed.success) {
-    return validationError(parsed.error.flatten().fieldErrors);
-  }
-
-  const [matchSession] = await db
-    .insert(matchSessions)
-    .values(parsed.data)
-    .returning();
-
-  return { success: true, data: matchSession };
-}
-
-export async function createMatchReservationAction(
-  input: unknown,
-): Promise<ActionResult<typeof matchReservations.$inferSelect>> {
-  return createMatchReservation(input);
-}
-
-export async function createMatchReservation(
-  input: unknown,
-): Promise<ActionResult<typeof matchReservations.$inferSelect>> {
-  const parsed = createMatchReservationSchema.safeParse(input);
-
-  if (!parsed.success) {
-    return validationError(parsed.error.flatten().fieldErrors);
-  }
-
-  const [reservation] = await db
-    .insert(matchReservations)
-    .values(parsed.data)
-    .returning();
-
-  return { success: true, data: reservation };
-}
+export const createMatchReservation = withAction(
+  createMatchReservationSchema,
+  async (data) => {
+    const [reservation] = await db
+      .insert(matchReservations)
+      .values(data)
+      .returning();
+    return { success: true, data: reservation };
+  },
+);
 
 export async function createEvent(input: {
   title: string;
@@ -94,7 +70,7 @@ export async function getEvent(eventId: number) {
     .limit(1);
 
   if (!eventData) {
-    return { success: false as const, error: "Event not found" };
+    return { success: false as const, error: { code: "EVENT_NOT_FOUND" } };
   }
 
   return { success: true as const, data: toEventView(eventData) };
@@ -118,9 +94,7 @@ export async function getEvents(options?: {
     .orderBy(matchSessions.startsAt)
     .limit(limit);
 
-  const data = events.map(toEventView);
-
-  return { success: true as const, data };
+  return { success: true as const, data: events.map(toEventView) };
 }
 
 function toEventView(event: typeof matchSessions.$inferSelect) {
@@ -128,7 +102,7 @@ function toEventView(event: typeof matchSessions.$inferSelect) {
     id: event.id,
     title: event.title,
     description: null,
-    type: "partida",
+    type: "partida" as const,
     location: event.location,
     city: null,
     country: null,
@@ -140,27 +114,15 @@ function toEventView(event: typeof matchSessions.$inferSelect) {
     maxAge: null,
     gender: null,
     positionNeeded: null,
-    participationCriteria: {},
+    participationCriteria: {} as Record<string, unknown>,
     currentParticipants: "0",
     maxParticipants: event.capacity?.toString() ?? null,
     organizerId: "",
     organizer: null,
     language: null,
-    images: [],
-    status: "ativo",
+    images: [] as string[],
+    status: "ativo" as const,
     createdAt: event.createdAt,
     updatedAt: event.updatedAt,
   };
-}
-
-function validationError(fieldErrors: Record<string, string[] | undefined>) {
-  return {
-    success: false,
-    error: {
-      code: "VALIDATION_ERROR",
-      fieldErrors: Object.fromEntries(
-        Object.entries(fieldErrors).filter(([, value]) => value?.length),
-      ) as Record<string, string[]>,
-    },
-  } as const;
 }
