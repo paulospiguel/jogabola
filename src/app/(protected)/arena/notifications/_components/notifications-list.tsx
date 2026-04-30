@@ -116,16 +116,17 @@ export function NotificationsList({
 
       <div className="jb-stack">
         {initialNotifications.map(notification => (
-          <button
+          <Button
             type="button"
+            variant="ghost"
             key={notification.id}
             onClick={() =>
               !notification.read && handleMarkAsRead(notification.id)
             }
             className={cn(
-              "jb-card group relative flex w-full gap-4 border-l-4 p-4 text-left transition-all duration-200",
+              "jb-card group relative h-auto w-full gap-4 border-l-4 p-4 text-left transition-all duration-200",
               notification.read
-                ? "border-transparent opacity-70"
+                ? "border-transparent opacity-70 hover:bg-transparent"
                 : "border-arena-primary bg-arena-surface-el/20 hover:bg-arena-surface-el/30",
             )}
           >
@@ -174,7 +175,7 @@ export function NotificationsList({
                 <div className="h-2 w-2 rounded-full bg-arena-primary shadow-[0_0_8px_rgba(124,255,79,0.5)]" />
               </div>
             )}
-          </button>
+          </Button>
         ))}
       </div>
     </div>
