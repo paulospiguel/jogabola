@@ -3,31 +3,21 @@
 import { Calendar, Clock, MapPin, Plus, Trophy } from "lucide-react";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import { CreateEventSheet } from "@/components/arena/create-event-sheet";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-
-interface EventItem {
-  id: number;
-  title: string;
-  type: string;
-  location: string;
-  startDate: Date | string;
-  status: string | null;
-}
+import type { EventView } from "@/types/events";
 
 interface EventsListClientProps {
-  events: EventItem[];
+  upcoming: EventView[];
+  past: EventView[];
   userId: string;
 }
 
-function eventDate(d: Date | string) {
-  return typeof d === "string" ? new Date(d) : d;
-}
-
 function formatDate(d: Date | string) {
-  return eventDate(d).toLocaleDateString("pt-PT", {
+  const date = typeof d === "string" ? new Date(d) : d;
+  return date.toLocaleDateString("pt-PT", {
     weekday: "short",
     day: "numeric",
     month: "short",
@@ -35,17 +25,14 @@ function formatDate(d: Date | string) {
 }
 
 function formatTime(d: Date | string) {
-  return eventDate(d).toLocaleTimeString("pt-PT", {
+  const date = typeof d === "string" ? new Date(d) : d;
+  return date.toLocaleTimeString("pt-PT", {
     hour: "2-digit",
     minute: "2-digit",
   });
 }
 
-function isUpcoming(d: Date | string) {
-  return eventDate(d) >= new Date();
-}
-
-function EventCard({ event }: { event: EventItem }) {
+function EventCard({ event }: { event: EventView }) {
   const t = useTranslations("arenaEvents");
   const isGame = event.type === "partida" || event.type === "jogo";
 
@@ -109,17 +96,11 @@ function EventCard({ event }: { event: EventItem }) {
   );
 }
 
-export function EventsListClient({ events, userId }: EventsListClientProps) {
+export function EventsListClient({ upcoming, past, userId }: EventsListClientProps) {
   const t = useTranslations("arenaEvents");
   const [sheet, setSheet] = useState(false);
 
-  const { upcoming, past } = useMemo(
-    () => ({
-      upcoming: events.filter(e => isUpcoming(e.startDate)),
-      past: events.filter(e => !isUpcoming(e.startDate)),
-    }),
-    [events],
-  );
+  const hasEvents = upcoming.length > 0 || past.length > 0;
 
   return (
     <>
@@ -149,7 +130,7 @@ export function EventsListClient({ events, userId }: EventsListClientProps) {
             </Button>
           </header>
 
-          {events.length === 0 ? (
+          {!hasEvents ? (
             <div className="jb-card mx-auto grid max-w-md place-items-center px-6 py-14 text-center">
               <div className="mb-4 grid size-14 place-items-center rounded-[18px] border border-arena-border bg-arena-surface">
                 <Calendar size={24} className="text-arena-text-muted" strokeWidth={1.5} />
