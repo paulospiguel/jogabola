@@ -4,12 +4,6 @@ import { cookies } from "next/headers";
 import { type Locale, locales } from "@/i18n/configs";
 import type { ActionResult } from "@/types/common";
 
-export async function setLocaleAction(
-  input: unknown,
-): Promise<ActionResult<{ locale: Locale }>> {
-  return setLocale(input);
-}
-
 export async function setLocale(
   input: unknown,
 ): Promise<ActionResult<{ locale: Locale }>> {

@@ -3,7 +3,7 @@
 import { useRouter } from "next/navigation";
 import { useLocale, useTranslations } from "next-intl";
 import { useTransition } from "react";
-import { setLocaleAction } from "@/actions/locale.actions";
+import { setLocale } from "@/actions/locale.actions";
 import { LuGlobe as Globe } from "@/components/icons";
 import {
   Select,
@@ -55,7 +55,7 @@ export default function LanguageSelector({
   async function onLanguageChange(lang: Locale) {
     const newLocale = lang as Locale;
     startTransition(async () => {
-      const result = await setLocaleAction(newLocale);
+      const result = await setLocale(newLocale);
 
       if (result.success) {
         router.refresh();
