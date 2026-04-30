@@ -1,8 +1,8 @@
 "use server";
 
-import { eq } from "drizzle-orm";
 import { db } from "@/db/client";
 import { players, teamMembers, teams } from "@/db/schema";
+import { findPlayerByEmail } from "@/db/queries/players";
 import {
   addPlayerToRosterSchema,
   addTeamMemberSchema,
@@ -31,13 +31,8 @@ export const addPlayerToRoster = withAuthAction(
   addPlayerToRosterSchema,
   async (user, data) => {
     const email = data.email.toLowerCase().trim();
-    const existing = await db
-      .select({ id: players.id })
-      .from(players)
-      .where(eq(players.email, email))
-      .limit(1);
-
-    if (existing.length > 0) {
+    const existing = await findPlayerByEmail(email);
+    if (existing) {
       return { success: false, error: { code: "PLAYER_EMAIL_ALREADY_EXISTS" } };
     }
 

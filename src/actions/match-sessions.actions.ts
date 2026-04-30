@@ -1,9 +1,9 @@
 "use server";
 
-import { and, eq, gte } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { db } from "@/db/client";
 import { matchReservations, matchSessions } from "@/db/schema";
+import { queryEventById, queryEvents } from "@/db/queries/events";
 import {
   createMatchReservationSchema,
   createMatchSessionSchema,
@@ -63,16 +63,10 @@ export async function createEvent(input: {
 }
 
 export async function getEvent(eventId: number) {
-  const [eventData] = await db
-    .select()
-    .from(matchSessions)
-    .where(eq(matchSessions.id, eventId))
-    .limit(1);
-
+  const eventData = await queryEventById(eventId);
   if (!eventData) {
     return { success: false as const, error: { code: "EVENT_NOT_FOUND" } };
   }
-
   return { success: true as const, data: toEventView(eventData) };
 }
 
@@ -83,17 +77,7 @@ export async function getEvents(options?: {
   upcomingOnly?: boolean;
 }) {
   const { limit = 10, upcomingOnly = true } = options || {};
-  const conditions = [];
-
-  if (upcomingOnly) conditions.push(gte(matchSessions.startsAt, new Date()));
-
-  const events = await db
-    .select()
-    .from(matchSessions)
-    .where(conditions.length ? and(...conditions) : undefined)
-    .orderBy(matchSessions.startsAt)
-    .limit(limit);
-
+  const events = await queryEvents({ limit, upcomingOnly });
   return { success: true as const, data: events.map(toEventView) };
 }
 
