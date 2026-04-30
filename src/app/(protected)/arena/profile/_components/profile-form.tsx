@@ -3,7 +3,7 @@
 import { CheckCircle2, Loader2, Save } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useState, useTransition } from "react";
-import { updateUserProfileAction } from "@/actions/profile.actions";
+import { updateUserProfile } from "@/actions/profile.actions";
 import { JbAvatar } from "@/components/arena/jb-avatar";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -39,7 +39,7 @@ export function ProfileForm({ profile }: ProfileFormProps) {
 
   function submit() {
     startTransition(async () => {
-      const result = await updateUserProfileAction(form);
+      const result = await updateUserProfile(form);
 
       if (!result.success) {
         setStatus("error");
