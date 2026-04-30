@@ -322,9 +322,13 @@ const EcosystemSection = () => {
               <p className="mb-8 text-sm leading-relaxed text-gray-400">
                 {module.description}
               </p>
-              <button className="flex items-center gap-2 text-xs font-bold tracking-widest text-blue-400 uppercase transition-colors hover:text-blue-300">
+              <Button
+                variant="ghost"
+                size="sm"
+                className="flex items-center gap-2 p-0 text-xs font-bold tracking-widest text-blue-400 uppercase transition-colors hover:bg-transparent hover:text-blue-300"
+              >
                 {t("modules.explore")} <ArrowRight className="h-4 w-4" />
-              </button>
+              </Button>
             </motion.div>
           ))}
         </div>
