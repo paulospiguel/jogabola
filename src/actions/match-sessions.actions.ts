@@ -122,7 +122,7 @@ function toEventView(event: typeof matchSessions.$inferSelect) {
     language: null,
     images: [] as string[],
     status: "ativo" as const,
-    createdAt: event.createdAt,
-    updatedAt: event.updatedAt,
+    createdAt: event.createdAt ?? new Date(),
+    updatedAt: event.updatedAt ?? new Date(),
   };
 }

@@ -1,0 +1,27 @@
+export type EventView = {
+  id: number;
+  title: string;
+  description: string | null;
+  type: string;
+  location: string;
+  city: string | null;
+  country: string | null;
+  startDate: Date;
+  endDate: Date | null | undefined;
+  gameStyle: string | null;
+  experienceLevel: string | null;
+  minAge: string | null;
+  maxAge: string | null;
+  gender: string | null;
+  positionNeeded: string | null;
+  participationCriteria: Record<string, unknown>;
+  currentParticipants: string;
+  maxParticipants: string | null;
+  organizerId: string;
+  organizer: string | null;
+  language: string | null;
+  images: string[];
+  status: string;
+  createdAt: Date;
+  updatedAt: Date;
+};
