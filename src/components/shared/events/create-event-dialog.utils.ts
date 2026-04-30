@@ -13,29 +13,29 @@ export type EventTypeMeta = {
 };
 
 export const EVENT_TYPE_META: Record<CreateEventType, EventTypeMeta> = {
-  jogo: {
-    labelKey: "typeOptions.jogo.label",
-    descriptionKey: "typeOptions.jogo.description",
+  game: {
+    labelKey: "typeOptions.game.label",
+    descriptionKey: "typeOptions.game.description",
     emoji: "🏆",
   },
-  treino: {
-    labelKey: "typeOptions.treino.label",
-    descriptionKey: "typeOptions.treino.description",
+  training: {
+    labelKey: "typeOptions.training.label",
+    descriptionKey: "typeOptions.training.description",
     emoji: "🏋️",
   },
-  amistoso: {
-    labelKey: "typeOptions.amistoso.label",
-    descriptionKey: "typeOptions.amistoso.description",
+  friendly: {
+    labelKey: "typeOptions.friendly.label",
+    descriptionKey: "typeOptions.friendly.description",
     emoji: "🤝",
   },
-  reuniao: {
-    labelKey: "typeOptions.reuniao.label",
-    descriptionKey: "typeOptions.reuniao.description",
+  meeting: {
+    labelKey: "typeOptions.meeting.label",
+    descriptionKey: "typeOptions.meeting.description",
     emoji: "🗣️",
   },
-  outro: {
-    labelKey: "typeOptions.outro.label",
-    descriptionKey: "typeOptions.outro.description",
+  other: {
+    labelKey: "typeOptions.other.label",
+    descriptionKey: "typeOptions.other.description",
     emoji: "📌",
   },
 };
@@ -49,12 +49,12 @@ export function toDateInputValue(date: Date) {
 export function getDefaultEventFormValues(date?: Date): CreateEventFormValues {
   return {
     title: "",
-    type: "treino",
+    type: "training",
     date: toDateInputValue(date ?? new Date()),
     time: "18:00",
     location: "",
     description: "",
-    status: "confirmado",
+    status: "confirmed",
     isRecurring: false,
     recurrenceType: "none",
     confirmationMode: "automatic",
@@ -97,5 +97,5 @@ export function getNextRecurringDate(
 }
 
 export function getEventConfirmationStatus(confirmationMode: ConfirmationMode) {
-  return confirmationMode === "automatic" ? "confirmado" : "pendente";
+  return confirmationMode === "automatic" ? "confirmed" : "pending";
 }

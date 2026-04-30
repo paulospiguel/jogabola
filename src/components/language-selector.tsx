@@ -4,7 +4,6 @@ import { useRouter } from "next/navigation";
 import { useLocale, useTranslations } from "next-intl";
 import { useTransition } from "react";
 import { setLocale } from "@/actions/locale.actions";
-import { LuGlobe as Globe } from "@/components/icons";
 import {
   Select,
   SelectContent,
@@ -71,17 +70,6 @@ export default function LanguageSelector({
     >
       <SelectTrigger className="h-10 w-auto min-w-[90px] gap-3 rounded-full border border-white/15 bg-white/5 px-4 text-sm font-medium text-white backdrop-blur-md transition-all hover:border-neon-primary/40 hover:bg-white/10 focus:ring-neon-primary/20 focus:ring-1">
         <div className="flex items-center gap-2.5">
-          {isPending ? (
-            <Globe
-              className="text-neon-primary h-4 w-4 animate-spin shrink-0"
-              style={{ minWidth: "16px", minHeight: "16px" }}
-            />
-          ) : (
-            <Globe
-              className="text-neon-primary h-4 w-4 shrink-0"
-              style={{ minWidth: "16px", minHeight: "16px" }}
-            />
-          )}
           <span className="text-base leading-none">
             {LANGUAGES[locale]?.icon}
           </span>

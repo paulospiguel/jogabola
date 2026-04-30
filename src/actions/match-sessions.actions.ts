@@ -1,18 +1,19 @@
 "use server";
 
+import { and, eq, gte, lt } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { db } from "@/db/client";
-import { matchReservations, matchSessions } from "@/db/schema";
 import { queryEventById, queryEvents } from "@/db/queries/events";
+import { matchReservations, matchSessions, teams } from "@/db/schema";
+import { withAction } from "@/lib/action-helpers";
 import {
   createMatchReservationSchema,
   createMatchSessionSchema,
 } from "@/schemas/match-sessions.schema";
-import { withAction } from "@/lib/action-helpers";
 
 export const createMatchSession = withAction(
   createMatchSessionSchema,
-  async (data) => {
+  async data => {
     const [matchSession] = await db
       .insert(matchSessions)
       .values(data)
@@ -23,7 +24,7 @@ export const createMatchSession = withAction(
 
 export const createMatchReservation = withAction(
   createMatchReservationSchema,
-  async (data) => {
+  async data => {
     const [reservation] = await db
       .insert(matchReservations)
       .values(data)
@@ -43,10 +44,32 @@ export async function createEvent(input: {
   isPublic?: boolean;
   organizerId?: string;
 }) {
+  // Find or create a default team for this organizer
+  let teamId: number;
+  if (input.organizerId) {
+    const existing = await db
+      .select({ id: teams.id })
+      .from(teams)
+      .where(eq(teams.ownerId, input.organizerId))
+      .limit(1);
+    if (existing.length > 0) {
+      teamId = existing[0].id;
+    } else {
+      const slug = `team-${input.organizerId.slice(0, 8)}`;
+      const [created] = await db
+        .insert(teams)
+        .values({ name: "Minha Equipa", slug, ownerId: input.organizerId })
+        .returning({ id: teams.id });
+      teamId = created.id;
+    }
+  } else {
+    return { success: false as const, error: { code: "ORGANIZER_REQUIRED" } };
+  }
+
   const [event] = await db
     .insert(matchSessions)
     .values({
-      teamId: 1,
+      teamId,
       title: input.title,
       location: input.location,
       startsAt: input.startDate,
@@ -68,6 +91,17 @@ export async function getEvent(eventId: number) {
     return { success: false as const, error: { code: "EVENT_NOT_FOUND" } };
   }
   return { success: true as const, data: toEventView(eventData) };
+}
+
+export async function getCalendarEvents(from: Date, to: Date) {
+  const events = await db
+    .select()
+    .from(matchSessions)
+    .where(
+      and(gte(matchSessions.startsAt, from), lt(matchSessions.startsAt, to)),
+    )
+    .orderBy(matchSessions.startsAt);
+  return { success: true as const, data: events };
 }
 
 export async function getEvents(options?: {

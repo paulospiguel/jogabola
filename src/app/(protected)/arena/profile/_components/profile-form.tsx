@@ -5,6 +5,7 @@ import { useTranslations } from "next-intl";
 import { useState, useTransition } from "react";
 import { updateUserProfile } from "@/actions/profile.actions";
 import { JbAvatar } from "@/components/arena/jb-avatar";
+import { VerifiedBadge } from "@/components/arena/verified-badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -115,8 +116,11 @@ export function ProfileForm({ profile }: ProfileFormProps) {
         </div>
 
         <div className="rounded-lg border border-arena-border bg-arena-surface/70 p-3">
-          <div className="text-xs font-semibold uppercase tracking-wide text-arena-text-muted">
-            {t("fields.email")}
+          <div className="flex items-center justify-between gap-2">
+            <div className="text-xs font-semibold uppercase tracking-wide text-arena-text-muted">
+              {t("fields.email")}
+            </div>
+            <VerifiedBadge verified={profile.emailVerified} />
           </div>
           <div className="mt-1 text-sm font-semibold text-arena-text">
             {profile.email}

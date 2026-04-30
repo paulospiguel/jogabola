@@ -2,6 +2,7 @@ import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { getLocale, getTranslations } from "next-intl/server";
 import { JbAvatar } from "@/components/arena/jb-avatar";
+import { VerifiedBadge } from "@/components/arena/verified-badge";
 import { auth } from "@/lib/auth";
 import { ProfileForm } from "./_components/profile-form";
 
@@ -28,7 +29,10 @@ export default async function ArenaProfilePage() {
         <header className="jb-topbar">
           <div>
             <div className="jb-kicker">{t("header.eyebrow")}</div>
-            <h1 className="jb-title">{t("header.title")}</h1>
+            <div className="flex items-center gap-2">
+              <h1 className="jb-title">{t("header.title")}</h1>
+              <VerifiedBadge verified={Boolean(session.user.emailVerified)} />
+            </div>
             <p className="mt-1 max-w-xl text-sm text-arena-text-sec">
               {t("header.description")}
             </p>
@@ -76,10 +80,14 @@ export default async function ArenaProfilePage() {
                   <dt className="text-arena-text-muted">
                     {t("fields.emailStatus")}
                   </dt>
-                  <dd className="mt-1 font-semibold text-arena-primary">
-                    {session.user.emailVerified
-                      ? t("status.verified")
-                      : t("status.unverified")}
+                  <dd className="mt-1">
+                    {session.user.emailVerified ? (
+                      <VerifiedBadge verified />
+                    ) : (
+                      <span className="text-sm font-semibold text-arena-text-muted">
+                        {t("status.unverified")}
+                      </span>
+                    )}
                   </dd>
                 </div>
               </dl>

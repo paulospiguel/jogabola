@@ -1,12 +1,12 @@
 export type CreateEventType =
-  | "jogo"
-  | "treino"
-  | "amistoso"
-  | "reuniao"
-  | "outro";
+  | "game"
+  | "training"
+  | "friendly"
+  | "meeting"
+  | "other";
 export type RecurrenceType = "none" | "daily" | "weekly" | "monthly";
 export type ConfirmationMode = "automatic" | "manual";
-export type EventStatus = "confirmado" | "pendente" | "cancelado";
+export type EventStatus = "confirmed" | "pending" | "cancelled";
 
 export type CreateEventFormValues = {
   title: string;

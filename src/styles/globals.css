@@ -141,6 +141,12 @@
   --color-arena-info: #38bdf8;
   --color-arena-highlight: #facc15;
 
+  /* user status colors */
+  --user-online: #22c55e;
+  --user-offline: #6b7280;
+  --user-away: #f59e0b;
+  --user-verified: #3b82f6;
+
   /* Transition durations */
   --duration-75: 75ms;
   --duration-100: 100ms;

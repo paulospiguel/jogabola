@@ -464,6 +464,7 @@
     "appMockupAlt": "Mockup de l'application Jogabola",
     "hero": {
       "versionBadge": "Version 2.0",
+      "badge": "Nouveau · {version}",
       "titlePart1": "Organize your",
       "titlePart2": "Team's",
       "titleHighlight": "équipe de rêve?",
@@ -1623,7 +1624,7 @@
   "arenaNav": {
     "dashboard": "Équipe",
     "teams": "Effectif",
-    "events": "Matchs",
+    "events": "Événements",
     "payments": "Paiements",
     "profile": "Profil",
     "notifications": "Notifications",
@@ -2013,8 +2014,41 @@
     },
     "sections": {
       "thisWeek": "Cette semaine",
+      "viewCalendar": "Calendrier",
       "squad": "Effectif",
       "viewFullSquad": "Voir l'effectif complet"
+    }
+  },
+  "arenaCalendar": {
+    "kicker": "Arena",
+    "title": "Calendrier des Événements",
+    "today": "Aujourd'hui",
+    "empty": "Aucun événement.",
+    "view": {
+      "week": "Semaine",
+      "month": "Mois",
+      "year": "Année",
+      "range": "Intervalle"
+    },
+    "nav": {
+      "prev": "Précédent",
+      "next": "Suivant",
+      "noEvents": "Aucun événement",
+      "eventCount": "{count, plural, one {# événement} other {# événements}}",
+      "rangePlaceholder": "Sélectionner une plage de dates",
+      "rangeHint": "Cliquez ci-dessus pour choisir la période"
+    },
+    "actions": {
+      "create": "Créer un événement"
+    },
+    "emptyState": {
+      "title": "Aucun événement",
+      "description": "Créez un match, un entraînement ou un événement pour votre équipe."
+    },
+    "legend": {
+      "game": "Match",
+      "training": "Entraînement",
+      "event": "Événement"
     }
   },
   "arenaSquad": {
@@ -2043,7 +2077,8 @@
     "title": "Événements",
     "actions": {
       "create": "Créer",
-      "createEvent": "Créer un événement"
+      "createEvent": "Créer un événement",
+      "viewCalendar": "Calendrier"
     },
     "types": {
       "match": "Match",
@@ -2073,6 +2108,14 @@
       "main": "Liste principale ({count})",
       "reserves": "Réserves / En attente ({count})"
     },
+    "share": {
+      "label": "Convoquer via",
+      "copyLink": "Copier le lien",
+      "copied": "Copié !",
+      "whatsapp": "WhatsApp",
+      "telegram": "Telegram",
+      "message": "Vous avez été convoqué pour {title}. Confirmez votre présence :"
+    },
     "actions": {
       "confirm": "Confirmer la présence",
       "cancel": "Annuler la présence"
@@ -2099,7 +2142,7 @@
     }
   },
   "arenaCreateEvent": {
-    "steps": ["Type d'événement", "Détails", "Convoquer", "Confirmer"],
+    "steps": ["Type d'événement", "Détails", "Aperçu", "Confirmer"],
     "success": "Événement créé !",
     "successSubtitle": "Convocation envoyée avec succès.",
     "error": "Erreur lors de la création de l'événement. Veuillez réessayer.",
@@ -2137,7 +2180,17 @@
     "actions": {
       "back": "Retour",
       "continue": "Continuer",
-      "create": "Créer l'événement"
+      "create": "Créer l'événement",
+      "close": "Fermer"
+    },
+    "convocar": {
+      "preview": "Aperçu",
+      "shareAfterCreate": "Partagez la convocation avec votre équipe :",
+      "copyLink": "Copier le lien",
+      "copied": "Copié !",
+      "whatsapp": "WhatsApp",
+      "telegram": "Telegram",
+      "shareMessage": "Convocation : {title} — Confirmez votre présence :"
     }
   },
   "settingsPage": {

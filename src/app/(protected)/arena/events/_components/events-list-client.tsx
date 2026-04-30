@@ -1,6 +1,6 @@
 "use client";
 
-import { Calendar, Clock, MapPin, Plus, Trophy } from "lucide-react";
+import { Calendar, CalendarDays, Clock, MapPin, Plus, Trophy } from "lucide-react";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
 import { useState } from "react";
@@ -118,16 +118,25 @@ export function EventsListClient({ upcoming, past, userId }: EventsListClientPro
               <div className="jb-kicker">{t("kicker")}</div>
               <h1 className="jb-title">{t("title")}</h1>
             </div>
-            <Button
-              className="jb-action jb-action-primary"
-              onClick={() => setSheet(true)}
-              type="button"
-              variant="ghost"
-              size="sm"
-            >
-              <Plus size={14} strokeWidth={2.5} />
-              {t("actions.create")}
-            </Button>
+            <div className="flex items-center gap-2">
+              <Link
+                href="/arena/calendar"
+                className="jb-action h-12"
+              >
+                <CalendarDays size={14} strokeWidth={2} />
+                {t("actions.viewCalendar")}
+              </Link>
+              <Button
+                className="jb-action jb-action-primary"
+                onClick={() => setSheet(true)}
+                type="button"
+                variant="ghost"
+                size="sm"
+              >
+                <Plus size={14} strokeWidth={2.5} />
+                {t("actions.create")}
+              </Button>
+            </div>
           </header>
 
           {!hasEvents ? (

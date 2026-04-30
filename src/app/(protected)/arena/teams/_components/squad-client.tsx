@@ -1,6 +1,6 @@
 "use client";
 
-import { Plus, Search, Star, X } from "lucide-react";
+import { Plus, Search, Star, VerifiedIcon, X } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useState } from "react";
 import { AddPlayerSheet } from "@/components/arena/add-player-sheet";
@@ -24,6 +24,7 @@ const PLAYERS = [
     rating: 8.2,
     games: 22,
     highlight: true,
+    isVerified: true,
   },
   {
     id: 2,
@@ -35,6 +36,7 @@ const PLAYERS = [
     rating: 7.5,
     games: 19,
     highlight: false,
+    isVerified: true,
   },
   {
     id: 3,
@@ -231,7 +233,7 @@ export function SquadClient({ userId }: { userId: string }) {
             {/* Search bar */}
             <div className="flex h-11 items-center gap-2.5 rounded-[12px] border border-arena-border bg-arena-surface px-3.5">
               <Search size={16} className="shrink-0 text-arena-text-muted" />
-              <Input
+              <input
                 value={search}
                 onChange={e => setSearch(e.target.value)}
                 placeholder={t("search.placeholder")}
@@ -303,10 +305,11 @@ export function SquadClient({ userId }: { userId: string }) {
                         <span className="text-sm font-semibold text-arena-text">
                           {p.name}
                         </span>
-                        {p.highlight && (
-                          <Star
+                        {p.isVerified && (
+                          <VerifiedIcon
+                            color="var(--user-verified)"
                             size={12}
-                            className="text-arena-highlight fill-arena-highlight"
+                            className="text-arena-verified fill-arena-verified"
                           />
                         )}
                       </div>

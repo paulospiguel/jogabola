@@ -8,6 +8,7 @@ import {
   Plus,
   Trophy,
   Users,
+  VerifiedIcon,
   Zap,
 } from "lucide-react";
 import Link from "next/link";
@@ -53,10 +54,10 @@ const MOCK_EVENTS = [
 ];
 
 const MOCK_SQUAD = [
-  { id: 1, name: "Diogo Ferreira", role: "GR", status: "confirmed" as const },
-  { id: 5, name: "Ricardo Pinto", role: "DE", status: "confirmed" as const },
-  { id: 8, name: "João Martins", role: "MD", status: "reserve" as const },
-  { id: 11, name: "Miguel Pereira", role: "PE", status: "pending" as const },
+  { id: 1, name: "Diogo Ferreira", role: "GR", status: "confirmed" as const, isVerified: true },
+  { id: 5, name: "Ricardo Pinto", role: "DE", status: "confirmed" as const, isVerified: false },
+  { id: 8, name: "João Martins", role: "MD", status: "reserve" as const, isVerified: false },
+  { id: 11, name: "Miguel Pereira", role: "PE", status: "pending" as const, isVerified: true },
 ];
 
 const confirmedCount = MOCK_SQUAD.filter(p => p.status === "confirmed").length;
@@ -212,7 +213,16 @@ export function ArenaDashboardClient({
 
             <aside className="jb-stack">
               <section>
-                <div className="jb-section-label">{t("sections.thisWeek")}</div>
+                <div className="jb-section-label flex items-center justify-between">
+                  <span>{t("sections.thisWeek")}</span>
+                  <Link
+                    href="/arena/calendar"
+                    className="flex items-center gap-1 rounded-lg px-2 py-1 text-[11px] font-semibold text-arena-info transition-colors hover:bg-arena-info/10"
+                  >
+                    <Calendar size={13} />
+                    {t("sections.viewCalendar")}
+                  </Link>
+                </div>
                 <div className="jb-stack">
                   {weekEvents.map(e => {
                     const isGame = e.type === "jogo";
@@ -257,9 +267,18 @@ export function ArenaDashboardClient({
                     >
                       <JbAvatar id={p.id} name={p.name} size={34} />
                       <span className="min-w-0 flex-1">
-                        <span className="block truncate text-sm font-semibold text-arena-text">
-                          {p.name}
-                        </span>
+                        <div className="flex items-center gap-1.5">
+                          <span className="block truncate text-sm font-semibold text-arena-text">
+                            {p.name}
+                          </span>
+                          {p.isVerified && (
+                            <VerifiedIcon
+                              color="var(--user-verified)"
+                              size={12}
+                              className="text-arena-verified fill-arena-verified"
+                            />
+                          )}
+                        </div>
                         <span className="mt-0.5 block text-[11px] text-arena-text-muted">
                           {p.role}
                         </span>

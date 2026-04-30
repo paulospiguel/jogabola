@@ -5,6 +5,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { useEffect, useState } from "react";
+import { Button } from "@/components/ui/button";
 import {
   Sheet,
   SheetClose,
@@ -13,15 +14,13 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import { Button } from "@/components/ui/button";
+import { MAIN_DOMAIN } from "@/configs";
 import menuHome from "@/constants/menu-home";
 import { useHeaderButtons } from "@/hooks/use-header-buttons";
 import { useSession } from "@/lib/auth-client";
 import { cn } from "@/lib/utils";
 import LanguageSelector from "./language-selector";
 import { Logo } from "./logo";
-
-const MAIN_DOMAIN = "jogabola.fun";
 
 export default function Header() {
   const { data: session } = useSession();

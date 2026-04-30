@@ -1,0 +1,986 @@
+"use client";
+
+import {
+  addDays,
+  addMonths,
+  addWeeks,
+  addYears,
+  eachDayOfInterval,
+  endOfDay,
+  endOfMonth,
+  endOfWeek,
+  endOfYear,
+  format,
+  getDay,
+  isSameMonth,
+  isToday,
+  startOfMonth,
+  startOfWeek,
+  startOfYear,
+  subDays,
+  subMonths,
+  subWeeks,
+  subYears,
+} from "date-fns";
+import { enUS, es, fr, type Locale, pt } from "date-fns/locale";
+import {
+  Calendar,
+  CalendarDays,
+  ChevronLeft,
+  ChevronRight,
+  Clock,
+  MapPin,
+  Plus,
+} from "lucide-react";
+import Link from "next/link";
+import { useLocale, useTranslations } from "next-intl";
+import { useMemo, useState, useTransition } from "react";
+import type { DateRange } from "react-day-picker";
+import { getCalendarEvents } from "@/actions/match-sessions.actions";
+import { Calendar as CalendarPicker } from "@/components/ui/calendar";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { cn } from "@/lib/utils";
+
+/* ------------------------------------------------------------------ */
+/*  Types                                                               */
+/* ------------------------------------------------------------------ */
+
+type SessionRow = {
+  id: number;
+  title: string;
+  location: string;
+  startsAt: Date | string;
+  endsAt: Date | string | null;
+  capacity: number | null;
+  priceCents: number | null;
+  currency: string;
+};
+
+type EventType = "game" | "training" | "event";
+type ViewMode = "week" | "month" | "year" | "range";
+
+function inferType(title: string): EventType {
+  const lower = title.toLowerCase();
+  if (
+    /treino|training|treinar|pré-época|pre-season|tático|preparação/.test(lower)
+  )
+    return "training";
+  if (
+    /jogo|game|partida|match|vs\.?|contra|cup|liga|torneio|amigável/.test(lower)
+  )
+    return "game";
+  return "event";
+}
+
+const TYPE_CONFIG: Record<
+  EventType,
+  { bg: string; border: string; text: string; dot: string }
+> = {
+  game: {
+    bg: "rgba(124,255,79,0.07)",
+    border: "rgba(124,255,79,0.28)",
+    text: "#7cff4f",
+    dot: "#7cff4f",
+  },
+  training: {
+    bg: "rgba(56,189,248,0.07)",
+    border: "rgba(56,189,248,0.28)",
+    text: "#38bdf8",
+    dot: "#38bdf8",
+  },
+  event: {
+    bg: "rgba(245,158,11,0.07)",
+    border: "rgba(245,158,11,0.28)",
+    text: "#f59e0b",
+    dot: "#f59e0b",
+  },
+};
+
+const DATE_LOCALES: Record<string, Locale> = { pt, en: enUS, es, fr };
+
+/* ------------------------------------------------------------------ */
+/*  Helpers                                                             */
+/* ------------------------------------------------------------------ */
+
+function toDate(d: Date | string): Date {
+  return typeof d === "string" ? new Date(d) : d;
+}
+
+function formatDuration(
+  start: Date | string,
+  end: Date | string | null,
+): string {
+  if (!end) return format(toDate(start), "HH:mm");
+  return `${format(toDate(start), "HH:mm")} – ${format(toDate(end), "HH:mm")}`;
+}
+
+function getWeekDays(weekStart: Date): Date[] {
+  return Array.from({ length: 7 }, (_, i) => {
+    const d = new Date(weekStart);
+    d.setDate(d.getDate() + i);
+    return d;
+  });
+}
+
+function getMondayOffset(date: Date): number {
+  const day = getDay(date);
+  return day === 0 ? 6 : day - 1;
+}
+
+function getMonthGrid(monthStart: Date): Date[] {
+  const start = startOfMonth(monthStart);
+  const end = endOfMonth(monthStart);
+  const days = eachDayOfInterval({ start, end });
+  const offset = getMondayOffset(days[0]);
+  const prefix = Array.from({ length: offset }, (_, i) =>
+    subDays(days[0], offset - i),
+  );
+  const total = prefix.length + days.length;
+  const remainder = total % 7;
+  const suffix =
+    remainder > 0
+      ? Array.from({ length: 7 - remainder }, (_, i) =>
+        addDays(days[days.length - 1], i + 1),
+      )
+      : [];
+  return [...prefix, ...days, ...suffix];
+}
+
+/* ------------------------------------------------------------------ */
+/*  Sub-components                                                      */
+/* ------------------------------------------------------------------ */
+
+function EventCard({ session }: { session: SessionRow }) {
+  const type = inferType(session.title);
+  const cfg = TYPE_CONFIG[type];
+  return (
+    <Link
+      href={`/arena/events/${session.id}`}
+      className="group flex items-center gap-3 rounded-xl px-3 py-2.5 transition-all hover:brightness-110"
+      style={{ backgroundColor: cfg.bg, border: `1px solid ${cfg.border}` }}
+    >
+      <div
+        className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg"
+        style={{ backgroundColor: `${cfg.dot}18` }}
+      >
+        <span
+          className="w-2 h-2 rounded-full"
+          style={{ backgroundColor: cfg.dot }}
+        />
+      </div>
+      <div className="min-w-0 flex-1">
+        <p className="font-bold text-[13px] text-arena-text truncate">
+          {session.title}
+        </p>
+        <div className="flex items-center gap-2 mt-0.5">
+          <span className="flex items-center gap-1 text-[11px] text-arena-text-sec">
+            <Clock size={10} />
+            {formatDuration(session.startsAt, session.endsAt)}
+          </span>
+          <span className="flex items-center gap-1 text-[11px] text-arena-text-muted truncate">
+            <MapPin size={10} />
+            {session.location}
+          </span>
+        </div>
+      </div>
+      <ChevronRight size={13} className="text-arena-text-muted shrink-0" />
+    </Link>
+  );
+}
+
+/* ------------------------------------------------------------------ */
+/*  Main component                                                      */
+/* ------------------------------------------------------------------ */
+
+interface CalendarEventsProps {
+  initialEvents: SessionRow[];
+  initialWeekStart: string;
+}
+
+export function CalendarEvents({
+  initialEvents,
+  initialWeekStart,
+}: CalendarEventsProps) {
+  const t = useTranslations("arenaCalendar");
+  const locale = useLocale();
+  const dfLocale = DATE_LOCALES[locale] ?? pt;
+  const [isPending, startTransition] = useTransition();
+
+  const [viewMode, setViewMode] = useState<ViewMode>("week");
+  const [weekStart, setWeekStart] = useState<Date>(
+    () => new Date(initialWeekStart),
+  );
+  const [monthStart, setMonthStart] = useState<Date>(() =>
+    startOfMonth(new Date()),
+  );
+  const [yearStart, setYearStart] = useState<Date>(() =>
+    startOfYear(new Date()),
+  );
+  const [customRange, setCustomRange] = useState<DateRange | undefined>(
+    undefined,
+  );
+  const [rangeOpen, setRangeOpen] = useState(false);
+  const [events, setEvents] = useState<SessionRow[]>(initialEvents);
+
+  /* -- derived period ----------------------------------------------- */
+  const { from, to, navLabel } = useMemo(() => {
+    switch (viewMode) {
+      case "week": {
+        const f = weekStart;
+        const t_ = endOfWeek(weekStart, { weekStartsOn: 1 });
+        return {
+          from: f,
+          to: t_,
+          navLabel: `${format(f, "d MMM", { locale: dfLocale })} – ${format(t_, "d MMM yyyy", { locale: dfLocale })}`,
+        };
+      }
+      case "month": {
+        const f = startOfMonth(monthStart);
+        const t_ = endOfMonth(monthStart);
+        return {
+          from: f,
+          to: t_,
+          navLabel: format(monthStart, "MMMM yyyy", { locale: dfLocale }),
+        };
+      }
+      case "year": {
+        const f = startOfYear(yearStart);
+        const t_ = endOfYear(yearStart);
+        return { from: f, to: t_, navLabel: format(yearStart, "yyyy") };
+      }
+      case "range": {
+        if (customRange?.from && customRange?.to) {
+          return {
+            from: customRange.from,
+            to: endOfDay(customRange.to),
+            navLabel: `${format(customRange.from, "d MMM", { locale: dfLocale })} – ${format(customRange.to, "d MMM yyyy", { locale: dfLocale })}`,
+          };
+        }
+        return { from: new Date(), to: new Date(), navLabel: "" };
+      }
+    }
+  }, [viewMode, weekStart, monthStart, yearStart, customRange, dfLocale]);
+
+  function fetchPeriod(f: Date, t_: Date) {
+    startTransition(async () => {
+      const result = await getCalendarEvents(f, t_);
+      if (result.success) setEvents(result.data as SessionRow[]);
+    });
+  }
+
+  function navigate(dir: "prev" | "next") {
+    switch (viewMode) {
+      case "week": {
+        const next =
+          dir === "prev" ? subWeeks(weekStart, 1) : addWeeks(weekStart, 1);
+        const f = startOfWeek(next, { weekStartsOn: 1 });
+        setWeekStart(f);
+        fetchPeriod(f, endOfWeek(f, { weekStartsOn: 1 }));
+        break;
+      }
+      case "month": {
+        const next =
+          dir === "prev" ? subMonths(monthStart, 1) : addMonths(monthStart, 1);
+        const f = startOfMonth(next);
+        setMonthStart(f);
+        fetchPeriod(f, endOfMonth(f));
+        break;
+      }
+      case "year": {
+        const next =
+          dir === "prev" ? subYears(yearStart, 1) : addYears(yearStart, 1);
+        const f = startOfYear(next);
+        setYearStart(f);
+        fetchPeriod(f, endOfYear(f));
+        break;
+      }
+    }
+  }
+
+  function switchMode(mode: ViewMode) {
+    setViewMode(mode);
+    if (mode === "week")
+      fetchPeriod(weekStart, endOfWeek(weekStart, { weekStartsOn: 1 }));
+    else if (mode === "month")
+      fetchPeriod(startOfMonth(monthStart), endOfMonth(monthStart));
+    else if (mode === "year")
+      fetchPeriod(startOfYear(yearStart), endOfYear(yearStart));
+  }
+
+  const eventsByDate = useMemo(() => {
+    const map: Record<string, SessionRow[]> = {};
+    for (const ev of events) {
+      const key = format(toDate(ev.startsAt), "yyyy-MM-dd");
+      if (!map[key]) map[key] = [];
+      map[key].push(ev);
+    }
+    return map;
+  }, [events]);
+
+  const totalEvents = events.length;
+  const weekDays = useMemo(() => getWeekDays(weekStart), [weekStart]);
+  const VIEW_MODES: ViewMode[] = ["week", "month", "year", "range"];
+
+  // suppress unused warning — from/to used to trigger memo
+  void from;
+  void to;
+
+  return (
+    <div className="jb-page">
+      <div className="jb-page-inner">
+        {/* Header */}
+        <header className="jb-topbar">
+          <div>
+            <div className="jb-kicker">{t("kicker")}</div>
+            <h1 className="jb-title">{t("title")}</h1>
+          </div>
+          <Link
+            href="/arena/events/create"
+            className="jb-action h-12 jb-action-primary hidden md:inline-flex"
+          >
+            <Plus size={15} strokeWidth={2.5} />
+            {t("actions.create")}
+          </Link>
+        </header>
+
+        {/* View mode tabs */}
+        <div className="jb-toolbar mb-4">
+          {VIEW_MODES.map(mode => (
+            <button
+              key={mode}
+              type="button"
+              onClick={() => switchMode(mode)}
+              className={cn("jb-chip", viewMode === mode && "jb-chip-active")}
+            >
+              {t(`view.${mode}`)}
+            </button>
+          ))}
+        </div>
+
+        {/* Nav bar — week / month / year */}
+        {viewMode !== "range" && (
+          <div
+            className="flex items-center justify-between gap-3 rounded-xl px-4 py-3 mb-5"
+            style={{
+              backgroundColor: "var(--color-arena-surface)",
+              border: "1px solid var(--color-arena-border)",
+            }}
+          >
+            <button
+              type="button"
+              onClick={() => navigate("prev")}
+              disabled={isPending}
+              className="flex h-8 w-8 items-center justify-center rounded-lg text-arena-text-sec hover:bg-arena-surface-el hover:text-arena-text transition-colors disabled:opacity-40"
+              aria-label={t("nav.prev")}
+            >
+              <ChevronLeft size={18} />
+            </button>
+            <div className="flex flex-col items-center gap-0.5">
+              <span className="text-[13px] font-bold text-arena-text">
+                {navLabel}
+              </span>
+              <span className="text-[11px] text-arena-text-muted">
+                {totalEvents === 0
+                  ? t("nav.noEvents")
+                  : t("nav.eventCount", { count: totalEvents })}
+              </span>
+            </div>
+            <button
+              type="button"
+              onClick={() => navigate("next")}
+              disabled={isPending}
+              className="flex h-8 w-8 items-center justify-center rounded-lg text-arena-text-sec hover:bg-arena-surface-el hover:text-arena-text transition-colors disabled:opacity-40"
+              aria-label={t("nav.next")}
+            >
+              <ChevronRight size={18} />
+            </button>
+          </div>
+        )}
+
+        {/* Range picker trigger */}
+        {viewMode === "range" && (
+          <div className="mb-5 flex flex-col gap-2">
+            <Popover open={rangeOpen} onOpenChange={setRangeOpen}>
+              <PopoverTrigger asChild>
+                <button
+                  type="button"
+                  className="flex items-center gap-2.5 rounded-xl px-4 py-3 text-sm font-semibold transition-colors hover:bg-arena-surface-el w-full"
+                  style={{
+                    backgroundColor: "var(--color-arena-surface)",
+                    border: "1px solid var(--color-arena-border)",
+                  }}
+                >
+                  <Calendar size={16} className="text-arena-primary shrink-0" />
+                  <span className="text-arena-text flex-1 text-left">
+                    {customRange?.from && customRange?.to
+                      ? navLabel
+                      : t("nav.rangePlaceholder")}
+                  </span>
+                  <ChevronRight size={14} className="text-arena-text-muted" />
+                </button>
+              </PopoverTrigger>
+              <PopoverContent
+                className="w-auto p-0"
+                align="start"
+                style={{
+                  backgroundColor: "var(--color-arena-surface)",
+                  border: "1px solid var(--color-arena-border)",
+                }}
+              >
+                <CalendarPicker
+                  mode="range"
+                  selected={customRange}
+                  onSelect={range => {
+                    setCustomRange(range);
+                    if (range?.from && range?.to) {
+                      fetchPeriod(range.from, endOfDay(range.to));
+                      setRangeOpen(false);
+                    }
+                  }}
+                  numberOfMonths={2}
+                  weekStartsOn={1}
+                  className="p-3"
+                />
+              </PopoverContent>
+            </Popover>
+            {customRange?.from && customRange?.to && (
+              <p className="text-[11px] text-arena-text-muted px-1">
+                {totalEvents === 0
+                  ? t("nav.noEvents")
+                  : t("nav.eventCount", { count: totalEvents })}
+              </p>
+            )}
+          </div>
+        )}
+
+        {/* ============================================================ */}
+        {/*  WEEK VIEW                                                    */}
+        {/* ============================================================ */}
+        {viewMode === "week" && (
+          <>
+            {/* Desktop 7-col grid */}
+            <div
+              className={cn(
+                "hidden md:grid grid-cols-7 gap-2 transition-opacity duration-200",
+                isPending && "opacity-40",
+              )}
+            >
+              {weekDays.map(day => {
+                const key = format(day, "yyyy-MM-dd");
+                const dayEvents = eventsByDate[key] ?? [];
+                const today = isToday(day);
+                return (
+                  <div key={key} className="flex flex-col gap-1.5">
+                    <div
+                      className="rounded-xl px-2 py-2 text-center"
+                      style={
+                        today
+                          ? {
+                            backgroundColor: "rgba(124,255,79,0.12)",
+                            border: "1px solid rgba(124,255,79,0.3)",
+                          }
+                          : {
+                            backgroundColor: "var(--color-arena-surface)",
+                            border: "1px solid var(--color-arena-border)",
+                          }
+                      }
+                    >
+                      <p
+                        className="text-[10px] font-bold uppercase tracking-wider"
+                        style={{
+                          color: today
+                            ? "#7cff4f"
+                            : "var(--color-arena-text-muted)",
+                        }}
+                      >
+                        {format(day, "EEE", { locale: dfLocale })}
+                      </p>
+                      <p
+                        className="text-[17px] font-extrabold"
+                        style={{
+                          color: today ? "#7cff4f" : "var(--color-arena-text)",
+                        }}
+                      >
+                        {format(day, "d")}
+                      </p>
+                    </div>
+                    {dayEvents.length === 0 ? (
+                      <div className="flex items-center justify-center h-full min-h-15 rounded-xl border border-dashed border-arena-border/50">
+                        <span className="text-[11px] text-arena-text-muted/50">
+                          —
+                        </span>
+                      </div>
+                    ) : (
+                      dayEvents.map(ev => {
+                        const cfg = TYPE_CONFIG[inferType(ev.title)];
+                        return (
+                          <Link
+                            key={ev.id}
+                            href={`/arena/events/${ev.id}`}
+                            className="block rounded-xl px-3 py-2.5 transition-all hover:brightness-110"
+                            style={{
+                              backgroundColor: cfg.bg,
+                              border: `1px solid ${cfg.border}`,
+                            }}
+                          >
+                            <div className="flex items-center gap-1.5 mb-1">
+                              <span
+                                className="w-1.5 h-1.5 rounded-full shrink-0"
+                                style={{ backgroundColor: cfg.dot }}
+                              />
+                              <span
+                                className="text-[11px] font-bold"
+                                style={{ color: cfg.text }}
+                              >
+                                {format(toDate(ev.startsAt), "HH:mm")}
+                              </span>
+                            </div>
+                            <p className="font-bold text-[13px] leading-tight text-arena-text truncate">
+                              {ev.title}
+                            </p>
+                            <p className="text-[11px] text-arena-text-muted truncate mt-0.5">
+                              {ev.location}
+                            </p>
+                          </Link>
+                        );
+                      })
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+
+            {/* Mobile stacked list */}
+            <div
+              className={cn(
+                "md:hidden flex flex-col gap-4 transition-opacity duration-200",
+                isPending && "opacity-40",
+              )}
+            >
+              {weekDays.map(day => {
+                const key = format(day, "yyyy-MM-dd");
+                const dayEvents = eventsByDate[key] ?? [];
+                const today = isToday(day);
+                return (
+                  <div key={key}>
+                    <div
+                      className="flex items-center gap-2 px-4 py-2 rounded-xl mb-2"
+                      style={
+                        today
+                          ? {
+                            backgroundColor: "rgba(124,255,79,0.12)",
+                            border: "1px solid rgba(124,255,79,0.3)",
+                          }
+                          : {
+                            backgroundColor: "var(--color-arena-surface)",
+                            border: "1px solid var(--color-arena-border)",
+                          }
+                      }
+                    >
+                      <span
+                        className="text-[15px] font-extrabold"
+                        style={{
+                          color: today ? "#7cff4f" : "var(--color-arena-text)",
+                        }}
+                      >
+                        {format(day, "d")}
+                      </span>
+                      <span
+                        className="text-[12px] font-bold uppercase tracking-wider"
+                        style={{
+                          color: today
+                            ? "#7cff4f"
+                            : "var(--color-arena-text-muted)",
+                        }}
+                      >
+                        {format(day, "EEEE", { locale: dfLocale })}
+                      </span>
+                      {today && (
+                        <span className="ml-auto text-[10px] font-bold text-arena-primary bg-arena-primary/10 rounded-md px-1.5 py-0.5">
+                          {t("today")}
+                        </span>
+                      )}
+                    </div>
+                    {dayEvents.length === 0 ? (
+                      <p className="px-4 text-[12px] text-arena-text-muted/60">
+                        {t("empty")}
+                      </p>
+                    ) : (
+                      <div className="flex flex-col gap-2">
+                        {dayEvents.map(ev => (
+                          <EventCard key={ev.id} session={ev} />
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+          </>
+        )}
+
+        {/* ============================================================ */}
+        {/*  MONTH VIEW                                                   */}
+        {/* ============================================================ */}
+        {viewMode === "month" && (
+          <div
+            className={cn(
+              "transition-opacity duration-200",
+              isPending && "opacity-40",
+            )}
+          >
+            {/* Day-of-week headers */}
+            <div className="grid grid-cols-7 gap-1 mb-1">
+              {Array.from({ length: 7 }, (_, i) => (
+                <div
+                  key={i}
+                  className="text-center text-[10px] font-bold uppercase tracking-wider text-arena-text-muted py-1.5"
+                >
+                  {format(
+                    addDays(startOfWeek(new Date(), { weekStartsOn: 1 }), i),
+                    "EEE",
+                    { locale: dfLocale },
+                  )}
+                </div>
+              ))}
+            </div>
+
+            {/* Day cells */}
+            <div className="grid grid-cols-7 gap-1">
+              {getMonthGrid(monthStart).map(day => {
+                const key = format(day, "yyyy-MM-dd");
+                const dayEvents = eventsByDate[key] ?? [];
+                const today = isToday(day);
+                const inMonth = isSameMonth(day, monthStart);
+                const dots = dayEvents.slice(0, 3);
+                const overflow = dayEvents.length - 3;
+                return (
+                  <div
+                    key={key}
+                    className="flex flex-col items-center rounded-xl p-1.5 min-h-14 transition-colors"
+                    style={{
+                      backgroundColor: today
+                        ? "rgba(124,255,79,0.1)"
+                        : dayEvents.length > 0 && inMonth
+                          ? "var(--color-arena-surface)"
+                          : "transparent",
+                      border: today
+                        ? "1px solid rgba(124,255,79,0.3)"
+                        : "1px solid transparent",
+                      opacity: inMonth ? 1 : 0.3,
+                    }}
+                  >
+                    <span
+                      className="text-[13px] font-bold mb-1"
+                      style={{
+                        color: today ? "#7cff4f" : "var(--color-arena-text)",
+                      }}
+                    >
+                      {format(day, "d")}
+                    </span>
+                    {dots.length > 0 && (
+                      <div className="flex gap-0.5 flex-wrap justify-center">
+                        {dots.map(ev => {
+                          const cfg = TYPE_CONFIG[inferType(ev.title)];
+                          return (
+                            <span
+                              key={ev.id}
+                              className="w-1.5 h-1.5 rounded-full"
+                              style={{ backgroundColor: cfg.dot }}
+                            />
+                          );
+                        })}
+                        {overflow > 0 && (
+                          <span className="text-[9px] font-bold text-arena-text-muted">
+                            +{overflow}
+                          </span>
+                        )}
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+
+            {/* Event list below grid */}
+            {totalEvents > 0 && (
+              <div className="mt-6">
+                <div className="jb-section-label mb-3">
+                  {t("nav.eventCount", { count: totalEvents })}
+                </div>
+                <div className="flex flex-col gap-2">
+                  {events
+                    .sort(
+                      (a, b) =>
+                        toDate(a.startsAt).getTime() -
+                        toDate(b.startsAt).getTime(),
+                    )
+                    .map(ev => (
+                      <EventCard key={ev.id} session={ev} />
+                    ))}
+                </div>
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* ============================================================ */}
+        {/*  YEAR VIEW                                                    */}
+        {/* ============================================================ */}
+        {viewMode === "year" && (
+          <div
+            className={cn(
+              "transition-opacity duration-200",
+              isPending && "opacity-40",
+            )}
+          >
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
+              {Array.from({ length: 12 }, (_, i) => {
+                const mStart = addMonths(startOfYear(yearStart), i);
+                const mLabel = format(mStart, "MMMM", { locale: dfLocale });
+                const mEvents = events.filter(ev =>
+                  isSameMonth(toDate(ev.startsAt), mStart),
+                );
+                const isCurrent = isSameMonth(mStart, new Date());
+                return (
+                  <button
+                    key={i}
+                    type="button"
+                    onClick={() => {
+                      setMonthStart(mStart);
+                      setViewMode("month");
+                      fetchPeriod(startOfMonth(mStart), endOfMonth(mStart));
+                    }}
+                    className="flex flex-col gap-2 rounded-xl p-4 text-left transition-all hover:brightness-110 active:scale-[0.98]"
+                    style={{
+                      backgroundColor: isCurrent
+                        ? "rgba(124,255,79,0.08)"
+                        : "var(--color-arena-surface)",
+                      border: isCurrent
+                        ? "1px solid rgba(124,255,79,0.25)"
+                        : "1px solid var(--color-arena-border)",
+                    }}
+                  >
+                    <span
+                      className="text-[13px] font-extrabold capitalize"
+                      style={{
+                        color: isCurrent
+                          ? "#7cff4f"
+                          : "var(--color-arena-text)",
+                      }}
+                    >
+                      {mLabel}
+                    </span>
+                    {mEvents.length > 0 ? (
+                      <>
+                        <div className="flex flex-wrap gap-0.5">
+                          {mEvents.slice(0, 8).map(ev => {
+                            const cfg = TYPE_CONFIG[inferType(ev.title)];
+                            return (
+                              <span
+                                key={ev.id}
+                                className="w-1.5 h-1.5 rounded-full"
+                                style={{ backgroundColor: cfg.dot }}
+                              />
+                            );
+                          })}
+                          {mEvents.length > 8 && (
+                            <span className="text-[10px] font-bold text-arena-text-muted">
+                              +{mEvents.length - 8}
+                            </span>
+                          )}
+                        </div>
+                        <span className="text-[11px] text-arena-text-muted">
+                          {t("nav.eventCount", { count: mEvents.length })}
+                        </span>
+                      </>
+                    ) : (
+                      <span className="text-[11px] text-arena-text-muted/50">
+                        {t("nav.noEvents")}
+                      </span>
+                    )}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+        )}
+
+        {/* ============================================================ */}
+        {/*  RANGE VIEW                                                   */}
+        {/* ============================================================ */}
+        {viewMode === "range" && !customRange?.from && (
+          <div className="flex flex-col items-center gap-4 py-16 text-center">
+            <div
+              className="flex h-16 w-16 items-center justify-center rounded-2xl"
+              style={{
+                backgroundColor: "var(--color-arena-surface-el)",
+                border: "1px solid var(--color-arena-border)",
+              }}
+            >
+              <CalendarDays
+                size={28}
+                className="text-arena-text-muted"
+                strokeWidth={1.5}
+              />
+            </div>
+            <div>
+              <p className="font-bold text-[15px] text-arena-text">
+                {t("nav.rangePlaceholder")}
+              </p>
+              <p className="mt-1 text-[13px] text-arena-text-muted">
+                {t("nav.rangeHint")}
+              </p>
+            </div>
+          </div>
+        )}
+
+        {viewMode === "range" && customRange?.from && customRange?.to && (
+          <div
+            className={cn(
+              "flex flex-col gap-2 transition-opacity duration-200",
+              isPending && "opacity-40",
+            )}
+          >
+            {totalEvents === 0 ? (
+              <div className="flex flex-col items-center gap-4 py-12 text-center">
+                <div
+                  className="flex h-14 w-14 items-center justify-center rounded-2xl"
+                  style={{
+                    backgroundColor: "var(--color-arena-surface-el)",
+                    border: "1px solid var(--color-arena-border)",
+                  }}
+                >
+                  <CalendarDays
+                    size={24}
+                    className="text-arena-text-muted"
+                    strokeWidth={1.5}
+                  />
+                </div>
+                <p className="text-[14px] text-arena-text-muted">
+                  {t("emptyState.title")}
+                </p>
+              </div>
+            ) : (
+              (() => {
+                const grouped: Record<string, SessionRow[]> = {};
+                for (const ev of events.sort(
+                  (a, b) =>
+                    toDate(a.startsAt).getTime() - toDate(b.startsAt).getTime(),
+                )) {
+                  const key = format(toDate(ev.startsAt), "yyyy-MM-dd");
+                  if (!grouped[key]) grouped[key] = [];
+                  grouped[key].push(ev);
+                }
+                return Object.entries(grouped).map(([dateKey, dayEvents]) => {
+                  const day = new Date(dateKey);
+                  const today = isToday(day);
+                  return (
+                    <div key={dateKey} className="mb-3">
+                      <div className="flex items-center gap-2 mb-2">
+                        <span
+                          className="text-[12px] font-bold uppercase tracking-wider"
+                          style={{
+                            color: today
+                              ? "#7cff4f"
+                              : "var(--color-arena-text-muted)",
+                          }}
+                        >
+                          {format(day, "EEE, d MMM", { locale: dfLocale })}
+                        </span>
+                        {today && (
+                          <span className="text-[10px] font-bold text-arena-primary bg-arena-primary/10 rounded-md px-1.5 py-0.5">
+                            {t("today")}
+                          </span>
+                        )}
+                      </div>
+                      <div className="flex flex-col gap-2">
+                        {dayEvents.map(ev => (
+                          <EventCard key={ev.id} session={ev} />
+                        ))}
+                      </div>
+                    </div>
+                  );
+                });
+              })()
+            )}
+          </div>
+        )}
+
+        {/* Empty state for week/month/year */}
+        {viewMode !== "range" && totalEvents === 0 && !isPending && (
+          <div className="mt-8 flex flex-col items-center gap-4 py-12 text-center">
+            <div
+              className="flex h-16 w-16 items-center justify-center rounded-2xl"
+              style={{
+                backgroundColor: "var(--color-arena-surface-el)",
+                border: "1px solid var(--color-arena-border)",
+              }}
+            >
+              <Calendar
+                size={28}
+                className="text-arena-text-muted"
+                strokeWidth={1.5}
+              />
+            </div>
+            <div>
+              <p className="font-bold text-[15px] text-arena-text">
+                {t("emptyState.title")}
+              </p>
+              <p className="mt-1 text-[13px] text-arena-text-muted">
+                {t("emptyState.description")}
+              </p>
+            </div>
+            <Link
+              href="/arena/events/create"
+              className="jb-action jb-action-primary mt-1"
+            >
+              <Plus size={15} strokeWidth={2.5} />
+              {t("actions.create")}
+            </Link>
+          </div>
+        )}
+
+        {/* Legend */}
+        <div className="mt-8 flex flex-wrap gap-2">
+          {(
+            Object.entries(TYPE_CONFIG) as [
+              EventType,
+              (typeof TYPE_CONFIG)[EventType],
+            ][]
+          ).map(([type, cfg]) => (
+            <div
+              key={type}
+              className="flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-[11px] font-semibold"
+              style={{
+                backgroundColor: cfg.bg,
+                border: `1px solid ${cfg.border}`,
+                color: cfg.text,
+              }}
+            >
+              <span
+                className="w-1.5 h-1.5 rounded-full"
+                style={{ backgroundColor: cfg.dot }}
+              />
+              {t(`legend.${type}`)}
+            </div>
+          ))}
+        </div>
+
+        {/* Mobile FAB */}
+        <Link
+          href="/arena/events/create"
+          className="md:hidden fixed bottom-24 right-5 z-30 flex h-12 w-12 items-center justify-center rounded-full shadow-lg"
+          style={{ backgroundColor: "#7cff4f", color: "#0b0f14" }}
+          aria-label={t("actions.create")}
+        >
+          <Plus size={22} strokeWidth={2.5} />
+        </Link>
+      </div>
+    </div>
+  );
+}

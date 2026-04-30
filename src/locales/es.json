@@ -464,6 +464,7 @@
     "appMockupAlt": "Mockup de la aplicación Jogabola",
     "hero": {
       "versionBadge": "Versión 2.0",
+      "badge": "Nuevo · {version}",
       "titlePart1": "Organize your",
       "titlePart2": "Team's",
       "titleHighlight": "equipo de ensueño?",
@@ -1623,7 +1624,7 @@
   "arenaNav": {
     "dashboard": "Equipo",
     "teams": "Plantilla",
-    "events": "Partidos",
+    "events": "Eventos",
     "payments": "Pagos",
     "profile": "Perfil",
     "notifications": "Notificaciones",
@@ -2013,8 +2014,41 @@
     },
     "sections": {
       "thisWeek": "Esta semana",
+      "viewCalendar": "Calendario",
       "squad": "Plantilla",
       "viewFullSquad": "Ver plantilla completa"
+    }
+  },
+  "arenaCalendar": {
+    "kicker": "Arena",
+    "title": "Calendario de Eventos",
+    "today": "Hoy",
+    "empty": "Sin eventos.",
+    "view": {
+      "week": "Semana",
+      "month": "Mes",
+      "year": "Año",
+      "range": "Intervalo"
+    },
+    "nav": {
+      "prev": "Anterior",
+      "next": "Siguiente",
+      "noEvents": "Ningún evento",
+      "eventCount": "{count, plural, one {# evento} other {# eventos}}",
+      "rangePlaceholder": "Seleccionar rango de fechas",
+      "rangeHint": "Haz clic arriba para elegir el período"
+    },
+    "actions": {
+      "create": "Crear Evento"
+    },
+    "emptyState": {
+      "title": "Ningún evento",
+      "description": "Crea un partido, entrenamiento o evento para tu equipo."
+    },
+    "legend": {
+      "game": "Partido",
+      "training": "Entrenamiento",
+      "event": "Evento"
     }
   },
   "arenaSquad": {
@@ -2043,7 +2077,8 @@
     "title": "Eventos",
     "actions": {
       "create": "Crear",
-      "createEvent": "Crear evento"
+      "createEvent": "Crear evento",
+      "viewCalendar": "Calendario"
     },
     "types": {
       "match": "Partido",
@@ -2073,6 +2108,14 @@
       "main": "Lista Principal ({count})",
       "reserves": "Reservas / Pendientes ({count})"
     },
+    "share": {
+      "label": "Convocar por",
+      "copyLink": "Copiar enlace",
+      "copied": "¡Copiado!",
+      "whatsapp": "WhatsApp",
+      "telegram": "Telegram",
+      "message": "Fuiste convocado para {title}. Confirma tu asistencia:"
+    },
     "actions": {
       "confirm": "Confirmar Asistencia",
       "cancel": "Cancelar Asistencia"
@@ -2099,7 +2142,7 @@
     }
   },
   "arenaCreateEvent": {
-    "steps": ["Tipo de evento", "Detalles", "Convocar", "Confirmar"],
+    "steps": ["Tipo de evento", "Detalles", "Vista previa", "Confirmar"],
     "success": "¡Evento creado!",
     "successSubtitle": "Convocatoria enviada con éxito.",
     "error": "Error al crear el evento. Inténtalo de nuevo.",
@@ -2137,7 +2180,17 @@
     "actions": {
       "back": "Volver",
       "continue": "Continuar",
-      "create": "Crear Evento"
+      "create": "Crear Evento",
+      "close": "Cerrar"
+    },
+    "convocar": {
+      "preview": "Vista previa",
+      "shareAfterCreate": "Comparte la convocatoria con tu equipo:",
+      "copyLink": "Copiar enlace",
+      "copied": "¡Copiado!",
+      "whatsapp": "WhatsApp",
+      "telegram": "Telegram",
+      "shareMessage": "Convocatoria: {title} — Confirma tu asistencia:"
     }
   },
   "settingsPage": {
