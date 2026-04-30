@@ -2,82 +2,49 @@
 
 import { and, desc, eq } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
-import { headers } from "next/headers";
 import { db } from "@/db/client";
 import { notifications } from "@/db/schema";
-import { auth } from "@/lib/auth";
+import { getAuthUser } from "@/lib/action-helpers";
 
 export async function getNotifications() {
-  const session = await auth.api.getSession({ headers: await headers() });
+  const user = await getAuthUser();
+  if (!user) return { success: false as const, error: { code: "UNAUTHORIZED" } };
 
-  if (!session?.user) {
-    return { success: false, error: "Unauthorized" };
-  }
+  const data = await db
+    .select()
+    .from(notifications)
+    .where(eq(notifications.userId, user.id))
+    .orderBy(desc(notifications.createdAt));
 
-  try {
-    const data = await db
-      .select()
-      .from(notifications)
-      .where(eq(notifications.userId, session.user.id))
-      .orderBy(desc(notifications.createdAt));
-
-    return { success: true, data };
-  } catch (error) {
-    console.error("Failed to fetch notifications:", error);
-    return { success: false, error: "Failed to fetch notifications" };
-  }
+  return { success: true as const, data };
 }
 
 export async function markNotificationAsRead(id: string) {
-  const session = await auth.api.getSession({ headers: await headers() });
+  const user = await getAuthUser();
+  if (!user) return { success: false as const, error: { code: "UNAUTHORIZED" } };
 
-  if (!session?.user) {
-    return { success: false, error: "Unauthorized" };
-  }
+  await db
+    .update(notifications)
+    .set({ read: true })
+    .where(and(eq(notifications.id, id), eq(notifications.userId, user.id)));
 
-  try {
-    await db
-      .update(notifications)
-      .set({ read: true })
-      .where(
-        and(
-          eq(notifications.id, id),
-          eq(notifications.userId, session.user.id),
-        ),
-      );
-
-    revalidatePath("/arena/notifications");
-    return { success: true };
-  } catch (error) {
-    console.error("Failed to mark notification as read:", error);
-    return { success: false, error: "Failed to update notification" };
-  }
+  revalidatePath("/arena/notifications");
+  return { success: true as const };
 }
 
 export async function markAllAsRead() {
-  const session = await auth.api.getSession({ headers: await headers() });
+  const user = await getAuthUser();
+  if (!user) return { success: false as const, error: { code: "UNAUTHORIZED" } };
 
-  if (!session?.user) {
-    return { success: false, error: "Unauthorized" };
-  }
+  await db
+    .update(notifications)
+    .set({ read: true })
+    .where(eq(notifications.userId, user.id));
 
-  try {
-    await db
-      .update(notifications)
-      .set({ read: true })
-      .where(eq(notifications.userId, session.user.id));
-
-    revalidatePath("/arena/notifications");
-    return { success: true };
-  } catch (error) {
-    console.error("Failed to mark all notifications as read:", error);
-    return { success: false, error: "Failed to update notifications" };
-  }
+  revalidatePath("/arena/notifications");
+  return { success: true as const };
 }
 
-/**
- * Utility to send a notification (server-side only)
- */
 export async function sendNotification(params: {
   userId: string;
   type: string;
@@ -85,28 +52,22 @@ export async function sendNotification(params: {
   message: string;
   metadata?: Record<string, unknown>;
 }) {
-  try {
-    // Check if user has notifications enabled
-    const userResult = await db.query.user.findFirst({
-      where: (u, { eq }) => eq(u.id, params.userId),
-      columns: { notificationsEnabled: true },
-    });
+  const userResult = await db.query.user.findFirst({
+    where: (u, { eq }) => eq(u.id, params.userId),
+    columns: { notificationsEnabled: true },
+  });
 
-    if (userResult && !userResult.notificationsEnabled) {
-      return { success: true, skipped: true };
-    }
-
-    await db.insert(notifications).values({
-      userId: params.userId,
-      type: params.type,
-      title: params.title,
-      message: params.message,
-      metadata: params.metadata,
-    });
-
-    return { success: true };
-  } catch (error) {
-    console.error("Failed to send notification:", error);
-    return { success: false, error: "Failed to send notification" };
+  if (userResult && !userResult.notificationsEnabled) {
+    return { success: true as const, skipped: true };
   }
+
+  await db.insert(notifications).values({
+    userId: params.userId,
+    type: params.type,
+    title: params.title,
+    message: params.message,
+    metadata: params.metadata,
+  });
+
+  return { success: true as const };
 }
