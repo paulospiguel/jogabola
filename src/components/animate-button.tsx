@@ -1,6 +1,6 @@
 "use client";
 import { MoveRight } from "@/components/icons";
-
+import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
 interface ArrowButtonProps
@@ -23,7 +23,8 @@ export default function ArrowButton({
   ...props
 }: ArrowButtonProps) {
   return (
-    <button
+    <Button
+      variant="outline"
       style={{ borderColor: borderColor }}
       {...props}
       className={cn(
@@ -48,6 +49,6 @@ export default function ArrowButton({
         {text}
       </span>
       <span className="invisible relative">Button</span>
-    </button>
+    </Button>
   );
 }
