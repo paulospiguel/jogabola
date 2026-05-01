@@ -11,6 +11,7 @@ import {
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useTranslations } from "next-intl";
+import { RELEASE } from "@/constants/app";
 import {
   Sidebar,
   SidebarContent,
@@ -26,6 +27,7 @@ import {
 } from "@/components/ui/sidebar";
 import { cn } from "@/lib/utils";
 import { Logo } from "../logo";
+import { JbTeamSwitcher } from "./jb-team-switcher";
 import { JbUserMenu } from "./jb-user-menu";
 
 const ITEMS = [
@@ -40,22 +42,32 @@ export function JbSidebar() {
   const pathname = usePathname();
   const { state, toggleSidebar } = useSidebar();
   const t = useTranslations("arenaNav");
+  const company = useTranslations("company");
 
   return (
     <Sidebar collapsible="icon" className="border-arena-border border-r">
-      <SidebarHeader className="flex h-24 flex-row items-center justify-center border-arena-border border-b px-2 group-data-[collapsible=icon]:px-0">
-        <Logo
-          variant="white"
-          size="small"
-          href="/arena"
-          className={cn(
-            "transition-all duration-300",
-            state === "collapsed" ? "w-8 h-8" : "scale-100",
+      <SidebarHeader className="flex flex-col gap-3 border-arena-border border-b px-2 py-5 group-data-[collapsible=icon]:items-center group-data-[collapsible=icon]:px-0">
+        <div className="flex h-10 items-center justify-between group-data-[collapsible=icon]:h-8 group-data-[collapsible=icon]:justify-center">
+          <Logo
+            variant="white"
+            size="small"
+            href="/arena"
+            className={cn(
+              "transition-all duration-300",
+              state === "collapsed" ? "w-8 h-8" : "scale-100",
+            )}
+          />
+          {RELEASE.IS_BETA && state !== "collapsed" && (
+            <span className="rounded-full border border-[#7CFF4F]/25 bg-[#7CFF4F]/10 px-2 py-0.5 text-[10px] font-bold tracking-widest text-[#7CFF4F] uppercase">
+              Beta
+            </span>
           )}
-        />
+        </div>
       </SidebarHeader>
 
       <SidebarContent className="px-2 py-4 group-data-[collapsible=icon]:px-0">
+        <JbTeamSwitcher />
+
         <SidebarGroup className="group-data-[collapsible=icon]:p-0">
           <SidebarGroupContent>
             <SidebarMenu className="gap-1.5 group-data-[collapsible=icon]:gap-2">
@@ -132,7 +144,7 @@ export function JbSidebar() {
                 <span className="truncate font-semibold">
                   {state === "collapsed" ? t("expand") : t("collapse")}
                 </span>
-                <span className="truncate text-xs">JogaBola Arena</span>
+                <span className="truncate text-xs">{company("name")}</span>
               </div>
             </SidebarMenuButton>
           </SidebarMenuItem>
