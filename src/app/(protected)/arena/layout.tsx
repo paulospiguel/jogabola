@@ -1,14 +1,29 @@
+import { headers } from "next/headers";
+import { redirect } from "next/navigation";
+import { auth } from "@/lib/auth";
 import DotGrid from "@/components/arena/dot-grid";
 import { JbBottomNav } from "@/components/arena/jb-bottom-nav";
 import { JbMobileTopBar } from "@/components/arena/jb-mobile-top-bar";
 import { JbSidebar } from "@/components/arena/jb-sidebar";
+import { CaptainGate } from "@/components/arena/captain-gate";
 import { SidebarProvider } from "@/components/ui/sidebar";
 
-export default function ArenaLayout({
+export default async function ArenaLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const session = await auth.api.getSession({ headers: await headers() });
+  const user = session?.user as any;
+  const sessionData = session?.session as any;
+
+  if (!user?.onboardingCompleted) {
+    redirect("/onboarding");
+  }
+
+  const role: string | null = user?.role ?? null;
+  const hasTeam = Boolean(sessionData?.teamId);
+
   return (
     <SidebarProvider>
       <div className="jb-arena flex min-h-screen w-full">
@@ -26,6 +41,8 @@ export default function ArenaLayout({
             speedTrigger={120}
           />
         </div>
+
+        <CaptainGate role={role} hasTeam={hasTeam} />
 
         <JbSidebar />
 

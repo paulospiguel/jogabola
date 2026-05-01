@@ -1,4 +1,5 @@
-import { boolean, pgTable, text, timestamp } from "drizzle-orm/pg-core";
+import { boolean, integer, pgTable, text, timestamp } from "drizzle-orm/pg-core";
+import { teams } from "./teams";
 
 export const user = pgTable("user", {
   id: text("id").primaryKey(),
@@ -10,6 +11,8 @@ export const user = pgTable("user", {
   notificationsEnabled: boolean("notifications_enabled")
     .notNull()
     .default(true),
+  role: text("role"), // "captain" | "athlete"
+  onboardingCompleted: boolean("onboarding_completed").notNull().default(false),
   createdAt: timestamp("created_at").notNull().defaultNow(),
   updatedAt: timestamp("updated_at").notNull().defaultNow(),
 });
@@ -25,6 +28,7 @@ export const session = pgTable("session", {
   userId: text("user_id")
     .notNull()
     .references(() => user.id, { onDelete: "cascade" }),
+  teamId: integer("team_id").references(() => teams.id, { onDelete: "set null" }),
 });
 
 export const account = pgTable("account", {

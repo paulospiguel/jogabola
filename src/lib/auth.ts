@@ -1,6 +1,7 @@
 import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import { emailOTP } from "better-auth/plugins";
+import { and, eq } from "drizzle-orm";
 import { db } from "@/db/client";
 import * as schema from "@/db/schema";
 import { authConfig } from "./auth/config";
@@ -92,12 +93,38 @@ export const auth = betterAuth({
   session: {
     expiresIn: authConfig.session.expiresIn,
     updateAge: authConfig.session.updateAge,
+    additionalFields: {
+      teamId: {
+        type: "number",
+      },
+    },
   },
   secret: env.secret,
   databaseHooks: {
+    session: {
+      create: {
+        before: async (session): Promise<{ data: any }> => {
+          const userTeams = await db
+            .select({ id: schema.teams.id })
+            .from(schema.teams)
+            .where(eq(schema.teams.ownerId, session.userId))
+            .limit(1);
+
+          if (userTeams.length > 0) {
+            return {
+              data: {
+                ...session,
+                teamId: userTeams[0].id,
+              },
+            };
+          }
+          return { data: session };
+        },
+      },
+    },
     user: {
       create: {
-        before: async user => ({
+        before: async (user): Promise<{ data: any }> => ({
           data: {
             ...user,
             image: normalizeImage(user.image),
@@ -109,7 +136,7 @@ export const auth = betterAuth({
         },
       },
       update: {
-        before: async user => ({
+        before: async (user): Promise<{ data: any }> => ({
           data: {
             ...user,
             ...(Object.hasOwn(user, "image")
@@ -129,6 +156,13 @@ export const auth = betterAuth({
       notificationsEnabled: {
         type: "boolean",
         defaultValue: true,
+      },
+      role: {
+        type: "string",
+      },
+      onboardingCompleted: {
+        type: "boolean",
+        defaultValue: false,
       },
     },
   },
