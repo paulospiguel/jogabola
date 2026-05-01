@@ -2,7 +2,6 @@
 
 import { AnimatePresence, motion } from "framer-motion";
 import { ChevronRight, Lock, Shield, User } from "lucide-react";
-import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { completeOnboarding, type UserRole } from "@/actions/onboarding.actions";
 
@@ -85,7 +84,6 @@ interface OnboardingClientProps {
 }
 
 export function OnboardingClient({ userName }: OnboardingClientProps) {
-  const router = useRouter();
   const [selected, setSelected] = useState<UserRole | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -103,8 +101,7 @@ export function OnboardingClient({ userName }: OnboardingClientProps) {
         setError("Erro ao guardar preferência. Tenta novamente.");
         return;
       }
-      router.push("/arena");
-      router.refresh();
+      window.location.href = "/arena";
     } catch {
       setError("Erro inesperado. Tenta novamente.");
     } finally {
