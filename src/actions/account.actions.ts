@@ -26,9 +26,11 @@ export const transferAccount = withAuthAction(
   z.object({ newEmail: z.string().email() }),
   async (authUser, { newEmail }) => {
     try {
-      const existing = await db.query.user.findFirst({
-        where: eq(user.email, newEmail),
-      });
+      const [existing] = await db
+        .select({ id: user.id })
+        .from(user)
+        .where(eq(user.email, newEmail))
+        .limit(1);
 
       if (existing) {
         return { success: false, error: { code: "EMAIL_ALREADY_IN_USE" } };
