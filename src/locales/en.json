@@ -1,26 +1,4 @@
 {
-  "about": {
-    "benefits": "Benefits",
-    "contact": "Contact Us",
-    "follow_us": "Follow Us on Social Media",
-    "history": "Our History",
-    "history_operating": "Operating for {years} years",
-    "history_text": "Jogabola was founded in {year} with the goal of transforming how people organize and participate in soccer games. Since then, we have worked tirelessly to make soccer more accessible to everyone.",
-    "mission": "Our Mission",
-    "mission_vision_values": "Mission, Vision and Values",
-    "statistics": "Our Numbers",
-    "statistics_cities": "Cities",
-    "statistics_fields": "Fields",
-    "statistics_games": "Games",
-    "statistics_users": "Users",
-    "team": "Our Team",
-    "title": "About Jogabola",
-    "values": "Our Values",
-    "vision": "Our Vision"
-  },
-  "aboutPage": {
-    "title": "About"
-  },
   "arena": {
     "actions": {
       "createTournament": "Create Tournament",
@@ -217,6 +195,7 @@
     }
   },
   "arenaDashboard": {
+    "loadingArena": "Loading arena...",
     "actions": {
       "createEvent": "Create Event",
       "event": "Event",
@@ -225,10 +204,18 @@
     "defaultUser": "User",
     "hero": {
       "nextMatch": "Next Match",
+      "noEvents": "No upcoming events. Create one!",
       "view": "View"
     },
     "kicker": "Your team",
+    "noTeam": {
+      "cta": "Create team",
+      "description": "Select a team in the sidebar or create a new one to get started.",
+      "title": "No team selected"
+    },
     "sections": {
+      "noSquad": "No players in the squad yet.",
+      "noWeekEvents": "No events scheduled for this week.",
       "squad": "Squad",
       "thisWeek": "This week",
       "viewCalendar": "Calendar",
@@ -238,7 +225,9 @@
       "confirmed": "Confirmed",
       "pending": "Pending",
       "reserves": "Reserves"
-    }
+    },
+    "add-player": "Add Player",
+    "create-event": "Create Event"
   },
   "arenaEventDetail": {
     "actions": {
@@ -299,6 +288,14 @@
     "profile": "Profile",
     "settings": "Settings",
     "signOut": "Sign Out",
+    "teamSwitcher": {
+      "createTeam": "Create a team",
+      "myTeam": "My team",
+      "myTeams": "{count} teams",
+      "noTeam": "No team",
+      "select": "Select team",
+      "teamsLabel": "My Teams"
+    },
     "teams": "Squad"
   },
   "arenaPage": {
@@ -422,13 +419,65 @@
       "validation": "Pre-validation",
       "validationValue": "Ready"
     },
-    "table": {
-      "mockMatch": "Weekly game",
-      "mockStatusPending": "Proof pending",
-      "mockStatusValidating": "Paid to validate",
-      "title": "Payments this week"
+    "status": {
+      "pending": "Pending",
+      "ready": "Ready",
+      "validating": "Validating",
+      "validated": "Validated"
     },
-    "title": "Weekly MBWay"
+    "method": {
+      "manualMbway": "Manual MBWay"
+    },
+    "proofs": {
+      "pending": "Proof pending",
+      "validating": "Paid to validate"
+    },
+    "loading": "Loading payments...",
+    "table": {
+      "title": "Weekly payments",
+      "player": "Athlete",
+      "event": "Event",
+      "amount": "Amount",
+      "method": "Method",
+      "status": "Status",
+      "risk": "Score",
+      "viewProfile": "View Profile",
+      "viewDetail": "View Details",
+      "match": {
+        "weeklyGame": "Weekly Game"
+      }
+    },
+    "detail": {
+      "title": "Payment Details",
+      "accept": "Accept Payment",
+      "reject": "Reject Payment",
+      "proof": "Proof of Payment",
+      "noProof": "No proof uploaded",
+      "history": "Athlete History",
+      "verify": "Manual Verify",
+      "viewProof": "View Full Proof",
+      "summary": "Transaction Summary",
+      "athlete": "Athlete Information",
+      "status": "Update Status"
+    },
+    "actions": {
+      "uploadProof": "Upload Proofs",
+      "setMethods": "Payment Methods",
+      "autoValidate": "Auto-validation",
+      "relevant": "Other Actions"
+    }
+  },
+  "arenaBadges": {
+    "confirmed": "Confirmed",
+    "reserve": "Reserve",
+    "pending": "Pending",
+    "refused": "Refused",
+    "highlight": "Highlight",
+    "waiting": "Waiting",
+    "validating": "Validating",
+    "low": "Low Risk",
+    "medium": "Medium Risk",
+    "high": "High Risk"
   },
   "arenaSquad": {
     "actions": {
@@ -450,76 +499,6 @@
       "playerCount": "{count} Player{count, plural, =1 {} other {s}}"
     },
     "title": "Squad"
-  },
-  "becomePartnerPage": {
-    "benefits": {
-      "subtitle": "Discover the exclusive advantages of being part of the JogaBola ecosystem",
-      "title": "Why Be Our Partner?"
-    },
-    "categories": {
-      "subtitle": "We have flexible options for companies of all sizes",
-      "title": "Choose Your Partnership Level"
-    },
-    "description": "Together, we will create unique opportunities and transform passion into success.",
-    "form": {
-      "submit": "Submit Application",
-      "submitting": "Submitting...",
-      "subtitle": "Fill in the form and we will get in touch within 24 hours",
-      "title": "Let's Talk"
-    },
-    "subtitle": "Join us in the amateur football revolution",
-    "title": "Become Our Partner"
-  },
-  "business": {
-    "benefits": {
-      "connectPlayers": {
-        "description": "Meet other soccer enthusiasts and expand your network.",
-        "title": "Connect with Players"
-      },
-      "findNearby": {
-        "description": "Locate fields and matches near you with just a few clicks.",
-        "title": "Find Nearby Games"
-      },
-      "joinTournaments": {
-        "description": "Sign up for local tournaments and showcase your skills.",
-        "title": "Join Tournaments"
-      },
-      "reserveFields": {
-        "description": "Book fields quickly and securely, without complications.",
-        "title": "Reserve Fields"
-      }
-    },
-    "longDescription": "Jogabola was born from a passion for soccer and the difficulty in organizing matches between friends. Our platform connects passionate players with available fields, simplifying the booking process and helping to form new sports communities.",
-    "mission": "Democratize access to soccer by connecting players and fields in a simple and intuitive way.",
-    "name": "Jogabola",
-    "shortDescription": "The platform that connects soccer lovers with nearby sports fields.",
-    "slogan": "The best place to find your team and play soccer.",
-    "team": {
-      "paulo": {
-        "bio": "Passionate about technology and soccer, Paulo combines his two passions to create innovative solutions.",
-        "name": "Paulo Spiguel",
-        "role": "Founder & Developer"
-      }
-    },
-    "values": {
-      "accessibility": {
-        "description": "We work to make soccer accessible to everyone, regardless of skill level.",
-        "title": "Accessibility"
-      },
-      "community": {
-        "description": "We foster the creation of new friendships and communities through sport.",
-        "title": "Community"
-      },
-      "innovation": {
-        "description": "We constantly seek new ways to improve our users' experience.",
-        "title": "Innovation"
-      },
-      "passion": {
-        "description": "We believe in the power of soccer to unite people and communities.",
-        "title": "Passion for Sport"
-      }
-    },
-    "vision": "To be the leading platform connecting players and soccer fields in Brazil."
   },
   "common": {
     "accept": "Accept",
@@ -598,8 +577,9 @@
     "toggleTheme": "Toggle theme"
   },
   "company": {
+    "name": "JogaBola",
     "description": "Find your ideal team or create your own, manage your athletes and participate in legendary leagues!",
-    "legalName": "JogaBola Foundation LLC",
+    "legalName": "JogaBola Inc",
     "slogan": "The best place to find your crew and play soccer."
   },
   "contact": {
@@ -628,24 +608,6 @@
     "description": "We use cookies to improve your experience on our site. By browsing you agree to our",
     "privacyPolicy": "Privacy Policy",
     "title": "Cookie Control"
-  },
-  "countDown": {
-    "day": "Day",
-    "days": "Days",
-    "hour": "Hour",
-    "hours": "Hours",
-    "minute": "Minute",
-    "minutes": "Minutes",
-    "month": "Month",
-    "months": "Months",
-    "second": "Second",
-    "seconds": "Seconds",
-    "subtitle": "We're working hard to launch our incredible app.",
-    "title": "Time left",
-    "week": "Week",
-    "weeks": "Weeks",
-    "year": "Year",
-    "years": "Years"
   },
   "currency": {
     "dollar": "$",
@@ -1307,91 +1269,6 @@
     "proPlan": "Pro Plan",
     "statCenter": "Stat Center"
   },
-  "signIn": {
-    "page": {
-      "errors": {
-        "googleAuthFailed": "Failed to authenticate with Google",
-        "invalidCredentials": "Incorrect email or password",
-        "invalidCredentialsDetails": "Incorrect email or password. Check your data and try again.",
-        "loginError": "Sign in error",
-        "loginFailed": "Unable to sign in with Google. Check your settings and try again.",
-        "registerError": "Account creation error",
-        "registerFailed": "Unable to create account",
-        "registerFailedDetails": "Unable to create account. Try again or use another email."
-      },
-      "features": {
-        "activeCommunity": "⚡ Active community",
-        "findTeams": "🎯 Find teams and players",
-        "joinTournaments": "🏆 Join tournaments",
-        "trackStats": "📊 Track your statistics"
-      },
-      "footer": "© {year} JogaBola — Live Football ⚡",
-      "form": {
-        "buttons": {
-          "google": "Google",
-          "logging": "Signing in...",
-          "login": "Sign In",
-          "register": "Create Account",
-          "registering": "Creating account..."
-        },
-        "continueWith": "or continue with",
-        "fields": {
-          "confirmPassword": "Confirm password",
-          "email": "Email",
-          "emailPlaceholder": "your@email.com",
-          "name": "Name",
-          "namePlaceholder": "Your name",
-          "password": "Password",
-          "passwordPlaceholder": "••••••••"
-        },
-        "forgotPassword": "Forgot your password?",
-        "subtitle": {
-          "login": "Sign in and continue your journey",
-          "register": "Start your football adventure"
-        },
-        "tabs": {
-          "login": "Login",
-          "register": "Register"
-        },
-        "title": {
-          "login": "Welcome back!",
-          "register": "Create your account"
-        }
-      },
-      "hero": {
-        "badge": "#1 Amateur Football Platform",
-        "description": "Connect with players, organize matches and live football like never before. Your journey starts here.",
-        "title": "Enter the Arena"
-      },
-      "success": {
-        "login": "Welcome!",
-        "loginMessage": "Successfully signed in",
-        "register": "Account created!",
-        "registerMessage": "Your account has been created successfully. Let's set up your profile."
-      }
-    }
-  },
-  "teamPage": {
-    "agents": {
-      "dataEngineering": {
-        "description": "Massive processing of performance metrics and structuring of sports Big Data.",
-        "title": "Data Engineering"
-      },
-      "intelligentSupport": {
-        "description": "24/7 assistance for managers and athletes with natural language and immediate resolutions.",
-        "title": "Intelligent Support"
-      },
-      "tacticalAnalysis": {
-        "description": "Identification of game patterns and high-precision strategic scenario simulation.",
-        "title": "AI Tactical Analysis"
-      }
-    },
-    "aiAgentsTitle": "AI AGENTS",
-    "badge": "INNOVATION TEAM",
-    "ceoName": "FOUNDER & CEO",
-    "subtitle": "Uniting human vision with artificial intelligence to revolutionize global sports management with JOGABOLA.",
-    "title": "Our <blue>Team</blue>"
-  },
   "timer": {
     "auth": {
       "login": "Login",
@@ -1477,124 +1354,5 @@
       "title": "Communication Preferences"
     },
     "title": "Join the Waiting List"
-  },
-  "welcomePage": {
-    "description": "Let's set up your perfect experience in just a few steps.",
-    "navigation": {
-      "completed": "completed",
-      "finish": "Finish Setup",
-      "next": "Next",
-      "of": "of",
-      "previous": "Previous",
-      "step": "Step"
-    },
-    "steps": {
-      "goals": {
-        "description": "Select all goals that apply to you. This helps us suggest the best features.",
-        "options": {
-          "coach-others": "Coach others",
-          "compete": "Compete in tournaments",
-          "find-team": "Find a team",
-          "have-fun": "Have fun",
-          "improve-skills": "Improve skills",
-          "make-friends": "Make new friends",
-          "organize-games": "Organise games",
-          "stay-fit": "Stay fit",
-          "track-stats": "Track statistics"
-        },
-        "title": "What Are Your Goals?"
-      },
-      "journey": {
-        "description": "Each journey offers a unique experience. Select the one that best suits your goals.",
-        "roles": {
-          "coach": {
-            "description": "Develop talent and create personalised training programmes",
-            "features": [
-              "Training programmes",
-              "Technical development",
-              "Tactical analysis",
-              "Mentoring"
-            ],
-            "title": "Specialist Coach"
-          },
-          "fan": {
-            "description": "Organise events, support teams and connect the community",
-            "features": [
-              "Event organisation",
-              "Team support",
-              "Community",
-              "Networking"
-            ],
-            "title": "Fan/Organiser"
-          },
-          "manager": {
-            "description": "Manage your team, organise training and lead to victory",
-            "features": [
-              "Team management",
-              "Training planning",
-              "Performance analysis",
-              "Recruitment"
-            ],
-            "title": "Manager/Coach"
-          },
-          "player": {
-            "description": "Find teams, improve your skills and conquer glory",
-            "features": [
-              "Find teams",
-              "Personal statistics",
-              "Tournaments",
-              "Training"
-            ],
-            "title": "Player"
-          }
-        },
-        "title": "Choose Your Journey"
-      },
-      "profile": {
-        "availability": {
-          "evenings": "Weekday evenings",
-          "flexible": "Flexible schedule",
-          "specific": "Specific times",
-          "weekends": "Weekends"
-        },
-        "description": "This information helps us personalise your JogaBola experience.",
-        "experience": {
-          "advanced": "Advanced - I play competitively",
-          "beginner": "Beginner - Just starting out",
-          "intermediate": "Intermediate - I play regularly",
-          "professional": "Professional/Semi-professional"
-        },
-        "fields": {
-          "availability": "Availability",
-          "email": "Email",
-          "experience": "Football Experience",
-          "location": "Location",
-          "name": "Full Name"
-        },
-        "title": "Let's Get to Know You"
-      },
-      "waitlist": {
-        "description": "Be among the first to try our apps when they launch. Select the ones that interest you most.",
-        "preferences": {
-          "earlyAccess": "Early access to new features",
-          "newsletter": "Subscribe to newsletter with tips and news",
-          "notifications": "Receive notifications about updates",
-          "title": "Communication Preferences"
-        },
-        "title": "Join the Waiting List"
-      },
-      "welcome": {
-        "description": "Let's set up your perfect experience in just a few steps.",
-        "features": {
-          "configuration": "Personalised setup",
-          "earlyAccess": "Early access",
-          "journey": "Journey selection"
-        },
-        "subtitle": "You are about to embark on an epic journey in the world of amateur football",
-        "title": "Welcome to JogaBola!"
-      }
-    },
-    "subtitle": "You are about to embark on an epic journey in the world of amateur football",
-    "title": "Welcome to JogaBola!"
   }
 }

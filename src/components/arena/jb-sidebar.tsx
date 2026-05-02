@@ -5,13 +5,13 @@ import {
   Calendar,
   CreditCard,
   LayoutDashboard,
+  Lock,
   Shield,
   Users,
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useTranslations } from "next-intl";
-import { RELEASE } from "@/constants/app";
 import {
   Sidebar,
   SidebarContent,
@@ -25,17 +25,34 @@ import {
   SidebarRail,
   useSidebar,
 } from "@/components/ui/sidebar";
+import { RELEASE } from "@/constants/app";
 import { cn } from "@/lib/utils";
 import { Logo } from "../logo";
 import { JbTeamSwitcher } from "./jb-team-switcher";
 import { JbUserMenu } from "./jb-user-menu";
+import { useTeamGate } from "./team-gate-context";
 
 const ITEMS = [
-  { href: "/arena", icon: Shield, labelKey: "dashboard" },
-  { href: "/arena/events", icon: Calendar, labelKey: "events" },
-  { href: "/arena/teams", icon: Users, labelKey: "teams" },
-  { href: "/arena/notifications", icon: Bell, labelKey: "notifications" },
-  { href: "/arena/payments", icon: CreditCard, labelKey: "payments" },
+  { href: "/arena", icon: Shield, labelKey: "dashboard", requiresTeam: false },
+  {
+    href: "/arena/events",
+    icon: Calendar,
+    labelKey: "events",
+    requiresTeam: true,
+  },
+  { href: "/arena/teams", icon: Users, labelKey: "teams", requiresTeam: true },
+  {
+    href: "/arena/notifications",
+    icon: Bell,
+    labelKey: "notifications",
+    requiresTeam: true,
+  },
+  {
+    href: "/arena/payments",
+    icon: CreditCard,
+    labelKey: "payments",
+    requiresTeam: true,
+  },
 ];
 
 export function JbSidebar() {
@@ -43,6 +60,9 @@ export function JbSidebar() {
   const { state, toggleSidebar } = useSidebar();
   const t = useTranslations("arenaNav");
   const company = useTranslations("company");
+  const { requireTeam, hasTeam, role } = useTeamGate();
+
+  const isCaptainWithoutTeam = role === "captain" && !hasTeam;
 
   return (
     <Sidebar collapsible="icon" className="border-arena-border border-r">
@@ -75,6 +95,7 @@ export function JbSidebar() {
                 const isActive =
                   pathname === item.href ||
                   (item.href !== "/arena" && pathname.startsWith(item.href));
+                const isLocked = isCaptainWithoutTeam && item.requiresTeam;
                 const Icon = item.icon;
 
                 return (
@@ -83,38 +104,60 @@ export function JbSidebar() {
                     className="group-data-[collapsible=icon]:flex group-data-[collapsible=icon]:justify-center"
                   >
                     <SidebarMenuButton
-                      asChild
-                      isActive={isActive}
-                      tooltip={t(item.labelKey)}
+                      asChild={!isLocked}
+                      isActive={isActive && !isLocked}
+                      tooltip={
+                        isLocked ? "Cria uma equipa primeiro" : t(item.labelKey)
+                      }
                       className={cn(
                         "h-11 rounded-[10px] transition-all duration-200",
-                        isActive
-                          ? "bg-arena-primary/10 text-arena-primary hover:bg-arena-primary/15 hover:text-arena-primary"
-                          : "text-arena-text-sec hover:bg-arena-surface/60 hover:text-arena-text",
+                        isLocked
+                          ? "cursor-not-allowed opacity-40 hover:bg-transparent hover:text-arena-text-sec"
+                          : isActive
+                            ? "bg-arena-primary/10 text-arena-primary hover:bg-arena-primary/15 hover:text-arena-primary"
+                            : "text-arena-text-sec hover:bg-arena-surface/60 hover:text-arena-text",
                         "group-data-[collapsible=icon]:h-10 group-data-[collapsible=icon]:w-10 group-data-[collapsible=icon]:p-0 group-data-[collapsible=icon]:justify-center",
                       )}
+                      onClick={isLocked ? () => requireTeam() : undefined}
                     >
-                      <Link
-                        href={item.href}
-                        className="flex items-center gap-3 group-data-[collapsible=icon]:gap-0 group-data-[collapsible=icon]:justify-center"
-                      >
-                        <Icon
-                          className={cn(
-                            "size-[18px] shrink-0",
-                            isActive ? "stroke-[2.5px]" : "stroke-[1.8px]",
-                          )}
-                        />
-                        <span
-                          className={cn(
-                            "font-semibold transition-opacity duration-200",
-                            state === "collapsed"
-                              ? "opacity-0 w-0"
-                              : "opacity-100",
-                          )}
-                        >
-                          {t(item.labelKey)}
+                      {isLocked ? (
+                        <span className="flex items-center gap-3 group-data-[collapsible=icon]:gap-0 group-data-[collapsible=icon]:justify-center">
+                          <Icon className="size-[18px] shrink-0 stroke-[1.8px]" />
+                          <span
+                            className={cn(
+                              "flex flex-1 items-center justify-between font-semibold transition-opacity duration-200",
+                              state === "collapsed"
+                                ? "opacity-0 w-0"
+                                : "opacity-100",
+                            )}
+                          >
+                            {t(item.labelKey)}
+                            <Lock size={12} className="opacity-60" />
+                          </span>
                         </span>
-                      </Link>
+                      ) : (
+                        <Link
+                          href={item.href}
+                          className="flex items-center gap-3 group-data-[collapsible=icon]:gap-0 group-data-[collapsible=icon]:justify-center"
+                        >
+                          <Icon
+                            className={cn(
+                              "size-[18px] shrink-0",
+                              isActive ? "stroke-[2.5px]" : "stroke-[1.8px]",
+                            )}
+                          />
+                          <span
+                            className={cn(
+                              "font-semibold transition-opacity duration-200",
+                              state === "collapsed"
+                                ? "opacity-0 w-0"
+                                : "opacity-100",
+                            )}
+                          >
+                            {t(item.labelKey)}
+                          </span>
+                        </Link>
+                      )}
                     </SidebarMenuButton>
                   </SidebarMenuItem>
                 );
@@ -144,7 +187,6 @@ export function JbSidebar() {
                 <span className="truncate font-semibold">
                   {state === "collapsed" ? t("expand") : t("collapse")}
                 </span>
-                <span className="truncate text-xs">{company("name")}</span>
               </div>
             </SidebarMenuButton>
           </SidebarMenuItem>

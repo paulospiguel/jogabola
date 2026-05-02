@@ -109,9 +109,10 @@ export async function getEvents(options?: {
   organizerId?: string;
   status?: string;
   upcomingOnly?: boolean;
+  teamId?: number | string;
 }) {
-  const { limit = 10, upcomingOnly = true } = options || {};
-  const events = await queryEvents({ limit, upcomingOnly });
+  const { limit = 10, upcomingOnly = true, teamId } = options || {};
+  const events = await queryEvents({ limit, upcomingOnly, teamId });
   return { success: true as const, data: events.map(toEventView) };
 }
 

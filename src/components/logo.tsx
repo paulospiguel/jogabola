@@ -8,7 +8,7 @@ import type { ComponentProps } from "react";
 import logo from "@/assets/logos/jogabola-logo.svg";
 import logoWhite from "@/assets/logos/jogabola-white.svg";
 import newLogoAnimated from "@/assets/logos/logo_animado.gif";
-import { COMPANY, TRANSLATION_KEYS } from "@/constants/app";
+import { APP } from "@/constants/app";
 import { useJourneyRedirect } from "@/hooks/use-journey-redirect";
 
 import { useSession } from "@/lib/auth-client";
@@ -77,7 +77,7 @@ export const Logo: React.FC<LogoProps> = ({
         className="object-contain"
       />
       <span className="sr-only">
-        {COMPANY.NAME} - {t(TRANSLATION_KEYS.COMPANY.SLOGAN)}
+        {t(APP.COMPANY.NAME)} — {t(APP.COMPANY.SLOGAN)}
       </span>
     </>
   );

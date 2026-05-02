@@ -1,3 +1,4 @@
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { avatarColor, initials } from "./tokens";
 
 interface JbAvatarProps {
@@ -5,6 +6,7 @@ interface JbAvatarProps {
   size?: number;
   id?: number | string;
   className?: string;
+  image?: string | null;
 }
 
 export function JbAvatar({
@@ -12,29 +14,37 @@ export function JbAvatar({
   size = 36,
   id = 1,
   className,
+  image,
 }: JbAvatarProps) {
   const col = avatarColor(id);
   const ini = initials(name);
 
   return (
-    <div
+    <Avatar
       className={className}
       style={{
         width: size,
         height: size,
-        borderRadius: "50%",
-        background: `${col}22`,
         border: `1.5px solid ${col}44`,
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        color: col,
-        fontSize: size * 0.34,
-        fontWeight: 700,
-        flexShrink: 0,
       }}
     >
-      {ini}
-    </div>
+      {image && (
+        <AvatarImage
+          src={image}
+          alt={name}
+          className="object-cover"
+        />
+      )}
+      <AvatarFallback
+        style={{
+          background: `${col}22`,
+          color: col,
+          fontSize: size * 0.34,
+          fontWeight: 700,
+        }}
+      >
+        {ini}
+      </AvatarFallback>
+    </Avatar>
   );
 }

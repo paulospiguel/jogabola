@@ -5,9 +5,11 @@ import { matchSessions } from "@/db/schema";
 export async function queryEvents(options?: {
   limit?: number;
   upcomingOnly?: boolean;
+  teamId?: number | string;
 }) {
-  const { limit = 10, upcomingOnly = true } = options ?? {};
+  const { limit = 10, upcomingOnly = true, teamId } = options ?? {};
   const conditions = [];
+  if (teamId) conditions.push(eq(matchSessions.teamId, Number(teamId)));
   if (upcomingOnly) conditions.push(gte(matchSessions.startsAt, new Date()));
 
   return db

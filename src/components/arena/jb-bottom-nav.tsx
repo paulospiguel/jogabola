@@ -1,23 +1,27 @@
 "use client";
 
-import { Bell, Calendar, Shield, Users } from "lucide-react";
+import { Bell, Calendar, Lock, Shield, Users } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
+import { useTeamGate } from "./team-gate-context";
 
 const ITEMS = [
-  { href: "/arena", icon: Shield, labelKey: "dashboard" },
-  { href: "/arena/teams", icon: Users, labelKey: "teams" },
-  { href: "/arena/events", icon: Calendar, labelKey: "events" },
-  { href: "/arena/notifications", icon: Bell, labelKey: "notifications" },
+  { href: "/arena", icon: Shield, labelKey: "dashboard", requiresTeam: false },
+  { href: "/arena/teams", icon: Users, labelKey: "teams", requiresTeam: true },
+  { href: "/arena/events", icon: Calendar, labelKey: "events", requiresTeam: true },
+  { href: "/arena/notifications", icon: Bell, labelKey: "notifications", requiresTeam: true },
 ];
 
 export function JbBottomNav() {
   const pathname = usePathname();
   const t = useTranslations("arenaNav");
+  const { requireTeam, hasTeam, role } = useTeamGate();
   const [isMobile, setIsMobile] = useState(false);
+
+  const isCaptainWithoutTeam = role === "captain" && !hasTeam;
 
   useEffect(() => {
     const query = window.matchMedia("(max-width: 767px)");
@@ -35,7 +39,27 @@ export function JbBottomNav() {
         const isActive =
           pathname === item.href ||
           (item.href !== "/arena" && pathname.startsWith(item.href));
+        const isLocked = isCaptainWithoutTeam && item.requiresTeam;
         const Icon = item.icon;
+
+        if (isLocked) {
+          return (
+            <button
+              key={item.href}
+              type="button"
+              onClick={() => requireTeam()}
+              className="relative flex flex-1 flex-col items-center gap-0.5 pt-2 opacity-35"
+            >
+              <div className="relative">
+                <Icon size={20} strokeWidth={1.7} className="text-arena-text-muted" />
+                <Lock size={9} className="absolute -right-1.5 -bottom-1 text-arena-text-muted" />
+              </div>
+              <span className="text-[10px] font-medium text-arena-text-muted">
+                {t(item.labelKey)}
+              </span>
+            </button>
+          );
+        }
 
         return (
           <Link

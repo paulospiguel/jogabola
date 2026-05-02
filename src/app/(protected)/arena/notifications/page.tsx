@@ -3,6 +3,7 @@ import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 import { getNotifications } from "@/actions/notifications.actions";
+import { JbUserMenu } from "@/components/arena/jb-user-menu";
 import { auth } from "@/lib/auth";
 import { NotificationsList } from "./_components/notifications-list";
 
@@ -38,8 +39,11 @@ export default async function ArenaNotificationsPage() {
               {t("header.description")}
             </p>
           </div>
-          <div className="h-11 w-11 rounded-full bg-arena-surface border border-arena-border flex items-center justify-center text-arena-text-sec">
-            <Bell size={20} />
+          <div className="flex items-center gap-3">
+            <div className="h-11 w-11 rounded-full bg-arena-surface border border-arena-border flex items-center justify-center text-arena-text-sec">
+              <Bell size={20} />
+            </div>
+            <JbUserMenu onlyAvatar />
           </div>
         </header>
 

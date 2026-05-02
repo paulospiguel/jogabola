@@ -17,9 +17,10 @@ import { JbAvatar } from "./jb-avatar";
 
 interface JbUserMenuProps {
   collapsed?: boolean;
+  onlyAvatar?: boolean;
 }
 
-export function JbUserMenu({ collapsed = false }: JbUserMenuProps) {
+export function JbUserMenu({ collapsed = false, onlyAvatar = false }: JbUserMenuProps) {
   const { data: session } = useSession();
   const router = useRouter();
   const t = useTranslations("arenaNav");
@@ -27,6 +28,7 @@ export function JbUserMenu({ collapsed = false }: JbUserMenuProps) {
   const name = session?.user?.name ?? "User";
   const email = session?.user?.email ?? "";
   const id = session?.user?.id ?? "1";
+  const image = session?.user?.image;
 
   async function handleSignOut() {
     await signOut();
@@ -36,27 +38,33 @@ export function JbUserMenu({ collapsed = false }: JbUserMenuProps) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button
-          type="button"
-          variant="ghost"
-          className="flex h-auto w-full items-center gap-3 rounded-[10px] px-3 py-2.5 text-sm hover:bg-arena-surface/60 focus-visible:ring-0"
-        >
-          <JbAvatar id={id} name={name} size={32} className="shrink-0" />
-          {!collapsed && (
-            <div className="grid flex-1 overflow-hidden text-left leading-tight">
-              <span className="truncate font-semibold text-arena-text">
-                {name}
-              </span>
-              <span className="truncate text-xs text-arena-text-muted">
-                {email}
-              </span>
-            </div>
-          )}
-        </Button>
+        {onlyAvatar ? (
+          <button className="outline-none transition-transform hover:scale-105 active:scale-95">
+            <JbAvatar id={id} name={name} image={image} size={40} />
+          </button>
+        ) : (
+          <Button
+            type="button"
+            variant="ghost"
+            className="flex h-auto w-full items-center gap-3 rounded-[10px] px-3 py-2.5 text-sm hover:bg-arena-surface/60 focus-visible:ring-0"
+          >
+            <JbAvatar id={id} name={name} image={image} size={32} className="shrink-0" />
+            {!collapsed && (
+              <div className="grid flex-1 overflow-hidden text-left leading-tight">
+                <span className="truncate font-semibold text-arena-text">
+                  {name}
+                </span>
+                <span className="truncate text-xs text-arena-text-muted">
+                  {email}
+                </span>
+              </div>
+            )}
+          </Button>
+        )}
       </DropdownMenuTrigger>
 
       <DropdownMenuContent
-        side="right"
+        side={onlyAvatar ? "bottom" : "right"}
         align="end"
         sideOffset={8}
         className="w-52 bg-arena-bg-sec border-arena-border text-arena-text"

@@ -6,7 +6,6 @@ declare global {
 
       // Better Auth
       BETTER_AUTH_SECRET?: string;
-      NEXTAUTH_SECRET?: string; // Fallback para compatibilidade
       TRUSTED_ORIGINS?: string; // URLs separadas por vírgula
 
       // Google OAuth (opcional)

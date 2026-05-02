@@ -1,12 +1,10 @@
 import { getBaseURL } from "@/lib/utils";
 
 function getAuthEnv() {
-  const secret = process.env.BETTER_AUTH_SECRET || process.env.NEXTAUTH_SECRET;
+  const secret = process.env.BETTER_AUTH_SECRET;
 
   if (!secret) {
-    throw new Error(
-      "BETTER_AUTH_SECRET ou NEXTAUTH_SECRET deve estar definido nas variáveis de ambiente",
-    );
+    throw new Error("BETTER_AUTH_SECRET");
   }
 
   const googleClientId = process.env.GOOGLE_CLIENT_ID;

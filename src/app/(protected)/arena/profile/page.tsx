@@ -1,7 +1,7 @@
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { getLocale, getTranslations } from "next-intl/server";
-import { JbAvatar } from "@/components/arena/jb-avatar";
+import { JbUserMenu } from "@/components/arena/jb-user-menu";
 import { VerifiedBadge } from "@/components/arena/verified-badge";
 import { auth } from "@/lib/auth";
 import { ProfileForm } from "./_components/profile-form";
@@ -37,11 +37,7 @@ export default async function ArenaProfilePage() {
               {t("header.description")}
             </p>
           </div>
-          <JbAvatar
-            id={session.user.id}
-            name={session.user.name || t("fallbacks.user")}
-            size={44}
-          />
+          <JbUserMenu onlyAvatar />
         </header>
 
         <div className="grid gap-4 lg:grid-cols-[1fr_360px]">

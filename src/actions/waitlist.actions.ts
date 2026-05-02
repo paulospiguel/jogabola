@@ -4,8 +4,8 @@ import { z } from "zod";
 import { addToWaitlist } from "@/lib/notion";
 
 const schema = z.object({
-  name: z.string().min(2, "Nome obrigatório"),
-  email: z.string().email("Email inválido"),
+  name: z.string().min(2, "Name must be at least 2 characters long."),
+  email: z.string().email("Invalid email address."),
 });
 
 export async function joinWaitlist(input: unknown) {
@@ -21,6 +21,6 @@ export async function joinWaitlist(input: unknown) {
     return { success: true };
   } catch (err) {
     console.error("[waitlist] error:", err);
-    return { success: false, error: "Erro ao registar. Tenta novamente." };
+    return { success: false, error: "An error occurred. Please try again." };
   }
 }

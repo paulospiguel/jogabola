@@ -1,7 +1,7 @@
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { getTranslations } from "next-intl/server";
-import { JbAvatar } from "@/components/arena/jb-avatar";
+import { JbUserMenu } from "@/components/arena/jb-user-menu";
 import { auth } from "@/lib/auth";
 import { SettingsForm } from "./_components/settings-form";
 
@@ -25,11 +25,7 @@ export default async function ArenaSettingsPage() {
               {t("header.description")}
             </p>
           </div>
-          <JbAvatar
-            id={session.user.id}
-            name={session.user.name || t("header.eyebrow")} // Using eyebrow as a placeholder or could use a specific key
-            size={44}
-          />
+          <JbUserMenu onlyAvatar />
         </header>
 
         <div className="max-w-2xl">

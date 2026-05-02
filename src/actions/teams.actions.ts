@@ -1,21 +1,23 @@
 "use server";
 
+import { eq } from "drizzle-orm";
+import { z } from "zod";
 import { db } from "@/db/client";
-import { players, teamMembers, teams } from "@/db/schema";
 import { findPlayerByEmail } from "@/db/queries/players";
+import { players, teamMembers, teams, user as userTable } from "@/db/schema";
+import { withAction, withAuthAction } from "@/lib/action-helpers";
 import {
   addPlayerToRosterSchema,
   addTeamMemberSchema,
   createTeamSchema,
 } from "@/schemas/teams.schema";
-import { withAction, withAuthAction } from "@/lib/action-helpers";
 
-export const createTeam = withAction(createTeamSchema, async (data) => {
+export const createTeam = withAction(createTeamSchema, async data => {
   const [team] = await db.insert(teams).values(data).returning();
   return { success: true, data: team };
 });
 
-export const addTeamMember = withAction(addTeamMemberSchema, async (data) => {
+export const addTeamMember = withAction(addTeamMemberSchema, async data => {
   const [member] = await db
     .insert(teamMembers)
     .values(data)
@@ -49,5 +51,46 @@ export const addPlayerToRoster = withAuthAction(
       .returning({ id: players.id, name: players.displayName });
 
     return { success: true, data: created };
+  },
+);
+
+export const getMyTeams = withAuthAction(z.any(), async user => {
+  const myTeams = await db
+    .select()
+    .from(teams)
+    .where(eq(teams.ownerId, user.id))
+    .orderBy(teams.name);
+
+  return { success: true, data: myTeams };
+});
+
+export const getTeamSquad = withAuthAction(
+  z.object({ teamId: z.number() }),
+  async (user, { teamId }) => {
+    // Check if user owns the team or is a member (simple check for now)
+    const squad = await db
+      .select({
+        id: teamMembers.playerId,
+        name: userTable.name,
+        role: teamMembers.role,
+        isVerified: userTable.emailVerified,
+      })
+      .from(teamMembers)
+      .innerJoin(userTable, eq(teamMembers.playerId, userTable.id))
+      .where(eq(teamMembers.teamId, teamId));
+
+    // Transform data to match Dashboard's expected format
+    const formattedSquad = squad.map(member => ({
+      id: member.id,
+      name: member.name,
+      role: "Jogador", // Simplification
+      status: (member.role === "player" ? "confirmed" : "pending") as
+        | "confirmed"
+        | "reserve"
+        | "pending",
+      isVerified: member.isVerified,
+    }));
+
+    return { success: true, data: formattedSquad };
   },
 );

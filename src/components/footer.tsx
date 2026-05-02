@@ -3,7 +3,7 @@
 import { Instagram, MessageSquare, Twitter } from "lucide-react";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
-import { COMPANY } from "@/constants/app";
+import { APP } from "@/constants/app";
 import { useHeaderButtons } from "@/hooks/use-header-buttons";
 import { useSession } from "@/lib/auth-client";
 import { cn } from "@/lib/utils";
@@ -43,9 +43,9 @@ export default function Footer({ className }: FooterProps) {
   ];
 
   const socialLinks = [
-    { icon: Instagram, href: COMPANY.SOCIAL.INSTAGRAM, label: "Instagram" },
-    { icon: Twitter, href: COMPANY.SOCIAL.TWITTER, label: "Twitter" },
-    { icon: MessageSquare, href: COMPANY.SOCIAL.DISCORD, label: "Discord" },
+    { icon: Instagram, href: APP.SOCIAL.INSTAGRAM, label: "Instagram" },
+    { icon: Twitter, href: APP.SOCIAL.TWITTER, label: "Twitter" },
+    { icon: MessageSquare, href: APP.SOCIAL.DISCORD, label: "Discord" },
   ];
 
   return (
@@ -105,7 +105,7 @@ export default function Footer({ className }: FooterProps) {
 
         <div className="flex flex-col items-center justify-between gap-8 border-t border-white/8 pt-10 md:flex-row">
           <p className="text-sm font-medium text-white/40">
-            {t("copyright", { year: currentYear, company: COMPANY.NAME })}
+            {t("copyright", { year: currentYear, company: APP.COMPANY.NAME })}
           </p>
           <div className="flex items-center gap-8">
             <span className="flex items-center gap-3 text-[10px] font-black tracking-[0.25em] text-white/36 uppercase">

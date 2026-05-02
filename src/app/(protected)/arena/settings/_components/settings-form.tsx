@@ -6,8 +6,37 @@ import { useState, useTransition } from "react";
 import { updateUserSettings } from "@/actions/settings.actions";
 import { locales } from "@/i18n/configs";
 import { cn } from "@/lib/utils";
-import { Button } from "@/components/ui/button";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
+
+const LANGUAGES = {
+  en: {
+    icon: "🇬🇧",
+    name: "locales.en",
+    code: "EN",
+  },
+  pt: {
+    icon: "🇵🇹",
+    name: "locales.pt",
+    code: "PT",
+  },
+  es: {
+    icon: "🇪🇸",
+    name: "locales.es",
+    code: "ES",
+  },
+  fr: {
+    icon: "🇫🇷",
+    name: "locales.fr",
+    code: "FR",
+  },
+} as const;
 
 interface SettingsFormProps {
   initialSettings: {
@@ -18,6 +47,7 @@ interface SettingsFormProps {
 
 export function SettingsForm({ initialSettings }: SettingsFormProps) {
   const t = useTranslations("settingsPage");
+  const tLoc = useTranslations("locales");
   const [isPending, startTransition] = useTransition();
   const [settings, setSettings] = useState(initialSettings);
   const [message, setMessage] = useState<{
@@ -59,24 +89,43 @@ export function SettingsForm({ initialSettings }: SettingsFormProps) {
           </div>
         </div>
 
-        <div className="grid gap-3 p-4 sm:grid-cols-3">
-          {locales.map(loc => (
-            <Button
-              key={loc}
-              onClick={() => handleUpdate({ locale: loc })}
-              disabled={isPending}
-              variant="ghost"
-              className={cn(
-                "flex items-center justify-between rounded-xl border px-4 py-3 transition-all duration-200",
-                settings.locale === loc
-                  ? "border-arena-primary/30 bg-arena-primary/10 text-arena-primary"
-                  : "border-arena-border bg-arena-surface-el/50 text-arena-text-sec hover:border-arena-border/80 hover:bg-arena-surface-el",
-              )}
-            >
-              <span className="font-medium uppercase">{loc}</span>
-              {settings.locale === loc && <Check size={16} />}
-            </Button>
-          ))}
+        <div className="p-4">
+          <Select
+            value={settings.locale}
+            onValueChange={(val) => handleUpdate({ locale: val })}
+            disabled={isPending}
+          >
+            <SelectTrigger className="h-12 w-full rounded-full border-arena-border bg-arena-surface-el/50 px-4 text-arena-text hover:border-arena-border/80 hover:bg-arena-surface-el">
+              <SelectValue>
+                <div className="flex items-center gap-3">
+                  <span className="text-lg">
+                    {LANGUAGES[settings.locale as keyof typeof LANGUAGES]?.icon}
+                  </span>
+                  <span className="font-medium">
+                    {tLoc(settings.locale as any)}
+                  </span>
+                </div>
+              </SelectValue>
+            </SelectTrigger>
+            <SelectContent className="border-arena-border bg-arena-surface">
+              {locales.map((loc) => (
+                <SelectItem
+                  key={loc}
+                  value={loc}
+                  className="cursor-pointer text-arena-text-sec focus:bg-arena-surface-el focus:text-arena-text"
+                >
+                  <div className="flex items-center gap-2">
+                    <span className="text-lg">
+                      {LANGUAGES[loc as keyof typeof LANGUAGES].icon}
+                    </span>
+                    <span>
+                      {tLoc(loc as any)}
+                    </span>
+                  </div>
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
         </div>
       </section>
 

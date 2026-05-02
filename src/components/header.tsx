@@ -21,6 +21,7 @@ import { useSession } from "@/lib/auth-client";
 import { cn } from "@/lib/utils";
 import LanguageSelector from "./language-selector";
 import { Logo } from "./logo";
+import { UserMenu } from "./user-menu";
 
 export default function Header() {
   const { data: session } = useSession();
@@ -123,6 +124,12 @@ export default function Header() {
               );
             })}
 
+          {session?.user && (
+            <div className="hidden md:block">
+              <UserMenu user={session.user as any} />
+            </div>
+          )}
+
           <Sheet>
             <SheetTrigger asChild>
               <Button
@@ -156,6 +163,15 @@ export default function Header() {
               </div>
 
               <SheetFooter className="border-border-default flex-col gap-3 border-t pt-4">
+                {session?.user && (
+                  <div className="flex flex-col items-center gap-4 py-4">
+                    <UserMenu user={session.user as any} />
+                    <div className="flex flex-col items-center">
+                      <p className="text-sm font-medium text-white">{session.user.name}</p>
+                      <p className="text-xs text-white/50">{session.user.email}</p>
+                    </div>
+                  </div>
+                )}
                 {!isLoading &&
                   buttons.map(button => {
                     const key = button.href || button.label;

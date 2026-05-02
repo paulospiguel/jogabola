@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useTranslations } from "next-intl";
 import { useState } from "react";
 import { CreateEventSheet } from "@/components/arena/create-event-sheet";
+import { JbUserMenu } from "@/components/arena/jb-user-menu";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import type { EventView } from "@/types/events";
@@ -136,6 +137,7 @@ export function EventsListClient({ upcoming, past, userId }: EventsListClientPro
                 <Plus size={14} strokeWidth={2.5} />
                 {t("actions.create")}
               </Button>
+              <JbUserMenu onlyAvatar />
             </div>
           </header>
 

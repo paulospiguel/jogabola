@@ -7,7 +7,7 @@ import { useTranslations } from "next-intl";
 import { Logo } from "@/components/logo";
 import { Button } from "@/components/ui/button";
 
-const TacticalDiagram = () => (
+const TacticalDiagram = ({ t }: { t: (key: string) => string }) => (
   <div className="relative h-full w-full">
     <svg
       viewBox="0 0 400 300"
@@ -195,7 +195,7 @@ export default function NotFound() {
 
             <div className="relative hidden lg:block">
               <div className="absolute inset-0 flex items-center justify-center">
-                <TacticalDiagram />
+                <TacticalDiagram t={t} />
               </div>
             </div>
           </div>

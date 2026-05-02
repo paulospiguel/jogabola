@@ -59,7 +59,7 @@ src/
 
 - `app/*/page.tsx`: route composition, auth/session load, and passing minimal
   props to client components.
-- `_components/*client.tsx`: local interaction state and view composition.
+- `_components/*.tsx`: local interaction state and view composition.
 - `components/arena/*`: reusable Arena primitives only. No route-specific
   business rules.
 - `actions/*`: server-only mutation/read entrypoints. Validate input and auth

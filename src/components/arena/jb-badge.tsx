@@ -1,12 +1,18 @@
-import { AlertCircle, Check, Clock, Star, X } from "lucide-react";
+import { AlertCircle, Check, Clock, Hourglass, Star, X } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { cn } from "@/lib/utils";
 
-type BadgeStatus =
+export type BadgeStatus =
   | "confirmed"
   | "reserve"
   | "pending"
   | "refused"
-  | "highlight";
+  | "highlight"
+  | "waiting"
+  | "validating"
+  | "low"
+  | "medium"
+  | "high";
 
 interface JbBadgeProps {
   status: BadgeStatus;
@@ -18,35 +24,62 @@ const STATUS_MAP: Record<
   { label: string; Icon: React.ElementType; className: string }
 > = {
   confirmed: {
-    label: "Confirmado",
+    label: "confirmed",
     Icon: Check,
     className: "border-arena-success/20 bg-arena-success/10 text-arena-success",
   },
   reserve: {
-    label: "Reserva",
+    label: "reserve",
     Icon: Clock,
     className: "border-arena-warning/20 bg-arena-warning/10 text-arena-warning",
   },
   pending: {
-    label: "Pendente",
+    label: "pending",
     Icon: AlertCircle,
     className:
       "border-arena-text-muted/20 bg-arena-text-muted/10 text-arena-text-muted",
   },
   refused: {
-    label: "Recusado",
+    label: "refused",
     Icon: X,
     className: "border-arena-danger/20 bg-arena-danger/10 text-arena-danger",
   },
+  validating: {
+    label: "validating",
+    Icon: Hourglass,
+    className: "border-arena-warning/20 bg-arena-warning/10 text-arena-warning",
+  },
+  waiting: {
+    label: "waiting",
+    Icon: Hourglass,
+    className: "border-arena-warning/20 bg-arena-warning/10 text-arena-warning",
+  },
   highlight: {
-    label: "MVP",
+    label: "highlight",
     Icon: Star,
     className:
       "border-arena-highlight/20 bg-arena-highlight/10 text-arena-highlight",
   },
+  low: {
+    label: "low",
+    Icon: Check,
+    className: "border-arena-success/20 bg-arena-success/10 text-arena-success",
+  },
+  medium: {
+    label: "medium",
+    Icon: AlertCircle,
+    className: "border-arena-warning/20 bg-arena-warning/10 text-arena-warning",
+  },
+  high: {
+    label: "high",
+    Icon: X,
+    className: "border-arena-danger/20 bg-arena-danger/10 text-arena-danger",
+  },
 };
 
 export function JbBadge({ status, animate }: JbBadgeProps) {
+  const t = useTranslations("arenaBadges");
+
   const m = STATUS_MAP[status] ?? STATUS_MAP.pending;
   const { Icon } = m;
 
@@ -59,7 +92,7 @@ export function JbBadge({ status, animate }: JbBadgeProps) {
       )}
     >
       <Icon size={10} strokeWidth={2.5} />
-      {m.label}
+      {t(m.label)}
     </span>
   );
 }
