@@ -10,7 +10,7 @@ import { useTeamGate } from "./team-gate-context";
 
 const ITEMS = [
   { href: "/arena", icon: Shield, labelKey: "dashboard", requiresTeam: false },
-  { href: "/arena/teams", icon: Users, labelKey: "teams", requiresTeam: true },
+  { href: "/arena/squads", icon: Users, labelKey: "squads", requiresTeam: true },
   { href: "/arena/events", icon: Calendar, labelKey: "events", requiresTeam: true },
   { href: "/arena/notifications", icon: Bell, labelKey: "notifications", requiresTeam: true },
 ];

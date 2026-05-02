@@ -39,7 +39,7 @@ No other installs needed — Button, Input, Tabs, Badge, Avatar, Sheet, Dialog, 
 
 All classNames preserved — dark-glass design is intentional and must not be reset by shadcn defaults.
 
-### `src/app/(protected)/arena/teams/_components/squad-client.tsx`
+### `src/app/(protected)/arena/squads/_components/squad-client.tsx`
 
 | Raw element | Replace with | Notes |
 |---|---|---|

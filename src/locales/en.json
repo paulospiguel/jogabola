@@ -90,6 +90,47 @@
       "myAccount": "My Account"
     }
   },
+  "arenaAthleteProfile": {
+    "title": "Athlete Profile",
+    "loading": "Loading athlete profile...",
+    "notFound": "Athlete not found",
+    "stats": {
+      "rating": "Rating",
+      "goals": "Goals",
+      "assists": "Assists",
+      "matches": "Matches"
+    },
+    "actions": {
+      "back": "Back to squad",
+      "edit": "Edit",
+      "message": "Message",
+      "remove": "Remove from Squad",
+      "viewAll": "View all"
+    },
+    "info": {
+      "role": "Position",
+      "joined": "Member since",
+      "contact": "Contact"
+    },
+    "analysis": {
+      "title": "Performance Analysis",
+      "evolution": "Evolution of Rating per Match",
+      "periods": {
+        "last10": "Last 10 matches",
+        "season": "Season 2024"
+      }
+    },
+    "roles": {
+      "captain": "Captain",
+      "coach": "Coach",
+      "owner": "Captain",
+      "player": "Player"
+    },
+    "history": {
+      "title": "Activity History",
+      "players": "Players"
+    }
+  },
   "arenaAddPlayer": {
     "actions": {
       "add": "Add Player"
@@ -161,11 +202,15 @@
     "error": "Error creating event. Please try again.",
     "info": "After creating the event, you can add players and manage the squad call from the event page.",
     "labels": {
-      "date": "Date",
+      "date": "Date & Time",
       "location": "Location",
       "maxPlayers": "Max Players",
-      "time": "Time",
-      "title": "Title *"
+      "recurrence": "Modality"
+    },
+    "recurrence": {
+      "once": "Once",
+      "weekly": "Weekly",
+      "monthly": "Monthly"
     },
     "noTitle": "No title",
     "placeholders": {
@@ -200,11 +245,19 @@
     },
     "labels": {
       "name": "Team Name *",
-      "slug": "Unique Identifier (slug) *"
+      "slug": "Unique Identifier (slug) *",
+      "location": "Location",
+      "description": "About the team",
+      "category": "Category",
+      "homeGround": "Home Ground"
     },
     "placeholders": {
       "name": "E.g.: The Galacticos",
-      "slug": "eg-the-galacticos"
+      "slug": "eg-the-galacticos",
+      "location": "City or Region",
+      "description": "E.g.: Amateur team since 2020...",
+      "category": "E.g.: Amateur, Semi-Pro...",
+      "homeGround": "E.g.: City Stadium"
     },
     "success": "Team {name} created successfully!",
     "successSubtitle": "You can now invite players and organize matches.",
@@ -243,6 +296,7 @@
     },
     "stats": {
       "confirmed": "Confirmed",
+      "new": "New",
       "pending": "Pending",
       "reserves": "Reserves"
     },
@@ -302,6 +356,7 @@
     "collapse": "Collapse Menu",
     "dashboard": "Team",
     "events": "Events",
+    "squads": "Squads",
     "expand": "Expand",
     "notifications": "Notifications",
     "payments": "Payments",
@@ -316,7 +371,7 @@
       "select": "Select team",
       "teamsLabel": "My Teams"
     },
-    "teams": "Squad"
+    "teams": "Teams"
   },
   "arenaPage": {
     "activeTeams": {
@@ -452,6 +507,7 @@
       "pending": "Proof pending",
       "validating": "Paid to validate"
     },
+    "notFound": "Payment not found",
     "loading": "Loading payments...",
     "table": {
       "title": "Weekly payments",
@@ -463,6 +519,7 @@
       "risk": "Score",
       "viewProfile": "View Profile",
       "viewDetail": "View Details",
+      "date": "Date & Time",
       "match": {
         "weeklyGame": "Weekly Game"
       }
@@ -472,15 +529,20 @@
       "accept": "Accept Payment",
       "reject": "Reject Payment",
       "proof": "Proof of Payment",
+      "proofAlt": "Payment Proof",
       "noProof": "No proof uploaded",
+      "noProofSub": "Wait for athlete to upload or manually verify.",
       "history": "Athlete History",
       "verify": "Manual Verify",
       "viewProof": "View Full Proof",
       "summary": "Transaction Summary",
       "athlete": "Athlete Information",
-      "status": "Update Status"
+      "status": "Update Status",
+      "memberSince": "Club Member since {year}"
     },
     "actions": {
+      "back": "Back to list",
+      "download": "Download",
       "uploadProof": "Upload Proofs",
       "setMethods": "Payment Methods",
       "autoValidate": "Auto-validation",
@@ -488,6 +550,7 @@
     }
   },
   "arenaBadges": {
+    "new": "New",
     "confirmed": "Confirmed",
     "reserve": "Reserve",
     "pending": "Pending",
@@ -518,7 +581,8 @@
     "stats": {
       "playerCount": "{count} Player{count, plural, =1 {} other {s}}"
     },
-    "title": "Squad"
+    "title": "Squad",
+    "loading": "Loading squad..."
   },
   "common": {
     "accept": "Accept",
@@ -592,9 +656,16 @@
     "teamName": "Team name",
     "teamPlayers": "Team players",
     "teamPlayersStats": "Team player statistics",
+    "verified": "Verified",
     "teamStats": "Team statistics",
     "title": "Title",
-    "toggleTheme": "Toggle theme"
+    "toggleTheme": "Toggle theme",
+    "positions": {
+      "GK": "Goalkeeper",
+      "CB": "Defender",
+      "MID": "Midfielder",
+      "FW": "Forward"
+    }
   },
   "company": {
     "name": "JogaBola",
@@ -838,28 +909,37 @@
       "title": "The complete ecosystem for your club management"
     },
     "ecosystem_section": {
-      "kicker": "MVP JOGABOLA",
+      "kicker": "MVP FEATURES",
+      "title": "Everything you need to manage your weekly game",
+      "subtitle": "Teams, confirmations, payments, proofs. No complications.",
       "modules": {
         "attendance": {
-          "description": "Confirm attendance, track reserves and keep the waiting list organized.",
-          "title": "Attendance and waiting"
+          "title": "Real-time confirmations",
+          "description": "Know how many are showing up before the game. No lost messages on WhatsApp."
         },
-        "explore": "Explore",
         "payments": {
-          "description": "Record weekly payments and track pending amounts per player.",
-          "title": "MBWay Payments"
+          "title": "Payment record",
+          "description": "Track who paid this week. Less chasing, more organization."
         },
         "proofs": {
-          "description": "Receive proofs and prepare automatic pre-validation without confirming real payments.",
-          "title": "Proofs"
+          "title": "Digital proofs",
+          "description": "Collect transfer proofs. Pre-validate without confirming real payments."
         },
         "teams": {
-          "description": "Manage squad, team members and invited players for weekly games.",
-          "title": "Teams and players"
+          "title": "Team management",
+          "description": "Organize your squad, invite guest players for the week. All in one place."
         }
       },
-      "subtitle": "No futuristic modules: just teams, reserves, attendance, payments and proofs.",
-      "title": "The essential to manage weekly games"
+      "explore": "Explore"
+    },
+    "waitlistCta": {
+      "badge": "BETA · Early Access",
+      "titlePart1": "Ready to",
+      "titlePart2": "organize?",
+      "subtitle": "Join the waiting list. Early access for serious captains.",
+      "cta": "Join the waiting list",
+      "alreadyHaveAccess": "Already have access?",
+      "signIn": "Sign in"
     },
     "features": {
       "items": {
@@ -891,22 +971,37 @@
       "title": "Complete Features"
     },
     "hero": {
-      "badge": "New · {version}",
-      "description": "Teams, weekly games, attendance confirmations, waiting list and MBWay payments in a simple flow for amateur football.",
-      "startJourney": "Start Journey",
-      "subtitle": "Build your professional team, set tactics and dominate the digital field.",
-      "title": "Ready to manage your",
-      "titleHighlight": "Game",
-      "titlePart1": "Organize your",
-      "titlePart2": "Team's",
-      "titlePart3": "with",
-      "titlePart4": "Less Work",
-      "trustIndicators": {
-        "freeToStart": "Free to start",
-        "noCard": "No card required"
+      "badge": "BETA · Early Access",
+      "titlePart1": "Your weekly game,",
+      "titlePart2": "organized.",
+      "titleHighlight": "No WhatsApp groups.",
+      "titlePart3": "No confusion.",
+      "description": "Manage teams, attendance, and payments in one place. For captains who take the game seriously.",
+      "joinWaitlist": "Join the waiting list"
+    },
+    "momentumStrip": {
+      "item1": "Game scheduled",
+      "item2": "14 confirmed",
+      "item3": "Payments on track"
+    },
+    "problems": {
+      "kicker": "THE PROBLEM",
+      "title": "Do you recognize this?",
+      "pain1": {
+        "title": "\"Who's coming to the game?\"",
+        "description": "Confirmations lost in WhatsApp. You never know who shows up.",
+        "resolution": "Real-time attendance list"
       },
-      "versionBadge": "Version 2.0",
-      "watchDemo": "Watch Demo"
+      "pain2": {
+        "title": "\"Has everyone paid yet?\"",
+        "description": "Chasing players for transfers week after week.",
+        "resolution": "Payment record per player"
+      },
+      "pain3": {
+        "title": "\"Where's the proof?\"",
+        "description": "Images buried in the group. Impossible to validate without wasting time.",
+        "resolution": "Upload and automatic pre-validation"
+      }
     },
     "partnersSection": {
       "emptyState": {

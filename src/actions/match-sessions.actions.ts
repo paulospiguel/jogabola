@@ -43,6 +43,7 @@ export async function createEvent(input: {
   maxParticipants?: string;
   isPublic?: boolean;
   organizerId?: string;
+  recurrence?: string;
 }) {
   // Find or create a default team for this organizer
   let teamId: number;
@@ -77,11 +78,38 @@ export async function createEvent(input: {
       capacity: input.maxParticipants
         ? Number.parseInt(input.maxParticipants, 10)
         : null,
+      recurrence: input.recurrence || "once",
       currency: "EUR",
     })
     .returning();
 
   revalidatePath("/arena/events");
+  return { success: true as const, data: toEventView(event) };
+}
+
+export async function updateEvent(
+  eventId: number,
+  input: {
+    status?: string;
+    startDate?: Date;
+    endDate?: Date;
+    recurrence?: string;
+  }
+) {
+  const [event] = await db
+    .update(matchSessions)
+    .set({
+      ...(input.status && { status: input.status }),
+      ...(input.startDate && { startsAt: input.startDate }),
+      ...(input.endDate && { endsAt: input.endDate }),
+      ...(input.recurrence && { recurrence: input.recurrence }),
+      updatedAt: new Date(),
+    })
+    .where(eq(matchSessions.id, eventId))
+    .returning();
+
+  revalidatePath("/arena/events");
+  revalidatePath(`/arena/events/${eventId}`);
   return { success: true as const, data: toEventView(event) };
 }
 
@@ -140,7 +168,8 @@ function toEventView(event: typeof matchSessions.$inferSelect) {
     organizer: null,
     language: null,
     images: [] as string[],
-    status: "ativo" as const,
+    status: event.status,
+    recurrence: event.recurrence,
     createdAt: event.createdAt ?? new Date(),
     updatedAt: event.updatedAt ?? new Date(),
   };

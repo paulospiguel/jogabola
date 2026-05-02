@@ -1,3 +1,4 @@
+import { eq } from "drizzle-orm";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import DotGrid from "@/components/arena/dot-grid";
@@ -8,7 +9,6 @@ import { TeamGateProvider } from "@/components/arena/team-gate-context";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import { db } from "@/db/client";
 import * as schema from "@/db/schema";
-import { eq } from "drizzle-orm";
 import { auth } from "@/lib/auth";
 
 export default async function ArenaLayout({
@@ -27,7 +27,6 @@ export default async function ArenaLayout({
   const role: string | null = user?.role ?? null;
   let hasTeam = Boolean(sessionData?.teamId);
 
-  // Fallback: Check if user has any team membership in DB if session is stale
   if (!hasTeam && user?.id) {
     const membership = await db.query.teamMembers.findFirst({
       where: eq(schema.teamMembers.playerId, user.id),

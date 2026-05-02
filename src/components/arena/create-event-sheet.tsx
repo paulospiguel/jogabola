@@ -33,8 +33,8 @@ interface FormState {
   type: "game" | "training" | "challenge";
   title: string;
   startDate: Date | null;
-  location: string;
   maxPlayers: string;
+  recurrence: "once" | "weekly" | "monthly";
 }
 
 // Arena-flavoured overrides applied on top of the UI base components
@@ -78,6 +78,7 @@ export function CreateEventSheet({
     startDate: null,
     location: "",
     maxPlayers: "14",
+    recurrence: "once",
   });
   const [sending, setSending] = useState(false);
   const [done, setDone] = useState(false);
@@ -100,6 +101,7 @@ export function CreateEventSheet({
       maxParticipants: form.maxPlayers,
       isPublic: true,
       organizerId,
+      recurrence: form.recurrence,
     });
 
     setSending(false);
@@ -370,6 +372,29 @@ export function CreateEventSheet({
                       {t("playersCount", { count: n })}
                     </SelectItem>
                   ))}
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div className="">
+              <Label className={labelClass} htmlFor="event-recurrence">
+                {t("labels.recurrence") || "Modalidade"}
+              </Label>
+              <Select
+                defaultValue="once"
+                onValueChange={(value: "once" | "weekly" | "monthly") => set("recurrence", value)}
+                value={form.recurrence}
+              >
+                <SelectTrigger
+                  className="h-11 w-full rounded-xl border-arena-border bg-arena-surface text-sm text-arena-text"
+                  id="event-recurrence"
+                >
+                  <SelectValue placeholder="Modalidade" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="once">{t("recurrence.once") || "Único"}</SelectItem>
+                  <SelectItem value="weekly">{t("recurrence.weekly") || "Semanal"}</SelectItem>
+                  <SelectItem value="monthly">{t("recurrence.monthly") || "Mensal"}</SelectItem>
                 </SelectContent>
               </Select>
             </div>

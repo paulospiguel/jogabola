@@ -8,6 +8,7 @@ import {
   List,
   MapPin,
   Send,
+  Settings2,
   Trophy,
   X,
 } from "lucide-react";
@@ -17,6 +18,7 @@ import { useEffect, useState } from "react";
 import { JbAvatar } from "@/components/arena/jb-avatar";
 import { JbBadge } from "@/components/arena/jb-badge";
 import { JbScreenHeader } from "@/components/arena/jb-screen-header";
+import { EditEventSheet } from "@/components/arena/edit-event-sheet";
 import { Button } from "@/components/ui/button";
 import { useEventAttendance } from "@/hooks/use-event-attendance";
 import { cn } from "@/lib/utils";
@@ -28,6 +30,8 @@ interface EventDetailProps {
     type: string;
     location: string;
     startDate: Date | string;
+    status: string;
+    recurrence: string;
     maxParticipants?: string | null;
     description?: string | null;
   };
@@ -136,6 +140,7 @@ export function EventDetail({ event }: EventDetailProps) {
   const t = useTranslations("arenaEventDetail");
   const [tab, setTab] = useState<Tab>("conv");
   const [myStatus, setMyStatus] = useState<"pending" | "confirmed">("pending");
+  const [isEditing, setIsEditing] = useState(false);
 
   const { confirmed, reserves, pending, isLoading } = useEventAttendance(
     event.id,
@@ -160,7 +165,23 @@ export function EventDetail({ event }: EventDetailProps) {
 
   return (
     <div className="flex min-h-screen flex-col bg-arena-bg">
-      <JbScreenHeader title={isJogo ? t("titleJogo") : t("titleTreino")} />
+      <JbScreenHeader 
+        title={isJogo ? t("titleJogo") : t("titleTreino")} 
+        right={
+          <Button
+            variant="ghost"
+            size="icon-sm"
+            className="text-arena-text-muted hover:text-arena-text"
+            onClick={() => setIsEditing(true)}
+          >
+            <Settings2 size={18} />
+          </Button>
+        }
+      />
+
+      {isEditing && (
+        <EditEventSheet event={event as any} onClose={() => setIsEditing(false)} />
+      )}
 
       <div
         className="border-b border-arena-border px-5 py-3.5"

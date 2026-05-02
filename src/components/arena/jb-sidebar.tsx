@@ -41,7 +41,7 @@ const ITEMS = [
     labelKey: "events",
     requiresTeam: true,
   },
-  { href: "/arena/teams", icon: Users, labelKey: "teams", requiresTeam: true },
+  { href: "/arena/squads", icon: Users, labelKey: "squads", requiresTeam: true },
   {
     href: "/arena/notifications",
     icon: Bell,

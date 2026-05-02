@@ -1,6 +1,6 @@
 "use client";
 
-import { Plus, Search, Star, VerifiedIcon, X } from "lucide-react";
+import { Plus, Search, Users2, Users2Icon, X } from "lucide-react";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
 import { useState } from "react";
@@ -8,12 +8,10 @@ import { AddPlayerSheet } from "@/components/arena/add-player-sheet";
 import { JbAvatar } from "@/components/arena/jb-avatar";
 import { JbBadge } from "@/components/arena/jb-badge";
 import { JbUserMenu } from "@/components/arena/jb-user-menu";
+import { VerifiedBadge } from "@/components/arena/verified-badge";
+import Loading from "@/components/loading";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import {
-  ToggleGroup,
-  ToggleGroupItem,
-} from "@/components/ui/toggle-group";
+import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { useSquad } from "@/hooks/use-squad";
 
 const FILTERS_DATA = [
@@ -28,8 +26,8 @@ export function SquadClient({ userId }: { userId: string }) {
   const [search, setSearch] = useState("");
   const [filter, setFilter] = useState("all");
   const [showAdd, setShowAdd] = useState(false);
-  
-  const { players, isLoading } = useSquad();
+
+  const { players, activeTeamId, isLoading } = useSquad();
 
   const filtered = players.filter(p => {
     const ms =
@@ -40,17 +38,19 @@ export function SquadClient({ userId }: { userId: string }) {
   });
 
   if (isLoading) {
-    return (
-      <div className="flex h-screen items-center justify-center bg-arena-bg text-arena-text-muted">
-        Carregando plantel...
-      </div>
-    );
+    return <div className="jb-page flex items-center justify-center">
+      <Loading text={t("loading")} />
+    </div>;
   }
 
   return (
     <>
       {showAdd && (
-        <AddPlayerSheet onClose={() => setShowAdd(false)} managerId={userId} />
+        <AddPlayerSheet 
+          onClose={() => setShowAdd(false)} 
+          managerId={userId} 
+          teamId={activeTeamId}
+        />
       )}
 
       <div className="jb-page">
@@ -58,19 +58,24 @@ export function SquadClient({ userId }: { userId: string }) {
           <header className="jb-topbar">
             <div>
               <div className="jb-kicker">{t("kicker")}</div>
-              <h1 className="jb-title">{t("title")}</h1>
+              <div className="flex items-center gap-2">
+                <Users2 className="text-arena-primary" />
+                <h1 className="jb-title">{t("title")}</h1>
+              </div>
             </div>
-            <Button
-              className="jb-action jb-action-primary hidden md:inline-flex"
-              onClick={() => setShowAdd(true)}
-              type="button"
-              variant="ghost"
-              size="sm"
-            >
-              <Plus size={15} strokeWidth={2.5} />
-              {t("actions.add")}
-            </Button>
-            <JbUserMenu onlyAvatar />
+            <div className="flex items-center gap-2">
+              <Button
+                className="jb-action jb-action-primary hidden md:inline-flex"
+                onClick={() => setShowAdd(true)}
+                type="button"
+                variant="ghost"
+                size="sm"
+              >
+                <Plus size={15} strokeWidth={2.5} />
+                {t("actions.add")}
+              </Button>
+              <JbUserMenu onlyAvatar />
+            </div>
           </header>
 
           <div>
@@ -117,7 +122,11 @@ export function SquadClient({ userId }: { userId: string }) {
           {filtered.length === 0 ? (
             <div className="flex flex-col items-center justify-center gap-3 px-6 py-10 text-center">
               <div className="flex size-14 items-center justify-center rounded-[18px] border border-arena-border bg-arena-surface">
-                <Search size={24} className="text-arena-text-muted" strokeWidth={1.5} />
+                <Search
+                  size={24}
+                  className="text-arena-text-muted"
+                  strokeWidth={1.5}
+                />
               </div>
               <div className="text-[15px] font-semibold text-arena-text">
                 {t("search.noResults")}
@@ -139,22 +148,21 @@ export function SquadClient({ userId }: { userId: string }) {
                 {filtered.map(p => (
                   <Link
                     key={p.id}
-                    href={`/arena/teams/${p.id}`}
+                    href={`/arena/squads/player/${p.id}`}
                     className="flex items-center gap-3 rounded-[14px] border border-arena-border bg-arena-surface px-3.5 py-3 transition-all hover:border-arena-primary/30 hover:bg-arena-primary/5 active:scale-[0.98]"
                   >
-                    <JbAvatar name={p.name} size={40} id={p.id} />
+                    <JbAvatar
+                      image={p.image}
+                      name={p.name}
+                      size={40}
+                      id={p.id}
+                    />
                     <div className="flex-1">
                       <div className="mb-1 flex items-center gap-1.5">
                         <span className="text-sm font-semibold text-arena-text">
                           {p.name}
                         </span>
-                        {p.isVerified && (
-                          <VerifiedIcon
-                            color="var(--user-verified)"
-                            size={12}
-                            className="text-arena-verified fill-arena-verified"
-                          />
-                        )}
+                        <VerifiedBadge variant="icon" verified={p.isVerified} />
                       </div>
                       <div className="flex items-center gap-1.5">
                         <span className="rounded-[5px] border border-arena-border bg-arena-surface-el px-1.5 py-0.5 text-[10px] font-bold text-arena-text-muted">

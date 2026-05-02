@@ -2,25 +2,21 @@
 
 import { and, eq } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
-import { redirect } from "next/navigation";
 import { z } from "zod";
 import { db } from "@/db/client";
 import { accountTransferRequests, user } from "@/db/schema";
 import { withAuthAction } from "@/lib/action-helpers";
 
-export const deleteAccount = withAuthAction(
-  z.object({}),
-  async authUser => {
-    try {
-      await db.delete(user).where(eq(user.id, authUser.id));
-      revalidatePath("/arena");
-      return { success: true, data: null };
-    } catch (err) {
-      console.error("[account] delete error:", err);
-      return { success: false, error: { code: "DELETE_FAILED" } };
-    }
-  },
-);
+export const deleteAccount = withAuthAction(z.object({}), async authUser => {
+  try {
+    await db.delete(user).where(eq(user.id, authUser.id));
+    revalidatePath("/arena");
+    return { success: true, data: null };
+  } catch (err) {
+    console.error("[account] delete error:", err);
+    return { success: false, error: { code: "DELETE_FAILED" } };
+  }
+});
 
 export const transferAccount = withAuthAction(
   z.object({ newEmail: z.string().email() }),
@@ -58,7 +54,9 @@ export const transferAccount = withAuthAction(
 
       revalidatePath("/arena/profile");
 
-      console.log(`[account] transfer request: ${authUser.email} → ${newEmail}`);
+      console.log(
+        `[account] transfer request: ${authUser.email} → ${newEmail}`,
+      );
       return { success: true, data: { message: "TRANSFER_REQUEST_SENT" } };
     } catch (err) {
       console.error("[account] transfer error:", err);

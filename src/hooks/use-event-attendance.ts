@@ -19,17 +19,17 @@ export function useEventAttendance(eventId: number) {
       return {
         confirmed: [
           { id: 1, name: "Diogo Ferreira", role: "GR" },
-          { id: 5, name: "Ricardo Pinto", role: "DE" },
+          { id: 5, name: "Ricardo Pinto", role: "LE" },
           { id: 4, name: "Bruno Alves", role: "DC" },
           { id: 7, name: "Nuno Santos", role: "MC" },
-          { id: 12, name: "Rui Gomes", role: "CA" },
+          { id: 12, name: "Rui Gomes", role: "PL" },
         ],
         reserves: [
           { id: 8, name: "João Martins", role: "MD" },
-          { id: 10, name: "Luís Oliveira", role: "PD" },
+          { id: 10, name: "Luís Oliveira", role: "ED" },
         ],
         pending: [
-          { id: 11, name: "Miguel Pereira", role: "PE" },
+          { id: 11, name: "Miguel Pereira", role: "EE" },
           { id: 14, name: "Sérgio Lima", role: "DC" },
         ],
       };

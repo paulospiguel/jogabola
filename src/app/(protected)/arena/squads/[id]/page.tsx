@@ -4,37 +4,44 @@ import {
   ArrowLeft,
   Calendar,
   ChevronRight,
-  Edit2,
   Mail,
-  MessageSquare,
   Star,
   Trophy,
+  User2,
   UserMinus,
   Zap,
 } from "lucide-react";
 import { useParams, useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { JbAvatar } from "@/components/arena/jb-avatar";
-import { type BadgeStatus, JbBadge } from "@/components/arena/jb-badge";
 import { VerifiedBadge } from "@/components/arena/verified-badge";
+import Loading from "@/components/loading";
 import { Button } from "@/components/ui/button";
+import { useAthleteProfile } from "@/hooks/use-athlete-profile";
 import { useDashboardData } from "@/hooks/use-dashboard";
 import { cn } from "@/lib/utils";
 
 export default function AthleteProfilePage() {
   const { id } = useParams();
   const router = useRouter();
-  const t = useTranslations("arenaAthleteProfile");
-  const { squad, events, isLoading } = useDashboardData();
+  const t = useTranslations();
+  const { events, isLoading: dashboardLoading } = useDashboardData();
+  const { profile: athlete, isLoading: profileLoading } = useAthleteProfile(
+    id as string,
+  );
 
-  const athlete = squad.find(p => p.id.toString() === id);
+  const arenaAthleteProfileTranslation = (sentence: string) => {
+    return t(`arenaAthleteProfile.${sentence}`);
+  };
+
+  const isLoading = dashboardLoading || profileLoading;
 
   if (isLoading) {
     return (
       <div className="jb-page flex items-center justify-center">
-        <div className="animate-pulse text-arena-text-muted">
-          Loading athlete profile...
-        </div>
+        <Loading
+          text={arenaAthleteProfileTranslation("loading")}
+        />
       </div>
     );
   }
@@ -43,14 +50,16 @@ export default function AthleteProfilePage() {
     return (
       <div className="jb-page">
         <div className="jb-page-inner text-center">
-          <h1 className="text-xl font-bold">Athlete not found</h1>
+          <h1 className="text-xl font-bold">
+            {arenaAthleteProfileTranslation("notFound")}
+          </h1>
           <Button
             variant="ghost"
             onClick={() => router.back()}
             className="mt-4"
           >
             <ArrowLeft className="mr-2" size={16} />
-            Back to squad
+            {arenaAthleteProfileTranslation("actions.back")}
           </Button>
         </div>
       </div>
@@ -59,25 +68,25 @@ export default function AthleteProfilePage() {
 
   const statCards = [
     {
-      label: t("stats.rating"),
+      label: arenaAthleteProfileTranslation("stats.rating"),
       value: (athlete as any).rating || "-",
       Icon: Star,
       color: "text-arena-highlight",
     },
     {
-      label: t("stats.goals"),
+      label: arenaAthleteProfileTranslation("stats.goals"),
       value: (athlete as any).goals || 0,
       Icon: Zap,
       color: "text-arena-primary",
     },
     {
-      label: t("stats.assists"),
+      label: arenaAthleteProfileTranslation("stats.assists"),
       value: (athlete as any).assists || 0,
       Icon: Trophy,
       color: "text-arena-success",
     },
     {
-      label: t("stats.matches"),
+      label: arenaAthleteProfileTranslation("stats.matches"),
       value: (athlete as any).games || 0,
       Icon: Calendar,
       color: "text-arena-info",
@@ -99,21 +108,26 @@ export default function AthleteProfilePage() {
             </Button>
             <div>
               <div className="jb-kicker uppercase">{athlete.role}</div>
-              <h1 className="jb-title">{t("title")}</h1>
+              <div className="flex items-center gap-2">
+                <User2 className="size-6 text-arena-primary" />
+                <h1 className="jb-title">
+                  {arenaAthleteProfileTranslation("title")}
+                </h1>
+              </div>
             </div>
           </div>
           <div className="flex gap-2">
-            <Button
+            {/* <Button
               variant="outline"
               className="border-arena-border hover:bg-arena-primary/10 hover:text-arena-primary"
             >
               <Edit2 className="mr-2" size={16} />
-              {t("actions.edit")}
+              {t("common.edit")}
             </Button>
             <Button className="jb-action-primary">
               <MessageSquare className="mr-2" size={16} />
-              {t("actions.message")}
-            </Button>
+              {arenaAthleteProfileTranslation("actions.message")}
+            </Button> */}
           </div>
         </header>
 
@@ -121,51 +135,53 @@ export default function AthleteProfilePage() {
           <aside className="space-y-6">
             {/* Athlete Identity Card */}
             <section className="jb-card p-6 flex flex-col items-center text-center">
-              <JbAvatar
-                id={athlete.id.toString()}
-                name={athlete.name}
-                size={100}
-              />
-              <div className="mt-4 flex items-center gap-2">
+              <div className="relative">
+                {true && (
+                  <span className="absolute z-10 top-0 right-0 flex h-5 items-center gap-1 rounded-full px-2 text-[10px] font-black tracking-widest text-arena-highlight uppercase">
+                    <Star size={10} fill="currentColor" />
+                  </span>
+                )}
+                <JbAvatar
+                  id={athlete.id.toString()}
+                  name={athlete.name}
+                  image={athlete.image}
+                  size={100}
+                />
+              </div>
+              <div className="mt-4 flex items-center gap-2 flex-col">
                 <h2 className="text-xl font-bold text-arena-text">
                   {athlete.name}
                 </h2>
-                <VerifiedBadge verified={athlete.isVerified} />
               </div>
               <div className="mt-2 flex items-center gap-2">
-                <JbBadge status={athlete.status as BadgeStatus} />
-                {(athlete as any).highlight && (
-                  <span className="flex h-5 items-center gap-1 rounded-full bg-arena-highlight/10 px-2 text-[10px] font-black tracking-widest text-arena-highlight uppercase">
-                    <Star size={10} fill="currentColor" />
-                    MVP
-                  </span>
-                )}
+                {/* <JbBadge status={athlete.status as BadgeStatus} /> */}
+                <VerifiedBadge verified={athlete.isVerified} />
               </div>
 
               <div className="mt-8 w-full space-y-4 text-left border-t border-arena-border pt-6">
                 <div>
                   <div className="text-[10px] font-bold uppercase tracking-widest text-arena-text-muted">
-                    {t("info.role")}
+                    {arenaAthleteProfileTranslation("info.role")}
                   </div>
-                  <div className="mt-1 font-semibold text-arena-text">
-                    {athlete.role}
-                  </div>
-                </div>
-                <div>
-                  <div className="text-[10px] font-bold uppercase tracking-widest text-arena-text-muted">
-                    {t("info.joined")}
-                  </div>
-                  <div className="mt-1 font-semibold text-arena-text">
-                    May 2023
+                  <div className="mt-1 font-semibold text-arena-text capitalize">
+                    {arenaAthleteProfileTranslation(`roles.${athlete.role}`)}
                   </div>
                 </div>
                 <div>
                   <div className="text-[10px] font-bold uppercase tracking-widest text-arena-text-muted">
-                    Contact
+                    {arenaAthleteProfileTranslation("info.joined")}
+                  </div>
+                  <div className="mt-1 font-semibold text-arena-text">
+                    {new Date(athlete.createdAt).toDateString()}
+                  </div>
+                </div>
+                <div>
+                  <div className="text-[10px] font-bold uppercase tracking-widest text-arena-text-muted">
+                    {arenaAthleteProfileTranslation("info.contact")}
                   </div>
                   <div className="mt-1 flex items-center gap-2 font-semibold text-arena-text">
                     <Mail size={14} className="text-arena-text-muted" />
-                    {athlete.name.toLowerCase().replace(" ", ".")}@example.com
+                    {athlete.email}
                   </div>
                 </div>
               </div>
@@ -175,7 +191,7 @@ export default function AthleteProfilePage() {
                 className="mt-8 w-full text-arena-danger hover:bg-arena-danger/10 hover:text-arena-danger"
               >
                 <UserMinus className="mr-2" size={16} />
-                {t("actions.remove")}
+                {arenaAthleteProfileTranslation("actions.remove")}
               </Button>
             </section>
           </aside>
@@ -203,11 +219,15 @@ export default function AthleteProfilePage() {
             <section className="jb-card overflow-hidden">
               <div className="border-b border-arena-border bg-arena-surface-el/50 px-6 py-4 flex items-center justify-between">
                 <h2 className="text-xs font-bold uppercase tracking-widest text-arena-text-muted">
-                  Performance Analysis
+                  {arenaAthleteProfileTranslation("analysis.title")}
                 </h2>
                 <select className="bg-transparent text-[10px] font-bold uppercase tracking-widest text-arena-text-muted focus:outline-none">
-                  <option>Last 10 matches</option>
-                  <option>Season 2024</option>
+                  <option>
+                    {arenaAthleteProfileTranslation("analysis.periods.last10")}
+                  </option>
+                  <option>
+                    {arenaAthleteProfileTranslation("analysis.periods.season")}
+                  </option>
                 </select>
               </div>
               <div className="p-12 flex flex-col items-center justify-center text-arena-text-muted bg-gradient-to-b from-transparent to-arena-primary/5">
@@ -221,7 +241,7 @@ export default function AthleteProfilePage() {
                   ))}
                 </div>
                 <p className="text-sm font-medium">
-                  Evolution of Rating per Match
+                  {arenaAthleteProfileTranslation("analysis.evolution")}
                 </p>
               </div>
             </section>
@@ -230,14 +250,14 @@ export default function AthleteProfilePage() {
             <section className="jb-card overflow-hidden">
               <div className="border-b border-arena-border bg-arena-surface-el/50 px-6 py-4 flex items-center justify-between">
                 <h2 className="text-xs font-bold uppercase tracking-widest text-arena-text-muted">
-                  {t("history.title")}
+                  {arenaAthleteProfileTranslation("history.title")}
                 </h2>
                 <Button
                   variant="ghost"
                   size="sm"
                   className="h-8 text-[10px] font-bold uppercase"
                 >
-                  View All
+                  {arenaAthleteProfileTranslation("actions.viewAll")}
                 </Button>
               </div>
               <div className="divide-y divide-arena-border">
@@ -264,7 +284,7 @@ export default function AthleteProfilePage() {
                           {item.total}
                         </div>
                         <div className="text-[9px] font-bold uppercase tracking-widest text-arena-text-muted">
-                          Players
+                          {arenaAthleteProfileTranslation("history.players")}
                         </div>
                       </div>
                       <ChevronRight

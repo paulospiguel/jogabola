@@ -28,7 +28,7 @@ export default function PaymentsPage() {
           <div>
             <div className="jb-kicker">{t("kicker")}</div>
             <div className="flex items-center gap-2">
-              <Shield className="size-6 text-arena-primary" />
+              <CreditCard className="size-6 text-arena-primary" />
               <h1 className="jb-title">{t("title")}</h1>
             </div>
           </div>
@@ -85,11 +85,6 @@ export default function PaymentsPage() {
             <h2 className="text-sm font-bold uppercase tracking-widest text-arena-text-muted">
               {t("table.title")}
             </h2>
-            <div className="flex gap-2">
-              <Button variant="ghost" size="sm" className="jb-action text-xs">
-                {t("actions.relevant")}
-              </Button>
-            </div>
           </div>
 
           <div className="grid gap-3">
@@ -112,17 +107,17 @@ export default function PaymentsPage() {
                     {/* Atleta Info */}
                     <div className="flex flex-1 items-center gap-3">
                       <JbAvatar
-                        id={payment.playerId}
-                        name={payment.player}
+                        id={payment.player.id}
+                        name={payment.player.name}
                         size={44}
                       />
                       <div className="flex-1">
                         <div className="flex items-center gap-1.5">
                           <span className="font-bold text-arena-text group-hover:text-arena-primary transition-colors">
-                            {payment.player}
+                            {payment.player.name}
                           </span>
                           <VerifiedBadge
-                            verified={payment.isVerified}
+                            verified={payment.player.isVerified}
                             variant="icon"
                           />
                         </div>
@@ -133,7 +128,7 @@ export default function PaymentsPage() {
                           </span>
                           <span>•</span>
                           <span className="truncate max-w-[150px]">
-                            {t(`table.match.${payment.match}`)}
+                            {payment.event.title}
                           </span>
                         </div>
                       </div>

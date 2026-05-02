@@ -11,6 +11,13 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { cn } from "@/lib/utils";
 
 const LOCALE_MAP: Record<string, Locale> = {
@@ -41,10 +48,16 @@ export function EventDatePicker({
 
   const [open, setOpen] = React.useState(false);
 
-  // Derive HH:mm from value
-  const timeStr = value
-    ? `${String(value.getHours()).padStart(2, "0")}:${String(value.getMinutes()).padStart(2, "0")}`
-    : "";
+  // Derive HH:mm from value, rounding minutes to nearest 5
+  let hStr = "";
+  let mStr = "";
+  if (value) {
+    hStr = String(value.getHours()).padStart(2, "0");
+    const m = value.getMinutes();
+    const roundedM = Math.round(m / 5) * 5;
+    mStr = String(roundedM === 60 ? 55 : roundedM).padStart(2, "0"); // prevent 60
+  }
+  const timeStr = value ? `${hStr}:${mStr}` : "";
 
   /** Merge a newly selected calendar day with the existing time (or 00:00) */
   const handleDaySelect = (day: Date | undefined) => {
@@ -59,8 +72,8 @@ export function EventDatePicker({
   };
 
   /** Merge a new time string with the existing calendar date (or today) */
-  const handleTimeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const [h, m] = e.target.value.split(":").map(Number);
+  const handleTimeChangeStr = (newTimeStr: string) => {
+    const [h, m] = newTimeStr.split(":").map(Number);
     const base = value ? new Date(value) : new Date();
     base.setHours(h ?? 0, m ?? 0, 0, 0);
     onChange?.(base);
@@ -90,7 +103,7 @@ export function EventDatePicker({
 
         {/* z-[10000] to appear above the bottom sheet (z-[9999]) */}
         <PopoverContent
-          align="start"
+          align="center"
           className="w-auto rounded-2xl border border-arena-border bg-arena-bg-sec p-0 shadow-[0_16px_48px_rgba(0,0,0,.7)] z-[10000]"
         >
           <Calendar
@@ -118,12 +131,53 @@ export function EventDatePicker({
             <span className="text-xs font-semibold text-arena-text-sec">
               {t("common.hour")}
             </span>
-            <input
-              type="time"
-              value={timeStr}
-              onChange={handleTimeChange}
-              className="ml-auto h-8 rounded-lg border border-arena-border bg-arena-surface px-2.5 text-sm text-arena-text outline-none focus:border-arena-primary/50"
-            />
+            <div className="ml-auto flex items-center gap-1">
+              <Select
+                value={timeStr ? timeStr.split(":")[0] : "00"}
+                onValueChange={(val) => {
+                  const m = timeStr ? timeStr.split(":")[1] : "00";
+                  handleTimeChangeStr(`${val}:${m}`);
+                }}
+              >
+                <SelectTrigger className="h-8 w-16 px-2 text-sm border-arena-border bg-arena-surface text-arena-text">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent position="popper" className="max-h-48 min-w-[5rem]">
+                  {Array.from({ length: 24 }).map((_, i) => {
+                    const v = String(i).padStart(2, "0");
+                    return (
+                      <SelectItem key={v} value={v}>
+                        {v}
+                      </SelectItem>
+                    );
+                  })}
+                </SelectContent>
+              </Select>
+
+              <span className="text-arena-text-muted font-bold">:</span>
+
+              <Select
+                value={timeStr ? timeStr.split(":")[1] : "00"}
+                onValueChange={(val) => {
+                  const h = timeStr ? timeStr.split(":")[0] : "00";
+                  handleTimeChangeStr(`${h}:${val}`);
+                }}
+              >
+                <SelectTrigger className="h-8 w-16 px-2 text-sm border-arena-border bg-arena-surface text-arena-text">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent position="popper" className="max-h-48 min-w-[5rem]">
+                  {Array.from({ length: 12 }).map((_, i) => {
+                    const v = String(i * 5).padStart(2, "0");
+                    return (
+                      <SelectItem key={v} value={v}>
+                        {v}
+                      </SelectItem>
+                    );
+                  })}
+                </SelectContent>
+              </Select>
+            </div>
           </div>
         </PopoverContent>
       </Popover>

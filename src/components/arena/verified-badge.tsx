@@ -1,10 +1,11 @@
+"use client";
+
 import { BadgeCheck } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { cn } from "@/lib/utils";
 
 interface VerifiedBadgeProps {
-  /** If false/undefined, renders nothing */
   verified?: boolean;
-  /** "default" = full chip with label, "icon" = icon-only tooltip variant */
   variant?: "default" | "icon";
   className?: string;
 }
@@ -14,6 +15,8 @@ export function VerifiedBadge({
   variant = "default",
   className,
 }: VerifiedBadgeProps) {
+  const t = useTranslations();
+
   if (!verified) return null;
 
   if (variant === "icon") {
@@ -40,7 +43,7 @@ export function VerifiedBadge({
       }}
     >
       <BadgeCheck size={12} strokeWidth={2.5} />
-      Verificado
+      {t("common.verified")}
     </span>
   );
 }

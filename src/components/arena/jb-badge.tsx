@@ -1,9 +1,10 @@
-import { AlertCircle, Check, Clock, Hourglass, Star, X } from "lucide-react";
+import { AlertCircle, Check, Clock, Hourglass, Sparkles, Star, X } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { cn } from "@/lib/utils";
 
 export type BadgeStatus =
   | "confirmed"
+  | "new"
   | "reserve"
   | "pending"
   | "refused"
@@ -27,6 +28,11 @@ const STATUS_MAP: Record<
     label: "confirmed",
     Icon: Check,
     className: "border-arena-success/20 bg-arena-success/10 text-arena-success",
+  },
+  new: {
+    label: "new",
+    Icon: Sparkles,
+    className: "border-arena-info/20 bg-arena-info/10 text-arena-info",
   },
   reserve: {
     label: "reserve",

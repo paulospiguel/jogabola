@@ -162,7 +162,7 @@ const HeroSection = () => {
             <div className="inline-flex items-center rounded-full border border-blue-500/20 bg-blue-500/10 px-4 py-1.5">
               <div className="mr-2 h-2 w-2 animate-pulse rounded-full bg-blue-400" />
               <span className="text-xs font-bold tracking-widest text-blue-400 uppercase">
-                {t("badge", { version: t("versionBadge") })}
+                {t("badge")}
               </span>
             </div>
 

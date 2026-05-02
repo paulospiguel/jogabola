@@ -4,13 +4,13 @@ import { Check, Loader2, Shield } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useState } from "react";
 import { createTeam } from "@/actions/teams.actions";
+import { useTeams } from "@/hooks/use-teams";
+import { authClient } from "@/lib/auth-client";
 import { cn } from "@/lib/utils";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
 import { JbBottomSheet } from "./jb-bottom-sheet";
-import { useTeams } from "@/hooks/use-teams";
-import { authClient } from "@/lib/auth-client";
 
 interface CreateTeamSheetProps {
   onClose: () => void;
@@ -19,6 +19,10 @@ interface CreateTeamSheetProps {
 interface FormState {
   name: string;
   slug: string;
+  location: string;
+  description: string;
+  category: string;
+  homeGround: string;
 }
 
 const inputClass =
@@ -31,6 +35,10 @@ export function CreateTeamSheet({ onClose }: CreateTeamSheetProps) {
   const [form, setForm] = useState<FormState>({
     name: "",
     slug: "",
+    location: "",
+    description: "",
+    category: "",
+    homeGround: "",
   });
   const [saving, setSaving] = useState(false);
   const [done, setDone] = useState(false);
@@ -64,6 +72,10 @@ export function CreateTeamSheet({ onClose }: CreateTeamSheetProps) {
     const result = await createTeam({
       name: form.name.trim(),
       slug: form.slug.trim(),
+      location: form.location.trim(),
+      description: form.description.trim(),
+      category: form.category.trim(),
+      homeGround: form.homeGround.trim(),
     });
 
     setSaving(false);
@@ -71,10 +83,10 @@ export function CreateTeamSheet({ onClose }: CreateTeamSheetProps) {
     if (!result.success) {
       const code = result.error.code;
       // Use the translated error if available, otherwise fallback to message or code
-      const message = t.has(`errors.${code}`) 
-        ? t(`errors.${code}`) 
+      const message = t.has(`errors.${code}`)
+        ? t(`errors.${code}`)
         : (result.error.message ?? code ?? "Error creating team");
-      
+
       setError(message);
       return;
     }
@@ -136,6 +148,62 @@ export function CreateTeamSheet({ onClose }: CreateTeamSheetProps) {
             onChange={e => set("slug", e.target.value)}
             placeholder={t("placeholders.slug")}
             value={form.slug}
+          />
+        </div>
+
+        {/* Location */}
+        <div className="mb-4">
+          <Label className={labelClass} htmlFor="team-location">
+            {t("labels.location")}
+          </Label>
+          <Input
+            className={inputClass}
+            id="team-location"
+            onChange={e => set("location", e.target.value)}
+            placeholder={t("placeholders.location")}
+            value={form.location}
+          />
+        </div>
+
+        {/* Category */}
+        <div className="mb-4">
+          <Label className={labelClass} htmlFor="team-category">
+            {t("labels.category")}
+          </Label>
+          <Input
+            className={inputClass}
+            id="team-category"
+            onChange={e => set("category", e.target.value)}
+            placeholder={t("placeholders.category")}
+            value={form.category}
+          />
+        </div>
+
+        {/* Home Ground */}
+        <div className="mb-4">
+          <Label className={labelClass} htmlFor="team-homeGround">
+            {t("labels.homeGround")}
+          </Label>
+          <Input
+            className={inputClass}
+            id="team-homeGround"
+            onChange={e => set("homeGround", e.target.value)}
+            placeholder={t("placeholders.homeGround")}
+            value={form.homeGround}
+          />
+        </div>
+
+        {/* Description */}
+        <div className="mb-4">
+          <Label className={labelClass} htmlFor="team-description">
+            {t("labels.description")}
+          </Label>
+          <textarea
+            className={cn(inputClass, "min-h-[80px] w-full resize-none py-2")}
+            id="team-description"
+            onChange={e => set("description", e.target.value)}
+            placeholder={t("placeholders.description")}
+            value={form.description}
           />
         </div>
 

@@ -3,6 +3,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { getEvents } from "@/actions/match-sessions.actions";
 import { getTeamSquad } from "@/actions/teams.actions";
+import type { PlayerStatus } from "@/constants/player";
 import { useTeams } from "@/hooks/use-teams";
 
 export interface DashboardEvent {
@@ -20,8 +21,10 @@ export interface SquadMember {
   id: string | number;
   name: string;
   role: string;
-  status: "confirmed" | "reserve" | "pending";
-  isVerified: boolean;
+  image?: string | null;
+  position?: string | null;
+  status: PlayerStatus;
+  isVerified?: boolean | null;
 }
 
 export function useDashboardData() {
@@ -56,8 +59,15 @@ export function useDashboardData() {
       id: e.id,
       type: e.type,
       title: e.title,
-      date: d.toLocaleDateString("pt-PT", { weekday: "short", day: "2-digit", month: "short" }),
-      time: d.toLocaleTimeString("pt-PT", { hour: "2-digit", minute: "2-digit" }),
+      date: d.toLocaleDateString("pt-PT", {
+        weekday: "short",
+        day: "2-digit",
+        month: "short",
+      }),
+      time: d.toLocaleTimeString("pt-PT", {
+        hour: "2-digit",
+        minute: "2-digit",
+      }),
       location: e.location,
       confirmed: Number(e.currentParticipants) || 0,
       total: Number(e.maxParticipants) || 14,

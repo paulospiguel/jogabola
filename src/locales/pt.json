@@ -90,6 +90,47 @@
       "myAccount": "Minha Conta"
     }
   },
+  "arenaAthleteProfile": {
+    "title": "Perfil do Atleta",
+    "loading": "A carregar perfil do atleta...",
+    "notFound": "Atleta não encontrado",
+    "stats": {
+      "rating": "Rating",
+      "goals": "Golos",
+      "assists": "Assistências",
+      "matches": "Partidas"
+    },
+    "actions": {
+      "back": "Voltar ao plantel",
+      "edit": "Editar",
+      "message": "Mensagem",
+      "remove": "Remover do Plantel",
+      "viewAll": "Ver tudo"
+    },
+    "info": {
+      "role": "Posição",
+      "joined": "Membro desde",
+      "contact": "Contacto"
+    },
+    "analysis": {
+      "title": "Análise de Performance",
+      "evolution": "Evolução do Rating por Jogo",
+      "periods": {
+        "last10": "Últimos 10 jogos",
+        "season": "Temporada 2024"
+      }
+    },
+    "roles": {
+      "captain": "Capitão",
+      "coach": "Treinador",
+      "owner": "Capitão",
+      "player": "Jogador"
+    },
+    "history": {
+      "title": "Histórico de Atividade",
+      "players": "Jogadores"
+    }
+  },
   "arenaAddPlayer": {
     "actions": {
       "add": "Adicionar Jogador"
@@ -161,11 +202,15 @@
     "error": "Erro ao criar evento. Tente novamente.",
     "info": "Após criar o evento, pode adicionar jogadores e gerir a convocatória a partir da página do evento.",
     "labels": {
-      "date": "Data",
+      "date": "Data e Hora",
       "location": "Local",
-      "maxPlayers": "Máx. jogadores",
-      "time": "Hora",
-      "title": "Título *"
+      "maxPlayers": "Nº Jogadores",
+      "recurrence": "Modalidade"
+    },
+    "recurrence": {
+      "once": "Único",
+      "weekly": "Semanal",
+      "monthly": "Mensal"
     },
     "noTitle": "Sem título",
     "placeholders": {
@@ -200,11 +245,19 @@
     },
     "labels": {
       "name": "Nome da Equipa *",
-      "slug": "Identificador único (slug) *"
+      "slug": "Identificador único (slug) *",
+      "location": "Localização",
+      "description": "Sobre a equipa",
+      "category": "Categoria",
+      "homeGround": "Campo Principal"
     },
     "placeholders": {
       "name": "Ex: Os Galáticos",
-      "slug": "ex-os-galaticos"
+      "slug": "ex-os-galaticos",
+      "location": "Cidade ou Região",
+      "description": "Ex: Equipa amadora desde 2020...",
+      "category": "Ex: Amador, Semi-Pro...",
+      "homeGround": "Ex: Estádio Municipal"
     },
     "success": "Equipa {name} criada com sucesso!",
     "successSubtitle": "Agora podes convidar jogadores e organizar partidas.",
@@ -301,6 +354,7 @@
   "arenaNav": {
     "collapse": "Recolher Menu",
     "dashboard": "Equipa",
+    "squads": "Plantel",
     "events": "Eventos",
     "expand": "Expandir",
     "notifications": "Notificações",
@@ -316,7 +370,7 @@
       "select": "Selecionar equipa",
       "teamsLabel": "Minhas Equipas"
     },
-    "teams": "Plantel"
+    "teams": "Equipas"
   },
   "arenaPage": {
     "activeTeams": {
@@ -443,6 +497,7 @@
     "mocks": {
       "match": "Jogo semanal"
     },
+    "notFound": "Pagamento não encontrado",
     "loading": "A carregar pagamentos...",
     "noPayments": "Nenhum pagamento encontrado.",
     "table": {
@@ -455,6 +510,7 @@
       "risk": "Score",
       "viewProfile": "Ver Perfil",
       "viewDetail": "Ver Detalhes",
+      "date": "Data e Hora",
       "match": {
         "weeklyGame": "Jogo Semanal"
       }
@@ -463,16 +519,21 @@
       "title": "Detalhes do Pagamento",
       "accept": "Aceitar Pagamento",
       "reject": "Rejeitar Pagamento",
-      "proof": "Comprovativo",
+      "proof": "Comprovativo de Pagamento",
+      "proofAlt": "Comprovativo de Pagamento",
       "noProof": "Sem comprovativo enviado",
+      "noProofSub": "Aguarde pelo upload do atleta ou valide manualmente.",
       "history": "Histórico do Atleta",
       "verify": "Validar manualmente",
       "viewProof": "Ver Comprovativo",
       "summary": "Resumo da Transação",
       "athlete": "Informação do Atleta",
-      "status": "Atualizar Estado"
+      "status": "Atualizar Estado",
+      "memberSince": "Membro do clube desde {year}"
     },
     "actions": {
+      "back": "Voltar à lista",
+      "download": "Download",
       "uploadProof": "Carregar Comprovativos",
       "setMethods": "Métodos de Pagamento",
       "autoValidate": "Auto-validação",
@@ -480,6 +541,7 @@
     }
   },
   "arenaBadges": {
+    "new": "Novo",
     "confirmed": "Confirmado",
     "reserve": "Reserva",
     "pending": "Pendente",
@@ -499,6 +561,7 @@
     "filters": {
       "all": "Todos",
       "confirmed": "Confirm.",
+      "new": "Novos",
       "pending": "Pendentes",
       "reserves": "Reservas"
     },
@@ -510,7 +573,21 @@
     "stats": {
       "playerCount": "{count} Jogador{count, plural, =1 {} other {es}}"
     },
-    "title": "Plantel"
+    "title": "Plantel",
+    "positions": {
+      "GR": "Guarda-Redes",
+      "LD": "Lateral Direito",
+      "DC": "Defesa Central",
+      "LE": "Lateral Esquerdo",
+      "MDF": "Médio Defensivo",
+      "MC": "Médio Centro",
+      "MO": "Médio Ofensivo",
+      "MD": "Médio Direito",
+      "ME": "Médio Esquerdo",
+      "ED": "Extremo Direito",
+      "EE": "Extremo Esquerdo",
+      "PL": "Ponta de Lança"
+    }
   },
   "common": {
     "accept": "Aceitar",
@@ -519,6 +596,7 @@
     "cancel": "Cancelar",
     "city": "Cidade",
     "close": "Fechar",
+    "comingSoon": "Em breve",
     "comingSoonDescription": "Esta área está em desenvolvimento. Em breve você terá acesso completo.",
     "confirm": "Confirme",
     "confirmPassword": "Confirme a password",
@@ -584,9 +662,16 @@
     "teamName": "Nome da equipa",
     "teamPlayers": "Jogadores da equipe",
     "teamPlayersStats": "Estatísticas dos jogadores da equipe",
+    "verified": "Verificado",
     "teamStats": "Estatísticas da equipa",
     "title": "Título",
-    "toggleTheme": "Mudar o tema"
+    "toggleTheme": "Mudar o tema",
+    "positions": {
+      "GK": "Guarda-Redes",
+      "CB": "Defesa",
+      "MID": "Médio",
+      "FW": "Avançado"
+    }
   },
   "company": {
     "description": "Encontra a tua equipa ideal ou cria a tua própria, gere os teus atletas e participa em ligas lendárias!",
@@ -810,28 +895,37 @@
       "title": "O ecossistema completo para a gestão do seu clube"
     },
     "ecosystem_section": {
-      "kicker": "MVP JOGABOLA",
+      "kicker": "FUNCIONALIDADES MVP",
+      "title": "Tudo o que precisas para gerir o teu jogo semanal",
+      "subtitle": "Equipas, confirmações, pagamentos, comprovativos. Sem complicações.",
       "modules": {
         "attendance": {
-          "description": "Confirmar presença, acompanhar reservas e manter a lista de espera organizada.",
-          "title": "Presenças e espera"
+          "title": "Confirmações em tempo real",
+          "description": "Saiba quantos aparecem antes do jogo. Sem mensagens perdidas no WhatsApp."
         },
-        "explore": "Explorar",
         "payments": {
-          "description": "Registar pagamentos semanais e acompanhar valores pendentes por jogador.",
-          "title": "Pagamentos MBWay"
+          "title": "Registo de pagamentos",
+          "description": "Acompanhe quem pagou esta semana. Menos perseguições, mais organização."
         },
         "proofs": {
-          "description": "Receber comprovativos e preparar a pré-validação automática sem confirmar pagamentos reais.",
-          "title": "Comprovativos"
+          "title": "Comprovativos digitais",
+          "description": "Recolha comprovativos de transferência. Pré-valide sem confirmar pagamentos reais."
         },
         "teams": {
-          "description": "Gerir plantel, membros da equipa e jogadores convidados para os jogos semanais.",
-          "title": "Equipas e jogadores"
+          "title": "Gestão de equipas",
+          "description": "Organize plantel, convide jogadores convidados para a semana. Tudo num só lugar."
         }
       },
-      "subtitle": "Sem módulos futuristas: apenas equipas, reservas, presenças, pagamentos e comprovativos.",
-      "title": "O essencial para gerir jogos semanais"
+      "explore": "Explorar"
+    },
+    "waitlistCta": {
+      "badge": "BETA · Acesso Antecipado",
+      "titlePart1": "Pronto para",
+      "titlePart2": "organizar?",
+      "subtitle": "Junta-te à lista de espera. Acesso antecipado para capitães sérios.",
+      "cta": "Entrar na lista de espera",
+      "alreadyHaveAccess": "Já tens acesso?",
+      "signIn": "Iniciar sessão"
     },
     "features": {
       "items": {
@@ -863,22 +957,37 @@
       "title": "Recursos Completos"
     },
     "hero": {
-      "badge": "Novo · {version}",
-      "description": "Equipas, jogos semanais, confirmações de presença, lista de espera e pagamentos MBWay num fluxo simples para futebol amador.",
-      "startJourney": "Começar Jornada",
-      "subtitle": "Monte sua equipe profissional, defina táticas e domine o campo digital.",
-      "title": "Pronto para gerenciar seu",
-      "titleHighlight": "Equipa",
-      "titlePart1": "Organize o",
-      "titlePart2": "Jogo da sua",
-      "titlePart3": "com",
-      "titlePart4": "Menos Trabalho",
-      "trustIndicators": {
-        "freeToStart": "Grátis para começar",
-        "noCard": "Sem cartão"
+      "badge": "BETA · Acesso Antecipado",
+      "titlePart1": "O teu jogo semanal,",
+      "titlePart2": "organizado.",
+      "titleHighlight": "Sem grupos de WhatsApp.",
+      "titlePart3": "Sem confusão.",
+      "description": "Gerencia equipas, presenças e pagamentos num só lugar. Para capitães que levam o jogo a sério.",
+      "joinWaitlist": "Entrar na lista de espera"
+    },
+    "momentumStrip": {
+      "item1": "Jogo marcado",
+      "item2": "14 confirmados",
+      "item3": "Pagamentos a dia"
+    },
+    "problems": {
+      "kicker": "O PROBLEMA",
+      "title": "Reconheces isto?",
+      "pain1": {
+        "title": "\"Quem vem ao jogo?\"",
+        "description": "Confirmações perdidas no WhatsApp. Nunca sabes quem aparece.",
+        "resolution": "Lista de presenças em tempo real"
       },
-      "versionBadge": "GESTÃO 2.0",
-      "watchDemo": "Ver Demo"
+      "pain2": {
+        "title": "\"Já toda gente pagou?\"",
+        "description": "Perseguir jogadores por transferência semana após semana.",
+        "resolution": "Registo de pagamentos por jogador"
+      },
+      "pain3": {
+        "title": "\"Onde está o comprovativo?\"",
+        "description": "Imagens enterradas no grupo. Impossível validar sem perder tempo.",
+        "resolution": "Upload e pré-validação automática"
+      }
     },
     "partnersSection": {
       "emptyState": {

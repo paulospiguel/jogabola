@@ -4,13 +4,11 @@ import {
   Calendar,
   ChevronRight,
   Clock,
-  Loader2,
   MapPin,
   Plus,
   Shield,
   Trophy,
   Users,
-  VerifiedIcon,
   Zap,
 } from "lucide-react";
 import Link from "next/link";
@@ -21,18 +19,21 @@ import { CreateEventSheet } from "@/components/arena/create-event-sheet";
 import { CreateTeamSheet } from "@/components/arena/create-team-sheet";
 import { JbAvatar } from "@/components/arena/jb-avatar";
 import { JbBadge } from "@/components/arena/jb-badge";
+import { JbPlayerRow } from "@/components/arena/jb-player-row";
 import { JbUserMenu } from "@/components/arena/jb-user-menu";
+import Loading from "@/components/loading";
 import { Button } from "@/components/ui/button";
 import { useDashboardData } from "@/hooks/use-dashboard";
 
 interface ArenaDashboardProps {
   userId: string;
-  userName: string;
 }
 
-export function ArenaDashboard({ userId, userName }: ArenaDashboardProps) {
+export function ArenaDashboard({ userId }: ArenaDashboardProps) {
   const t = useTranslations("arenaDashboard");
-  const [sheet, setSheet] = useState<"create-event" | "add-player" | "create-team" | null>(null);
+  const [sheet, setSheet] = useState<
+    "create-event" | "add-player" | "create-team" | null
+  >(null);
 
   const {
     activeTeamId,
@@ -50,10 +51,7 @@ export function ArenaDashboard({ userId, userName }: ArenaDashboardProps) {
   if (isLoading) {
     return (
       <div className="flex h-screen items-center justify-center bg-arena-bg text-arena-text-muted">
-        <div className="text-center">
-          <Loader2 className="animate-spin" size={18} />
-          <p className="text-sm text-arena-text-muted">{t("loadingArena")}</p>
-        </div>
+        <Loading text={t("loadingArena")} />
       </div>
     );
   }
@@ -98,7 +96,11 @@ export function ArenaDashboard({ userId, userName }: ArenaDashboardProps) {
         <CreateEventSheet organizerId={userId} onClose={() => setSheet(null)} />
       )}
       {sheet === "add-player" && (
-        <AddPlayerSheet managerId={userId} onClose={() => setSheet(null)} />
+        <AddPlayerSheet
+          managerId={userId}
+          teamId={activeTeamId}
+          onClose={() => setSheet(null)}
+        />
       )}
       {sheet === "create-team" && (
         <CreateTeamSheet onClose={() => setSheet(null)} />
@@ -150,7 +152,11 @@ export function ArenaDashboard({ userId, userName }: ArenaDashboardProps) {
                   <div className="mb-3 flex items-center justify-between gap-3">
                     <div className="flex items-center gap-2">
                       <span className="grid size-[26px] place-items-center rounded-[7px] bg-arena-primary/[0.13]">
-                        <Zap size={13} className="text-arena-primary" strokeWidth={2} />
+                        <Zap
+                          size={13}
+                          className="text-arena-primary"
+                          strokeWidth={2}
+                        />
                       </span>
                       <span className="jb-kicker text-arena-primary">
                         {t("hero.nextMatch")}
@@ -175,22 +181,26 @@ export function ArenaDashboard({ userId, userName }: ArenaDashboardProps) {
                     ].map(({ Icon, label }) => (
                       <span className="flex items-center gap-1.5" key={label}>
                         <Icon size={12} className="text-arena-text-muted" />
-                        <span className="text-xs text-arena-text-sec">{label}</span>
+                        <span className="text-xs text-arena-text-sec">
+                          {label}
+                        </span>
                       </span>
                     ))}
                   </div>
 
                   <div className="mt-4 flex items-center justify-between gap-3">
                     <div className="flex -space-x-1">
-                      {squad.filter(p => p.status === "confirmed").map(p => (
-                        <JbAvatar
-                          className="ring-2 ring-[#1B2430]"
-                          id={p.id}
-                          key={p.id}
-                          name={p.name}
-                          size={28}
-                        />
-                      ))}
+                      {squad
+                        .filter(p => p.status === "confirmed")
+                        .map(p => (
+                          <JbAvatar
+                            className="ring-2 ring-[#1B2430]"
+                            id={p.id}
+                            key={p.id}
+                            name={p.name}
+                            size={28}
+                          />
+                        ))}
                     </div>
                     <span className="flex items-center gap-1 text-sm font-semibold text-arena-primary">
                       {t("hero.view")}
@@ -220,11 +230,25 @@ export function ArenaDashboard({ userId, userName }: ArenaDashboardProps) {
               )}
 
               <div className="jb-stat-grid">
-                {([
-                  { l: t("stats.confirmed"), v: confirmedCount, cls: "text-arena-success" },
-                  { l: t("stats.reserves"), v: reserveCount, cls: "text-arena-warning" },
-                  { l: t("stats.pending"), v: pendingCount, cls: "text-arena-text-muted" },
-                ] as const).map(s => (
+                {(
+                  [
+                    {
+                      l: t("stats.confirmed"),
+                      v: confirmedCount,
+                      cls: "text-arena-success",
+                    },
+                    {
+                      l: t("stats.reserves"),
+                      v: reserveCount,
+                      cls: "text-arena-warning",
+                    },
+                    {
+                      l: t("stats.pending"),
+                      v: pendingCount,
+                      cls: "text-arena-text-muted",
+                    },
+                  ] as const
+                ).map(s => (
                   <div className="jb-card px-2 py-3 text-center" key={s.l}>
                     <div className={`text-[22px] font-extrabold ${s.cls}`}>
                       {s.v}
@@ -275,7 +299,10 @@ export function ArenaDashboard({ userId, userName }: ArenaDashboardProps) {
                             className={`jb-icon-tile ${isGame ? "bg-arena-primary/[0.08]" : "bg-arena-info/[0.08]"}`}
                           >
                             {isGame ? (
-                              <Trophy size={20} className="text-arena-primary" />
+                              <Trophy
+                                size={20}
+                                className="text-arena-primary"
+                              />
                             ) : (
                               <Calendar size={20} className="text-arena-info" />
                             )}
@@ -305,40 +332,22 @@ export function ArenaDashboard({ userId, userName }: ArenaDashboardProps) {
                 <div className="jb-section-label">{t("sections.squad")}</div>
                 <div className="jb-stack">
                   {squad.length > 0 ? (
-                    squad.slice(0, 5).map(p => (
-                      <Link
-                        className="jb-card jb-list-row"
-                        href={`/arena/teams/${p.id}`}
-                        key={p.id}
-                      >
-                        <JbAvatar id={p.id} name={p.name} size={34} />
-                        <span className="min-w-0 flex-1">
-                          <div className="flex items-center gap-1.5">
-                            <span className="block truncate text-sm font-semibold text-arena-text">
-                              {p.name}
-                            </span>
-                            {p.isVerified && (
-                              <VerifiedIcon
-                                color="var(--user-verified)"
-                                size={12}
-                                className="text-arena-verified fill-arena-verified"
-                              />
-                            )}
-                          </div>
-                          <span className="mt-0.5 block text-[11px] text-arena-text-muted">
-                            {p.role}
-                          </span>
-                        </span>
-                        <JbBadge status={p.status} />
-                      </Link>
-                    ))
+                    squad
+                      .slice(0, 5)
+                      .map(p => (
+                        <JbPlayerRow
+                          {...p}
+                          key={p.id}
+                          href={`/arena/squads/player/${p.id}`}
+                        />
+                      ))
                   ) : (
                     <div className="jb-card px-4 py-6 text-center text-sm text-arena-text-muted">
                       {t("sections.noSquad")}
                     </div>
                   )}
 
-                  <Link className="jb-action" href="/arena/teams">
+                  <Link className="jb-action" href="/arena/squad">
                     {t("sections.viewFullSquad")}
                     <ChevronRight size={14} />
                   </Link>

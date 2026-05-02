@@ -3,6 +3,7 @@
 import { AnimatePresence, motion } from "framer-motion";
 import { ArrowRight, CheckCircle, Loader2 } from "lucide-react";
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 import { useState } from "react";
 import { joinWaitlist } from "@/actions/waitlist.actions";
 import { Logo } from "@/components/logo";
@@ -13,6 +14,8 @@ export default function WaitlistPage() {
   const [loading, setLoading] = useState(false);
   const [done, setDone] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  const t = useTranslations("common");
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -61,7 +64,7 @@ export default function WaitlistPage() {
           <div className="mb-6 flex justify-center">
             <span className="inline-flex items-center gap-2 rounded-full border border-[#7CFF4F]/20 bg-[#7CFF4F]/8 px-3 py-1 text-xs font-semibold tracking-widest text-[#7CFF4F] uppercase">
               <span className="size-1.5 rounded-full bg-[#7CFF4F] animate-pulse" />
-              Em breve
+              {t("comingSoon")}
             </span>
           </div>
 

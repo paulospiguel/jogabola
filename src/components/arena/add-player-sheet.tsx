@@ -19,27 +19,21 @@ import { JbAvatar } from "./jb-avatar";
 import { JbBottomSheet } from "./jb-bottom-sheet";
 
 const POSITIONS = [
-  "GR",
-  "DD",
-  "DC",
-  "DE",
-  "MC",
-  "MD",
-  "ME",
-  "PD",
-  "PE",
-  "CA",
-  "SC",
+  "GK",
+  "CB",
+  "MID",
+  "FW",
 ];
 
 interface AddPlayerSheetProps {
   onClose: () => void;
-  managerId?: string;
+  managerId?: string | null;
+  teamId?: number | null;
 }
 
 interface FormState {
   name: string;
-  role: string;
+  position: string;
   email: string;
   phone: string;
   admin: boolean;
@@ -47,14 +41,15 @@ interface FormState {
 
 // Arena-flavoured overrides applied on top of the UI base components
 const inputClass =
-  "h-11 rounded-xl border-arena-border bg-arena-surface text-sm text-arena-text placeholder:text-arena-text-muted/70 focus-visible:ring-arena-primary/40 focus-visible:border-arena-primary/50";
+  "h-11 rounded-xl border border-arena-border bg-arena-surface text-sm text-arena-text placeholder:text-arena-text-muted/70 focus-visible:ring-arena-primary/40 focus-visible:border-arena-primary/50";
 const labelClass = "mb-1 text-xs font-semibold text-arena-text-sec";
 
-export function AddPlayerSheet({ onClose, managerId }: AddPlayerSheetProps) {
+export function AddPlayerSheet({ onClose, managerId, teamId }: AddPlayerSheetProps) {
   const t = useTranslations("arenaAddPlayer");
+  const commonTranslations = useTranslations("common");
   const [form, setForm] = useState<FormState>({
     name: "",
-    role: "MC",
+    position: "MID",
     email: "",
     phone: "",
     admin: false,
@@ -74,9 +69,10 @@ export function AddPlayerSheet({ onClose, managerId }: AddPlayerSheetProps) {
     const result = await addPlayerToRoster({
       name: form.name.trim(),
       email: form.email.trim(),
-      position: form.role,
+      position: form.position,
       experience: "beginner",
       managerId,
+      teamId,
     });
 
     setSaving(false);
@@ -118,7 +114,7 @@ export function AddPlayerSheet({ onClose, managerId }: AddPlayerSheetProps) {
             </p>
             <div className="mt-1 flex items-center gap-1.5">
               <span className="rounded-[5px] border border-arena-border bg-arena-surface-el px-[7px] py-0.5 text-[10px] font-bold text-arena-text-muted">
-                {form.role}
+                {commonTranslations(`positions.${form.position}`)}
               </span>
               {form.email && (
                 <span className="text-[11px] text-arena-text-muted">
@@ -145,23 +141,30 @@ export function AddPlayerSheet({ onClose, managerId }: AddPlayerSheetProps) {
 
         {/* Position — Select component */}
         <div className="mb-3">
-          <Label className={labelClass} htmlFor="player-role">
+          <Label className={labelClass} htmlFor="player-position">
             {t("labels.position")}
           </Label>
           <Select
-            onValueChange={value => set("role", value)}
-            value={form.role}
+            onValueChange={value => set("position", value)}
+            value={form.position}
           >
             <SelectTrigger
-              className="h-11 w-full rounded-xl border-arena-border bg-arena-surface text-sm text-arena-text"
-              id="player-role"
+              className="h-11 w-full rounded-xl border border-arena-border bg-arena-surface text-sm text-arena-text"
+              id="player-position"
             >
               <SelectValue />
             </SelectTrigger>
-            <SelectContent>
+            <SelectContent className="z-[10000]">
               {POSITIONS.map(p => (
                 <SelectItem key={p} value={p}>
-                  {p}
+                  <div className="flex items-center gap-2">
+                    <span className="w-8 font-bold text-arena-primary">
+                      {p}
+                    </span>
+                    <span className="text-arena-text">
+                      {commonTranslations(`positions.${p}`)}
+                    </span>
+                  </div>
                 </SelectItem>
               ))}
             </SelectContent>
