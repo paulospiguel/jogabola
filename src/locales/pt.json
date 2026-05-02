@@ -194,6 +194,26 @@
       }
     }
   },
+  "arenaCreateTeam": {
+    "actions": {
+      "create": "Criar Equipa"
+    },
+    "labels": {
+      "name": "Nome da Equipa *",
+      "slug": "Identificador único (slug) *"
+    },
+    "placeholders": {
+      "name": "Ex: Os Galáticos",
+      "slug": "ex-os-galaticos"
+    },
+    "success": "Equipa {name} criada com sucesso!",
+    "successSubtitle": "Agora podes convidar jogadores e organizar partidas.",
+    "title": "Criar Nova Equipa",
+    "errors": {
+      "TEAM_NAME_ALREADY_EXISTS": "Já existe uma equipa com este nome.",
+      "TEAM_SLUG_ALREADY_EXISTS": "Este identificador (slug) já está a ser utilizado por outra equipa."
+    }
+  },
   "arenaDashboard": {
     "actions": {
       "createEvent": "Criar Evento",
@@ -418,12 +438,6 @@
       "proofsValue": "Upload ativo",
       "validation": "Pré-validação",
       "validationValue": "Preparada"
-    },
-    "table": {
-      "mockMatch": "Jogo semanal",
-      "mockStatusPending": "Comprovativo pendente",
-      "mockStatusValidating": "Pago por validar",
-      "title": "Pagamentos desta semana"
     },
     "title": "MBWay semanal",
     "mocks": {
@@ -1293,6 +1307,79 @@
       "timerEndSound": "Som de Fim",
       "timerMode": "Modo do Cronômetro",
       "title": "Configurações da Partida"
+    }
+  },
+  "onboarding": {
+    "badge": {
+      "soon": "Em breve",
+      "selected": "Selecionado"
+    },
+    "header": {
+      "welcome": "Bem-vindo ao {appName}",
+      "greeting": "Olá, {name}!",
+      "description": "Antes de começar, diz-nos como será a tua jornada:"
+    },
+    "roles": {
+      "coach": {
+        "title": "Treinador",
+        "description": "Gere a tua equipa, marca jogos e convida atletas.",
+        "features": [
+          "Criar e gerir equipas",
+          "Agendar partidas e eventos",
+          "Convidar e gerir atletas",
+          "Controlar pagamentos"
+        ]
+      },
+      "athlete": {
+        "title": "Atleta",
+        "description": "Junta-te a equipas, confirma presença e gere o teu perfil de jogador.",
+        "features": [
+          "Perfil de atleta",
+          "Confirmar presença em jogos",
+          "Histórico de partidas",
+          "Ver estatísticas"
+        ]
+      }
+    },
+    "cta": {
+      "continue": "Continuar",
+      "saving": "A guardar..."
+    },
+    "footer": {
+      "changeLater": "Podes alterar isto mais tarde nas definições."
+    },
+    "errors": {
+      "save": "Erro ao guardar preferência. Tenta novamente.",
+      "unexpected": "Erro inesperado. Tenta novamente."
+    }
+  },
+  "profileDangerZone": {
+    "title": "Zona de Perigo",
+    "description": "Ações críticas para a gestão da tua conta.",
+    "delete": {
+      "title": "Eliminar Conta",
+      "description": "Elimina permanentemente a tua conta e todos os dados associados. Esta ação não pode ser desfeita.",
+      "button": "Eliminar Conta",
+      "confirm": {
+        "title": "Tens a certeza absoluta?",
+        "description": "Isto irá eliminar permanentemente a tua conta e remover os teus dados dos nossos servidores.",
+        "cancel": "Cancelar",
+        "action": "Eliminar Permanentemente"
+      }
+    },
+    "transfer": {
+      "title": "Transferir Conta",
+      "description": "Transfere a tua conta para um novo endereço de email. Terás de confirmar a alteração via email.",
+      "button": "Transferir Conta",
+      "label": "Novo Email",
+      "placeholder": "novo-email@exemplo.com",
+      "confirm": {
+        "title": "Solicitar Transferência de Conta",
+        "description": "Será enviado um email para o novo endereço para confirmar a transferência.",
+        "cancel": "Cancelar",
+        "action": "Enviar Solicitação"
+      },
+      "success": "Solicitação enviada! Por favor, verifica o novo email para confirmar."
     }
   },
   "validation": {

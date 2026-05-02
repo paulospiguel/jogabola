@@ -11,8 +11,7 @@ export const preferredRegion = ["fra1", "sfo1", "iad1"];
 export const maxDuration = 60;
 
 export const metadata: Metadata = {
-  title: APP.COMPANY.NAME,
-  description: APP.COMPANY.SLOGAN,
+  title: APP.APP_NAME,
   icons: {
     icon: "/favicon.png",
     apple: "/favicon.png",

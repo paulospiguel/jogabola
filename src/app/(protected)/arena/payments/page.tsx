@@ -1,15 +1,21 @@
 "use client";
 
-import { CreditCard, FileUp, ShieldCheck, ChevronRight, Wallet } from "lucide-react";
-import { useTranslations } from "next-intl";
+import {
+  ChevronRight,
+  CreditCard,
+  FileUp,
+  Shield,
+  ShieldCheck,
+  Wallet,
+} from "lucide-react";
 import Link from "next/link";
+import { useTranslations } from "next-intl";
+import { JbAvatar } from "@/components/arena/jb-avatar";
 import { type BadgeStatus, JbBadge } from "@/components/arena/jb-badge";
 import { JbUserMenu } from "@/components/arena/jb-user-menu";
-import { JbAvatar } from "@/components/arena/jb-avatar";
 import { VerifiedBadge } from "@/components/arena/verified-badge";
 import { Button } from "@/components/ui/button";
-import { usePayments, type Payment } from "@/hooks/use-payments";
-import { cn } from "@/lib/utils";
+import { type Payment, usePayments } from "@/hooks/use-payments";
 
 export default function PaymentsPage() {
   const t = useTranslations("arenaPayments");
@@ -21,7 +27,10 @@ export default function PaymentsPage() {
         <header className="jb-topbar">
           <div>
             <div className="jb-kicker">{t("kicker")}</div>
-            <h1 className="jb-title">{t("title")}</h1>
+            <div className="flex items-center gap-2">
+              <Shield className="size-6 text-arena-primary" />
+              <h1 className="jb-title">{t("title")}</h1>
+            </div>
           </div>
           <JbUserMenu onlyAvatar />
         </header>
@@ -50,9 +59,9 @@ export default function PaymentsPage() {
               href: "#validate",
             },
           ].map(({ label, value, Icon, action, href }) => (
-            <Link 
-              href={href} 
-              className="jb-card group p-4 transition-all hover:border-arena-primary/50 hover:bg-arena-primary/5" 
+            <Link
+              href={href}
+              className="jb-card group p-4 transition-all hover:border-arena-primary/50 hover:bg-arena-primary/5"
               key={label}
             >
               <div className="flex items-center justify-between">
@@ -94,19 +103,28 @@ export default function PaymentsPage() {
               </div>
             ) : (
               payments.map((payment: Payment) => (
-                <Link 
-                  key={payment.id} 
+                <Link
+                  key={payment.id}
                   href={`/arena/payments/${payment.id}`}
                   className="jb-card group relative overflow-hidden transition-all hover:border-arena-primary/30"
                 >
                   <div className="flex flex-col gap-4 p-4 md:flex-row md:items-center">
                     {/* Atleta Info */}
                     <div className="flex flex-1 items-center gap-3">
-                      <JbAvatar id={payment.playerId} name={payment.player} size={44} />
+                      <JbAvatar
+                        id={payment.playerId}
+                        name={payment.player}
+                        size={44}
+                      />
                       <div className="flex-1">
                         <div className="flex items-center gap-1.5">
-                          <span className="font-bold text-arena-text group-hover:text-arena-primary transition-colors">{payment.player}</span>
-                          <VerifiedBadge verified={payment.isVerified} variant="icon" />
+                          <span className="font-bold text-arena-text group-hover:text-arena-primary transition-colors">
+                            {payment.player}
+                          </span>
+                          <VerifiedBadge
+                            verified={payment.isVerified}
+                            variant="icon"
+                          />
                         </div>
                         <div className="flex items-center gap-2 text-xs text-arena-text-muted">
                           <span className="flex items-center gap-1">
@@ -114,7 +132,9 @@ export default function PaymentsPage() {
                             {payment.method}
                           </span>
                           <span>•</span>
-                          <span className="truncate max-w-[150px]">{t(`table.match.${payment.match}`)}</span>
+                          <span className="truncate max-w-[150px]">
+                            {t(`table.match.${payment.match}`)}
+                          </span>
                         </div>
                       </div>
                     </div>
@@ -125,7 +145,10 @@ export default function PaymentsPage() {
                         <span className="text-[10px] font-bold uppercase tracking-wider text-arena-text-muted">
                           {t("table.status")}
                         </span>
-                        <JbBadge status={payment.status as BadgeStatus} animate />
+                        <JbBadge
+                          status={payment.status as BadgeStatus}
+                          animate
+                        />
                       </div>
 
                       <div className="flex flex-col gap-1.5">
@@ -139,14 +162,14 @@ export default function PaymentsPage() {
                         <span className="text-[10px] font-bold uppercase tracking-wider text-arena-text-muted">
                           {t("table.amount")}
                         </span>
-                        <span className="text-lg font-black text-arena-primary">{payment.amount}</span>
+                        <span className="text-lg font-black text-arena-primary">
+                          {payment.amount}
+                        </span>
                       </div>
                     </div>
 
                     {/* Action */}
-                    <div
-                      className="flex h-10 w-10 items-center justify-center rounded-xl bg-arena-surface-el text-arena-text-muted transition-all group-hover:bg-arena-primary group-hover:text-arena-bg"
-                    >
+                    <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-arena-surface-el text-arena-text-muted transition-all group-hover:bg-arena-primary group-hover:text-arena-bg">
                       <ChevronRight size={20} />
                     </div>
                   </div>

@@ -18,6 +18,7 @@ import { useTranslations } from "next-intl";
 import { useState } from "react";
 import { AddPlayerSheet } from "@/components/arena/add-player-sheet";
 import { CreateEventSheet } from "@/components/arena/create-event-sheet";
+import { CreateTeamSheet } from "@/components/arena/create-team-sheet";
 import { JbAvatar } from "@/components/arena/jb-avatar";
 import { JbBadge } from "@/components/arena/jb-badge";
 import { JbUserMenu } from "@/components/arena/jb-user-menu";
@@ -31,7 +32,7 @@ interface ArenaDashboardProps {
 
 export function ArenaDashboard({ userId, userName }: ArenaDashboardProps) {
   const t = useTranslations("arenaDashboard");
-  const [sheet, setSheet] = useState<"create-event" | "add-player" | null>(null);
+  const [sheet, setSheet] = useState<"create-event" | "add-player" | "create-team" | null>(null);
 
   const {
     activeTeamId,
@@ -60,26 +61,31 @@ export function ArenaDashboard({ userId, userName }: ArenaDashboardProps) {
   // No team selected / manager has no teams yet
   if (!activeTeamId || !activeTeam) {
     return (
-      <div className="flex h-screen flex-col items-center justify-center gap-4 bg-arena-bg text-arena-text-muted">
-        <div className="flex size-14 items-center justify-center rounded-2xl bg-arena-surface-el">
-          <Shield className="size-7 text-arena-primary" />
+      <>
+        {sheet === "create-team" && (
+          <CreateTeamSheet onClose={() => setSheet(null)} />
+        )}
+        <div className="flex h-screen flex-col items-center justify-center gap-4 bg-arena-bg text-arena-text-muted">
+          <div className="flex size-14 items-center justify-center rounded-2xl bg-arena-surface-el">
+            <Shield className="size-7 text-arena-primary" />
+          </div>
+          <div className="text-center">
+            <h2 className="text-lg font-bold text-arena-text">
+              {t("noTeam.title")}
+            </h2>
+            <p className="mt-1 text-sm text-arena-text-muted">
+              {t("noTeam.description")}
+            </p>
+          </div>
+          <Button
+            onClick={() => setSheet("create-team")}
+            className="jb-action jb-action-primary text-sm h-10"
+          >
+            <Plus size={15} />
+            {t("noTeam.cta")}
+          </Button>
         </div>
-        <div className="text-center">
-          <h2 className="text-lg font-bold text-arena-text">
-            {t("noTeam.title")}
-          </h2>
-          <p className="mt-1 text-sm text-arena-text-muted">
-            {t("noTeam.description")}
-          </p>
-        </div>
-        <Link
-          href="/arena/teams"
-          className="jb-action jb-action-primary text-sm"
-        >
-          <Plus size={15} />
-          {t("noTeam.cta")}
-        </Link>
-      </div>
+      </>
     );
   }
 
@@ -94,13 +100,19 @@ export function ArenaDashboard({ userId, userName }: ArenaDashboardProps) {
       {sheet === "add-player" && (
         <AddPlayerSheet managerId={userId} onClose={() => setSheet(null)} />
       )}
+      {sheet === "create-team" && (
+        <CreateTeamSheet onClose={() => setSheet(null)} />
+      )}
 
       <div className="jb-page">
         <div className="jb-page-inner">
           <header className="jb-topbar">
             <div>
               <div className="jb-kicker">{t("kicker")}</div>
-              <h1 className="jb-title">{activeTeam.name}</h1>
+              <div className="flex items-center gap-2">
+                <Shield className="size-6 text-arena-primary" />
+                <h1 className="jb-title">{activeTeam.name}</h1>
+              </div>
             </div>
 
             <div className="flex items-center gap-2">

@@ -13,7 +13,7 @@ export const updateUserProfile = withAuthAction(
     try {
       const [profile] = await db
         .update(user)
-        .set({ name: data.name, image: data.image || null, updatedAt: new Date() })
+        .set({ name: data.name, updatedAt: new Date() })
         .where(eq(user.id, authUser.id))
         .returning({
           id: user.id,

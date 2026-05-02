@@ -1,4 +1,5 @@
 export const APP = {
+  APP_NAME: "Jogabola",
   COMPANY: {
     NAME: "company.name",
     SLOGAN: "company.slogan",

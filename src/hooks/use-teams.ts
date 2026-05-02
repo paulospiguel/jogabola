@@ -19,13 +19,6 @@ export function useTeams() {
   const { data: sessionData } = useSession();
   const { activeTeamId, setActiveTeamId } = useTeamStore();
 
-  useEffect(() => {
-    const defaultTeamId = (sessionData?.session as any)?.teamId;
-    if (defaultTeamId && activeTeamId === null) {
-      setActiveTeamId(defaultTeamId);
-    }
-  }, [sessionData, activeTeamId, setActiveTeamId]);
-
   const { data: myTeams, isLoading, refetch } = useQuery({
     queryKey: ["dashboard", "teams"],
     queryFn: async () => {
@@ -34,6 +27,17 @@ export function useTeams() {
       return response.success ? response.data : [];
     },
   });
+
+  useEffect(() => {
+    const defaultTeamId = (sessionData?.session as any)?.teamId;
+    
+    if (defaultTeamId && activeTeamId === null) {
+      setActiveTeamId(defaultTeamId);
+    } else if (!defaultTeamId && activeTeamId === null && myTeams && myTeams.length > 0) {
+      // Fallback: if no team in session but user has teams, pick the first one
+      setActiveTeamId(myTeams[0].id);
+    }
+  }, [sessionData, activeTeamId, setActiveTeamId, myTeams]);
 
   return {
     activeTeamId,

@@ -6,7 +6,6 @@ export const createTeamSchema = z.object({
     .string()
     .min(3, { message: "VALIDATION_TEAM_SLUG_TOO_SHORT" })
     .regex(/^[a-z0-9-]+$/, { message: "VALIDATION_TEAM_SLUG_INVALID" }),
-  ownerId: z.string().min(1, { message: "VALIDATION_OWNER_REQUIRED" }),
 });
 
 export const addTeamMemberSchema = z.object({

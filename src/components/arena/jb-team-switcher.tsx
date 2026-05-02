@@ -1,7 +1,8 @@
 "use client";
 
-import { ChevronsUpDown, Shield } from "lucide-react";
+import { ChevronsUpDown, ListTree, Shield } from "lucide-react";
 import { useTranslations } from "next-intl";
+import { useState } from "react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -18,16 +19,17 @@ import {
 } from "@/components/ui/sidebar";
 import { useTeams } from "@/hooks/use-teams";
 import { cn } from "@/lib/utils";
+import { CreateTeamSheet } from "./create-team-sheet";
 
 export function JbTeamSwitcher() {
   const { activeTeamId, setActiveTeamId, myTeams, isLoading } = useTeams();
   const { state } = useSidebar();
   const t = useTranslations("arenaNav.teamSwitcher");
   const collapsed = state === "collapsed";
+  const [sheetOpen, setSheetOpen] = useState(false);
 
   const activeTeam = myTeams.find((tm: any) => tm.id === activeTeamId);
 
-  // Loading skeleton
   if (isLoading) {
     return (
       <SidebarMenu>
@@ -48,33 +50,37 @@ export function JbTeamSwitcher() {
     );
   }
 
-  // No teams state
   if (!myTeams || myTeams.length === 0) {
     return (
-      <SidebarMenu>
-        <SidebarMenuItem>
-          <div
-            className={cn(
-              "flex h-12 items-center gap-3 rounded-xl px-3",
-              collapsed && "h-10 justify-center px-0",
-            )}
-          >
-            <div className="flex size-8 shrink-0 items-center justify-center rounded-lg bg-arena-primary/15 text-arena-primary">
-              <Shield className="size-4" />
-            </div>
-            {!collapsed && (
-              <div className="min-w-0 flex-1">
-                <p className="truncate text-xs font-semibold text-arena-text">
-                  {t("noTeam")}
-                </p>
-                <p className="truncate text-[10px] text-arena-text-muted">
-                  {t("createTeam")}
-                </p>
+      <>
+        {sheetOpen && <CreateTeamSheet onClose={() => setSheetOpen(false)} />}
+        <SidebarMenu>
+          <SidebarMenuItem className="group-data-[collapsible=icon]:flex group-data-[collapsible=icon]:justify-center">
+            <SidebarMenuButton
+              size="lg"
+              onClick={() => setSheetOpen(true)}
+              className={cn(
+                "h-12 rounded-xl border border-arena-primary/30 bg-arena-primary/5 transition-all hover:bg-arena-primary/10",
+                collapsed && "h-10 w-10 justify-center border-none p-0",
+              )}
+            >
+              <div className="flex size-8 shrink-0 items-center justify-center rounded-lg bg-arena-primary/15 text-arena-primary">
+                <ListTree className={cn(collapsed ? "size-3.5" : "size-4")} />
               </div>
-            )}
-          </div>
-        </SidebarMenuItem>
-      </SidebarMenu>
+              {!collapsed && (
+                <div className="min-w-0 flex-1">
+                  <p className="truncate text-xs font-semibold text-arena-primary">
+                    {t("noTeam")}
+                  </p>
+                  <p className="truncate text-[10px] text-arena-primary/70">
+                    {t("createTeam")}
+                  </p>
+                </div>
+              )}
+            </SidebarMenuButton>
+          </SidebarMenuItem>
+        </SidebarMenu>
+      </>
     );
   }
 
@@ -85,7 +91,7 @@ export function JbTeamSwitcher() {
 
   return (
     <SidebarMenu>
-      <SidebarMenuItem>
+      <SidebarMenuItem className="group-data-[collapsible=icon]:flex group-data-[collapsible=icon]:justify-center">
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <SidebarMenuButton
@@ -94,7 +100,6 @@ export function JbTeamSwitcher() {
                 "h-12 rounded-xl border border-arena-border/50 bg-arena-surface-el/60 transition-all",
                 "hover:bg-arena-surface-el hover:border-arena-border",
                 "data-[state=open]:bg-arena-surface-el data-[state=open]:border-arena-primary/30",
-                // Collapsed: icon-only pill, perfectly centered
                 collapsed && "h-10 w-10 justify-center border-none bg-transparent p-0",
               )}
               tooltip={activeTeam?.name ?? t("select")}
@@ -106,7 +111,7 @@ export function JbTeamSwitcher() {
                   collapsed ? "size-7" : "size-8",
                 )}
               >
-                <Shield className={cn(collapsed ? "size-3.5" : "size-4")} />
+                <ListTree className={cn(collapsed ? "size-3.5" : "size-4")} />
               </div>
 
               {/* Team name + sub-label — hidden when collapsed */}
@@ -159,7 +164,7 @@ export function JbTeamSwitcher() {
                         : "bg-arena-surface-el text-arena-text-muted",
                     )}
                   >
-                    <Shield className="size-3.5" />
+                    <ListTree className="size-3.5" />
                   </div>
                   <div className="min-w-0 flex-1">
                     <p className="truncate font-semibold">{team.name}</p>

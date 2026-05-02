@@ -25,7 +25,7 @@ function getClientBaseURL(): string {
   );
 }
 
-const authClient = createAuthClient({
+export const authClient = createAuthClient({
   baseURL: getClientBaseURL(),
   plugins: [emailOTPClient()],
 });

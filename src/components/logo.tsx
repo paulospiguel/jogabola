@@ -26,6 +26,7 @@ type LogoProps = {
   size?: keyof typeof sizes;
   isAnimate?: boolean;
   variant?: "white" | "default";
+  isBeta?: boolean;
   href?: string;
 };
 
@@ -38,6 +39,7 @@ export const Logo: React.FC<LogoProps> = ({
   variant,
   className,
   isAnimate,
+  isBeta,
   size = "medium",
   href,
 }) => {
@@ -72,7 +74,7 @@ export const Logo: React.FC<LogoProps> = ({
       <Image
         unoptimized
         src={logotipo}
-        alt="Logo Jogabola"
+        alt={t(APP.COMPANY.NAME)}
         fill
         className="object-contain"
       />
@@ -97,6 +99,12 @@ export const Logo: React.FC<LogoProps> = ({
       className={cn("relative flex", logoSize, className)}
     >
       {content}
+
+      {isBeta && (
+        <span className="absolute -right-4 top-3 rounded-full border border-[#7CFF4F]/25 bg-[#7CFF4F]/10 px-2 py-0.5 text-[10px] font-bold tracking-widest text-[#7CFF4F] uppercase">
+          Beta
+        </span>
+      )}
     </Link>
   );
 };

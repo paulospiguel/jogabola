@@ -17,14 +17,12 @@ type ProfileFormProps = {
 
 type FormState = {
   name: string;
-  image: string;
 };
 
 export function ProfileForm({ profile }: ProfileFormProps) {
   const t = useTranslations("profilePage");
   const [form, setForm] = useState<FormState>({
     name: profile.name,
-    image: profile.image ?? "",
   });
   const [fieldErrors, setFieldErrors] = useState<Record<string, string[]>>({});
   const [status, setStatus] = useState<"idle" | "saved" | "error">("idle");
@@ -54,7 +52,6 @@ export function ProfileForm({ profile }: ProfileFormProps) {
       setErrorCode(null);
       setForm({
         name: result.data.name,
-        image: result.data.image ?? "",
       });
     });
   }
@@ -66,6 +63,7 @@ export function ProfileForm({ profile }: ProfileFormProps) {
           <JbAvatar
             id={profile.id}
             name={form.name || profile.email}
+            image={profile.image}
             size={48}
           />
           <div>
@@ -91,24 +89,6 @@ export function ProfileForm({ profile }: ProfileFormProps) {
             value={form.name}
           />
           {fieldErrors.name?.map(error => (
-            <p className="text-xs text-red-400" key={error}>
-              {t(`errors.${error}`)}
-            </p>
-          ))}
-        </div>
-
-        <div className="space-y-2">
-          <Label className="text-arena-text-sec" htmlFor="profile-image">
-            {t("fields.image")}
-          </Label>
-          <Input
-            className="border-arena-border bg-arena-surface text-arena-text"
-            id="profile-image"
-            onChange={event => updateField("image", event.target.value)}
-            placeholder="https://"
-            value={form.image}
-          />
-          {fieldErrors.image?.map(error => (
             <p className="text-xs text-red-400" key={error}>
               {t(`errors.${error}`)}
             </p>

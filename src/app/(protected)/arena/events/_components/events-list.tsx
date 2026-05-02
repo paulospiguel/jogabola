@@ -1,6 +1,6 @@
 "use client";
 
-import { Calendar, CalendarDays, Clock, MapPin, Plus, Trophy } from "lucide-react";
+import { Calendar, CalendarDays, Clock, MapPin, Plus, Shield, Trophy } from "lucide-react";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
 import { useState } from "react";
@@ -10,7 +10,7 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import type { EventView } from "@/types/events";
 
-interface EventsListClientProps {
+interface EventsListProps {
   upcoming: EventView[];
   past: EventView[];
   userId: string;
@@ -97,7 +97,7 @@ function EventCard({ event }: { event: EventView }) {
   );
 }
 
-export function EventsListClient({ upcoming, past, userId }: EventsListClientProps) {
+export function EventsList({ upcoming, past, userId }: EventsListProps) {
   const t = useTranslations("arenaEvents");
   const [sheet, setSheet] = useState(false);
 
@@ -117,7 +117,10 @@ export function EventsListClient({ upcoming, past, userId }: EventsListClientPro
           <header className="jb-topbar">
             <div>
               <div className="jb-kicker">{t("kicker")}</div>
-              <h1 className="jb-title">{t("title")}</h1>
+              <div className="flex items-center gap-2">
+                <Shield className="size-6 text-arena-primary" />
+                <h1 className="jb-title">{t("title")}</h1>
+              </div>
             </div>
             <div className="flex items-center gap-2">
               <Link

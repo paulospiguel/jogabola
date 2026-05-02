@@ -1,7 +1,7 @@
 import { headers } from "next/headers";
 import { getEvent } from "@/actions/match-sessions.actions";
 import { auth } from "@/lib/auth";
-import { EventDetailClient } from "./_components/event-detail-client";
+import { EventDetail } from "./_components/event-detail";
 
 interface Params {
   params: Promise<{ id: string }>;
@@ -35,5 +35,5 @@ export default async function ArenaEventDetailPage({ params }: Params) {
     );
   }
 
-  return <EventDetailClient event={event} userId={userId} />;
+  return <EventDetail event={event} userId={userId} />;
 }

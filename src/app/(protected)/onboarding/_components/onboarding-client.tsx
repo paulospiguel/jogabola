@@ -1,9 +1,16 @@
 "use client";
 
 import { AnimatePresence, motion } from "framer-motion";
-import { ChevronRight, Lock, Shield, User } from "lucide-react";
+import { Check, ChevronRight, Lock } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { useState } from "react";
-import { completeOnboarding, type UserRole } from "@/actions/onboarding.actions";
+import {
+  completeOnboarding,
+  type UserRole,
+} from "@/actions/onboarding.actions";
+import coachIcon from "@/assets/images/jb-coach.png";
+import playerIcon from "@/assets/images/jb-player.png";
+import { APP } from "@/constants/app";
 
 interface RoleCardProps {
   icon: React.ReactNode;
@@ -26,6 +33,8 @@ function RoleCard({
   selected,
   onClick,
 }: RoleCardProps) {
+  const t = useTranslations("onboarding.badge");
+
   return (
     <button
       type="button"
@@ -49,7 +58,7 @@ function RoleCard({
       {disabled && (
         <span className="absolute top-4 right-4 flex items-center gap-1 rounded-full bg-white/8 px-2.5 py-1 text-[10px] font-semibold tracking-wider text-white/30 uppercase">
           <Lock size={9} />
-          Em breve
+          {t("soon")}
         </span>
       )}
 
@@ -58,7 +67,9 @@ function RoleCard({
       </div>
 
       <h3 className="mb-1.5 text-base font-bold text-white">{title}</h3>
-      <p className="mb-4 text-sm leading-relaxed text-white/50">{description}</p>
+      <p className="mb-4 text-sm leading-relaxed text-white/50">
+        {description}
+      </p>
 
       <ul className="space-y-2">
         {features.map(f => (
@@ -70,9 +81,8 @@ function RoleCard({
       </ul>
 
       {selected && !disabled && (
-        <div className="mt-4 flex items-center gap-1.5 text-xs font-semibold text-[#7CFF4F]">
-          <span className="size-1.5 rounded-full bg-[#7CFF4F] animate-pulse" />
-          Selecionado
+        <div className="mt-4 flex absolute top-0 right-4 items-center gap-1.5 text-xs font-semibold text-[#7CFF4F]">
+          <Check size={12} />
         </div>
       )}
     </button>
@@ -84,9 +94,27 @@ interface OnboardingClientProps {
 }
 
 export function OnboardingClient({ userName }: OnboardingClientProps) {
+  const t = useTranslations("onboarding");
   const [selected, setSelected] = useState<UserRole | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  const coachIconElement = (
+    <img
+      src={coachIcon.src}
+      alt="Coach"
+      className="w-full h-full object-contain"
+    />
+  );
+  const playerIconElement = (
+    <img
+      src={playerIcon.src}
+      alt="Player"
+      className="w-full h-full object-contain"
+    />
+  );
+
+  const APP_NAME = APP.APP_NAME;
 
   const firstName = userName.split(" ")[0];
 
@@ -98,12 +126,12 @@ export function OnboardingClient({ userName }: OnboardingClientProps) {
     try {
       const result = await completeOnboarding(selected);
       if (!result.success) {
-        setError("Erro ao guardar preferência. Tenta novamente.");
+        setError(t("errors.save"));
         return;
       }
       window.location.href = "/arena";
     } catch {
-      setError("Erro inesperado. Tenta novamente.");
+      setError(t("errors.unexpected"));
     } finally {
       setLoading(false);
     }
@@ -122,43 +150,31 @@ export function OnboardingClient({ userName }: OnboardingClientProps) {
           <div className="mb-3 inline-flex items-center gap-2 rounded-full border border-[#7CFF4F]/20 bg-[#7CFF4F]/8 px-3 py-1">
             <span className="size-1.5 rounded-full bg-[#7CFF4F] animate-pulse" />
             <span className="text-xs font-semibold tracking-widest text-[#7CFF4F] uppercase">
-              Bem-vindo à Arena
+              {t("header.welcome", { appName: APP_NAME })}
             </span>
           </div>
           <h1 className="mb-2 text-3xl font-bold tracking-tight text-white">
-            Olá, {firstName}!
+            {t("header.greeting", { name: firstName })}
           </h1>
-          <p className="text-sm text-white/45">
-            Como queres usar a JogaBola Arena?
-          </p>
+          <p className="text-sm text-white/45">{t("header.description")}</p>
         </div>
 
         {/* Role cards */}
         <div className="mb-8 grid gap-4 sm:grid-cols-2">
           <RoleCard
-            icon={<Shield size={22} className="text-[#7CFF4F]" />}
-            title="Capitão"
-            description="Gere a tua equipa, marca jogos e convida atletas."
-            features={[
-              "Criar e gerir equipas",
-              "Agendar partidas e eventos",
-              "Convidar e gerir atletas",
-              "Controlar pagamentos",
-            ]}
+            icon={coachIconElement}
+            title={t("roles.coach.title")}
+            description={t("roles.coach.description")}
+            features={t.raw("roles.coach.features")}
             selected={selected === "captain"}
             onClick={() => setSelected("captain")}
           />
 
           <RoleCard
-            icon={<User size={22} className="text-white/30" />}
-            title="Atleta"
-            description="Junta-te a equipas, confirma presença e gere o teu perfil de jogador."
-            features={[
-              "Perfil de atleta",
-              "Confirmar presença em jogos",
-              "Histórico de partidas",
-              "Ver estatísticas",
-            ]}
+            icon={playerIconElement}
+            title={t("roles.athlete.title")}
+            description={t("roles.athlete.description")}
+            features={t.raw("roles.athlete.features")}
             disabled
             selected={selected === "athlete"}
             onClick={() => setSelected("athlete")}
@@ -192,13 +208,13 @@ export function OnboardingClient({ userName }: OnboardingClientProps) {
                 : "cursor-not-allowed bg-white/8 text-white/25",
             ].join(" ")}
           >
-            {loading ? "A guardar..." : "Continuar"}
+            {loading ? t("cta.saving") : t("cta.continue")}
             {!loading && <ChevronRight size={16} />}
           </button>
         </div>
 
         <p className="mt-6 text-center text-xs text-white/20">
-          Podes alterar isto mais tarde nas definições.
+          {t("footer.changeLater")}
         </p>
       </motion.div>
     </div>

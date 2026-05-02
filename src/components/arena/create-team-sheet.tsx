@@ -10,6 +10,7 @@ import { Input } from "../ui/input";
 import { Label } from "../ui/label";
 import { JbBottomSheet } from "./jb-bottom-sheet";
 import { useTeams } from "@/hooks/use-teams";
+import { authClient } from "@/lib/auth-client";
 
 interface CreateTeamSheetProps {
   onClose: () => void;
@@ -68,14 +69,21 @@ export function CreateTeamSheet({ onClose }: CreateTeamSheetProps) {
     setSaving(false);
 
     if (!result.success) {
-      const e = (result as any).error;
-      setError(e?.message ?? e?.code ?? "Error creating team");
+      const code = result.error.code;
+      // Use the translated error if available, otherwise fallback to message or code
+      const message = t.has(`errors.${code}`) 
+        ? t(`errors.${code}`) 
+        : (result.error.message ?? code ?? "Error creating team");
+      
+      setError(message);
       return;
     }
 
     if (result.data) {
       setDone(true);
       await refetch();
+      // Force refresh the session cookie/data on the client
+      await authClient.getSession();
       setActiveTeamId(result.data.id);
       setTimeout(onClose, 2000);
     }

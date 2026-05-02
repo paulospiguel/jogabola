@@ -3,8 +3,9 @@
 import {
   Bell,
   Calendar,
+  ChevronsLeft,
+  ChevronsRight,
   CreditCard,
-  LayoutDashboard,
   Lock,
   Shield,
   Users,
@@ -59,29 +60,24 @@ export function JbSidebar() {
   const pathname = usePathname();
   const { state, toggleSidebar } = useSidebar();
   const t = useTranslations("arenaNav");
-  const company = useTranslations("company");
   const { requireTeam, hasTeam, role } = useTeamGate();
 
   const isCaptainWithoutTeam = role === "captain" && !hasTeam;
 
   return (
     <Sidebar collapsible="icon" className="border-arena-border border-r">
-      <SidebarHeader className="flex flex-col gap-3 border-arena-border border-b px-2 py-5 group-data-[collapsible=icon]:items-center group-data-[collapsible=icon]:px-0">
-        <div className="flex h-10 items-center justify-between group-data-[collapsible=icon]:h-8 group-data-[collapsible=icon]:justify-center">
+      <SidebarHeader className="flex flex-col items-center gap-3 border-arena-border border-b px-2 py-5 group-data-[collapsible=icon]:px-0">
+        <div className="relative flex h-12 w-full items-center justify-center group-data-[collapsible=icon]:h-8">
           <Logo
             variant="white"
             size="small"
             href="/arena"
+            isBeta={RELEASE.IS_BETA && state !== "collapsed"}
             className={cn(
               "transition-all duration-300",
               state === "collapsed" ? "w-8 h-8" : "scale-100",
             )}
           />
-          {RELEASE.IS_BETA && state !== "collapsed" && (
-            <span className="rounded-full border border-[#7CFF4F]/25 bg-[#7CFF4F]/10 px-2 py-0.5 text-[10px] font-bold tracking-widest text-[#7CFF4F] uppercase">
-              Beta
-            </span>
-          )}
         </div>
       </SidebarHeader>
 
@@ -132,7 +128,7 @@ export function JbSidebar() {
                             )}
                           >
                             {t(item.labelKey)}
-                            <Lock size={12} className="opacity-60" />
+                            <Lock size={5} className="opacity-60 ml-2" />
                           </span>
                         </span>
                       ) : (
@@ -175,8 +171,13 @@ export function JbSidebar() {
               className="text-arena-text-sec hover:bg-arena-surface/60 hover:text-arena-text group-data-[collapsible=icon]:h-10 group-data-[collapsible=icon]:w-10 group-data-[collapsible=icon]:p-0 group-data-[collapsible=icon]:justify-center"
               onClick={toggleSidebar}
             >
-              <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-arena-surface-el text-arena-primary group-data-[collapsible=icon]:size-7">
-                <LayoutDashboard className="size-4" />
+              <div
+                title={state === "collapsed" ? t("expand") : t("collapse")}
+                className="flex aspect-square size-8 items-center justify-center rounded-lg bg-arena-surface-el text-arena-primary group-data-[collapsible=icon]:size-7"
+              >
+                {state === "collapsed"
+                  ? <ChevronsRight className="size-4" />
+                  : <ChevronsLeft className="size-4" />}
               </div>
               <div
                 className={cn(

@@ -194,6 +194,26 @@
       }
     }
   },
+  "arenaCreateTeam": {
+    "actions": {
+      "create": "Create Team"
+    },
+    "labels": {
+      "name": "Team Name *",
+      "slug": "Unique Identifier (slug) *"
+    },
+    "placeholders": {
+      "name": "E.g.: The Galacticos",
+      "slug": "eg-the-galacticos"
+    },
+    "success": "Team {name} created successfully!",
+    "successSubtitle": "You can now invite players and organize matches.",
+    "title": "Create New Team",
+    "errors": {
+      "TEAM_NAME_ALREADY_EXISTS": "A team with this name already exists.",
+      "TEAM_SLUG_ALREADY_EXISTS": "This identifier (slug) is already in use by another team."
+    }
+  },
   "arenaDashboard": {
     "loadingArena": "Loading arena...",
     "actions": {
@@ -1315,6 +1335,79 @@
       "timerEndSound": "Timer End Sound",
       "timerMode": "Timer Mode",
       "title": "Match Settings"
+    }
+  },
+  "onboarding": {
+    "badge": {
+      "soon": "Soon",
+      "selected": "Selected"
+    },
+    "header": {
+      "welcome": "Welcome to {appName}",
+      "greeting": "Hello, {name}!",
+      "description": "Before you start, tell us how your journey will be:"
+    },
+    "roles": {
+      "coach": {
+        "title": "Coach",
+        "description": "Manage your team, schedule matches and invite athletes.",
+        "features": [
+          "Create and manage teams",
+          "Schedule matches and events",
+          "Invite and manage athletes",
+          "Control payments"
+        ]
+      },
+      "athlete": {
+        "title": "Athlete",
+        "description": "Join teams, confirm attendance and manage your player profile.",
+        "features": [
+          "Athlete profile",
+          "Confirm attendance in matches",
+          "Match history",
+          "View statistics"
+        ]
+      }
+    },
+    "cta": {
+      "continue": "Continue",
+      "saving": "Saving..."
+    },
+    "footer": {
+      "changeLater": "You can change this later in settings."
+    },
+    "errors": {
+      "save": "Error saving preference. Please try again.",
+      "unexpected": "Unexpected error. Please try again."
+    }
+  },
+  "profileDangerZone": {
+    "title": "Danger Zone",
+    "description": "Critical actions for your account management.",
+    "delete": {
+      "title": "Delete Account",
+      "description": "Permanently delete your account and all associated data. This action cannot be undone.",
+      "button": "Delete Account",
+      "confirm": {
+        "title": "Are you absolutely sure?",
+        "description": "This will permanently delete your account and remove your data from our servers.",
+        "cancel": "Cancel",
+        "action": "Delete Permanently"
+      }
+    },
+    "transfer": {
+      "title": "Transfer Account",
+      "description": "Transfer your account to a new email address. You will need to confirm the change via email.",
+      "button": "Transfer Account",
+      "label": "New Email",
+      "placeholder": "new-email@example.com",
+      "confirm": {
+        "title": "Request Account Transfer",
+        "description": "An email will be sent to the new address to confirm the transfer.",
+        "cancel": "Cancel",
+        "action": "Send Request"
+      },
+      "success": "Transfer request sent! Please check the new email to confirm."
     }
   },
   "validation": {

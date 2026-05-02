@@ -4,7 +4,13 @@ import { eq } from "drizzle-orm";
 import { z } from "zod";
 import { db } from "@/db/client";
 import { findPlayerByEmail } from "@/db/queries/players";
-import { players, teamMembers, teams, user as userTable } from "@/db/schema";
+import {
+  players,
+  session,
+  teamMembers,
+  teams,
+  user as userTable,
+} from "@/db/schema";
 import { withAction, withAuthAction } from "@/lib/action-helpers";
 import {
   addPlayerToRosterSchema,
@@ -12,10 +18,44 @@ import {
   createTeamSchema,
 } from "@/schemas/teams.schema";
 
-export const createTeam = withAction(createTeamSchema, async data => {
-  const [team] = await db.insert(teams).values(data).returning();
-  return { success: true, data: team };
-});
+export const createTeam = withAuthAction(
+  createTeamSchema,
+  async (user, data) => {
+    const existingName = await db.query.teams.findFirst({
+      where: eq(teams.name, data.name.trim()),
+    });
+
+    if (existingName) {
+      return { success: false, error: { code: "TEAM_NAME_ALREADY_EXISTS" } };
+    }
+
+    const existingSlug = await db.query.teams.findFirst({
+      where: eq(teams.slug, data.slug.trim()),
+    });
+
+    if (existingSlug) {
+      return { success: false, error: { code: "TEAM_SLUG_ALREADY_EXISTS" } };
+    }
+
+    const [team] = await db
+      .insert(teams)
+      .values({ ...data, ownerId: user.id })
+      .returning();
+
+    await db.insert(teamMembers).values({
+      teamId: team.id,
+      playerId: user.id,
+      role: "owner",
+    });
+
+    await db
+      .update(session)
+      .set({ teamId: team.id, updatedAt: new Date() })
+      .where(eq(session.userId, user.id));
+
+    return { success: true, data: team };
+  },
+);
 
 export const addTeamMember = withAction(addTeamMemberSchema, async data => {
   const [member] = await db
@@ -67,7 +107,6 @@ export const getMyTeams = withAuthAction(z.any(), async user => {
 export const getTeamSquad = withAuthAction(
   z.object({ teamId: z.number() }),
   async (user, { teamId }) => {
-    // Check if user owns the team or is a member (simple check for now)
     const squad = await db
       .select({
         id: teamMembers.playerId,
@@ -79,11 +118,10 @@ export const getTeamSquad = withAuthAction(
       .innerJoin(userTable, eq(teamMembers.playerId, userTable.id))
       .where(eq(teamMembers.teamId, teamId));
 
-    // Transform data to match Dashboard's expected format
     const formattedSquad = squad.map(member => ({
       id: member.id,
       name: member.name,
-      role: "Jogador", // Simplification
+      role: "player", // Simplification
       status: (member.role === "player" ? "confirmed" : "pending") as
         | "confirmed"
         | "reserve"
