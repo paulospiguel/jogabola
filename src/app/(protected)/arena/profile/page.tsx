@@ -3,7 +3,9 @@ import { redirect } from "next/navigation";
 import { getLocale, getTranslations } from "next-intl/server";
 import { JbUserMenu } from "@/components/arena/jb-user-menu";
 import { VerifiedBadge } from "@/components/arena/verified-badge";
+import { getPendingTransferRequest } from "@/db/queries/account";
 import { auth } from "@/lib/auth";
+import { DangerZone } from "./_components/danger-zone";
 import { ProfileForm } from "./_components/profile-form";
 
 export default async function ArenaProfilePage() {
@@ -13,7 +15,10 @@ export default async function ArenaProfilePage() {
     redirect("/auth");
   }
 
-  const t = await getTranslations("profilePage");
+  const [t, pendingTransfer] = await Promise.all([
+    getTranslations("profilePage"),
+    getPendingTransferRequest(session.user.id),
+  ]);
   const locale = await getLocale();
   const createdAt = session.user.createdAt
     ? new Date(session.user.createdAt)
@@ -40,17 +45,21 @@ export default async function ArenaProfilePage() {
           <JbUserMenu onlyAvatar />
         </header>
 
-        <div className="grid gap-4 lg:grid-cols-[1fr_360px]">
-          <ProfileForm
-            profile={{
-              id: session.user.id,
-              name: session.user.name || "",
-              email: session.user.email,
-              emailVerified: Boolean(session.user.emailVerified),
-              image: session.user.image || null,
-              createdAt,
-            }}
-          />
+        <div className="grid gap-8 lg:grid-cols-[1fr_360px]">
+          <div className="space-y-8">
+            <ProfileForm
+              profile={{
+                id: session.user.id,
+                name: session.user.name || "",
+                email: session.user.email,
+                emailVerified: Boolean(session.user.emailVerified),
+                image: session.user.image || null,
+                createdAt,
+              }}
+            />
+
+            <DangerZone pendingTransfer={pendingTransfer ?? null} />
+          </div>
 
           <aside className="space-y-4">
             <section className="jb-card p-4">

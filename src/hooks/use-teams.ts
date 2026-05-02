@@ -26,7 +26,7 @@ export function useTeams() {
     }
   }, [sessionData, activeTeamId, setActiveTeamId]);
 
-  const { data: myTeams, isLoading } = useQuery({
+  const { data: myTeams, isLoading, refetch } = useQuery({
     queryKey: ["dashboard", "teams"],
     queryFn: async () => {
       const { getMyTeams } = await import("@/actions/teams.actions");
@@ -40,5 +40,6 @@ export function useTeams() {
     setActiveTeamId,
     myTeams: myTeams ?? [],
     isLoading,
+    refetch,
   };
 }
