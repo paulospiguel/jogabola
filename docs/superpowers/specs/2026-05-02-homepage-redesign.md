@@ -92,14 +92,22 @@ No numbers. No claims. Just recognizable football-captain moments.
 **New section.** Background: `bg-slate-900`. 3 cards in a row (stacked on mobile).
 
 Each card:
-- Emoji icon
+- Custom image via `next/image` (see asset paths below), max height ~80px, `object-contain`
 - Pain title (bold, white)
 - Pain description (1–2 lines, gray-400)
 - Resolution line (blue-400, small, with arrow)
 
+**Asset paths:**
+| Card | File |
+|------|------|
+| Pain 1 — Attendance | `src/assets/images/jb-confused-cap.png` |
+| Pain 2 — Payments | `src/assets/images/jb-money.png` |
+| Pain 3 — Proofs | `src/assets/images/jb-receipts.png` |
+
 ```
 Card 1                          Card 2                          Card 3
-😤 "Quem vem ao jogo?"          📲 "Já toda gente pagou?"        📁 "Onde está o comprovativo?"
+[jb-confused-cap.png]           [jb-money.png]                  [jb-receipts.png]
+"Quem vem ao jogo?"             "Já toda gente pagou?"          "Onde está o comprovativo?"
 Confirmações perdidas no        Perseguir jogadores por          Imagens enterradas no grupo.
 WhatsApp. Nunca sabes           transferência semana após        Impossível validar sem
 quem aparece.                   semana.                          perder tempo.
