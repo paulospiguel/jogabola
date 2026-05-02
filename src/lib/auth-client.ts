@@ -3,16 +3,7 @@ import { createAuthClient } from "better-auth/react";
 
 function getClientBaseURL(): string {
   if (typeof window !== "undefined") {
-    const publicUrl = process.env.NEXT_PUBLIC_APP_URL;
-
-    if (!publicUrl) {
-      console.warn(
-        "NEXT_PUBLIC_APP_URL não está definido. Usando window.location.origin como fallback.",
-      );
-      return window.location.origin;
-    }
-
-    return publicUrl;
+    return window.location.origin;
   }
 
   return (

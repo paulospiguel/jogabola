@@ -90,6 +90,41 @@
       "myAccount": "Minha Conta"
     }
   },
+  "authPage": {
+    "title": "Entrar no JogaBola",
+    "emailLabel": "Endereço de Email",
+    "emailPlaceholder": "email@exemplo.com",
+    "signIn": "Entrar",
+    "googleLogin": "Entrar com Google",
+    "appleLogin": "Entrar com Apple",
+    "orEmail": "ou entrar com email",
+    "verifyEmail": "Verifica o teu Email",
+    "codeSentTo": "Enviámos um código de acesso para",
+    "codeLabel": "Código de Acesso",
+    "codePlaceholder": "Ex: 123456",
+    "validateCode": "Validar Código",
+    "changeEmail": "Alterar Email",
+    "terms": "Termos",
+    "privacy": "Privacidade",
+    "termsAgreement": "Ao entrar, aceitas os nossos {terms} e a {privacy}",
+    "back": "Voltar",
+    "messages": {
+      "codeSentTitle": "Código enviado",
+      "codeSentDescription": "Enviámos um código para {email}.",
+      "loginSuccessTitle": "Login validado",
+      "loginSuccessDescription": "A entrar na Arena.",
+      "loginErrorTitle": "Erro no login",
+      "loginErrorDescription": "Não foi possível enviar o código.",
+      "invalidCodeTitle": "Código inválido",
+      "invalidCodeDescription": "Confirma o código e tenta outra vez.",
+      "socialError": "Não foi possível entrar."
+    },
+    "validation": {
+      "invalidEmail": "Email inválido",
+      "incompleteCode": "Código incompleto",
+      "numbersOnly": "Usa apenas números"
+    }
+  },
   "arenaAthleteProfile": {
     "title": "Perfil do Atleta",
     "loading": "A carregar perfil do atleta...",
@@ -914,9 +949,9 @@
         "teams": {
           "title": "Gestão de equipas",
           "description": "Organize plantel, convide jogadores convidados para a semana. Tudo num só lugar."
-        }
-      },
-      "explore": "Explorar"
+        },
+        "explore": "Explorar"
+      }
     },
     "waitlistCta": {
       "badge": "BETA · Acesso Antecipado",
@@ -962,8 +997,11 @@
       "titlePart2": "organizado.",
       "titleHighlight": "Sem grupos de WhatsApp.",
       "titlePart3": "Sem confusão.",
+      "titlePart4": "A tua arena.",
       "description": "Gerencia equipas, presenças e pagamentos num só lugar. Para capitães que levam o jogo a sério.",
-      "joinWaitlist": "Entrar na lista de espera"
+      "joinWaitlist": "Entrar na lista de espera",
+      "startJourney": "Começar Jornada",
+      "watchDemo": "Ver Demonstração"
     },
     "momentumStrip": {
       "item1": "Jogo marcado",

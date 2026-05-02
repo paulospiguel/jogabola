@@ -5,50 +5,17 @@ import { AnimatePresence, motion } from "framer-motion";
 import { ArrowLeft, ArrowRight, Loader2, Mail, X } from "lucide-react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
+import { useTranslations } from "next-intl";
 import { useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
+import { DotGrid } from "@/components/arena/dot-grid";
 import { AppleIcon, Google, GoogleIcon } from "@/components/icons";
+import { Logo } from "@/components/logo";
+import { APP } from "@/constants/app";
 import { useToast } from "@/hooks/use-toast-custom";
 import { emailOtp, signIn, useSession } from "@/lib/auth-client";
 
-function SocialLoginIcon() {
-  return (
-    <div className="relative flex h-10 w-10 items-center justify-center rounded-xl bg-white/10">
-      <div className="absolute -right-1 -bottom-1 flex h-6 w-6 items-center justify-center rounded-full bg-white/10 p-1 ring-1 ring-white/20">
-        <Mail className="h-3 w-3 p-0.5" />
-      </div>
-      <Google />
-    </div>
-  );
-}
-
-type LoginMethod = {
-  id: "social";
-  label: string;
-  sublabel?: string;
-  icon: React.ReactNode;
-};
-
-const loginMethods: LoginMethod[] = [
-  {
-    id: "social",
-    label: "Social Login",
-    icon: <SocialLoginIcon />,
-  },
-] as const;
-
-const emailSchema = z.object({ email: z.string().email("Email inválido") });
-const codeSchema = z.object({
-  code: z
-    .string()
-    .min(6, "Código incompleto")
-    .max(8)
-    .regex(/^\d+$/, "Usa apenas números"),
-});
-
-type EmailInput = z.infer<typeof emailSchema>;
-type CodeInput = z.infer<typeof codeSchema>;
 type AuthStep = "email" | "code";
 
 function defaultNameFromEmail(email: string) {
@@ -60,17 +27,31 @@ function defaultNameFromEmail(email: string) {
 }
 
 export default function LoginPage() {
+  const t = useTranslations("authPage");
   const router = useRouter();
   const searchParams = useSearchParams();
   const { data } = useSession();
   const { toast } = useToast();
 
-  const [selectedMethod, setSelectedMethod] = useState<"social">("social");
   const [step, setStep] = useState<AuthStep>("email");
   const [loading, setLoading] = useState(false);
   const [collectedEmail, setCollectedEmail] = useState(
     searchParams.get("email") || "",
   );
+
+  const emailSchema = z.object({
+    email: z.string().email(t("validation.invalidEmail")),
+  });
+  const codeSchema = z.object({
+    code: z
+      .string()
+      .min(6, t("validation.incompleteCode"))
+      .max(8)
+      .regex(/^\d+$/, t("validation.numbersOnly")),
+  });
+
+  type EmailInput = z.infer<typeof emailSchema>;
+  type CodeInput = z.infer<typeof codeSchema>;
 
   const codeInputRef = useRef<HTMLInputElement | null>(null);
 
@@ -99,20 +80,23 @@ export default function LoginPage() {
       });
 
       if (result.error) {
-        throw new Error(result.error.message || "Erro ao enviar código.");
+        throw new Error(
+          result.error.message || t("messages.loginErrorDescription"),
+        );
       }
 
       setCollectedEmail(email);
       codeForm.reset({ code: "" });
       setStep("code");
       setTimeout(() => codeInputRef.current?.focus(), 100);
-      toast.success("Código enviado", `Enviámos um código para ${email}.`);
+      toast.success(
+        t("messages.codeSentTitle"),
+        t("messages.codeSentDescription", { email }),
+      );
     } catch (err: unknown) {
       const message =
-        err instanceof Error
-          ? err.message
-          : "Não foi possível enviar o código.";
-      toast.error("Erro no login", message);
+        err instanceof Error ? err.message : t("messages.loginErrorDescription");
+      toast.error(t("messages.loginErrorTitle"), message);
     } finally {
       setLoading(false);
     }
@@ -129,16 +113,21 @@ export default function LoginPage() {
       });
 
       if (result.error) {
-        throw new Error(result.error.message || "Código inválido.");
+        throw new Error(
+          result.error.message || t("messages.invalidCodeDescription"),
+        );
       }
 
-      toast.success("Login validado", "A entrar na Arena.");
+      toast.success(
+        t("messages.loginSuccessTitle"),
+        t("messages.loginSuccessDescription"),
+      );
     } catch (err: unknown) {
       const message =
         err instanceof Error
           ? err.message
-          : "Confirma o código e tenta outra vez.";
-      toast.error("Código inválido", message);
+          : t("messages.invalidCodeDescription");
+      toast.error(t("messages.invalidCodeTitle"), message);
       setLoading(false);
     }
   }
@@ -151,12 +140,11 @@ export default function LoginPage() {
         callbackURL: "/arena",
       });
       if (result.error)
-        throw new Error(result.error.message || "Erro ao entrar com Google.");
+        throw new Error(result.error.message || t("messages.socialError"));
       if (result.data?.url) window.location.href = result.data.url;
     } catch (err: unknown) {
-      const message =
-        err instanceof Error ? err.message : "Não foi possível entrar.";
-      toast.error("Erro no login", message);
+      const message = err instanceof Error ? err.message : t("messages.socialError");
+      toast.error(t("messages.loginErrorTitle"), message);
       setLoading(false);
     }
   }
@@ -169,244 +157,272 @@ export default function LoginPage() {
         callbackURL: "/arena",
       });
       if (result.error)
-        throw new Error(result.error.message || "Erro ao entrar com Apple.");
+        throw new Error(result.error.message || t("messages.socialError"));
       if (result.data?.url) window.location.href = result.data.url;
     } catch (err: unknown) {
-      const message =
-        err instanceof Error ? err.message : "Não foi possível entrar.";
-      toast.error("Erro no login", message);
+      const message = err instanceof Error ? err.message : t("messages.socialError");
+      toast.error(t("messages.loginErrorTitle"), message);
       setLoading(false);
     }
   }
 
   return (
-    <div className="relative min-h-screen overflow-hidden bg-[#0A0A16]">
-      <div className="pointer-events-none absolute inset-0">
-        <div className="absolute top-[24%] left-[9%] h-72 w-72 rounded-full bg-[#5D17A9]/25 blur-[86px]" />
-        <div className="absolute right-[6%] bottom-[10%] h-96 w-96 rounded-full bg-[#0B3B78]/18 blur-[100px]" />
+    <div className="relative min-h-screen overflow-hidden bg-arena-bg font-body selection:bg-arena-primary/30 selection:text-arena-primary">
+      {/* Interactive Background */}
+      <div className="absolute inset-0 pointer-events-none opacity-40">
+        <DotGrid
+          baseColor="#263244"
+          activeColor="#7CFF4F"
+          proximity={180}
+          dotSize={2}
+          gap={32}
+        />
       </div>
 
-      <div className="relative z-10 flex min-h-screen items-center justify-center px-4 py-10">
+      {/* Radial Overlays for depth */}
+      <div className="pointer-events-none absolute inset-0">
+        <div className="absolute top-[-10%] left-[-10%] h-[50%] w-[50%] rounded-full bg-arena-primary/5 blur-[120px]" />
+        <div className="absolute bottom-[-10%] right-[-10%] h-[50%] w-[50%] rounded-full bg-arena-info/5 blur-[120px]" />
+      </div>
+
+      <div className="relative z-10 flex min-h-screen flex-col items-center justify-center px-4 py-12">
+        <motion.div
+          animate={{ opacity: 1, y: 0 }}
+          className="mb-8 flex flex-col items-center text-center"
+          initial={{ opacity: 0, y: -20 }}
+          transition={{ duration: 0.4 }}
+        >
+          <Logo isBeta className="mb-4 text-arena-primary" size="large" />
+          <p className="mt-2 text-sm font-medium tracking-wide text-arena-text-sec/80">
+            {t(APP.COMPANY.SLOGAN)}
+          </p>
+        </motion.div>
+
         <motion.div
           animate={{ opacity: 1, scale: 1 }}
-          className="relative flex w-full max-w-[672px] flex-col overflow-hidden rounded-2xl border border-[#263244] bg-[#101724]/95 shadow-2xl md:min-h-[460px] md:flex-row"
-          initial={{ opacity: 0, scale: 0.97 }}
-          transition={{ duration: 0.22 }}
+          className="relative w-full max-w-[440px] overflow-hidden rounded-[24px] border border-arena-border bg-arena-surface/80 shadow-[0_32px_64px_-16px_rgba(0,0,0,0.6)] backdrop-blur-xl"
+          initial={{ opacity: 0, scale: 0.95 }}
+          transition={{ duration: 0.3, delay: 0.1 }}
         >
           <Link
-            aria-label="Fechar"
-            className="absolute top-4 right-4 z-20 flex h-8 w-8 items-center justify-center rounded-full bg-white/10 text-white/60 transition-colors hover:bg-white/20 hover:text-white"
+            aria-label={t("back")}
+            className="absolute top-5 right-5 z-20 flex h-9 w-9 items-center justify-center rounded-xl bg-arena-bg-sec/50 text-arena-text-sec transition-all hover:bg-arena-bg-sec hover:text-arena-text border border-arena-border"
             href="/"
           >
-            <X className="h-4 w-4" />
+            <X className="h-4.5 w-4.5" />
           </Link>
 
-          <aside className="flex w-full shrink-0 flex-col gap-1 border-[#263244] border-b p-4 md:w-56 md:border-r md:border-b-0">
-            <h1 className="mb-3 px-2 text-xl font-semibold tracking-[0.01em] text-white">
-              Entrar
-            </h1>
-            {loginMethods.map(method => (
-              <button
-                className={`flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-left transition-all ${
-                  selectedMethod === method.id
-                    ? "bg-white/18 text-white"
-                    : "text-white/60 hover:bg-white/8 hover:text-white"
-                }`}
-                key={method.id}
-                onClick={() => {
-                  setSelectedMethod(method.id);
-                  if (method.id === "social") setStep("email");
-                }}
-                type="button"
-              >
-                <span className="shrink-0">{method.icon}</span>
-                <span className="min-w-0">
-                  <span className="block truncate text-sm font-medium tracking-[0.06em]">
-                    {method.label}
-                  </span>
-                  {method.sublabel ? (
-                    <span className="block text-xs leading-tight tracking-[0.06em] text-white/35">
-                      {method.sublabel}
-                    </span>
-                  ) : null}
-                </span>
-              </button>
-            ))}
-          </aside>
-
-          <main className="flex flex-1 flex-col justify-between px-6 py-8 md:px-8">
-            <div className="flex flex-1 flex-col justify-center">
-              <AnimatePresence mode="wait">
+          <div className="px-8 pt-10 pb-12">
+            <AnimatePresence mode="wait">
+              {step === "email" ? (
                 <motion.div
                   animate={{ opacity: 1, x: 0 }}
-                  className="mx-auto w-full max-w-[382px] space-y-4"
-                  exit={{ opacity: 0, x: -16 }}
-                  initial={{ opacity: 0, x: 16 }}
-                  key="social"
-                  transition={{ duration: 0.18 }}
+                  className="space-y-6"
+                  exit={{ opacity: 0, x: -20 }}
+                  initial={{ opacity: 0, x: 20 }}
+                  key="email-step"
+                  transition={{ duration: 0.2 }}
                 >
-                  <button
-                    className="flex w-full items-center justify-center gap-3 rounded-xl border border-white/20 bg-white/10 px-4 py-3 text-sm font-medium tracking-[0.08em] text-white transition-all hover:bg-white/18 disabled:opacity-50"
-                    disabled={loading}
-                    onClick={handleGoogleLogin}
-                    type="button"
-                  >
-                    {loading ? (
-                      <Loader2 className="h-4 w-4 animate-spin" />
-                    ) : (
-                      <GoogleIcon className="h-5 w-5" />
-                    )}
-                    Continue with Google
-                  </button>
-
-                  <button
-                    className="flex w-full items-center justify-center gap-3 rounded-xl border border-white/20 bg-white/10 px-4 py-3 text-sm font-medium tracking-[0.08em] text-white transition-all hover:bg-white/18 disabled:opacity-50"
-                    disabled={loading}
-                    onClick={handleAppleLogin}
-                    type="button"
-                  >
-                    {loading ? (
-                      <Loader2 className="h-4 w-4 animate-spin" />
-                    ) : (
-                      <AppleIcon className="h-5 w-5" />
-                    )}
-                    Continue with Apple
-                  </button>
-
-                  <div className="flex items-center gap-3">
-                    <div className="h-px flex-1 bg-white/15" />
-                    <span className="text-xs tracking-[0.08em] text-white/35">
-                      or
-                    </span>
-                    <div className="h-px flex-1 bg-white/15" />
+                  <div className="space-y-2">
+                    <h2 className="text-2xl font-bold tracking-tight text-arena-text">
+                      {t("title")}
+                    </h2>
+                    <p className="text-sm text-arena-text-muted">
+                      {t("googleLogin")} ou {t("appleLogin")}.
+                    </p>
                   </div>
 
-                  <AnimatePresence mode="wait">
-                    {step === "email" ? (
-                      <motion.form
-                        animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0, y: -8 }}
-                        initial={{ opacity: 0, y: 8 }}
-                        key="email-step"
-                        onSubmit={emailForm.handleSubmit(requestCode)}
-                        transition={{ duration: 0.18 }}
-                      >
-                        <div className="relative">
-                          <input
-                            {...emailForm.register("email")}
-                            autoComplete="email"
-                            className="h-[47px] w-full rounded-xl border border-white/20 bg-white/10 px-4 pr-12 text-sm tracking-[0.04em] text-white placeholder-white/40 outline-none transition-all focus:border-white/40 focus:bg-white/13"
-                            placeholder="pp@pp.com"
-                            type="email"
-                          />
-                          <button
-                            aria-label="Enviar código"
-                            className="absolute top-1/2 right-3 flex h-7 w-7 -translate-y-1/2 items-center justify-center rounded-lg bg-white/20 text-white transition-colors hover:bg-white/30"
-                            disabled={loading}
-                            type="submit"
-                          >
-                            {loading ? (
-                              <Loader2 className="h-4 w-4 animate-spin" />
-                            ) : (
-                              <ArrowRight className="h-4 w-4" />
-                            )}
-                          </button>
-                        </div>
-                        {emailForm.formState.errors.email ? (
-                          <p className="mt-1 text-xs text-red-400">
-                            {emailForm.formState.errors.email.message}
-                          </p>
-                        ) : null}
-                      </motion.form>
-                    ) : (
-                      <motion.form
-                        animate={{ opacity: 1, y: 0 }}
-                        className="space-y-3"
-                        exit={{ opacity: 0, y: -8 }}
-                        initial={{ opacity: 0, y: 8 }}
-                        key="code-step"
-                        onSubmit={codeForm.handleSubmit(validateCode)}
-                        transition={{ duration: 0.18 }}
-                      >
-                        <button
-                          className="flex items-center gap-2 text-xs tracking-[0.06em] text-white/45 hover:text-white/70"
-                          onClick={() => setStep("email")}
-                          type="button"
-                        >
-                          <ArrowLeft className="h-3.5 w-3.5" />
-                          {collectedEmail}
-                        </button>
-                        <div className="relative">
-                          <input
-                            {...codeForm.register("code")}
-                            autoComplete="one-time-code"
-                            className="h-[47px] w-full rounded-xl border border-white/20 bg-white/10 px-4 pr-12 text-center font-mono text-xl tracking-[0.5em] text-white outline-none transition-all placeholder:text-white/25 focus:border-white/40 focus:bg-white/13"
-                            inputMode="numeric"
-                            maxLength={6}
-                            placeholder="000000"
-                            ref={el => {
-                              codeForm.register("code").ref(el);
-                              codeInputRef.current = el;
-                            }}
-                            type="text"
-                          />
-                          <button
-                            aria-label="Validar código"
-                            className="absolute top-1/2 right-3 flex h-7 w-7 -translate-y-1/2 items-center justify-center rounded-lg bg-white/20 text-white transition-colors hover:bg-white/30"
-                            disabled={loading}
-                            type="submit"
-                          >
-                            {loading ? (
-                              <Loader2 className="h-4 w-4 animate-spin" />
-                            ) : (
-                              <ArrowRight className="h-4 w-4" />
-                            )}
-                          </button>
-                        </div>
-                        {codeForm.formState.errors.code ? (
-                          <p className="text-xs text-red-400">
-                            {codeForm.formState.errors.code.message}
-                          </p>
-                        ) : (
-                          <p className="text-center text-xs tracking-[0.05em] text-white/35">
-                            Código enviado. Expira em 5 minutos.
-                          </p>
-                        )}
-                        <button
-                          className="mx-auto block text-xs text-white/45 underline underline-offset-4 hover:text-white/70"
-                          disabled={loading}
-                          onClick={() => requestCode({ email: collectedEmail })}
-                          type="button"
-                        >
-                          Reenviar código
-                        </button>
-                      </motion.form>
-                    )}
-                  </AnimatePresence>
-                </motion.div>
-              </AnimatePresence>
-            </div>
+                  <div className="grid grid-cols-2 gap-3">
+                    <button
+                      className="group relative flex h-14 items-center justify-center rounded-2xl border border-arena-border bg-arena-bg-sec/50 transition-all hover:border-arena-primary/30 hover:bg-arena-surface-el active:scale-[0.98]"
+                      disabled={loading}
+                      onClick={handleGoogleLogin}
+                      type="button"
+                    >
+                      <GoogleIcon className="h-6 w-6" />
+                      <div className="absolute inset-0 rounded-2xl bg-arena-primary/5 opacity-0 transition-opacity group-hover:opacity-100" />
+                    </button>
+                    <button
+                      className="group relative flex h-14 items-center justify-center rounded-2xl border border-arena-border bg-arena-bg-sec/50 transition-all hover:border-arena-info/30 hover:bg-arena-surface-el active:scale-[0.98]"
+                      disabled={loading}
+                      onClick={handleAppleLogin}
+                      type="button"
+                    >
+                      <AppleIcon className="h-6 w-6" />
+                      <div className="absolute inset-0 rounded-2xl bg-arena-info/5 opacity-0 transition-opacity group-hover:opacity-100" />
+                    </button>
+                  </div>
 
-            <p className="mt-6 text-center text-xs tracking-[0.08em] text-white/30">
-              Ao entrar, aceitas os{" "}
-              <Link
-                className="text-white/50 underline underline-offset-2 hover:text-white/80"
-                href="#"
-                aria-disabled="true"
-              >
-                Termos de Serviço
-              </Link>{" "}
-              &{" "}
-              <Link
-                className="text-white/50 underline underline-offset-2 hover:text-white/80"
-                href="#"
-                aria-disabled="true"
-              >
-                Política de Privacidade
-              </Link>
+                  <div className="relative flex items-center py-2">
+                    <div className="flex-grow border-t border-arena-border"></div>
+                    <span className="mx-4 flex-shrink text-[10px] font-bold uppercase tracking-widest text-arena-text-muted">
+                      {t("orEmail")}
+                    </span>
+                    <div className="flex-grow border-t border-arena-border"></div>
+                  </div>
+
+                  <form
+                    className="space-y-4"
+                    onSubmit={emailForm.handleSubmit(requestCode)}
+                  >
+                    <div className="space-y-2">
+                      <label
+                        className="text-xs font-bold uppercase tracking-widest text-arena-text-sec ml-1"
+                        htmlFor="email"
+                      >
+                        {t("emailLabel")}
+                      </label>
+                      <div className="relative group">
+                        <input
+                          {...emailForm.register("email")}
+                          autoComplete="email"
+                          className="h-[52px] w-full rounded-2xl border border-arena-border bg-arena-bg-sec/50 px-5 text-sm tracking-wide text-arena-text placeholder:text-arena-text-muted transition-all focus:border-arena-primary focus:bg-arena-bg-sec focus:ring-4 focus:ring-arena-primary/10 outline-none"
+                          id="email"
+                          placeholder={t("emailPlaceholder")}
+                          type="email"
+                        />
+                        <div className="absolute inset-y-0 right-3 flex items-center">
+                          <button
+                            className="flex h-9 w-9 items-center justify-center rounded-xl bg-arena-primary text-arena-bg shadow-[0_0_15px_rgba(124,255,79,0.3)] transition-all hover:scale-105 active:scale-95 disabled:opacity-50"
+                            disabled={loading}
+                            type="submit"
+                          >
+                            {loading ? (
+                              <Loader2 className="h-4 w-4 animate-spin" />
+                            ) : (
+                              <ArrowRight className="h-5 w-5" />
+                            )}
+                          </button>
+                        </div>
+                      </div>
+                      {emailForm.formState.errors.email && (
+                        <p className="ml-1 text-xs font-medium text-arena-danger animate-in fade-in slide-in-from-top-1">
+                          {emailForm.formState.errors.email.message}
+                        </p>
+                      )}
+                    </div>
+                  </form>
+                </motion.div>
+              ) : (
+                <motion.div
+                  animate={{ opacity: 1, x: 0 }}
+                  className="space-y-6"
+                  exit={{ opacity: 0, x: -20 }}
+                  initial={{ opacity: 0, x: 20 }}
+                  key="code-step"
+                  transition={{ duration: 0.2 }}
+                >
+                  <div className="space-y-2">
+                    <button
+                      className="flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-arena-primary hover:text-arena-primary/80 transition-colors"
+                      onClick={() => setStep("email")}
+                      type="button"
+                    >
+                      <ArrowLeft className="h-3.5 w-3.5" />
+                      {t("changeEmail")}
+                    </button>
+                    <h2 className="text-2xl font-bold tracking-tight text-arena-text">
+                      {t("verifyEmail")}
+                    </h2>
+                    <p className="text-sm text-arena-text-muted">
+                      {t("codeSentTo")}{" "}
+                      <span className="text-arena-text-sec font-semibold">
+                        {collectedEmail}
+                      </span>
+                    </p>
+                  </div>
+
+                  <form
+                    className="space-y-6"
+                    onSubmit={codeForm.handleSubmit(validateCode)}
+                  >
+                    <div className="space-y-3">
+                      <div className="relative group">
+                        <input
+                          {...codeForm.register("code")}
+                          autoComplete="one-time-code"
+                          className="h-[64px] w-full rounded-2xl border border-arena-border bg-arena-bg-sec/50 px-5 text-center font-mono text-3xl tracking-[0.4em] text-arena-primary placeholder:text-arena-text-muted/30 transition-all focus:border-arena-primary focus:bg-arena-bg-sec focus:ring-4 focus:ring-arena-primary/10 outline-none"
+                          inputMode="numeric"
+                          maxLength={6}
+                          placeholder="000000"
+                          ref={el => {
+                            codeForm.register("code").ref(el);
+                            codeInputRef.current = el;
+                          }}
+                          type="text"
+                        />
+                      </div>
+                      {codeForm.formState.errors.code ? (
+                        <p className="text-center text-xs font-medium text-arena-danger animate-in fade-in slide-in-from-top-1">
+                          {codeForm.formState.errors.code.message}
+                        </p>
+                      ) : (
+                        <p className="text-center text-[11px] font-bold uppercase tracking-widest text-arena-text-muted">
+                          {t("validation.numbersOnly")}
+                        </p>
+                      )}
+                    </div>
+
+                    <button
+                      className="flex h-[52px] w-full items-center justify-center gap-2 rounded-2xl bg-arena-primary text-sm font-bold uppercase tracking-widest text-arena-bg shadow-[0_0_20px_rgba(124,255,79,0.25)] transition-all hover:scale-[1.02] hover:shadow-[0_0_30px_rgba(124,255,79,0.4)] active:scale-[0.98] disabled:opacity-50 disabled:scale-100"
+                      disabled={loading}
+                      type="submit"
+                    >
+                      {loading ? (
+                        <Loader2 className="h-5 w-5 animate-spin" />
+                      ) : (
+                        t("validateCode")
+                      )}
+                    </button>
+
+                    <div className="text-center">
+                      <button
+                        className="text-xs font-bold uppercase tracking-widest text-arena-text-muted hover:text-arena-text transition-colors underline underline-offset-4"
+                        disabled={loading}
+                        onClick={() => requestCode({ email: collectedEmail })}
+                        type="button"
+                      >
+                        {t("messages.codeSentTitle")}
+                      </button>
+                    </div>
+                  </form>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
+
+          <div className="bg-arena-bg-sec/30 border-t border-arena-border px-8 py-6 text-center">
+            <p className="text-[10px] font-medium tracking-wider text-arena-text-muted uppercase leading-relaxed">
+              {t.rich("termsAgreement", {
+                terms: chunks => (
+                  <Link
+                    className="text-arena-text-sec hover:text-arena-primary transition-colors underline underline-offset-2"
+                    href="#"
+                  >
+                    {chunks}
+                  </Link>
+                ),
+                privacy: chunks => (
+                  <Link
+                    className="text-arena-text-sec hover:text-arena-primary transition-colors underline underline-offset-2"
+                    href="#"
+                  >
+                    {chunks}
+                  </Link>
+                ),
+              })}
             </p>
-          </main>
+          </div>
         </motion.div>
+
+        <motion.p
+          animate={{ opacity: 1 }}
+          className="mt-8 text-xs font-bold uppercase tracking-[0.2em] text-arena-text-muted/40"
+          initial={{ opacity: 0 }}
+          transition={{ duration: 1, delay: 0.5 }}
+        >
+          v2.4.0 • Built for Champions
+        </motion.p>
       </div>
     </div>
   );

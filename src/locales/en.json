@@ -90,6 +90,41 @@
       "myAccount": "My Account"
     }
   },
+  "authPage": {
+    "title": "Sign in to JogaBola",
+    "emailLabel": "Email Address",
+    "emailPlaceholder": "email@example.com",
+    "signIn": "Sign In",
+    "googleLogin": "Sign in with Google",
+    "appleLogin": "Sign in with Apple",
+    "orEmail": "or sign in with email",
+    "verifyEmail": "Verify your Email",
+    "codeSentTo": "We've sent an access code to",
+    "codeLabel": "Access Code",
+    "codePlaceholder": "Ex: 123456",
+    "validateCode": "Validate Code",
+    "changeEmail": "Change Email",
+    "terms": "Terms",
+    "privacy": "Privacy",
+    "termsAgreement": "By signing in, you agree to our {terms} and {privacy}",
+    "back": "Back",
+    "messages": {
+      "codeSentTitle": "Code sent",
+      "codeSentDescription": "We've sent a code to {email}.",
+      "loginSuccessTitle": "Login validated",
+      "loginSuccessDescription": "Entering the Arena.",
+      "loginErrorTitle": "Login error",
+      "loginErrorDescription": "Could not send the code.",
+      "invalidCodeTitle": "Invalid code",
+      "invalidCodeDescription": "Check the code and try again.",
+      "socialError": "Could not sign in."
+    },
+    "validation": {
+      "invalidEmail": "Invalid email",
+      "incompleteCode": "Incomplete code",
+      "numbersOnly": "Use numbers only"
+    }
+  },
   "arenaAthleteProfile": {
     "title": "Athlete Profile",
     "loading": "Loading athlete profile...",
@@ -928,9 +963,9 @@
         "teams": {
           "title": "Team management",
           "description": "Organize your squad, invite guest players for the week. All in one place."
-        }
-      },
-      "explore": "Explore"
+        },
+        "explore": "Explore"
+      }
     },
     "waitlistCta": {
       "badge": "BETA · Early Access",
@@ -976,8 +1011,11 @@
       "titlePart2": "organized.",
       "titleHighlight": "No WhatsApp groups.",
       "titlePart3": "No confusion.",
+      "titlePart4": "Your arena.",
       "description": "Manage teams, attendance, and payments in one place. For captains who take the game seriously.",
-      "joinWaitlist": "Join the waiting list"
+      "joinWaitlist": "Join the waiting list",
+      "startJourney": "Start Journey",
+      "watchDemo": "Watch Demo"
     },
     "momentumStrip": {
       "item1": "Game scheduled",
