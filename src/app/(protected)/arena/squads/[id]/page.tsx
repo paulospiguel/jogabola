@@ -155,7 +155,7 @@ export default function AthleteProfilePage() {
               </div>
               <div className="mt-2 flex items-center gap-2">
                 {/* <JbBadge status={athlete.status as BadgeStatus} /> */}
-                <VerifiedBadge verified={athlete.isVerified} />
+                <VerifiedBadge verified={!!athlete.isVerified} />
               </div>
 
               <div className="mt-8 w-full space-y-4 text-left border-t border-arena-border pt-6">
@@ -172,7 +172,7 @@ export default function AthleteProfilePage() {
                     {arenaAthleteProfileTranslation("info.joined")}
                   </div>
                   <div className="mt-1 font-semibold text-arena-text">
-                    {new Date(athlete.createdAt).toDateString()}
+                    {athlete?.createdAt && new Date(athlete?.createdAt).toDateString()}
                   </div>
                 </div>
                 <div>

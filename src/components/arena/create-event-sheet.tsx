@@ -33,6 +33,7 @@ interface FormState {
   type: "game" | "training" | "challenge";
   title: string;
   startDate: Date | null;
+  location: string;
   maxPlayers: string;
   recurrence: "once" | "weekly" | "monthly";
 }
@@ -75,8 +76,8 @@ export function CreateEventSheet({
   const [form, setForm] = useState<FormState>({
     type: "game",
     title: "",
-    startDate: null,
     location: "",
+    startDate: null,
     maxPlayers: "14",
     recurrence: "once",
   });
@@ -96,7 +97,7 @@ export function CreateEventSheet({
     const result = await createEvent({
       title: form.title,
       type: form.type,
-      location: form.location || "A definir",
+      location: form.location,
       startDate: form.startDate ?? new Date(),
       maxParticipants: form.maxPlayers,
       isPublic: true,
