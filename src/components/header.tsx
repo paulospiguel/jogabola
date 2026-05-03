@@ -95,8 +95,8 @@ export default function Header() {
                     className={cn(
                       "hidden rounded-full px-5 py-2.5 no-underline transition-colors duration-300 md:visible md:block",
                       button.variant === "primary"
-                        ? "bg-neon-primary font-semibold text-[#050312] hover:bg-neon-primary/90"
-                        : "border border-white/8 bg-white/4 font-medium text-white/72 hover:text-white",
+                        ? "bg-[#7CFF4F] font-semibold text-black hover:bg-[#6ee847]"
+                        : "border border-white/10 bg-white/5 font-medium text-white/80 hover:text-white",
                     )}
                   >
                     {button.label.includes("header.")
@@ -113,8 +113,8 @@ export default function Header() {
                   className={cn(
                     "hidden rounded-full px-5 py-2.5 no-underline transition-colors duration-300 md:visible md:flex",
                     button.variant === "primary"
-                      ? "bg-neon-primary font-semibold text-[#050312] hover:bg-neon-primary/90"
-                      : "border border-white/8 bg-white/4 font-medium text-white/72 hover:text-white",
+                      ? "bg-[#7CFF4F] font-semibold text-black hover:bg-[#6ee847]"
+                      : "border border-white/10 bg-white/5 font-medium text-white/80 hover:text-white",
                   )}
                 >
                   {button.label.includes("header.")
@@ -183,7 +183,7 @@ export default function Header() {
                             className={cn(
                               "w-full rounded-full px-4 py-3 text-center text-sm no-underline transition-colors duration-300",
                               button.variant === "primary"
-                                ? "bg-neon-primary font-semibold text-[#050312] hover:bg-neon-primary/90"
+                                ? "bg-[#7CFF4F] font-semibold text-black hover:bg-[#6ee847]"
                                 : "border border-white/10 bg-white/5 text-white hover:bg-white/10",
                             )}
                           >
@@ -202,7 +202,7 @@ export default function Header() {
                           className={cn(
                             "w-full rounded-full px-4 py-3 text-sm transition-colors duration-300",
                             button.variant === "primary"
-                              ? "bg-neon-primary font-semibold text-[#050312] hover:bg-neon-primary/90"
+                              ? "bg-[#7CFF4F] font-semibold text-black hover:bg-[#6ee847]"
                               : "border border-white/10 bg-white/5 text-white hover:bg-white/10",
                           )}
                         >

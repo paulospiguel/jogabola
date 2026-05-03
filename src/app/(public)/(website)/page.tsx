@@ -136,7 +136,7 @@ const HeroSection = () => {
               </span>
             </div>
 
-            <h1 className="text-5xl font-extrabold leading-tight text-white md:text-6xl lg:text-7xl">
+            <h1 className="text-4xl font-extrabold leading-tight text-white md:text-5xl lg:text-6xl">
               {t("titlePart1")}
               <br />
               {t("titlePart2")}
