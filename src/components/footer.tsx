@@ -17,6 +17,8 @@ export default function Footer({ className }: FooterProps) {
   const { data: session } = useSession();
   const { buttons, isLoading } = useHeaderButtons();
   const t = useTranslations("footer");
+  const translation = useTranslations();
+
   const currentYear = new Date().getFullYear();
 
   const logoHref =
@@ -105,7 +107,7 @@ export default function Footer({ className }: FooterProps) {
 
         <div className="flex flex-col items-center justify-between gap-8 border-t border-white/8 pt-10 md:flex-row">
           <p className="text-sm font-medium text-white/40">
-            {t("copyright", { year: currentYear, company: APP.COMPANY.NAME })}
+            {t("copyright", { year: currentYear, company: translation(APP.COMPANY.NAME) })}
           </p>
           <div className="flex items-center gap-8">
             <span className="flex items-center gap-3 text-[10px] font-black tracking-[0.25em] text-white/36 uppercase">

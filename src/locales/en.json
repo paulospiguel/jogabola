@@ -1013,6 +1013,8 @@
       "titlePart4": "Your arena.",
       "description": "Manage teams, attendance, and payments in one place. For captains who take the game seriously.",
       "joinWaitlist": "Join the waiting list",
+      "signIn": "Sign In",
+      "goToArena": "Go to Arena",
       "startJourney": "Start Journey",
       "watchDemo": "Watch Demo"
     },

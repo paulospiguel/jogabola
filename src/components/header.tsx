@@ -76,7 +76,7 @@ export default function Header() {
             <Logo size="small" isAnimate href={logoHref} />
           </div>
 
-          <Navbar className="hidden md:flex" />
+          {!isHome && <Navbar className="hidden md:flex" />}
         </div>
 
         <div className="flex items-center space-x-4">
@@ -124,7 +124,7 @@ export default function Header() {
               );
             })}
 
-          {session?.user && (
+          {session?.user && !isHome && (
             <div className="hidden md:block">
               <UserMenu user={session.user as any} />
             </div>
@@ -155,15 +155,17 @@ export default function Header() {
                 </SheetTitle>
               </div>
 
-              <div className="flex-1 overflow-y-auto py-6">
-                <Navbar
-                  className="flex-col items-start space-y-3 text-base font-medium"
-                  onItemClick={() => setIsMenuOpen(false)}
-                />
-              </div>
+              {!isHome && (
+                <div className="flex-1 overflow-y-auto py-6">
+                  <Navbar
+                    className="flex-col items-start space-y-3 text-base font-medium"
+                    onItemClick={() => setIsMenuOpen(false)}
+                  />
+                </div>
+              )}
 
               <SheetFooter className="border-border-default flex-col gap-3 border-t pt-4">
-                {session?.user && (
+                {session?.user && !isHome && (
                   <div className="flex flex-col items-center gap-4 py-4">
                     <UserMenu user={session.user as any} />
                     <div className="flex flex-col items-center">

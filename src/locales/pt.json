@@ -999,6 +999,8 @@
       "titlePart4": "A tua arena.",
       "description": "Gerencia equipas, presenças e pagamentos num só lugar. Para capitães que levam o jogo a sério.",
       "joinWaitlist": "Entrar na lista de espera",
+      "signIn": "Entrar",
+      "goToArena": "Ir para Arena",
       "startJourney": "Começar Jornada",
       "watchDemo": "Ver Demonstração"
     },

@@ -8,13 +8,14 @@ import {
   FileCheck2,
   Users,
 } from "lucide-react";
-import { useTranslations } from "next-intl";
 import Image from "next/image";
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 import confusedCapImg from "@/assets/images/jb-confused-cap.png";
 import moneyImg from "@/assets/images/jb-money.png";
 import receiptsImg from "@/assets/images/jb-receipts.png";
 import { Button } from "@/components/ui/button";
+import { useSession } from "@/lib/auth-client";
 import { cn } from "@/lib/utils";
 
 const DASHBOARD_BARS = [
@@ -43,6 +44,7 @@ const FieldPattern = () => {
 
 const DashboardCard = () => {
   const t = useTranslations("homePage.dashboard");
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -116,6 +118,9 @@ const DashboardCard = () => {
 
 const HeroSection = () => {
   const t = useTranslations("homePage.hero");
+  const translation = useTranslations("header");
+
+  const { data: session, isPending } = useSession();
 
   return (
     <section className="relative flex min-h-screen items-center overflow-hidden bg-slate-950 pt-20">
@@ -151,15 +156,17 @@ const HeroSection = () => {
             </p>
 
             <div className="pt-4">
-              <Button
-                asChild
-                className="rounded-full px-8 py-7 text-lg font-bold shadow-xl transition-all hover:scale-105"
-                style={{ backgroundColor: "#7CFF4F", color: "#000" }}
-              >
-                <Link href="/waitlist">
-                  {t("joinWaitlist")}
-                </Link>
-              </Button>
+              {!isPending && (
+                <Button
+                  asChild
+                  className="rounded-full px-8 py-7 text-lg font-bold shadow-xl transition-all hover:scale-105"
+                  style={{ backgroundColor: "#7CFF4F", color: "#000" }}
+                >
+                  <Link href={session?.user ? "/arena" : "/auth"}>
+                    {session?.user ? t("goToArena") : translation("launchJourney")}
+                  </Link>
+                </Button>
+              )}
             </div>
           </motion.div>
 
@@ -178,8 +185,14 @@ const MomentumStrip = () => {
 
   const items = [
     { icon: <span className="text-2xl">⚽</span>, label: t("item1") },
-    { icon: <CheckCircle2 className="h-6 w-6 text-[#7CFF4F]" />, label: t("item2") },
-    { icon: <CreditCard className="h-6 w-6 text-blue-400" />, label: t("item3") },
+    {
+      icon: <CheckCircle2 className="h-6 w-6 text-[#7CFF4F]" />,
+      label: t("item2"),
+    },
+    {
+      icon: <CreditCard className="h-6 w-6 text-blue-400" />,
+      label: t("item3"),
+    },
   ];
 
   return (
@@ -189,7 +202,9 @@ const MomentumStrip = () => {
           {items.map((item, i) => (
             <div key={i} className="flex items-center gap-3">
               {item.icon}
-              <span className="text-base font-bold text-white">{item.label}</span>
+              <span className="text-base font-bold text-white">
+                {item.label}
+              </span>
             </div>
           ))}
         </div>
@@ -255,7 +270,9 @@ const ProblemsSection = () => {
                   className="object-contain"
                 />
               </div>
-              <h3 className="mb-3 text-lg font-bold text-white">{pain.title}</h3>
+              <h3 className="mb-3 text-lg font-bold text-white">
+                {pain.title}
+              </h3>
               <p className="mb-6 flex-1 text-sm leading-relaxed text-gray-400">
                 {pain.description}
               </p>
@@ -275,10 +292,26 @@ const EcosystemSection = () => {
   const t = useTranslations("homePage.ecosystem_section");
 
   const modules = [
-    { icon: Users, title: t("modules.teams.title"), description: t("modules.teams.description") },
-    { icon: CheckCircle2, title: t("modules.attendance.title"), description: t("modules.attendance.description") },
-    { icon: CreditCard, title: t("modules.payments.title"), description: t("modules.payments.description") },
-    { icon: FileCheck2, title: t("modules.proofs.title"), description: t("modules.proofs.description") },
+    {
+      icon: Users,
+      title: t("modules.teams.title"),
+      description: t("modules.teams.description"),
+    },
+    {
+      icon: CheckCircle2,
+      title: t("modules.attendance.title"),
+      description: t("modules.attendance.description"),
+    },
+    {
+      icon: CreditCard,
+      title: t("modules.payments.title"),
+      description: t("modules.payments.description"),
+    },
+    {
+      icon: FileCheck2,
+      title: t("modules.proofs.title"),
+      description: t("modules.proofs.description"),
+    },
   ];
 
   return (
@@ -312,8 +345,12 @@ const EcosystemSection = () => {
               <div className="mb-6 flex h-14 w-14 items-center justify-center rounded-2xl bg-blue-600/20 text-blue-400 transition-transform group-hover:scale-110">
                 <module.icon className="h-7 w-7" />
               </div>
-              <h3 className="mb-4 text-xl font-bold text-white">{module.title}</h3>
-              <p className="text-sm leading-relaxed text-gray-400">{module.description}</p>
+              <h3 className="mb-4 text-xl font-bold text-white">
+                {module.title}
+              </h3>
+              <p className="text-sm leading-relaxed text-gray-400">
+                {module.description}
+              </p>
             </motion.div>
           ))}
         </div>
@@ -357,7 +394,10 @@ const WaitlistCtaSection = () => {
 
         <p className="mt-6 text-sm text-white/30">
           {t("alreadyHaveAccess")}{" "}
-          <Link href="/auth" className="text-white/50 underline underline-offset-2 transition-colors hover:text-white/70">
+          <Link
+            href="/auth"
+            className="text-white/50 underline underline-offset-2 transition-colors hover:text-white/70"
+          >
             {t("signIn")}
           </Link>
         </p>

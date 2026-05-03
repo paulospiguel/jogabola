@@ -39,11 +39,6 @@ export function useHeaderButtons(): UseHeaderButtonsReturn {
   return {
     buttons: [
       {
-        label: "header.signIn",
-        href: "/auth",
-        variant: "secondary",
-      },
-      {
         label: "header.launchJourney",
         href: "/auth",
         variant: "primary",

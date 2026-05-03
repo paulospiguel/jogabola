@@ -80,7 +80,7 @@ export async function addToWaitlist(
         email: email.toLowerCase().trim(),
       },
       Type: {
-        select: { name: "waitlist" },
+        select: { name: TypeProperty.Waitlist },
       },
     },
   });
