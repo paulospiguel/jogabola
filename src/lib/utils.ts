@@ -100,7 +100,10 @@ const getBaseURL = () => {
     return window.location.origin;
   }
 
-  // No servidor (SSR/Actions/API), priorize a URL específica da Vercel em preview/dev
+  if (process.env.NEXT_PUBLIC_APP_URL) {
+    return process.env.NEXT_PUBLIC_APP_URL;
+  }
+
   if (
     process.env.VERCEL_ENV === "preview" ||
     process.env.VERCEL_ENV === "development"
@@ -111,7 +114,6 @@ const getBaseURL = () => {
   }
 
   return (
-    process.env.NEXT_PUBLIC_APP_URL ||
     process.env.NEXT_PUBLIC_URL ||
     process.env.NEXTAUTH_URL ||
     (process.env.VERCEL_URL
