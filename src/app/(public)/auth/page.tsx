@@ -2,7 +2,7 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { AnimatePresence, motion } from "framer-motion";
-import { ArrowLeft, ArrowRight, Loader2, Mail, X } from "lucide-react";
+import { ArrowLeft, ArrowRight, Loader2, X } from "lucide-react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useTranslations } from "next-intl";
@@ -10,7 +10,7 @@ import { useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { DotGrid } from "@/components/arena/dot-grid";
-import { AppleIcon, Google, GoogleIcon } from "@/components/icons";
+import { AppleIcon, GoogleIcon } from "@/components/icons";
 import { Logo } from "@/components/logo";
 import { APP } from "@/constants/app";
 import { useToast } from "@/hooks/use-toast-custom";
@@ -28,6 +28,8 @@ function defaultNameFromEmail(email: string) {
 
 export default function LoginPage() {
   const t = useTranslations("authPage");
+  const translation = useTranslations()
+
   const router = useRouter();
   const searchParams = useSearchParams();
   const { data } = useSession();
@@ -192,9 +194,9 @@ export default function LoginPage() {
           initial={{ opacity: 0, y: -20 }}
           transition={{ duration: 0.4 }}
         >
-          <Logo isBeta className="mb-4 text-arena-primary" size="large" />
-          <p className="mt-2 text-sm font-medium tracking-wide text-arena-text-sec/80">
-            {t(APP.COMPANY.SLOGAN)}
+          <Logo href="/" isBeta className="mb-2 text-arena-primary" size="medium" />
+          <p className="text-sm font-medium tracking-wide text-arena-text-sec/80">
+            {translation(APP.COMPANY.SLOGAN)}
           </p>
         </motion.div>
 
