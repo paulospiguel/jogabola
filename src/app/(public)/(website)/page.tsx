@@ -6,16 +6,15 @@ import {
   CheckCircle2,
   CreditCard,
   FileCheck2,
-  Play,
-  Star,
   Users,
 } from "lucide-react";
 import { useTranslations } from "next-intl";
-import { useRef } from "react";
-import Modal, { type ModalRef } from "@/components/modal";
+import Image from "next/image";
+import Link from "next/link";
+import confusedCapImg from "@/assets/images/jb-confused-cap.png";
+import moneyImg from "@/assets/images/jb-money.png";
+import receiptsImg from "@/assets/images/jb-receipts.png";
 import { Button } from "@/components/ui/button";
-import { webConfig } from "@/configs";
-import { useJourneyRedirect } from "@/hooks/use-journey-redirect";
 import { cn } from "@/lib/utils";
 
 const DASHBOARD_BARS = [
@@ -115,40 +114,11 @@ const DashboardCard = () => {
   );
 };
 
-const VideoPreviewModal = ({
-  children,
-  videoId,
-}: {
-  children: React.ReactNode;
-  videoId: string;
-}) => {
-  const modalRef = useRef<ModalRef>(null);
-  return (
-    <Modal
-      ref={modalRef}
-      size="large"
-      triggerComponent={children}
-      title="Jogabola - Demo"
-      content={
-        <iframe
-          width="100%"
-          height="auto"
-          src={`https://www.youtube.com/embed/${videoId}`}
-          title="YouTube video player"
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-          allowFullScreen
-        ></iframe>
-      }
-    />
-  );
-};
-
 const HeroSection = () => {
   const t = useTranslations("homePage.hero");
-  const { redirectToJourney } = useJourneyRedirect();
 
   return (
-    <section className="bg-background dark:bg-blue-850 relative flex min-h-screen items-center overflow-hidden pt-20">
+    <section className="relative flex min-h-screen items-center overflow-hidden bg-slate-950 pt-20">
       <FieldPattern />
 
       <div className="relative z-10 container mx-auto max-w-7xl px-4 py-10 md:px-6">
@@ -159,9 +129,9 @@ const HeroSection = () => {
             transition={{ duration: 0.8 }}
             className="space-y-8"
           >
-            <div className="inline-flex items-center rounded-full border border-blue-500/20 bg-blue-500/10 px-4 py-1.5">
-              <div className="mr-2 h-2 w-2 animate-pulse rounded-full bg-blue-400" />
-              <span className="text-xs font-bold tracking-widest text-blue-400 uppercase">
+            <div className="inline-flex items-center rounded-full border border-[#7CFF4F]/20 bg-[#7CFF4F]/10 px-4 py-1.5">
+              <div className="mr-2 h-2 w-2 animate-pulse rounded-full bg-[#7CFF4F]" />
+              <span className="text-xs font-bold tracking-widest text-[#7CFF4F] uppercase">
                 {t("badge")}
               </span>
             </div>
@@ -171,33 +141,25 @@ const HeroSection = () => {
               <br />
               {t("titlePart2")}
               <br />
-              <span className="text-blue-500">{t("titleHighlight")}</span>{" "}
-              {t("titlePart3")}
+              <span className="text-blue-500">{t("titleHighlight")}</span>
               <br />
-              {t("titlePart4")}
+              {t("titlePart3")}
             </h1>
 
             <p className="max-w-lg text-lg leading-relaxed text-gray-400 md:text-xl">
               {t("description")}
             </p>
 
-            <div className="flex flex-col gap-4 pt-4 sm:flex-row">
+            <div className="pt-4">
               <Button
-                onClick={redirectToJourney}
-                className="rounded-full bg-blue-600 px-8 py-7 text-lg font-bold text-white shadow-xl shadow-blue-600/20 transition-all hover:scale-105 hover:bg-blue-700"
+                asChild
+                className="rounded-full px-8 py-7 text-lg font-bold shadow-xl transition-all hover:scale-105"
+                style={{ backgroundColor: "#7CFF4F", color: "#000" }}
               >
-                {t("startJourney")}
+                <Link href="/waitlist">
+                  {t("joinWaitlist")}
+                </Link>
               </Button>
-
-              <VideoPreviewModal videoId="VIDEO_ID">
-                <Button
-                  variant="outline"
-                  className="rounded-full border-white/10 bg-white/5 px-8 py-7 text-lg font-bold text-white backdrop-blur-sm transition-all hover:bg-white/10"
-                >
-                  <Play className="mr-3 h-6 w-6 fill-white" />
-                  {t("watchDemo")}
-                </Button>
-              </VideoPreviewModal>
             </div>
           </motion.div>
 
@@ -211,42 +173,96 @@ const HeroSection = () => {
   );
 };
 
-const StatsSection = () => {
-  const t = useTranslations("homePage");
+const MomentumStrip = () => {
+  const t = useTranslations("homePage.momentumStrip");
+
+  const items = [
+    { icon: <span className="text-2xl">⚽</span>, label: t("item1") },
+    { icon: <CheckCircle2 className="h-6 w-6 text-[#7CFF4F]" />, label: t("item2") },
+    { icon: <CreditCard className="h-6 w-6 text-blue-400" />, label: t("item3") },
+  ];
+
   return (
-    <section className="bg-background dark:bg-blue-850 relative overflow-hidden">
-      <div className="container mx-auto max-w-7xl border-t border-white/5 px-4 py-10 md:px-6">
-        <h3 className="pb-5 text-center text-4xl font-bold text-white">
-          {t("stats.title")}
-        </h3>
-        <div className="flex flex-wrap items-center justify-center gap-10">
-          {Object.values(webConfig.HOME_STATS).map((stat, index) => (
+    <div className="border-t border-b border-white/5 bg-slate-950 py-6">
+      <div className="container mx-auto max-w-7xl px-4 md:px-6">
+        <div className="flex flex-col items-center justify-center gap-8 sm:flex-row sm:gap-16">
+          {items.map((item, i) => (
+            <div key={i} className="flex items-center gap-3">
+              {item.icon}
+              <span className="text-base font-bold text-white">{item.label}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+};
+
+const ProblemsSection = () => {
+  const t = useTranslations("homePage.problems");
+
+  const pains = [
+    {
+      image: confusedCapImg,
+      alt: "confused captain",
+      title: t("pain1.title"),
+      description: t("pain1.description"),
+      resolution: t("pain1.resolution"),
+    },
+    {
+      image: moneyImg,
+      alt: "money payment",
+      title: t("pain2.title"),
+      description: t("pain2.description"),
+      resolution: t("pain2.resolution"),
+    },
+    {
+      image: receiptsImg,
+      alt: "payment receipts",
+      title: t("pain3.title"),
+      description: t("pain3.description"),
+      resolution: t("pain3.resolution"),
+    },
+  ];
+
+  return (
+    <section className="bg-slate-900 py-24">
+      <div className="container mx-auto max-w-7xl px-4 md:px-6">
+        <div className="mb-14 text-center">
+          <p className="mb-3 text-xs font-bold tracking-widest text-blue-500 uppercase">
+            {t("kicker")}
+          </p>
+          <h2 className="text-4xl font-extrabold text-white md:text-5xl">
+            {t("title")}
+          </h2>
+        </div>
+
+        <div className="grid gap-8 md:grid-cols-3">
+          {pains.map((pain, i) => (
             <motion.div
-              key={stat.key}
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.5, delay: 0.8 + index * 0.1 }}
-              className="group relative"
+              key={i}
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: i * 0.1 }}
+              viewport={{ once: true }}
+              className="flex flex-col rounded-3xl border border-white/5 bg-white/5 p-8"
             >
-              <div className="flex flex-col">
-                <div className="flex items-baseline gap-1">
-                  <span className="text-3xl font-black tracking-tighter text-white sm:text-4xl">
-                    {stat.value}
-                  </span>
-                  {stat.isRating && (
-                    <div className="flex items-center gap-1 pb-1">
-                      <Star className="h-4 w-4 fill-blue-500 text-blue-500" />
-                      <span className="text-[10px] font-bold text-blue-400">
-                        {t("stats.averageRating")}
-                      </span>
-                    </div>
-                  )}
-                </div>
-                <span className="text-[10px] font-black tracking-[0.2em] text-gray-500 uppercase transition-colors group-hover:text-blue-500">
-                  {t(`stats.${stat.label}`)}
-                </span>
+              <div className="mb-6 flex h-20 items-center">
+                <Image
+                  src={pain.image}
+                  alt={pain.alt}
+                  height={80}
+                  className="object-contain"
+                />
               </div>
-              <div className="absolute -bottom-2 h-0.5 w-0 bg-blue-600 transition-all group-hover:w-full" />
+              <h3 className="mb-3 text-lg font-bold text-white">{pain.title}</h3>
+              <p className="mb-6 flex-1 text-sm leading-relaxed text-gray-400">
+                {pain.description}
+              </p>
+              <div className="flex items-center gap-2 text-xs font-bold text-blue-400">
+                <ArrowRight className="h-3 w-3 shrink-0" />
+                {pain.resolution}
+              </div>
             </motion.div>
           ))}
         </div>
@@ -259,30 +275,10 @@ const EcosystemSection = () => {
   const t = useTranslations("homePage.ecosystem_section");
 
   const modules = [
-    {
-      icon: Users,
-      title: t("modules.teams.title"),
-      description: t("modules.teams.description"),
-      color: "blue",
-    },
-    {
-      icon: CheckCircle2,
-      title: t("modules.attendance.title"),
-      description: t("modules.attendance.description"),
-      color: "blue",
-    },
-    {
-      icon: CreditCard,
-      title: t("modules.payments.title"),
-      description: t("modules.payments.description"),
-      color: "blue",
-    },
-    {
-      icon: FileCheck2,
-      title: t("modules.proofs.title"),
-      description: t("modules.proofs.description"),
-      color: "blue",
-    },
+    { icon: Users, title: t("modules.teams.title"), description: t("modules.teams.description") },
+    { icon: CheckCircle2, title: t("modules.attendance.title"), description: t("modules.attendance.description") },
+    { icon: CreditCard, title: t("modules.payments.title"), description: t("modules.payments.description") },
+    { icon: FileCheck2, title: t("modules.proofs.title"), description: t("modules.proofs.description") },
   ];
 
   return (
@@ -316,22 +312,55 @@ const EcosystemSection = () => {
               <div className="mb-6 flex h-14 w-14 items-center justify-center rounded-2xl bg-blue-600/20 text-blue-400 transition-transform group-hover:scale-110">
                 <module.icon className="h-7 w-7" />
               </div>
-              <h3 className="mb-4 text-xl font-bold text-white">
-                {module.title}
-              </h3>
-              <p className="mb-8 text-sm leading-relaxed text-gray-400">
-                {module.description}
-              </p>
-              <Button
-                variant="ghost"
-                size="sm"
-                className="flex items-center gap-2 p-0 text-xs font-bold tracking-widest text-blue-400 uppercase transition-colors hover:bg-transparent hover:text-blue-300"
-              >
-                {t("modules.explore")} <ArrowRight className="h-4 w-4" />
-              </Button>
+              <h3 className="mb-4 text-xl font-bold text-white">{module.title}</h3>
+              <p className="text-sm leading-relaxed text-gray-400">{module.description}</p>
             </motion.div>
           ))}
         </div>
+      </div>
+    </section>
+  );
+};
+
+const WaitlistCtaSection = () => {
+  const t = useTranslations("homePage.waitlistCta");
+
+  return (
+    <section className="relative overflow-hidden bg-slate-900 py-32">
+      <div className="pointer-events-none absolute inset-0">
+        <div className="absolute top-1/2 left-1/2 h-96 w-96 -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#7CFF4F]/5 blur-[100px]" />
+      </div>
+
+      <div className="relative z-10 container mx-auto max-w-2xl px-4 text-center md:px-6">
+        <div className="mb-8 flex justify-center">
+          <span className="inline-flex items-center gap-2 rounded-full border border-[#7CFF4F]/20 bg-[#7CFF4F]/10 px-4 py-1.5 text-xs font-bold tracking-widest text-[#7CFF4F] uppercase">
+            <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-[#7CFF4F]" />
+            {t("badge")}
+          </span>
+        </div>
+
+        <h2 className="mb-4 text-4xl font-extrabold text-white md:text-5xl">
+          {t("titlePart1")}
+          <br />
+          {t("titlePart2")}
+        </h2>
+
+        <p className="mb-10 text-lg text-gray-400">{t("subtitle")}</p>
+
+        <Button
+          asChild
+          className="rounded-full px-10 py-7 text-lg font-bold shadow-xl transition-all hover:scale-105"
+          style={{ backgroundColor: "#7CFF4F", color: "#000" }}
+        >
+          <Link href="/waitlist">{t("cta")}</Link>
+        </Button>
+
+        <p className="mt-6 text-sm text-white/30">
+          {t("alreadyHaveAccess")}{" "}
+          <Link href="/auth" className="text-white/50 underline underline-offset-2 transition-colors hover:text-white/70">
+            {t("signIn")}
+          </Link>
+        </p>
       </div>
     </section>
   );
@@ -341,8 +370,10 @@ export default function Home() {
   return (
     <main className="relative bg-slate-950">
       <HeroSection />
-      <StatsSection />
+      <MomentumStrip />
+      <ProblemsSection />
       <EcosystemSection />
+      <WaitlistCtaSection />
     </main>
   );
 }
