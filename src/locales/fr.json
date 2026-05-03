@@ -866,28 +866,36 @@
       "title": "The complete ecosystem for your club management"
     },
     "ecosystem_section": {
-      "kicker": "MVP JOGABOLA",
+      "kicker": "MVP · L'ESSENTIEL",
+      "title": "Tout ce qu'il faut pour gérer ton match hebdomadaire",
+      "subtitle": "Pas de modules en trop. Pas de courbe d'apprentissage. Tu commences aujourd'hui.",
       "modules": {
-        "attendance": {
-          "description": "Confirm attendance, track reserves and keep the waiting list organized.",
-          "title": "Attendance and waiting"
+        "teams": {
+          "title": "Équipes et Effectif",
+          "description": "Sache toujours qui est dans ton effectif et qui tu invites pour le prochain match."
         },
-        "explore": "Explore",
+        "attendance": {
+          "title": "Présences et Liste d'Attente",
+          "description": "Liste des confirmés, réservations et file d'attente automatique. Sans WhatsApp."
+        },
         "payments": {
-          "description": "Record weekly payments and track pending amounts per player.",
-          "title": "MBWay Payments"
+          "title": "Paiements MBWay",
+          "description": "Enregistre qui a payé, qui est en attente et les montants en retard, sans stress."
         },
         "proofs": {
-          "description": "Receive proofs and prepare automatic pre-validation without confirming real payments.",
-          "title": "Proofs"
-        },
-        "teams": {
-          "description": "Manage squad, team members and invited players for weekly games.",
-          "title": "Teams and players"
+          "title": "Justificatifs",
+          "description": "Les joueurs envoient le justificatif. Tu valides. Tout au même endroit."
         }
-      },
-      "subtitle": "No futuristic modules: just teams, reserves, attendance, payments and proofs.",
-      "title": "The essential to manage weekly games"
+      }
+    },
+    "waitlistCta": {
+      "badge": "ACCÈS ANTICIPÉ",
+      "titlePart1": "Sois parmi les premiers à",
+      "titlePart2": "organiser ton match avec Jogabola.",
+      "subtitle": "Nous sommes en bêta. Liste d'attente ouverte.",
+      "cta": "Rejoindre la liste d'attente",
+      "alreadyHaveAccess": "Tu as déjà accès ?",
+      "signIn": "Se connecter"
     },
     "features": {
       "items": {

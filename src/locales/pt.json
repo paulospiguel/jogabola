@@ -930,37 +930,36 @@
       "title": "O ecossistema completo para a gestão do seu clube"
     },
     "ecosystem_section": {
-      "kicker": "FUNCIONALIDADES MVP",
+      "kicker": "MVP · O ESSENCIAL",
       "title": "Tudo o que precisas para gerir o teu jogo semanal",
-      "subtitle": "Equipas, confirmações, pagamentos, comprovativos. Sem complicações.",
+      "subtitle": "Sem módulos a mais. Sem curva de aprendizagem. Começas hoje.",
       "modules": {
+        "teams": {
+          "title": "Equipas e Plantel",
+          "description": "Sabe sempre quem está no teu plantel e quem convidas para o próximo jogo."
+        },
         "attendance": {
-          "title": "Confirmações em tempo real",
-          "description": "Saiba quantos aparecem antes do jogo. Sem mensagens perdidas no WhatsApp."
+          "title": "Presenças e Lista de Espera",
+          "description": "Lista de confirmados, reservas e fila de espera automática. Sem WhatsApp."
         },
         "payments": {
-          "title": "Registo de pagamentos",
-          "description": "Acompanhe quem pagou esta semana. Menos perseguições, mais organização."
+          "title": "Pagamentos MBWay",
+          "description": "Regista quem pagou, quem está pendente e valores em atraso, sem stress."
         },
         "proofs": {
-          "title": "Comprovativos digitais",
-          "description": "Recolha comprovativos de transferência. Pré-valide sem confirmar pagamentos reais."
-        },
-        "teams": {
-          "title": "Gestão de equipas",
-          "description": "Organize plantel, convide jogadores convidados para a semana. Tudo num só lugar."
-        },
-        "explore": "Explorar"
+          "title": "Comprovativos",
+          "description": "Jogadores enviam o comprovativo. Tu validas. Tudo num só lugar."
+        }
       }
     },
     "waitlistCta": {
-      "badge": "BETA · Acesso Antecipado",
-      "titlePart1": "Pronto para",
-      "titlePart2": "organizar?",
-      "subtitle": "Junta-te à lista de espera. Acesso antecipado para capitães sérios.",
+      "badge": "ACESSO ANTECIPADO",
+      "titlePart1": "Sê dos primeiros a",
+      "titlePart2": "organizar o teu jogo com o Jogabola.",
+      "subtitle": "Estamos em beta. Lista de espera aberta.",
       "cta": "Entrar na lista de espera",
       "alreadyHaveAccess": "Já tens acesso?",
-      "signIn": "Iniciar sessão"
+      "signIn": "Entrar"
     },
     "features": {
       "items": {

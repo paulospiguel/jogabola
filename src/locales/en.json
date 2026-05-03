@@ -944,35 +944,34 @@
       "title": "The complete ecosystem for your club management"
     },
     "ecosystem_section": {
-      "kicker": "MVP FEATURES",
+      "kicker": "MVP · THE ESSENTIALS",
       "title": "Everything you need to manage your weekly game",
-      "subtitle": "Teams, confirmations, payments, proofs. No complications.",
+      "subtitle": "No extra modules. No learning curve. Start today.",
       "modules": {
+        "teams": {
+          "title": "Squads and Roster",
+          "description": "Always know who's in your squad and who you're inviting for the next game."
+        },
         "attendance": {
-          "title": "Real-time confirmations",
-          "description": "Know how many are showing up before the game. No lost messages on WhatsApp."
+          "title": "Attendance and Waiting List",
+          "description": "Confirmed list, reserves and automatic waiting list. No WhatsApp needed."
         },
         "payments": {
-          "title": "Payment record",
-          "description": "Track who paid this week. Less chasing, more organization."
+          "title": "MBWay Payments",
+          "description": "Track who paid, who's pending and overdue amounts, stress-free."
         },
         "proofs": {
-          "title": "Digital proofs",
-          "description": "Collect transfer proofs. Pre-validate without confirming real payments."
-        },
-        "teams": {
-          "title": "Team management",
-          "description": "Organize your squad, invite guest players for the week. All in one place."
-        },
-        "explore": "Explore"
+          "title": "Payment Proofs",
+          "description": "Players send the proof. You validate. All in one place."
+        }
       }
     },
     "waitlistCta": {
-      "badge": "BETA · Early Access",
-      "titlePart1": "Ready to",
-      "titlePart2": "organize?",
-      "subtitle": "Join the waiting list. Early access for serious captains.",
-      "cta": "Join the waiting list",
+      "badge": "EARLY ACCESS",
+      "titlePart1": "Be among the first to",
+      "titlePart2": "organise your game with Jogabola.",
+      "subtitle": "We're in beta. Waitlist is open.",
+      "cta": "Join the waitlist",
       "alreadyHaveAccess": "Already have access?",
       "signIn": "Sign in"
     },
