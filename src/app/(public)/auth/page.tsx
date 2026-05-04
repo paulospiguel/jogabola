@@ -26,14 +26,23 @@ function defaultNameFromEmail(email: string) {
   return name || "Jogador";
 }
 
+function getSafeCallbackURL(value: string | null) {
+  if (!value || !value.startsWith("/") || value.startsWith("//")) {
+    return "/arena";
+  }
+  return value;
+}
+
 export default function LoginPage() {
   const t = useTranslations("authPage");
-  const translation = useTranslations()
+  const translation = useTranslations();
 
   const router = useRouter();
   const searchParams = useSearchParams();
   const { data } = useSession();
   const { toast } = useToast();
+  const callbackURL = getSafeCallbackURL(searchParams.get("callbackURL"));
+  const isRegisterMode = searchParams.get("mode") === "register";
 
   const [step, setStep] = useState<AuthStep>("email");
   const [loading, setLoading] = useState(false);
@@ -59,8 +68,8 @@ export default function LoginPage() {
 
   useEffect(() => {
     if (!data?.user?.id) return;
-    router.push("/arena");
-  }, [data?.user?.id, router]);
+    router.push(callbackURL);
+  }, [callbackURL, data?.user?.id, router]);
 
   const emailForm = useForm<EmailInput>({
     resolver: zodResolver(emailSchema),
@@ -97,7 +106,9 @@ export default function LoginPage() {
       );
     } catch (err: unknown) {
       const message =
-        err instanceof Error ? err.message : t("messages.loginErrorDescription");
+        err instanceof Error
+          ? err.message
+          : t("messages.loginErrorDescription");
       toast.error(t("messages.loginErrorTitle"), message);
     } finally {
       setLoading(false);
@@ -111,7 +122,7 @@ export default function LoginPage() {
         email: collectedEmail,
         otp: values.code,
         name: defaultNameFromEmail(collectedEmail),
-        callbackURL: "/arena",
+        callbackURL,
       });
 
       if (result.error) {
@@ -122,7 +133,9 @@ export default function LoginPage() {
 
       toast.success(
         t("messages.loginSuccessTitle"),
-        t("messages.loginSuccessDescription"),
+        t("messages.loginSuccessDescription", {
+          destination: callbackURL === "/arena" ? t("arena") : t("event"),
+        }),
       );
     } catch (err: unknown) {
       const message =
@@ -139,13 +152,14 @@ export default function LoginPage() {
     try {
       const result = await signIn.social({
         provider: "google",
-        callbackURL: "/arena",
+        callbackURL,
       });
       if (result.error)
         throw new Error(result.error.message || t("messages.socialError"));
       if (result.data?.url) window.location.href = result.data.url;
     } catch (err: unknown) {
-      const message = err instanceof Error ? err.message : t("messages.socialError");
+      const message =
+        err instanceof Error ? err.message : t("messages.socialError");
       toast.error(t("messages.loginErrorTitle"), message);
       setLoading(false);
     }
@@ -156,13 +170,14 @@ export default function LoginPage() {
     try {
       const result = await signIn.social({
         provider: "apple",
-        callbackURL: "/arena",
+        callbackURL,
       });
       if (result.error)
         throw new Error(result.error.message || t("messages.socialError"));
       if (result.data?.url) window.location.href = result.data.url;
     } catch (err: unknown) {
-      const message = err instanceof Error ? err.message : t("messages.socialError");
+      const message =
+        err instanceof Error ? err.message : t("messages.socialError");
       toast.error(t("messages.loginErrorTitle"), message);
       setLoading(false);
     }
@@ -194,7 +209,12 @@ export default function LoginPage() {
           initial={{ opacity: 0, y: -20 }}
           transition={{ duration: 0.4 }}
         >
-          <Logo href="/" isBeta className="mb-2 text-arena-primary" size="medium" />
+          <Logo
+            href="/"
+            isBeta
+            className="mb-2 text-arena-primary"
+            size="medium"
+          />
           <p className="text-sm font-medium tracking-wide text-arena-text-sec/80">
             {translation(APP.COMPANY.SLOGAN)}
           </p>
@@ -227,10 +247,12 @@ export default function LoginPage() {
                 >
                   <div className="space-y-2">
                     <h2 className="text-2xl font-bold tracking-tight text-arena-text">
-                      {t("title")}
+                      {isRegisterMode ? t("registerTitle") : t("title")}
                     </h2>
                     <p className="text-sm text-arena-text-muted">
-                      {t("googleLogin")} ou {t("appleLogin")}.
+                      {isRegisterMode
+                        ? t("registerSubtitle")
+                        : `${t("googleLogin")} ou ${t("appleLogin")}.`}
                     </p>
                   </div>
 

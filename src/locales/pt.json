@@ -92,6 +92,10 @@
   },
   "authPage": {
     "title": "Entrar no JogaBola",
+    "registerTitle": "Criar conta de atleta",
+    "registerSubtitle": "Usa o teu email para criares uma conta verificada e voltares mais rápido nos próximos jogos.",
+    "arena": "Arena",
+    "event": "evento",
     "emailLabel": "Endereço de Email",
     "emailPlaceholder": "email@exemplo.com",
     "signIn": "Entrar",
@@ -112,7 +116,7 @@
       "codeSentTitle": "Código enviado",
       "codeSentDescription": "Enviámos um código para {email}.",
       "loginSuccessTitle": "Login validado",
-      "loginSuccessDescription": "A entrar na Arena.",
+      "loginSuccessDescription": "A entrar no {destination}.",
       "loginErrorTitle": "Erro no login",
       "loginErrorDescription": "Não foi possível enviar o código.",
       "invalidCodeTitle": "Código inválido",
@@ -164,7 +168,10 @@
     "history": {
       "title": "Histórico de Atividade",
       "players": "Jogadores"
-    }
+    },
+    "notValidated": "Atleta não validado",
+    "notValidatedDesc": "Este atleta ainda não criou uma conta no Jogabola. As estatísticas e o perfil completo estarão disponíveis após a validação.",
+    "pendingValidation": "Validação pendente"
   },
   "arenaAddPlayer": {
     "actions": {
@@ -384,6 +391,11 @@
     "types": {
       "match": "Jogo",
       "training": "Treino"
+    },
+    "status": {
+      "scheduled": "Agendado",
+      "confirmed": "Confirmado",
+      "cancelled": "Cancelado"
     }
   },
   "arenaNav": {
@@ -519,16 +531,18 @@
     }
   },
   "arenaPayments": {
-    "kicker": "Pagamentos",
+    "kicker": "Gestão financeira",
+    "title": "Pagamentos",
+    "titleSub": "Controla cobranças, comprovativos e métodos aceites pela equipa.",
+    "configureBtn": "Configurar métodos",
     "stats": {
-      "method": "Método",
-      "methodValue": "MBWay manual",
+      "method": "Métodos ativos",
+      "methodValue": "MBWay · Numerário",
       "proofs": "Comprovativos",
       "proofsValue": "Upload ativo",
       "validation": "Pré-validação",
       "validationValue": "Preparada"
     },
-    "title": "MBWay semanal",
     "mocks": {
       "match": "Jogo semanal"
     },
@@ -536,7 +550,7 @@
     "loading": "A carregar pagamentos...",
     "noPayments": "Nenhum pagamento encontrado.",
     "table": {
-      "title": "Pagamentos semanais",
+      "title": "Histórico de pagamentos",
       "player": "Atleta",
       "event": "Evento",
       "amount": "Valor",
@@ -609,20 +623,18 @@
       "playerCount": "{count} Jogador{count, plural, =1 {} other {es}}"
     },
     "title": "Plantel",
+    "loading": "A carregar plantel...",
     "positions": {
-      "GR": "Guarda-Redes",
-      "LD": "Lateral Direito",
-      "DC": "Defesa Central",
-      "LE": "Lateral Esquerdo",
-      "MDF": "Médio Defensivo",
-      "MC": "Médio Centro",
-      "MO": "Médio Ofensivo",
-      "MD": "Médio Direito",
-      "ME": "Médio Esquerdo",
-      "ED": "Extremo Direito",
-      "EE": "Extremo Esquerdo",
-      "PL": "Ponta de Lança"
-    }
+      "GK": "Guarda-redes",
+      "DEF": "Defesa",
+      "MID": "Médio",
+      "FWD": "Avançado",
+      "SUB": "Suplente",
+      "NA": "Não definido"
+    },
+    "notValidated": "Jogador não validado",
+    "notValidatedDesc": "Este jogador ainda não criou a sua conta Jogabola. O perfil completo e as estatísticas estarão disponíveis após a validação.",
+    "pendingValidation": "Validação em espera"
   },
   "common": {
     "accept": "Aceitar",
@@ -1571,7 +1583,36 @@
   },
   "legal": {
     "terms": {
-      "title": "Termos e Condições"
+      "title": "Termos e Condições",
+      "backHome": "Voltar ao Início",
+      "lastUpdated": "Última atualização: 4 de Maio de 2026",
+      "sections": [
+        {
+          "title": "1. Aceitação dos Termos",
+          "body": "Ao aceder e utilizar o JogaBola, concordas em cumprir estes termos e condições. Se não concordares com qualquer parte destes termos, não deverás utilizar os nossos serviços."
+        },
+        {
+          "title": "2. Uso do Serviço",
+          "body": "O JogaBola é uma plataforma para organização, gestão e participação em eventos desportivos. Podes confirmar presença com conta ou, quando disponível, como convidado verificado por email.",
+          "items": [
+            "O uso comercial não autorizado é proibido.",
+            "É proibido enviar spam, conteúdo ofensivo ou informações falsas.",
+            "És responsável pela precisão das informações fornecidas e pela segurança da tua conta."
+          ]
+        },
+        {
+          "title": "3. Inscrição em Eventos",
+          "body": "Ao inscreveres-te num evento, confirmas que as informações fornecidas são corretas e que aceitas as regras definidas pelo organizador. Contas verificadas ajudam a gerir presenças, pagamentos e histórico de participação em eventos futuros."
+        },
+        {
+          "title": "4. Pagamentos e Taxas",
+          "body": "Alguns eventos podem exigir pagamento. As condições de pagamento, reembolso ou cancelamento são definidas pelo organizador do evento, salvo indicação expressa em contrário."
+        },
+        {
+          "title": "5. Limitação de Responsabilidade",
+          "body": "O JogaBola não se responsabiliza por danos, lesões, cancelamentos, alterações ou falhas técnicas fora do nosso controlo relacionados com eventos organizados através da plataforma."
+        }
+      ]
     },
     "privacy": {
       "title": "Política de Privacidade"

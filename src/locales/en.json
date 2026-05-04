@@ -92,6 +92,10 @@
   },
   "authPage": {
     "title": "Sign in to JogaBola",
+    "registerTitle": "Create an athlete account",
+    "registerSubtitle": "Use your email to create a verified account and come back faster for future matches.",
+    "arena": "Arena",
+    "event": "event",
     "emailLabel": "Email Address",
     "emailPlaceholder": "email@example.com",
     "signIn": "Sign In",
@@ -112,7 +116,7 @@
       "codeSentTitle": "Code sent",
       "codeSentDescription": "We've sent a code to {email}.",
       "loginSuccessTitle": "Login validated",
-      "loginSuccessDescription": "Entering the Arena.",
+      "loginSuccessDescription": "Entering the {destination}.",
       "loginErrorTitle": "Login error",
       "loginErrorDescription": "Could not send the code.",
       "invalidCodeTitle": "Invalid code",
@@ -617,7 +621,18 @@
       "playerCount": "{count} Player{count, plural, =1 {} other {s}}"
     },
     "title": "Squad",
-    "loading": "Loading squad..."
+    "loading": "Loading squad...",
+    "positions": {
+      "GK": "Goalkeeper",
+      "DEF": "Defender",
+      "MID": "Midfielder",
+      "FWD": "Forward",
+      "SUB": "Substitute",
+      "NA": "Not defined"
+    },
+    "notValidated": "Unvalidated Player",
+    "notValidatedDesc": "This player has not yet created their Jogabola account. The complete profile and statistics will be available after validation.",
+    "pendingValidation": "Pending Validation"
   },
   "common": {
     "accept": "Accept",
@@ -1581,5 +1596,48 @@
       "title": "Communication Preferences"
     },
     "title": "Join the Waiting List"
+  },
+  "legal": {
+    "terms": {
+      "title": "Terms and Conditions",
+      "backHome": "Back to Home",
+      "lastUpdated": "Last updated: May 4, 2026",
+      "sections": [
+        {
+          "title": "1. Acceptance of Terms",
+          "body": "By accessing and using JogaBola, you agree to comply with these terms and conditions. If you do not agree with any part of these terms, you should not use our services."
+        },
+        {
+          "title": "2. Use of the Service",
+          "body": "JogaBola is a platform for organizing, managing, and participating in sports events. You may confirm attendance with an account or, when available, as an email-verified guest.",
+          "items": [
+            "Unauthorized commercial use is prohibited.",
+            "Spam, offensive content, and false information are prohibited.",
+            "You are responsible for the accuracy of the information you provide and for keeping your account secure."
+          ]
+        },
+        {
+          "title": "3. Event Registration",
+          "body": "When registering for an event, you confirm that the information provided is accurate and that you accept the rules set by the organizer. Verified accounts help manage attendance, payments, and participation history for future events."
+        },
+        {
+          "title": "4. Payments and Fees",
+          "body": "Some events may require payment. Payment, refund, or cancellation conditions are defined by the event organizer unless expressly stated otherwise."
+        },
+        {
+          "title": "5. Limitation of Liability",
+          "body": "JogaBola is not liable for damages, injuries, cancellations, changes, or technical failures outside our control related to events organized through the platform."
+        }
+      ]
+    },
+    "privacy": {
+      "title": "Privacy Policy"
+    },
+    "disclaimer": {
+      "title": "Disclaimer"
+    },
+    "contact": {
+      "title": "Contact"
+    }
   }
 }

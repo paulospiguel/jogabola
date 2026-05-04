@@ -1,7 +1,7 @@
 import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import { emailOTP } from "better-auth/plugins";
-import { and, eq } from "drizzle-orm";
+import { eq } from "drizzle-orm";
 import { db } from "@/db/client";
 import * as schema from "@/db/schema";
 import { authConfig } from "./auth/config";
@@ -63,7 +63,6 @@ export const auth = betterAuth({
       resendStrategy: "reuse",
       async sendVerificationOTP({ email, otp, type }) {
         if (type !== "sign-in") return;
-
         if (
           !process.env.RESEND_API_KEY &&
           process.env.NODE_ENV !== "production"
@@ -71,22 +70,11 @@ export const auth = betterAuth({
           console.info(`[auth:email-otp] ${email} -> ${otp}`);
           return;
         }
-
-        const { sendEmail } = await import("@/lib/email");
-        await sendEmail({
-          to: email,
-          subject: "Código de acesso JogaBola",
-          html: `
-            <div style="font-family:Arial,sans-serif;background:#0b0f14;color:#f5f7fa;padding:32px">
-              <div style="max-width:420px;margin:auto;background:#111827;border:1px solid #263244;border-radius:18px;padding:28px">
-                <h1 style="font-size:20px;margin:0 0 12px">Entrar no JogaBola</h1>
-                <p style="color:#a7b0be;margin:0 0 20px">Usa este código para validar o teu login.</p>
-                <div style="font-size:32px;letter-spacing:8px;font-weight:800;color:#7cff4f;background:#151c26;border-radius:12px;padding:16px;text-align:center">${otp}</div>
-                <p style="color:#6b7280;font-size:12px;margin:20px 0 0">Este código expira em 5 minutos.</p>
-              </div>
-            </div>
-          `,
-        });
+        const { sendAuthOtp } = await import("@/lib/email");
+        const result = await sendAuthOtp(email, otp);
+        if (!result.success) {
+          throw new Error("AUTH_OTP_EMAIL_SEND_FAILED");
+        }
       },
     }),
   ],

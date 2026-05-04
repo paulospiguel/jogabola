@@ -1,6 +1,6 @@
 "use client";
 
-import { Plus, Search, Users2, Users2Icon, X } from "lucide-react";
+import { Plus, Search, Users2, X } from "lucide-react";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
 import { useState } from "react";
@@ -46,9 +46,9 @@ export function SquadClient({ userId }: { userId: string }) {
   return (
     <>
       {showAdd && (
-        <AddPlayerSheet 
-          onClose={() => setShowAdd(false)} 
-          managerId={userId} 
+        <AddPlayerSheet
+          onClose={() => setShowAdd(false)}
+          managerId={userId}
           teamId={activeTeamId}
         />
       )}

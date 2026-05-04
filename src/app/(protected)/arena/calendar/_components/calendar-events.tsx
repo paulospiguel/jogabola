@@ -58,6 +58,7 @@ type SessionRow = {
   capacity: number | null;
   priceCents: number | null;
   currency: string;
+  status?: "scheduled" | "confirmed" | "cancelled";
 };
 
 type EventType = "game" | "training" | "event";
@@ -173,10 +174,24 @@ function EventCard({ session }: { session: SessionRow }) {
         />
       </div>
       <div className="min-w-0 flex-1">
-        <p className="font-bold text-[13px] text-arena-text truncate">
-          {session.title}
-        </p>
-        <div className="flex items-center gap-2 mt-0.5">
+        <div className="flex items-center gap-1.5 mb-0.5">
+          <p className="font-bold text-[13px] text-arena-text truncate">
+            {session.title}
+          </p>
+          {session.status && session.status !== "scheduled" && (
+            <span
+              className={cn(
+                "shrink-0 rounded-[4px] border px-1 py-px text-[9px] font-bold uppercase tracking-wide",
+                session.status === "confirmed"
+                  ? "text-arena-success bg-arena-success/10 border-arena-success/25"
+                  : "text-arena-danger bg-arena-danger/10 border-arena-danger/25",
+              )}
+            >
+              {session.status === "confirmed" ? "Confirmado" : "Cancelado"}
+            </span>
+          )}
+        </div>
+        <div className="flex items-center gap-2">
           <span className="flex items-center gap-1 text-[11px] text-arena-text-sec">
             <Clock size={10} />
             {formatDuration(session.startsAt, session.endsAt)}

@@ -10,7 +10,7 @@ import { Logo } from "../logo";
 const ITEMS = [
   { href: "/arena", icon: Shield, labelKey: "dashboard" },
   { href: "/arena/events", icon: Calendar, labelKey: "events" },
-  { href: "/arena/teams", icon: Users, labelKey: "teams" },
+  { href: "/arena/squads", icon: Users, labelKey: "squads" },
   { href: "/arena/payments", icon: CreditCard, labelKey: "payments" },
   { href: "/arena/profile", icon: UserRound, labelKey: "profile" },
 ];

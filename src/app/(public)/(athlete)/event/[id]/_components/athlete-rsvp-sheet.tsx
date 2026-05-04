@@ -7,20 +7,25 @@ import {
   MailIcon,
   UserIcon,
 } from "@animateicons/react/lucide";
-import { ArrowLeft, ArrowRight, Sparkles } from "lucide-react";
+import { ArrowLeft, ArrowRight, RotateCcw, Sparkles } from "lucide-react";
 import Link from "next/link";
-import { useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { confirmUserAttendance } from "@/actions/attendance.actions";
 import { requestGuestOTP, verifyGuestOTP } from "@/actions/guest-rsvp.actions";
+import { createPayment, submitPaymentProof } from "@/actions/payments.actions";
 import { JbBottomSheet } from "@/components/arena/jb-bottom-sheet";
+import { PaymentMethodCard } from "@/components/arena/payment-method-card";
 import {
   InputOTP,
   InputOTPGroup,
   InputOTPSeparator,
   InputOTPSlot,
 } from "@/components/ui/input-otp";
+import { useEvent } from "@/hooks/use-events";
+import { useTeamPaymentSettings } from "@/hooks/use-team-payment-settings";
 import { emailOtp, signIn } from "@/lib/auth-client";
 import { cn } from "@/lib/utils";
+import type { PaymentMethod, TeamPaymentConfig } from "@/types/payments";
 
 type Step =
   | "choose"
@@ -28,10 +33,12 @@ type Step =
   | "login-otp"
   | "guest-info"
   | "guest-otp"
+  | "payment"
   | "success";
 
 interface AthleteRsvpSheetProps {
   eventId: number;
+  userId?: string | null;
   onClose: () => void;
   onSuccess: (status: string) => void;
 }
@@ -124,12 +131,124 @@ function SubmitBtn({
   );
 }
 
+const RESEND_SECONDS = 30;
+
+function useResendTimer() {
+  const [seconds, setSeconds] = useState(RESEND_SECONDS);
+  const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
+
+  const start = useCallback(() => {
+    setSeconds(RESEND_SECONDS);
+    if (intervalRef.current) clearInterval(intervalRef.current);
+    intervalRef.current = setInterval(() => {
+      setSeconds(s => {
+        if (s <= 1) {
+          const id = intervalRef.current;
+          if (id) clearInterval(id);
+          return 0;
+        }
+        return s - 1;
+      });
+    }, 1000);
+  }, []);
+
+  useEffect(() => {
+    start();
+    return () => {
+      if (intervalRef.current) clearInterval(intervalRef.current);
+    };
+  }, [start]);
+
+  return { seconds, canResend: seconds === 0, restart: start };
+}
+
+function ResendTimer({
+  onResend,
+  loading,
+}: {
+  onResend: () => Promise<void>;
+  loading: boolean;
+}) {
+  const { seconds, canResend, restart } = useResendTimer();
+  const [resending, setResending] = useState(false);
+
+  async function handleResend() {
+    setResending(true);
+    await onResend();
+    setResending(false);
+    restart();
+  }
+
+  const circumference = 2 * Math.PI * 10; // r=10
+  const progress = (seconds / RESEND_SECONDS) * circumference;
+
+  return (
+    <div className="flex items-center justify-center gap-2.5 pt-1">
+      {canResend ? (
+        <button
+          type="button"
+          disabled={loading || resending}
+          onClick={handleResend}
+          className="flex items-center gap-1.5 rounded-[10px] border border-arena-border bg-arena-surface px-4 py-2 text-[12px] font-bold text-arena-primary transition-all hover:bg-arena-primary/10 disabled:opacity-50"
+        >
+          {resending ? (
+            <LoaderIcon size={14} color="currentColor" />
+          ) : (
+            <RotateCcw size={13} strokeWidth={2.5} />
+          )}
+          Reenviar código
+        </button>
+      ) : (
+        <div className="flex items-center gap-2 text-[12px] text-arena-text-muted">
+          {/* Circular countdown */}
+          <div className="relative flex size-7 items-center justify-center">
+            <svg
+              width="28"
+              height="28"
+              className="-rotate-90"
+              aria-hidden="true"
+            >
+              {/* Track */}
+              <circle
+                cx="14"
+                cy="14"
+                r="10"
+                fill="none"
+                stroke="var(--color-arena-border)"
+                strokeWidth="2"
+              />
+              {/* Progress */}
+              <circle
+                cx="14"
+                cy="14"
+                r="10"
+                fill="none"
+                stroke="var(--color-arena-primary)"
+                strokeWidth="2"
+                strokeDasharray={circumference}
+                strokeDashoffset={circumference - progress}
+                strokeLinecap="round"
+                style={{ transition: "stroke-dashoffset 0.9s linear" }}
+              />
+            </svg>
+            <span className="absolute text-[9px] font-bold tabular-nums text-arena-primary">
+              {seconds}
+            </span>
+          </div>
+          <span>Reenviar em {seconds}s</span>
+        </div>
+      )}
+    </div>
+  );
+}
+
 export function AthleteRsvpSheet({
   eventId,
+  userId,
   onClose,
   onSuccess,
 }: AthleteRsvpSheetProps) {
-  const [step, setStep] = useState<Step>("choose");
+  const [step, setStep] = useState<Step>(userId ? "payment" : "choose");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
@@ -140,9 +259,40 @@ export function AthleteRsvpSheet({
   const [loginEmail, setLoginEmail] = useState("");
   const [loginOtp, setLoginOtp] = useState("");
 
+  const [reservationId, setReservationId] = useState<number | null>(null);
+
+  const { event } = useEvent(eventId);
+  const { settings } = useTeamPaymentSettings(event?.teamId);
+
+  useEffect(() => {
+    if (userId && step === "payment" && !reservationId && !loading) {
+      setLoading(true);
+      confirmUserAttendance(eventId).then(res => {
+        setLoading(false);
+        if (res.success) {
+          setReservationId(res.reservationId);
+        } else {
+          setError(res.error || "Erro ao confirmar presença");
+        }
+      });
+    }
+  }, [userId, step, reservationId, eventId, loading]);
+
   function clearError() {
     setError("");
   }
+
+  const handleNextAfterRsvp = useCallback(
+    (resId?: number) => {
+      if (event?.priceCents && event.priceCents > 0) {
+        if (resId) setReservationId(resId);
+        setStep("payment");
+      } else {
+        setStep("success");
+      }
+    },
+    [event],
+  );
 
   async function handleGuestSendOTP(e: React.FormEvent) {
     e.preventDefault();
@@ -176,6 +326,7 @@ export function AthleteRsvpSheet({
     const res = await verifyGuestOTP(eventId, guestEmail, guestOtp, guestName);
     setLoading(false);
     if (res.success) {
+      onSuccess("confirmed");
       setStep("success");
     } else {
       setError(res.error || "Código inválido.");
@@ -232,11 +383,42 @@ export function AthleteRsvpSheet({
     const confirm = await confirmUserAttendance(eventId);
     setLoading(false);
     if (confirm.success) {
-      setStep("success");
       onSuccess("confirmed");
+      handleNextAfterRsvp(confirm.reservationId);
     } else {
       setError("Sessão criada mas erro ao confirmar presença. Tenta de novo.");
     }
+  }
+
+  async function handlePaymentIntent(method: PaymentMethod) {
+    if (!reservationId || !event) return;
+
+    const res = await createPayment({
+      matchReservationId: reservationId,
+      amountCents: event.priceCents,
+      currency: event.currency,
+      method,
+    });
+
+    if (res.success) {
+      if (method === "cash") {
+        setStep("success");
+      }
+      return res.data;
+    } else {
+      setError("Erro ao processar pagamento.");
+    }
+  }
+
+  async function handleMbwayProof(paymentId: number) {
+    // Placeholder for real proof upload
+    // For now, we'll just submit a dummy URL to mark as paid_unverified
+    await submitPaymentProof({
+      paymentId,
+      fileUrl: "https://example.com/placeholder-proof.jpg",
+      notes: "Pagamento via MBWay confirmado pelo atleta",
+    });
+    setStep("success");
   }
 
   const TITLES: Record<Step, string> = {
@@ -245,8 +427,33 @@ export function AthleteRsvpSheet({
     "login-otp": "Verificar email",
     "guest-info": "Confirmar como Convidado",
     "guest-otp": "Verificar email",
+    payment: "Pagamento",
     success: "Presença Confirmada!",
   };
+
+  const defaultPaymentConfig: TeamPaymentConfig = {
+    stripe: { enabled: false },
+    mbway: { enabled: false },
+    cash: { enabled: true, instructions: "Paga ao capitão no início do jogo." },
+  };
+
+  const paymentConfig: TeamPaymentConfig = settings
+    ? {
+        stripe: {
+          enabled: settings.stripeEnabled,
+          accountId: settings.stripeAccountId ?? undefined,
+        },
+        mbway: {
+          enabled: settings.mbwayEnabled,
+          phone: settings.mbwayPhone ?? undefined,
+          name: settings.mbwayName ?? undefined,
+        },
+        cash: {
+          enabled: settings.cashEnabled,
+          instructions: settings.cashInstructions ?? undefined,
+        },
+      }
+    : defaultPaymentConfig;
 
   return (
     <JbBottomSheet title={TITLES[step]} onClose={onClose}>
@@ -366,6 +573,18 @@ export function AthleteRsvpSheet({
               <CheckIcon size={18} color="currentColor" />
               Entrar e confirmar
             </SubmitBtn>
+            <ResendTimer
+              loading={loading}
+              onResend={async () => {
+                clearError();
+                const result = await emailOtp.sendVerificationOtp({
+                  email: loginEmail.trim().toLowerCase(),
+                  type: "sign-in",
+                });
+                if (result.error)
+                  setError(result.error.message || "Erro ao reenviar.");
+              }}
+            />
           </form>
         )}
 
@@ -443,7 +662,58 @@ export function AthleteRsvpSheet({
               <CheckIcon size={18} color="currentColor" />
               Confirmar presença
             </SubmitBtn>
+            <ResendTimer
+              loading={loading}
+              onResend={async () => {
+                clearError();
+                const res = await requestGuestOTP(
+                  eventId,
+                  guestName.trim(),
+                  guestEmail.trim(),
+                );
+                if (!res.success)
+                  setError(res.error || "Erro ao reenviar PIN.");
+              }}
+            />
           </form>
+        )}
+
+        {/* STEP: payment */}
+        {step === "payment" && event && (
+          <div className="flex flex-col gap-4">
+            <div className="flex flex-col gap-1.5 rounded-[12px] border border-arena-primary/20 bg-arena-primary/5 p-3.5">
+              <div className="flex items-center gap-2">
+                <div className="flex size-7 items-center justify-center rounded-full bg-arena-primary text-arena-bg">
+                  <CheckIcon size={14} color="currentColor" />
+                </div>
+                <p className="text-[13px] font-bold text-arena-text">
+                  Vaga reservada!
+                </p>
+              </div>
+              <p className="text-[12px] text-arena-text-muted">
+                Garante o teu lugar efetuando o pagamento agora.
+              </p>
+            </div>
+
+            <PaymentMethodCard
+              config={paymentConfig}
+              amountCents={event.priceCents}
+              currency={event.currency}
+              onCashIntent={() => handlePaymentIntent("cash")}
+              onMbwayProof={async () => {
+                const p = await handlePaymentIntent("mbway");
+                if (p) handleMbwayProof(p.id);
+              }}
+            />
+
+            <button
+              type="button"
+              onClick={() => setStep("success")}
+              className="mt-2 text-center text-[12px] font-bold text-arena-text-muted hover:text-arena-text"
+            >
+              Pagar mais tarde
+            </button>
+          </div>
         )}
 
         {/* STEP: success */}
@@ -475,7 +745,7 @@ export function AthleteRsvpSheet({
                 atleta. Grátis.
               </p>
               <Link
-                href={`/auth?email=${encodeURIComponent(guestEmail || loginEmail)}`}
+                href={`/auth?mode=register&email=${encodeURIComponent(guestEmail || loginEmail)}&callbackURL=/event/${eventId}`}
                 className={cn(
                   "flex h-[44px] w-full items-center justify-center gap-2 rounded-[12px] bg-arena-primary text-[13px] font-bold text-arena-bg no-underline transition-all hover:bg-arena-primary/90",
                 )}

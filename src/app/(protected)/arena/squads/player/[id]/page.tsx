@@ -1,9 +1,11 @@
 "use client";
 
+import { ShieldUserIcon } from "@animateicons/react/lucide";
 import {
   ArrowLeft,
   Calendar,
   ChevronRight,
+  Clock,
   Mail,
   Star,
   Trophy,
@@ -39,9 +41,7 @@ export default function AthleteProfilePage() {
   if (isLoading) {
     return (
       <div className="jb-page flex items-center justify-center">
-        <Loading
-          text={arenaAthleteProfileTranslation("loading")}
-        />
+        <Loading text={arenaAthleteProfileTranslation("loading")} />
       </div>
     );
   }
@@ -61,6 +61,66 @@ export default function AthleteProfilePage() {
             <ArrowLeft className="mr-2" size={16} />
             {arenaAthleteProfileTranslation("actions.back")}
           </Button>
+        </div>
+      </div>
+    );
+  }
+
+  if (!athlete.isVerified) {
+    return (
+      <div className="jb-page">
+        <div className="jb-page-inner">
+          <header className="mb-8 flex items-center gap-4">
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => router.back()}
+              className="h-10 w-10 rounded-full bg-arena-surface-el hover:bg-arena-primary/10 hover:text-arena-primary"
+            >
+              <ArrowLeft size={20} />
+            </Button>
+            <div>
+              <div className="jb-kicker uppercase">{arenaAthleteProfileTranslation("pendingValidation")}</div>
+              <div className="flex items-center gap-2">
+                <ShieldUserIcon className="size-6 text-arena-text-muted" />
+                <h1 className="jb-title">{arenaAthleteProfileTranslation("title")}</h1>
+              </div>
+            </div>
+          </header>
+
+          <div className="max-w-md mx-auto">
+            <section className="jb-card p-6 flex flex-col items-center text-center gap-4">
+              <div className="flex size-16 items-center justify-center rounded-[18px] border border-arena-border bg-arena-surface">
+                <Clock size={28} className="text-arena-text-muted" strokeWidth={1.5} />
+              </div>
+              <JbAvatar
+                id={athlete.id.toString()}
+                name={athlete.name}
+                image={null}
+                size={72}
+              />
+              <div>
+                <h2 className="text-lg font-bold text-arena-text">{athlete.name}</h2>
+                {athlete.email && (
+                  <div className="mt-1 flex items-center justify-center gap-1.5 text-sm text-arena-text-muted">
+                    <Mail size={13} />
+                    {athlete.email}
+                  </div>
+                )}
+              </div>
+              <div className="rounded-[10px] border border-arena-warning/30 bg-arena-warning/10 px-4 py-3 text-sm text-arena-warning">
+                <p className="font-semibold">{arenaAthleteProfileTranslation("notValidated")}</p>
+                <p className="mt-1 text-xs opacity-80">{arenaAthleteProfileTranslation("notValidatedDesc")}</p>
+              </div>
+              <Button
+                variant="ghost"
+                className="w-full text-arena-danger hover:bg-arena-danger/10 hover:text-arena-danger"
+              >
+                <UserMinus className="mr-2" size={16} />
+                {arenaAthleteProfileTranslation("actions.remove")}
+              </Button>
+            </section>
+          </div>
         </div>
       </div>
     );
@@ -109,7 +169,7 @@ export default function AthleteProfilePage() {
             <div>
               <div className="jb-kicker uppercase">{athlete.role}</div>
               <div className="flex items-center gap-2">
-                <User2 className="size-6 text-arena-primary" />
+                <ShieldUserIcon className="size-6 text-arena-primary" />
                 <h1 className="jb-title">
                   {arenaAthleteProfileTranslation("title")}
                 </h1>
@@ -172,7 +232,8 @@ export default function AthleteProfilePage() {
                     {arenaAthleteProfileTranslation("info.joined")}
                   </div>
                   <div className="mt-1 font-semibold text-arena-text">
-                    {athlete?.createdAt && new Date(athlete?.createdAt).toDateString()}
+                    {athlete?.createdAt &&
+                      new Date(athlete?.createdAt).toDateString()}
                   </div>
                 </div>
                 <div>

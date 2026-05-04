@@ -253,19 +253,49 @@ export const getAthleteProfile = withAuthAction(
       )
       .limit(1);
 
-    if (!athlete) {
+    if (athlete) {
+      return {
+        success: true,
+        data: {
+          ...athlete,
+          isVerified: true,
+          rating: 8.5,
+          goals: 12,
+          assists: 8,
+          games: 15,
+        } as SquadMember,
+      };
+    }
+
+    const [guest] = await db
+      .select({
+        id: players.id,
+        name: players.displayName,
+        email: players.email,
+        image: sql<string | null>`null`,
+        position: players.position,
+        role: sql<string>`'player'`,
+        status: sql<string>`'new'`,
+        isVerified: sql<boolean>`false`,
+        createdAt: players.createdAt,
+      })
+      .from(players)
+      .where(and(eq(players.teamId, teamId), eq(players.id, playerId), isNull(players.userId)))
+      .limit(1);
+
+    if (!guest) {
       return { success: false, error: { code: "ATHLETE_NOT_FOUND" } };
     }
 
     return {
       success: true,
       data: {
-        ...athlete,
-        // Mocked stats for now
-        rating: 8.5,
-        goals: 12,
-        assists: 8,
-        games: 15,
+        ...guest,
+        isVerified: false,
+        rating: 0,
+        goals: 0,
+        assists: 0,
+        games: 0,
       } as SquadMember,
     };
   },

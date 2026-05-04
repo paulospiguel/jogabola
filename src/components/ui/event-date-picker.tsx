@@ -2,22 +2,17 @@
 
 import { format, type Locale, startOfDay } from "date-fns";
 import { enUS, es, fr, ptBR } from "date-fns/locale";
-import { CalendarIcon, Clock } from "lucide-react";
-import { useLocale, useTranslations } from "next-intl";
+import { CalendarIcon } from "lucide-react";
+import { useLocale } from "next-intl";
 import * as React from "react";
+import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import { cn } from "@/lib/utils";
 
 const LOCALE_MAP: Record<string, Locale> = {
@@ -26,6 +21,17 @@ const LOCALE_MAP: Record<string, Locale> = {
   es,
   fr,
 };
+
+const TIME_SLOTS = [
+  "07:00", "07:30", "08:00", "08:30",
+  "09:00", "09:30", "10:00", "10:30",
+  "11:00", "11:30", "12:00", "12:30",
+  "13:00", "13:30", "14:00", "14:30",
+  "15:00", "15:30", "16:00", "16:30",
+  "17:00", "17:30", "18:00", "18:30",
+  "19:00", "19:30", "20:00", "20:30",
+  "21:00", "21:30", "22:00", "22:30",
+];
 
 type EventDatePickerProps = {
   value?: Date | null;
@@ -44,38 +50,27 @@ export function EventDatePicker({
 }: EventDatePickerProps) {
   const locale = useLocale();
   const dateFnsLocale = LOCALE_MAP[locale] ?? ptBR;
-  const t = useTranslations();
-
   const [open, setOpen] = React.useState(false);
 
-  // Derive HH:mm from value, rounding minutes to nearest 5
-  let hStr = "";
-  let mStr = "";
-  if (value) {
-    hStr = String(value.getHours()).padStart(2, "0");
-    const m = value.getMinutes();
-    const roundedM = Math.round(m / 5) * 5;
-    mStr = String(roundedM === 60 ? 55 : roundedM).padStart(2, "0"); // prevent 60
-  }
-  const timeStr = value ? `${hStr}:${mStr}` : "";
+  const selectedTimeStr = value
+    ? `${String(value.getHours()).padStart(2, "0")}:${String(value.getMinutes()).padStart(2, "0")}`
+    : null;
 
-  /** Merge a newly selected calendar day with the existing time (or 00:00) */
   const handleDaySelect = (day: Date | undefined) => {
     if (!day) {
       onChange?.(null);
       return;
     }
-    const [h, m] = timeStr ? timeStr.split(":").map(Number) : [0, 0];
+    const [h, m] = selectedTimeStr ? selectedTimeStr.split(":").map(Number) : [0, 0];
     const merged = new Date(day);
     merged.setHours(h, m, 0, 0);
     onChange?.(merged);
   };
 
-  /** Merge a new time string with the existing calendar date (or today) */
-  const handleTimeChangeStr = (newTimeStr: string) => {
-    const [h, m] = newTimeStr.split(":").map(Number);
+  const handleTimeSelect = (slot: string) => {
+    const [h, m] = slot.split(":").map(Number);
     const base = value ? new Date(value) : new Date();
-    base.setHours(h ?? 0, m ?? 0, 0, 0);
+    base.setHours(h, m, 0, 0);
     onChange?.(base);
   };
 
@@ -101,82 +96,59 @@ export function EventDatePicker({
           </button>
         </PopoverTrigger>
 
-        {/* z-[10000] to appear above the bottom sheet (z-[9999]) */}
         <PopoverContent
           align="center"
           className="w-auto rounded-2xl border border-arena-border bg-arena-bg-sec p-0 shadow-[0_16px_48px_rgba(0,0,0,.7)] z-[10000]"
         >
-          <Calendar
-            mode="single"
-            captionLayout="label"
-            selected={value ?? undefined}
-            onSelect={handleDaySelect}
-            /* Allow today and all future dates */
-            fromDate={startOfDay(new Date())}
-            locale={dateFnsLocale}
-            className="bg-transparent"
-            classNames={{
-              root: "text-arena-text",
-              today:
-                "border border-arena-primary/40 text-arena-primary rounded-md",
-              selected:
-                "[&_button]:!bg-arena-primary [&_button]:!text-arena-bg [&_button]:font-semibold",
-              disabled: "opacity-30 cursor-not-allowed",
-            }}
-          />
+          <div className="flex max-sm:flex-col">
+            <Calendar
+              mode="single"
+              captionLayout="label"
+              selected={value ?? undefined}
+              onSelect={handleDaySelect}
+              fromDate={startOfDay(new Date())}
+              locale={dateFnsLocale}
+              className="bg-transparent"
+              classNames={{
+                root: "text-arena-text",
+                today: "border border-arena-primary/40 text-arena-primary rounded-md",
+                selected:
+                  "[&_button]:!bg-arena-primary [&_button]:!text-arena-bg [&_button]:font-semibold",
+                disabled: "opacity-30 cursor-not-allowed",
+              }}
+            />
 
-          {/* Time input row */}
-          <div className="flex items-center gap-2.5 border-t border-arena-border px-3 pb-3 pt-2.5">
-            <Clock className="size-4 shrink-0 text-arena-text-muted" />
-            <span className="text-xs font-semibold text-arena-text-sec">
-              {t("common.hour")}
-            </span>
-            <div className="ml-auto flex items-center gap-1">
-              <Select
-                value={timeStr ? timeStr.split(":")[0] : "00"}
-                onValueChange={(val) => {
-                  const m = timeStr ? timeStr.split(":")[1] : "00";
-                  handleTimeChangeStr(`${val}:${m}`);
-                }}
-              >
-                <SelectTrigger className="h-8 w-16 px-2 text-sm border-arena-border bg-arena-surface text-arena-text">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent position="popper" className="max-h-48 min-w-[5rem]">
-                  {Array.from({ length: 24 }).map((_, i) => {
-                    const v = String(i).padStart(2, "0");
-                    return (
-                      <SelectItem key={v} value={v}>
-                        {v}
-                      </SelectItem>
-                    );
-                  })}
-                </SelectContent>
-              </Select>
-
-              <span className="text-arena-text-muted font-bold">:</span>
-
-              <Select
-                value={timeStr ? timeStr.split(":")[1] : "00"}
-                onValueChange={(val) => {
-                  const h = timeStr ? timeStr.split(":")[0] : "00";
-                  handleTimeChangeStr(`${h}:${val}`);
-                }}
-              >
-                <SelectTrigger className="h-8 w-16 px-2 text-sm border-arena-border bg-arena-surface text-arena-text">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent position="popper" className="max-h-48 min-w-[5rem]">
-                  {Array.from({ length: 12 }).map((_, i) => {
-                    const v = String(i * 5).padStart(2, "0");
-                    return (
-                      <SelectItem key={v} value={v}>
-                        {v}
-                      </SelectItem>
-                    );
-                  })}
-                </SelectContent>
-              </Select>
+            <div className="relative w-full max-sm:h-52 sm:w-36">
+              <div className="absolute inset-0 py-3 max-sm:border-t border-arena-border">
+                <ScrollArea className="h-full sm:border-s border-arena-border">
+                  <div className="space-y-2.5">
+                    <div className="flex h-5 shrink-0 items-center px-4">
+                      <p className="text-[11px] font-semibold text-arena-text-muted uppercase tracking-wide">
+                        {value ? format(value, "EEE, d", { locale: dateFnsLocale }) : "Hora"}
+                      </p>
+                    </div>
+                    <div className="grid gap-1 px-3">
+                      {TIME_SLOTS.map(slot => (
+                        <Button
+                          key={slot}
+                          type="button"
+                          size="sm"
+                          variant={selectedTimeStr === slot ? "default" : "outline"}
+                          onClick={() => handleTimeSelect(slot)}
+                          className={cn(
+                            "w-full h-8 text-[12px] font-semibold rounded-lg border transition-colors",
+                            selectedTimeStr === slot
+                              ? "bg-arena-primary text-arena-bg border-arena-primary hover:bg-arena-primary/90"
+                              : "border-arena-border bg-transparent text-arena-text-sec hover:border-arena-primary/40 hover:text-arena-text hover:bg-arena-primary/5",
+                          )}
+                        >
+                          {slot}
+                        </Button>
+                      ))}
+                    </div>
+                  </div>
+                </ScrollArea>
+              </div>
             </div>
           </div>
         </PopoverContent>

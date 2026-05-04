@@ -8,7 +8,7 @@ import {
   ShareIcon,
   XIcon,
 } from "@animateicons/react/lucide";
-import { ArrowLeft, Calendar, Clock, Trophy } from "lucide-react";
+import { ArrowLeft, Banknote, Calendar, Clock, Trophy } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -18,6 +18,7 @@ import {
 } from "@/actions/attendance.actions";
 import { JbAvatar } from "@/components/arena/jb-avatar";
 import { JbBadge } from "@/components/arena/jb-badge";
+import { LocationMap } from "@/components/arena/location-map";
 import { Logo } from "@/components/logo";
 import { useEventAttendance } from "@/hooks/use-event-attendance";
 import { cn } from "@/lib/utils";
@@ -26,6 +27,7 @@ import { CountdownTimer } from "./countdown-timer";
 
 interface Event {
   id: number;
+  teamId: number;
   title: string;
   type: string;
   location: string;
@@ -33,6 +35,8 @@ interface Event {
   status: string;
   recurrence: string;
   maxParticipants?: string | null;
+  priceCents: number;
+  currency: string;
   description?: string | null;
   images?: string[];
 }
@@ -272,10 +276,13 @@ export function AthleteEventDetail({
   const isFull = confirmed.length >= total;
 
   async function handleConfirm() {
-    if (!userId) {
+    // If not logged in OR if it's a paid event, use the RSVP sheet flow
+    if (!userId || (event.priceCents && event.priceCents > 0)) {
       setShowRsvpSheet(true);
       return;
     }
+
+    // Direct confirmation only for free events when logged in
     setActionLoading(true);
     const res = await confirmUserAttendance(event.id);
     if (res.success) {
@@ -367,6 +374,13 @@ export function AthleteEventDetail({
             {
               Icon: <MapPinIcon size={14} color="currentColor" />,
               label: event.location,
+            },
+            {
+              Icon: <Banknote size={14} className="text-arena-text-muted" />,
+              label:
+                event.priceCents > 0
+                  ? `${(event.priceCents / 100).toFixed(2).replace(".", ",")} ${event.currency}`
+                  : "Grátis",
             },
           ].map(({ Icon, label }) => (
             <div key={label} className="flex items-center gap-2.5">
@@ -534,36 +548,7 @@ export function AthleteEventDetail({
 
         {tab === "local" && (
           <div className="px-4 py-4">
-            <div className="overflow-hidden rounded-[16px] border border-arena-border bg-arena-surface">
-              <div className="flex h-28 items-center justify-center bg-arena-bg-sec">
-                <span className="text-arena-primary">
-                  <MapPinIcon size={36} color="currentColor" />
-                </span>
-              </div>
-              <div className="px-4 py-4">
-                <p className="mb-3 text-[14px] font-semibold text-arena-text">
-                  {event.location}
-                </p>
-                <div className="flex gap-2">
-                  <Link
-                    href={`https://www.google.com/maps/search/${encodeURIComponent(event.location)}`}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="flex h-10 flex-1 items-center justify-center rounded-[10px] border border-arena-border bg-arena-surface-el text-[12px] font-semibold text-arena-text-sec no-underline transition-colors hover:bg-arena-surface hover:text-arena-text"
-                  >
-                    Google Maps
-                  </Link>
-                  <Link
-                    href={`https://maps.apple.com/?q=${encodeURIComponent(event.location)}`}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="flex h-10 flex-1 items-center justify-center rounded-[10px] border border-arena-border bg-arena-surface-el text-[12px] font-semibold text-arena-text-sec no-underline transition-colors hover:bg-arena-surface hover:text-arena-text"
-                  >
-                    Apple Maps
-                  </Link>
-                </div>
-              </div>
-            </div>
+            <LocationMap location={event.location} />
 
             {event.description && (
               <div className="mt-4 rounded-[14px] border border-arena-border bg-arena-surface p-4">
@@ -614,15 +599,25 @@ export function AthleteEventDetail({
               {isFull ? "Entrar na lista de espera" : "Confirmar presença"}
             </button>
             {!userId && (
-              <p className="text-center text-[11px] text-arena-text-muted">
-                Já tens conta?{" "}
-                <Link
-                  href={`/auth?callbackURL=/event/${event.id}`}
-                  className="font-semibold text-arena-primary hover:underline"
-                >
-                  Entra para confirmar mais rápido
-                </Link>
-              </p>
+              <div className="rounded-[14px] border border-arena-border bg-arena-surface p-3.5">
+                <p className="mb-2.5 text-center text-[12px] font-semibold text-arena-text-sec">
+                  Tens conta Jogabola? Entra para gerir a tua presença.
+                </p>
+                <div className="flex gap-2">
+                  <Link
+                    href={`/auth?callbackURL=/event/${event.id}`}
+                    className="flex h-10 flex-1 items-center justify-center rounded-[10px] border border-arena-border bg-arena-surface-el text-[13px] font-bold text-arena-text-sec no-underline transition-colors hover:bg-arena-surface hover:text-arena-text"
+                  >
+                    Entrar
+                  </Link>
+                  <Link
+                    href={`/auth?mode=register&callbackURL=/event/${event.id}`}
+                    className="flex h-10 flex-1 items-center justify-center rounded-[10px] bg-arena-primary text-[13px] font-bold text-arena-bg no-underline transition-colors hover:bg-arena-primary/90"
+                  >
+                    Criar conta
+                  </Link>
+                </div>
+              </div>
             )}
           </div>
         )}
@@ -631,10 +626,10 @@ export function AthleteEventDetail({
       {showRsvpSheet && (
         <AthleteRsvpSheet
           eventId={event.id}
+          userId={userId}
           onClose={() => setShowRsvpSheet(false)}
           onSuccess={status => {
             setMyStatus(status);
-            setShowRsvpSheet(false);
             refetch();
           }}
         />

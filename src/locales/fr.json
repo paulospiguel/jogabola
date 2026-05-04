@@ -560,12 +560,18 @@
       "playerCount": "{count} Joueur{count, plural, =1 {} other {s}}"
     },
     "title": "Effectif",
+    "loading": "Chargement de l'effectif...",
     "positions": {
       "GK": "Gardien",
-      "CB": "Défenseur",
+      "DEF": "Défenseur",
       "MID": "Milieu",
-      "FW": "Attaquant"
-    }
+      "FWD": "Attaquant",
+      "SUB": "Remplaçant",
+      "NA": "Non défini"
+    },
+    "notValidated": "Joueur non validé",
+    "notValidatedDesc": "Ce joueur n'a pas encore créé son compte Jogabola. Le profil complet et les statistiques seront disponibles après validation.",
+    "pendingValidation": "Validation en attente"
   },
   "common": {
     "accept": "Accepter",
@@ -1425,5 +1431,87 @@
       "title": "Communication Preferences"
     },
     "title": "Join the Waiting List"
+  },
+  "authPage": {
+    "title": "Connexion à JogaBola",
+    "registerTitle": "Créer un compte athlète",
+    "registerSubtitle": "Utilise ton email pour créer un compte vérifié et revenir plus vite lors des prochains matchs.",
+    "arena": "Arena",
+    "event": "événement",
+    "emailLabel": "Adresse email",
+    "emailPlaceholder": "email@exemple.com",
+    "signIn": "Connexion",
+    "googleLogin": "Connexion avec Google",
+    "appleLogin": "Connexion avec Apple",
+    "orEmail": "ou connexion avec email",
+    "verifyEmail": "Vérifie ton email",
+    "codeSentTo": "Nous avons envoyé un code d'accès à",
+    "codeLabel": "Code d'accès",
+    "codePlaceholder": "Ex : 123456",
+    "validateCode": "Valider le code",
+    "changeEmail": "Changer d'email",
+    "terms": "Conditions",
+    "privacy": "Confidentialité",
+    "termsAgreement": "En te connectant, tu acceptes nos <terms>Conditions d'utilisation</terms> et notre <privacy>Politique de Confidentialité</privacy>",
+    "back": "Retour",
+    "messages": {
+      "codeSentTitle": "Code envoyé",
+      "codeSentDescription": "Nous avons envoyé un code à {email}.",
+      "loginSuccessTitle": "Connexion validée",
+      "loginSuccessDescription": "Ouverture de {destination}.",
+      "loginErrorTitle": "Erreur de connexion",
+      "loginErrorDescription": "Impossible d'envoyer le code.",
+      "invalidCodeTitle": "Code invalide",
+      "invalidCodeDescription": "Vérifie le code et réessaie.",
+      "socialError": "Connexion impossible."
+    },
+    "validation": {
+      "invalidEmail": "Email invalide",
+      "incompleteCode": "Saisis le code complet",
+      "numbersOnly": "Chiffres uniquement"
+    }
+  },
+  "legal": {
+    "terms": {
+      "title": "Conditions Générales",
+      "backHome": "Retour à l'accueil",
+      "lastUpdated": "Dernière mise à jour : 4 mai 2026",
+      "sections": [
+        {
+          "title": "1. Acceptation des Conditions",
+          "body": "En accédant à JogaBola et en l'utilisant, tu acceptes de respecter ces conditions générales. Si tu n'acceptes pas une partie de ces conditions, tu ne dois pas utiliser nos services."
+        },
+        {
+          "title": "2. Utilisation du Service",
+          "body": "JogaBola est une plateforme permettant d'organiser, de gérer et de participer à des événements sportifs. Tu peux confirmer ta présence avec un compte ou, lorsque disponible, comme invité vérifié par email.",
+          "items": [
+            "L'utilisation commerciale non autorisée est interdite.",
+            "Le spam, les contenus offensants et les fausses informations sont interdits.",
+            "Tu es responsable de l'exactitude des informations fournies et de la sécurité de ton compte."
+          ]
+        },
+        {
+          "title": "3. Inscription aux Événements",
+          "body": "En t'inscrivant à un événement, tu confirmes que les informations fournies sont exactes et que tu acceptes les règles définies par l'organisateur. Les comptes vérifiés aident à gérer les présences, les paiements et l'historique de participation aux prochains événements."
+        },
+        {
+          "title": "4. Paiements et Frais",
+          "body": "Certains événements peuvent nécessiter un paiement. Les conditions de paiement, de remboursement ou d'annulation sont définies par l'organisateur de l'événement, sauf indication contraire explicite."
+        },
+        {
+          "title": "5. Limitation de Responsabilité",
+          "body": "JogaBola n'est pas responsable des dommages, blessures, annulations, modifications ou défaillances techniques hors de notre contrôle liés aux événements organisés via la plateforme."
+        }
+      ]
+    },
+    "privacy": {
+      "title": "Politique de Confidentialité"
+    },
+    "disclaimer": {
+      "title": "Mentions Légales"
+    },
+    "contact": {
+      "title": "Contact"
+    }
   }
 }

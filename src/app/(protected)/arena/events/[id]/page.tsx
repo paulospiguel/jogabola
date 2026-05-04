@@ -16,7 +16,7 @@ export default async function ArenaEventDetailPage({ params }: Params) {
   const user = session?.user;
 
   if (!user) {
-    redirect("/auth/sign-in");
+    redirect(`/event/${eventId}`);
   }
 
   const result = await getEvent(eventId);
@@ -31,13 +31,13 @@ export default async function ArenaEventDetailPage({ params }: Params) {
   }
 
   // In the arena version, we assume the user has some level of access if they are here
-  // We can pass isAdmin=true for now as it's the "Manage" view, 
+  // We can pass isAdmin=true for now as it's the "Manage" view,
   // but ideally we check if user is admin of the team.
-  
+
   return (
     <div className="jb-page">
       <div className="jb-page-inner max-w-5xl">
-        <EventDetail event={event as any} userId={user.id} canEdit={true} />
+        <EventDetail event={event} userId={user.id} canEdit={true} />
       </div>
     </div>
   );

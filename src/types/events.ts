@@ -1,5 +1,8 @@
+export type EventStatus = "scheduled" | "confirmed" | "cancelled";
+
 export type EventView = {
   id: number;
+  teamId: number;
   title: string;
   description: string | null;
   type: string;
@@ -17,11 +20,13 @@ export type EventView = {
   participationCriteria: Record<string, unknown>;
   currentParticipants: string;
   maxParticipants: string | null;
+  priceCents: number;
+  currency: string;
   organizerId: string;
   organizer: string | null;
   language: string | null;
   images: string[];
-  status: string;
+  status: EventStatus;
   createdAt: Date;
   updatedAt: Date;
 };

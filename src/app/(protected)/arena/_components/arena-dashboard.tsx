@@ -46,7 +46,9 @@ export function ArenaDashboard({ userId }: ArenaDashboardProps) {
     isLoading,
   } = useDashboardData();
 
-  const activeTeam = myTeams.find((team: any) => team.id === activeTeamId);
+  const activeTeam = myTeams.find(
+    (team: { id: number }) => team.id === activeTeamId,
+  );
 
   if (isLoading) {
     return (
@@ -93,7 +95,7 @@ export function ArenaDashboard({ userId }: ArenaDashboardProps) {
   return (
     <>
       {sheet === "create-event" && (
-        <CreateEventSheet organizerId={userId} onClose={() => setSheet(null)} />
+        <CreateEventSheet onClose={() => setSheet(null)} />
       )}
       {sheet === "add-player" && (
         <AddPlayerSheet

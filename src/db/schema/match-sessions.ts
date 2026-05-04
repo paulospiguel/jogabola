@@ -12,7 +12,7 @@ export const matchSessions = pgTable("match_sessions", {
   startsAt: timestamp("starts_at").notNull(),
   endsAt: timestamp("ends_at"),
   capacity: integer("capacity"),
-  status: text("status").notNull().default("scheduled"), // "scheduled", "canceled", "completed"
+  status: text("status").notNull().default("scheduled"), // "scheduled" | "confirmed" | "cancelled"
   recurrence: text("recurrence").notNull().default("once"), // "once", "weekly", "monthly"
   priceCents: integer("price_cents").default(0),
   currency: text("currency").notNull().default("EUR"),

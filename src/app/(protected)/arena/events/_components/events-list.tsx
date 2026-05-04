@@ -1,6 +1,14 @@
 "use client";
 
-import { Calendar, CalendarDays, Clock, MapPin, Plus, Shield, Trophy } from "lucide-react";
+import {
+  Calendar,
+  CalendarDays,
+  Clock,
+  Layers,
+  MapPin,
+  Plus,
+  Shield,
+} from "lucide-react";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
 import { useState } from "react";
@@ -8,12 +16,43 @@ import { CreateEventSheet } from "@/components/arena/create-event-sheet";
 import { JbUserMenu } from "@/components/arena/jb-user-menu";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import type { EventView } from "@/types/events";
+import type { EventStatus, EventView } from "@/types/events";
 
 interface EventsListProps {
   upcoming: EventView[];
   past: EventView[];
-  userId: string;
+}
+
+const STATUS_CONFIG: Record<EventStatus, { label: string; className: string }> =
+  {
+    scheduled: {
+      label: "status.scheduled",
+      className: "text-arena-info bg-arena-info/10 border-arena-info/25",
+    },
+    confirmed: {
+      label: "status.confirmed",
+      className:
+        "text-arena-success bg-arena-success/10 border-arena-success/25",
+    },
+    cancelled: {
+      label: "status.cancelled",
+      className: "text-arena-danger bg-arena-danger/10 border-arena-danger/25",
+    },
+  };
+
+function EventStatusBadge({ status }: { status: EventStatus }) {
+  const t = useTranslations("arenaEvents");
+  const cfg = STATUS_CONFIG[status] ?? STATUS_CONFIG.scheduled;
+  return (
+    <span
+      className={cn(
+        "rounded-[5px] border px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-wide",
+        cfg.className,
+      )}
+    >
+      {t(cfg.label)}
+    </span>
+  );
 }
 
 function formatDate(d: Date | string) {
@@ -51,7 +90,7 @@ function EventCard({ event }: { event: EventView }) {
             )}
           >
             {isGame ? (
-              <Trophy size={13} className="text-arena-primary" />
+              <Shield size={13} className="text-arena-primary" />
             ) : (
               <Calendar size={13} className="text-arena-info" />
             )}
@@ -65,6 +104,7 @@ function EventCard({ event }: { event: EventView }) {
             {isGame ? t("types.match") : t("types.training")}
           </span>
         </div>
+        <EventStatusBadge status={event.status} />
       </div>
 
       <div className="mb-2 text-sm font-semibold leading-snug text-arena-text md:text-base">
@@ -97,7 +137,7 @@ function EventCard({ event }: { event: EventView }) {
   );
 }
 
-export function EventsList({ upcoming, past, userId }: EventsListProps) {
+export function EventsList({ upcoming, past }: EventsListProps) {
   const t = useTranslations("arenaEvents");
   const [sheet, setSheet] = useState(false);
 
@@ -105,12 +145,7 @@ export function EventsList({ upcoming, past, userId }: EventsListProps) {
 
   return (
     <>
-      {sheet ? (
-        <CreateEventSheet
-          organizerId={userId}
-          onClose={() => setSheet(false)}
-        />
-      ) : null}
+      {sheet ? <CreateEventSheet onClose={() => setSheet(false)} /> : null}
 
       <div className="jb-page">
         <div className="jb-page-inner">
@@ -118,15 +153,12 @@ export function EventsList({ upcoming, past, userId }: EventsListProps) {
             <div>
               <div className="jb-kicker">{t("kicker")}</div>
               <div className="flex items-center gap-2">
-                <Shield className="size-6 text-arena-primary" />
+                <Layers className="size-6 text-arena-primary" />
                 <h1 className="jb-title">{t("title")}</h1>
               </div>
             </div>
             <div className="flex items-center gap-2">
-              <Link
-                href="/arena/calendar"
-                className="jb-action h-12"
-              >
+              <Link href="/arena/calendar" className="jb-action h-12">
                 <CalendarDays size={14} strokeWidth={2} />
                 {t("actions.viewCalendar")}
               </Link>
@@ -147,7 +179,11 @@ export function EventsList({ upcoming, past, userId }: EventsListProps) {
           {!hasEvents ? (
             <div className="jb-card mx-auto grid max-w-md place-items-center px-6 py-14 text-center">
               <div className="mb-4 grid size-14 place-items-center rounded-[18px] border border-arena-border bg-arena-surface">
-                <Calendar size={24} className="text-arena-text-muted" strokeWidth={1.5} />
+                <Calendar
+                  size={24}
+                  className="text-arena-text-muted"
+                  strokeWidth={1.5}
+                />
               </div>
               <div className="text-[15px] font-semibold text-arena-text">
                 {t("empty.title")}

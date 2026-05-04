@@ -1,5 +1,7 @@
 import { z } from "zod";
 
+export const PAYMENT_METHODS = ["stripe", "mbway", "cash"] as const;
+
 export const createPaymentSchema = z.object({
   matchReservationId: z
     .number()
@@ -10,7 +12,7 @@ export const createPaymentSchema = z.object({
     .int()
     .positive({ message: "VALIDATION_AMOUNT_REQUIRED" }),
   currency: z.string().length(3).default("EUR"),
-  method: z.enum(["manual_mbway", "stripe", "paypal"]),
+  method: z.enum(PAYMENT_METHODS),
 });
 
 export const submitPaymentProofSchema = z.object({
@@ -40,6 +42,24 @@ export const verifyPaymentProofSchema = z.object({
   }),
 });
 
+export const upsertTeamPaymentSettingsSchema = z.object({
+  teamId: z.number().int().positive(),
+  stripeEnabled: z.boolean().default(false),
+  stripeAccountId: z.string().optional(),
+  mbwayEnabled: z.boolean().default(false),
+  mbwayPhone: z
+    .string()
+    .regex(/^\+?[0-9\s]{9,15}$/, "Número inválido")
+    .optional()
+    .or(z.literal("")),
+  mbwayName: z.string().max(80).optional(),
+  cashEnabled: z.boolean().default(true),
+  cashInstructions: z.string().max(300).optional(),
+});
+
 export type CreatePaymentInput = z.infer<typeof createPaymentSchema>;
 export type SubmitPaymentProofInput = z.infer<typeof submitPaymentProofSchema>;
 export type VerifyPaymentProofInput = z.infer<typeof verifyPaymentProofSchema>;
+export type UpsertTeamPaymentSettingsInput = z.infer<
+  typeof upsertTeamPaymentSettingsSchema
+>;

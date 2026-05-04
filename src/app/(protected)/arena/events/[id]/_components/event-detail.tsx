@@ -19,6 +19,7 @@ import { JbAvatar } from "@/components/arena/jb-avatar";
 import { JbBadge } from "@/components/arena/jb-badge";
 import { JbScreenHeader } from "@/components/arena/jb-screen-header";
 import { EditEventSheet } from "@/components/arena/edit-event-sheet";
+import { LocationMap } from "@/components/arena/location-map";
 import { Button } from "@/components/ui/button";
 import { useEventAttendance } from "@/hooks/use-event-attendance";
 import { cn } from "@/lib/utils";
@@ -70,7 +71,7 @@ function ShareBar({
   const [url, setUrl] = useState("");
 
   useEffect(() => {
-    setUrl(`${window.location.origin}/arena/events/${eventId}`);
+    setUrl(`${window.location.origin}/event/${eventId}`);
   }, [eventId]);
 
   const message = t("share.message", { title: eventTitle });
@@ -358,34 +359,7 @@ export function EventDetail({ event, userId, canEdit = false }: EventDetailProps
 
         {tab === "local" && (
           <div className="px-5 py-3.5">
-            <div className="mb-3.5 overflow-hidden rounded-[16px] border border-arena-border bg-arena-surface">
-              <div className="flex h-24 items-center justify-center bg-arena-bg-sec">
-                <MapPin size={32} className="text-arena-primary" />
-              </div>
-              <div className="px-3.5 py-3">
-                <div className="mb-2.5 text-[13px] font-semibold text-arena-text">
-                  {event.location}
-                </div>
-                <div className="flex gap-1.5">
-                  <Link
-                    href={`https://www.google.com/maps/search/${encodeURIComponent(event.location)}`}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="flex h-9 flex-1 items-center justify-center rounded-[10px] border border-arena-border bg-arena-surface-el text-[12px] font-semibold text-arena-text-sec no-underline transition-colors hover:bg-arena-surface hover:text-arena-text"
-                  >
-                    Google Maps
-                  </Link>
-                  <Link
-                    href={`https://maps.apple.com/?q=${encodeURIComponent(event.location)}`}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="flex h-9 flex-1 items-center justify-center rounded-[10px] border border-arena-border bg-arena-surface-el text-[12px] font-semibold text-arena-text-sec no-underline transition-colors hover:bg-arena-surface hover:text-arena-text"
-                  >
-                    Apple Maps
-                  </Link>
-                </div>
-              </div>
-            </div>
+            <LocationMap location={event.location} eventId={event.id} canEdit={canEdit} />
           </div>
         )}
       </div>

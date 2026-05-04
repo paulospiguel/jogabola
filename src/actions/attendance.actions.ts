@@ -4,7 +4,7 @@ import { and, eq } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { headers } from "next/headers";
 import { db } from "@/db/client";
-import { attendance } from "@/db/schema";
+import { attendance, matchReservations, user } from "@/db/schema";
 import { withAction } from "@/lib/action-helpers";
 import { auth } from "@/lib/auth";
 import { upsertAttendanceSchema } from "@/schemas/attendance.schema";
@@ -31,8 +31,6 @@ export async function getAttendanceForMatchSession(matchSessionId: number) {
     .where(eq(attendance.matchSessionId, matchSessionId));
   return { success: true as const, data: rows };
 }
-
-import { user } from "@/db/schema";
 
 export async function getEventAttendanceWithUsers(eventId: number) {
   const records = await db
@@ -78,12 +76,15 @@ export async function confirmUserAttendance(eventId: number) {
     return { success: false as const, error: "Não autenticado" };
   }
 
+  const userId = session.user.id;
+
   try {
+    // 1. Upsert attendance
     await db
       .insert(attendance)
       .values({
         matchSessionId: eventId,
-        playerId: session.user.id,
+        playerId: userId,
         status: "confirmed",
         updatedAt: new Date(),
       })
@@ -92,9 +93,24 @@ export async function confirmUserAttendance(eventId: number) {
         set: { status: "confirmed", updatedAt: new Date() },
       });
 
+    // 2. Upsert match_reservation (required for payments)
+    const [reservation] = await db
+      .insert(matchReservations)
+      .values({
+        matchSessionId: eventId,
+        playerId: userId,
+        status: "reserved_unpaid",
+        updatedAt: new Date(),
+      })
+      .onConflictDoUpdate({
+        target: [matchReservations.matchSessionId, matchReservations.playerId],
+        set: { updatedAt: new Date() },
+      })
+      .returning();
+
     revalidatePath(`/event/${eventId}`);
     revalidatePath(`/arena/events/${eventId}`);
-    return { success: true as const };
+    return { success: true as const, reservationId: reservation.id };
   } catch {
     return { success: false as const, error: "Erro ao confirmar presença" };
   }
