@@ -106,7 +106,7 @@
     "changeEmail": "Alterar Email",
     "terms": "Termos",
     "privacy": "Privacidade",
-    "termsAgreement": "Ao entrar, aceitas os nossos {terms} e a {privacy}",
+    "termsAgreement": "Ao entrar, aceitas os nossos <terms>Termos de Serviço</terms> e a <privacy>Política de Privacidade</privacy>",
     "back": "Voltar",
     "messages": {
       "codeSentTitle": "Código enviado",
@@ -825,13 +825,14 @@
       "about": "Sobre",
       "academy": "Academia",
       "community": "Comunidade",
-      "contact": "Contato",
+      "contact": "Contactos",
       "cookies": "Cookies",
-      "features": "Recursos",
-      "partners": "Tornar-se Parceiro",
+      "disclaimer": "Aviso Legal",
+      "features": "Funcionalidades",
+      "partners": "Parceiros",
       "plans": "Planos",
       "privacy": "Privacidade",
-      "terms": "Termos"
+      "terms": "Termos e Condições"
     },
     "privacyPolicy": "Política de Privacidade",
     "systems": "SISTEMAS OPERACIONAIS",
@@ -1567,5 +1568,19 @@
       "title": "Preferências de Comunicação"
     },
     "title": "Junta-te à Lista de Espera"
+  },
+  "legal": {
+    "terms": {
+      "title": "Termos e Condições"
+    },
+    "privacy": {
+      "title": "Política de Privacidade"
+    },
+    "disclaimer": {
+      "title": "Aviso Legal"
+    },
+    "contact": {
+      "title": "Contactos"
+    }
   }
 }

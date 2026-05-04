@@ -80,9 +80,7 @@ export default function Header() {
         </div>
 
         <div className="flex items-center space-x-4">
-          <div className="hidden md:flex items-center">
-            <LanguageSelector />
-          </div>
+
 
           {!isLoading &&
             buttons.map(button => {
@@ -222,6 +220,10 @@ export default function Header() {
               </SheetFooter>
             </SheetContent>
           </Sheet>
+
+          <div className="hidden md:flex items-center">
+            <LanguageSelector />
+          </div>
         </div>
       </div>
     </motion.header>

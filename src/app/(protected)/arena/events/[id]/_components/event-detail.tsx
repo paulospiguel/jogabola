@@ -36,6 +36,7 @@ interface EventDetailProps {
     description?: string | null;
   };
   userId: string;
+  canEdit?: boolean;
 }
 
 function formatDate(d: Date | string) {
@@ -136,7 +137,7 @@ function ShareBar({
   );
 }
 
-export function EventDetail({ event }: EventDetailProps) {
+export function EventDetail({ event, userId, canEdit = false }: EventDetailProps) {
   const t = useTranslations("arenaEventDetail");
   const [tab, setTab] = useState<Tab>("conv");
   const [myStatus, setMyStatus] = useState<"pending" | "confirmed">("pending");

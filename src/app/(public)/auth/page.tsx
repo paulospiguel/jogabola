@@ -399,7 +399,7 @@ export default function LoginPage() {
                 terms: chunks => (
                   <Link
                     className="text-arena-text-sec hover:text-arena-primary transition-colors underline underline-offset-2"
-                    href="#"
+                    href="/terms"
                   >
                     {chunks}
                   </Link>
@@ -407,7 +407,7 @@ export default function LoginPage() {
                 privacy: chunks => (
                   <Link
                     className="text-arena-text-sec hover:text-arena-primary transition-colors underline underline-offset-2"
-                    href="#"
+                    href="/privacy"
                   >
                     {chunks}
                   </Link>

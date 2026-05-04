@@ -106,7 +106,7 @@
     "changeEmail": "Change Email",
     "terms": "Terms",
     "privacy": "Privacy",
-    "termsAgreement": "By signing in, you agree to our {terms} and {privacy}",
+    "termsAgreement": "By signing in, you agree to our <terms>Terms of Service</terms> and <privacy>Privacy Policy</privacy>",
     "back": "Back",
     "messages": {
       "codeSentTitle": "Code sent",

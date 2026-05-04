@@ -29,17 +29,24 @@ export default function Footer({ className }: FooterProps) {
   const footerLinks = [
     {
       title: t("columns.product"),
-      links: [{ label: t("links.features"), href: "/" }],
+      links: [
+        { label: t("links.features"), href: "/#funcionalidades" },
+        { label: t("links.plans"), href: "/#planos" },
+      ],
     },
     {
       title: t("columns.institutional"),
-      links: [{ label: t("links.terms"), href: "/" }],
+      links: [
+        { label: t("links.about"), href: "/#sobre" },
+        { label: t("links.contact"), href: "/contact" },
+      ],
     },
     {
       title: t("columns.legal"),
       links: [
-        { label: t("links.terms"), href: "/" },
-        { label: t("links.cookies"), href: "#" },
+        { label: t("links.terms"), href: "/terms" },
+        { label: t("links.privacy"), href: "/privacy" },
+        { label: t("links.disclaimer"), href: "/disclaimer" },
       ],
     },
   ];

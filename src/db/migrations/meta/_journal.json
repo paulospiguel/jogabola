@@ -92,6 +92,13 @@
       "when": 1773518679532,
       "tag": "0012_tiny_crystal",
       "breakpoints": true
+    },
+    {
+      "idx": 13,
+      "version": "7",
+      "when": 1777879324025,
+      "tag": "0013_guest_otp",
+      "breakpoints": true
     }
   ]
 }

@@ -4,3 +4,4 @@ export * from "./notifications";
 export * from "./payments";
 export * from "./teams";
 export * from "./users";
+export * from "./guest-otp";
