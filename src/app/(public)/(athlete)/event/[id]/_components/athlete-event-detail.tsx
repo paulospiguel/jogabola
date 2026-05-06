@@ -1,14 +1,15 @@
 "use client";
 
+import { CheckIcon, MapPinIcon, XIcon } from "@animateicons/react/lucide";
+import { useQueryClient } from "@tanstack/react-query";
 import {
-  CheckIcon,
-  MapPinIcon,
-  ShareIcon,
-  XIcon,
-} from "@animateicons/react/lucide";
-import { ArrowLeft, Banknote, Calendar, Clock, Trophy } from "lucide-react";
+  Banknote,
+  Calendar,
+  Clock,
+  Share2 as ShareIcon,
+  Trophy,
+} from "lucide-react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { useState } from "react";
 import {
@@ -18,9 +19,8 @@ import {
 import { JbAvatar } from "@/components/arena/jb-avatar";
 import { JbBadge } from "@/components/arena/jb-badge";
 import { LocationMap } from "@/components/arena/location-map";
-import { Logo } from "@/components/logo";
-import { useEventAttendance } from "@/hooks/use-event-attendance";
-import { cn } from "@/lib/utils";
+import { type Participant, useEventAttendance } from "@/hooks/use-event-attendance";
+import { cn, formatDate, formatTime } from "@/lib/utils";
 import { AthleteRsvpSheet } from "./athlete-rsvp-sheet";
 import { CountdownTimer } from "./countdown-timer";
 
@@ -47,34 +47,21 @@ interface AthleteEventDetailProps {
   initialMyStatus: string | null;
 }
 
-function formatDate(d: Date | string) {
-  const date = typeof d === "string" ? new Date(d) : d;
-  return date.toLocaleDateString("pt-PT", {
-    weekday: "long",
-    day: "numeric",
-    month: "long",
-  });
-}
-
-function formatTime(d: Date | string) {
-  const date = typeof d === "string" ? new Date(d) : d;
-  return date.toLocaleTimeString("pt-PT", {
-    hour: "2-digit",
-    minute: "2-digit",
-  });
-}
-
 type Tab = "lista" | "local";
 type AthleteEventTranslator = ReturnType<typeof useTranslations>;
+type AttendanceLists = {
+  confirmed: Participant[];
+  reserves: Participant[];
+  pending: Participant[];
+};
 
-function EventHeader({
+function EventShare({
   eventTitle,
   t,
 }: {
   eventTitle: string;
   t: AthleteEventTranslator;
 }) {
-  const router = useRouter();
   const [copied, setCopied] = useState(false);
 
   function handleShare() {
@@ -90,22 +77,11 @@ function EventHeader({
   }
 
   return (
-    <header className="sticky top-0 z-30 flex h-14 items-center justify-between border-b border-arena-border bg-arena-bg/90 px-4 backdrop-blur-md">
-      <button
-        type="button"
-        onClick={() => router.back()}
-        className="flex size-9 items-center justify-center rounded-xl text-arena-text-muted transition-colors hover:bg-arena-surface hover:text-arena-text"
-        aria-label={t("back")}
-      >
-        <ArrowLeft size={20} />
-      </button>
-
-      <Logo href="/" size="mini" variant="white" className="opacity-80" />
-
+    <header className="sticky top-0 z-30 flex h-14 items-center justify-between px-4">
       <button
         type="button"
         onClick={handleShare}
-        className="flex size-9 items-center justify-center rounded-xl text-arena-text-muted transition-colors hover:bg-arena-surface hover:text-arena-text"
+        className="flex size-9 items-center justify-center rounded-xl text-arena-text-muted transition-colors hover:text-arena-text"
         aria-label={t("share")}
       >
         {copied ? (
@@ -206,6 +182,7 @@ export function AthleteEventDetail({
   initialMyStatus,
 }: AthleteEventDetailProps) {
   const t = useTranslations("athleteEventPublic");
+  const queryClient = useQueryClient();
   const [tab, setTab] = useState<Tab>("lista");
   const [myStatus, setMyStatus] = useState<string | null>(initialMyStatus);
   const [showRsvpSheet, setShowRsvpSheet] = useState(false);
@@ -218,6 +195,37 @@ export function AthleteEventDetail({
   const total = Number(event.maxParticipants) || 14;
   const isFull = confirmed.length >= total;
 
+  function updateAttendanceCache(
+    updater: (current: AttendanceLists) => AttendanceLists,
+  ) {
+    queryClient.setQueryData<AttendanceLists>(
+      ["event", event.id, "attendance"],
+      current => {
+        const base =
+          current ?? ({ confirmed: [], reserves: [], pending: [] } satisfies AttendanceLists);
+        return updater(base);
+      },
+    );
+  }
+
+  function handleAttendanceSuccess(status: string) {
+    setMyStatus(status);
+    setShowRsvpSheet(false);
+    updateAttendanceCache(current => {
+      const participant = { id: userId, name: userName, role: "Jogador" };
+      const filteredConfirmed = current.confirmed.filter(p => p.id !== userId);
+      const filteredReserves = current.reserves.filter(p => p.id !== userId);
+      const filteredPending = current.pending.filter(p => p.id !== userId);
+
+      return {
+        confirmed: [participant, ...filteredConfirmed],
+        reserves: filteredReserves,
+        pending: filteredPending,
+      };
+    });
+    void refetch();
+  }
+
   async function handleConfirm() {
     // If not logged in OR if it's a paid event, use the RSVP sheet flow
     if (!userId || (event.priceCents && event.priceCents > 0)) {
@@ -229,8 +237,7 @@ export function AthleteEventDetail({
     setActionLoading(true);
     const res = await confirmUserAttendance(event.id);
     if (res.success) {
-      setMyStatus("confirmed");
-      refetch();
+      handleAttendanceSuccess("confirmed");
     }
     setActionLoading(false);
   }
@@ -240,20 +247,23 @@ export function AthleteEventDetail({
     const res = await cancelUserAttendance(event.id);
     if (res.success) {
       setMyStatus(null);
-      refetch();
+      updateAttendanceCache(current => ({
+        confirmed: current.confirmed.filter(p => p.id !== userId),
+        reserves: current.reserves.filter(p => p.id !== userId),
+        pending: current.pending.filter(p => p.id !== userId),
+      }));
+      void refetch();
     }
     setActionLoading(false);
   }
 
   const TABS = [
-    { id: "lista" as Tab, label: t("tabs.squad") },
-    { id: "local" as Tab, label: t("tabs.location") },
+    { id: "list" as Tab, label: t("tabs.squad") },
+    { id: "location" as Tab, label: t("tabs.location") },
   ];
 
   return (
     <div className="flex min-h-screen flex-col bg-arena-bg">
-      <EventHeader eventTitle={event.title} t={t} />
-
       {/* Event Hero */}
       <div
         className="border-b border-arena-border px-4 pb-5 pt-4"
@@ -292,6 +302,8 @@ export function AthleteEventDetail({
               {event.title}
             </h1>
           </div>
+
+          <EventShare eventTitle={event.title} t={t} />
         </div>
 
         <div className="mb-6 flex flex-col items-center justify-center rounded-[24px] border border-arena-border/50 bg-arena-surface-el/30 py-5 shadow-inner backdrop-blur-sm">
@@ -571,10 +583,7 @@ export function AthleteEventDetail({
           eventId={event.id}
           userId={userId}
           onClose={() => setShowRsvpSheet(false)}
-          onSuccess={status => {
-            setMyStatus(status);
-            refetch();
-          }}
+          onSuccess={handleAttendanceSuccess}
         />
       )}
     </div>

@@ -1,6 +1,6 @@
 "use client";
 
-import { LogOut, Settings, UserRound } from "lucide-react";
+import { LogOut, Settings, User2, UserRound } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
@@ -20,20 +20,30 @@ interface JbUserMenuProps {
   onlyAvatar?: boolean;
 }
 
-export function JbUserMenu({ collapsed = false, onlyAvatar = false }: JbUserMenuProps) {
+export function JbUserMenu({
+  collapsed = false,
+  onlyAvatar = false,
+}: JbUserMenuProps) {
   const { data: session } = useSession();
   const router = useRouter();
   const t = useTranslations("arenaNav");
 
-  const name = session?.user?.name ?? "User";
+  const name = session?.user?.name ?? "?";
   const email = session?.user?.email ?? "";
   const id = session?.user?.id ?? "1";
-  const image = session?.user?.image;
+  const image = session?.user?.image ?? null;
+
+  const isAuthenticated = !!session?.user;
 
   async function handleSignOut() {
     await signOut();
     router.push("/");
   }
+
+  if (!isAuthenticated) {
+    return null;
+  }
+
 
   return (
     <DropdownMenu>
@@ -48,7 +58,13 @@ export function JbUserMenu({ collapsed = false, onlyAvatar = false }: JbUserMenu
             variant="ghost"
             className="flex h-auto w-full items-center gap-3 rounded-[10px] px-3 py-2.5 text-sm hover:bg-arena-surface/60 focus-visible:ring-0"
           >
-            <JbAvatar id={id} name={name} image={image} size={32} className="shrink-0" />
+            <JbAvatar
+              id={id}
+              name={name}
+              image={image}
+              size={32}
+              className="shrink-0"
+            />
             {!collapsed && (
               <div className="grid flex-1 overflow-hidden text-left leading-tight">
                 <span className="truncate font-semibold text-arena-text">

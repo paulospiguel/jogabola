@@ -1,5 +1,6 @@
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
+import { getUserEventAttendanceStatus } from "@/actions/attendance.actions";
 import { getEvent } from "@/actions/match-sessions.actions";
 import { auth } from "@/lib/auth";
 import { userCanAccessTeam } from "@/lib/team-access";
@@ -43,7 +44,12 @@ export default async function ArenaEventDetailPage({ params }: Params) {
   return (
     <div className="jb-page">
       <div className="jb-page-inner max-w-5xl">
-        <EventDetail event={event} userId={user.id} canEdit={true} />
+        <EventDetail
+          event={event}
+          userId={user.id}
+          canEdit={true}
+          initialMyStatus={await getUserEventAttendanceStatus(eventId, user.id)}
+        />
       </div>
     </div>
   );

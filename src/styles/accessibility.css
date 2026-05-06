@@ -63,12 +63,12 @@
 
 /* Enhanced focus styles for keyboard navigation */
 :focus-visible {
-  outline: 3px solid var(--color-focus-ring, var(--color-neon-primary));
+  /* outline: 3px solid var(--color-focus-ring, var(--color-neon-primary));*/
   outline-offset: 2px;
   border-radius: 4px;
-  box-shadow:
+  /* box-shadow:
     0 0 0 2px var(--color-background-base),
-    0 0 0 5px var(--color-focus-ring, var(--color-neon-primary));
+    0 0 0 5px var(--color-focus-ring, var(--color-neon-primary)); */
 }
 
 /* Skip link for keyboard navigation */

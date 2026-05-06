@@ -17,6 +17,11 @@ import { createPayment, submitPaymentProof } from "@/actions/payments.actions";
 import { JbBottomSheet } from "@/components/arena/jb-bottom-sheet";
 import { PaymentMethodCard } from "@/components/arena/payment-method-card";
 import {
+  InputGroup,
+  InputGroupAddon,
+  InputGroupInput,
+} from "@/components/ui/input-group";
+import {
   InputOTP,
   InputOTPGroup,
   InputOTPSeparator,
@@ -71,20 +76,17 @@ function EmailInput({
   onChange: (v: string) => void;
 }) {
   return (
-    <div className="relative">
-      <span className="pointer-events-none absolute inset-y-0 left-0 flex w-12 items-center justify-center text-arena-text-muted">
-        <MailIcon size={17} color="currentColor" />
-      </span>
-      <input
-        type="email"
-        value={value}
+    <InputGroup className="h-[50px] rounded-[12px]  border-arena-border">
+      <InputGroupInput type="email" value={value}
         onChange={e => onChange(e.target.value)}
-        placeholder="o-teu@email.com"
-        className="h-[50px] w-full rounded-[12px] border border-arena-border bg-arena-bg-sec/50 pl-12 pr-4 text-[14px] text-arena-text placeholder:text-arena-text-muted outline-none transition-all focus:border-arena-primary focus:ring-2 focus:ring-arena-primary/10"
+        placeholder="email@email.com"
+        className="w-full"
         required
-        autoComplete="email"
-      />
-    </div>
+        autoComplete="email" />
+      <InputGroupAddon>
+        <MailIcon size={17} color="currentColor" />
+      </InputGroupAddon>
+    </InputGroup>
   );
 }
 
@@ -303,12 +305,13 @@ export function AthleteRsvpSheet({
         setLoading(false);
         if (res.success) {
           setReservationId(res.reservationId);
+          onSuccess("confirmed");
         } else {
           setError(res.error || t("errors.confirmAttendance"));
         }
       });
     }
-  }, [userId, step, reservationId, eventId, loading, t]);
+  }, [userId, step, reservationId, eventId, loading, t, onSuccess]);
 
   function clearError() {
     setError("");
@@ -471,20 +474,20 @@ export function AthleteRsvpSheet({
 
   const paymentConfig: TeamPaymentConfig = settings
     ? {
-        stripe: {
-          enabled: settings.stripeEnabled,
-          accountId: settings.stripeAccountId ?? undefined,
-        },
-        mbway: {
-          enabled: settings.mbwayEnabled,
-          phone: settings.mbwayPhone ?? undefined,
-          name: settings.mbwayName ?? undefined,
-        },
-        cash: {
-          enabled: settings.cashEnabled,
-          instructions: settings.cashInstructions ?? undefined,
-        },
-      }
+      stripe: {
+        enabled: settings.stripeEnabled,
+        accountId: settings.stripeAccountId ?? undefined,
+      },
+      mbway: {
+        enabled: settings.mbwayEnabled,
+        phone: settings.mbwayPhone ?? undefined,
+        name: settings.mbwayName ?? undefined,
+      },
+      cash: {
+        enabled: settings.cashEnabled,
+        instructions: settings.cashInstructions ?? undefined,
+      },
+    }
     : defaultPaymentConfig;
 
   return (
@@ -638,20 +641,19 @@ export function AthleteRsvpSheet({
               {t("noAccount")}
             </p>
 
-            <div className="relative">
-              <span className="pointer-events-none absolute inset-y-0 left-0 flex w-12 items-center justify-center text-arena-text-muted">
-                <UserIcon size={17} color="currentColor" />
-              </span>
-              <input
+            <InputGroup className="h-[50px] rounded-[12px]  border-arena-border">
+              <InputGroupInput
                 type="text"
                 value={guestName}
                 onChange={e => setGuestName(e.target.value)}
                 placeholder="Nome completo"
-                className="h-[50px] w-full rounded-[12px] border border-arena-border bg-arena-bg-sec/50 pl-12 pr-4 text-[14px] text-arena-text placeholder:text-arena-text-muted outline-none transition-all focus:border-arena-primary focus:ring-2 focus:ring-arena-primary/10"
                 required
                 autoComplete="name"
               />
-            </div>
+              <InputGroupAddon>
+                <UserIcon size={17} color="currentColor" />
+              </InputGroupAddon>
+            </InputGroup>
 
             <EmailInput value={guestEmail} onChange={setGuestEmail} />
 

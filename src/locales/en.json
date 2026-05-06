@@ -274,12 +274,7 @@
       "training": "Ex: Technical Training"
     },
     "playersCount": "{count} players",
-    "steps": [
-      "Event Type",
-      "Details",
-      "Preview",
-      "Confirm"
-    ],
+    "steps": ["Event Type", "Details", "Preview", "Confirm"],
     "success": "Event created!",
     "successSubtitle": "Invitation sent successfully.",
     "types": {
@@ -389,7 +384,8 @@
     },
     "titleJogo": "Match Details",
     "titleTreino": "Training",
-    "training": "Training"
+    "training": "Training",
+    "loading": "Loading event details..."
   },
   "arenaEvents": {
     "actions": {
@@ -1707,6 +1703,8 @@
       "cancelled": "Cancelled"
     },
     "countdown": "COUNTDOWN",
+    "eventNotFound": "Event not found",
+    "backToHome": "Back to Home",
     "filledSlots": "Slots filled",
     "slotsFull": "Slots full - you can join the waiting list",
     "confirmed": "Confirmed",

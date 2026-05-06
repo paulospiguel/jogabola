@@ -15,14 +15,19 @@ import {
 import Link from "next/link";
 import { useTranslations } from "next-intl";
 import { useEffect, useState } from "react";
+import {
+  cancelUserAttendance,
+  confirmUserAttendance,
+} from "@/actions/attendance.actions";
+import { EditEventSheet } from "@/components/arena/edit-event-sheet";
 import { JbAvatar } from "@/components/arena/jb-avatar";
 import { JbBadge } from "@/components/arena/jb-badge";
 import { JbScreenHeader } from "@/components/arena/jb-screen-header";
-import { EditEventSheet } from "@/components/arena/edit-event-sheet";
 import { LocationMap } from "@/components/arena/location-map";
+import Loading from "@/components/loading";
 import { Button } from "@/components/ui/button";
 import { useEventAttendance } from "@/hooks/use-event-attendance";
-import { cn } from "@/lib/utils";
+import { cn, formatDate, formatTime } from "@/lib/utils";
 
 interface EventDetailProps {
   event: {
@@ -38,23 +43,7 @@ interface EventDetailProps {
   };
   userId: string;
   canEdit?: boolean;
-}
-
-function formatDate(d: Date | string) {
-  const date = typeof d === "string" ? new Date(d) : d;
-  return date.toLocaleDateString("pt-PT", {
-    weekday: "short",
-    day: "numeric",
-    month: "short",
-  });
-}
-
-function formatTime(d: Date | string) {
-  const date = typeof d === "string" ? new Date(d) : d;
-  return date.toLocaleTimeString("pt-PT", {
-    hour: "2-digit",
-    minute: "2-digit",
-  });
+  initialMyStatus?: string | null;
 }
 
 type Tab = "conv" | "local";
@@ -138,20 +127,47 @@ function ShareBar({
   );
 }
 
-export function EventDetail({ event, userId, canEdit = false }: EventDetailProps) {
+export function EventDetail({
+  event,
+  userId: _userId,
+  canEdit = false,
+  initialMyStatus,
+}: EventDetailProps) {
   const t = useTranslations("arenaEventDetail");
   const [tab, setTab] = useState<Tab>("conv");
-  const [myStatus, setMyStatus] = useState<"pending" | "confirmed">("pending");
-  const [isEditing, setIsEditing] = useState(false);
-
-  const { confirmed, reserves, pending, isLoading } = useEventAttendance(
-    event.id,
+  const [myStatus, setMyStatus] = useState<string | null>(
+    initialMyStatus ?? null,
   );
+  const [isEditing, setIsEditing] = useState(false);
+  const [actionLoading, setActionLoading] = useState(false);
+
+  const { confirmed, reserves, pending, isLoading, refetch } =
+    useEventAttendance(event.id);
+
+  async function handleConfirm() {
+    setActionLoading(true);
+    const res = await confirmUserAttendance(event.id);
+    if (res.success) {
+      setMyStatus("confirmed");
+      refetch();
+    }
+    setActionLoading(false);
+  }
+
+  async function handleCancel() {
+    setActionLoading(true);
+    const res = await cancelUserAttendance(event.id);
+    if (res.success) {
+      setMyStatus(null);
+      refetch();
+    }
+    setActionLoading(false);
+  }
 
   if (isLoading) {
     return (
       <div className="flex h-screen items-center justify-center bg-arena-bg text-arena-text-muted">
-        Carregando detalhes...
+        <Loading text={t("loading")} />
       </div>
     );
   }
@@ -167,8 +183,8 @@ export function EventDetail({ event, userId, canEdit = false }: EventDetailProps
 
   return (
     <div className="flex min-h-screen flex-col bg-arena-bg">
-      <JbScreenHeader 
-        title={isJogo ? t("titleJogo") : t("titleTreino")} 
+      <JbScreenHeader
+        title={isJogo ? t("titleJogo") : t("titleTreino")}
         right={
           <Button
             variant="ghost"
@@ -182,7 +198,10 @@ export function EventDetail({ event, userId, canEdit = false }: EventDetailProps
       />
 
       {isEditing && (
-        <EditEventSheet event={event as any} onClose={() => setIsEditing(false)} />
+        <EditEventSheet
+          event={event as any}
+          onClose={() => setIsEditing(false)}
+        />
       )}
 
       <div
@@ -359,7 +378,11 @@ export function EventDetail({ event, userId, canEdit = false }: EventDetailProps
 
         {tab === "local" && (
           <div className="px-5 py-3.5">
-            <LocationMap location={event.location} eventId={event.id} canEdit={canEdit} />
+            <LocationMap
+              location={event.location}
+              eventId={event.id}
+              canEdit={canEdit}
+            />
           </div>
         )}
       </div>
@@ -372,12 +395,11 @@ export function EventDetail({ event, userId, canEdit = false }: EventDetailProps
         }}
       >
         <Button
-          onClick={() =>
-            setMyStatus(s => (s === "confirmed" ? "pending" : "confirmed"))
-          }
+          onClick={myStatus === "confirmed" ? handleCancel : handleConfirm}
+          disabled={actionLoading}
           type="button"
           className={cn(
-            "h-[50px] w-full rounded-[14px] text-[15px] font-bold",
+            "h-[50px] w-full rounded-[14px] text-[15px] font-bold disabled:opacity-60",
             myStatus === "confirmed"
               ? "border border-arena-border bg-arena-surface-el text-arena-text-sec hover:bg-arena-surface"
               : "bg-arena-primary text-arena-bg hover:bg-arena-primary/90",
