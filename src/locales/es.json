@@ -353,7 +353,9 @@
       "myTeams": "{count} equipos",
       "noTeam": "Sin equipo",
       "select": "Seleccionar equipo",
-      "teamsLabel": "Mis equipos"
+      "teamsLabel": "Mis equipos",
+      "createNewTeam": "Crear nuevo equipo",
+      "upgradePlan": "Mejorar plan"
     },
     "profile": "Perfil",
     "settings": "Configuraciones",

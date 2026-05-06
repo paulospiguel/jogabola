@@ -415,7 +415,9 @@
       "myTeams": "{count} equipas",
       "noTeam": "Sem equipa",
       "select": "Selecionar equipa",
-      "teamsLabel": "Minhas Equipas"
+      "teamsLabel": "Minhas Equipas",
+      "createNewTeam": "Criar nova equipa",
+      "upgradePlan": "Atualizar plano"
     },
     "teams": "Equipas"
   },

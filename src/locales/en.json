@@ -408,7 +408,9 @@
       "myTeams": "{count} teams",
       "noTeam": "No team",
       "select": "Select team",
-      "teamsLabel": "My Teams"
+      "teamsLabel": "My Teams",
+      "createNewTeam": "Create new team",
+      "upgradePlan": "Upgrade plan"
     },
     "teams": "Teams"
   },
