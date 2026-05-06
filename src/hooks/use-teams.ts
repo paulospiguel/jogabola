@@ -28,13 +28,23 @@ export function useTeams() {
     },
   });
 
+  const { data: planData, isLoading: isPlanLoading } = useQuery({
+    queryKey: ["dashboard", "planTier"],
+    queryFn: async () => {
+      const { getUserPlanTier } = await import("@/actions/teams.actions");
+      const response = await getUserPlanTier({});
+      return response.success
+        ? response.data
+        : { planTier: "BASE" as const, teamCount: 0, canCreateTeam: false };
+    },
+  });
+
   useEffect(() => {
     const defaultTeamId = (sessionData?.session as any)?.teamId;
-    
+
     if (defaultTeamId && activeTeamId === null) {
       setActiveTeamId(defaultTeamId);
     } else if (!defaultTeamId && activeTeamId === null && myTeams && myTeams.length > 0) {
-      // Fallback: if no team in session but user has teams, pick the first one
       setActiveTeamId(myTeams[0].id);
     }
   }, [sessionData, activeTeamId, setActiveTeamId, myTeams]);
@@ -45,5 +55,8 @@ export function useTeams() {
     myTeams: myTeams ?? [],
     isLoading,
     refetch,
+    planTier: planData?.planTier ?? "BASE",
+    canCreateTeam: planData?.canCreateTeam ?? false,
+    isPlanLoading,
   };
 }
