@@ -152,6 +152,10 @@ export const auth = betterAuth({
         type: "boolean",
         defaultValue: false,
       },
+      planTier: {
+        type: "string",
+        defaultValue: "BASE",
+      },
     },
   },
 });

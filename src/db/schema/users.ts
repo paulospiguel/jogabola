@@ -13,6 +13,7 @@ export const user = pgTable("user", {
     .default(true),
   role: text("role"), // "captain" | "athlete"
   onboardingCompleted: boolean("onboarding_completed").notNull().default(false),
+  planTier: text("plan_tier").notNull().default("BASE"),
   createdAt: timestamp("created_at").notNull().defaultNow(),
   updatedAt: timestamp("updated_at").notNull().defaultNow(),
 });
