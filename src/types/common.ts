@@ -9,5 +9,6 @@ export type ActionResult<T> =
         code: string;
         message?: string;
         fieldErrors?: Record<string, string[]>;
+        [key: string]: unknown;
       };
     };

@@ -129,6 +129,20 @@
     "history": {
       "title": "Historial de Actividad",
       "players": "Jugadores"
+    },
+    "removeDialog": {
+      "title": "¿Eliminar de la plantilla?",
+      "description": "Vas a eliminar a {name} de esta plantilla.",
+      "warning": "Esta acción elimina al atleta del equipo y puede afectar convocatorias futuras. El historial ya registrado no se eliminará.",
+      "cancel": "Cancelar",
+      "confirm": "Eliminar atleta",
+      "removing": "Eliminando...",
+      "errors": {
+        "TEAM_NOT_FOUND": "No se pudo confirmar el equipo activo.",
+        "CANNOT_REMOVE_OWNER": "No se puede eliminar al propietario del equipo de la plantilla.",
+        "PLAYER_NOT_IN_TEAM": "Este atleta ya no pertenece a esta plantilla.",
+        "UNKNOWN_ERROR": "No se pudo eliminar al atleta. Inténtalo de nuevo."
+      }
     }
   },
   "arenaAddPlayer": {
@@ -217,7 +231,12 @@
       "training": "Ej: Entrenamiento Técnico"
     },
     "playersCount": "{count} jugadores",
-    "steps": ["Tipo de evento", "Detalles", "Vista previa", "Confirmar"],
+    "steps": [
+      "Tipo de evento",
+      "Detalles",
+      "Vista previa",
+      "Confirmar"
+    ],
     "success": "¡Evento creado!",
     "successSubtitle": "Convocatoria enviada con éxito.",
     "types": {
@@ -260,8 +279,11 @@
     "title": "Crear Nuevo Equipo",
     "errors": {
       "TEAM_NAME_ALREADY_EXISTS": "Ya existe un equipo con este nombre.",
-      "TEAM_SLUG_ALREADY_EXISTS": "Este identificador (slug) ya está siendo usado por otro equipo."
-    }
+      "TEAM_SLUG_ALREADY_EXISTS": "Este identificador (slug) ya está siendo usado por otro equipo.",
+      "TEAM_LIMIT_REACHED": "Has alcanzado el límite de {limit} equipos en el plan gratuito. Actualiza para crear más equipos."
+    },
+    "limitReachedTitle": "Límite del plan gratuito",
+    "upgradeCta": "Ver planes"
   },
   "arenaDashboard": {
     "actions": {
@@ -772,11 +794,13 @@
       "community": "Comunidad",
       "contact": "Contacto",
       "cookies": "Cookies",
+      "disclaimer": "Aviso legal",
       "features": "Características",
       "partners": "Convertirse en Socio",
       "plans": "Planes",
       "privacy": "Privacidad",
-      "terms": "Términos"
+      "terms": "Términos",
+      "roadmap": "Hoja de Ruta"
     },
     "privacyPolicy": "Política de Privacidad",
     "systems": "SISTEMAS OPERATIVOS",
@@ -794,19 +818,19 @@
     "saving": "Guardando..."
   },
   "goals": {
-    "description": "Select all goals that apply to you. This helps us suggest the best features.",
+    "description": "Selecciona todos los objetivos que se aplican a ti. Esto nos ayuda a sugerirte las mejores funcionalidades.",
     "options": {
-      "coach-others": "Coach others",
-      "compete": "Compete in tournaments",
-      "find-team": "Find a team",
-      "have-fun": "Have fun",
-      "improve-skills": "Improve skills",
-      "make-friends": "Make new friends",
-      "organize-games": "Organise games",
-      "stay-fit": "Stay fit",
-      "track-stats": "Track statistics"
+      "coach-others": "Entrenar a otros",
+      "compete": "Competir en torneos",
+      "find-team": "Encontrar un equipo",
+      "have-fun": "Divertirme",
+      "improve-skills": "Mejorar habilidades",
+      "make-friends": "Hacer nuevos amigos",
+      "organize-games": "Organizar partidos",
+      "stay-fit": "Mantenerme en forma",
+      "track-stats": "Seguir estadísticas"
     },
-    "title": "What Are Your Goals?"
+    "title": "¿Cuáles son tus objetivos?"
   },
   "header": {
     "about": "Acerca de nosotros",
@@ -832,10 +856,10 @@
       "title": "¿Listo para comenzar?"
     },
     "dashboard": {
-      "confirmed": "CONFIRMED ATTENDANCE",
-      "kicker": "WEEKLY GAME",
-      "players": "players",
-      "title": "Team Dashboard"
+      "confirmed": "ASISTENCIAS CONFIRMADAS",
+      "kicker": "PARTIDO SEMANAL",
+      "players": "jugadores",
+      "title": "Panel del equipo"
     },
     "demo": {
       "stats": {
@@ -888,7 +912,7 @@
           "description": "Lista de confirmados, reservas y cola de espera automática. Sin WhatsApp."
         },
         "payments": {
-          "title": "Pagos MBWay",
+          "title": "Pagos Integrados",
           "description": "Registra quién pagó, quién está pendiente y los importes vencidos, sin estrés."
         },
         "proofs": {
@@ -968,21 +992,51 @@
         "resolution": "Carga y pre-validación automática"
       }
     },
+    "communityReviews": {
+      "kicker": "RESEÑAS",
+      "title": "La comunidad opina",
+      "subtitle": "Experiencias reales de quienes están cambiando el caos de los grupos por partidos semanales más fáciles de gestionar.",
+      "previous": "Reseña anterior",
+      "next": "Reseña siguiente",
+      "cta": "Unirme a la lista de espera",
+      "items": {
+        "sarah": {
+          "name": "Sarah Fuller",
+          "date": "Febrero 2026",
+          "text": "Por fin puedo ver quién confirmó, quién está en espera y quién aún no ha pagado sin buscar mensajes antiguos en el grupo."
+        },
+        "bruno": {
+          "name": "Bruno Roberts",
+          "date": "Febrero 2026",
+          "text": "Fácil de entender y rápido de usar. Si organizas partidos cada semana, ahorra tiempo desde la primera convocatoria."
+        },
+        "mina": {
+          "name": "Mina Adel",
+          "date": "Febrero 2026",
+          "text": "Me gusta tener asistencias, pagos y comprobantes en el mismo lugar. El equipo entiende mejor qué falta antes del partido."
+        },
+        "subbo": {
+          "name": "subbo21",
+          "date": "Enero 2026",
+          "text": "Ayuda muchísimo cuando hay muchos jugadores y reservas. Ya no tengo que ser la persona pesada preguntando todo por WhatsApp."
+        }
+      }
+    },
     "partnersSection": {
       "emptyState": {
-        "description": "We are in an exciting growth phase and are looking for partners who share our passion for transforming the amateur football world. Together, we can create unique opportunities and revolutionise the sport we love.",
+        "description": "Estamos en una fase emocionante de crecimiento y buscamos socios que compartan nuestra pasión por transformar el fútbol amateur. Juntos podemos crear oportunidades únicas y revolucionar el deporte que tanto amamos.",
         "features": [
-          "Global visibility on our platform",
-          "Access to a passionate community",
-          "Co-content creation opportunities",
-          "Real impact on football development"
+          "Visibilidad global en nuestra plataforma",
+          "Acceso a una comunidad apasionada",
+          "Oportunidades de cocreación de contenido",
+          "Impacto real en el desarrollo del fútbol"
         ],
-        "makePartner": "Become Our Partner",
-        "title": "In Search of Visionary Partners"
+        "makePartner": "Conviértete en nuestro socio",
+        "title": "Buscamos socios visionarios"
       },
-      "makePartner": "Become Our Partner",
-      "subtitle": "Together, we are revolutionising amateur football with the support of brands that believe in our vision.",
-      "title": "Our Partners"
+      "makePartner": "Conviértete en nuestro socio",
+      "subtitle": "Juntos estamos revolucionando el fútbol amateur con el apoyo de marcas que creen en nuestra visión.",
+      "title": "Nuestros socios"
     },
     "sponsors": "Patrocinadores",
     "startMyJourney": "Comenzar mi viaje",
@@ -1516,5 +1570,250 @@
     "contact": {
       "title": "Contacto"
     }
+  },
+  "athleteEventPublic": {
+    "back": "Volver",
+    "share": "Compartir",
+    "copied": "Copiado!",
+    "status": {
+      "scheduled": "Programado",
+      "ongoing": "En curso",
+      "completed": "Completado",
+      "cancelled": "Cancelado"
+    },
+    "countdown": "CUENTA REGRESIVA",
+    "filledSlots": "Plazas ocupadas",
+    "slotsFull": "Plazas agotadas - puedes unirte a la lista de espera",
+    "confirmed": "Confirmados",
+    "waitingList": "Lista de espera",
+    "noOneConfirmed": "Nadie ha confirmado aún. ¡Sé el primero!",
+    "loading": "Cargando...",
+    "notes": "Notas",
+    "presenceConfirmed": "¡Asistencia confirmada!",
+    "greetingWithName": "Hola, {name}",
+    "onConfirmedList": "Estás en la lista confirmada",
+    "joinWaitlist": "Unirse a la lista de espera",
+    "confirmPresence": "Confirmar asistencia",
+    "cancelPresence": "Cancelar asistencia",
+    "hasAccount": "¿Tienes cuenta en Jogabola? Inicia sesión para gestionar tu asistencia.",
+    "login": "Iniciar sesión",
+    "register": "Crear cuenta",
+    "tabs": {
+      "squad": "Convocados",
+      "location": "Lugar"
+    },
+    "type": {
+      "game": "Partido Oficial",
+      "training": "Entrenamiento"
+    },
+    "price": {
+      "free": "Gratis"
+    }
+  },
+  "athleteRsvp": {
+    "back": "Volver",
+    "resendCode": "Reenviar código",
+    "resendIn": "Reenviar en {seconds}s",
+    "fillNameEmail": "Rellena el nombre y email.",
+    "invalidCode": "Código inválido.",
+    "enterEmail": "Introduce tu email.",
+    "enterCode": "Introduce el código de 6 dígitos.",
+    "titles": {
+      "choose": "Confirmar Asistencia",
+      "loginEmail": "Iniciar sesión",
+      "loginOtp": "Verificar email",
+      "guestInfo": "Confirmar como Invitado",
+      "guestOtp": "Verificar email",
+      "payment": "Pago",
+      "success": "¡Asistencia Confirmada!"
+    },
+    "choosePrompt": "¿Cómo quieres confirmar tu asistencia?",
+    "hasAccountOption": "Tengo cuenta JogaBola",
+    "hasAccountHint": "Historial de asistencias y pagos",
+    "continueAsGuest": "Continuar como Invitado",
+    "guestEmailHint": "Rápido - verificamos por email",
+    "noAccountPrefix": "¿No tienes cuenta?",
+    "createNow": "Crea una ahora",
+    "freeSuffix": "- es gratis",
+    "loginEmailHint": "Introduce tu email y te enviaremos un código de acceso.",
+    "receiveCode": "Recibir código",
+    "codeSentTo": "Código enviado a",
+    "loginAndConfirm": "Entrar y confirmar",
+    "noAccount": "¿Sin cuenta? Sin problema - confirmamos por email.",
+    "receivePin": "Recibir PIN",
+    "confirmPresence": "Confirmar asistencia",
+    "paymentReservedTitle": "¡Plaza reservada!",
+    "paymentReservedSubtitle": "Asegura tu lugar pagando ahora.",
+    "payLater": "Pagar más tarde",
+    "presenceConfirmed": "¡Asistencia confirmada!",
+    "successGreetingWithName": "¡Hola, {name}! ¡Nos vemos en el partido!",
+    "successOnList": "Estás en la lista. ¡Nos vemos en el partido!",
+    "createAthleteAccount": "Crea tu cuenta de atleta",
+    "createAccountFree": "Accede a tu historial de asistencias, pagos y perfil de atleta. Gratis.",
+    "createFreeAccount": "Crear cuenta gratuita",
+    "close": "Cerrar",
+    "cashInstructions": "Paga al capitán al inicio del partido.",
+    "paymentNotes": "Pago via MBWay confirmado por el atleta",
+    "terms": {
+      "prefix": "Al continuar, aceptas los",
+      "terms": "Términos",
+      "and": "y",
+      "privacy": "Privacidad"
+    },
+    "errors": {
+      "confirmAttendance": "Error al confirmar asistencia",
+      "sendCode": "Error al enviar código.",
+      "sessionCreatedAttendanceFailed": "Sesión creada pero error al confirmar asistencia. Inténtalo de nuevo.",
+      "processPayment": "Error al procesar el pago.",
+      "resend": "Error al reenviar.",
+      "resendPin": "Error al reenviar PIN.",
+      "email": {
+        "RESEND_API_KEY_MISSING": "El envío de email no está configurado: falta RESEND_API_KEY.",
+        "RESEND_API_KEY_INVALID": "La clave de Resend no es válida. Revisa RESEND_API_KEY.",
+        "RESEND_FROM_INVALID": "El remitente de email no es válido. Corrige EMAIL_FROM.",
+        "RESEND_DOMAIN_NOT_VERIFIED": "El dominio remitente aún no está verificado en Resend.",
+        "RESEND_DEV_DOMAIN_RESTRICTED": "El dominio resend.dev solo envía al email propietario de la cuenta Resend. Verifica tu propio dominio para enviar a invitados.",
+        "EMAIL_SEND_FAILED": "No se pudo enviar el PIN por email. Revisa el email o inténtalo de nuevo."
+      }
+    }
+  },
+  "pricingPage": {
+    "eyebrow": "Planes",
+    "title": "Precios para cada fase de tu equipo",
+    "subtitle": "Empieza gratis, pasa a Pro cuando tu partido semanal se vuelva serio y habla con nosotros cuando necesites una operación completa.",
+    "recommended": "Recomendado",
+    "limits": {
+      "teams": "Equipos",
+      "players": "Jugadores",
+      "events": "Eventos/mes"
+    },
+    "plans": {
+      "free": {
+        "badge": "Empezar",
+        "name": "Free",
+        "description": "Para capitanes que quieren dejar atrás el caos de WhatsApp y organizar sus primeros partidos sin fricción.",
+        "price": "0€",
+        "period": "/mes",
+        "cta": "Empezar gratis",
+        "features": [
+          "Hasta 3 equipos activos",
+          "Hasta 25 jugadores por equipo",
+          "10 eventos al mes",
+          "Asistencia y lista de espera",
+          "Registro básico de pagos"
+        ]
+      },
+      "pro": {
+        "badge": "Más usado",
+        "name": "Pro",
+        "description": "Para organizadores recurrentes que necesitan más equipos, pagos y control semanal.",
+        "price": "9€",
+        "period": "/mes",
+        "cta": "Unirme a la lista Pro",
+        "features": [
+          "Hasta 10 equipos activos",
+          "Hasta 50 jugadores por equipo",
+          "100 eventos al mes",
+          "Comprobantes y validación",
+          "Gestión avanzada de asistencia",
+          "Soporte prioritario"
+        ]
+      },
+      "elite": {
+        "badge": "Clubes",
+        "name": "Elite",
+        "description": "Para clubes, academias y comunidades que gestionan muchos partidos, plantillas y operaciones.",
+        "price": "A medida",
+        "period": "",
+        "cta": "Hablar con nosotros",
+        "features": [
+          "Equipos prácticamente ilimitados",
+          "Jugadores prácticamente ilimitados",
+          "Eventos prácticamente ilimitados",
+          "Onboarding asistido",
+          "Configuración para clubes y comunidades",
+          "Acompañamiento dedicado"
+        ]
+      }
+    },
+    "note": {
+      "title": "Todavía estamos en beta",
+      "description": "Los precios pueden evolucionar a medida que abrimos más funcionalidades. Los usuarios tempranos tendrán prioridad de acceso y condiciones iniciales.",
+      "cta": "¿Tienes dudas? Habla con nosotros"
+    }
+  },
+  "roadmapPage": {
+    "eyebrow": "Transparencia",
+    "title": "Hoja de Ruta del Proyecto",
+    "subtitle": "Dónde estamos y hacia dónde vamos. Actualizado cada sprint.",
+    "legend": {
+      "done": "Completado",
+      "inProgress": "En progreso",
+      "planned": "Planificado",
+      "future": "Futuro"
+    },
+    "phases": [
+      {
+        "id": "mvp-core",
+        "label": "MVP · Núcleo",
+        "period": "Q1-Q2 2026",
+        "status": "done",
+        "items": [
+          "Autenticación por email OTP",
+          "Creación y gestión de equipos",
+          "Convocatorias y confirmación de asistencia",
+          "Página pública del evento (atleta)",
+          "Pagos y subida de comprobantes",
+          "Configuración de métodos de pago",
+          "Calendario de eventos",
+          "Perfil del atleta",
+          "Sistema de email transaccional"
+        ]
+      },
+      {
+        "id": "freemium",
+        "label": "Freemium",
+        "period": "Q2 2026",
+        "status": "inProgress",
+        "items": [
+          "Plan gratuito (hasta 3 equipos, 10 eventos/mes)",
+          "Página de planes y precios",
+          "Actualización al plan Pro",
+          "Infraestructura de facturación"
+        ]
+      },
+      {
+        "id": "pro-features",
+        "label": "Funciones Pro",
+        "period": "Q3 2026",
+        "status": "planned",
+        "items": [
+          "Estadísticas avanzadas de atletas",
+          "Informes financieros exportables",
+          "Integración con Google Calendar",
+          "Notificaciones push nativas",
+          "Chat integrado"
+        ]
+      },
+      {
+        "id": "elite",
+        "label": "Elite y Escala",
+        "period": "Q4 2026",
+        "status": "future",
+        "items": [
+          "Multi-torneo y ligas",
+          "Scouting y networking de atletas",
+          "Página pública del club",
+          "App móvil nativa (iOS + Android)",
+          "API pública para socios"
+        ]
+      }
+    ],
+    "cta": {
+      "title": "¿Quieres seguir de cerca?",
+      "subtitle": "Únete a la lista de espera y recibe actualizaciones de primera mano.",
+      "button": "Unirse a la lista de espera"
+    },
+    "backHome": "Volver al inicio"
   }
 }

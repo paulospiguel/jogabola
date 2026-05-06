@@ -11,10 +11,12 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { CreateEventSheet } from "@/components/arena/create-event-sheet";
 import { JbUserMenu } from "@/components/arena/jb-user-menu";
 import { Button } from "@/components/ui/button";
+import { useEvents } from "@/hooks/use-events";
+import { useTeams } from "@/hooks/use-teams";
 import { cn } from "@/lib/utils";
 import type { EventStatus, EventView } from "@/types/events";
 
@@ -140,12 +142,33 @@ function EventCard({ event }: { event: EventView }) {
 export function EventsList({ upcoming, past }: EventsListProps) {
   const t = useTranslations("arenaEvents");
   const [sheet, setSheet] = useState(false);
+  const { activeTeamId } = useTeams();
+  const { events } = useEvents({
+    upcomingOnly: false,
+    limit: 50,
+    enabled: Boolean(activeTeamId),
+  });
 
-  const hasEvents = upcoming.length > 0 || past.length > 0;
+  const { visibleUpcoming, visiblePast } = useMemo(() => {
+    const source = activeTeamId ? events : [...upcoming, ...past];
+    const now = new Date();
+
+    return {
+      visibleUpcoming: source.filter(event => new Date(event.startDate) >= now),
+      visiblePast: source.filter(event => new Date(event.startDate) < now),
+    };
+  }, [activeTeamId, events, upcoming, past]);
+
+  const hasEvents = visibleUpcoming.length > 0 || visiblePast.length > 0;
 
   return (
     <>
-      {sheet ? <CreateEventSheet onClose={() => setSheet(false)} /> : null}
+      {sheet ? (
+        <CreateEventSheet
+          onClose={() => setSheet(false)}
+          teamId={activeTeamId ?? undefined}
+        />
+      ) : null}
 
       <div className="jb-page">
         <div className="jb-page-inner">
@@ -206,7 +229,7 @@ export function EventsList({ upcoming, past }: EventsListProps) {
               <section>
                 <div className="jb-section-label">{t("sections.upcoming")}</div>
                 <div className="jb-stack">
-                  {upcoming.map(event => (
+                  {visibleUpcoming.map(event => (
                     <EventCard event={event} key={event.id} />
                   ))}
                 </div>
@@ -215,8 +238,8 @@ export function EventsList({ upcoming, past }: EventsListProps) {
               <section>
                 <div className="jb-section-label">{t("sections.past")}</div>
                 <div className="jb-stack">
-                  {past.length > 0 ? (
-                    past.map(event => (
+                  {visiblePast.length > 0 ? (
+                    visiblePast.map(event => (
                       <EventCard event={event} key={event.id} />
                     ))
                   ) : (

@@ -4,6 +4,7 @@ import { Check, Loader2, Shield } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useState } from "react";
 import { createTeam } from "@/actions/teams.actions";
+import { FREE_PLAN_LIMITS } from "@/constants/plans";
 import { useTeams } from "@/hooks/use-teams";
 import { authClient } from "@/lib/auth-client";
 import { cn } from "@/lib/utils";
@@ -31,7 +32,7 @@ const labelClass = "mb-1 text-xs font-semibold text-arena-text-sec";
 
 export function CreateTeamSheet({ onClose }: CreateTeamSheetProps) {
   const t = useTranslations("arenaCreateTeam");
-  const { refetch, setActiveTeamId } = useTeams();
+  const { myTeams, refetch, setActiveTeamId } = useTeams();
   const [form, setForm] = useState<FormState>({
     name: "",
     slug: "",
@@ -82,10 +83,19 @@ export function CreateTeamSheet({ onClose }: CreateTeamSheetProps) {
 
     if (!result.success) {
       const code = result.error.code;
-      // Use the translated error if available, otherwise fallback to message or code
-      const message = t.has(`errors.${code}`)
-        ? t(`errors.${code}`)
-        : (result.error.message ?? code ?? "Error creating team");
+      let message: string;
+
+      if (code === "TEAM_LIMIT_REACHED") {
+        const limit =
+          typeof result.error.limit === "number"
+            ? result.error.limit
+            : FREE_PLAN_LIMITS.maxTeams;
+        message = t("errors.TEAM_LIMIT_REACHED", { limit });
+      } else if (t.has(`errors.${code}`)) {
+        message = t(`errors.${code}`);
+      } else {
+        message = result.error.message ?? code ?? "Error creating team";
+      }
 
       setError(message);
       return;
@@ -119,6 +129,31 @@ export function CreateTeamSheet({ onClose }: CreateTeamSheetProps) {
   }
 
   const canSave = form.name.trim().length >= 2 && form.slug.trim().length >= 3;
+  const isAtLimit = myTeams.length >= FREE_PLAN_LIMITS.maxTeams;
+
+  if (isAtLimit) {
+    return (
+      <JbBottomSheet onClose={onClose} noPad title={t("limitReachedTitle")}>
+        <div className="flex flex-col items-center gap-4 px-5 pb-12 pt-10 text-center">
+          <div className="flex size-16 items-center justify-center rounded-2xl bg-arena-warning/10 text-arena-warning">
+            <Shield size={32} />
+          </div>
+          <p className="text-base font-bold text-arena-text">
+            {t("errors.TEAM_LIMIT_REACHED", {
+              limit: FREE_PLAN_LIMITS.maxTeams,
+            })}
+          </p>
+          <Button
+            className="mt-2 h-[50px] w-full rounded-[14px] bg-arena-primary text-[15px] font-bold text-arena-bg"
+            onClick={onClose}
+            type="button"
+          >
+            {t("upgradeCta")}
+          </Button>
+        </div>
+      </JbBottomSheet>
+    );
+  }
 
   return (
     <JbBottomSheet onClose={onClose} noPad title={t("title")}>

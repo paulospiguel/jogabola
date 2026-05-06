@@ -3,7 +3,6 @@
 import { and, eq, isNull, sql } from "drizzle-orm";
 import { z } from "zod";
 import { db } from "@/db/client";
-import { findPlayerByEmail } from "@/db/queries/players";
 import {
   players,
   session,
@@ -12,11 +11,13 @@ import {
   user as userTable,
 } from "@/db/schema";
 import { withAction, withAuthAction } from "@/lib/action-helpers";
-import { canCreateTeam, type PlanTier } from "@/lib/plan-limits";
+import { canCreateTeam, normalizePlanTier } from "@/lib/plan-limits";
+import { userCanAccessTeam } from "@/lib/team-access";
 import {
   addPlayerToRosterSchema,
   addTeamMemberSchema,
   createTeamSchema,
+  removePlayerFromRosterSchema,
 } from "@/schemas/teams.schema";
 
 export interface SquadMember {
@@ -44,7 +45,7 @@ export const createTeam = withAuthAction(
       .where(eq(userTable.id, user.id))
       .limit(1);
 
-    const planTier = (userRecord?.planTier ?? "BASE") as PlanTier;
+    const planTier = normalizePlanTier(userRecord?.planTier);
 
     const [{ teamCount }] = await db
       .select({ teamCount: sql<number>`count(*)::int` })
@@ -97,7 +98,11 @@ export const addTeamMember = withAction(addTeamMemberSchema, async data => {
     .values(data)
     .onConflictDoUpdate({
       target: [teamMembers.teamId, teamMembers.playerId],
-      set: { role: data.role, status: data.status || "new", updatedAt: new Date() },
+      set: {
+        role: data.role,
+        status: data.status || "new",
+        updatedAt: new Date(),
+      },
     })
     .returning();
   return { success: true, data: member };
@@ -111,6 +116,11 @@ export const addPlayerToRoster = withAuthAction(
 
     if (!teamId) {
       return { success: false, error: { code: "TEAM_REQUIRED" } };
+    }
+
+    const canAccessTeam = await userCanAccessTeam(user.id, teamId);
+    if (!canAccessTeam) {
+      return { success: false, error: { code: "TEAM_NOT_FOUND" } };
     }
 
     // 1. Check if user already exists in the platform
@@ -135,7 +145,7 @@ export const addPlayerToRoster = withAuthAction(
       }
 
       // Add as team member with "new" status
-      const [member] = await db
+      const [_member] = await db
         .insert(teamMembers)
         .values({
           teamId,
@@ -146,7 +156,10 @@ export const addPlayerToRoster = withAuthAction(
         })
         .returning();
 
-      return { success: true, data: { id: existingUser.id, name: existingUser.name } };
+      return {
+        success: true,
+        data: { id: existingUser.id, name: existingUser.name },
+      };
     }
 
     // 2. Check if already in the players table (invited but not yet a user)
@@ -162,8 +175,8 @@ export const addPlayerToRoster = withAuthAction(
           error: { code: "PLAYER_ALREADY_INVITED_TO_TEAM" },
         };
       }
-      
-      // Update the player record or just return error? 
+
+      // Update the player record or just return error?
       // For now, let's say they can only be in one team's pending list or we need a many-to-many for players too.
       // But let's keep it simple: error if already invited elsewhere.
       return {
@@ -191,18 +204,125 @@ export const addPlayerToRoster = withAuthAction(
 );
 
 export const getMyTeams = withAuthAction(z.any(), async user => {
-  const myTeams = await db
+  const ownedTeams = await db
     .select()
     .from(teams)
     .where(eq(teams.ownerId, user.id))
     .orderBy(teams.name);
 
+  const memberTeams = await db
+    .select({
+      id: teams.id,
+      name: teams.name,
+      slug: teams.slug,
+      location: teams.location,
+      description: teams.description,
+      category: teams.category,
+      homeGround: teams.homeGround,
+      ownerId: teams.ownerId,
+      createdAt: teams.createdAt,
+      updatedAt: teams.updatedAt,
+    })
+    .from(teamMembers)
+    .innerJoin(teams, eq(teamMembers.teamId, teams.id))
+    .where(eq(teamMembers.playerId, user.id))
+    .orderBy(teams.name);
+
+  const myTeams = Array.from(
+    new Map(
+      [...ownedTeams, ...memberTeams].map(team => [team.id, team]),
+    ).values(),
+  ).sort((a, b) => a.name.localeCompare(b.name));
+
   return { success: true, data: myTeams };
 });
+
+export const switchActiveTeam = withAuthAction(
+  z.object({ teamId: z.number() }),
+  async (user, { teamId }) => {
+    const canAccessTeam = await userCanAccessTeam(user.id, teamId);
+    if (!canAccessTeam) {
+      return { success: false, error: { code: "TEAM_NOT_FOUND" } };
+    }
+
+    await db
+      .update(session)
+      .set({ teamId, updatedAt: new Date() })
+      .where(eq(session.userId, user.id));
+
+    return { success: true, data: { teamId } };
+  },
+);
+
+export const removePlayerFromRoster = withAuthAction(
+  removePlayerFromRosterSchema,
+  async (user, { teamId, playerId }) => {
+    const team = await db.query.teams.findFirst({
+      where: and(eq(teams.id, teamId), eq(teams.ownerId, user.id)),
+    });
+
+    if (!team) {
+      return { success: false, error: { code: "TEAM_NOT_FOUND" } };
+    }
+
+    if (team.ownerId === playerId) {
+      return { success: false, error: { code: "CANNOT_REMOVE_OWNER" } };
+    }
+
+    const member = await db.query.teamMembers.findFirst({
+      where: and(
+        eq(teamMembers.teamId, teamId),
+        eq(teamMembers.playerId, playerId),
+      ),
+    });
+
+    if (member) {
+      await db
+        .delete(teamMembers)
+        .where(
+          and(
+            eq(teamMembers.teamId, teamId),
+            eq(teamMembers.playerId, playerId),
+          ),
+        );
+
+      return { success: true, data: { removed: true } };
+    }
+
+    const invitedPlayer = await db.query.players.findFirst({
+      where: and(
+        eq(players.teamId, teamId),
+        eq(players.id, playerId),
+        isNull(players.userId),
+      ),
+    });
+
+    if (invitedPlayer) {
+      await db
+        .delete(players)
+        .where(
+          and(
+            eq(players.teamId, teamId),
+            eq(players.id, playerId),
+            isNull(players.userId),
+          ),
+        );
+
+      return { success: true, data: { removed: true } };
+    }
+
+    return { success: false, error: { code: "PLAYER_NOT_IN_TEAM" } };
+  },
+);
 
 export const getTeamSquad = withAuthAction(
   z.object({ teamId: z.number() }),
   async (user, { teamId }) => {
+    const canAccessTeam = await userCanAccessTeam(user.id, teamId);
+    if (!canAccessTeam) {
+      return { success: false, error: { code: "TEAM_NOT_FOUND" } };
+    }
+
     const registeredMembers = await db
       .select({
         id: userTable.id,
@@ -252,6 +372,11 @@ export const getTeamSquad = withAuthAction(
 export const getAthleteProfile = withAuthAction(
   z.object({ playerId: z.string(), teamId: z.number() }),
   async (user, { playerId, teamId }) => {
+    const canAccessTeam = await userCanAccessTeam(user.id, teamId);
+    if (!canAccessTeam) {
+      return { success: false, error: { code: "TEAM_NOT_FOUND" } };
+    }
+
     const [athlete] = await db
       .select({
         id: userTable.id,
@@ -298,7 +423,13 @@ export const getAthleteProfile = withAuthAction(
         createdAt: players.createdAt,
       })
       .from(players)
-      .where(and(eq(players.teamId, teamId), eq(players.id, playerId), isNull(players.userId)))
+      .where(
+        and(
+          eq(players.teamId, teamId),
+          eq(players.id, playerId),
+          isNull(players.userId),
+        ),
+      )
       .limit(1);
 
     if (!guest) {
@@ -326,7 +457,7 @@ export const getUserPlanTier = withAuthAction(z.any(), async user => {
     .where(eq(userTable.id, user.id))
     .limit(1);
 
-  const planTier = (userRecord?.planTier ?? "BASE") as PlanTier;
+  const planTier = normalizePlanTier(userRecord?.planTier);
 
   const [{ teamCount }] = await db
     .select({ teamCount: sql<number>`count(*)::int` })

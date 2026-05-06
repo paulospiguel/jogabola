@@ -1,6 +1,7 @@
 "use server";
 
 import { desc, eq } from "drizzle-orm";
+import { z } from "zod";
 import { db } from "@/db/client";
 import {
   matchReservations,
@@ -9,14 +10,14 @@ import {
   payments,
   user,
 } from "@/db/schema";
-import { z } from "zod";
+import { withAction, withAuthAction } from "@/lib/action-helpers";
+import { userCanAccessTeam } from "@/lib/team-access";
 import {
   createPaymentSchema,
   submitPaymentProofSchema,
 } from "@/schemas/payments.schema";
-import { withAction, withAuthAction } from "@/lib/action-helpers";
 
-export const createPayment = withAction(createPaymentSchema, async (data) => {
+export const createPayment = withAction(createPaymentSchema, async data => {
   const [payment] = await db
     .insert(payments)
     .values({ ...data, status: "pending" })
@@ -26,7 +27,7 @@ export const createPayment = withAction(createPaymentSchema, async (data) => {
 
 export const submitPaymentProof = withAction(
   submitPaymentProofSchema,
-  async (data) => {
+  async data => {
     const [proof] = await db.insert(paymentProofs).values(data).returning();
     await db
       .update(payments)
@@ -39,6 +40,11 @@ export const submitPaymentProof = withAction(
 export const getTeamPayments = withAuthAction(
   z.object({ teamId: z.number() }),
   async (currentUser, { teamId }) => {
+    const canAccessTeam = await userCanAccessTeam(currentUser.id, teamId);
+    if (!canAccessTeam) {
+      return { success: false, error: { code: "TEAM_NOT_FOUND" } };
+    }
+
     const rawPayments = await db
       .select({
         id: payments.id,
@@ -54,8 +60,14 @@ export const getTeamPayments = withAuthAction(
         matchTitle: matchSessions.title,
       })
       .from(payments)
-      .innerJoin(matchReservations, eq(payments.matchReservationId, matchReservations.id))
-      .innerJoin(matchSessions, eq(matchReservations.matchSessionId, matchSessions.id))
+      .innerJoin(
+        matchReservations,
+        eq(payments.matchReservationId, matchReservations.id),
+      )
+      .innerJoin(
+        matchSessions,
+        eq(matchReservations.matchSessionId, matchSessions.id),
+      )
       .innerJoin(user, eq(matchReservations.playerId, user.id))
       .leftJoin(paymentProofs, eq(paymentProofs.paymentId, payments.id))
       .where(eq(matchSessions.teamId, teamId))
@@ -67,7 +79,9 @@ export const getTeamPayments = withAuthAction(
       method: p.method,
       status: p.status === "paid_unverified" ? "validating" : p.status,
       score: "low" as const,
-      date: p.createdAt ? p.createdAt.toISOString().slice(0, 16).replace("T", " ") : "",
+      date: p.createdAt
+        ? p.createdAt.toISOString().slice(0, 16).replace("T", " ")
+        : "",
       proofUrl: p.proofUrl ?? undefined,
       player: {
         id: p.playerId,
@@ -81,5 +95,5 @@ export const getTeamPayments = withAuthAction(
     }));
 
     return { success: true, data: formattedPayments };
-  }
+  },
 );

@@ -154,7 +154,7 @@ export const auth = betterAuth({
       },
       planTier: {
         type: "string",
-        defaultValue: "BASE",
+        defaultValue: "free",
       },
     },
   },

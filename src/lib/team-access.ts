@@ -1,0 +1,51 @@
+import { and, eq } from "drizzle-orm";
+import { db } from "@/db/client";
+import { teamMembers, teams } from "@/db/schema";
+
+export async function userCanAccessTeam(
+  userId: string,
+  teamId: number,
+): Promise<boolean> {
+  const ownedTeam = await db.query.teams.findFirst({
+    columns: { id: true },
+    where: eq(teams.id, teamId),
+  });
+
+  if (!ownedTeam) return false;
+
+  const owned = await db.query.teams.findFirst({
+    columns: { id: true },
+    where: and(eq(teams.id, teamId), eq(teams.ownerId, userId)),
+  });
+
+  if (owned) return true;
+
+  const membership = await db.query.teamMembers.findFirst({
+    columns: { id: true, teamId: true },
+    where: and(
+      eq(teamMembers.teamId, teamId),
+      eq(teamMembers.playerId, userId),
+    ),
+  });
+
+  return Boolean(membership);
+}
+
+export async function getAccessibleTeamIds(userId: string): Promise<number[]> {
+  const ownedTeams = await db
+    .select({ id: teams.id })
+    .from(teams)
+    .where(eq(teams.ownerId, userId));
+
+  const memberships = await db
+    .select({ id: teamMembers.teamId })
+    .from(teamMembers)
+    .where(eq(teamMembers.playerId, userId));
+
+  return Array.from(
+    new Set([
+      ...ownedTeams.map(team => team.id),
+      ...memberships.map(m => m.id),
+    ]),
+  );
+}

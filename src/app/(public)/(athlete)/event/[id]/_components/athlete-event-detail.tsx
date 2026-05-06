@@ -2,16 +2,15 @@
 
 import {
   CheckIcon,
-  LinkIcon,
   MapPinIcon,
-  SendIcon,
   ShareIcon,
   XIcon,
 } from "@animateicons/react/lucide";
 import { ArrowLeft, Banknote, Calendar, Clock, Trophy } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useTranslations } from "next-intl";
+import { useState } from "react";
 import {
   cancelUserAttendance,
   confirmUserAttendance,
@@ -66,8 +65,15 @@ function formatTime(d: Date | string) {
 }
 
 type Tab = "lista" | "local";
+type AthleteEventTranslator = ReturnType<typeof useTranslations>;
 
-function EventHeader({ eventTitle }: { eventTitle: string }) {
+function EventHeader({
+  eventTitle,
+  t,
+}: {
+  eventTitle: string;
+  t: AthleteEventTranslator;
+}) {
   const router = useRouter();
   const [copied, setCopied] = useState(false);
 
@@ -89,7 +95,7 @@ function EventHeader({ eventTitle }: { eventTitle: string }) {
         type="button"
         onClick={() => router.back()}
         className="flex size-9 items-center justify-center rounded-xl text-arena-text-muted transition-colors hover:bg-arena-surface hover:text-arena-text"
-        aria-label="Voltar"
+        aria-label={t("back")}
       >
         <ArrowLeft size={20} />
       </button>
@@ -100,7 +106,7 @@ function EventHeader({ eventTitle }: { eventTitle: string }) {
         type="button"
         onClick={handleShare}
         className="flex size-9 items-center justify-center rounded-xl text-arena-text-muted transition-colors hover:bg-arena-surface hover:text-arena-text"
-        aria-label="Partilhar"
+        aria-label={t("share")}
       >
         {copied ? (
           <CheckIcon size={18} color="var(--color-arena-primary)" />
@@ -112,22 +118,28 @@ function EventHeader({ eventTitle }: { eventTitle: string }) {
   );
 }
 
-function StatusBadge({ status }: { status: string }) {
-  const map: Record<string, { label: string; color: string }> = {
+function StatusBadge({
+  status,
+  t,
+}: {
+  status: string;
+  t: AthleteEventTranslator;
+}) {
+  const map: Record<string, { key: string; color: string }> = {
     scheduled: {
-      label: "Agendado",
+      key: "scheduled",
       color: "text-arena-info border-arena-info/30 bg-arena-info/10",
     },
     ongoing: {
-      label: "A Decorrer",
+      key: "ongoing",
       color: "text-arena-success border-arena-success/30 bg-arena-success/10",
     },
     completed: {
-      label: "Concluído",
+      key: "completed",
       color: "text-arena-text-muted border-arena-border bg-arena-surface",
     },
     cancelled: {
-      label: "Cancelado",
+      key: "cancelled",
       color: "text-arena-danger border-arena-danger/30 bg-arena-danger/10",
     },
   };
@@ -139,7 +151,7 @@ function StatusBadge({ status }: { status: string }) {
         s.color,
       )}
     >
-      {s.label}
+      {t(`status.${s.key}`)}
     </span>
   );
 }
@@ -147,9 +159,11 @@ function StatusBadge({ status }: { status: string }) {
 function AttendanceBar({
   confirmed,
   total,
+  t,
 }: {
   confirmed: number;
   total: number;
+  t: AthleteEventTranslator;
 }) {
   const pct = Math.min((confirmed / total) * 100, 100);
   const isFull = confirmed >= total;
@@ -158,7 +172,7 @@ function AttendanceBar({
     <div className="rounded-[14px] border border-arena-border bg-arena-surface p-4">
       <div className="mb-2 flex items-center justify-between">
         <span className="text-[13px] font-semibold text-arena-text-sec">
-          Vagas preenchidas
+          {t("filledSlots")}
         </span>
         <span className="text-[13px] font-bold text-arena-text">
           <span className={isFull ? "text-arena-danger" : "text-arena-success"}>
@@ -178,81 +192,9 @@ function AttendanceBar({
       </div>
       {isFull && (
         <p className="mt-2 text-center text-[11px] font-semibold text-arena-danger">
-          Vagas esgotadas — podes entrar na lista de espera
+          {t("slotsFull")}
         </p>
       )}
-    </div>
-  );
-}
-
-function ShareBar({
-  eventId,
-  eventTitle,
-}: {
-  eventId: number;
-  eventTitle: string;
-}) {
-  const [copied, setCopied] = useState(false);
-  const [url, setUrl] = useState("");
-
-  useEffect(() => {
-    setUrl(`${window.location.origin}/event/${eventId}`);
-  }, [eventId]);
-
-  const message = `Joga connosco! ${eventTitle}`;
-  const waHref = `https://wa.me/?text=${encodeURIComponent(`${message} ${url}`)}`;
-  const tgHref = `https://t.me/share/url?url=${encodeURIComponent(url)}&text=${encodeURIComponent(message)}`;
-
-  return (
-    <div className="mb-5 rounded-[14px] border border-arena-border bg-arena-surface p-3.5">
-      <div className="mb-2.5 text-[10px] font-bold uppercase tracking-wider text-arena-text-muted">
-        Convidar atletas
-      </div>
-      <div className="flex gap-2">
-        <button
-          type="button"
-          onClick={() =>
-            navigator.clipboard.writeText(url).then(() => {
-              setCopied(true);
-              setTimeout(() => setCopied(false), 2000);
-            })
-          }
-          className="flex flex-1 flex-col items-center gap-1.5 rounded-[10px] border border-arena-border bg-arena-surface-el py-2.5 text-[11px] font-semibold text-arena-text-sec transition-colors hover:border-arena-primary/30 hover:bg-arena-primary/10 hover:text-arena-primary"
-        >
-          {copied ? (
-            <CheckIcon size={18} color="var(--color-arena-primary)" />
-          ) : (
-            <LinkIcon size={18} color="currentColor" />
-          )}
-          {copied ? "Copiado!" : "Copiar link"}
-        </button>
-        <Link
-          href={waHref}
-          target="_blank"
-          rel="noreferrer"
-          className="flex flex-1 flex-col items-center gap-1.5 rounded-[10px] border border-arena-border bg-arena-surface-el py-2.5 text-[11px] font-semibold text-arena-text-sec no-underline transition-colors hover:border-[#25d366]/30 hover:bg-[#25d366]/10 hover:text-[#25d366]"
-        >
-          <svg
-            width="18"
-            height="18"
-            viewBox="0 0 24 24"
-            fill="currentColor"
-            aria-hidden="true"
-          >
-            <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
-          </svg>
-          WhatsApp
-        </Link>
-        <Link
-          href={tgHref}
-          target="_blank"
-          rel="noreferrer"
-          className="flex flex-1 flex-col items-center gap-1.5 rounded-[10px] border border-arena-border bg-arena-surface-el py-2.5 text-[11px] font-semibold text-arena-text-sec no-underline transition-colors hover:border-[#2ca5e0]/30 hover:bg-[#2ca5e0]/10 hover:text-[#2ca5e0]"
-        >
-          <SendIcon size={18} color="currentColor" />
-          Telegram
-        </Link>
-      </div>
     </div>
   );
 }
@@ -263,6 +205,7 @@ export function AthleteEventDetail({
   userName,
   initialMyStatus,
 }: AthleteEventDetailProps) {
+  const t = useTranslations("athleteEventPublic");
   const [tab, setTab] = useState<Tab>("lista");
   const [myStatus, setMyStatus] = useState<string | null>(initialMyStatus);
   const [showRsvpSheet, setShowRsvpSheet] = useState(false);
@@ -303,13 +246,13 @@ export function AthleteEventDetail({
   }
 
   const TABS = [
-    { id: "lista" as Tab, label: "Convocados" },
-    { id: "local" as Tab, label: "Local" },
+    { id: "lista" as Tab, label: t("tabs.squad") },
+    { id: "local" as Tab, label: t("tabs.location") },
   ];
 
   return (
     <div className="flex min-h-screen flex-col bg-arena-bg">
-      <EventHeader eventTitle={event.title} />
+      <EventHeader eventTitle={event.title} t={t} />
 
       {/* Event Hero */}
       <div
@@ -341,9 +284,9 @@ export function AthleteEventDetail({
                   isJogo ? "text-arena-primary" : "text-arena-info",
                 )}
               >
-                {isJogo ? "Jogo Oficial" : "Treino"}
+                {isJogo ? t("type.game") : t("type.training")}
               </span>
-              <StatusBadge status={event.status} />
+              <StatusBadge status={event.status} t={t} />
             </div>
             <h1 className="text-[18px] font-bold leading-snug text-arena-text">
               {event.title}
@@ -355,7 +298,7 @@ export function AthleteEventDetail({
           <div className="mb-3.5 flex items-center gap-2">
             <div className="size-1.5 rounded-full bg-arena-primary animate-pulse" />
             <p className="text-[10px] font-black uppercase tracking-[0.25em] text-arena-text-muted">
-              CONTAGEM DECRESCENTE
+              {t("countdown")}
             </p>
           </div>
           <CountdownTimer targetDate={event.startDate} />
@@ -380,7 +323,7 @@ export function AthleteEventDetail({
               label:
                 event.priceCents > 0
                   ? `${(event.priceCents / 100).toFixed(2).replace(".", ",")} ${event.currency}`
-                  : "Grátis",
+                  : t("price.free"),
             },
           ].map(({ Icon, label }) => (
             <div key={label} className="flex items-center gap-2.5">
@@ -393,7 +336,7 @@ export function AthleteEventDetail({
         </div>
 
         {!isLoading && (
-          <AttendanceBar confirmed={confirmed.length} total={total} />
+          <AttendanceBar confirmed={confirmed.length} total={total} t={t} />
         )}
 
         {/* My status card */}
@@ -404,10 +347,12 @@ export function AthleteEventDetail({
             </div>
             <div className="flex-1">
               <p className="text-[12px] font-bold text-arena-success">
-                Presença confirmada!
+                {t("presenceConfirmed")}
               </p>
               <p className="text-[11px] text-arena-text-muted">
-                {userName ? `Olá, ${userName}` : "Estás na lista confirmada"}
+                {userName
+                  ? t("greetingWithName", { name: userName })
+                  : t("onConfirmedList")}
               </p>
             </div>
           </div>
@@ -435,21 +380,19 @@ export function AthleteEventDetail({
       </div>
 
       {/* Tab content */}
-      <div className="flex-1 overflow-auto pb-28">
+      <div className="flex-1 overflow-auto pb-5">
         {tab === "lista" && (
           <div className="px-4 py-4">
-            <ShareBar eventId={event.id} eventTitle={event.title} />
-
             {isLoading ? (
               <div className="flex h-32 items-center justify-center text-arena-text-muted text-sm">
-                A carregar...
+                {t("loading")}
               </div>
             ) : (
               <>
                 {/* Confirmed */}
                 <div className="mb-1 flex items-center justify-between">
                   <span className="text-[11px] font-bold uppercase tracking-widest text-arena-text-muted">
-                    Confirmados
+                    {t("confirmed")}
                   </span>
                   <span className="text-[11px] font-bold text-arena-success">
                     {confirmed.length}
@@ -458,7 +401,7 @@ export function AthleteEventDetail({
                 <div className="mb-4 flex flex-col">
                   {confirmed.length === 0 ? (
                     <div className="rounded-[14px] border border-arena-border bg-arena-surface px-4 py-5 text-center text-[13px] text-arena-text-muted">
-                      Ainda ninguém confirmou. Sê o primeiro!
+                      {t("noOneConfirmed")}
                     </div>
                   ) : (
                     confirmed.map((p, i) => (
@@ -498,7 +441,7 @@ export function AthleteEventDetail({
                   <>
                     <div className="mb-1 flex items-center justify-between">
                       <span className="text-[11px] font-bold uppercase tracking-widest text-arena-text-muted">
-                        Lista de espera
+                        {t("waitingList")}
                       </span>
                       <span className="text-[11px] font-bold text-arena-text-muted">
                         {reserves.length + pending.length}
@@ -553,7 +496,7 @@ export function AthleteEventDetail({
             {event.description && (
               <div className="mt-4 rounded-[14px] border border-arena-border bg-arena-surface p-4">
                 <p className="mb-1 text-[10px] font-bold uppercase tracking-wider text-arena-text-muted">
-                  Notas
+                  {t("notes")}
                 </p>
                 <p className="text-[13px] text-arena-text-sec">
                   {event.description}
@@ -566,7 +509,7 @@ export function AthleteEventDetail({
 
       {/* Sticky RSVP bar */}
       <div
-        className="fixed bottom-0 left-0 right-0 z-20 px-4 pb-8 pt-4"
+        className="sticky bottom-0 z-20 px-4 pb-[calc(1rem+env(safe-area-inset-bottom))] pt-4"
         style={{
           background:
             "linear-gradient(0deg, var(--color-arena-bg) 60%, transparent)",
@@ -580,7 +523,7 @@ export function AthleteEventDetail({
             className="flex h-[52px] w-full items-center justify-center gap-2 rounded-[16px] border border-arena-border bg-arena-surface-el text-[14px] font-bold text-arena-text-sec transition-colors hover:bg-arena-surface disabled:opacity-60"
           >
             <XIcon size={18} color="currentColor" />
-            Cancelar presença
+            {t("cancelPresence")}
           </button>
         ) : (
           <div className="flex flex-col gap-2">
@@ -596,25 +539,25 @@ export function AthleteEventDetail({
               )}
             >
               <CheckIcon size={18} color="currentColor" />
-              {isFull ? "Entrar na lista de espera" : "Confirmar presença"}
+              {isFull ? t("joinWaitlist") : t("confirmPresence")}
             </button>
             {!userId && (
               <div className="rounded-[14px] border border-arena-border bg-arena-surface p-3.5">
                 <p className="mb-2.5 text-center text-[12px] font-semibold text-arena-text-sec">
-                  Tens conta Jogabola? Entra para gerir a tua presença.
+                  {t("hasAccount")}
                 </p>
                 <div className="flex gap-2">
                   <Link
                     href={`/auth?callbackURL=/event/${event.id}`}
                     className="flex h-10 flex-1 items-center justify-center rounded-[10px] border border-arena-border bg-arena-surface-el text-[13px] font-bold text-arena-text-sec no-underline transition-colors hover:bg-arena-surface hover:text-arena-text"
                   >
-                    Entrar
+                    {t("login")}
                   </Link>
                   <Link
                     href={`/auth?mode=register&callbackURL=/event/${event.id}`}
                     className="flex h-10 flex-1 items-center justify-center rounded-[10px] bg-arena-primary text-[13px] font-bold text-arena-bg no-underline transition-colors hover:bg-arena-primary/90"
                   >
-                    Criar conta
+                    {t("register")}
                   </Link>
                 </div>
               </div>

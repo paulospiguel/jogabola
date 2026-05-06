@@ -5,12 +5,18 @@ import { z } from "zod";
 import { db } from "@/db/client";
 import { teamPaymentSettings } from "@/db/schema";
 import { withAuthAction } from "@/lib/action-helpers";
+import { userCanAccessTeam } from "@/lib/team-access";
 import { upsertTeamPaymentSettingsSchema } from "@/schemas/payments.schema";
 import type { TeamPaymentConfig } from "@/types/payments";
 
 export const upsertTeamPaymentSettings = withAuthAction(
   upsertTeamPaymentSettingsSchema,
-  async (_user, data) => {
+  async (user, data) => {
+    const canAccessTeam = await userCanAccessTeam(user.id, data.teamId);
+    if (!canAccessTeam) {
+      return { success: false, error: { code: "TEAM_NOT_FOUND" } };
+    }
+
     const existing = await db.query.teamPaymentSettings.findFirst({
       where: eq(teamPaymentSettings.teamId, data.teamId),
     });
@@ -34,7 +40,12 @@ export const upsertTeamPaymentSettings = withAuthAction(
 
 export const getTeamPaymentSettings = withAuthAction(
   z.object({ teamId: z.number() }),
-  async (_user, { teamId }) => {
+  async (user, { teamId }) => {
+    const canAccessTeam = await userCanAccessTeam(user.id, teamId);
+    if (!canAccessTeam) {
+      return { success: false, error: { code: "TEAM_NOT_FOUND" } };
+    }
+
     const settings = await db.query.teamPaymentSettings.findFirst({
       where: eq(teamPaymentSettings.teamId, teamId),
     });

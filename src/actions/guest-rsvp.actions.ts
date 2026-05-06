@@ -4,7 +4,11 @@ import { and, eq, gt } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { db } from "@/db/client";
 import { attendance, guestEventOtp, matchSessions } from "@/db/schema";
-import { sendAttendanceConfirmed, sendGuestRsvpOtp } from "@/lib/email";
+import {
+  getEmailDeliveryErrorCode,
+  sendAttendanceConfirmed,
+  sendGuestRsvpOtp,
+} from "@/lib/email";
 
 function generateOTP() {
   return Math.floor(100000 + Math.random() * 900000).toString();
@@ -83,6 +87,7 @@ export async function requestGuestOTP(
     if (!emailResult.success) {
       return {
         success: false,
+        errorCode: getEmailDeliveryErrorCode(emailResult.error),
         error:
           "Não foi possível enviar o PIN por email. Confirma o email ou tenta novamente.",
       };

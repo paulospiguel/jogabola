@@ -168,6 +168,20 @@
     "history": {
       "title": "Activity History",
       "players": "Players"
+    },
+    "removeDialog": {
+      "title": "Remove from squad?",
+      "description": "You are about to remove {name} from this squad.",
+      "warning": "This removes the athlete from the team and may affect future call-ups. Existing history will not be deleted.",
+      "cancel": "Cancel",
+      "confirm": "Remove athlete",
+      "removing": "Removing...",
+      "errors": {
+        "TEAM_NOT_FOUND": "Could not confirm the active team.",
+        "CANNOT_REMOVE_OWNER": "The team owner cannot be removed from the squad.",
+        "PLAYER_NOT_IN_TEAM": "This athlete is no longer in this squad.",
+        "UNKNOWN_ERROR": "Could not remove the athlete. Try again."
+      }
     }
   },
   "arenaAddPlayer": {
@@ -260,7 +274,12 @@
       "training": "Ex: Technical Training"
     },
     "playersCount": "{count} players",
-    "steps": ["Event Type", "Details", "Preview", "Confirm"],
+    "steps": [
+      "Event Type",
+      "Details",
+      "Preview",
+      "Confirm"
+    ],
     "success": "Event created!",
     "successSubtitle": "Invitation sent successfully.",
     "types": {
@@ -303,8 +322,11 @@
     "title": "Create New Team",
     "errors": {
       "TEAM_NAME_ALREADY_EXISTS": "A team with this name already exists.",
-      "TEAM_SLUG_ALREADY_EXISTS": "This identifier (slug) is already in use by another team."
-    }
+      "TEAM_SLUG_ALREADY_EXISTS": "This identifier (slug) is already in use by another team.",
+      "TEAM_LIMIT_REACHED": "You have reached the {limit}-team limit on the free plan. Upgrade to create more teams."
+    },
+    "limitReachedTitle": "Free plan limit",
+    "upgradeCta": "View plans"
   },
   "arenaDashboard": {
     "loadingArena": "Loading arena...",
@@ -858,11 +880,13 @@
       "community": "Community",
       "contact": "Contact",
       "cookies": "Cookies",
+      "disclaimer": "Disclaimer",
       "features": "Features",
       "partners": "Become a Partner",
       "plans": "Plans",
       "privacy": "Privacy",
-      "terms": "Terms"
+      "terms": "Terms",
+      "roadmap": "Roadmap"
     },
     "privacyPolicy": "Privacy Policy",
     "systems": "OPERATING SYSTEMS",
@@ -974,7 +998,7 @@
           "description": "Confirmed list, reserves and automatic waiting list. No WhatsApp needed."
         },
         "payments": {
-          "title": "MBWay Payments",
+          "title": "Integrated Payments",
           "description": "Track who paid, who's pending and overdue amounts, stress-free."
         },
         "proofs": {
@@ -1057,6 +1081,36 @@
         "title": "\"Where's the proof?\"",
         "description": "Images buried in the group. Impossible to validate without wasting time.",
         "resolution": "Upload and automatic pre-validation"
+      }
+    },
+    "communityReviews": {
+      "kicker": "REVIEWS",
+      "title": "The community speaks",
+      "subtitle": "Real experiences from people replacing group chat chaos with weekly games that are easier to manage.",
+      "previous": "Previous review",
+      "next": "Next review",
+      "cta": "Join the waitlist",
+      "items": {
+        "sarah": {
+          "name": "Sarah Fuller",
+          "date": "February 2026",
+          "text": "I can finally see who confirmed, who is waiting, and who still has not paid without digging through old group messages."
+        },
+        "bruno": {
+          "name": "Bruno Roberts",
+          "date": "February 2026",
+          "text": "Simple to understand and fast to use. If you organize games every week, it saves time from the first call-up."
+        },
+        "mina": {
+          "name": "Mina Adel",
+          "date": "February 2026",
+          "text": "I like having attendance, payments, and proof uploads in one place. The team understands what is missing before match day."
+        },
+        "subbo": {
+          "name": "subbo21",
+          "date": "January 2026",
+          "text": "It helps a lot when there are many players and reserves. I no longer need to be the annoying person asking everything in WhatsApp."
+        }
       }
     },
     "partnersSection": {
@@ -1641,5 +1695,250 @@
     "contact": {
       "title": "Contact"
     }
+  },
+  "athleteEventPublic": {
+    "back": "Back",
+    "share": "Share",
+    "copied": "Copied!",
+    "status": {
+      "scheduled": "Scheduled",
+      "ongoing": "Ongoing",
+      "completed": "Completed",
+      "cancelled": "Cancelled"
+    },
+    "countdown": "COUNTDOWN",
+    "filledSlots": "Slots filled",
+    "slotsFull": "Slots full - you can join the waiting list",
+    "confirmed": "Confirmed",
+    "waitingList": "Waiting list",
+    "noOneConfirmed": "No one confirmed yet. Be the first!",
+    "loading": "Loading...",
+    "notes": "Notes",
+    "presenceConfirmed": "Attendance confirmed!",
+    "greetingWithName": "Hi, {name}",
+    "onConfirmedList": "You are on the confirmed list",
+    "joinWaitlist": "Join waiting list",
+    "confirmPresence": "Confirm attendance",
+    "cancelPresence": "Cancel attendance",
+    "hasAccount": "Have a Jogabola account? Sign in to manage your attendance.",
+    "login": "Sign in",
+    "register": "Create account",
+    "tabs": {
+      "squad": "Squad",
+      "location": "Location"
+    },
+    "type": {
+      "game": "Official Match",
+      "training": "Training"
+    },
+    "price": {
+      "free": "Free"
+    }
+  },
+  "athleteRsvp": {
+    "back": "Back",
+    "resendCode": "Resend code",
+    "resendIn": "Resend in {seconds}s",
+    "fillNameEmail": "Fill in your name and email.",
+    "invalidCode": "Invalid code.",
+    "enterEmail": "Enter your email.",
+    "enterCode": "Enter the 6-digit code.",
+    "titles": {
+      "choose": "Confirm Attendance",
+      "loginEmail": "Sign in",
+      "loginOtp": "Verify email",
+      "guestInfo": "Confirm as Guest",
+      "guestOtp": "Verify email",
+      "payment": "Payment",
+      "success": "Attendance Confirmed!"
+    },
+    "choosePrompt": "How do you want to confirm your attendance?",
+    "hasAccountOption": "I have a JogaBola account",
+    "hasAccountHint": "Attendance and payment history",
+    "continueAsGuest": "Continue as Guest",
+    "guestEmailHint": "Quick - we verify by email",
+    "noAccountPrefix": "Don't have an account?",
+    "createNow": "Create one now",
+    "freeSuffix": "- it is free",
+    "loginEmailHint": "Enter your email and we will send an access code.",
+    "receiveCode": "Receive code",
+    "codeSentTo": "Code sent to",
+    "loginAndConfirm": "Sign in and confirm",
+    "noAccount": "No account? No problem - we confirm via email.",
+    "receivePin": "Receive PIN",
+    "confirmPresence": "Confirm attendance",
+    "paymentReservedTitle": "Spot reserved!",
+    "paymentReservedSubtitle": "Secure your spot by paying now.",
+    "payLater": "Pay later",
+    "presenceConfirmed": "Attendance confirmed!",
+    "successGreetingWithName": "Hi, {name}! See you at the game!",
+    "successOnList": "You are on the list. See you at the game!",
+    "createAthleteAccount": "Create your athlete account",
+    "createAccountFree": "Access your attendance history, payments, and athlete profile. Free.",
+    "createFreeAccount": "Create free account",
+    "close": "Close",
+    "cashInstructions": "Pay the captain at the start of the game.",
+    "paymentNotes": "Payment via MBWay confirmed by athlete",
+    "terms": {
+      "prefix": "By continuing, you accept the",
+      "terms": "Terms",
+      "and": "and",
+      "privacy": "Privacy"
+    },
+    "errors": {
+      "confirmAttendance": "Error confirming attendance",
+      "sendCode": "Error sending code.",
+      "sessionCreatedAttendanceFailed": "Session created but attendance confirmation failed. Try again.",
+      "processPayment": "Error processing payment.",
+      "resend": "Error resending.",
+      "resendPin": "Error resending PIN.",
+      "email": {
+        "RESEND_API_KEY_MISSING": "Email sending is not configured: RESEND_API_KEY is missing.",
+        "RESEND_API_KEY_INVALID": "The Resend API key is invalid. Check RESEND_API_KEY.",
+        "RESEND_FROM_INVALID": "The sender address is invalid. Fix EMAIL_FROM.",
+        "RESEND_DOMAIN_NOT_VERIFIED": "The sender domain is not verified in Resend yet.",
+        "RESEND_DEV_DOMAIN_RESTRICTED": "The resend.dev domain only sends to the email that owns the Resend account. Verify your own domain to email guests.",
+        "EMAIL_SEND_FAILED": "Could not send the PIN by email. Check the email or try again."
+      }
+    }
+  },
+  "pricingPage": {
+    "eyebrow": "Plans",
+    "title": "Pricing for every stage of your team",
+    "subtitle": "Start free, move to Pro when your weekly game gets serious, and talk to us when you need a full operation.",
+    "recommended": "Recommended",
+    "limits": {
+      "teams": "Teams",
+      "players": "Players",
+      "events": "Events/mo"
+    },
+    "plans": {
+      "free": {
+        "badge": "Start",
+        "name": "Free",
+        "description": "For captains who want to leave WhatsApp chaos behind and organize their first games with less friction.",
+        "price": "€0",
+        "period": "/mo",
+        "cta": "Start free",
+        "features": [
+          "Up to 3 active teams",
+          "Up to 25 players per team",
+          "10 events per month",
+          "Attendance and waiting list",
+          "Basic payment tracking"
+        ]
+      },
+      "pro": {
+        "badge": "Most used",
+        "name": "Pro",
+        "description": "For recurring organizers who need more teams, payments, and weekly control.",
+        "price": "€9",
+        "period": "/mo",
+        "cta": "Join the Pro waitlist",
+        "features": [
+          "Up to 10 active teams",
+          "Up to 50 players per team",
+          "100 events per month",
+          "Payment proofs and validation",
+          "Advanced attendance management",
+          "Priority support"
+        ]
+      },
+      "elite": {
+        "badge": "Clubs",
+        "name": "Elite",
+        "description": "For clubs, academies, and communities managing many games, squads, and operations.",
+        "price": "Custom",
+        "period": "",
+        "cta": "Talk to us",
+        "features": [
+          "Practically unlimited teams",
+          "Practically unlimited players",
+          "Practically unlimited events",
+          "Assisted onboarding",
+          "Setup for clubs and communities",
+          "Dedicated guidance"
+        ]
+      }
+    },
+    "note": {
+      "title": "We are still in beta",
+      "description": "Pricing may evolve as we open more functionality. Early users will get priority access and initial conditions.",
+      "cta": "Questions? Talk to us"
+    }
+  },
+  "roadmapPage": {
+    "eyebrow": "Transparency",
+    "title": "Project Roadmap",
+    "subtitle": "Where we are and where we're going. Updated every sprint.",
+    "legend": {
+      "done": "Done",
+      "inProgress": "In progress",
+      "planned": "Planned",
+      "future": "Future"
+    },
+    "phases": [
+      {
+        "id": "mvp-core",
+        "label": "MVP · Core",
+        "period": "Q1-Q2 2026",
+        "status": "done",
+        "items": [
+          "Email OTP authentication",
+          "Team creation and management",
+          "Call-ups and attendance confirmation",
+          "Public event page (athlete view)",
+          "Payments and proof upload",
+          "Payment method configuration",
+          "Event calendar",
+          "Athlete profile",
+          "Transactional email system"
+        ]
+      },
+      {
+        "id": "freemium",
+        "label": "Freemium",
+        "period": "Q2 2026",
+        "status": "inProgress",
+        "items": [
+          "Free plan (up to 3 teams, 10 events/month)",
+          "Plans and pricing page",
+          "Upgrade to Pro plan",
+          "Billing infrastructure"
+        ]
+      },
+      {
+        "id": "pro-features",
+        "label": "Pro Features",
+        "period": "Q3 2026",
+        "status": "planned",
+        "items": [
+          "Advanced athlete statistics",
+          "Exportable financial reports",
+          "Google Calendar integration",
+          "Native push notifications",
+          "Integrated chat"
+        ]
+      },
+      {
+        "id": "elite",
+        "label": "Elite & Scale",
+        "period": "Q4 2026",
+        "status": "future",
+        "items": [
+          "Multi-tournament and leagues",
+          "Athlete scouting and networking",
+          "Public club page",
+          "Native mobile app (iOS + Android)",
+          "Public API for partners"
+        ]
+      }
+    ],
+    "cta": {
+      "title": "Want to follow along?",
+      "subtitle": "Join the waitlist and get first-hand updates.",
+      "button": "Join waitlist"
+    },
+    "backHome": "Back to home"
   }
 }

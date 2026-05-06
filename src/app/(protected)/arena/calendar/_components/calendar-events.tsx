@@ -34,7 +34,13 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { useLocale, useTranslations } from "next-intl";
-import { useMemo, useState, useTransition } from "react";
+import {
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+  useTransition,
+} from "react";
 import type { DateRange } from "react-day-picker";
 import { getCalendarEvents } from "@/actions/match-sessions.actions";
 import { Calendar as CalendarPicker } from "@/components/ui/calendar";
@@ -43,6 +49,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import { useTeams } from "@/hooks/use-teams";
 import { cn } from "@/lib/utils";
 
 /* ------------------------------------------------------------------ */
@@ -145,8 +152,8 @@ function getMonthGrid(monthStart: Date): Date[] {
   const suffix =
     remainder > 0
       ? Array.from({ length: 7 - remainder }, (_, i) =>
-        addDays(days[days.length - 1], i + 1),
-      )
+          addDays(days[days.length - 1], i + 1),
+        )
       : [];
   return [...prefix, ...days, ...suffix];
 }
@@ -222,6 +229,7 @@ export function CalendarEvents({
 }: CalendarEventsProps) {
   const t = useTranslations("arenaCalendar");
   const locale = useLocale();
+  const { activeTeamId } = useTeams();
   const dfLocale = DATE_LOCALES[locale] ?? pt;
   const [isPending, startTransition] = useTransition();
 
@@ -280,12 +288,28 @@ export function CalendarEvents({
     }
   }, [viewMode, weekStart, monthStart, yearStart, customRange, dfLocale]);
 
-  function fetchPeriod(f: Date, t_: Date) {
-    startTransition(async () => {
-      const result = await getCalendarEvents(f, t_);
-      if (result.success) setEvents(result.data as SessionRow[]);
-    });
-  }
+  const fetchPeriod = useCallback(
+    (f: Date, t_: Date) => {
+      startTransition(async () => {
+        const result = await getCalendarEvents(
+          f,
+          t_,
+          activeTeamId ?? undefined,
+        );
+        if (result.success) setEvents(result.data as SessionRow[]);
+      });
+    },
+    [activeTeamId],
+  );
+
+  useEffect(() => {
+    if (!activeTeamId) {
+      setEvents([]);
+      return;
+    }
+
+    fetchPeriod(from, to);
+  }, [activeTeamId, fetchPeriod, from, to]);
 
   function navigate(dir: "prev" | "next") {
     switch (viewMode) {
@@ -495,13 +519,13 @@ export function CalendarEvents({
                       style={
                         today
                           ? {
-                            backgroundColor: "rgba(124,255,79,0.12)",
-                            border: "1px solid rgba(124,255,79,0.3)",
-                          }
+                              backgroundColor: "rgba(124,255,79,0.12)",
+                              border: "1px solid rgba(124,255,79,0.3)",
+                            }
                           : {
-                            backgroundColor: "var(--color-arena-surface)",
-                            border: "1px solid var(--color-arena-border)",
-                          }
+                              backgroundColor: "var(--color-arena-surface)",
+                              border: "1px solid var(--color-arena-border)",
+                            }
                       }
                     >
                       <p
@@ -587,13 +611,13 @@ export function CalendarEvents({
                       style={
                         today
                           ? {
-                            backgroundColor: "rgba(124,255,79,0.12)",
-                            border: "1px solid rgba(124,255,79,0.3)",
-                          }
+                              backgroundColor: "rgba(124,255,79,0.12)",
+                              border: "1px solid rgba(124,255,79,0.3)",
+                            }
                           : {
-                            backgroundColor: "var(--color-arena-surface)",
-                            border: "1px solid var(--color-arena-border)",
-                          }
+                              backgroundColor: "var(--color-arena-surface)",
+                              border: "1px solid var(--color-arena-border)",
+                            }
                       }
                     >
                       <span

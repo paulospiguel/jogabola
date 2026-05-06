@@ -95,7 +95,10 @@ export function ArenaDashboard({ userId }: ArenaDashboardProps) {
   return (
     <>
       {sheet === "create-event" && (
-        <CreateEventSheet onClose={() => setSheet(null)} />
+        <CreateEventSheet
+          onClose={() => setSheet(null)}
+          teamId={activeTeamId}
+        />
       )}
       {sheet === "add-player" && (
         <AddPlayerSheet

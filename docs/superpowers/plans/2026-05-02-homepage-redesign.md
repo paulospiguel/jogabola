@@ -236,7 +236,7 @@ Add this block inside `"homePage"` (after `"hero"`) in each file:
       "description": "Lista de confirmados, reservas e fila de espera automática. Sem WhatsApp."
     },
     "payments": {
-      "title": "Pagamentos MBWay",
+      "title": "Pagamentos Integrados",
       "description": "Regista quem pagou, quem está pendente e valores em atraso, sem stress."
     },
     "proofs": {
@@ -263,7 +263,7 @@ Add this block inside `"homePage"` (after `"hero"`) in each file:
       "description": "Confirmed list, reserves and automatic waiting list. No WhatsApp needed."
     },
     "payments": {
-      "title": "MBWay Payments",
+      "title": "Integrated Payments",
       "description": "Track who paid, who's pending and overdue amounts, stress-free."
     },
     "proofs": {
@@ -290,7 +290,7 @@ Add this block inside `"homePage"` (after `"hero"`) in each file:
       "description": "Lista de confirmados, reservas y cola de espera automática. Sin WhatsApp."
     },
     "payments": {
-      "title": "Pagos MBWay",
+      "title": "Pagos Integrados",
       "description": "Registra quién pagó, quién está pendiente y los importes vencidos, sin estrés."
     },
     "proofs": {
@@ -317,7 +317,7 @@ Add this block inside `"homePage"` (after `"hero"`) in each file:
       "description": "Liste des confirmés, réservations et file d'attente automatique. Sans WhatsApp."
     },
     "payments": {
-      "title": "Paiements MBWay",
+      "title": "Paiements Integrados",
       "description": "Enregistre qui a payé, qui est en attente et les montants en retard, sans stress."
     },
     "proofs": {

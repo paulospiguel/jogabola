@@ -1,16 +1,16 @@
 import {
   Body,
   Container,
+  Font,
   Head,
   Html,
   Img,
   Preview,
   Section,
-  Text,
   Tailwind,
-  Font,
+  Text,
 } from "@react-email/components";
-import * as React from "react";
+import type * as React from "react";
 
 // Design tokens (arena dark theme)
 export const colors = {
@@ -32,7 +32,8 @@ export const colors = {
   textFaint: "#6B7280",
 };
 
-export const APP_URL = process.env.NEXT_PUBLIC_APP_URL || "https://jogabola.fun";
+export const APP_URL =
+  process.env.NEXT_PUBLIC_APP_URL || "https://jogabola.app";
 export const FROM_NAME = "JogaBola";
 
 interface EmailLayoutProps {
@@ -114,26 +115,38 @@ export function EmailLayout({ preview, children }: EmailLayoutProps) {
                   margin: "0 0 4px",
                 }}
               >
-                © {new Date().getFullYear()} JogaBola · Todos os direitos reservados
+                © {new Date().getFullYear()} JogaBola · Todos os direitos
+                reservados
               </Text>
-              <Text style={{ fontSize: 11, color: colors.textFaint, margin: 0 }}>
+              <Text
+                style={{ fontSize: 11, color: colors.textFaint, margin: 0 }}
+              >
                 <a
                   href={`${APP_URL}/privacy`}
-                  style={{ color: colors.textFaint, textDecoration: "underline" }}
+                  style={{
+                    color: colors.textFaint,
+                    textDecoration: "underline",
+                  }}
                 >
                   Privacidade
                 </a>
                 {" · "}
                 <a
                   href={`${APP_URL}/terms`}
-                  style={{ color: colors.textFaint, textDecoration: "underline" }}
+                  style={{
+                    color: colors.textFaint,
+                    textDecoration: "underline",
+                  }}
                 >
                   Termos
                 </a>
                 {" · "}
                 <a
                   href={`${APP_URL}/contact`}
-                  style={{ color: colors.textFaint, textDecoration: "underline" }}
+                  style={{
+                    color: colors.textFaint,
+                    textDecoration: "underline",
+                  }}
                 >
                   Contacto
                 </a>
@@ -148,9 +161,7 @@ export function EmailLayout({ preview, children }: EmailLayoutProps) {
 
 // Shared card sections
 export function CardBody({ children }: { children: React.ReactNode }) {
-  return (
-    <Section style={{ padding: "28px 28px 8px" }}>{children}</Section>
-  );
+  return <Section style={{ padding: "28px 28px 8px" }}>{children}</Section>;
 }
 
 export function CardFooter({ children }: { children: React.ReactNode }) {

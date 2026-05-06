@@ -11,10 +11,66 @@ const resend = new Resend(process.env.RESEND_API_KEY);
 const FROM_EMAIL =
   process.env.EMAIL_FROM ||
   process.env.RESEND_EMAIL_FROM ||
-  "JogaBola <noreply@jogabola.fun>";
+  "JogaBola <noreply@jogabola.app>";
+
+export type EmailDeliveryErrorCode =
+  | "RESEND_API_KEY_MISSING"
+  | "RESEND_API_KEY_INVALID"
+  | "RESEND_FROM_INVALID"
+  | "RESEND_DOMAIN_NOT_VERIFIED"
+  | "RESEND_DEV_DOMAIN_RESTRICTED"
+  | "EMAIL_SEND_FAILED";
 
 function isDev() {
   return process.env.NODE_ENV !== "production" && !process.env.RESEND_API_KEY;
+}
+
+function errorText(error: unknown) {
+  if (!error) return "";
+  if (error instanceof Error) {
+    return `${error.name} ${error.message} ${String(error.cause ?? "")}`;
+  }
+  if (typeof error === "object") {
+    return JSON.stringify(normalizeEmailError(error));
+  }
+  return String(error);
+}
+
+export function getEmailDeliveryErrorCode(
+  error: unknown,
+): EmailDeliveryErrorCode {
+  const text = errorText(error).toLowerCase();
+
+  if (text.includes("resend_api_key is not configured")) {
+    return "RESEND_API_KEY_MISSING";
+  }
+  if (text.includes("invalid_api_key") || text.includes("api key is invalid")) {
+    return "RESEND_API_KEY_INVALID";
+  }
+  if (
+    text.includes("invalid `from`") ||
+    text.includes("invalid from") ||
+    text.includes("sender email address")
+  ) {
+    return "RESEND_FROM_INVALID";
+  }
+  if (
+    text.includes("resend.dev") &&
+    (text.includes("only send testing emails") ||
+      text.includes("only send") ||
+      text.includes("verify a domain"))
+  ) {
+    return "RESEND_DEV_DOMAIN_RESTRICTED";
+  }
+  if (
+    text.includes("domain is not verified") ||
+    text.includes("domain has not been verified") ||
+    text.includes("please, add and verify your domain")
+  ) {
+    return "RESEND_DOMAIN_NOT_VERIFIED";
+  }
+
+  return "EMAIL_SEND_FAILED";
 }
 
 function normalizeEmailError(error: unknown) {

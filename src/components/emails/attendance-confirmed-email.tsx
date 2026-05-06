@@ -4,10 +4,10 @@ import {
   APP_URL,
   CardBody,
   CardFooter,
+  colors,
   EmailLayout,
   PrimaryButton,
   SectionTitle,
-  colors,
 } from "./base/email-layout";
 
 interface AttendanceConfirmedEmailProps {
@@ -149,23 +149,37 @@ export function AttendanceConfirmedEmail({
       <CardFooter>
         {isGuest ? (
           <Text
-            style={{ fontSize: 11, color: colors.textFaint, margin: 0, lineHeight: 1.5 }}
+            style={{
+              fontSize: 11,
+              color: colors.textFaint,
+              margin: 0,
+              lineHeight: 1.5,
+            }}
           >
             Confirmaste como convidado. Cria uma conta gratuita em{" "}
             <a
               href={`${APP_URL}/auth`}
-              style={{ color: colors.primary, textDecoration: "none", fontWeight: 600 }}
+              style={{
+                color: colors.primary,
+                textDecoration: "none",
+                fontWeight: 600,
+              }}
             >
-              jogabola.fun
+              jogabola.app
             </a>{" "}
             para gerir futuras presenças mais rapidamente.
           </Text>
         ) : (
           <Text
-            style={{ fontSize: 11, color: colors.textFaint, margin: 0, lineHeight: 1.5 }}
+            style={{
+              fontSize: 11,
+              color: colors.textFaint,
+              margin: 0,
+              lineHeight: 1.5,
+            }}
           >
-            Precisas de cancelar? Acede ao evento e clica em "Cancelar
-            presença" antes do início.
+            Precisas de cancelar? Acede ao evento e clica em "Cancelar presença"
+            antes do início.
           </Text>
         )}
       </CardFooter>

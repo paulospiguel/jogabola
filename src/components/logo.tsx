@@ -9,7 +9,7 @@ import logo from "@/assets/logos/jogabola-logo.svg";
 import logoWhite from "@/assets/logos/jogabola-white.svg";
 import newLogoAnimated from "@/assets/logos/logo_animado.gif";
 import { APP } from "@/constants/app";
-import { useJourneyRedirect } from "@/hooks/use-journey-redirect";
+import { useRouterUtils } from "@/hooks/use-router-utils";
 
 import { useSession } from "@/lib/auth-client";
 import { cn } from "@/lib/utils";
@@ -45,7 +45,7 @@ export const Logo: React.FC<LogoProps> = ({
 }) => {
   const t = useTranslations();
   const { data: session } = useSession();
-  const { redirectToJourney } = useJourneyRedirect();
+  const { redirectToJourney, redirectToHome } = useRouterUtils();
   const logoSize = sizes[size];
   let logotipo: StaticImageData;
 
@@ -63,9 +63,19 @@ export const Logo: React.FC<LogoProps> = ({
   }
 
   const handleClick = (e: React.MouseEvent) => {
+    if (href === "home") {
+      e.preventDefault();
+      return redirectToHome();
+    }
+
     if (session?.user?.id && href === "/") {
       e.preventDefault();
       redirectToJourney();
+    }
+
+    if (href) {
+      e.preventDefault();
+      window.open(href, "_blank");
     }
   };
 

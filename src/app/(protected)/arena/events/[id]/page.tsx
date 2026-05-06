@@ -2,6 +2,7 @@ import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { getEvent } from "@/actions/match-sessions.actions";
 import { auth } from "@/lib/auth";
+import { userCanAccessTeam } from "@/lib/team-access";
 import { EventDetail } from "./_components/event-detail";
 
 interface Params {
@@ -30,9 +31,14 @@ export default async function ArenaEventDetailPage({ params }: Params) {
     );
   }
 
-  // In the arena version, we assume the user has some level of access if they are here
-  // We can pass isAdmin=true for now as it's the "Manage" view,
-  // but ideally we check if user is admin of the team.
+  const canAccessTeam = await userCanAccessTeam(user.id, event.teamId);
+  if (!canAccessTeam) {
+    return (
+      <div className="flex min-h-[60vh] items-center justify-center text-arena-text-muted">
+        Evento não encontrado.
+      </div>
+    );
+  }
 
   return (
     <div className="jb-page">

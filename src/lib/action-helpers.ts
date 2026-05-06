@@ -7,6 +7,7 @@ export type AuthUser = {
   id: string;
   name: string;
   email: string;
+  teamId: number | null;
 };
 
 export function validationError(
@@ -27,7 +28,15 @@ export async function getAuthUser(): Promise<AuthUser | null> {
   const session = await auth.api.getSession({ headers: await headers() });
   const u = session?.user;
   if (!u?.id) return null;
-  return { id: u.id, name: u.name, email: u.email };
+  const sessionData = session?.session as
+    | { teamId?: number | null }
+    | undefined;
+  return {
+    id: u.id,
+    name: u.name,
+    email: u.email,
+    teamId: sessionData?.teamId ?? null,
+  };
 }
 
 export function withAction<S extends ZodTypeAny, T>(

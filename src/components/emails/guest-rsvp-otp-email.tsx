@@ -4,10 +4,10 @@ import {
   APP_URL,
   CardBody,
   CardFooter,
+  colors,
   EmailLayout,
   OtpBox,
   SectionTitle,
-  colors,
 } from "./base/email-layout";
 
 interface GuestRsvpOtpEmailProps {
@@ -120,8 +120,8 @@ export function GuestRsvpOtpEmail({
             borderLeft: `3px solid ${colors.info}`,
           }}
         >
-          ⏱ Expira em <strong style={{ color: colors.text }}>10 minutos</strong>.
-          Introduz este código no campo PIN do site.
+          ⏱ Expira em <strong style={{ color: colors.text }}>10 minutos</strong>
+          . Introduz este código no campo PIN do site.
         </Text>
       </Section>
 
@@ -137,17 +137,26 @@ export function GuestRsvpOtpEmail({
           Quer uma conta JogaBola?
         </Text>
         <Text
-          style={{ fontSize: 11, color: colors.textFaint, margin: 0, lineHeight: 1.5 }}
+          style={{
+            fontSize: 11,
+            color: colors.textFaint,
+            margin: 0,
+            lineHeight: 1.5,
+          }}
         >
           Cria uma conta gratuita em{" "}
           <a
             href={`${APP_URL}/auth`}
-            style={{ color: colors.primary, textDecoration: "none", fontWeight: 600 }}
+            style={{
+              color: colors.primary,
+              textDecoration: "none",
+              fontWeight: 600,
+            }}
           >
-            jogabola.fun
+            jogabola.app
           </a>{" "}
-          para gerir presenças, pagamentos e estatísticas sem precisar de PIN
-          em cada evento.
+          para gerir presenças, pagamentos e estatísticas sem precisar de PIN em
+          cada evento.
         </Text>
       </CardFooter>
     </EmailLayout>

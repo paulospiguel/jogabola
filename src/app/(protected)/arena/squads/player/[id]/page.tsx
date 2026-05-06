@@ -1,6 +1,7 @@
 "use client";
 
 import { ShieldUserIcon } from "@animateicons/react/lucide";
+import { useQueryClient } from "@tanstack/react-query";
 import {
   ArrowLeft,
   Calendar,
@@ -9,24 +10,37 @@ import {
   Mail,
   Star,
   Trophy,
-  User2,
   UserMinus,
   Zap,
 } from "lucide-react";
 import { useParams, useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
+import { useState } from "react";
+import { removePlayerFromRoster } from "@/actions/teams.actions";
 import { JbAvatar } from "@/components/arena/jb-avatar";
 import { VerifiedBadge } from "@/components/arena/verified-badge";
 import Loading from "@/components/loading";
+import {
+  AlertDialog,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import { useAthleteProfile } from "@/hooks/use-athlete-profile";
 import { useDashboardData } from "@/hooks/use-dashboard";
+import { useTeams } from "@/hooks/use-teams";
 import { cn } from "@/lib/utils";
 
 export default function AthleteProfilePage() {
   const { id } = useParams();
   const router = useRouter();
   const t = useTranslations();
+  const { activeTeamId } = useTeams();
   const { events, isLoading: dashboardLoading } = useDashboardData();
   const { profile: athlete, isLoading: profileLoading } = useAthleteProfile(
     id as string,
@@ -80,10 +94,14 @@ export default function AthleteProfilePage() {
               <ArrowLeft size={20} />
             </Button>
             <div>
-              <div className="jb-kicker uppercase">{arenaAthleteProfileTranslation("pendingValidation")}</div>
+              <div className="jb-kicker uppercase">
+                {arenaAthleteProfileTranslation("pendingValidation")}
+              </div>
               <div className="flex items-center gap-2">
                 <ShieldUserIcon className="size-6 text-arena-text-muted" />
-                <h1 className="jb-title">{arenaAthleteProfileTranslation("title")}</h1>
+                <h1 className="jb-title">
+                  {arenaAthleteProfileTranslation("title")}
+                </h1>
               </div>
             </div>
           </header>
@@ -91,7 +109,11 @@ export default function AthleteProfilePage() {
           <div className="max-w-md mx-auto">
             <section className="jb-card p-6 flex flex-col items-center text-center gap-4">
               <div className="flex size-16 items-center justify-center rounded-[18px] border border-arena-border bg-arena-surface">
-                <Clock size={28} className="text-arena-text-muted" strokeWidth={1.5} />
+                <Clock
+                  size={28}
+                  className="text-arena-text-muted"
+                  strokeWidth={1.5}
+                />
               </div>
               <JbAvatar
                 id={athlete.id.toString()}
@@ -100,7 +122,9 @@ export default function AthleteProfilePage() {
                 size={72}
               />
               <div>
-                <h2 className="text-lg font-bold text-arena-text">{athlete.name}</h2>
+                <h2 className="text-lg font-bold text-arena-text">
+                  {athlete.name}
+                </h2>
                 {athlete.email && (
                   <div className="mt-1 flex items-center justify-center gap-1.5 text-sm text-arena-text-muted">
                     <Mail size={13} />
@@ -109,16 +133,20 @@ export default function AthleteProfilePage() {
                 )}
               </div>
               <div className="rounded-[10px] border border-arena-warning/30 bg-arena-warning/10 px-4 py-3 text-sm text-arena-warning">
-                <p className="font-semibold">{arenaAthleteProfileTranslation("notValidated")}</p>
-                <p className="mt-1 text-xs opacity-80">{arenaAthleteProfileTranslation("notValidatedDesc")}</p>
+                <p className="font-semibold">
+                  {arenaAthleteProfileTranslation("notValidated")}
+                </p>
+                <p className="mt-1 text-xs opacity-80">
+                  {arenaAthleteProfileTranslation("notValidatedDesc")}
+                </p>
               </div>
-              <Button
-                variant="ghost"
-                className="w-full text-arena-danger hover:bg-arena-danger/10 hover:text-arena-danger"
-              >
-                <UserMinus className="mr-2" size={16} />
-                {arenaAthleteProfileTranslation("actions.remove")}
-              </Button>
+              <RemoveFromRosterDialog
+                activeTeamId={activeTeamId}
+                playerId={athlete.id.toString()}
+                playerName={athlete.name}
+                onRemoved={() => router.push("/arena/squads")}
+                t={arenaAthleteProfileTranslation}
+              />
             </section>
           </div>
         </div>
@@ -129,25 +157,25 @@ export default function AthleteProfilePage() {
   const statCards = [
     {
       label: arenaAthleteProfileTranslation("stats.rating"),
-      value: (athlete as any).rating || "-",
+      value: athlete.rating || "-",
       Icon: Star,
       color: "text-arena-highlight",
     },
     {
       label: arenaAthleteProfileTranslation("stats.goals"),
-      value: (athlete as any).goals || 0,
+      value: athlete.goals || 0,
       Icon: Zap,
       color: "text-arena-primary",
     },
     {
       label: arenaAthleteProfileTranslation("stats.assists"),
-      value: (athlete as any).assists || 0,
+      value: athlete.assists || 0,
       Icon: Trophy,
       color: "text-arena-success",
     },
     {
       label: arenaAthleteProfileTranslation("stats.matches"),
-      value: (athlete as any).games || 0,
+      value: athlete.games || 0,
       Icon: Calendar,
       color: "text-arena-info",
     },
@@ -247,13 +275,14 @@ export default function AthleteProfilePage() {
                 </div>
               </div>
 
-              <Button
-                variant="ghost"
-                className="mt-8 w-full text-arena-danger hover:bg-arena-danger/10 hover:text-arena-danger"
-              >
-                <UserMinus className="mr-2" size={16} />
-                {arenaAthleteProfileTranslation("actions.remove")}
-              </Button>
+              <RemoveFromRosterDialog
+                activeTeamId={activeTeamId}
+                className="mt-8"
+                playerId={athlete.id.toString()}
+                playerName={athlete.name}
+                onRemoved={() => router.push("/arena/squads")}
+                t={arenaAthleteProfileTranslation}
+              />
             </section>
           </aside>
 
@@ -295,7 +324,7 @@ export default function AthleteProfilePage() {
                 <div className="flex h-32 items-end gap-3 mb-6">
                   {[40, 60, 45, 90, 65, 80, 50, 75, 85, 95].map((h, i) => (
                     <div
-                      key={i}
+                      key={`rating-bar-${i}-${h}`}
                       className="w-4 bg-arena-primary/20 rounded-t-sm transition-all hover:bg-arena-primary hover:h-40"
                       style={{ height: `${h}%` }}
                     />
@@ -324,7 +353,7 @@ export default function AthleteProfilePage() {
               <div className="divide-y divide-arena-border">
                 {events.map((item, i) => (
                   <div
-                    key={i}
+                    key={`${item.title}-${item.date}-${i}`}
                     className="flex items-center gap-4 px-6 py-4 hover:bg-arena-surface-el transition-colors"
                   >
                     <div className="flex-1 min-w-0">
@@ -361,5 +390,124 @@ export default function AthleteProfilePage() {
         </div>
       </div>
     </div>
+  );
+}
+
+function RemoveFromRosterDialog({
+  activeTeamId,
+  className,
+  playerId,
+  playerName,
+  onRemoved,
+  t,
+}: {
+  activeTeamId: number | null;
+  className?: string;
+  playerId: string;
+  playerName: string;
+  onRemoved: () => void;
+  t: (sentence: string) => string;
+}) {
+  const queryClient = useQueryClient();
+  const [open, setOpen] = useState(false);
+  const [isRemoving, setIsRemoving] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  async function handleRemove() {
+    if (!activeTeamId) {
+      setError(t("removeDialog.errors.TEAM_NOT_FOUND"));
+      return;
+    }
+
+    setIsRemoving(true);
+    setError(null);
+
+    const result = await removePlayerFromRoster({
+      teamId: activeTeamId,
+      playerId,
+    });
+
+    setIsRemoving(false);
+
+    if (!result.success) {
+      const code = result.error.code;
+      const errorKey = [
+        "TEAM_NOT_FOUND",
+        "CANNOT_REMOVE_OWNER",
+        "PLAYER_NOT_IN_TEAM",
+      ].includes(code)
+        ? code
+        : "UNKNOWN_ERROR";
+
+      setError(t(`removeDialog.errors.${errorKey}`));
+      return;
+    }
+
+    await queryClient.invalidateQueries({ queryKey: ["squad", activeTeamId] });
+    await queryClient.invalidateQueries({
+      queryKey: ["athlete-profile", playerId, activeTeamId],
+    });
+    setOpen(false);
+    onRemoved();
+  }
+
+  return (
+    <AlertDialog open={open} onOpenChange={setOpen}>
+      <AlertDialogTrigger asChild>
+        <Button
+          variant="ghost"
+          className={cn(
+            "w-full text-arena-danger hover:bg-arena-danger/10 hover:text-arena-danger",
+            className,
+          )}
+        >
+          <UserMinus className="mr-2" size={16} />
+          {t("actions.remove")}
+        </Button>
+      </AlertDialogTrigger>
+      <AlertDialogContent className="border-arena-border bg-arena-surface shadow-2xl">
+        <AlertDialogHeader>
+          <div className="mb-2 flex size-12 items-center justify-center rounded-2xl border border-arena-danger/25 bg-arena-danger/10 text-arena-danger">
+            <UserMinus size={24} strokeWidth={2} />
+          </div>
+          <AlertDialogTitle className="text-arena-text">
+            {t("removeDialog.title")}
+          </AlertDialogTitle>
+          <AlertDialogDescription className="text-arena-text-sec">
+            {t("removeDialog.description").replace("{name}", playerName)}
+          </AlertDialogDescription>
+        </AlertDialogHeader>
+
+        <div className="rounded-[14px] border border-arena-warning/25 bg-arena-warning/10 px-4 py-3 text-[13px] font-semibold text-arena-warning">
+          {t("removeDialog.warning")}
+        </div>
+
+        {error && (
+          <div className="rounded-[12px] border border-arena-danger/25 bg-arena-danger/10 px-4 py-3 text-[13px] text-arena-danger">
+            {error}
+          </div>
+        )}
+
+        <AlertDialogFooter>
+          <AlertDialogCancel
+            className="border-arena-border bg-arena-surface-el text-arena-text-sec hover:bg-arena-surface hover:text-arena-text"
+            disabled={isRemoving}
+          >
+            {t("removeDialog.cancel")}
+          </AlertDialogCancel>
+          <Button
+            className="bg-arena-danger text-white hover:bg-arena-danger/90"
+            disabled={isRemoving}
+            onClick={handleRemove}
+            type="button"
+          >
+            <UserMinus className="mr-2" size={16} />
+            {isRemoving
+              ? t("removeDialog.removing")
+              : t("removeDialog.confirm")}
+          </Button>
+        </AlertDialogFooter>
+      </AlertDialogContent>
+    </AlertDialog>
   );
 }

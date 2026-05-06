@@ -26,6 +26,7 @@ import { JbBottomSheet } from "./jb-bottom-sheet";
 interface CreateEventSheetProps {
   onClose: () => void;
   onCreated?: () => void;
+  teamId?: number;
 }
 
 interface FormState {
@@ -45,6 +46,7 @@ const labelClass = "mb-1 text-xs font-semibold text-arena-text-sec";
 export function CreateEventSheet({
   onClose,
   onCreated,
+  teamId,
 }: CreateEventSheetProps) {
   const t = useTranslations("arenaCreateEvent");
   const [step, setStep] = useState(0);
@@ -100,6 +102,7 @@ export function CreateEventSheet({
       maxParticipants: form.maxPlayers,
       isPublic: true,
       recurrence: form.recurrence,
+      teamId,
     });
 
     setSending(false);

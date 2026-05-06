@@ -9,6 +9,7 @@ import {
 } from "@animateicons/react/lucide";
 import { ArrowLeft, ArrowRight, RotateCcw, Sparkles } from "lucide-react";
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { confirmUserAttendance } from "@/actions/attendance.actions";
 import { requestGuestOTP, verifyGuestOTP } from "@/actions/guest-rsvp.actions";
@@ -43,7 +44,13 @@ interface AthleteRsvpSheetProps {
   onSuccess: (status: string) => void;
 }
 
-function BackButton({ onClick }: { onClick: () => void }) {
+function BackButton({
+  onClick,
+  label,
+}: {
+  onClick: () => void;
+  label: string;
+}) {
   return (
     <button
       type="button"
@@ -51,7 +58,7 @@ function BackButton({ onClick }: { onClick: () => void }) {
       className="mb-1 flex items-center gap-1.5 text-[12px] font-bold uppercase tracking-wider text-arena-primary hover:text-arena-primary/80"
     >
       <ArrowLeft size={13} />
-      Voltar
+      {label}
     </button>
   );
 }
@@ -65,15 +72,15 @@ function EmailInput({
 }) {
   return (
     <div className="relative">
-      <span className="absolute left-3 top-1/2 -translate-y-1/2 text-arena-text-muted">
-        <MailIcon size={16} color="currentColor" />
+      <span className="pointer-events-none absolute inset-y-0 left-0 flex w-12 items-center justify-center text-arena-text-muted">
+        <MailIcon size={17} color="currentColor" />
       </span>
       <input
         type="email"
         value={value}
         onChange={e => onChange(e.target.value)}
         placeholder="o-teu@email.com"
-        className="h-[50px] w-full rounded-[12px] border border-arena-border bg-arena-bg-sec/50 pl-10 pr-4 text-[14px] text-arena-text placeholder:text-arena-text-muted outline-none transition-all focus:border-arena-primary focus:ring-2 focus:ring-arena-primary/10"
+        className="h-[50px] w-full rounded-[12px] border border-arena-border bg-arena-bg-sec/50 pl-12 pr-4 text-[14px] text-arena-text placeholder:text-arena-text-muted outline-none transition-all focus:border-arena-primary focus:ring-2 focus:ring-arena-primary/10"
         required
         autoComplete="email"
       />
@@ -132,6 +139,26 @@ function SubmitBtn({
 }
 
 const RESEND_SECONDS = 30;
+const EMAIL_ERROR_CODES = new Set([
+  "RESEND_API_KEY_MISSING",
+  "RESEND_API_KEY_INVALID",
+  "RESEND_FROM_INVALID",
+  "RESEND_DOMAIN_NOT_VERIFIED",
+  "RESEND_DEV_DOMAIN_RESTRICTED",
+  "EMAIL_SEND_FAILED",
+]);
+
+function getGuestOtpErrorMessage(
+  t: ReturnType<typeof useTranslations>,
+  res: { error?: string; errorCode?: string },
+  fallback: string,
+) {
+  if (res.errorCode && EMAIL_ERROR_CODES.has(res.errorCode)) {
+    return t(`errors.email.${res.errorCode}`);
+  }
+
+  return res.error || fallback;
+}
 
 function useResendTimer() {
   const [seconds, setSeconds] = useState(RESEND_SECONDS);
@@ -165,9 +192,13 @@ function useResendTimer() {
 function ResendTimer({
   onResend,
   loading,
+  resendCodeLabel,
+  resendInLabel,
 }: {
   onResend: () => Promise<void>;
   loading: boolean;
+  resendCodeLabel: string;
+  resendInLabel: (seconds: number) => string;
 }) {
   const { seconds, canResend, restart } = useResendTimer();
   const [resending, setResending] = useState(false);
@@ -196,7 +227,7 @@ function ResendTimer({
           ) : (
             <RotateCcw size={13} strokeWidth={2.5} />
           )}
-          Reenviar código
+          {resendCodeLabel}
         </button>
       ) : (
         <div className="flex items-center gap-2 text-[12px] text-arena-text-muted">
@@ -235,7 +266,7 @@ function ResendTimer({
               {seconds}
             </span>
           </div>
-          <span>Reenviar em {seconds}s</span>
+          <span>{resendInLabel(seconds)}</span>
         </div>
       )}
     </div>
@@ -248,6 +279,7 @@ export function AthleteRsvpSheet({
   onClose,
   onSuccess,
 }: AthleteRsvpSheetProps) {
+  const t = useTranslations("athleteRsvp");
   const [step, setStep] = useState<Step>(userId ? "payment" : "choose");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -272,11 +304,11 @@ export function AthleteRsvpSheet({
         if (res.success) {
           setReservationId(res.reservationId);
         } else {
-          setError(res.error || "Erro ao confirmar presença");
+          setError(res.error || t("errors.confirmAttendance"));
         }
       });
     }
-  }, [userId, step, reservationId, eventId, loading]);
+  }, [userId, step, reservationId, eventId, loading, t]);
 
   function clearError() {
     setError("");
@@ -297,7 +329,7 @@ export function AthleteRsvpSheet({
   async function handleGuestSendOTP(e: React.FormEvent) {
     e.preventDefault();
     if (!guestName.trim() || !guestEmail.trim()) {
-      setError("Preenche o nome e email.");
+      setError(t("fillNameEmail"));
       return;
     }
     setLoading(true);
@@ -311,14 +343,14 @@ export function AthleteRsvpSheet({
     if (res.success) {
       setStep("guest-otp");
     } else {
-      setError(res.error || "Erro ao enviar código.");
+      setError(getGuestOtpErrorMessage(t, res, t("errors.sendCode")));
     }
   }
 
   async function handleGuestVerifyOTP(e: React.FormEvent) {
     e.preventDefault();
     if (guestOtp.length < 6) {
-      setError("Introduz o código de 6 dígitos.");
+      setError(t("enterCode"));
       return;
     }
     setLoading(true);
@@ -329,14 +361,14 @@ export function AthleteRsvpSheet({
       onSuccess("confirmed");
       setStep("success");
     } else {
-      setError(res.error || "Código inválido.");
+      setError(res.error || t("invalidCode"));
     }
   }
 
   async function handleLoginSendOTP(e: React.FormEvent) {
     e.preventDefault();
     if (!loginEmail.trim()) {
-      setError("Introduz o teu email.");
+      setError(t("enterEmail"));
       return;
     }
     setLoading(true);
@@ -347,7 +379,7 @@ export function AthleteRsvpSheet({
     });
     setLoading(false);
     if (result.error) {
-      setError(result.error.message || "Erro ao enviar código.");
+      setError(result.error.message || t("errors.sendCode"));
     } else {
       setStep("login-otp");
     }
@@ -356,7 +388,7 @@ export function AthleteRsvpSheet({
   async function handleLoginVerifyOTP(e: React.FormEvent) {
     e.preventDefault();
     if (loginOtp.length < 6) {
-      setError("Introduz o código de 6 dígitos.");
+      setError(t("enterCode"));
       return;
     }
     setLoading(true);
@@ -375,7 +407,7 @@ export function AthleteRsvpSheet({
     });
 
     if (result.error) {
-      setError(result.error.message || "Código inválido.");
+      setError(result.error.message || t("invalidCode"));
       setLoading(false);
       return;
     }
@@ -386,7 +418,7 @@ export function AthleteRsvpSheet({
       onSuccess("confirmed");
       handleNextAfterRsvp(confirm.reservationId);
     } else {
-      setError("Sessão criada mas erro ao confirmar presença. Tenta de novo.");
+      setError(t("errors.sessionCreatedAttendanceFailed"));
     }
   }
 
@@ -406,7 +438,7 @@ export function AthleteRsvpSheet({
       }
       return res.data;
     } else {
-      setError("Erro ao processar pagamento.");
+      setError(t("errors.processPayment"));
     }
   }
 
@@ -416,25 +448,25 @@ export function AthleteRsvpSheet({
     await submitPaymentProof({
       paymentId,
       fileUrl: "https://example.com/placeholder-proof.jpg",
-      notes: "Pagamento via MBWay confirmado pelo atleta",
+      notes: t("paymentNotes"),
     });
     setStep("success");
   }
 
   const TITLES: Record<Step, string> = {
-    choose: "Confirmar Presença",
-    "login-email": "Entrar na conta",
-    "login-otp": "Verificar email",
-    "guest-info": "Confirmar como Convidado",
-    "guest-otp": "Verificar email",
-    payment: "Pagamento",
-    success: "Presença Confirmada!",
+    choose: t("titles.choose"),
+    "login-email": t("titles.loginEmail"),
+    "login-otp": t("titles.loginOtp"),
+    "guest-info": t("titles.guestInfo"),
+    "guest-otp": t("titles.guestOtp"),
+    payment: t("titles.payment"),
+    success: t("titles.success"),
   };
 
   const defaultPaymentConfig: TeamPaymentConfig = {
     stripe: { enabled: false },
     mbway: { enabled: false },
-    cash: { enabled: true, instructions: "Paga ao capitão no início do jogo." },
+    cash: { enabled: true, instructions: t("cashInstructions") },
   };
 
   const paymentConfig: TeamPaymentConfig = settings
@@ -468,7 +500,7 @@ export function AthleteRsvpSheet({
         {step === "choose" && (
           <div className="flex flex-col gap-3">
             <p className="mb-2 text-[13px] text-arena-text-muted">
-              Como queres confirmar a tua presença?
+              {t("choosePrompt")}
             </p>
 
             <button
@@ -484,10 +516,10 @@ export function AthleteRsvpSheet({
               </div>
               <div className="flex-1">
                 <p className="text-[14px] font-bold text-arena-text">
-                  Tenho conta JogaBola
+                  {t("hasAccountOption")}
                 </p>
                 <p className="text-[12px] text-arena-text-muted">
-                  Histórico de presenças e pagamentos
+                  {t("hasAccountHint")}
                 </p>
               </div>
               <ArrowRight
@@ -509,10 +541,10 @@ export function AthleteRsvpSheet({
               </div>
               <div className="flex-1">
                 <p className="text-[14px] font-bold text-arena-text">
-                  Continuar como Convidado
+                  {t("continueAsGuest")}
                 </p>
                 <p className="text-[12px] text-arena-text-muted">
-                  Rápido — verificamos por email
+                  {t("guestEmailHint")}
                 </p>
               </div>
               <ArrowRight
@@ -522,14 +554,14 @@ export function AthleteRsvpSheet({
             </button>
 
             <p className="mt-1 text-center text-[11px] text-arena-text-muted">
-              Não tens conta?{" "}
+              {t("noAccountPrefix")}{" "}
               <Link
                 href="/auth"
                 className="font-semibold text-arena-primary hover:underline"
               >
-                Cria agora
+                {t("createNow")}
               </Link>{" "}
-              — é grátis
+              {t("freeSuffix")}
             </p>
           </div>
         )}
@@ -538,17 +570,18 @@ export function AthleteRsvpSheet({
         {step === "login-email" && (
           <form onSubmit={handleLoginSendOTP} className="flex flex-col gap-4">
             <BackButton
+              label={t("back")}
               onClick={() => {
                 clearError();
                 setStep("choose");
               }}
             />
             <p className="text-[13px] text-arena-text-muted">
-              Introduz o teu email e enviamos um código de acesso.
+              {t("loginEmailHint")}
             </p>
             <EmailInput value={loginEmail} onChange={setLoginEmail} />
             <SubmitBtn loading={loading}>
-              Receber código <ArrowRight size={16} />
+              {t("receiveCode")} <ArrowRight size={16} />
             </SubmitBtn>
           </form>
         )}
@@ -557,13 +590,14 @@ export function AthleteRsvpSheet({
         {step === "login-otp" && (
           <form onSubmit={handleLoginVerifyOTP} className="flex flex-col gap-4">
             <BackButton
+              label={t("back")}
               onClick={() => {
                 clearError();
                 setStep("login-email");
               }}
             />
             <p className="text-[13px] text-arena-text-muted">
-              Código enviado para{" "}
+              {t("codeSentTo")}{" "}
               <span className="font-semibold text-arena-text-sec">
                 {loginEmail}
               </span>
@@ -571,10 +605,12 @@ export function AthleteRsvpSheet({
             <OtpField value={loginOtp} onChange={setLoginOtp} />
             <SubmitBtn loading={loading}>
               <CheckIcon size={18} color="currentColor" />
-              Entrar e confirmar
+              {t("loginAndConfirm")}
             </SubmitBtn>
             <ResendTimer
               loading={loading}
+              resendCodeLabel={t("resendCode")}
+              resendInLabel={seconds => t("resendIn", { seconds })}
               onResend={async () => {
                 clearError();
                 const result = await emailOtp.sendVerificationOtp({
@@ -582,7 +618,7 @@ export function AthleteRsvpSheet({
                   type: "sign-in",
                 });
                 if (result.error)
-                  setError(result.error.message || "Erro ao reenviar.");
+                  setError(result.error.message || t("errors.resend"));
               }}
             />
           </form>
@@ -592,25 +628,26 @@ export function AthleteRsvpSheet({
         {step === "guest-info" && (
           <form onSubmit={handleGuestSendOTP} className="flex flex-col gap-4">
             <BackButton
+              label={t("back")}
               onClick={() => {
                 clearError();
                 setStep("choose");
               }}
             />
             <p className="text-[13px] text-arena-text-muted">
-              Sem conta? Sem problema — confirmamos via email.
+              {t("noAccount")}
             </p>
 
             <div className="relative">
-              <span className="absolute left-3 top-1/2 -translate-y-1/2 text-arena-text-muted">
-                <UserIcon size={16} color="currentColor" />
+              <span className="pointer-events-none absolute inset-y-0 left-0 flex w-12 items-center justify-center text-arena-text-muted">
+                <UserIcon size={17} color="currentColor" />
               </span>
               <input
                 type="text"
                 value={guestName}
                 onChange={e => setGuestName(e.target.value)}
                 placeholder="Nome completo"
-                className="h-[50px] w-full rounded-[12px] border border-arena-border bg-arena-bg-sec/50 pl-10 pr-4 text-[14px] text-arena-text placeholder:text-arena-text-muted outline-none transition-all focus:border-arena-primary focus:ring-2 focus:ring-arena-primary/10"
+                className="h-[50px] w-full rounded-[12px] border border-arena-border bg-arena-bg-sec/50 pl-12 pr-4 text-[14px] text-arena-text placeholder:text-arena-text-muted outline-none transition-all focus:border-arena-primary focus:ring-2 focus:ring-arena-primary/10"
                 required
                 autoComplete="name"
               />
@@ -619,23 +656,23 @@ export function AthleteRsvpSheet({
             <EmailInput value={guestEmail} onChange={setGuestEmail} />
 
             <SubmitBtn loading={loading}>
-              Receber PIN <ArrowRight size={16} />
+              {t("receivePin")} <ArrowRight size={16} />
             </SubmitBtn>
 
             <p className="text-center text-[10px] text-arena-text-muted">
-              Ao continuar, aceitas os{" "}
+              {t("terms.prefix")}{" "}
               <Link
                 href="/terms"
                 className="underline hover:text-arena-text transition-colors"
               >
-                Termos
+                {t("terms.terms")}
               </Link>{" "}
-              e{" "}
+              {t("terms.and")}{" "}
               <Link
                 href="/privacy"
                 className="underline hover:text-arena-text transition-colors"
               >
-                Privacidade
+                {t("terms.privacy")}
               </Link>
               .
             </p>
@@ -646,13 +683,14 @@ export function AthleteRsvpSheet({
         {step === "guest-otp" && (
           <form onSubmit={handleGuestVerifyOTP} className="flex flex-col gap-4">
             <BackButton
+              label={t("back")}
               onClick={() => {
                 clearError();
                 setStep("guest-info");
               }}
             />
             <p className="text-[13px] text-arena-text-muted">
-              Código enviado para{" "}
+              {t("codeSentTo")}{" "}
               <span className="font-semibold text-arena-text-sec">
                 {guestEmail}
               </span>
@@ -660,10 +698,12 @@ export function AthleteRsvpSheet({
             <OtpField value={guestOtp} onChange={setGuestOtp} />
             <SubmitBtn loading={loading}>
               <CheckIcon size={18} color="currentColor" />
-              Confirmar presença
+              {t("confirmPresence")}
             </SubmitBtn>
             <ResendTimer
               loading={loading}
+              resendCodeLabel={t("resendCode")}
+              resendInLabel={seconds => t("resendIn", { seconds })}
               onResend={async () => {
                 clearError();
                 const res = await requestGuestOTP(
@@ -672,7 +712,9 @@ export function AthleteRsvpSheet({
                   guestEmail.trim(),
                 );
                 if (!res.success)
-                  setError(res.error || "Erro ao reenviar PIN.");
+                  setError(
+                    getGuestOtpErrorMessage(t, res, t("errors.resendPin")),
+                  );
               }}
             />
           </form>
@@ -687,11 +729,11 @@ export function AthleteRsvpSheet({
                   <CheckIcon size={14} color="currentColor" />
                 </div>
                 <p className="text-[13px] font-bold text-arena-text">
-                  Vaga reservada!
+                  {t("paymentReservedTitle")}
                 </p>
               </div>
               <p className="text-[12px] text-arena-text-muted">
-                Garante o teu lugar efetuando o pagamento agora.
+                {t("paymentReservedSubtitle")}
               </p>
             </div>
 
@@ -711,7 +753,7 @@ export function AthleteRsvpSheet({
               onClick={() => setStep("success")}
               className="mt-2 text-center text-[12px] font-bold text-arena-text-muted hover:text-arena-text"
             >
-              Pagar mais tarde
+              {t("payLater")}
             </button>
           </div>
         )}
@@ -725,11 +767,12 @@ export function AthleteRsvpSheet({
 
             <div>
               <h2 className="text-[20px] font-bold text-arena-text">
-                Presença confirmada!
+                {t("presenceConfirmed")}
               </h2>
               <p className="mt-1 text-[13px] text-arena-text-muted">
-                {guestName ? `Olá, ${guestName}!` : "Estás na lista."} Até ao
-                jogo!
+                {guestName
+                  ? t("successGreetingWithName", { name: guestName })
+                  : t("successOnList")}
               </p>
             </div>
 
@@ -737,12 +780,11 @@ export function AthleteRsvpSheet({
               <div className="mb-2 flex items-center gap-2">
                 <Sparkles size={16} className="text-arena-primary" />
                 <span className="text-[13px] font-bold text-arena-text">
-                  Cria a tua conta de atleta
+                  {t("createAthleteAccount")}
                 </span>
               </div>
               <p className="mb-3 text-[12px] text-arena-text-muted">
-                Acede ao teu histórico de presenças, pagamentos e perfil de
-                atleta. Grátis.
+                {t("createAccountFree")}
               </p>
               <Link
                 href={`/auth?mode=register&email=${encodeURIComponent(guestEmail || loginEmail)}&callbackURL=/event/${eventId}`}
@@ -751,7 +793,7 @@ export function AthleteRsvpSheet({
                 )}
               >
                 <Sparkles size={15} />
-                Criar conta gratuita
+                {t("createFreeAccount")}
               </Link>
             </div>
 
@@ -760,7 +802,7 @@ export function AthleteRsvpSheet({
               onClick={onClose}
               className="text-[12px] text-arena-text-muted transition-colors hover:text-arena-text"
             >
-              Fechar
+              {t("close")}
             </button>
           </div>
         )}

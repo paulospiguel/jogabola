@@ -1,6 +1,6 @@
 "use client";
 
-import { Instagram, MessageSquare, Twitter } from "lucide-react";
+import { Instagram } from "lucide-react";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
 import { APP } from "@/constants/app";
@@ -32,7 +32,8 @@ export default function Footer({ className }: FooterProps) {
       title: t("columns.product"),
       links: [
         { label: t("links.features"), href: "/#funcionalidades" },
-        { label: t("links.plans"), href: "/#planos" },
+        { label: t("links.plans"), href: "/pricing" },
+        { label: t("links.roadmap"), href: "/roadmap" },
       ],
     },
     {

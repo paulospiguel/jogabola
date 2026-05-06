@@ -1,6 +1,5 @@
 "use client";
 
-import { format } from "date-fns";
 import { Loader2 } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useState } from "react";
@@ -31,13 +30,15 @@ const labelClass = "mb-1 text-xs font-semibold text-arena-text-sec";
 
 export function EditEventSheet({ event, onClose }: EditEventSheetProps) {
   const t = useTranslations("arenaCreateEvent"); // Reusing for labels/recurrence translations
-  
+  const tEvents = useTranslations("arenaEvents");
+  const tCommon = useTranslations("common");
+
   const [form, setForm] = useState({
     startDate: new Date(event.startDate),
     status: event.status || "scheduled",
     recurrence: event.recurrence || "once",
   });
-  
+
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -64,7 +65,9 @@ export function EditEventSheet({ event, onClose }: EditEventSheetProps) {
     <JbBottomSheet onClose={onClose}>
       <div className="flex flex-col gap-4 px-5 pb-8 pt-6">
         <div className="mb-2 flex items-center justify-between">
-          <h2 className="text-lg font-bold text-arena-text">Editar Informações</h2>
+          <h2 className="text-lg font-bold text-arena-text">
+            Editar Informações
+          </h2>
         </div>
 
         <div>
@@ -87,26 +90,35 @@ export function EditEventSheet({ event, onClose }: EditEventSheetProps) {
               <SelectValue placeholder="Modalidade" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="once">{t("recurrence.once") || "Único"}</SelectItem>
-              <SelectItem value="weekly">{t("recurrence.weekly") || "Semanal"}</SelectItem>
-              <SelectItem value="monthly">{t("recurrence.monthly") || "Mensal"}</SelectItem>
+              <SelectItem value="once">
+                {t("recurrence.once") || "Único"}
+              </SelectItem>
+              <SelectItem value="weekly">
+                {t("recurrence.weekly") || "Semanal"}
+              </SelectItem>
+              <SelectItem value="monthly">
+                {t("recurrence.monthly") || "Mensal"}
+              </SelectItem>
             </SelectContent>
           </Select>
         </div>
 
         <div>
           <Label className={labelClass}>Status do Evento</Label>
-          <Select
-            value={form.status}
-            onValueChange={v => set("status", v)}
-          >
+          <Select value={form.status} onValueChange={v => set("status", v)}>
             <SelectTrigger className="h-11 w-full rounded-xl border-arena-border bg-arena-surface text-sm text-arena-text">
               <SelectValue placeholder="Status" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="scheduled">Agendado</SelectItem>
-              <SelectItem value="completed">Concluído</SelectItem>
-              <SelectItem value="canceled">Cancelado</SelectItem>
+              <SelectItem value="scheduled">
+                {tEvents("status.scheduled")}
+              </SelectItem>
+              <SelectItem value="completed">
+                {tEvents("status.confirmed")}
+              </SelectItem>
+              <SelectItem value="canceled">
+                {tEvents("status.cancelled")}
+              </SelectItem>
             </SelectContent>
           </Select>
         </div>
@@ -125,7 +137,7 @@ export function EditEventSheet({ event, onClose }: EditEventSheetProps) {
             variant="outline"
             disabled={saving}
           >
-            Cancelar
+            {tCommon("cancel")}
           </Button>
           <Button
             className="h-[50px] flex-[2] rounded-[14px] bg-arena-primary text-[15px] font-bold text-arena-bg hover:bg-arena-primary/90"
@@ -133,7 +145,11 @@ export function EditEventSheet({ event, onClose }: EditEventSheetProps) {
             type="button"
             disabled={saving}
           >
-            {saving ? <Loader2 className="animate-spin" size={16} /> : "Guardar"}
+            {saving ? (
+              <Loader2 className="animate-spin" size={16} />
+            ) : (
+              tCommon("save")
+            )}
           </Button>
         </div>
       </div>

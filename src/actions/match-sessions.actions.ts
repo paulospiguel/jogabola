@@ -6,6 +6,7 @@ import { db } from "@/db/client";
 import { queryEventById, queryEvents } from "@/db/queries/events";
 import { matchReservations, matchSessions, teams, user } from "@/db/schema";
 import { getAuthUser, withAction } from "@/lib/action-helpers";
+import { getAccessibleTeamIds, userCanAccessTeam } from "@/lib/team-access";
 import {
   createMatchReservationSchema,
   createMatchSessionSchema,
@@ -52,6 +53,7 @@ export async function createEvent(input: {
   isPublic?: boolean;
   organizerId?: string;
   recurrence?: string;
+  teamId?: number;
 }) {
   const authUser = await getAuthUser();
   if (!authUser) {
@@ -66,16 +68,20 @@ export async function createEvent(input: {
     return { success: false as const, error: { code: "MANAGER_REQUIRED" } };
   }
 
-  // Find or create a default team for this organizer
-  let teamId: number;
-  const existing = await db
-    .select({ id: teams.id })
-    .from(teams)
-    .where(eq(teams.ownerId, authUser.id))
-    .limit(1);
-  if (existing.length > 0) {
-    teamId = existing[0].id;
-  } else {
+  let teamId = input.teamId ?? authUser.teamId ?? null;
+  if (teamId) {
+    const canAccessTeam = await userCanAccessTeam(authUser.id, teamId);
+    if (!canAccessTeam) {
+      return { success: false as const, error: { code: "TEAM_NOT_FOUND" } };
+    }
+  }
+
+  if (!teamId) {
+    const accessibleTeamIds = await getAccessibleTeamIds(authUser.id);
+    teamId = accessibleTeamIds[0] ?? null;
+  }
+
+  if (!teamId) {
     const slug = `team-${authUser.id.slice(0, 8)}`;
     const [created] = await db
       .insert(teams)
@@ -115,6 +121,28 @@ export async function updateEvent(
     location?: string;
   },
 ) {
+  const authUser = await getAuthUser();
+  if (!authUser) {
+    return { success: false as const, error: { code: "UNAUTHORIZED" } };
+  }
+
+  const existingEvent = await db.query.matchSessions.findFirst({
+    columns: { teamId: true },
+    where: eq(matchSessions.id, eventId),
+  });
+
+  if (!existingEvent) {
+    return { success: false as const, error: { code: "EVENT_NOT_FOUND" } };
+  }
+
+  const canAccessTeam = await userCanAccessTeam(
+    authUser.id,
+    existingEvent.teamId,
+  );
+  if (!canAccessTeam) {
+    return { success: false as const, error: { code: "TEAM_NOT_FOUND" } };
+  }
+
   const [event] = await db
     .update(matchSessions)
     .set({
@@ -141,12 +169,39 @@ export async function getEvent(eventId: number) {
   return { success: true as const, data: toEventView(eventData) };
 }
 
-export async function getCalendarEvents(from: Date, to: Date) {
+export async function getCalendarEvents(
+  from: Date,
+  to: Date,
+  teamId?: number | string,
+) {
+  const authUser = await getAuthUser();
+  let resolvedTeamId = Number(teamId ?? authUser?.teamId ?? 0) || null;
+
+  if (authUser && !resolvedTeamId) {
+    const accessibleTeamIds = await getAccessibleTeamIds(authUser.id);
+    resolvedTeamId = accessibleTeamIds[0] ?? null;
+  }
+
+  if (authUser && resolvedTeamId) {
+    const canAccessTeam = await userCanAccessTeam(authUser.id, resolvedTeamId);
+    if (!canAccessTeam) {
+      return { success: false as const, error: { code: "TEAM_NOT_FOUND" } };
+    }
+  }
+
+  if (authUser && !resolvedTeamId) {
+    return { success: true as const, data: [] };
+  }
+
   const events = await db
     .select()
     .from(matchSessions)
     .where(
-      and(gte(matchSessions.startsAt, from), lt(matchSessions.startsAt, to)),
+      and(
+        gte(matchSessions.startsAt, from),
+        lt(matchSessions.startsAt, to),
+        ...(resolvedTeamId ? [eq(matchSessions.teamId, resolvedTeamId)] : []),
+      ),
     )
     .orderBy(matchSessions.startsAt);
   return {
@@ -166,7 +221,33 @@ export async function getEvents(options?: {
   teamId?: number | string;
 }) {
   const { limit = 10, upcomingOnly = true, teamId } = options || {};
-  const events = await queryEvents({ limit, upcomingOnly, teamId });
+  const authUser = await getAuthUser();
+  let resolvedTeamId = teamId ?? authUser?.teamId ?? undefined;
+
+  if (authUser && !resolvedTeamId) {
+    const accessibleTeamIds = await getAccessibleTeamIds(authUser.id);
+    resolvedTeamId = accessibleTeamIds[0];
+  }
+
+  if (authUser && resolvedTeamId) {
+    const canAccessTeam = await userCanAccessTeam(
+      authUser.id,
+      Number(resolvedTeamId),
+    );
+    if (!canAccessTeam) {
+      return { success: false as const, error: { code: "TEAM_NOT_FOUND" } };
+    }
+  }
+
+  if (authUser && !resolvedTeamId) {
+    return { success: true as const, data: [] };
+  }
+
+  const events = await queryEvents({
+    limit,
+    upcomingOnly,
+    teamId: resolvedTeamId,
+  });
   return { success: true as const, data: events.map(toEventView) };
 }
 

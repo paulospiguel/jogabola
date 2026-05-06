@@ -17,5 +17,7 @@
    Do instead: prefer `rg` and focused `sed`/`ls` reads over broad scans or slower alternatives.
 
 ## User Directives
-1. **[2026-03-13] Use required skills when the task matches**
+1. **[2026-05-06] Future UI must follow Jogabola design system**
+   Do instead: use existing project tokens/patterns first: dark transparent surfaces, `border-default`, `text-*`, neon mint focus, arena green selection/primary states, and repo typography before introducing external visual styles.
+2. **[2026-03-13] Use required skills when the task matches**
    Do instead: load the named or obviously relevant skill, follow its workflow, and keep the explanation concise.

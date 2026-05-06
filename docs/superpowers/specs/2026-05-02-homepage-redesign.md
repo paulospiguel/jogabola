@@ -150,7 +150,7 @@ Section title: "Reconheces isto?" (kicker above: "O PROBLEMA")
 |--------|-----------|-----------------|
 | Teams | `Equipas e Plantel` | `Sabe sempre quem está no teu plantel e quem convidas para o próximo jogo.` |
 | Attendance | `Presenças e Lista de Espera` | `Lista de confirmados, reservas e fila de espera automática. Sem WhatsApp.` |
-| Payments | `Pagamentos MBWay` | `Regista quem pagou, quem está pendente e valores em atraso, sem stress.` |
+| Payments | `Pagamentos Integrados` | `Regista quem pagou, quem está pendente e valores em atraso, sem stress.` |
 | Proofs | `Comprovativos` | `Jogadores enviam o comprovativo. Tu validas. Tudo num só lugar.` |
 
 **i18n keys affected:** `homePage.ecosystem_section.*` (update existing keys)
@@ -164,7 +164,7 @@ Section title: "Reconheces isto?" (kicker above: "O PROBLEMA")
 | `modules.teams.description` | `Sabe sempre quem está no teu plantel e quem convidas para o próximo jogo.` | `Always know who's in your squad and who you're inviting for the next game.` | `Sabe siempre quién está en tu plantilla y a quién invitas para el próximo partido.` | `Sache toujours qui est dans ton effectif et qui tu invites pour le prochain match.` |
 | `modules.attendance.title` | `Presenças e Lista de Espera` | `Attendance and Waiting List` | `Asistencias y Lista de Espera` | `Présences et Liste d'Attente` |
 | `modules.attendance.description` | `Lista de confirmados, reservas e fila de espera automática. Sem WhatsApp.` | `Confirmed list, reserves and automatic waiting list. No WhatsApp needed.` | `Lista de confirmados, reservas y cola de espera automática. Sin WhatsApp.` | `Liste des confirmés, réservations et file d'attente automatique. Sans WhatsApp.` |
-| `modules.payments.title` | `Pagamentos MBWay` | `MBWay Payments` | `Pagos MBWay` | `Paiements MBWay` |
+| `modules.payments.title` | `Pagamentos Integrados` | `Integrated Payments` | `Pagos Integrados` | `Paiements Intégrés` |
 | `modules.payments.description` | `Regista quem pagou, quem está pendente e valores em atraso, sem stress.` | `Track who paid, who's pending and overdue amounts, stress-free.` | `Registra quién pagó, quién está pendiente y los importes vencidos, sin estrés.` | `Enregistre qui a payé, qui est en attente et les montants en retard, sans stress.` |
 | `modules.proofs.title` | `Comprovativos` | `Payment Proofs` | `Comprobantes` | `Justificatifs` |
 | `modules.proofs.description` | `Jogadores enviam o comprovativo. Tu validas. Tudo num só lugar.` | `Players send the proof. You validate. All in one place.` | `Los jugadores envían el comprobante. Tú validas. Todo en un solo lugar.` | `Les joueurs envoient le justificatif. Tu valides. Tout au même endroit.` |

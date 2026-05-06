@@ -75,15 +75,15 @@ export const infoBusiness = {
   ],
 
   socialMedia: {
-    instagram: "https://instagram.com/jogabola.fun",
+    instagram: "https://instagram.com/jogabola.app",
     twitter: "https://twitter.com/jogabola",
-    facebook: "https://facebook.com/jogabola.fun",
+    facebook: "https://facebook.com/jogabola.app",
     linkedin: "https://linkedin.com/in/paulo-spiguel/",
-    youtube: "https://youtube.com/jogabola.fun",
+    youtube: "https://youtube.com/jogabola.app",
   },
 
   contact: {
-    email: "contato@jogabola.fun",
+    email: "contato@jogabola.app",
     phone: "+55 xxx xxx xxx",
   },
 };
