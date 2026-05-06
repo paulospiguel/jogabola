@@ -12,6 +12,7 @@ import {
   user as userTable,
 } from "@/db/schema";
 import { withAction, withAuthAction } from "@/lib/action-helpers";
+import { canCreateTeam, type PlanTier } from "@/lib/plan-limits";
 import {
   addPlayerToRosterSchema,
   addTeamMemberSchema,
@@ -37,6 +38,23 @@ export interface SquadMember {
 export const createTeam = withAuthAction(
   createTeamSchema,
   async (user, data) => {
+    const [userRecord] = await db
+      .select({ planTier: userTable.planTier })
+      .from(userTable)
+      .where(eq(userTable.id, user.id))
+      .limit(1);
+
+    const planTier = (userRecord?.planTier ?? "BASE") as PlanTier;
+
+    const [{ teamCount }] = await db
+      .select({ teamCount: sql<number>`count(*)::int` })
+      .from(teams)
+      .where(eq(teams.ownerId, user.id));
+
+    if (!canCreateTeam(planTier, teamCount)) {
+      return { success: false, error: { code: "PLAN_LIMIT_REACHED" } };
+    }
+
     const existingName = await db.query.teams.findFirst({
       where: eq(teams.name, data.name.trim()),
     });
@@ -300,3 +318,27 @@ export const getAthleteProfile = withAuthAction(
     };
   },
 );
+
+export const getUserPlanTier = withAuthAction(z.any(), async user => {
+  const [userRecord] = await db
+    .select({ planTier: userTable.planTier })
+    .from(userTable)
+    .where(eq(userTable.id, user.id))
+    .limit(1);
+
+  const planTier = (userRecord?.planTier ?? "BASE") as PlanTier;
+
+  const [{ teamCount }] = await db
+    .select({ teamCount: sql<number>`count(*)::int` })
+    .from(teams)
+    .where(eq(teams.ownerId, user.id));
+
+  return {
+    success: true,
+    data: {
+      planTier,
+      teamCount,
+      canCreateTeam: canCreateTeam(planTier, teamCount),
+    },
+  };
+});
