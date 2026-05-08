@@ -2007,5 +2007,27 @@
     "subtitle": "Entra em contacto connosco",
     "suggestion": "Sugestão",
     "title": "Contacto"
+  },
+  "paymentStatus": {
+    "pending": "Pagamento pendente",
+    "paid_unverified": "Em validação",
+    "review_required": "Em revisão",
+    "approved": "Pagamento aprovado",
+    "rejected": "Pagamento rejeitado",
+    "refunded": "Reembolsado"
+  },
+  "manualMarkPaid": {
+    "title": "Marcar como pago",
+    "athlete": "Atleta",
+    "method": "Método de pagamento",
+    "note": "Nota (opcional)",
+    "notePlaceholder": "Ex: pagou antes do jogo via Revolut",
+    "confirm": "Confirmar pagamento",
+    "methods": {
+      "cash": "Dinheiro (presencial)",
+      "mbway": "MBWay",
+      "transfer": "Transferência bancária",
+      "other": "Outro"
+    }
   }
 }

@@ -19,6 +19,7 @@ import {
 import { JbAvatar } from "@/components/arena/jb-avatar";
 import { JbBadge } from "@/components/arena/jb-badge";
 import { LocationMap } from "@/components/arena/location-map";
+import { PaymentStatusBadge } from "@/components/arena/payment-status-badge";
 import { type Participant, useEventAttendance } from "@/hooks/use-event-attendance";
 import { cn, formatDate, formatTime } from "@/lib/utils";
 import { AthleteRsvpSheet } from "./athlete-rsvp-sheet";
@@ -440,9 +441,17 @@ export function AthleteEventDetail({
                             {p.role}
                           </div>
                         </div>
-                        <span className="text-arena-success">
-                          <CheckIcon size={15} color="currentColor" />
-                        </span>
+                        {event.priceCents && event.priceCents > 0 && p.paymentStatus ? (
+                          <PaymentStatusBadge
+                            status={p.paymentStatus as Parameters<typeof PaymentStatusBadge>[0]["status"]}
+                            method={p.paymentMethod ?? undefined}
+                            canViewRejected={p.id === userId}
+                          />
+                        ) : (
+                          <span className="text-arena-success">
+                            <CheckIcon size={15} color="currentColor" />
+                          </span>
+                        )}
                       </div>
                     ))
                   )}

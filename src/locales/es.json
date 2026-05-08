@@ -2005,5 +2005,27 @@
       "button": "Unirse a la lista de espera"
     },
     "backHome": "Volver al inicio"
+  },
+  "paymentStatus": {
+    "pending": "Pago pendiente",
+    "paid_unverified": "En validación",
+    "review_required": "En revisión",
+    "approved": "Pago aprobado",
+    "rejected": "Pago rechazado",
+    "refunded": "Reembolsado"
+  },
+  "manualMarkPaid": {
+    "title": "Marcar como pagado",
+    "athlete": "Atleta",
+    "method": "Método de pago",
+    "note": "Nota (opcional)",
+    "notePlaceholder": "Ej: pagó antes del partido via Revolut",
+    "confirm": "Confirmar pago",
+    "methods": {
+      "cash": "Efectivo (presencial)",
+      "mbway": "MBWay",
+      "transfer": "Transferencia bancaria",
+      "other": "Otro"
+    }
   }
 }

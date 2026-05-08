@@ -472,6 +472,9 @@ export function AthleteRsvpSheet({
     cash: { enabled: true, instructions: t("cashInstructions") },
   };
 
+  // When payment is required upfront, cash is not a valid option (manager can override manually)
+  const cashAllowed = !(event?.paymentRequired);
+
   const paymentConfig: TeamPaymentConfig = settings
     ? {
       stripe: {
@@ -484,11 +487,11 @@ export function AthleteRsvpSheet({
         name: settings.mbwayName ?? undefined,
       },
       cash: {
-        enabled: settings.cashEnabled,
+        enabled: settings.cashEnabled && cashAllowed,
         instructions: settings.cashInstructions ?? undefined,
       },
     }
-    : defaultPaymentConfig;
+    : { ...defaultPaymentConfig, cash: { ...defaultPaymentConfig.cash, enabled: cashAllowed } };
 
   return (
     <JbBottomSheet title={TITLES[step]} onClose={onClose}>

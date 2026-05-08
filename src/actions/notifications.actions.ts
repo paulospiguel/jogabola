@@ -1,9 +1,9 @@
 "use server";
 
-import { and, desc, eq } from "drizzle-orm";
+import { and, desc, eq, isNull, lt } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { db } from "@/db/client";
-import { notifications } from "@/db/schema";
+import { matchSessions, notifications } from "@/db/schema";
 import { getAuthUser } from "@/lib/action-helpers";
 
 export async function getNotifications() {
@@ -70,4 +70,81 @@ export async function sendNotification(params: {
   });
 
   return { success: true as const };
+}
+
+/** Notify team manager that a payment was submitted and needs validation */
+export async function notifyPaymentValidationRequired(params: {
+  managerId: string;
+  athleteName: string;
+  eventTitle: string;
+  paymentId: number;
+  eventId: number;
+}) {
+  return sendNotification({
+    userId: params.managerId,
+    type: "payment_validation_required",
+    title: "Pagamento aguarda validação",
+    message: `${params.athleteName} submeteu pagamento para "${params.eventTitle}".`,
+    metadata: {
+      paymentId: params.paymentId,
+      eventId: params.eventId,
+    },
+  });
+}
+
+/** Compute-on-request: create deadline reminders for athlete if not already created */
+export async function ensureDeadlineReminders(athleteId: string) {
+  const now = new Date();
+  const in24h = new Date(now.getTime() + 24 * 60 * 60 * 1000);
+
+  // Find upcoming events with payment deadline within 24h
+  const upcomingEvents = await db
+    .select({
+      id: matchSessions.id,
+      title: matchSessions.title,
+      startsAt: matchSessions.startsAt,
+      paymentDeadlineHours: matchSessions.paymentDeadlineHours,
+    })
+    .from(matchSessions)
+    .where(
+      and(
+        eq(matchSessions.paymentRequired, true),
+        lt(matchSessions.startsAt, in24h),
+      ),
+    );
+
+  for (const event of upcomingEvents) {
+    if (!event.paymentDeadlineHours || !event.startsAt) continue;
+
+    const deadlineAt = new Date(
+      event.startsAt.getTime() - event.paymentDeadlineHours * 60 * 60 * 1000,
+    );
+
+    if (deadlineAt > now && deadlineAt < in24h) {
+      // Check if we already sent this notification
+      const existing = await db
+        .select({ id: notifications.id })
+        .from(notifications)
+        .where(
+          and(
+            eq(notifications.userId, athleteId),
+            eq(notifications.type, "payment_deadline_reminder"),
+          ),
+        )
+        .limit(1);
+
+      if (existing.length === 0) {
+        await sendNotification({
+          userId: athleteId,
+          type: "payment_deadline_reminder",
+          title: "Lembrete de pagamento",
+          message: `O prazo de pagamento para "${event.title}" expira em breve.`,
+          metadata: {
+            eventId: event.id,
+            deadlineAt: deadlineAt.toISOString(),
+          },
+        });
+      }
+    }
+  }
 }

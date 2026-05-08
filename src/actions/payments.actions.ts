@@ -1,6 +1,6 @@
 "use server";
 
-import { desc, eq } from "drizzle-orm";
+import { and, desc, eq } from "drizzle-orm";
 import { z } from "zod";
 import { db } from "@/db/client";
 import {
@@ -8,10 +8,15 @@ import {
   matchSessions,
   paymentProofs,
   payments,
+  teams,
   user,
 } from "@/db/schema";
+import { headers } from "next/headers";
+import { revalidatePath } from "next/cache";
 import { withAction, withAuthAction } from "@/lib/action-helpers";
+import { auth } from "@/lib/auth";
 import { userCanAccessTeam } from "@/lib/team-access";
+import { notifyPaymentValidationRequired } from "@/actions/notifications.actions";
 import {
   createPaymentSchema,
   submitPaymentProofSchema,
@@ -33,6 +38,37 @@ export const submitPaymentProof = withAction(
       .update(payments)
       .set({ status: "paid_unverified", updatedAt: new Date() })
       .where(eq(payments.id, data.paymentId));
+
+    // Notify team manager that proof needs validation
+    try {
+      const [paymentRow] = await db
+        .select({
+          managerId: teams.ownerId,
+          athleteName: user.name,
+          eventTitle: matchSessions.title,
+          eventId: matchSessions.id,
+        })
+        .from(payments)
+        .innerJoin(matchReservations, eq(matchReservations.id, payments.matchReservationId))
+        .innerJoin(matchSessions, eq(matchSessions.id, matchReservations.matchSessionId))
+        .innerJoin(teams, eq(teams.id, matchSessions.teamId))
+        .innerJoin(user, eq(user.id, matchReservations.playerId))
+        .where(eq(payments.id, data.paymentId))
+        .limit(1);
+
+      if (paymentRow) {
+        await notifyPaymentValidationRequired({
+          managerId: paymentRow.managerId,
+          athleteName: paymentRow.athleteName ?? "Atleta",
+          eventTitle: paymentRow.eventTitle,
+          paymentId: data.paymentId,
+          eventId: paymentRow.eventId,
+        });
+      }
+    } catch {
+      // Non-blocking: notification failure should not break payment flow
+    }
+
     return { success: true, data: proof };
   },
 );
@@ -97,3 +133,86 @@ export const getTeamPayments = withAuthAction(
     return { success: true, data: formattedPayments };
   },
 );
+
+export async function markPaymentManually(
+  eventId: number,
+  athleteId: string,
+  method: string,
+  note?: string,
+) {
+  const session = await auth.api.getSession({ headers: await headers() });
+  if (!session?.user?.id) {
+    return { success: false as const, error: "Não autenticado" };
+  }
+
+  const managerId = session.user.id;
+
+  try {
+    // Verify manager has access to the team that owns this event
+    const [matchSession] = await db
+      .select({ teamId: matchSessions.teamId, priceCents: matchSessions.priceCents, currency: matchSessions.currency })
+      .from(matchSessions)
+      .where(eq(matchSessions.id, eventId))
+      .limit(1);
+
+    if (!matchSession) {
+      return { success: false as const, error: "Evento não encontrado" };
+    }
+
+    const canAccess = await userCanAccessTeam(managerId, matchSession.teamId);
+    if (!canAccess) {
+      return { success: false as const, error: "Sem permissão" };
+    }
+
+    // Upsert reservation
+    const [reservation] = await db
+      .insert(matchReservations)
+      .values({
+        matchSessionId: eventId,
+        playerId: athleteId,
+        status: "reserved_unpaid",
+        updatedAt: new Date(),
+      })
+      .onConflictDoUpdate({
+        target: [matchReservations.matchSessionId, matchReservations.playerId],
+        set: { updatedAt: new Date() },
+      })
+      .returning();
+
+    // Check for existing payment
+    const [existingPayment] = await db
+      .select()
+      .from(payments)
+      .where(eq(payments.matchReservationId, reservation.id))
+      .limit(1);
+
+    if (existingPayment) {
+      await db
+        .update(payments)
+        .set({
+          status: "approved",
+          method,
+          markedByUserId: managerId,
+          manualNote: note ?? null,
+          updatedAt: new Date(),
+        })
+        .where(eq(payments.id, existingPayment.id));
+    } else {
+      await db.insert(payments).values({
+        matchReservationId: reservation.id,
+        amountCents: matchSession.priceCents ?? 0,
+        currency: matchSession.currency ?? "EUR",
+        method,
+        status: "approved",
+        markedByUserId: managerId,
+        manualNote: note ?? null,
+      });
+    }
+
+    revalidatePath(`/arena/events/${eventId}`);
+    revalidatePath(`/event/${eventId}`);
+    return { success: true as const };
+  } catch {
+    return { success: false as const, error: "Erro ao registar pagamento" };
+  }
+}

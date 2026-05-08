@@ -2000,5 +2000,27 @@
       "button": "Join waitlist"
     },
     "backHome": "Back to home"
+  },
+  "paymentStatus": {
+    "pending": "Payment pending",
+    "paid_unverified": "Under review",
+    "review_required": "Needs review",
+    "approved": "Payment approved",
+    "rejected": "Payment rejected",
+    "refunded": "Refunded"
+  },
+  "manualMarkPaid": {
+    "title": "Mark as paid",
+    "athlete": "Athlete",
+    "method": "Payment method",
+    "note": "Note (optional)",
+    "notePlaceholder": "E.g. paid before the game via Revolut",
+    "confirm": "Confirm payment",
+    "methods": {
+      "cash": "Cash (in person)",
+      "mbway": "MBWay",
+      "transfer": "Bank transfer",
+      "other": "Other"
+    }
   }
 }

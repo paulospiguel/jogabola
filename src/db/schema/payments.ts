@@ -20,6 +20,10 @@ export const payments = pgTable("payments", {
   method: text("method").notNull(),
   status: text("status").notNull().default("pending"),
   providerReference: text("provider_reference"),
+  markedByUserId: text("marked_by_user_id").references(() => user.id, {
+    onDelete: "set null",
+  }),
+  manualNote: text("manual_note"),
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at").defaultNow(),
 });

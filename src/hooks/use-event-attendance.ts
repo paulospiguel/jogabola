@@ -8,6 +8,8 @@ export interface Participant {
   id: string | number;
   name: string;
   role: string;
+  paymentStatus?: string | null;
+  paymentMethod?: string | null;
 }
 
 export function useEventAttendance(eventId: number) {

@@ -4,7 +4,7 @@ import { and, eq } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { headers } from "next/headers";
 import { db } from "@/db/client";
-import { attendance, matchReservations, user } from "@/db/schema";
+import { attendance, matchReservations, payments, user } from "@/db/schema";
 import { withAction } from "@/lib/action-helpers";
 import { auth } from "@/lib/auth";
 import { upsertAttendanceSchema } from "@/schemas/attendance.schema";
@@ -42,9 +42,19 @@ export async function getEventAttendanceWithUsers(eventId: number) {
         id: user.id,
         name: user.name,
       },
+      paymentStatus: payments.status,
+      paymentMethod: payments.method,
     })
     .from(attendance)
     .leftJoin(user, eq(attendance.playerId, user.id))
+    .leftJoin(
+      matchReservations,
+      and(
+        eq(matchReservations.matchSessionId, eventId),
+        eq(matchReservations.playerId, attendance.playerId),
+      ),
+    )
+    .leftJoin(payments, eq(payments.matchReservationId, matchReservations.id))
     .where(eq(attendance.matchSessionId, eventId));
 
   const confirmed = [];
@@ -56,7 +66,13 @@ export async function getEventAttendanceWithUsers(eventId: number) {
     const role = "Jogador";
     const id = r.user?.id || `guest-${r.id}`;
 
-    const participant = { id, name, role };
+    const participant = {
+      id,
+      name,
+      role,
+      paymentStatus: r.paymentStatus ?? null,
+      paymentMethod: r.paymentMethod ?? null,
+    };
 
     if (r.status === "confirmed") {
       confirmed.push(participant);
