@@ -1,4 +1,4 @@
-import { boolean, integer, pgTable, serial, text, timestamp } from "drizzle-orm/pg-core";
+import { boolean, integer, pgTable, serial, text, timestamp, uniqueIndex } from "drizzle-orm/pg-core";
 import { teams } from "./teams";
 import { user } from "./users";
 
@@ -22,15 +22,24 @@ export const matchSessions = pgTable("match_sessions", {
   updatedAt: timestamp("updated_at").defaultNow(),
 });
 
-export const matchReservations = pgTable("match_reservations", {
-  id: serial("id").primaryKey(),
-  matchSessionId: integer("match_session_id")
-    .notNull()
-    .references(() => matchSessions.id, { onDelete: "cascade" }),
-  playerId: text("player_id")
-    .notNull()
-    .references(() => user.id, { onDelete: "cascade" }),
-  status: text("status").notNull().default("reserved_unpaid"),
-  createdAt: timestamp("created_at").defaultNow(),
-  updatedAt: timestamp("updated_at").defaultNow(),
-});
+export const matchReservations = pgTable(
+  "match_reservations",
+  {
+    id: serial("id").primaryKey(),
+    matchSessionId: integer("match_session_id")
+      .notNull()
+      .references(() => matchSessions.id, { onDelete: "cascade" }),
+    playerId: text("player_id")
+      .notNull()
+      .references(() => user.id, { onDelete: "cascade" }),
+    status: text("status").notNull().default("reserved_unpaid"),
+    createdAt: timestamp("created_at").defaultNow(),
+    updatedAt: timestamp("updated_at").defaultNow(),
+  },
+  table => ({
+    reservationIdx: uniqueIndex("match_reservations_session_player_idx").on(
+      table.matchSessionId,
+      table.playerId,
+    ),
+  }),
+);
