@@ -1296,6 +1296,62 @@
     },
     "unreadCount": "{count, plural, =1 {One unread notification} other {# unread notifications}}"
   },
+  "payment": {
+    "required": "Payment required",
+    "optional": "Optional payment",
+    "timing": {
+      "before": "Before the match",
+      "after": "After the match"
+    },
+    "deadlineHours": "Deadline (hours before match)",
+    "reminderHours": "Remind (hours before deadline)",
+    "policy": {
+      "label": "If deadline expires",
+      "notify": "Notify only",
+      "cancel": "Cancel reservation and free spot"
+    },
+    "deadline": {
+      "label": "Payment deadline",
+      "expiresIn": "Expires in",
+      "expired": "Deadline expired"
+    },
+    "status": {
+      "pending": "Pending",
+      "paid_unverified": "Under review",
+      "review_required": "Review",
+      "approved": "Approved",
+      "rejected": "Rejected",
+      "refunded": "Refunded"
+    },
+    "receipt": {
+      "confirmed": "Payment confirmed",
+      "number": "Receipt"
+    },
+    "reminder": {
+      "email": {
+        "subject": "Payment pending — {eventTitle}",
+        "title": "Payment pending",
+        "cta": "Pay now →"
+      }
+    },
+    "dashboard": {
+      "paid": "Paid",
+      "pending": "Pending",
+      "overdue": "Overdue",
+      "totalReceived": "Total received",
+      "approve": "Approve",
+      "reject": "Reject",
+      "tabLabel": "Payments"
+    },
+    "paymentConfig": {
+      "enable": "Charge payment",
+      "enableHint": "Require payment from players",
+      "amount": "Amount",
+      "when": "When to pay",
+      "expiration": "If deadline expires",
+      "activeMethodsHint": "Active methods (configured in team settings)"
+    }
+  },
   "organizerPage": {
     "comingSoon": {
       "description": "This area is under development. Soon you will have full access to the event organization panel.",

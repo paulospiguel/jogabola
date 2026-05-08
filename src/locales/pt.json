@@ -361,7 +361,8 @@
     "stats": {
       "confirmed": "Confirmados",
       "pending": "Pendentes",
-      "reserves": "Reservas"
+      "reserves": "Reservas",
+      "new": "Novos"
     },
     "add-player": "Adicionar Jogador",
     "create-event": "Criar Evento"
@@ -391,7 +392,8 @@
     },
     "titleJogo": "Detalhe do Jogo",
     "titleTreino": "Treino",
-    "training": "Treino"
+    "training": "Treino",
+    "loading": "A carregar detalhes do evento..."
   },
   "arenaEvents": {
     "actions": {
@@ -611,7 +613,10 @@
       "setMethods": "Métodos de Pagamento",
       "autoValidate": "Auto-validação",
       "relevant": "Outras Ações"
-    }
+    },
+    "status": "Estado",
+    "method": "Método",
+    "proofs": "Comprovativos"
   },
   "arenaBadges": {
     "new": "Novo",
@@ -1283,6 +1288,62 @@
     },
     "unreadCount": "{count, plural, =1 {Uma notificação por ler} other {# notificações por ler}}"
   },
+  "payment": {
+    "required": "Pagamento obrigatório",
+    "optional": "Pagamento opcional",
+    "timing": {
+      "before": "Antes do jogo",
+      "after": "Após o jogo"
+    },
+    "deadlineHours": "Prazo (horas antes do jogo)",
+    "reminderHours": "Lembrar (horas antes do prazo)",
+    "policy": {
+      "label": "Se prazo expirar",
+      "notify": "Apenas notificar",
+      "cancel": "Cancelar reserva e liberar vaga"
+    },
+    "deadline": {
+      "label": "Prazo de pagamento",
+      "expiresIn": "Expira em",
+      "expired": "Prazo expirado"
+    },
+    "status": {
+      "pending": "Pendente",
+      "paid_unverified": "Em análise",
+      "review_required": "Revisão",
+      "approved": "Aprovado",
+      "rejected": "Rejeitado",
+      "refunded": "Reembolsado"
+    },
+    "receipt": {
+      "confirmed": "Pagamento confirmado",
+      "number": "Recibo"
+    },
+    "reminder": {
+      "email": {
+        "subject": "Pagamento pendente — {eventTitle}",
+        "title": "Pagamento pendente",
+        "cta": "Pagar agora →"
+      }
+    },
+    "dashboard": {
+      "paid": "Pagos",
+      "pending": "Pendentes",
+      "overdue": "Atrasados",
+      "totalReceived": "Total recebido",
+      "approve": "Aprovar",
+      "reject": "Rejeitar",
+      "tabLabel": "Pagamentos"
+    },
+    "paymentConfig": {
+      "enable": "Cobrar pagamento",
+      "enableHint": "Exigir pagamento dos jogadores",
+      "amount": "Valor",
+      "when": "Quando pagar",
+      "expiration": "Se prazo expirar",
+      "activeMethodsHint": "Métodos ativos (configurados nas definições do time)"
+    }
+  },
   "organizerPage": {
     "comingSoon": {
       "description": "Esta área está em desenvolvimento. Em breve você terá acesso completo ao painel de organização de eventos.",
@@ -1716,7 +1777,9 @@
     },
     "price": {
       "free": "Grátis"
-    }
+    },
+    "eventNotFound": "Evento não encontrado",
+    "backToHome": "Voltar ao Início"
   },
   "athleteRsvp": {
     "back": "Voltar",
@@ -1923,5 +1986,25 @@
       "button": "Entrar na lista de espera"
     },
     "backHome": "Voltar ao início"
+  },
+  "contact": {
+    "bug": "Bug",
+    "complaint": "Reclamação",
+    "email": "Email",
+    "email_invalid": "Email inválido",
+    "message": "Mensagem",
+    "message_required": "Mensagem obrigatória",
+    "name": "Nome",
+    "name_required": "Nome obrigatório",
+    "other": "Outro",
+    "phone": "Telemóvel",
+    "question": "Pergunta",
+    "send": "Enviar",
+    "send_error": "Erro ao enviar mensagem",
+    "send_success": "Mensagem enviada com sucesso",
+    "subject": "Assunto",
+    "subtitle": "Entra em contacto connosco",
+    "suggestion": "Sugestão",
+    "title": "Contacto"
   }
 }

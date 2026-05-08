@@ -13,52 +13,52 @@
     },
     "events": {
       "details": {
-        "about": "About the event",
+        "about": "À propos de l'événement",
         "actions": {
           "organizer": {
-            "addParticipant": "Add Participant",
-            "createChat": "Create Event Chat",
-            "editEvent": "Edit Event",
-            "manageParticipants": "Manage Participants"
+            "addParticipant": "Ajouter un Participant",
+            "createChat": "Créer un Chat Événement",
+            "editEvent": "Modifier l'Événement",
+            "manageParticipants": "Gérer les Participants"
           },
           "participant": {
-            "createChat": "Create Event Chat",
-            "invitePeople": "Invite People",
-            "manageParticipants": "Manage Participants"
+            "createChat": "Créer un Chat Événement",
+            "invitePeople": "Inviter des Personnes",
+            "manageParticipants": "Gérer les Participants"
           }
         },
-        "back": "Back",
-        "criteria": "Participation criteria",
-        "favorite": "Favourite",
-        "favorited": "Favourited",
-        "follow": "Follow",
-        "following": "Following",
-        "join": "Join event",
-        "loading": "Loading event...",
+        "back": "Retour",
+        "criteria": "Critères de participation",
+        "favorite": "Favori",
+        "favorited": "Favori",
+        "follow": "Suivre",
+        "following": "Suivi",
+        "join": "Rejoindre l'événement",
+        "loading": "Chargement de l'événement...",
         "messageModal": {
-          "cancel": "Cancel",
-          "description": "Send a message to the event organiser",
+          "cancel": "Annuler",
+          "description": "Envoyer un message à l'organisateur",
           "label": "Message",
-          "placeholder": "Write your message here...",
-          "send": "Send",
-          "sending": "Sending...",
-          "title": "Send message to organiser"
+          "placeholder": "Écrivez votre message ici...",
+          "send": "Envoyer",
+          "sending": "Envoi...",
+          "title": "Envoyer un message à l'organisateur"
         },
-        "notFound": "Event not found",
-        "organizer": "Organiser",
+        "notFound": "Événement non trouvé",
+        "organizer": "Organisateur",
         "participants": "participants",
-        "participating": "You are participating",
-        "sendMessage": "Send message",
-        "share": "Share"
+        "participating": "Vous participez",
+        "sendMessage": "Envoyer un message",
+        "share": "Partager"
       },
       "title": "Prochains Événements",
       "viewAll": "Voir tous les événements"
     },
     "header": {
       "description": "Suivez le rythme de votre équipe, organisez des matchs et gardez la communauté toujours active.",
-      "openMenu": "Open navigation menu",
-      "quote": "Track the performance of your players, build detailed statistics and monitor the performance of your team.",
-      "searchPlaceholder": "Search matches, players, or stats...",
+      "openMenu": "Ouvrir le menu de navigation",
+      "quote": "Suivez la performance de vos joueurs, construisez des statistiques détaillées et surveillez les performances de votre équipe.",
+      "searchPlaceholder": "Rechercher des matchs, joueurs ou statistiques...",
       "subtitle": "Centre de l'Arena",
       "title": "Bienvenue dans l'Arena ⚽"
     },
@@ -71,13 +71,13 @@
       "viewAll": "Voir tous les matchs"
     },
     "notifications": {
-      "ago1hour": "1 hour ago",
-      "ago2hours": "2 hours ago",
-      "ago5min": "5 minutes ago",
-      "newMatch": "New match available",
-      "teamInvite": "Team invitation",
+      "ago1hour": "Il y a 1 heure",
+      "ago2hours": "Il y a 2 heures",
+      "ago5min": "Il y a 5 minutes",
+      "newMatch": "Nouveau match disponible",
+      "teamInvite": "Invitation à rejoindre une équipe",
       "title": "Notifications",
-      "tournamentStarting": "Tournament starting"
+      "tournamentStarting": "Tournoi en commençant"
     },
     "stats": {
       "activeTeams": "Équipes Actives",
@@ -87,7 +87,46 @@
       "winRate": "Taux de Victoire"
     },
     "userMenu": {
-      "myAccount": "My Account"
+      "myAccount": "Mon Compte"
+    }
+  },
+  "authPage": {
+    "title": "Connexion à JogaBola",
+    "registerTitle": "Créer un compte athlète",
+    "registerSubtitle": "Utilise ton email pour créer un compte vérifié et revenir plus vite lors des prochains matchs.",
+    "arena": "Arena",
+    "event": "événement",
+    "emailLabel": "Adresse email",
+    "emailPlaceholder": "email@exemple.com",
+    "signIn": "Connexion",
+    "googleLogin": "Connexion avec Google",
+    "appleLogin": "Connexion avec Apple",
+    "orEmail": "ou connexion avec email",
+    "verifyEmail": "Vérifie ton email",
+    "codeSentTo": "Nous avons envoyé un code d'accès à",
+    "codeLabel": "Code d'accès",
+    "codePlaceholder": "Ex : 123456",
+    "validateCode": "Valider le code",
+    "changeEmail": "Changer d'email",
+    "terms": "Conditions",
+    "privacy": "Confidentialité",
+    "termsAgreement": "En te connectant, tu acceptes nos <terms>Conditions d'utilisation</terms> et notre <privacy>Politique de Confidentialité</privacy>",
+    "back": "Retour",
+    "messages": {
+      "codeSentTitle": "Code envoyé",
+      "codeSentDescription": "Nous avons envoyé un code à {email}.",
+      "loginSuccessTitle": "Connexion validée",
+      "loginSuccessDescription": "Ouverture de {destination}.",
+      "loginErrorTitle": "Erreur de connexion",
+      "loginErrorDescription": "Impossible d'envoyer le code.",
+      "invalidCodeTitle": "Code invalide",
+      "invalidCodeDescription": "Vérifie le code et réessaie.",
+      "socialError": "Connexion impossible."
+    },
+    "validation": {
+      "invalidEmail": "Email invalide",
+      "incompleteCode": "Saisis le code complet",
+      "numbersOnly": "Chiffres uniquement"
     }
   },
   "arenaAthleteProfile": {
@@ -108,7 +147,7 @@
       "viewAll": "Tout voir"
     },
     "info": {
-      "role": "Position",
+      "role": "Poste",
       "joined": "Membre depuis",
       "contact": "Contact"
     },
@@ -216,15 +255,19 @@
     "error": "Erreur lors de la création de l'événement. Veuillez réessayer.",
     "info": "Après avoir créé l'événement, vous pouvez ajouter des joueurs et gérer la convocation à partir de la page de l'événement.",
     "labels": {
-      "date": "Date",
+      "date": "Date et Heure",
       "location": "Lieu",
       "maxPlayers": "Max. joueurs",
-      "time": "Heure",
-      "title": "Titre *"
+      "recurrence": "Modalité"
+    },
+    "recurrence": {
+      "once": "Une fois",
+      "weekly": "Hebdomadaire",
+      "monthly": "Mensuel"
     },
     "noTitle": "Sans titre",
     "placeholders": {
-      "dateTime": "dd/mm/aaaa, hh:mm",
+      "dateTime": "jj/mm/aaaa, hh:mm",
       "location": "Ex : Terrain 5, Bairro Alto",
       "match": "Ex : FC Bairro Alto vs Benfica B",
       "time": "Ex : 18:00",
@@ -286,18 +329,27 @@
     "upgradeCta": "Voir les plans"
   },
   "arenaDashboard": {
+    "loadingArena": "Chargement de l'arena...",
     "actions": {
-      "createEvent": "Create Event",
-      "event": "Event",
-      "player": "Player"
+      "createEvent": "Créer un Événement",
+      "event": "Événement",
+      "player": "Joueur"
     },
     "defaultUser": "Utilisateur",
     "hero": {
-      "nextMatch": "Next Match",
-      "view": "View"
+      "nextMatch": "Prochain Match",
+      "noEvents": "Aucun événement à venir. Créez-en un !",
+      "view": "Voir"
     },
     "kicker": "Tableau de bord",
+    "noTeam": {
+      "cta": "Créer une équipe",
+      "description": "Sélectionnez une équipe dans la barre latérale ou créez-en une pour commencer.",
+      "title": "Aucune équipe sélectionnée"
+    },
     "sections": {
+      "noSquad": "Aucun joueur dans l'effectif pour le moment.",
+      "noWeekEvents": "Aucun événement programmé cette semaine.",
       "squad": "Effectif",
       "thisWeek": "Cette semaine",
       "viewCalendar": "Calendrier",
@@ -305,8 +357,9 @@
     },
     "stats": {
       "confirmed": "Confirmés",
-      "pending": "Pending",
-      "reserves": "Reserves"
+      "new": "Nouveaux",
+      "pending": "En attente",
+      "reserves": "Remplaçants"
     },
     "add-player": "Ajouter un Joueur",
     "create-event": "Créer un Événement"
@@ -336,7 +389,8 @@
     },
     "titleJogo": "Détails du match",
     "titleTreino": "Entraînement",
-    "training": "Entraînement"
+    "training": "Entraînement",
+    "loading": "Chargement des détails de l'événement..."
   },
   "arenaEvents": {
     "actions": {
@@ -358,16 +412,22 @@
     "types": {
       "match": "Match",
       "training": "Entraînement"
+    },
+    "status": {
+      "scheduled": "Programmé"
     }
   },
   "arenaNav": {
     "collapse": "Réduire le menu",
     "dashboard": "Équipe",
-    "squads": "Effectif",
     "events": "Événements",
+    "squads": "Effectif",
     "expand": "Agrandir",
     "notifications": "Notifications",
     "payments": "Paiements",
+    "profile": "Profil",
+    "settings": "Paramètres",
+    "signOut": "Déconnexion",
     "teamSwitcher": {
       "createTeam": "Créer une équipe",
       "myTeam": "Mon équipe",
@@ -378,65 +438,62 @@
       "createNewTeam": "Créer une nouvelle équipe",
       "upgradePlan": "Mettre à niveau"
     },
-    "profile": "Profil",
-    "settings": "Paramètres",
-    "signOut": "Déconnexion",
     "teams": "Équipes"
   },
   "arenaPage": {
     "activeTeams": {
       "columns": {
-        "form": "Form",
-        "name": "Team Name",
-        "status": "Status"
+        "form": "Forme",
+        "name": "Nom de l'Équipe",
+        "status": "Statut"
       },
-      "title": "Active Teams",
-      "viewAll": "View All →"
+      "title": "Équipes Actives",
+      "viewAll": "Voir Tout →"
     },
     "analytics": {
       "periods": {
-        "month": "Month",
-        "week": "Week",
-        "year": "Year"
+        "month": "Mois",
+        "week": "Semaine",
+        "year": "Année"
       },
-      "title": "Performance Analytics"
+      "title": "Analyse de Performance"
     },
     "billingHeader": {
-      "description": "Manage your subscription, upgrade, or view invoices.",
-      "title": "Billing & Plans"
+      "description": "Gérez votre abonnement, mettez à niveau ou consultez les factures.",
+      "title": "Facturation et Plans"
     },
     "calendar": {
-      "newEvent": "New event",
-      "noAppointments": "No appointments here yet",
-      "noAppointmentsSub": "Create events for training, matches, or meetings directly on this date.",
-      "scheduleNow": "Schedule now",
-      "scheduledEvents": "scheduled event(s)",
-      "seasonCalendar": "Season calendar",
-      "seasonCalendarSub": "Select a day to see scheduled events or click on a marker for quick details.",
-      "smartSchedule": "Smart schedule",
-      "subtitle": "Organize training sessions, matches, and meetings in one place. Track attendance confirmations, manage changes, and integrate everything with Google Calendar to keep the team aligned.",
-      "syncGcal": "Sync GCal",
-      "syncing": "Syncing..."
+      "newEvent": "Nouvel événement",
+      "noAppointments": "Aucun rendez-vous ici pour le moment",
+      "noAppointmentsSub": "Créez des événements pour l'entraînement, les matchs ou les réunions directement à cette date.",
+      "scheduleNow": "Programmer maintenant",
+      "scheduledEvents": "événement(s) programmé(s)",
+      "seasonCalendar": "Calendrier de la saison",
+      "seasonCalendarSub": "Sélectionnez un jour pour voir les événements programmés ou cliquez sur un marqueur pour les détails rapides.",
+      "smartSchedule": "Agenda intelligent",
+      "subtitle": "Organisez les séances d'entraînement, les matchs et les réunions en un seul endroit. Suivez les confirmations de présence, gérez les changements et intégrez tout avec Google Calendar pour garder l'équipe alignée.",
+      "syncGcal": "Sync Google Calendar",
+      "syncing": "Synchronisation..."
     },
     "calendarHeader": {
-      "description": "Organize training sessions, matches, and team commitments.",
-      "title": "Team Schedule"
+      "description": "Organisez les séances d'entraînement, les matchs et les engagements de l'équipe.",
+      "title": "Calendrier de l'Équipe"
     },
     "clubHeader": {
-      "description": "Customize your presence and manage team identity.",
-      "title": "Club Page"
+      "description": "Personnalisez votre présence et gérez l'identité de l'équipe.",
+      "title": "Page du Club"
     },
     "eventsHeader": {
-      "description": "Manage competitions, ticketing, and matches.",
-      "title": "Events & Tournaments"
+      "description": "Gérez les compétitions, la vente de billets et les matchs.",
+      "title": "Événements et Tournois"
     },
     "eyebrows": {
       "arena": "Arena",
-      "billing": "Billing",
-      "calendar": "Calendar",
+      "billing": "Facturation",
+      "calendar": "Calendrier",
       "club": "Club",
-      "events": "Events",
-      "teams": "Teams"
+      "events": "Événements",
+      "teams": "Équipes"
     },
     "header": {
       "description": "Vue opérationnelle de l'effectif et du calendrier.",
@@ -450,14 +507,14 @@
       "title": "VUE DU CLUB"
     },
     "management": {
-      "quickActions": "⚡ Quick Actions",
-      "title": "Management"
+      "quickActions": "⚡ Actions Rapides",
+      "title": "Gestion"
     },
     "mvp": {
-      "rating": "Rating",
-      "season": "Season",
-      "title": "MVP Race",
-      "viewLeaderboards": "View Leaderboards →"
+      "rating": "Note",
+      "season": "Saison",
+      "title": "Course au MVP",
+      "viewLeaderboards": "Voir les Classements →"
     },
     "quickActions": {
       "addPlayer": "Ajouter un athlète",
@@ -490,14 +547,12 @@
       "training": "Entraînement"
     },
     "teamsHeader": {
-      "description": "Manage your squad, track player form, and control team limits according to your plan.",
-      "title": "Active Teams"
+      "description": "Gérez votre effectif, suivez la forme des joueurs et contrôlez les limites des équipes selon votre plan.",
+      "title": "Équipes Actives"
     }
   },
   "arenaPayments": {
     "kicker": "Paiements",
-    "notFound": "Paiement non trouvé",
-    "loading": "Chargement des paiements...",
     "stats": {
       "method": "Méthode",
       "methodValue": "MBWay manuel",
@@ -506,10 +561,22 @@
       "validation": "Pré-validation",
       "validationValue": "Prête"
     },
+    "status": {
+      "pending": "En attente",
+      "ready": "Prêt",
+      "validating": "Validation",
+      "validated": "Validé"
+    },
+    "method": {
+      "manualMbway": "MBWay manuel"
+    },
+    "proofs": {
+      "pending": "Preuve en attente",
+      "validating": "Payé à valider"
+    },
+    "notFound": "Paiement non trouvé",
+    "loading": "Chargement des paiements...",
     "table": {
-      "mockMatch": "Match hebdomadaire",
-      "mockStatusPending": "Preuve en attente",
-      "mockStatusValidating": "Payé à valider",
       "title": "Paiements de cette semaine",
       "player": "Athlète",
       "event": "Événement",
@@ -545,10 +612,11 @@
       "download": "Télécharger",
       "uploadProof": "Charger des Preuves",
       "setMethods": "Méthodes de Paiement",
-      "autoValidate": "Auto-validation",
+      "autoValidate": "Validation automatique",
       "relevant": "Autres Actions"
     },
-    "title": "MBWay hebdomadaire"
+    "noPayments": "Aucun paiement trouvé",
+    "configureBtn": "Configurer les méthodes"
   },
   "arenaBadges": {
     "new": "Nouveau",
@@ -570,8 +638,7 @@
     },
     "filters": {
       "all": "Tous",
-      "confirmed": "Confirm.",
-      "new": "Nouveaux",
+      "confirmed": "Confirmé",
       "pending": "En attente",
       "reserves": "Réserves"
     },
@@ -604,12 +671,12 @@
     "cancel": "Annuler",
     "city": "Ville",
     "close": "Fermer",
-    "comingSoonDescription": "This area is under development. Soon you will have full access.",
+    "comingSoonDescription": "Cette zone est en cours de développement. Bientôt vous aurez un accès complet.",
     "confirm": "Confirmer",
     "confirmPassword": "Confirmez votre mot de passe",
     "copyright": "Droits d'auteur ©{year}. Tous droits réservés.",
     "create": "Créer",
-    "dark": "Dark",
+    "dark": "Sombre",
     "date": "Date",
     "dateTime": "Date et heure",
     "decline": "Décliner",
@@ -619,20 +686,20 @@
     "email": "Courrier électronique",
     "error": "Erreur",
     "finish": "Terminer",
-    "home": "Home",
+    "home": "Accueil",
     "hour": "Heure",
-    "inDevelopment": "In Development",
-    "invalidDate": "Invalid date",
+    "inDevelopment": "En Développement",
+    "invalidDate": "Date invalide",
     "join": "Adhérer",
     "knowMore": "En savoir plus",
-    "light": "Light",
+    "light": "Clair",
     "loading": "Chargement",
     "logo": "Logo",
     "manage": "Gérez",
-    "myAccount": "My Account",
+    "myAccount": "Mon Compte",
     "name": "Nom",
     "next": "Suivant(e)",
-    "notFilled": "Not filled",
+    "notFilled": "Non rempli",
     "notifications": "Notifications",
     "password": "Mot de passe",
     "performance": "Rendement",
@@ -647,19 +714,19 @@
     "playerStats": "Statistiques des joueurs",
     "playerTeam": "L'équipe du joueur",
     "players": "Joueurs",
-    "profile": "Profile",
+    "profile": "Profil",
     "rights": "Tous droits réservés",
-    "role": "Position",
+    "role": "Poste",
     "save": "Enregistrer",
-    "search": "Search...",
-    "searchCountry": "Search country...",
+    "search": "Rechercher...",
+    "searchCountry": "Rechercher un pays...",
     "season": "Saison",
-    "selectCompetition": "Select a competition",
-    "settings": "Settings",
-    "signOut": "Sign Out",
-    "statistics": "Statistics",
+    "selectCompetition": "Sélectionner une compétition",
+    "settings": "Paramètres",
+    "signOut": "Déconnexion",
+    "statistics": "Statistiques",
     "success": "Succès",
-    "system": "System",
+    "system": "Système",
     "team": "Équipe",
     "teamDescription": "Description de l'équipe",
     "teamJouneys": "Journées d'équipe",
@@ -672,13 +739,39 @@
     "verified": "Vérifié",
     "teamStats": "Statistiques de l'équipe",
     "title": "Titre",
-    "toggleTheme": "Toggle theme"
+    "toggleTheme": "Basculer le thème",
+    "positions": {
+      "GK": "Gardien",
+      "CB": "Défenseur",
+      "MID": "Milieu",
+      "FW": "Avant"
+    }
   },
   "company": {
+    "name": "JogaBola",
     "description": "Trouvez votre équipe idéale ou créez la vôtre, gérez vos athlètes et participez à des ligues légendaires !",
     "legalName": "JogaBola Foundation LLC",
-    "slogan": "Le meilleur endroit pour trouver votre équipe et jouer au foot.",
-    "name": "JogaBola"
+    "slogan": "Le meilleur endroit pour trouver votre équipe et jouer au foot."
+  },
+  "contact": {
+    "bug": "Anomalie",
+    "complaint": "Réclamation",
+    "email": "Email",
+    "email_invalid": "Email invalide",
+    "message": "Message",
+    "message_required": "Le message est obligatoire",
+    "name": "Nom",
+    "name_required": "Le nom est obligatoire",
+    "other": "Autre",
+    "phone": "Téléphone",
+    "question": "Question",
+    "send": "Envoyer",
+    "send_error": "Erreur lors de l'envoi du message",
+    "send_success": "Message envoyé avec succès",
+    "subject": "Objet",
+    "subtitle": "Entrez en contact avec nous",
+    "suggestion": "Suggestion",
+    "title": "Contact"
   },
   "cookieConsent": {
     "accept": "Accepter",
@@ -696,43 +789,43 @@
     "delete": {
       "button": "Oui, Supprimer Définitivement",
       "confirmLabel": "Tapez \"{clubName}\" pour confirmer",
-      "description": "Cette action supprimera définitivement le club, les joueurs, l'agenda et toutes les données enregistrées.",
+      "description": "Cette action supprimera définitivement le club, les joueurs, l'agenda et toutes les données enregistrées. La récupération n'est pas possible après confirmation.",
       "title": "Supprimer le Club"
     },
     "description": "Les actions dans cette section peuvent entraîner la perte définitive de données statistiques, de joueurs et d'historique. Assurez-vous de créer des sauvegardes avant de procéder.",
     "title": "Attention : Actions Irréversibles",
     "transfer": {
       "button": "Transférer la Gestion",
-      "description": "Transférez le contrôle total à un autre utilisateur existant dans l'effectif.",
+      "description": "Transférez le contrôle total, l'accès à l'administration financière et la configuration de l'équipe à un autre utilisateur existant dans l'effectif.",
       "title": "Transférer la Gestion du Club"
     }
   },
   "eventPage": {
     "create": {
       "placeholders": {
-        "description": "Add details about the event...",
-        "location": "E.g.: Club Training Center",
-        "title": "E.g.: Technical training"
+        "description": "Ajouter des détails sur l'événement...",
+        "location": "Ex : Centre d'entraînement du Club",
+        "title": "Ex : Entraînement technique"
       }
     },
     "filters": {
-      "selectLanguage": "Select a language",
-      "selectLevel": "Select level",
-      "selectPeriod": "Select period"
+      "selectLanguage": "Sélectionner une langue",
+      "selectLevel": "Sélectionner un niveau",
+      "selectPeriod": "Sélectionner une période"
     },
     "search": {
-      "gameStyle": "Game style",
-      "location": "Location",
-      "selectDates": "Select dates",
-      "useCurrentLocation": "Use current location"
+      "gameStyle": "Style de jeu",
+      "location": "Lieu",
+      "selectDates": "Sélectionner les dates",
+      "useCurrentLocation": "Utiliser la position actuelle"
     }
   },
   "eventSearch": {
     "advancedFilters": "Filtres avancés",
     "dateRange": "Sélectionnez les dates",
-    "description": "Search for matches, training sessions, or groups near you. Filter by location, game style, or date range.",
-    "endDate": "End date",
-    "filters": "Filters",
+    "description": "Recherchez des matchs, des séances d'entraînement ou des groupes près de chez vous. Filtrez par lieu, style de jeu ou plage de dates.",
+    "endDate": "Date de fin",
+    "filters": "Filtres",
     "gameStyle": "Style de jeu",
     "gameStyleOptions": {
       "competitivo": "Compétitif",
@@ -767,8 +860,8 @@
       }
     },
     "search": "Rechercher",
-    "startDate": "Start date",
-    "title": "Find your next match",
+    "startDate": "Date de début",
+    "title": "Trouvez votre prochain match",
     "useCurrentLocation": "Utiliser la position actuelle"
   },
   "experience": {
@@ -877,25 +970,25 @@
     "ecosystem_full_section": {
       "modules": {
         "engagement": {
-          "description": "Fan portal, online ticket sales and loyalty programmes to strengthen the bond with your community.",
-          "title": "Fan Engagement"
+          "description": "Portail des fans, vente de billets en ligne et programmes de fidélité pour renforcer le lien avec votre communauté.",
+          "title": "Engagement des Fans"
         },
-        "explore": "Explore module",
+        "explore": "Explorer le module",
         "finance": {
-          "description": "Total control of membership fees, sponsorships and expenses. Automatic reports for impeccable financial health.",
-          "title": "Financial Management"
+          "description": "Contrôle total des cotisations, parrainages et dépenses. Rapports automatiques pour une santé financière impeccable.",
+          "title": "Gestion Financière"
         },
         "health": {
-          "description": "Load monitoring, injury history and physiological follow-up to maximise performance and reduce risk.",
-          "title": "Athlete Health"
+          "description": "Suivi de la charge, historique des blessures et suivi physiologique pour maximiser les performances et réduire les risques.",
+          "title": "Santé de l'Athlète"
         },
         "tactical": {
-          "description": "Draw plays, organise line-ups and share technical analysis videos with your staff and athletes in real time.",
-          "title": "Tactical Planning"
+          "description": "Tracez des jeux, organisez les alignements et partagez les vidéos d'analyse technique avec votre personnel et vos athlètes en temps réel.",
+          "title": "Planification Tactique"
         }
       },
-      "subtitle": "We developed the necessary tools to professionalise every department of your sports organisation.",
-      "title": "The complete ecosystem for your club management"
+      "subtitle": "Nous avons développé les outils nécessaires pour professionnaliser chaque département de votre organisation sportive.",
+      "title": "L'écosystème complet pour la gestion de votre club"
     },
     "ecosystem_section": {
       "kicker": "MVP · L'ESSENTIEL",
@@ -964,8 +1057,13 @@
       "titlePart2": "organisé.",
       "titleHighlight": "Sans groupes WhatsApp.",
       "titlePart3": "Sans confusion.",
+      "titlePart4": "Ton arena.",
       "description": "Gère les équipes, les présences et les paiements en un seul endroit. Pour les capitaines qui prennent le jeu au sérieux.",
-      "joinWaitlist": "Rejoins la liste d'attente"
+      "joinWaitlist": "Rejoins la liste d'attente",
+      "signIn": "Se connecter",
+      "goToArena": "Aller à l'Arena",
+      "startJourney": "Commencer le Voyage",
+      "watchDemo": "Regarder la Démo"
     },
     "momentumStrip": {
       "item1": "Match programmé",
@@ -1071,78 +1169,78 @@
   },
   "howItWorksPage": {
     "buttons": {
-      "getStarted": "Get Started",
-      "learnMore": "Learn More"
+      "getStarted": "Commencer",
+      "learnMore": "En Savoir Plus"
     },
     "cta": {
-      "button": "Get Started",
-      "description": "Be part of the transformation of amateur football. Together, we will create a future where every talent has the opportunity to shine.",
-      "title": "Join the Revolution"
+      "button": "Commencer",
+      "description": "Soyez acteur de la transformation du football amateur. Ensemble, nous créerons un avenir où chaque talent a l'opportunité de briller.",
+      "title": "Rejoignez la Révolution"
     },
-    "description": "We transform grassroots, amateur and neighbourhood football into a powerful talent, well-being and health chain through intelligent and accessible tools.",
+    "description": "Nous transformons le football local, amateur et de quartier en une puissante chaîne de talent, bien-être et santé par des outils intelligents et accessibles.",
     "features": {
       "analytics": {
-        "description": "Detailed data and insights that help players and teams continuously improve their performance.",
-        "title": "Performance Analytics"
+        "description": "Des données détaillées et des insights qui aident les joueurs et les équipes à continuellement améliorer leurs performances.",
+        "title": "Analyse de Performance"
       },
       "connect": {
-        "description": "We unite players, coaches, clubs and fans on a single platform that strengthens the amateur football ecosystem.",
-        "title": "Connect Communities"
+        "description": "Nous unissons les joueurs, les entraîneurs, les clubs et les fans sur une seule plateforme qui renforce l'écosystème du football amateur.",
+        "title": "Connecter les Communautés"
       },
       "development": {
-        "description": "We identify and develop talent through a personalised scouting and training system.",
-        "title": "Talent Development"
+        "description": "Nous identifions et développons les talents par un système de scouting et d'entraînement personnalisé.",
+        "title": "Développement des Talents"
       },
       "global": {
-        "description": "We expand opportunities beyond local borders, connecting talent to clubs and international competitions.",
-        "title": "Global Reach"
+        "description": "Nous élargissons les opportunités au-delà des frontières locales, connectant les talents aux clubs et aux compétitions internationales.",
+        "title": "Portée Mondiale"
       },
       "security": {
-        "description": "A secure and reliable platform that protects data and promotes fair play in all interactions.",
-        "title": "Safe Environment"
+        "description": "Une plateforme sécurisée et fiable qui protège les données et promeut le fair-play dans toutes les interactions.",
+        "title": "Environnement Sûr"
       },
       "technology": {
-        "description": "Advanced management, performance analysis and competition organisation tools available to everyone.",
-        "title": "Smart Technology"
+        "description": "Des outils avancés de gestion, d'analyse de performance et d'organisation de compétitions disponibles pour tous.",
+        "title": "Technologie Intelligente"
       }
     },
     "howItWorks": {
-      "subtitle": "Through advanced technology and a community-centred approach, we create a complete ecosystem for football development.",
-      "title": "How We Transform Football"
+      "subtitle": "Grâce à une technologie avancée et une approche centrée sur la communauté, nous créons un écosystème complet pour le développement du football.",
+      "title": "Comment Nous Transformons le Football"
     },
     "mission": {
-      "description": "Professionalize and democratize amateur football, offering powerful tools that transform passion into opportunity, talent into career, and communities into thriving sports development ecosystems.",
-      "title": "Our Mission"
+      "description": "Professionnaliser et démocratiser le football amateur, en offrant des outils puissants qui transforment la passion en opportunité, le talent en carrière, et les communautés en écosystèmes de développement sportif prospères.",
+      "title": "Notre Mission"
     },
     "objectives": {
       "democratization": {
-        "description": "Make professional tools accessible to all levels of amateur football.",
-        "title": "Democratisation"
+        "description": "Rendre les outils professionnels accessibles à tous les niveaux du football amateur.",
+        "title": "Démocratisation"
       },
       "professionalization": {
-        "description": "Raise organisational and management standards in grassroots and amateur football.",
-        "title": "Professionalisation"
+        "description": "Élever les normes organisationnelles et de gestion du football local et amateur.",
+        "title": "Professionnalisation"
       },
-      "title": "Our Objectives",
+      "title": "Nos Objectifs",
       "vision2030": {
-        "description": "To be the world's leading platform for amateur football management and development, connecting millions of players and creating opportunities on every continent.",
+        "description": "Être la plateforme leader mondiale pour la gestion et le développement du football amateur, connectant des millions de joueurs et créant des opportunités sur chaque continent.",
         "title": "Vision 2030"
       },
       "wellness": {
-        "description": "Promote physical and mental health through sport and community.",
-        "title": "Well-being"
+        "description": "Promouvoir la santé physique et mentale par le sport et la communauté.",
+        "title": "Bien-être"
       }
     },
     "stats": {
-      "clubs": "Partner Clubs",
-      "countries": "Countries",
-      "games": "Organised Games",
-      "players": "Active Players",
-      "subtitle": "Numbers that show how we are revolutionising amateur football worldwide.",
-      "title": "Global Impact"
+      "clubs": "Clubs Partenaires",
+      "countries": "Pays",
+      "games": "Matchs Organisés",
+      "players": "Joueurs Actifs",
+      "subtitle": "Des chiffres qui montrent comment nous transformons le football amateur dans le monde.",
+      "title": "Impact Mondial"
     },
-    "subtitle": "Democratizing Football",
-    "title": "How It Works"
+    "subtitle": "Démocratiser le Football",
+    "title": "Comment Ça Fonctionne"
   },
   "locales": {
     "en": "Anglais",
@@ -1167,7 +1265,7 @@
     "privacyAndTerms": "Confidentialité et Conditions",
     "team": "Équipe",
     "terms": "Conditions",
-    "timer": "Timer"
+    "timer": "Chronomètre"
   },
   "meta": {
     "description": "Le meilleur endroit pour trouver votre équipe et jouer au football.",
@@ -1208,20 +1306,76 @@
     },
     "unreadCount": "{count, plural, =1 {Une notification non lue} other {# notifications non lues}}"
   },
+  "payment": {
+    "required": "Paiement requis",
+    "optional": "Paiement facultatif",
+    "timing": {
+      "before": "Avant le match",
+      "after": "Après le match"
+    },
+    "deadlineHours": "Délai (heures avant le match)",
+    "reminderHours": "Rappel (heures avant la limite)",
+    "policy": {
+      "label": "Si la limite expire",
+      "notify": "Notifier seulement",
+      "cancel": "Annuler la réservation et libérer la place"
+    },
+    "deadline": {
+      "label": "Date limite de paiement",
+      "expiresIn": "Expire dans",
+      "expired": "Délai expiré"
+    },
+    "status": {
+      "pending": "En attente",
+      "paid_unverified": "En cours d'analyse",
+      "review_required": "Révision",
+      "approved": "Approuvé",
+      "rejected": "Refusé",
+      "refunded": "Remboursé"
+    },
+    "receipt": {
+      "confirmed": "Paiement confirmé",
+      "number": "Reçu"
+    },
+    "reminder": {
+      "email": {
+        "subject": "Paiement en attente — {eventTitle}",
+        "title": "Paiement en attente",
+        "cta": "Payer maintenant →"
+      }
+    },
+    "dashboard": {
+      "paid": "Payés",
+      "pending": "En attente",
+      "overdue": "En retard",
+      "totalReceived": "Total reçu",
+      "approve": "Approuver",
+      "reject": "Rejeter",
+      "tabLabel": "Paiements"
+    },
+    "paymentConfig": {
+      "enable": "Facturer un paiement",
+      "enableHint": "Exiger un paiement des joueurs",
+      "amount": "Montant",
+      "when": "Quand payer",
+      "expiration": "Si la limite expire",
+      "activeMethodsHint": "Méthodes actives (configurées dans les paramètres de l'équipe)"
+    }
+  },
   "organizerPage": {
     "comingSoon": {
-      "description": "Cette zone est en cours de développement.",
+      "description": "Cette zone est en cours de développement. Bientôt vous aurez accès complet au panneau d'organisation des événements.",
       "title": "En développement"
     },
-    "eyebrow": "Organizer",
+    "eyebrow": "Organisateur",
     "hero": {
-      "description": "Centralisez matchs, inscriptions et lieux avec le même shell opérationnel.",
+      "description": "Centralisez les matchs, les entrées et les lieux en utilisant le même shell opérationnel que les autres zones protégées.",
       "eyebrow": "Orchestration du calendrier",
       "title": "Planifiez les compétitions avec moins de friction"
     },
     "newTournament": "Nouveau tournoi",
     "roadmap": {
-      "description": "La prochaine livraison réunira calendrier, participants et confirmations.",
+      "description": "La prochaine livraison reliera le calendrier, les participants et les confirmations dans un seul panneau.",
       "eyebrow": "Prochain module",
       "title": "Les flux d'organisation s'étendent"
     },
@@ -1248,26 +1402,26 @@
   },
   "profile": {
     "availability": {
-      "evenings": "Weekday evenings",
-      "flexible": "Flexible schedule",
-      "specific": "Specific times",
-      "weekends": "Weekends"
+      "evenings": "Soirées de semaine",
+      "flexible": "Horaire flexible",
+      "specific": "Moments spécifiques",
+      "weekends": "Fins de semaine"
     },
-    "description": "This information helps us personalise your JogaBola experience.",
+    "description": "Ces informations nous aident à personnaliser votre expérience JogaBola.",
     "experience": {
-      "advanced": "Advanced - I play competitively",
-      "beginner": "Beginner - Just starting out",
-      "intermediate": "Intermediate - I play regularly",
-      "professional": "Professional/Semi-professional"
+      "advanced": "Avancé - Je joue en compétition",
+      "beginner": "Débutant - Je commence juste",
+      "intermediate": "Intermédiaire - Je joue régulièrement",
+      "professional": "Professionnel/Semi-professionnel"
     },
     "fields": {
-      "availability": "Availability",
+      "availability": "Disponibilité",
       "email": "Email",
-      "experience": "Football Experience",
-      "location": "Location",
-      "name": "Full Name"
+      "experience": "Expérience Footballistique",
+      "location": "Localisation",
+      "name": "Nom Complet"
     },
-    "title": "Let's Get to Know You"
+    "title": "Faisons Connaissance"
   },
   "profilePage": {
     "actions": {
@@ -1328,7 +1482,7 @@
     },
     "roles": {
       "fan": "Supporter",
-      "manager": "Manager",
+      "manager": "Gestionnaire",
       "organizer": "Organisateur",
       "player": "Athlète amateur"
     },
@@ -1357,7 +1511,7 @@
     "loading": "Recherche des événements...",
     "noResults": "Aucun résultat trouvé",
     "noResultsDescription": "Essayez d'ajuster les filtres de recherche",
-    "organizedBy": "Organized by",
+    "organizedBy": "Organisé par",
     "participants": "participants",
     "resultsFound": "{count} {count, plural, =1 {résultat trouvé} other {résultats trouvés}}",
     "searchPrompt": "Affinez la recherche par lieu, date et style avant d'ouvrir un événement.",
@@ -1389,18 +1543,18 @@
     }
   },
   "sidebar": {
-    "activeTeams": "Active Teams",
-    "activeUntil": "Active until {date}",
-    "clubAdmin": "Club Admin",
-    "clubPage": "Club Page",
-    "clubSettings": "Club Settings",
-    "dashboard": "Dashboard",
+    "activeTeams": "Équipes Actives",
+    "activeUntil": "Actif jusqu'au {date}",
+    "clubAdmin": "Administrateur du Club",
+    "clubPage": "Page du Club",
+    "clubSettings": "Paramètres du Club",
+    "dashboard": "Tableau de Bord",
     "finances": "Finances",
-    "fixtures": "Fixtures",
-    "manageBilling": "Manage Billing",
-    "management": "Management",
-    "proPlan": "Pro Plan",
-    "statCenter": "Stat Center"
+    "fixtures": "Calendriers",
+    "manageBilling": "Gérer la Facturation",
+    "management": "Gestion",
+    "proPlan": "Plan Pro",
+    "statCenter": "Centre de Statistiques"
   },
   "timer": {
     "auth": {
@@ -1428,7 +1582,7 @@
         "secondHalf": "2e mi-temps",
         "training": "Entraînement"
       },
-      "loop": "Loop",
+      "loop": "Boucle",
       "matchFormat": "Format du match",
       "modeDescriptions": {
         "countDown": "Le chronomètre décompte jusqu'à 00:00 et joue un son.",
@@ -1448,6 +1602,79 @@
       "timerEndSound": "Son de fin",
       "timerMode": "Mode du chronomètre",
       "title": "Paramètres du match"
+    }
+  },
+  "onboarding": {
+    "badge": {
+      "soon": "Bientôt",
+      "selected": "Sélectionné"
+    },
+    "header": {
+      "welcome": "Bienvenue à {appName}",
+      "greeting": "Bonjour, {name}!",
+      "description": "Avant de commencer, dites-nous comment votre voyage sera:"
+    },
+    "roles": {
+      "coach": {
+        "title": "Entraîneur",
+        "description": "Gérez votre équipe, programmez les matchs et invitez les athlètes.",
+        "features": [
+          "Créer et gérer les équipes",
+          "Programmer les matchs et événements",
+          "Inviter et gérer les athlètes",
+          "Contrôler les paiements"
+        ]
+      },
+      "athlete": {
+        "title": "Athlète",
+        "description": "Rejoignez les équipes, confirmez la présence et gérez votre profil de joueur.",
+        "features": [
+          "Profil d'athlète",
+          "Confirmer la présence aux matchs",
+          "Historique des matchs",
+          "Voir les statistiques"
+        ]
+      }
+    },
+    "cta": {
+      "continue": "Continuer",
+      "saving": "Enregistrement..."
+    },
+    "footer": {
+      "changeLater": "Vous pouvez modifier ce paramètre plus tard dans les paramètres."
+    },
+    "errors": {
+      "save": "Erreur lors de l'enregistrement de la préférence. Veuillez réessayer.",
+      "unexpected": "Erreur inattendue. Veuillez réessayer."
+    }
+  },
+  "profileDangerZone": {
+    "title": "Zone de Danger",
+    "description": "Actions critiques pour la gestion de votre compte.",
+    "delete": {
+      "title": "Supprimer le Compte",
+      "description": "Supprimez définitivement votre compte et toutes les données associées. Cette action ne peut pas être annulée.",
+      "button": "Supprimer le Compte",
+      "confirm": {
+        "title": "Êtes-vous absolument sûr ?",
+        "description": "Cela supprimera définitivement votre compte et supprimera vos données de nos serveurs.",
+        "cancel": "Annuler",
+        "action": "Supprimer Définitivement"
+      }
+    },
+    "transfer": {
+      "title": "Transférer le Compte",
+      "description": "Transférez votre compte à une nouvelle adresse email. Vous devrez confirmer le changement par email.",
+      "button": "Transférer le Compte",
+      "label": "Nouvel Email",
+      "placeholder": "nouvel-email@exemple.com",
+      "confirm": {
+        "title": "Demander le Transfert du Compte",
+        "description": "Un email sera envoyé à la nouvelle adresse pour confirmer le transfert.",
+        "cancel": "Annuler",
+        "action": "Envoyer la Demande"
+      },
+      "success": "Demande de transfert envoyée ! Veuillez vérifier le nouvel email pour confirmer."
     }
   },
   "validation": {
@@ -1479,53 +1706,14 @@
     "VALIDATION_TITLE_TOO_SHORT": "Le titre doit contenir au moins 3 caractères."
   },
   "waitlist": {
-    "description": "Be among the first to try our apps when they launch. Select the ones that interest you most.",
+    "description": "Soyez parmi les premiers à essayer nos applications lors de leur lancement. Sélectionnez celles qui vous intéressent le plus.",
     "preferences": {
-      "earlyAccess": "Early access to new features",
-      "newsletter": "Subscribe to newsletter with tips and news",
-      "notifications": "Receive notifications about updates",
-      "title": "Communication Preferences"
+      "earlyAccess": "Accès anticipé aux nouvelles fonctionnalités",
+      "newsletter": "S'abonner à la newsletter avec des conseils et actualités",
+      "notifications": "Recevoir des notifications sur les mises à jour",
+      "title": "Préférences de Communication"
     },
-    "title": "Join the Waiting List"
-  },
-  "authPage": {
-    "title": "Connexion à JogaBola",
-    "registerTitle": "Créer un compte athlète",
-    "registerSubtitle": "Utilise ton email pour créer un compte vérifié et revenir plus vite lors des prochains matchs.",
-    "arena": "Arena",
-    "event": "événement",
-    "emailLabel": "Adresse email",
-    "emailPlaceholder": "email@exemple.com",
-    "signIn": "Connexion",
-    "googleLogin": "Connexion avec Google",
-    "appleLogin": "Connexion avec Apple",
-    "orEmail": "ou connexion avec email",
-    "verifyEmail": "Vérifie ton email",
-    "codeSentTo": "Nous avons envoyé un code d'accès à",
-    "codeLabel": "Code d'accès",
-    "codePlaceholder": "Ex : 123456",
-    "validateCode": "Valider le code",
-    "changeEmail": "Changer d'email",
-    "terms": "Conditions",
-    "privacy": "Confidentialité",
-    "termsAgreement": "En te connectant, tu acceptes nos <terms>Conditions d'utilisation</terms> et notre <privacy>Politique de Confidentialité</privacy>",
-    "back": "Retour",
-    "messages": {
-      "codeSentTitle": "Code envoyé",
-      "codeSentDescription": "Nous avons envoyé un code à {email}.",
-      "loginSuccessTitle": "Connexion validée",
-      "loginSuccessDescription": "Ouverture de {destination}.",
-      "loginErrorTitle": "Erreur de connexion",
-      "loginErrorDescription": "Impossible d'envoyer le code.",
-      "invalidCodeTitle": "Code invalide",
-      "invalidCodeDescription": "Vérifie le code et réessaie.",
-      "socialError": "Connexion impossible."
-    },
-    "validation": {
-      "invalidEmail": "Email invalide",
-      "incompleteCode": "Saisis le code complet",
-      "numbersOnly": "Chiffres uniquement"
-    }
+    "title": "Rejoindre la Liste d'Attente"
   },
   "legal": {
     "terms": {
@@ -1581,6 +1769,8 @@
       "cancelled": "Annulé"
     },
     "countdown": "COMPTE À REBOURS",
+    "eventNotFound": "Événement non trouvé",
+    "backToHome": "Retour à l'Accueil",
     "filledSlots": "Places remplies",
     "slotsFull": "Places épuisées - vous pouvez rejoindre la liste d'attente",
     "confirmed": "Confirmés",
@@ -1633,7 +1823,7 @@
     "guestEmailHint": "Rapide - nous vérifions par email",
     "noAccountPrefix": "Pas de compte ?",
     "createNow": "Créez-en un maintenant",
-    "freeSuffix": "- c’est gratuit",
+    "freeSuffix": "- c'est gratuit",
     "loginEmailHint": "Entrez votre email et nous vous enverrons un code d'accès.",
     "receiveCode": "Recevoir le code",
     "codeSentTo": "Code envoyé à",
@@ -1689,7 +1879,7 @@
     "plans": {
       "free": {
         "badge": "Démarrer",
-        "name": "Free",
+        "name": "Gratuit",
         "description": "Pour les capitaines qui veulent quitter le chaos WhatsApp et organiser leurs premiers matchs sans friction.",
         "price": "0€",
         "period": "/mois",
@@ -1756,7 +1946,7 @@
         "id": "mvp-core",
         "label": "MVP · Noyau",
         "period": "Q1-Q2 2026",
-        "status": "done",
+        "status": "terminé",
         "items": [
           "Authentification par email OTP",
           "Création et gestion d'équipes",
@@ -1773,7 +1963,7 @@
         "id": "freemium",
         "label": "Freemium",
         "period": "Q2 2026",
-        "status": "inProgress",
+        "status": "en cours",
         "items": [
           "Plan gratuit (jusqu'à 3 équipes, 10 événements/mois)",
           "Page des plans et tarifs",
@@ -1785,7 +1975,7 @@
         "id": "pro-features",
         "label": "Fonctionnalités Pro",
         "period": "Q3 2026",
-        "status": "planned",
+        "status": "planifié",
         "items": [
           "Statistiques avancées des athlètes",
           "Rapports financiers exportables",
@@ -1798,7 +1988,7 @@
         "id": "elite",
         "label": "Élite & Échelle",
         "period": "Q4 2026",
-        "status": "future",
+        "status": "futur",
         "items": [
           "Multi-tournoi et ligues",
           "Scouting et networking d'athlètes",
