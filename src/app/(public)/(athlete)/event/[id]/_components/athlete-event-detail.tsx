@@ -47,7 +47,7 @@ interface AthleteEventDetailProps {
   initialMyStatus: string | null;
 }
 
-type Tab = "lista" | "local";
+type Tab = "list" | "location";
 type AthleteEventTranslator = ReturnType<typeof useTranslations>;
 type AttendanceLists = {
   confirmed: Participant[];
@@ -183,7 +183,7 @@ export function AthleteEventDetail({
 }: AthleteEventDetailProps) {
   const t = useTranslations("athleteEventPublic");
   const queryClient = useQueryClient();
-  const [tab, setTab] = useState<Tab>("lista");
+  const [tab, setTab] = useState<Tab>("list");
   const [myStatus, setMyStatus] = useState<string | null>(initialMyStatus);
   const [showRsvpSheet, setShowRsvpSheet] = useState(false);
   const [actionLoading, setActionLoading] = useState(false);
@@ -393,7 +393,7 @@ export function AthleteEventDetail({
 
       {/* Tab content */}
       <div className="flex-1 overflow-auto pb-5">
-        {tab === "lista" && (
+        {tab === "list" && (
           <div className="px-4 py-4">
             {isLoading ? (
               <div className="flex h-32 items-center justify-center text-arena-text-muted text-sm">
@@ -501,7 +501,7 @@ export function AthleteEventDetail({
           </div>
         )}
 
-        {tab === "local" && (
+        {tab === "location" && (
           <div className="px-4 py-4">
             <LocationMap location={event.location} />
 

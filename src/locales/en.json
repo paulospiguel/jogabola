@@ -274,7 +274,12 @@
       "training": "Ex: Technical Training"
     },
     "playersCount": "{count} players",
-    "steps": ["Event Type", "Details", "Preview", "Confirm"],
+    "steps": [
+      "Event Type",
+      "Details",
+      "Preview",
+      "Confirm"
+    ],
     "success": "Event created!",
     "successSubtitle": "Invitation sent successfully.",
     "types": {
@@ -290,7 +295,8 @@
         "desc": "Training session",
         "label": "Training"
       }
-    }
+    },
+    "payment": "Payment"
   },
   "arenaCreateTeam": {
     "actions": {

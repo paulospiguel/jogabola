@@ -298,7 +298,8 @@
         "desc": "Sessão de treino",
         "label": "Treino"
       }
-    }
+    },
+    "payment": "Pagamento"
   },
   "arenaCreateTeam": {
     "actions": {
