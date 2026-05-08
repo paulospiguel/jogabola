@@ -1,7 +1,7 @@
 "use client";
 
 import { format } from "date-fns";
-import { Check, Link2, Loader2, Send } from "lucide-react";
+import { Check, ChevronDown, ChevronUp, CreditCard, Link2, Loader2, Send } from "lucide-react";
 import Image from "next/image";
 import { useTranslations } from "next-intl";
 import { useState } from "react";
@@ -36,6 +36,119 @@ interface FormState {
   location: string;
   maxPlayers: string;
   recurrence: "once" | "weekly" | "monthly";
+  priceCents: number;
+  paymentRequired: boolean;
+  paymentDeadlineHours: string;
+}
+
+function PaymentSection({
+  form,
+  set,
+  t,
+}: {
+  form: FormState;
+  set: <K extends keyof FormState>(k: K, v: FormState[K]) => void;
+  t: ReturnType<typeof useTranslations<"arenaCreateEvent">>;
+}) {
+  const [open, setOpen] = useState(false);
+
+  return (
+    <div className="rounded-xl border border-arena-border bg-arena-surface overflow-hidden">
+      <button
+        type="button"
+        onClick={() => setOpen(o => !o)}
+        className="flex w-full items-center justify-between px-4 py-3 text-left"
+      >
+        <span className="flex items-center gap-2 text-[13px] font-semibold text-arena-text">
+          <CreditCard size={15} className="text-arena-primary" />
+          {t("payment.section") || "Pagamento"}
+        </span>
+        {open ? (
+          <ChevronUp size={15} className="text-arena-text-muted" />
+        ) : (
+          <ChevronDown size={15} className="text-arena-text-muted" />
+        )}
+      </button>
+
+      {open && (
+        <div className="flex flex-col gap-3 border-t border-arena-border px-4 pb-4 pt-3">
+          {/* Price */}
+          <div>
+            <Label className="mb-1 text-xs font-semibold text-arena-text-sec" htmlFor="event-price">
+              {t("payment.price") || "Valor (€)"}
+            </Label>
+            <Input
+              className="h-11 rounded-xl border-arena-border bg-arena-bg text-sm text-arena-text placeholder:text-arena-text-muted/70 focus-visible:ring-arena-primary/40 focus-visible:border-arena-primary/50"
+              id="event-price"
+              type="number"
+              min={0}
+              step={0.5}
+              placeholder="0.00"
+              value={form.priceCents > 0 ? (form.priceCents / 100).toFixed(2) : ""}
+              onChange={e => {
+                const val = Number.parseFloat(e.target.value) || 0;
+                set("priceCents", Math.round(val * 100));
+              }}
+            />
+          </div>
+
+          {/* Payment required toggle */}
+          <button
+            type="button"
+            onClick={() => set("paymentRequired", !form.paymentRequired)}
+            className={cn(
+              "flex items-center justify-between rounded-xl border px-4 py-3 text-left transition-colors",
+              form.paymentRequired
+                ? "border-arena-primary/40 bg-arena-primary/5"
+                : "border-arena-border bg-arena-bg",
+            )}
+          >
+            <div>
+              <p className="text-[13px] font-semibold text-arena-text">
+                {t("payment.required") || "Pagamento obrigatório"}
+              </p>
+              <p className="text-[11px] text-arena-text-muted">
+                {t("payment.requiredHint") || "Atletas devem pagar antes de confirmar"}
+              </p>
+            </div>
+            <div className={cn(
+              "h-5 w-9 rounded-full transition-colors",
+              form.paymentRequired ? "bg-arena-primary" : "bg-arena-border",
+            )}>
+              <div className={cn(
+                "mt-0.5 h-4 w-4 rounded-full bg-white shadow transition-transform",
+                form.paymentRequired ? "translate-x-4 ml-0.5" : "translate-x-0.5",
+              )} />
+            </div>
+          </button>
+
+          {/* Deadline hours — only when paymentRequired */}
+          {form.paymentRequired && (
+            <div>
+              <Label className="mb-1 text-xs font-semibold text-arena-text-sec" htmlFor="event-deadline">
+                {t("payment.deadlineHours") || "Prazo de pagamento"}
+              </Label>
+              <div className="flex items-center gap-2">
+                <Input
+                  className="h-11 flex-1 rounded-xl border-arena-border bg-arena-bg text-sm text-arena-text placeholder:text-arena-text-muted/70 focus-visible:ring-arena-primary/40 focus-visible:border-arena-primary/50"
+                  id="event-deadline"
+                  type="number"
+                  min={1}
+                  max={168}
+                  placeholder="24"
+                  value={form.paymentDeadlineHours}
+                  onChange={e => set("paymentDeadlineHours", e.target.value)}
+                />
+                <span className="shrink-0 text-[12px] text-arena-text-muted">
+                  {t("payment.deadlineHoursUnit") || "h antes do jogo"}
+                </span>
+              </div>
+            </div>
+          )}
+        </div>
+      )}
+    </div>
+  );
 }
 
 // Arena-flavoured overrides applied on top of the UI base components
@@ -80,6 +193,9 @@ export function CreateEventSheet({
     startDate: null,
     maxPlayers: "14",
     recurrence: "once",
+    priceCents: 0,
+    paymentRequired: false,
+    paymentDeadlineHours: "",
   });
   const [sending, setSending] = useState(false);
   const [done, setDone] = useState(false);
@@ -103,6 +219,11 @@ export function CreateEventSheet({
       isPublic: true,
       recurrence: form.recurrence,
       teamId,
+      priceCents: form.priceCents,
+      paymentRequired: form.paymentRequired,
+      paymentDeadlineHours: form.paymentRequired && form.paymentDeadlineHours
+        ? Number.parseInt(form.paymentDeadlineHours, 10)
+        : null,
     });
 
     setSending(false);
@@ -417,6 +538,9 @@ export function CreateEventSheet({
                 </SelectContent>
               </Select>
             </div>
+
+            {/* Payment section */}
+            <PaymentSection form={form} set={set} t={t} />
           </div>
         )}
 

@@ -22,6 +22,8 @@ export type EventView = {
   maxParticipants: string | null;
   priceCents: number;
   currency: string;
+  paymentRequired: boolean;
+  paymentDeadlineHours: number | null;
   organizerId: string;
   organizer: string | null;
   language: string | null;

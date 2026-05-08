@@ -46,6 +46,7 @@ export default function LoginPage() {
 
   const [step, setStep] = useState<AuthStep>("email");
   const [loading, setLoading] = useState(false);
+  const [socialLoading, setSocialLoading] = useState<"google" | "apple" | null>(null);
   const [collectedEmail, setCollectedEmail] = useState(
     searchParams.get("email") || "",
   );
@@ -148,12 +149,9 @@ export default function LoginPage() {
   }
 
   async function handleGoogleLogin() {
-    setLoading(true);
+    setSocialLoading("google");
     try {
-      const result = await signIn.social({
-        provider: "google",
-        callbackURL,
-      });
+      const result = await signIn.social({ provider: "google", callbackURL });
       if (result.error)
         throw new Error(result.error.message || t("messages.socialError"));
       if (result.data?.url) window.location.href = result.data.url;
@@ -161,17 +159,14 @@ export default function LoginPage() {
       const message =
         err instanceof Error ? err.message : t("messages.socialError");
       toast.error(t("messages.loginErrorTitle"), message);
-      setLoading(false);
+      setSocialLoading(null);
     }
   }
 
   async function handleAppleLogin() {
-    setLoading(true);
+    setSocialLoading("apple");
     try {
-      const result = await signIn.social({
-        provider: "apple",
-        callbackURL,
-      });
+      const result = await signIn.social({ provider: "apple", callbackURL });
       if (result.error)
         throw new Error(result.error.message || t("messages.socialError"));
       if (result.data?.url) window.location.href = result.data.url;
@@ -179,7 +174,7 @@ export default function LoginPage() {
       const message =
         err instanceof Error ? err.message : t("messages.socialError");
       toast.error(t("messages.loginErrorTitle"), message);
-      setLoading(false);
+      setSocialLoading(null);
     }
   }
 
@@ -258,21 +253,29 @@ export default function LoginPage() {
 
                   <div className="grid grid-cols-2 gap-3">
                     <button
-                      className="group relative flex h-14 items-center justify-center rounded-2xl border border-arena-border bg-arena-bg-sec/50 transition-all hover:border-arena-primary/30 hover:bg-arena-surface-el active:scale-[0.98]"
-                      disabled={loading}
+                      className="group relative flex h-14 items-center justify-center rounded-2xl border border-arena-border bg-arena-bg-sec/50 transition-all hover:border-arena-primary/30 hover:bg-arena-surface-el active:scale-[0.98] disabled:opacity-60 disabled:cursor-not-allowed"
+                      disabled={loading || socialLoading !== null}
                       onClick={handleGoogleLogin}
                       type="button"
                     >
-                      <GoogleIcon className="h-6 w-6" />
+                      {socialLoading === "google" ? (
+                        <Loader2 className="h-5 w-5 animate-spin text-arena-text-muted" />
+                      ) : (
+                        <GoogleIcon className="h-6 w-6" />
+                      )}
                       <div className="absolute inset-0 rounded-2xl bg-arena-primary/5 opacity-0 transition-opacity group-hover:opacity-100" />
                     </button>
                     <button
-                      className="group relative flex h-14 items-center justify-center rounded-2xl border border-arena-border bg-arena-bg-sec/50 transition-all hover:border-arena-info/30 hover:bg-arena-surface-el active:scale-[0.98]"
-                      disabled={loading}
+                      className="group relative flex h-14 items-center justify-center rounded-2xl border border-arena-border bg-arena-bg-sec/50 transition-all hover:border-arena-info/30 hover:bg-arena-surface-el active:scale-[0.98] disabled:opacity-60 disabled:cursor-not-allowed"
+                      disabled={loading || socialLoading !== null}
                       onClick={handleAppleLogin}
                       type="button"
                     >
-                      <AppleIcon className="h-6 w-6" />
+                      {socialLoading === "apple" ? (
+                        <Loader2 className="h-5 w-5 animate-spin text-arena-text-muted" />
+                      ) : (
+                        <AppleIcon className="h-6 w-6" />
+                      )}
                       <div className="absolute inset-0 rounded-2xl bg-arena-info/5 opacity-0 transition-opacity group-hover:opacity-100" />
                     </button>
                   </div>

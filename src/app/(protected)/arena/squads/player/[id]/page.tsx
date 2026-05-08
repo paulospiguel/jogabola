@@ -34,7 +34,7 @@ import { Button } from "@/components/ui/button";
 import { useAthleteProfile } from "@/hooks/use-athlete-profile";
 import { useDashboardData } from "@/hooks/use-dashboard";
 import { useTeams } from "@/hooks/use-teams";
-import { cn } from "@/lib/utils";
+import { cn, formatDate } from "@/lib/utils";
 
 export default function AthleteProfilePage() {
   const { id } = useParams();
@@ -261,7 +261,7 @@ export default function AthleteProfilePage() {
                   </div>
                   <div className="mt-1 font-semibold text-arena-text">
                     {athlete?.createdAt &&
-                      new Date(athlete?.createdAt).toDateString()}
+                      formatDate(athlete?.createdAt)}
                   </div>
                 </div>
                 <div>

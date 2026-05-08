@@ -1,4 +1,4 @@
-import { integer, pgTable, serial, text, timestamp } from "drizzle-orm/pg-core";
+import { boolean, integer, pgTable, serial, text, timestamp } from "drizzle-orm/pg-core";
 import { teams } from "./teams";
 import { user } from "./users";
 
@@ -16,6 +16,8 @@ export const matchSessions = pgTable("match_sessions", {
   recurrence: text("recurrence").notNull().default("once"), // "once", "weekly", "monthly"
   priceCents: integer("price_cents").default(0),
   currency: text("currency").notNull().default("EUR"),
+  paymentRequired: boolean("payment_required").notNull().default(false),
+  paymentDeadlineHours: integer("payment_deadline_hours"),
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at").defaultNow(),
 });

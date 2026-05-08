@@ -54,6 +54,9 @@ export async function createEvent(input: {
   organizerId?: string;
   recurrence?: string;
   teamId?: number;
+  priceCents?: number;
+  paymentRequired?: boolean;
+  paymentDeadlineHours?: number | null;
 }) {
   const authUser = await getAuthUser();
   if (!authUser) {
@@ -103,6 +106,9 @@ export async function createEvent(input: {
         : null,
       recurrence: input.recurrence || "once",
       currency: "EUR",
+      priceCents: input.priceCents ?? 0,
+      paymentRequired: input.paymentRequired ?? false,
+      paymentDeadlineHours: input.paymentDeadlineHours ?? null,
     })
     .returning();
 
@@ -119,6 +125,9 @@ export async function updateEvent(
     endDate?: Date;
     recurrence?: string;
     location?: string;
+    priceCents?: number;
+    paymentRequired?: boolean;
+    paymentDeadlineHours?: number | null;
   },
 ) {
   const authUser = await getAuthUser();
@@ -151,6 +160,9 @@ export async function updateEvent(
       ...(input.endDate && { endsAt: input.endDate }),
       ...(input.recurrence && { recurrence: input.recurrence }),
       ...(input.location && { location: input.location }),
+      ...(input.priceCents !== undefined && { priceCents: input.priceCents }),
+      ...(input.paymentRequired !== undefined && { paymentRequired: input.paymentRequired }),
+      ...(input.paymentDeadlineHours !== undefined && { paymentDeadlineHours: input.paymentDeadlineHours }),
       updatedAt: new Date(),
     })
     .where(eq(matchSessions.id, eventId))
@@ -274,6 +286,8 @@ function toEventView(event: typeof matchSessions.$inferSelect) {
     maxParticipants: event.capacity?.toString() ?? null,
     priceCents: event.priceCents ?? 0,
     currency: event.currency || "EUR",
+    paymentRequired: event.paymentRequired,
+    paymentDeadlineHours: event.paymentDeadlineHours ?? null,
     organizerId: "",
     organizer: null,
     language: null,
