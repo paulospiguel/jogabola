@@ -25,7 +25,7 @@ export const APP = {
     FACEBOOK: "https://facebook.com/jogabola.app",
     YOUTUBE: "https://youtube.com/jogabola.app",
   },
-  VERSION: process.env.APP_VERSION || "1.0.0",
+  VERSION: process.env.VERSION || "1.0.0",
   ROUTES: {
     HOME: "/",
   },

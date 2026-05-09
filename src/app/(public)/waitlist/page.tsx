@@ -4,16 +4,25 @@ import { AnimatePresence, motion } from "framer-motion";
 import { ArrowRight, CheckCircle, Loader2 } from "lucide-react";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
-import { useState } from "react";
+import { useState, useEffect, Suspense } from "react";
+import { useSearchParams } from "next/navigation";
 import { joinWaitlist } from "@/actions/waitlist.actions";
 import { Logo } from "@/components/logo";
 
-export default function WaitlistPage() {
+function WaitlistContent() {
+  const searchParams = useSearchParams();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
   const [done, setDone] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const emailParam = searchParams.get("email");
+    if (emailParam) {
+      setEmail(emailParam);
+    }
+  }, [searchParams]);
 
   const t = useTranslations("common");
 
@@ -171,5 +180,13 @@ export default function WaitlistPage() {
         </motion.div>
       </div>
     </div>
+  );
+}
+
+export default function WaitlistPage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen bg-[#0A0A16]" />}>
+      <WaitlistContent />
+    </Suspense>
   );
 }

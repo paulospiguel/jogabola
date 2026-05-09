@@ -11,9 +11,10 @@ import {
   Wallet,
   Zap,
 } from "lucide-react";
-import Link from "next/link";
 import { useTranslations } from "next-intl";
-import type { ComponentType } from "react";
+import Link from "next/link";
+import { useState, type ComponentType } from "react";
+import { useRouter } from "next/navigation";
 import {
   PhoneMockup,
   type PhoneScreen,
@@ -547,6 +548,17 @@ const TestimonialsSection = () => {
 
 const FinalCta = () => {
   const t = useTranslations("homePage.finalCta");
+  const [email, setEmail] = useState("");
+  const router = useRouter();
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (email) {
+      router.push(`/waitlist?email=${encodeURIComponent(email)}`);
+    } else {
+      router.push("/waitlist");
+    }
+  };
 
   return (
     <section className="relative overflow-hidden border-t border-arena-border bg-[#06090D] px-5 py-24 md:px-10 lg:px-20 lg:py-35">
@@ -562,18 +574,23 @@ const FinalCta = () => {
             {t("headlineAccent")}
           </span>
         </h2>
-        <form className="mx-auto mt-12 flex max-w-2xl flex-col gap-3 rounded-[18px] border border-arena-primary/30 bg-arena-bg/55 p-3 shadow-[0_0_60px_rgba(124,255,79,.14)] backdrop-blur-xl sm:flex-row">
+        <form
+          onSubmit={handleSubmit}
+          className="mx-auto mt-12 flex max-w-2xl flex-col gap-3 rounded-[18px] border border-arena-primary/30 bg-arena-bg/55 p-3 shadow-[0_0_60px_rgba(124,255,79,.14)] backdrop-blur-xl sm:flex-row"
+        >
           <input
             type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
             aria-label={t("emailLabel")}
             placeholder={t("emailPlaceholder")}
             className="min-h-13 flex-1 bg-transparent px-4 text-arena-text placeholder:text-arena-text-muted focus-visible:outline-none"
           />
           <Button
-            asChild
+            type="submit"
             className="rounded-xl bg-arena-primary px-6 py-6 font-extrabold text-[#0B0F14] shadow-[0_0_28px_rgba(124,255,79,.45)] hover:bg-arena-primary/90"
           >
-            <Link href="/waitlist">{t("cta")}</Link>
+            {t("cta")}
           </Button>
         </form>
         <Link
