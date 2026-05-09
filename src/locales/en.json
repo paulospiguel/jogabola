@@ -1060,18 +1060,28 @@
       "title": "Complete Features"
     },
     "hero": {
-      "badge": "BETA · Early Access",
+      "badge": "BETA · Early access",
       "titlePart1": "Your weekly game,",
       "titlePart2": "organized.",
       "titleHighlight": "No WhatsApp groups.",
       "titlePart3": "No confusion.",
       "titlePart4": "Your arena.",
-      "description": "Manage teams, attendance, and payments in one place. For captains who take the game seriously.",
+      "description": "No more WhatsApp chaos. Attendance, payments, and receipts in one place — for captains who take the weekly game seriously.",
       "joinWaitlist": "Join the waiting list",
       "signIn": "Sign In",
       "goToArena": "Go to Arena",
       "startJourney": "Start Journey",
-      "watchDemo": "Watch Demo"
+      "watchDemo": "Watch Demo",
+      "headline": {
+        "play": "Play",
+        "more": "more.",
+        "organize": "Organize less."
+      },
+      "secondaryCta": "Watch demo · 0:42",
+      "tickerStrong": "+3 captains",
+      "ticker": "joined the list in the last 24h",
+      "badgeConfirmed": "14 confirmed",
+      "badgePaid": "11/14 players"
     },
     "momentumStrip": {
       "item1": "Game scheduled",
@@ -1079,7 +1089,7 @@
       "item3": "Payments on track"
     },
     "problems": {
-      "kicker": "THE PROBLEM",
+      "kicker": "The problem",
       "title": "Do you recognize this?",
       "pain1": {
         "title": "\"Who's coming to the game?\"",
@@ -1095,7 +1105,26 @@
         "title": "\"Where's the proof?\"",
         "description": "Images buried in the group. Impossible to validate without wasting time.",
         "resolution": "Upload and automatic pre-validation"
-      }
+      },
+      "titlePrefix": "Does this feel",
+      "titleStroke": "familiar?",
+      "items": [
+        {
+          "title": "“Who is coming?”",
+          "description": "Confirmations get buried in WhatsApp scroll. You never know who shows up until they do.",
+          "resolution": "Real-time attendance with reserves and a waitlist."
+        },
+        {
+          "title": "“Has everyone paid?”",
+          "description": "Chasing players for payment every single week gets old fast.",
+          "resolution": "Payment tracking per player. Paid, pending, and overdue without stress."
+        },
+        {
+          "title": "“Where is the receipt?”",
+          "description": "Images disappear in the group chat. Validation becomes a Saturday morning chore.",
+          "resolution": "Upload and quick pre-validation. You approve with a tap."
+        }
+      ]
     },
     "communityReviews": {
       "kicker": "REVIEWS",
@@ -1173,7 +1202,124 @@
       "title": "Success Stories"
     },
     "title": "Ready to build your dream team?",
-    "watchVideo": "Presentation video"
+    "watchVideo": "Presentation video",
+    "marquee": {
+      "items": [
+        "No WhatsApp chaos",
+        "Call-ups in seconds",
+        "Stress-free payments",
+        "Receipts in the right place",
+        "Automatic waitlist",
+        "Lighter Saturdays"
+      ]
+    },
+    "how": {
+      "kicker": "How it works",
+      "titlePrefix": "In",
+      "titleHighlight": "eight minutes",
+      "titleSuffix": ", your team plays.",
+      "steps": [
+        {
+          "title": "Create your team",
+          "description": "Invite the squad with a link. Everyone joins from their phone."
+        },
+        {
+          "title": "Schedule the game",
+          "description": "Set date, time, price, and seats. The app opens attendance and the waitlist."
+        },
+        {
+          "title": "Play relaxed",
+          "description": "See who confirmed, who paid, and what is missing. Whistle on the pitch, not in spreadsheets."
+        }
+      ]
+    },
+    "mvp": {
+      "kicker": "MVP · The essentials",
+      "title": "Everything you need.",
+      "titleAccent": "Nothing extra.",
+      "body": "No bloated modules. No learning curve. Just what weekly captains need to organize games.",
+      "items": [
+        {
+          "title": "Squad & Teams",
+          "description": "Your squad in one place. Invite, call up, relax."
+        },
+        {
+          "title": "Attendance & Waitlist",
+          "description": "Confirmed players, reserves, and an automatic waitlist."
+        },
+        {
+          "title": "Payments",
+          "description": "Who paid, who owes, totals per match. Ready to close the books."
+        },
+        {
+          "title": "Receipts",
+          "description": "Players send them, you validate them. Everything stored together."
+        }
+      ]
+    },
+    "journey": {
+      "kicker": "The journey",
+      "title": "From opening to final whistle.",
+      "body": "A short flow to open a team, schedule the game, call up the squad, and close payments inside the app.",
+      "steps": [
+        {
+          "label": "STEP 01",
+          "title": "Choose a role",
+          "description": "Captain or athlete, each person starts on the right path."
+        },
+        {
+          "label": "STEP 02",
+          "title": "Create the event",
+          "description": "Date, place, price, and spots are clear from the start."
+        },
+        {
+          "label": "STEP 03",
+          "title": "Call up the squad",
+          "description": "Confirmations and waitlist update in real time."
+        },
+        {
+          "label": "STEP 04",
+          "title": "Close payments",
+          "description": "Receipt sent, captain notified, accounts settled."
+        }
+      ]
+    },
+    "testimonialsOusada": {
+      "kicker": "Reviews",
+      "titlePrefix": "The community",
+      "titleHighlight": "speaks louder.",
+      "items": [
+        {
+          "name": "Sara F.",
+          "role": "Captain · The Falcons",
+          "text": "I finally know who confirmed and who is late without digging through old messages. I got my Saturday mornings back."
+        },
+        {
+          "name": "Bruno R.",
+          "role": "Organizer · Thursday Kickabout",
+          "text": "Simple, fast, and it does what it promises. For weekly organizers, it saves hours from the first call-up."
+        },
+        {
+          "name": "Mina A.",
+          "role": "Captain · The Wolves",
+          "text": "Attendance, payments, and receipts in one place. The team understands what is missing before game day."
+        },
+        {
+          "name": "André S.",
+          "role": "Captain · FC Quinta",
+          "text": "I no longer need to be the annoying person asking everything on WhatsApp. The app does the dirty work."
+        }
+      ]
+    },
+    "finalCta": {
+      "badge": "Early access · Limited spots",
+      "headline": "Be among the first",
+      "headlineAccent": "to play.",
+      "emailLabel": "Email",
+      "emailPlaceholder": "your-email@example.com",
+      "cta": "Join the list",
+      "link": "Already have access? Sign in"
+    }
   },
   "howItWorksPage": {
     "buttons": {

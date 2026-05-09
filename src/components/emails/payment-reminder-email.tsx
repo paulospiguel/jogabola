@@ -1,13 +1,12 @@
 import { Section, Text } from "@react-email/components";
-import * as React from "react";
 import {
   APP_URL,
   CardBody,
   CardFooter,
+  colors,
   EmailLayout,
   PrimaryButton,
   SectionTitle,
-  colors,
 } from "./base/email-layout";
 
 interface PaymentReminderEmailProps {
@@ -50,9 +49,10 @@ export function PaymentReminderEmail({
       <div
         style={{
           height: 4,
-          background: deadlineHours <= 2
-            ? `linear-gradient(90deg, ${colors.danger} 0%, ${colors.primary} 100%)`
-            : `linear-gradient(90deg, ${colors.warning ?? "#f59e0b"} 0%, ${colors.primary} 100%)`,
+          background:
+            deadlineHours <= 2
+              ? `linear-gradient(90deg, ${colors.danger} 0%, ${colors.primary} 100%)`
+              : `linear-gradient(90deg, ${colors.warning} 0%, ${colors.primary} 100%)`,
         }}
       />
 
@@ -77,8 +77,15 @@ export function PaymentReminderEmail({
             lineHeight: 1.6,
           }}
         >
-          A tua reserva em <strong style={{ color: colors.text }}>{eventTitle}</strong> está
-          pendente de pagamento. Tens <strong style={{ color: deadlineHours <= 2 ? colors.danger : colors.text }}>{urgencyLabel}</strong> para completar o pagamento.
+          A tua reserva em{" "}
+          <strong style={{ color: colors.text }}>{eventTitle}</strong> está
+          pendente de pagamento. Tens{" "}
+          <strong
+            style={{ color: deadlineHours <= 2 ? colors.danger : colors.text }}
+          >
+            {urgencyLabel}
+          </strong>{" "}
+          para completar o pagamento.
         </Text>
 
         {/* Amount card */}
@@ -118,8 +125,11 @@ export function PaymentReminderEmail({
         {/* Warning box */}
         <div
           style={{
-            backgroundColor: deadlineHours <= 2 ? "rgba(239,68,68,0.08)" : "rgba(245,158,11,0.08)",
-            border: `1px solid ${deadlineHours <= 2 ? colors.danger : (colors.warning ?? "#f59e0b")}33`,
+            backgroundColor:
+              deadlineHours <= 2
+                ? "rgba(239,68,68,0.08)"
+                : "rgba(245,158,11,0.08)",
+            border: `1px solid ${deadlineHours <= 2 ? colors.danger : colors.warning}33`,
             borderRadius: 10,
             padding: "12px 14px",
             marginBottom: 20,
@@ -146,7 +156,12 @@ export function PaymentReminderEmail({
 
       <CardFooter>
         <Text
-          style={{ fontSize: 11, color: colors.textFaint, margin: 0, lineHeight: 1.5 }}
+          style={{
+            fontSize: 11,
+            color: colors.textFaint,
+            margin: 0,
+            lineHeight: 1.5,
+          }}
         >
           Se não pretendes participar, acede ao evento e cancela a presença.
         </Text>

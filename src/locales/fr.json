@@ -1065,18 +1065,28 @@
       "title": "Fonctionnalités Complètes"
     },
     "hero": {
-      "badge": "BETA · Accès Anticipé",
+      "badge": "BÊTA · Accès anticipé",
       "titlePart1": "Ton match hebdomadaire,",
       "titlePart2": "organisé.",
       "titleHighlight": "Sans groupes WhatsApp.",
       "titlePart3": "Sans confusion.",
       "titlePart4": "Ton arena.",
-      "description": "Gère les équipes, les présences et les paiements en un seul endroit. Pour les capitaines qui prennent le jeu au sérieux.",
+      "description": "Fini le chaos WhatsApp. Présences, paiements et justificatifs au même endroit pour les capitaines qui prennent le match hebdomadaire au sérieux.",
       "joinWaitlist": "Rejoins la liste d'attente",
       "signIn": "Se connecter",
       "goToArena": "Aller à l'Arena",
       "startJourney": "Commencer le Voyage",
-      "watchDemo": "Regarder la Démo"
+      "watchDemo": "Regarder la Démo",
+      "headline": {
+        "play": "Joue",
+        "more": "plus.",
+        "organize": "Organise moins."
+      },
+      "secondaryCta": "Voir la démo · 0:42",
+      "tickerStrong": "+3 capitaines",
+      "ticker": "ont rejoint la liste ces dernières 24h",
+      "badgeConfirmed": "14 confirmés",
+      "badgePaid": "11/14 joueurs"
     },
     "momentumStrip": {
       "item1": "Match programmé",
@@ -1084,7 +1094,7 @@
       "item3": "Paiements à jour"
     },
     "problems": {
-      "kicker": "LE PROBLÈME",
+      "kicker": "Le problème",
       "title": "Tu reconnais ?",
       "pain1": {
         "title": "\"Qui vient au match?\"",
@@ -1100,7 +1110,26 @@
         "title": "\"Où est la preuve?\"",
         "description": "Les images sont enterrées dans le groupe. Impossible de valider sans perdre du temps.",
         "resolution": "Téléchargement et pré-validation automatique"
-      }
+      },
+      "titlePrefix": "Tu reconnais",
+      "titleStroke": "ça ?",
+      "items": [
+        {
+          "title": "« Qui vient jouer ? »",
+          "description": "Les confirmations se perdent dans WhatsApp. Tu ne sais jamais qui vient avant le coup d’envoi.",
+          "resolution": "Présences en temps réel, avec réserves et liste d’attente."
+        },
+        {
+          "title": "« Tout le monde a payé ? »",
+          "description": "Relancer les joueurs chaque semaine pour le paiement devient vite pénible.",
+          "resolution": "Suivi des paiements par joueur. Payé, en retard, sans stress."
+        },
+        {
+          "title": "« Où est le justificatif ? »",
+          "description": "Les images se noient dans le groupe. Valider te prend la matinée.",
+          "resolution": "Envoi et prévalidation rapide. Tu valides en un geste."
+        }
+      ]
     },
     "communityReviews": {
       "kicker": "AVIS",
@@ -1178,7 +1207,124 @@
       "title": "Histoires de Succès"
     },
     "title": "Êtes-vous prêt à constituer l'équipe de vos rêves ?",
-    "watchVideo": "Voir le vidéo"
+    "watchVideo": "Voir le vidéo",
+    "marquee": {
+      "items": [
+        "Sans WhatsApp",
+        "Convocations en secondes",
+        "Paiements sans stress",
+        "Justificatifs au bon endroit",
+        "Liste d’attente automatique",
+        "Samedis plus légers"
+      ]
+    },
+    "how": {
+      "kicker": "Comment ça marche",
+      "titlePrefix": "En",
+      "titleHighlight": "huit minutes",
+      "titleSuffix": ", ton équipe joue.",
+      "steps": [
+        {
+          "title": "Crée ton équipe",
+          "description": "Invite l’effectif avec un lien. Tout le monde rejoint depuis son téléphone."
+        },
+        {
+          "title": "Planifie le match",
+          "description": "Définis date, heure, prix et places. L’app ouvre les présences et l’attente."
+        },
+        {
+          "title": "Joue tranquille",
+          "description": "Vois qui a confirmé, qui a payé et ce qui manque. Siffle sur le terrain, pas dans Excel."
+        }
+      ]
+    },
+    "mvp": {
+      "kicker": "MVP · L’essentiel",
+      "title": "Tout ce qu’il faut.",
+      "titleAccent": "Rien de plus.",
+      "body": "Pas de modules inutiles. Pas de courbe d’apprentissage. Juste l’essentiel pour organiser les matchs hebdomadaires.",
+      "items": [
+        {
+          "title": "Effectif & Équipes",
+          "description": "Ton effectif au même endroit. Invite, convoque, respire."
+        },
+        {
+          "title": "Présences & Attente",
+          "description": "Confirmés, réserves et liste automatique. Adieu les chaînes de messages."
+        },
+        {
+          "title": "Paiements",
+          "description": "Qui a payé, qui doit, les totaux par match. Prêt à clôturer."
+        },
+        {
+          "title": "Justificatifs",
+          "description": "Les joueurs envoient, tu valides. Tout reste rangé ensemble."
+        }
+      ]
+    },
+    "journey": {
+      "kicker": "Le parcours",
+      "title": "De l’ouverture au coup de sifflet final.",
+      "body": "Un flux court pour ouvrir l’équipe, planifier le match, convoquer l’effectif et clôturer les paiements dans l’app.",
+      "steps": [
+        {
+          "label": "STEP 01",
+          "title": "Choisis le rôle",
+          "description": "Capitaine ou athlète, chacun commence au bon endroit."
+        },
+        {
+          "label": "STEP 02",
+          "title": "Crée l’événement",
+          "description": "Date, lieu, prix et places sont clairs dès le départ."
+        },
+        {
+          "label": "STEP 03",
+          "title": "Convoque l’effectif",
+          "description": "Présences et liste d’attente se mettent à jour en direct."
+        },
+        {
+          "label": "STEP 04",
+          "title": "Clôture les paiements",
+          "description": "Justificatif envoyé, capitaine prévenu, comptes réglés."
+        }
+      ]
+    },
+    "testimonialsOusada": {
+      "kicker": "Avis",
+      "titlePrefix": "La communauté",
+      "titleHighlight": "parle plus fort.",
+      "items": [
+        {
+          "name": "Sara F.",
+          "role": "Capitaine · Les Faucons",
+          "text": "Je sais enfin qui a confirmé et qui est en retard sans fouiller les anciens messages. J’ai récupéré mes samedis matin."
+        },
+        {
+          "name": "Bruno R.",
+          "role": "Organisateur · Match du jeudi",
+          "text": "Simple, rapide, et ça tient sa promesse. Pour organiser chaque semaine, on gagne des heures dès la première convocation."
+        },
+        {
+          "name": "Mina A.",
+          "role": "Capitaine · Les Louves",
+          "text": "Présences, paiements et justificatifs au même endroit. L’équipe comprend mieux ce qui manque avant le match."
+        },
+        {
+          "name": "André S.",
+          "role": "Capitaine · FC Quinta",
+          "text": "Je n’ai plus besoin d’être celui qui relance tout le monde sur WhatsApp. L’app fait le travail pénible."
+        }
+      ]
+    },
+    "finalCta": {
+      "badge": "Accès anticipé · Places limitées",
+      "headline": "Sois parmi les premiers",
+      "headlineAccent": "à jouer.",
+      "emailLabel": "Email",
+      "emailPlaceholder": "ton-email@exemple.com",
+      "cta": "Rejoindre la liste",
+      "link": "Déjà accès ? Se connecter"
+    }
   },
   "howItWorksPage": {
     "buttons": {

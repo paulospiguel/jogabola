@@ -62,11 +62,21 @@ export default function Footer({ className }: FooterProps) {
   return (
     <footer
       className={cn(
-        "border-t border-white/8 bg-[linear-gradient(180deg,#0a0b1e_0%,#080a25_100%)] pt-20 pb-10",
+        "relative overflow-hidden border-t border-arena-border bg-[linear-gradient(180deg,#06090D_0%,#0B0F14_100%)] pt-20 pb-10",
         className,
       )}
     >
-      <div className="container mx-auto max-w-7xl px-4 md:px-6">
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute right-0 -bottom-12 left-0 hidden text-center font-sora text-[260px] leading-none font-extrabold text-transparent opacity-70 lg:block xl:text-[320px]"
+        style={{
+          WebkitTextStroke: "1px rgba(38,50,68,.9)",
+          letterSpacing: "-12px",
+        }}
+      >
+        jogabola
+      </div>
+      <div className="relative z-10 container mx-auto max-w-7xl px-4 md:px-6">
         <div className="mb-20 grid gap-16 lg:grid-cols-12">
           <div className="space-y-8 lg:col-span-5">
             <div className="flex items-center gap-3">
