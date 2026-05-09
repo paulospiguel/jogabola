@@ -1,3 +1,5 @@
+
+
 export const APP = {
   APP_NAME: "Jogabola",
   COMPANY: {
@@ -17,10 +19,13 @@ export const APP = {
     TEAM_LOGO: "/images/default-team-logo.png",
   },
   SOCIAL: {
-    INSTAGRAM: "https://instagram.com/jogabolafun",
-    DISCORD: "https://discord.com/jogabolafun",
-    TWITTER: "https://x.com/jogabolafun",
+    INSTAGRAM: "https://instagram.com/jogabola.app",
+    TWITTER: "https://x.com/jogabola_app",
+    TIKTOK: "https://tiktok.com/jogabola.app",
+    FACEBOOK: "https://facebook.com/jogabola.app",
+    YOUTUBE: "https://youtube.com/jogabola.app",
   },
+  VERSION: process.env.APP_VERSION || "1.0.0",
   ROUTES: {
     HOME: "/",
   },

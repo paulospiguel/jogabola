@@ -20,10 +20,13 @@ import {
   confirmUserAttendance,
 } from "@/actions/attendance.actions";
 import { EditEventSheet } from "@/components/arena/edit-event-sheet";
-import { JbAvatar } from "@/components/arena/jb-avatar";
 import { JbBadge } from "@/components/arena/jb-badge";
 import { JbScreenHeader } from "@/components/arena/jb-screen-header";
 import { LocationMap } from "@/components/arena/location-map";
+import {
+  ParticipantRow,
+  participantRowPosition,
+} from "@/components/arena/participant-row";
 import Loading from "@/components/loading";
 import { Button } from "@/components/ui/button";
 import { useEventAttendance } from "@/hooks/use-event-attendance";
@@ -39,6 +42,9 @@ interface EventDetailProps {
     status: string;
     recurrence: string;
     maxParticipants?: string | null;
+    priceCents?: number;
+    paymentRequired?: boolean;
+    paymentDeadlineHours?: number | null;
     description?: string | null;
   };
   userId: string;
@@ -129,7 +135,7 @@ function ShareBar({
 
 export function EventDetail({
   event,
-  userId: _userId,
+  userId,
   canEdit = false,
   initialMyStatus,
 }: EventDetailProps) {
@@ -198,10 +204,7 @@ export function EventDetail({
       />
 
       {isEditing && (
-        <EditEventSheet
-          event={event as any}
-          onClose={() => setIsEditing(false)}
-        />
+        <EditEventSheet event={event} onClose={() => setIsEditing(false)} />
       )}
 
       <div
@@ -307,35 +310,21 @@ export function EventDetail({
             </div>
             <div className="mb-3.5 flex flex-col">
               {confirmed.map((p, i) => (
-                <div
+                <ParticipantRow
                   key={p.id}
-                  className={cn(
-                    "flex items-center gap-2.5 border border-arena-border bg-arena-surface px-3.5 py-2.5",
-                    i === 0
-                      ? "rounded-t-[14px] rounded-b-[4px]"
-                      : i === confirmed.length - 1
-                        ? "rounded-t-[4px] rounded-b-[14px] border-t-0"
-                        : "rounded-[4px] border-t-0",
-                  )}
-                >
-                  <span className="w-5 text-center text-[11px] font-bold text-arena-text-muted">
-                    {i + 1}
-                  </span>
-                  <JbAvatar name={p.name} size={30} id={p.id} />
-                  <div className="flex-1">
-                    <div className="text-[13px] font-semibold text-arena-text">
-                      {p.name}
-                    </div>
-                    <div className="text-[10px] text-arena-text-muted">
-                      {p.role}
-                    </div>
-                  </div>
-                  <Check
-                    size={15}
-                    className="text-arena-success"
-                    strokeWidth={2.5}
-                  />
-                </div>
+                  participant={p}
+                  index={i}
+                  position={participantRowPosition(i, confirmed.length)}
+                  currentUserId={userId}
+                  showPayment={(event.priceCents ?? 0) > 0}
+                  trailing={
+                    <Check
+                      size={15}
+                      className="text-arena-success"
+                      strokeWidth={2.5}
+                    />
+                  }
+                />
               ))}
             </div>
 
@@ -349,28 +338,15 @@ export function EventDetail({
                 ...reserves.map(p => ({ ...p, status: "reserve" as const })),
                 ...pending.map(p => ({ ...p, status: "pending" as const })),
               ].map((p, i, arr) => (
-                <div
+                <ParticipantRow
                   key={p.id}
-                  className={cn(
-                    "flex items-center gap-2.5 border border-arena-border bg-arena-surface px-3.5 py-2.5 opacity-80",
-                    i === 0
-                      ? "rounded-t-[14px] rounded-b-[4px]"
-                      : i === arr.length - 1
-                        ? "rounded-t-[4px] rounded-b-[14px] border-t-0"
-                        : "rounded-[4px] border-t-0",
-                  )}
-                >
-                  <JbAvatar name={p.name} size={30} id={p.id} />
-                  <div className="flex-1">
-                    <div className="text-[13px] font-semibold text-arena-text">
-                      {p.name}
-                    </div>
-                    <div className="text-[10px] text-arena-text-muted">
-                      {p.role}
-                    </div>
-                  </div>
-                  <JbBadge status={p.status} />
-                </div>
+                  participant={p}
+                  position={participantRowPosition(i, arr.length)}
+                  currentUserId={userId}
+                  showPayment={(event.priceCents ?? 0) > 0}
+                  dimmed
+                  trailing={<JbBadge status={p.status} />}
+                />
               ))}
             </div>
           </div>

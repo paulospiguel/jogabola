@@ -16,11 +16,16 @@ import {
   cancelUserAttendance,
   confirmUserAttendance,
 } from "@/actions/attendance.actions";
-import { JbAvatar } from "@/components/arena/jb-avatar";
 import { JbBadge } from "@/components/arena/jb-badge";
 import { LocationMap } from "@/components/arena/location-map";
-import { PaymentStatusBadge } from "@/components/arena/payment-status-badge";
-import { type Participant, useEventAttendance } from "@/hooks/use-event-attendance";
+import {
+  ParticipantRow,
+  participantRowPosition,
+} from "@/components/arena/participant-row";
+import {
+  type Participant,
+  useEventAttendance,
+} from "@/hooks/use-event-attendance";
 import { cn, formatDate, formatTime } from "@/lib/utils";
 import { AthleteRsvpSheet } from "./athlete-rsvp-sheet";
 import { CountdownTimer } from "./countdown-timer";
@@ -195,6 +200,16 @@ export function AthleteEventDetail({
   const isJogo = event.type === "partida" || event.type === "jogo";
   const total = Number(event.maxParticipants) || 14;
   const isFull = confirmed.length >= total;
+  const myPaymentStatus =
+    confirmed.find(p => p.id === userId)?.paymentStatus ?? null;
+  const canResumePayment =
+    myStatus === "confirmed" &&
+    !isLoading &&
+    event.priceCents > 0 &&
+    (!myPaymentStatus ||
+      myPaymentStatus === "pending" ||
+      myPaymentStatus === "rejected" ||
+      myPaymentStatus === "refunded");
 
   function updateAttendanceCache(
     updater: (current: AttendanceLists) => AttendanceLists,
@@ -203,7 +218,12 @@ export function AthleteEventDetail({
       ["event", event.id, "attendance"],
       current => {
         const base =
-          current ?? ({ confirmed: [], reserves: [], pending: [] } satisfies AttendanceLists);
+          current ??
+          ({
+            confirmed: [],
+            reserves: [],
+            pending: [],
+          } satisfies AttendanceLists);
         return updater(base);
       },
     );
@@ -418,41 +438,19 @@ export function AthleteEventDetail({
                     </div>
                   ) : (
                     confirmed.map((p, i) => (
-                      <div
+                      <ParticipantRow
                         key={p.id}
-                        className={cn(
-                          "flex items-center gap-3 border border-arena-border bg-arena-surface px-3.5 py-3",
-                          i === 0
-                            ? "rounded-t-[14px] rounded-b-[4px]"
-                            : i === confirmed.length - 1
-                              ? "rounded-t-[4px] rounded-b-[14px] border-t-0"
-                              : "rounded-[4px] border-t-0",
-                        )}
-                      >
-                        <span className="w-5 text-center text-[11px] font-bold text-arena-text-muted">
-                          {i + 1}
-                        </span>
-                        <JbAvatar name={p.name} size={32} id={p.id} />
-                        <div className="flex-1 min-w-0">
-                          <div className="truncate text-[13px] font-semibold text-arena-text">
-                            {p.name}
-                          </div>
-                          <div className="text-[10px] text-arena-text-muted">
-                            {p.role}
-                          </div>
-                        </div>
-                        {event.priceCents && event.priceCents > 0 && p.paymentStatus ? (
-                          <PaymentStatusBadge
-                            status={p.paymentStatus as Parameters<typeof PaymentStatusBadge>[0]["status"]}
-                            method={p.paymentMethod ?? undefined}
-                            canViewRejected={p.id === userId}
-                          />
-                        ) : (
+                        participant={p}
+                        index={i}
+                        position={participantRowPosition(i, confirmed.length)}
+                        currentUserId={userId}
+                        showPayment={event.priceCents > 0}
+                        trailing={
                           <span className="text-arena-success">
                             <CheckIcon size={15} color="currentColor" />
                           </span>
-                        )}
-                      </div>
+                        }
+                      />
                     ))
                   )}
                 </div>
@@ -479,28 +477,15 @@ export function AthleteEventDetail({
                           status: "pending" as const,
                         })),
                       ].map((p, i, arr) => (
-                        <div
+                        <ParticipantRow
                           key={p.id}
-                          className={cn(
-                            "flex items-center gap-3 border border-arena-border bg-arena-surface px-3.5 py-3 opacity-70",
-                            i === 0
-                              ? "rounded-t-[14px] rounded-b-[4px]"
-                              : i === arr.length - 1
-                                ? "rounded-t-[4px] rounded-b-[14px] border-t-0"
-                                : "rounded-[4px] border-t-0",
-                          )}
-                        >
-                          <JbAvatar name={p.name} size={32} id={p.id} />
-                          <div className="flex-1 min-w-0">
-                            <div className="truncate text-[13px] font-semibold text-arena-text">
-                              {p.name}
-                            </div>
-                            <div className="text-[10px] text-arena-text-muted">
-                              {p.role}
-                            </div>
-                          </div>
-                          <JbBadge status={p.status} />
-                        </div>
+                          participant={p}
+                          position={participantRowPosition(i, arr.length)}
+                          currentUserId={userId}
+                          showPayment={event.priceCents > 0}
+                          dimmed
+                          trailing={<JbBadge status={p.status} />}
+                        />
                       ))}
                     </div>
                   </>
@@ -537,15 +522,28 @@ export function AthleteEventDetail({
         }}
       >
         {myStatus === "confirmed" ? (
-          <button
-            type="button"
-            disabled={actionLoading}
-            onClick={handleCancel}
-            className="flex h-[52px] w-full items-center justify-center gap-2 rounded-[16px] border border-arena-border bg-arena-surface-el text-[14px] font-bold text-arena-text-sec transition-colors hover:bg-arena-surface disabled:opacity-60"
-          >
-            <XIcon size={18} color="currentColor" />
-            {t("cancelPresence")}
-          </button>
+          <div className="flex flex-col gap-2">
+            {canResumePayment && (
+              <button
+                type="button"
+                disabled={actionLoading}
+                onClick={() => setShowRsvpSheet(true)}
+                className="flex h-[54px] w-full items-center justify-center gap-2 rounded-[16px] bg-arena-primary text-[15px] font-bold text-arena-bg shadow-[0_0_24px_rgba(124,255,79,0.25)] transition-all hover:bg-arena-primary/90 disabled:opacity-60"
+              >
+                <Banknote size={18} />
+                {t("payNow")}
+              </button>
+            )}
+            <button
+              type="button"
+              disabled={actionLoading}
+              onClick={handleCancel}
+              className="flex h-[52px] w-full items-center justify-center gap-2 rounded-[16px] border border-arena-border bg-arena-surface-el text-[14px] font-bold text-arena-text-sec transition-colors hover:bg-arena-surface disabled:opacity-60"
+            >
+              <XIcon size={18} color="currentColor" />
+              {t("cancelPresence")}
+            </button>
+          </div>
         ) : (
           <div className="flex flex-col gap-2">
             <button

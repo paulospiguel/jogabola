@@ -8,6 +8,8 @@ export interface Participant {
   id: string | number;
   name: string;
   role: string;
+  image?: string | null;
+  verified?: boolean;
   paymentStatus?: string | null;
   paymentMethod?: string | null;
 }

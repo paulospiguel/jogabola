@@ -91,9 +91,11 @@
     }
   },
   "authPage": {
+    "builtForChampions": "Built for Champions",
     "title": "Sign in to JogaBola",
     "registerTitle": "Create an athlete account",
     "registerSubtitle": "Use your email to create a verified account and come back faster for future matches.",
+    "loginSubtitle": "Use your verified account to get quick access to your matches and statistics.",
     "arena": "Arena",
     "event": "event",
     "emailLabel": "Email Address",
@@ -121,7 +123,15 @@
       "loginErrorDescription": "Could not send the code.",
       "invalidCodeTitle": "Invalid code",
       "invalidCodeDescription": "Check the code and try again.",
-      "socialError": "Could not sign in."
+      "socialError": "Could not sign in.",
+      "email": {
+        "RESEND_API_KEY_MISSING": "Email sending is not configured: RESEND_API_KEY is missing.",
+        "RESEND_API_KEY_INVALID": "The Resend API key is invalid. Check RESEND_API_KEY.",
+        "RESEND_FROM_INVALID": "The sender address is invalid. Fix EMAIL_FROM.",
+        "RESEND_DOMAIN_NOT_VERIFIED": "The sender domain is not verified in Resend yet.",
+        "RESEND_DEV_DOMAIN_RESTRICTED": "The resend.dev domain only sends to the email that owns the Resend account. Verify your own domain to send codes.",
+        "EMAIL_SEND_FAILED": "Could not send the code by email. Check the email or try again."
+      }
     },
     "validation": {
       "invalidEmail": "Invalid email",
@@ -274,12 +284,7 @@
       "training": "Ex: Technical Training"
     },
     "playersCount": "{count} players",
-    "steps": [
-      "Event Type",
-      "Details",
-      "Preview",
-      "Confirm"
-    ],
+    "steps": ["Event Type", "Details", "Preview", "Confirm"],
     "success": "Event created!",
     "successSubtitle": "Invitation sent successfully.",
     "types": {
@@ -296,7 +301,14 @@
         "label": "Training"
       }
     },
-    "payment": "Payment"
+    "payment": {
+      "section": "Payment",
+      "price": "Amount (€)",
+      "required": "Payment required",
+      "requiredHint": "Athletes must pay before confirming",
+      "deadlineHours": "Payment deadline",
+      "deadlineHoursUnit": "h before the match"
+    }
   },
   "arenaCreateTeam": {
     "actions": {

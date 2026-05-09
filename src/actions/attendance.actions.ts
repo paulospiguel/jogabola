@@ -41,6 +41,8 @@ export async function getEventAttendanceWithUsers(eventId: number) {
       user: {
         id: user.id,
         name: user.name,
+        image: user.image,
+        emailVerified: user.emailVerified,
       },
       paymentStatus: payments.status,
       paymentMethod: payments.method,
@@ -70,6 +72,8 @@ export async function getEventAttendanceWithUsers(eventId: number) {
       id,
       name,
       role,
+      image: r.user?.image ?? null,
+      verified: r.user?.emailVerified ?? false,
       paymentStatus: r.paymentStatus ?? null,
       paymentMethod: r.paymentMethod ?? null,
     };

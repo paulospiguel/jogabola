@@ -12,6 +12,7 @@ import Link from "next/link";
 import { useTranslations } from "next-intl";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { confirmUserAttendance } from "@/actions/attendance.actions";
+import { requestAuthSignInOTP } from "@/actions/auth-otp.actions";
 import { requestGuestOTP, verifyGuestOTP } from "@/actions/guest-rsvp.actions";
 import { createPayment, submitPaymentProof } from "@/actions/payments.actions";
 import { JbBottomSheet } from "@/components/arena/jb-bottom-sheet";
@@ -29,7 +30,7 @@ import {
 } from "@/components/ui/input-otp";
 import { useEvent } from "@/hooks/use-events";
 import { useTeamPaymentSettings } from "@/hooks/use-team-payment-settings";
-import { emailOtp, signIn } from "@/lib/auth-client";
+import { signIn } from "@/lib/auth-client";
 import { cn } from "@/lib/utils";
 import type { PaymentMethod, TeamPaymentConfig } from "@/types/payments";
 
@@ -77,12 +78,15 @@ function EmailInput({
 }) {
   return (
     <InputGroup className="h-[50px] rounded-[12px]  border-arena-border">
-      <InputGroupInput type="email" value={value}
+      <InputGroupInput
+        type="email"
+        value={value}
         onChange={e => onChange(e.target.value)}
         placeholder="email@email.com"
         className="w-full"
         required
-        autoComplete="email" />
+        autoComplete="email"
+      />
       <InputGroupAddon>
         <MailIcon size={17} color="currentColor" />
       </InputGroupAddon>
@@ -376,13 +380,10 @@ export function AthleteRsvpSheet({
     }
     setLoading(true);
     clearError();
-    const result = await emailOtp.sendVerificationOtp({
-      email: loginEmail.trim().toLowerCase(),
-      type: "sign-in",
-    });
+    const result = await requestAuthSignInOTP(loginEmail);
     setLoading(false);
-    if (result.error) {
-      setError(result.error.message || t("errors.sendCode"));
+    if (!result.success) {
+      setError(getGuestOtpErrorMessage(t, result, t("errors.sendCode")));
     } else {
       setStep("login-otp");
     }
@@ -473,25 +474,28 @@ export function AthleteRsvpSheet({
   };
 
   // When payment is required upfront, cash is not a valid option (manager can override manually)
-  const cashAllowed = !(event?.paymentRequired);
+  const cashAllowed = !event?.paymentRequired;
 
   const paymentConfig: TeamPaymentConfig = settings
     ? {
-      stripe: {
-        enabled: settings.stripeEnabled,
-        accountId: settings.stripeAccountId ?? undefined,
-      },
-      mbway: {
-        enabled: settings.mbwayEnabled,
-        phone: settings.mbwayPhone ?? undefined,
-        name: settings.mbwayName ?? undefined,
-      },
-      cash: {
-        enabled: settings.cashEnabled && cashAllowed,
-        instructions: settings.cashInstructions ?? undefined,
-      },
-    }
-    : { ...defaultPaymentConfig, cash: { ...defaultPaymentConfig.cash, enabled: cashAllowed } };
+        stripe: {
+          enabled: settings.stripeEnabled,
+          accountId: settings.stripeAccountId ?? undefined,
+        },
+        mbway: {
+          enabled: settings.mbwayEnabled,
+          phone: settings.mbwayPhone ?? undefined,
+          name: settings.mbwayName ?? undefined,
+        },
+        cash: {
+          enabled: settings.cashEnabled && cashAllowed,
+          instructions: settings.cashInstructions ?? undefined,
+        },
+      }
+    : {
+        ...defaultPaymentConfig,
+        cash: { ...defaultPaymentConfig.cash, enabled: cashAllowed },
+      };
 
   return (
     <JbBottomSheet title={TITLES[step]} onClose={onClose}>
@@ -619,12 +623,12 @@ export function AthleteRsvpSheet({
               resendInLabel={seconds => t("resendIn", { seconds })}
               onResend={async () => {
                 clearError();
-                const result = await emailOtp.sendVerificationOtp({
-                  email: loginEmail.trim().toLowerCase(),
-                  type: "sign-in",
-                });
-                if (result.error)
-                  setError(result.error.message || t("errors.resend"));
+                const result = await requestAuthSignInOTP(loginEmail);
+                if (!result.success) {
+                  setError(
+                    getGuestOtpErrorMessage(t, result, t("errors.resend")),
+                  );
+                }
               }}
             />
           </form>

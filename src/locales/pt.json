@@ -91,6 +91,8 @@
     }
   },
   "authPage": {
+    "loginSubtitle": "Use sua conta verificada para acessar rapidamente suas partidas e estatísticas.",
+    "builtForChampions": "Construído para Campeões",
     "title": "Entrar no JogaBola",
     "registerTitle": "Criar conta de atleta",
     "registerSubtitle": "Usa o teu email para criares uma conta verificada e voltares mais rápido nos próximos jogos.",
@@ -121,7 +123,15 @@
       "loginErrorDescription": "Não foi possível enviar o código.",
       "invalidCodeTitle": "Código inválido",
       "invalidCodeDescription": "Confirma o código e tenta outra vez.",
-      "socialError": "Não foi possível entrar."
+      "socialError": "Não foi possível entrar.",
+      "email": {
+        "RESEND_API_KEY_MISSING": "Envio de email não configurado: falta RESEND_API_KEY.",
+        "RESEND_API_KEY_INVALID": "A chave do Resend é inválida. Confirma RESEND_API_KEY.",
+        "RESEND_FROM_INVALID": "O remetente de email está inválido. Corrige EMAIL_FROM.",
+        "RESEND_DOMAIN_NOT_VERIFIED": "O domínio do remetente ainda não está verificado no Resend.",
+        "RESEND_DEV_DOMAIN_RESTRICTED": "O domínio resend.dev só envia para o email dono da conta Resend. Verifica um domínio próprio para enviar códigos.",
+        "EMAIL_SEND_FAILED": "Não foi possível enviar o código por email. Confirma o email ou tenta novamente."
+      }
     },
     "validation": {
       "invalidEmail": "Email inválido",
@@ -277,12 +287,7 @@
       "training": "Ex: Treino Técnico"
     },
     "playersCount": "{count} jogadores",
-    "steps": [
-      "Tipo de evento",
-      "Detalhes",
-      "Pré-visualização",
-      "Confirmar"
-    ],
+    "steps": ["Tipo de evento", "Detalhes", "Pré-visualização", "Confirmar"],
     "success": "Evento criado!",
     "successSubtitle": "Convocatória enviada com sucesso.",
     "types": {
@@ -299,7 +304,14 @@
         "label": "Treino"
       }
     },
-    "payment": "Pagamento"
+    "payment": {
+      "section": "Pagamento",
+      "price": "Valor (€)",
+      "required": "Pagamento obrigatório",
+      "requiredHint": "Atletas devem pagar antes de confirmar",
+      "deadlineHours": "Prazo de pagamento",
+      "deadlineHoursUnit": "h antes do jogo"
+    }
   },
   "arenaCreateTeam": {
     "actions": {

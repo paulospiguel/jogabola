@@ -9,14 +9,24 @@ import { useTranslations } from "next-intl";
 import { useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
+import { requestAuthSignInOTP } from "@/actions/auth-otp.actions";
 import { DotGrid } from "@/components/arena/dot-grid";
-import { AppleIcon, GoogleIcon } from "@/components/icons";
+import { GoogleIcon } from "@/components/icons";
 import { Logo } from "@/components/logo";
 import { APP } from "@/constants/app";
 import { useToast } from "@/hooks/use-toast-custom";
-import { emailOtp, signIn, useSession } from "@/lib/auth-client";
+import { signIn, useSession } from "@/lib/auth-client";
 
 type AuthStep = "email" | "code";
+
+const EMAIL_ERROR_CODES = new Set([
+  "RESEND_API_KEY_MISSING",
+  "RESEND_API_KEY_INVALID",
+  "RESEND_FROM_INVALID",
+  "RESEND_DOMAIN_NOT_VERIFIED",
+  "RESEND_DEV_DOMAIN_RESTRICTED",
+  "EMAIL_SEND_FAILED",
+]);
 
 function defaultNameFromEmail(email: string) {
   const name = email
@@ -33,6 +43,18 @@ function getSafeCallbackURL(value: string | null) {
   return value;
 }
 
+function getAuthOtpErrorMessage(
+  t: ReturnType<typeof useTranslations>,
+  result: { error?: string; errorCode?: string },
+  fallback: string,
+) {
+  if (result.errorCode && EMAIL_ERROR_CODES.has(result.errorCode)) {
+    return t(`messages.email.${result.errorCode}`);
+  }
+
+  return result.error || fallback;
+}
+
 export default function LoginPage() {
   const t = useTranslations("authPage");
   const translation = useTranslations();
@@ -46,7 +68,7 @@ export default function LoginPage() {
 
   const [step, setStep] = useState<AuthStep>("email");
   const [loading, setLoading] = useState(false);
-  const [socialLoading, setSocialLoading] = useState<"google" | "apple" | null>(null);
+  const [socialLoading, setSocialLoading] = useState<"google" | null>(null);
   const [collectedEmail, setCollectedEmail] = useState(
     searchParams.get("email") || "",
   );
@@ -86,14 +108,15 @@ export default function LoginPage() {
     setLoading(true);
     try {
       const email = values.email.trim().toLowerCase();
-      const result = await emailOtp.sendVerificationOtp({
-        email,
-        type: "sign-in",
-      });
+      const result = await requestAuthSignInOTP(email);
 
-      if (result.error) {
+      if (!result.success) {
         throw new Error(
-          result.error.message || t("messages.loginErrorDescription"),
+          getAuthOtpErrorMessage(
+            t,
+            result,
+            t("messages.loginErrorDescription"),
+          ),
         );
       }
 
@@ -152,21 +175,6 @@ export default function LoginPage() {
     setSocialLoading("google");
     try {
       const result = await signIn.social({ provider: "google", callbackURL });
-      if (result.error)
-        throw new Error(result.error.message || t("messages.socialError"));
-      if (result.data?.url) window.location.href = result.data.url;
-    } catch (err: unknown) {
-      const message =
-        err instanceof Error ? err.message : t("messages.socialError");
-      toast.error(t("messages.loginErrorTitle"), message);
-      setSocialLoading(null);
-    }
-  }
-
-  async function handleAppleLogin() {
-    setSocialLoading("apple");
-    try {
-      const result = await signIn.social({ provider: "apple", callbackURL });
       if (result.error)
         throw new Error(result.error.message || t("messages.socialError"));
       if (result.data?.url) window.location.href = result.data.url;
@@ -247,13 +255,13 @@ export default function LoginPage() {
                     <p className="text-sm text-arena-text-muted">
                       {isRegisterMode
                         ? t("registerSubtitle")
-                        : `${t("googleLogin")} ou ${t("appleLogin")}.`}
+                        : t("loginSubtitle")}
                     </p>
                   </div>
 
-                  <div className="grid grid-cols-2 gap-3">
+                  <div>
                     <button
-                      className="group relative flex h-14 items-center justify-center rounded-2xl border border-arena-border bg-arena-bg-sec/50 transition-all hover:border-arena-primary/30 hover:bg-arena-surface-el active:scale-[0.98] disabled:opacity-60 disabled:cursor-not-allowed"
+                      className="group relative flex h-14 w-full items-center justify-center rounded-2xl border border-arena-border bg-arena-bg-sec/50 transition-all hover:border-arena-primary/30 hover:bg-arena-surface-el active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-60"
                       disabled={loading || socialLoading !== null}
                       onClick={handleGoogleLogin}
                       type="button"
@@ -261,22 +269,12 @@ export default function LoginPage() {
                       {socialLoading === "google" ? (
                         <Loader2 className="h-5 w-5 animate-spin text-arena-text-muted" />
                       ) : (
-                        <GoogleIcon className="h-6 w-6" />
+                        <div className="flex items-center gap-2">
+                          <GoogleIcon className="h-6 w-6" />
+                          <p className="text-sm font-bold tracking-wider uppercase">{t("googleLogin")}</p>
+                        </div>
                       )}
                       <div className="absolute inset-0 rounded-2xl bg-arena-primary/5 opacity-0 transition-opacity group-hover:opacity-100" />
-                    </button>
-                    <button
-                      className="group relative flex h-14 items-center justify-center rounded-2xl border border-arena-border bg-arena-bg-sec/50 transition-all hover:border-arena-info/30 hover:bg-arena-surface-el active:scale-[0.98] disabled:opacity-60 disabled:cursor-not-allowed"
-                      disabled={loading || socialLoading !== null}
-                      onClick={handleAppleLogin}
-                      type="button"
-                    >
-                      {socialLoading === "apple" ? (
-                        <Loader2 className="h-5 w-5 animate-spin text-arena-text-muted" />
-                      ) : (
-                        <AppleIcon className="h-6 w-6" />
-                      )}
-                      <div className="absolute inset-0 rounded-2xl bg-arena-info/5 opacity-0 transition-opacity group-hover:opacity-100" />
                     </button>
                   </div>
 
@@ -448,7 +446,7 @@ export default function LoginPage() {
           initial={{ opacity: 0 }}
           transition={{ duration: 1, delay: 0.5 }}
         >
-          v2.4.0 • Built for Champions
+          v{APP.VERSION} • {t("builtForChampions")}
         </motion.p>
       </div>
     </div>

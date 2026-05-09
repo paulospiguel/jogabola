@@ -586,6 +586,7 @@
 }
 
 @theme inline {
+  --font-sora: var(--font-sora);
   --color-background: #18193b;
   --color-foreground: var(--foreground);
   --color-card: var(--card);
