@@ -679,6 +679,7 @@
     "cancel": "Cancel",
     "city": "City",
     "close": "Close",
+    "comingSoon": "Coming soon",
     "comingSoonDescription": "This area is under development. Soon you will have full access.",
     "confirm": "Confirm",
     "confirmPassword": "Confirm your password",
@@ -1777,7 +1778,8 @@
           "Schedule matches and events",
           "Invite and manage athletes",
           "Control payments"
-        ]
+        ],
+        "eyebrow": "Team management"
       },
       "athlete": {
         "title": "Athlete",
@@ -1787,6 +1789,18 @@
           "Confirm attendance in matches",
           "Match history",
           "View statistics"
+        ],
+        "eyebrow": "On the pitch"
+      },
+      "referee": {
+        "eyebrow": "Official match",
+        "title": "Referee",
+        "description": "Control the match, validate incidents, and keep the game organized.",
+        "features": [
+          "Manage clock and score",
+          "Log cards and incidents",
+          "Validate attendance on pitch",
+          "Share the match report"
         ]
       }
     },
@@ -1860,14 +1874,25 @@
     "VALIDATION_TITLE_TOO_SHORT": "Title must be at least 3 characters."
   },
   "waitlist": {
-    "description": "Be among the first to try our apps when they launch. Select the ones that interest you most.",
+    "description": "We are currently in beta testing. Sign up to be among the first to enter when we open.",
     "preferences": {
       "earlyAccess": "Early access to new features",
       "newsletter": "Subscribe to newsletter with tips and news",
       "notifications": "Receive notifications about updates",
       "title": "Communication Preferences"
     },
-    "title": "Join the Waiting List"
+    "title": "Join the Waiting List",
+    "successTitle": "You are on the list!",
+    "successDescription": "We will let you know as soon as we open access.",
+    "backToHome": "Back to start",
+    "arena": "JogaBola Arena",
+    "namePlaceholder": "Your name",
+    "emailPlaceholder": "Your email",
+    "submitBtn": "Join the list",
+    "sessionActive": "Session active as <email>{email}</email>.",
+    "logout": "Log out",
+    "alreadyHaveAccess": "Already have access?",
+    "signIn": "Sign in"
   },
   "legal": {
     "terms": {

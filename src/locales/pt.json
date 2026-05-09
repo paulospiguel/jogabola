@@ -1764,7 +1764,8 @@
           "Agendar partidas e eventos",
           "Convidar e gerir atletas",
           "Controlar pagamentos"
-        ]
+        ],
+        "eyebrow": "Gestão da equipa"
       },
       "athlete": {
         "title": "Atleta",
@@ -1774,6 +1775,18 @@
           "Confirmar presença em jogos",
           "Histórico de partidas",
           "Ver estatísticas"
+        ],
+        "eyebrow": "Dentro de campo"
+      },
+      "referee": {
+        "eyebrow": "Jogo oficial",
+        "title": "Árbitro",
+        "description": "Controla o jogo, valida ocorrências e mantém a partida organizada.",
+        "features": [
+          "Gerir cronómetro e resultado",
+          "Registar cartões e ocorrências",
+          "Validar presenças no campo",
+          "Partilhar súmula do jogo"
         ]
       }
     },
@@ -1847,14 +1860,25 @@
     "VALIDATION_TITLE_TOO_SHORT": "O título deve ter pelo menos 3 caracteres."
   },
   "waitlist": {
-    "description": "Sê um dos primeiros a experimentar as nossas aplicações quando forem lançadas. Seleciona as que te interessam mais.",
+    "description": "Estamos em fase de testes. Regista-te para seres dos primeiros a entrar quando abrirmos.",
     "preferences": {
       "earlyAccess": "Acesso antecipado a novas funcionalidades",
       "newsletter": "Subscrever newsletter com dicas e novidades",
       "notifications": "Receber notificações sobre atualizações",
       "title": "Preferências de Comunicação"
     },
-    "title": "Junta-te à Lista de Espera"
+    "title": "Junta-te à Lista de Espera",
+    "successTitle": "Estás na lista!",
+    "successDescription": "Avisamos-te assim que abrirmos o acesso.",
+    "backToHome": "Voltar ao início",
+    "arena": "JogaBola Arena",
+    "namePlaceholder": "O teu nome",
+    "emailPlaceholder": "O teu email",
+    "submitBtn": "Entrar na lista",
+    "sessionActive": "Sessão iniciada como <email>{email}</email>.",
+    "logout": "Terminar sessão",
+    "alreadyHaveAccess": "Já tens acesso?",
+    "signIn": "Entrar"
   },
   "legal": {
     "terms": {

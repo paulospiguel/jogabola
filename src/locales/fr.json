@@ -684,6 +684,7 @@
     "cancel": "Annuler",
     "city": "Ville",
     "close": "Fermer",
+    "comingSoon": "Bientôt",
     "comingSoonDescription": "Cette zone est en cours de développement. Bientôt vous aurez un accès complet.",
     "confirm": "Confirmer",
     "confirmPassword": "Confirmez votre mot de passe",
@@ -1782,7 +1783,8 @@
           "Programmer les matchs et événements",
           "Inviter et gérer les athlètes",
           "Contrôler les paiements"
-        ]
+        ],
+        "eyebrow": "Gestion d’équipe"
       },
       "athlete": {
         "title": "Athlète",
@@ -1792,6 +1794,18 @@
           "Confirmer la présence aux matchs",
           "Historique des matchs",
           "Voir les statistiques"
+        ],
+        "eyebrow": "Sur le terrain"
+      },
+      "referee": {
+        "eyebrow": "Match officiel",
+        "title": "Arbitre",
+        "description": "Contrôle le match, valide les incidents et garde la rencontre organisée.",
+        "features": [
+          "Gérer le chrono et le score",
+          "Noter cartons et incidents",
+          "Valider les présences sur le terrain",
+          "Partager le rapport du match"
         ]
       }
     },
@@ -1865,14 +1879,25 @@
     "VALIDATION_TITLE_TOO_SHORT": "Le titre doit contenir au moins 3 caractères."
   },
   "waitlist": {
-    "description": "Soyez parmi les premiers à essayer nos applications lors de leur lancement. Sélectionnez celles qui vous intéressent le plus.",
+    "description": "Nous sommes actuellement en phase de test bêta. Inscrivez-vous pour être parmi les premiers à entrer lorsque nous ouvrirons.",
     "preferences": {
       "earlyAccess": "Accès anticipé aux nouvelles fonctionnalités",
       "newsletter": "S'abonner à la newsletter avec des conseils et actualités",
       "notifications": "Recevoir des notifications sur les mises à jour",
       "title": "Préférences de Communication"
     },
-    "title": "Rejoindre la Liste d'Attente"
+    "title": "Rejoindre la Liste d'Attente",
+    "successTitle": "Vous êtes sur la liste !",
+    "successDescription": "Nous vous tiendrons au courant dès que nous ouvrirons l'accès.",
+    "backToHome": "Retour au début",
+    "arena": "JogaBola Arena",
+    "namePlaceholder": "Votre nom",
+    "emailPlaceholder": "Votre email",
+    "submitBtn": "Rejoindre la liste",
+    "sessionActive": "Session active en tant que <email>{email}</email>.",
+    "logout": "Se déconnecter",
+    "alreadyHaveAccess": "Vous avez déjà un accès ?",
+    "signIn": "Se connecter"
   },
   "legal": {
     "terms": {

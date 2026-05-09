@@ -19,6 +19,8 @@ type Language = {
   nativeName: string;
   name: string;
   code: string;
+  flag: string;
+  flagLabel: string;
 };
 
 const LANGUAGES = {
@@ -26,23 +28,61 @@ const LANGUAGES = {
     nativeName: "English",
     name: "locales.en",
     code: "EN",
+    flag: "england",
+    flagLabel: "England flag",
   },
   pt: {
     nativeName: "Português",
     name: "locales.pt",
     code: "PT",
+    flag: "🇵🇹",
+    flagLabel: "Bandeira de Portugal",
   },
   es: {
     nativeName: "Español",
     name: "locales.es",
     code: "ES",
+    flag: "🇪🇸",
+    flagLabel: "Bandera de España",
   },
   fr: {
     nativeName: "Français",
     name: "locales.fr",
     code: "FR",
+    flag: "🇫🇷",
+    flagLabel: "Drapeau de France",
   },
 } as Record<Locale, Language>;
+
+function LanguageFlag({
+  language,
+  className,
+}: {
+  language: Language;
+  className?: string;
+}) {
+  if (language.flag === "england") {
+    return (
+      <span
+        className={cn(
+          "relative inline-block h-[1em] w-[1.42em] overflow-hidden rounded-[0.16em] bg-white align-[-0.12em] shadow-[inset_0_0_0_1px_rgba(0,0,0,.12)]",
+          className,
+        )}
+        role="img"
+        aria-label={language.flagLabel}
+      >
+        <span className="absolute top-1/2 left-0 h-[20%] w-full -translate-y-1/2 bg-[#CE1124]" />
+        <span className="absolute top-0 left-1/2 h-full w-[14%] -translate-x-1/2 bg-[#CE1124]" />
+      </span>
+    );
+  }
+
+  return (
+    <span className={className} role="img" aria-label={language.flagLabel}>
+      {language.flag}
+    </span>
+  );
+}
 
 export default function LanguageSelector({
   onlyIcon = false,
@@ -90,8 +130,12 @@ export default function LanguageSelector({
             strokeWidth={2.4}
           />
           {!onlyIcon && (
-            <span className="relative text-[13px] leading-snug tracking-[0.12em]">
-              {LANGUAGES[locale]?.code}
+            <span className="relative flex items-center gap-2 text-[13px] leading-snug tracking-[0.12em]">
+              <LanguageFlag
+                language={LANGUAGES[locale]}
+                className="text-base leading-none"
+              />
+              <span>{LANGUAGES[locale]?.code}</span>
             </span>
           )}
         </button>
@@ -137,13 +181,13 @@ export default function LanguageSelector({
                 <span className="flex min-w-0 items-center gap-4">
                   <span
                     className={cn(
-                      "flex size-10 shrink-0 items-center justify-center rounded-full border font-sora text-xs font-extrabold tracking-[0.12em]",
+                      "flex size-10 shrink-0 items-center justify-center rounded-full border text-xl leading-none",
                       isSelected
-                        ? "border-arena-primary bg-arena-primary text-[#0B0F14]"
-                        : "border-arena-border bg-arena-surface text-arena-primary group-hover:border-arena-primary/45",
+                        ? "border-arena-primary bg-arena-primary/18 shadow-[0_0_22px_rgba(124,255,79,.18)]"
+                        : "border-arena-border bg-arena-surface group-hover:border-arena-primary/45",
                     )}
                   >
-                    {language.code}
+                    <LanguageFlag language={language} className="text-xl" />
                   </span>
                   <span className="min-w-0">
                     <span className="block truncate text-base font-extrabold leading-snug tracking-normal text-arena-text">

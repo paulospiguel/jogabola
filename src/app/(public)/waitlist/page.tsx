@@ -8,9 +8,11 @@ import { useState, useEffect, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import { joinWaitlist } from "@/actions/waitlist.actions";
 import { Logo } from "@/components/logo";
+import { useSession, signOut } from "@/lib/auth-client";
 
 function WaitlistContent() {
   const searchParams = useSearchParams();
+  const { data: session } = useSession();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
@@ -25,6 +27,7 @@ function WaitlistContent() {
   }, [searchParams]);
 
   const t = useTranslations("common");
+  const tWaitlist = useTranslations("waitlist");
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -87,16 +90,16 @@ function WaitlistContent() {
               >
                 <CheckCircle className="mx-auto mb-4 size-12 text-[#7CFF4F]" />
                 <h2 className="mb-2 text-xl font-bold text-white">
-                  Estás na lista!
+                  {tWaitlist("successTitle")}
                 </h2>
                 <p className="text-sm text-white/50">
-                  Avisamos-te assim que abrirmos o acesso.
+                  {tWaitlist("successDescription")}
                 </p>
                 <Link
                   href="/"
                   className="mt-6 inline-flex items-center gap-1.5 text-sm text-white/40 hover:text-white/70 transition-colors"
                 >
-                  Voltar ao início
+                  {tWaitlist("backToHome")}
                 </Link>
               </motion.div>
             ) : (
@@ -106,18 +109,17 @@ function WaitlistContent() {
                 className="rounded-2xl border border-white/10 bg-white/5 p-8"
               >
                 <h1 className="mb-2 text-2xl font-bold tracking-tight text-white">
-                  JogaBola Arena
+                  {tWaitlist("arena")}
                 </h1>
                 <p className="mb-6 text-sm leading-relaxed text-white/45">
-                  Estamos em fase de testes. Regista-te para seres dos primeiros
-                  a entrar quando abrirmos.
+                  {tWaitlist("description")}
                 </p>
 
                 <form onSubmit={handleSubmit} className="space-y-3">
                   <div>
                     <input
                       type="text"
-                      placeholder="O teu nome"
+                      placeholder={tWaitlist("namePlaceholder")}
                       value={name}
                       onChange={e => setName(e.target.value)}
                       required
@@ -128,7 +130,7 @@ function WaitlistContent() {
                   <div>
                     <input
                       type="email"
-                      placeholder="O teu email"
+                      placeholder={tWaitlist("emailPlaceholder")}
                       value={email}
                       onChange={e => setEmail(e.target.value)}
                       required
@@ -158,7 +160,7 @@ function WaitlistContent() {
                       <Loader2 className="size-4 animate-spin" />
                     ) : (
                       <>
-                        Entrar na lista
+                        {tWaitlist("submitBtn")}
                         <ArrowRight className="size-4" />
                       </>
                     )}
@@ -166,13 +168,30 @@ function WaitlistContent() {
                 </form>
 
                 <p className="mt-4 text-center text-xs text-white/25">
-                  Já tens acesso?{" "}
-                  <Link
-                    href="/auth"
-                    className="text-white/40 underline underline-offset-2 hover:text-white/70 transition-colors"
-                  >
-                    Entrar
-                  </Link>
+                  {session ? (
+                    <>
+                      {tWaitlist.rich("sessionActive", {
+                        email: (chunks) => <span className="text-white/45 font-semibold">{session.user.email}</span>
+                      })}{" "}
+                      <button
+                        type="button"
+                        onClick={() => signOut()}
+                        className="text-[#7CFF4F] hover:text-[#7CFF4F]/80 underline underline-offset-2 transition-colors cursor-pointer font-semibold"
+                      >
+                        {tWaitlist("logout")}
+                      </button>
+                    </>
+                  ) : (
+                    <>
+                      {tWaitlist("alreadyHaveAccess")}{" "}
+                      <Link
+                        href="/auth"
+                        className="text-white/40 underline underline-offset-2 hover:text-white/70 transition-colors"
+                      >
+                        {tWaitlist("signIn")}
+                      </Link>
+                    </>
+                  )}
                 </p>
               </motion.div>
             )}
