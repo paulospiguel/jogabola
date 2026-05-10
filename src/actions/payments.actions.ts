@@ -216,3 +216,68 @@ export async function markPaymentManually(
     return { success: false as const, error: "Erro ao registar pagamento" };
   }
 }
+
+export async function getPaymentById(paymentId: number): Promise<{
+  success: true;
+  data: {
+    id: number;
+    status: string;
+    method: string;
+    amountCents: number;
+    currency: string;
+    payerName: string | null;
+    teamName: string;
+    eventTitle: string;
+    eventId: number;
+    mbwayPhone?: string | null;
+  };
+} | { success: false; error: string }> {
+  try {
+    const [row] = await db
+      .select({
+        id: payments.id,
+        status: payments.status,
+        method: payments.method,
+        amountCents: payments.amountCents,
+        currency: payments.currency,
+        payerName: user.name,
+        teamName: teams.name,
+        eventTitle: matchSessions.title,
+        eventId: matchSessions.id,
+      })
+      .from(payments)
+      .innerJoin(
+        matchReservations,
+        eq(matchReservations.id, payments.matchReservationId),
+      )
+      .innerJoin(
+        matchSessions,
+        eq(matchSessions.id, matchReservations.matchSessionId),
+      )
+      .innerJoin(teams, eq(teams.id, matchSessions.teamId))
+      .leftJoin(user, eq(user.id, matchReservations.playerId))
+      .where(eq(payments.id, paymentId))
+      .limit(1);
+
+    if (!row) {
+      return { success: false, error: "Pagamento não encontrado" };
+    }
+
+    return {
+      success: true,
+      data: {
+        id: row.id,
+        status: row.status,
+        method: row.method,
+        amountCents: row.amountCents,
+        currency: row.currency,
+        payerName: row.payerName,
+        teamName: row.teamName,
+        eventTitle: row.eventTitle,
+        eventId: row.eventId,
+      },
+    };
+  } catch {
+    return { success: false, error: "Erro ao carregar pagamento" };
+  }
+}
