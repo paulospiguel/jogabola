@@ -32,7 +32,6 @@ export type PaymentDetail = {
   teamName: string;
   eventTitle: string;
   eventId: number;
-  mbwayPhone?: string | null;
 };
 
 export function usePayments() {

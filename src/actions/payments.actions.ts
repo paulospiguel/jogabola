@@ -229,7 +229,6 @@ export async function getPaymentById(paymentId: number): Promise<{
     teamName: string;
     eventTitle: string;
     eventId: number;
-    mbwayPhone?: string | null;
   };
 } | { success: false; error: string }> {
   try {
