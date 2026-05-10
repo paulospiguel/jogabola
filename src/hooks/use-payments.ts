@@ -22,6 +22,19 @@ export interface Payment {
   };
 }
 
+export type PaymentDetail = {
+  id: number;
+  status: string;
+  method: string;
+  amountCents: number;
+  currency: string;
+  payerName: string | null;
+  teamName: string;
+  eventTitle: string;
+  eventId: number;
+  mbwayPhone?: string | null;
+};
+
 export function usePayments() {
   const { activeTeamId } = useTeams();
 
@@ -45,6 +58,31 @@ export function usePayments() {
 
   return {
     payments: data ?? [],
+    isLoading,
+    error,
+    refetch,
+  };
+}
+
+export function usePayment(paymentId: number | null) {
+  const { data, isLoading, error, refetch } = useQuery({
+    queryKey: ["payment", paymentId],
+    enabled: !!paymentId,
+    refetchOnWindowFocus: true,
+    queryFn: async () => {
+      if (!paymentId) return null;
+      const { getPaymentById } = await import("@/actions/payments.actions");
+      const res = await getPaymentById(paymentId);
+      if (!res.success) {
+        throw new Error(res.error);
+      }
+      return res.data;
+    },
+    staleTime: 0, // Always refetch — payment status changes when captain approves
+  });
+
+  return {
+    payment: data ?? null,
     isLoading,
     error,
     refetch,
