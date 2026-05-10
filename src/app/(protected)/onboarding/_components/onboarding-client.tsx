@@ -1,7 +1,7 @@
 "use client";
 
 import { AnimatePresence, motion } from "framer-motion";
-import { BadgeCheck, Check, ChevronRight, Lock } from "lucide-react";
+import { Check, Users } from "lucide-react";
 import Image from "next/image";
 import { useTranslations } from "next-intl";
 import { useState } from "react";
@@ -15,136 +15,133 @@ import jbIconReferee from "@/assets/images/jb-referee.png";
 import { APP } from "@/constants/app";
 import { cn } from "@/lib/utils";
 
-interface RoleCardProps {
+// ---------------------------------------------------------------------------
+// RoleCardLarge — full-width card for Capitão and Atleta
+// ---------------------------------------------------------------------------
+interface RoleCardLargeProps {
   icon: React.ReactNode;
-  eyebrow: string;
   title: string;
   description: string;
-  features: string[];
-  badge?: string;
-  disabled?: boolean;
   selected: boolean;
+  disabled?: boolean;
   onClick: () => void;
 }
 
-function RoleCard({
+function RoleCardLarge({
   icon,
-  eyebrow,
   title,
   description,
-  features,
-  badge,
-  disabled,
   selected,
+  disabled,
   onClick,
-}: RoleCardProps) {
-  const t = useTranslations("onboarding.badge");
+}: RoleCardLargeProps) {
+  const t = useTranslations("onboarding");
 
   return (
-    <div className="relative w-full h-full">
-      <button
-        type="button"
-        onClick={disabled ? undefined : onClick}
-        disabled={disabled}
-        className={cn(
-          "group h-full w-full overflow-hidden rounded-[18px] border p-5 text-left transition-all duration-300",
-          disabled
-            ? "cursor-not-allowed border-arena-border/55 bg-arena-bg/45 opacity-55"
-            : selected
-              ? "border-arena-primary/60 bg-arena-primary/10 shadow-[0_0_34px_rgba(124,255,79,.14)]"
-              : "border-arena-border bg-arena-surface/72 hover:border-arena-primary/35 hover:bg-arena-surface-el/72",
-        )}
-      >
+    <motion.button
+      type="button"
+      onClick={disabled ? undefined : onClick}
+      disabled={disabled}
+      whileTap={disabled ? undefined : { scale: 0.97 }}
+      transition={{ duration: 0.12, ease: [0.4, 0, 0.2, 1] }}
+      className={cn(
+        "group relative w-full overflow-hidden rounded-[18px] border p-4 text-left transition-all duration-300",
+        disabled
+          ? "cursor-not-allowed border-dashed border-arena-border/45 bg-arena-bg/30 opacity-55"
+          : selected
+            ? "cursor-pointer border-arena-primary bg-arena-primary/10 shadow-[0_0_34px_rgba(124,255,79,.14)]"
+            : "cursor-pointer border-arena-border bg-arena-surface/80 hover:border-arena-primary/35 hover:bg-arena-surface-el/80",
+      )}
+    >
+      {/* subtle radial glow when selected */}
+      {selected && !disabled && (
+        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_18%_12%,rgba(124,255,79,.18),transparent_36%),radial-gradient(circle_at_88%_100%,rgba(56,189,248,.10),transparent_42%)]" />
+      )}
+
+      {/* EM BREVE badge */}
+      {disabled && (
+        <span className="absolute top-3 right-3 rounded-full border border-arena-border/60 bg-arena-surface/80 px-2 py-0.5 text-[10px] font-bold tracking-[0.14em] text-arena-text-muted uppercase">
+          {t("badge.soon")}
+        </span>
+      )}
+
+      {/* Selected check badge */}
+      {selected && !disabled && (
+        <span className="absolute top-3 right-3 flex size-6 items-center justify-center rounded-full bg-arena-primary text-[#0B0F14]">
+          <Check size={13} strokeWidth={2.8} />
+        </span>
+      )}
+
+      <div className="relative flex items-center gap-4">
+        {/* Icon container */}
         <div
           className={cn(
-            "pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-300",
-            selected &&
-            "opacity-100 bg-[radial-gradient(circle_at_18%_12%,rgba(124,255,79,.18),transparent_36%),radial-gradient(circle_at_88%_100%,rgba(56,189,248,.10),transparent_42%)]",
-          )}
-        />
-
-        {badge && (
-          <span className="absolute top-4 right-4 rounded-full border border-arena-border bg-arena-bg/70 px-2.5 py-1 text-[10px] font-bold tracking-widest text-arena-text-muted uppercase">
-            {badge}
-          </span>
-        )}
-
-        {disabled && (
-          <span className="absolute z-10 -top-4 -right-4 flex items-center gap-1 rounded-full border border-arena-border bg-arena-surface/80 px-2.5 py-1 text-[10px] font-bold tracking-wider text-arena-text-muted uppercase">
-            <Lock size={9} />
-            {t("soon")}
-          </span>
-        )}
-
-        <div className="relative flex items-start gap-4">
-          <div
-            className={cn(
-              "flex size-16 shrink-0 items-center justify-center overflow-hidden rounded-2xl border transition-all duration-300",
-              selected
+            "flex size-14 shrink-0 items-center justify-center overflow-hidden rounded-[14px] border transition-all duration-300",
+            disabled
+              ? "border-arena-border/40 bg-arena-bg/50"
+              : selected
                 ? "border-arena-primary/45 bg-arena-primary/15 shadow-[0_0_28px_rgba(124,255,79,.18)]"
                 : "border-arena-border bg-arena-bg/65 group-hover:border-arena-primary/35",
-            )}
-          >
-            {icon}
-          </div>
-
-          <div className="min-w-0 flex-1 pt-1">
-            <p className="mb-2 text-[10px] font-extrabold tracking-[0.16em] text-arena-primary uppercase">
-              {eyebrow}
-            </p>
-            <h3 className="mb-2 font-sora text-xl font-extrabold text-arena-text">
-              {title}
-            </h3>
-            <p className="text-sm leading-relaxed text-arena-text-sec">
-              {description}
-            </p>
-          </div>
+          )}
+        >
+          {icon}
         </div>
 
-        <AnimatePresence initial={false}>
-          {selected && !disabled && (
-            <motion.div
-              initial={{ height: 0, opacity: 0, y: -4 }}
-              animate={{ height: "auto", opacity: 1, y: 0 }}
-              exit={{ height: 0, opacity: 0, y: -4 }}
-              transition={{ duration: 0.22, ease: [0.4, 0, 0.2, 1] }}
-              className="relative overflow-hidden"
-            >
-              <div className="mt-5 border-t border-arena-primary/20 pt-5">
-                <div className="mb-3 flex items-center justify-between gap-3">
-                  <span className="text-[10px] font-extrabold tracking-[0.16em] text-arena-primary uppercase">
-                    {t("selected")}
-                  </span>
-                  <span className="h-px flex-1 bg-linear-to-r from-arena-primary/45 to-transparent" />
-                </div>
-                <ul className="grid gap-2">
-                  {features.map(f => (
-                    <li
-                      key={f}
-                      className="flex items-center gap-3 rounded-[10px] border border-arena-border/75 bg-arena-bg/56 px-3 py-2 text-xs font-semibold text-arena-text-sec"
-                    >
-                      <span className="flex size-5 shrink-0 items-center justify-center rounded-full bg-arena-primary text-[#0B0F14]">
-                        <Check size={12} strokeWidth={2.6} />
-                      </span>
-                      {f}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
+        {/* Text */}
+        <div className="min-w-0 flex-1">
+          <h3
+            className={cn(
+              "font-sora text-[17px] font-extrabold leading-snug transition-colors duration-200",
+              disabled
+                ? "text-arena-text/55"
+                : selected
+                  ? "text-arena-text"
+                  : "text-arena-text",
+            )}
+          >
+            {title}
+          </h3>
+          <p className="mt-0.5 text-[12px] leading-relaxed text-arena-text-sec">
+            {description}
+          </p>
+        </div>
+      </div>
+    </motion.button>
+  );
+}
 
-        {selected && !disabled && (
-          <div className="absolute top-4 right-4 flex items-center gap-1.5 rounded-full border border-arena-primary/35 bg-arena-primary/12 px-2.5 py-1 text-xs font-semibold text-arena-primary">
-            <Check size={12} />
-          </div>
-        )}
-      </button>
+// ---------------------------------------------------------------------------
+// RoleCardSmall — compact card for Árbitro and Adepto (side-by-side)
+// ---------------------------------------------------------------------------
+interface RoleCardSmallProps {
+  icon: React.ReactNode;
+  title: string;
+}
+
+function RoleCardSmall({ icon, title }: RoleCardSmallProps) {
+  const t = useTranslations("onboarding");
+
+  return (
+    <div className="relative flex cursor-not-allowed flex-col items-center gap-2.5 overflow-hidden rounded-[16px] border border-dashed border-arena-border/45 bg-arena-bg/30 px-3 py-4 opacity-55 transition-opacity">
+      {/* icon */}
+      <div className="flex size-12 items-center justify-center overflow-hidden rounded-[12px] border border-arena-border/40 bg-arena-bg/50">
+        {icon}
+      </div>
+
+      <span className="text-[13px] font-semibold text-arena-text/55">
+        {title}
+      </span>
+
+      <span className="rounded-full border border-arena-border/60 bg-arena-surface/80 px-2 py-0.5 text-[9px] font-bold tracking-[0.14em] text-arena-text-muted uppercase">
+        {t("badge.soon")}
+      </span>
     </div>
   );
 }
 
+// ---------------------------------------------------------------------------
+// OnboardingClient
+// ---------------------------------------------------------------------------
 interface OnboardingClientProps {
   userName: string;
 }
@@ -155,40 +152,43 @@ export function OnboardingClient({ userName }: OnboardingClientProps) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const coachIconElement = (
+  const APP_NAME = APP.APP_NAME;
+  const firstName = userName.split(" ")[0];
+
+  // Icon elements
+  const coachIconEl = (
     <Image
       src={coachIcon}
       alt="Coach"
-      width={64}
-      height={64}
+      width={56}
+      height={56}
       className="h-full w-full object-contain"
     />
   );
-  const playerIconElement = (
+
+  const playerIconEl = (
     <Image
       src={playerIcon}
       alt="Player"
-      width={64}
-      height={64}
+      width={56}
+      height={56}
       className="h-full w-full object-contain"
     />
   );
-  const refereeIconElement = (
-    <div className="relative flex size-full items-center justify-center">
-      <Image
-        src={jbIconReferee}
-        alt="Referee"
-        width={64}
-        height={64}
-        className="h-full w-full object-contain"
-      />
-      {/* <BadgeCheck className="absolute right-2 bottom-2 size-5 text-arena-primary" /> */}
-    </div>
+
+  const refereeIconEl = (
+    <Image
+      src={jbIconReferee}
+      alt="Referee"
+      width={48}
+      height={48}
+      className="h-full w-full object-contain"
+    />
   );
 
-  const APP_NAME = APP.APP_NAME;
-
-  const firstName = userName.split(" ")[0];
+  const fanIconEl = (
+    <Users size={24} className="text-arena-text-muted" />
+  );
 
   async function handleContinue() {
     if (!selected) return;
@@ -211,64 +211,64 @@ export function OnboardingClient({ userName }: OnboardingClientProps) {
 
   return (
     <div className="relative flex min-h-screen items-center justify-center overflow-hidden bg-[#06090D] px-4 py-12">
+      {/* Background gradients */}
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_50%_15%,rgba(124,255,79,.10),transparent_32%),radial-gradient(circle_at_82%_72%,rgba(56,189,248,.08),transparent_38%)]" />
       <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(rgba(38,50,68,.18)_1px,transparent_1px),linear-gradient(90deg,rgba(38,50,68,.18)_1px,transparent_1px)] bg-[size:72px_72px] opacity-40 [mask-image:radial-gradient(circle_at_center,black_25%,transparent_78%)]" />
+
       <motion.div
         initial={{ opacity: 0, y: 16 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.3 }}
-        className="relative w-full max-w-4xl"
+        transition={{ duration: 0.3, ease: [0.4, 0, 0.2, 1] }}
+        className="relative w-full max-w-[480px]"
       >
-        {/* Header */}
-        <div className="mb-10 text-center">
-          <div className="mb-3 inline-flex items-center gap-2 rounded-full border border-[#7CFF4F]/20 bg-[#7CFF4F]/8 px-3 py-1">
-            <span className="size-1.5 rounded-full bg-[#7CFF4F] animate-pulse" />
-            <span className="text-xs font-semibold tracking-widest text-[#7CFF4F] uppercase">
-              {t("header.welcome", { appName: APP_NAME })}
-            </span>
-          </div>
-          <h1 className="mb-2 font-sora text-3xl font-extrabold tracking-tight text-white">
-            {t("header.greeting", { name: firstName })}
+        {/* ── Header ── */}
+        <div className="mb-8 px-1">
+          <p className="mb-1.5 text-[10px] font-bold tracking-[0.16em] text-arena-text-muted uppercase">
+            BEM-VINDO AO
+          </p>
+          <h1 className="mb-2 font-sora text-[28px] font-extrabold lowercase leading-none tracking-tight text-arena-text">
+            {APP_NAME.toLowerCase()}
           </h1>
-          <p className="text-sm text-white/45">{t("header.description")}</p>
+          <p className="text-[13px] text-arena-text-sec">
+            {t("header.description")}
+          </p>
         </div>
 
-        {/* Role cards */}
-        <div className="mb-8 grid gap-4 lg:grid-cols-3">
-          <RoleCard
-            icon={coachIconElement}
-            eyebrow={t("roles.coach.eyebrow")}
+        {/* ── Role cards ── */}
+        <div className="mb-5 flex flex-col gap-3">
+          {/* Capitão — selectable */}
+          <RoleCardLarge
+            icon={coachIconEl}
             title={t("roles.coach.title")}
             description={t("roles.coach.description")}
-            features={t.raw("roles.coach.features")}
             selected={selected === "captain"}
             onClick={() => setSelected("captain")}
           />
 
-          <RoleCard
-            icon={playerIconElement}
-            eyebrow={t("roles.athlete.eyebrow")}
+          {/* Atleta — EM BREVE */}
+          <RoleCardLarge
+            icon={playerIconEl}
             title={t("roles.athlete.title")}
             description={t("roles.athlete.description")}
-            features={t.raw("roles.athlete.features")}
-            disabled
-            selected={selected === "athlete"}
-            onClick={() => setSelected("athlete")}
-          />
-
-          <RoleCard
-            icon={refereeIconElement}
-            eyebrow={t("roles.referee.eyebrow")}
-            title={t("roles.referee.title")}
-            description={t("roles.referee.description")}
-            features={t.raw("roles.referee.features")}
-            disabled
             selected={false}
+            disabled
             onClick={() => undefined}
           />
         </div>
 
-        {/* Error */}
+        {/* ── Small cards grid (Árbitro + Adepto) ── */}
+        <div className="mb-7 grid grid-cols-2 gap-3">
+          <RoleCardSmall
+            icon={refereeIconEl}
+            title={t("roles.referee.title")}
+          />
+          <RoleCardSmall
+            icon={fanIconEl}
+            title={t("roles.fan.title")}
+          />
+        </div>
+
+        {/* ── Error message ── */}
         <AnimatePresence>
           {error && (
             <motion.p
@@ -282,25 +282,25 @@ export function OnboardingClient({ userName }: OnboardingClientProps) {
           )}
         </AnimatePresence>
 
-        {/* CTA */}
-        <div className="flex justify-center">
-          <button
-            type="button"
-            onClick={handleContinue}
-            disabled={!selected || loading}
-            className={[
-              "flex items-center gap-2 rounded-xl px-8 py-3.5 text-sm font-semibold transition-all duration-200",
-              selected && !loading
-                ? "bg-[#7CFF4F] text-black hover:bg-[#7CFF4F]/90 shadow-[0_0_20px_rgba(124,255,79,0.25)]"
-                : "cursor-not-allowed bg-white/8 text-white/25",
-            ].join(" ")}
-          >
-            {loading ? t("cta.saving") : t("cta.continue")}
-            {!loading && <ChevronRight size={16} />}
-          </button>
-        </div>
+        {/* ── CTA ── */}
+        <motion.button
+          type="button"
+          onClick={handleContinue}
+          disabled={!selected || loading}
+          whileTap={selected && !loading ? { scale: 0.97 } : undefined}
+          transition={{ duration: 0.12, ease: [0.4, 0, 0.2, 1] }}
+          className={cn(
+            "w-full rounded-[14px] py-3.5 text-[15px] font-bold transition-all duration-200",
+            selected && !loading
+              ? "bg-arena-primary text-[#0B0F14] shadow-[0_0_20px_rgba(124,255,79,0.25)] hover:bg-arena-primary/90"
+              : "cursor-not-allowed bg-white/8 text-white/25",
+          )}
+        >
+          {loading ? t("cta.saving") : t("cta.continue")}
+        </motion.button>
 
-        <p className="mt-6 text-center text-xs text-white/20">
+        {/* ── Footer ── */}
+        <p className="mt-5 text-center text-[11px] text-arena-text-muted/60">
           {t("footer.changeLater")}
         </p>
       </motion.div>
