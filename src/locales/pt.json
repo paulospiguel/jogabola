@@ -1788,6 +1788,12 @@
           "Validar presenças no campo",
           "Partilhar súmula do jogo"
         ]
+      },
+      "fan": {
+        "eyebrow": "ADEPTO",
+        "title": "Adepto",
+        "description": "Acompanha a tua equipa, vê resultados e estatísticas.",
+        "features": []
       }
     },
     "cta": {
@@ -2211,5 +2217,41 @@
       "transfer": "Transferência bancária",
       "other": "Outro"
     }
+  },
+  "paymentResult": {
+    "paid": {
+      "title": "Pagamento concluído",
+      "subtitle": "{amount} · {eventTitle}",
+      "caption": "Comprovativo enviado ao capitão."
+    },
+    "paid_unverified": {
+      "title": "Aguardando confirmação",
+      "subtitle": "{amount} · {eventTitle}",
+      "caption": "O capitão vai validar o teu pagamento."
+    },
+    "failed": {
+      "title": "Pagamento falhou",
+      "subtitle": "Tenta novamente ou usa outro método.",
+      "caption": ""
+    },
+    "pending": {
+      "title": "Pagamento pendente",
+      "subtitle": "{amount} · {eventTitle}",
+      "caption": "Completa o pagamento para confirmar presença."
+    },
+    "details": {
+      "from": "De",
+      "to": "Para",
+      "method": "Método",
+      "total": "Total"
+    },
+    "methods": {
+      "mbway": "MB Way",
+      "cash": "Numerário",
+      "stripe": "Cartão",
+      "unknown": "Outro"
+    },
+    "backToEvent": "Voltar ao evento",
+    "tryAgain": "Tentar novamente"
   }
 }

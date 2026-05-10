@@ -1802,6 +1802,12 @@
           "Validate attendance on pitch",
           "Share the match report"
         ]
+      },
+      "fan": {
+        "eyebrow": "FAN",
+        "title": "Fan",
+        "description": "Follow your team, see results and statistics.",
+        "features": []
       }
     },
     "cta": {
@@ -2205,5 +2211,41 @@
       "transfer": "Bank transfer",
       "other": "Other"
     }
+  },
+  "paymentResult": {
+    "paid": {
+      "title": "Payment completed",
+      "subtitle": "{amount} · {eventTitle}",
+      "caption": "Proof sent to captain."
+    },
+    "paid_unverified": {
+      "title": "Awaiting confirmation",
+      "subtitle": "{amount} · {eventTitle}",
+      "caption": "The captain will validate your payment."
+    },
+    "failed": {
+      "title": "Payment failed",
+      "subtitle": "Try again or use another method.",
+      "caption": ""
+    },
+    "pending": {
+      "title": "Payment pending",
+      "subtitle": "{amount} · {eventTitle}",
+      "caption": "Complete the payment to confirm attendance."
+    },
+    "details": {
+      "from": "From",
+      "to": "To",
+      "method": "Method",
+      "total": "Total"
+    },
+    "methods": {
+      "mbway": "MB Way",
+      "cash": "Cash",
+      "stripe": "Card",
+      "unknown": "Other"
+    },
+    "backToEvent": "Back to event",
+    "tryAgain": "Try again"
   }
 }
