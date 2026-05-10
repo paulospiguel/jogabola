@@ -9,6 +9,7 @@ import {
 } from "@animateicons/react/lucide";
 import { ArrowLeft, ArrowRight, RotateCcw, Sparkles } from "lucide-react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { confirmUserAttendance } from "@/actions/attendance.actions";
@@ -286,6 +287,7 @@ export function AthleteRsvpSheet({
   onSuccess,
 }: AthleteRsvpSheetProps) {
   const t = useTranslations("athleteRsvp");
+  const router = useRouter();
   const [step, setStep] = useState<Step>(userId ? "payment" : "choose");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -436,10 +438,8 @@ export function AthleteRsvpSheet({
       method,
     });
 
-    if (res.success) {
-      if (method === "cash") {
-        setStep("success");
-      }
+    if (res.success && res.data) {
+      router.push(`/event/${eventId}/payment/result/${res.data.id}`);
       return res.data;
     } else {
       setError(t("errors.processPayment"));
@@ -454,7 +454,7 @@ export function AthleteRsvpSheet({
       fileUrl: "https://example.com/placeholder-proof.jpg",
       notes: t("paymentNotes"),
     });
-    setStep("success");
+    router.push(`/event/${eventId}/payment/result/${paymentId}`);
   }
 
   const TITLES: Record<Step, string> = {
