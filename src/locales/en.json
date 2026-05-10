@@ -1765,6 +1765,7 @@
       "selected": "Selected"
     },
     "header": {
+      "eyebrow": "WELCOME TO",
       "welcome": "Welcome to {appName}",
       "greeting": "Hello, {name}!",
       "description": "Before you start, tell us how your journey will be:"

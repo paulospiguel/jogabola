@@ -1770,6 +1770,7 @@
       "selected": "Seleccionado"
     },
     "header": {
+      "eyebrow": "BIENVENIDO A",
       "welcome": "Bienvenido a {appName}",
       "greeting": "¡Hola, {name}!",
       "description": "Antes de empezar, cuéntanos cómo será tu jornada:"
@@ -1807,6 +1808,12 @@
           "Validar asistencia en el campo",
           "Compartir acta del partido"
         ]
+      },
+      "fan": {
+        "eyebrow": "AFICIONADO",
+        "title": "Aficionado",
+        "description": "Sigue a tu equipo, ve resultados y estadísticas.",
+        "features": []
       }
     },
     "cta": {

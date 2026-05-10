@@ -1751,6 +1751,7 @@
       "selected": "Selecionado"
     },
     "header": {
+      "eyebrow": "BEM-VINDO AO",
       "welcome": "Bem-vindo ao {appName}",
       "greeting": "Olá, {name}!",
       "description": "Antes de começar, diz-nos como será a tua jornada:"

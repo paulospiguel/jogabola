@@ -1770,6 +1770,7 @@
       "selected": "Sélectionné"
     },
     "header": {
+      "eyebrow": "BIENVENUE SUR",
       "welcome": "Bienvenue à {appName}",
       "greeting": "Bonjour, {name}!",
       "description": "Avant de commencer, dites-nous comment votre voyage sera:"
@@ -1807,6 +1808,12 @@
           "Valider les présences sur le terrain",
           "Partager le rapport du match"
         ]
+      },
+      "fan": {
+        "eyebrow": "FAN",
+        "title": "Fan",
+        "description": "Suivez votre équipe, voir les résultats et les statistiques.",
+        "features": []
       }
     },
     "cta": {

@@ -92,11 +92,7 @@ function RoleCardLarge({
           <h3
             className={cn(
               "font-sora text-[17px] font-extrabold leading-snug transition-colors duration-200",
-              disabled
-                ? "text-arena-text/55"
-                : selected
-                  ? "text-arena-text"
-                  : "text-arena-text",
+              disabled ? "text-arena-text/55" : "text-arena-text",
             )}
           >
             {title}
@@ -153,7 +149,6 @@ export function OnboardingClient({ userName }: OnboardingClientProps) {
   const [error, setError] = useState<string | null>(null);
 
   const APP_NAME = APP.APP_NAME;
-  const firstName = userName.split(" ")[0];
 
   // Icon elements
   const coachIconEl = (
@@ -210,7 +205,7 @@ export function OnboardingClient({ userName }: OnboardingClientProps) {
   }
 
   return (
-    <div className="relative flex min-h-screen items-center justify-center overflow-hidden bg-[#06090D] px-4 py-12">
+    <div className="relative flex min-h-screen items-center justify-center overflow-hidden bg-arena-bg px-4 py-12">
       {/* Background gradients */}
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_50%_15%,rgba(124,255,79,.10),transparent_32%),radial-gradient(circle_at_82%_72%,rgba(56,189,248,.08),transparent_38%)]" />
       <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(rgba(38,50,68,.18)_1px,transparent_1px),linear-gradient(90deg,rgba(38,50,68,.18)_1px,transparent_1px)] bg-[size:72px_72px] opacity-40 [mask-image:radial-gradient(circle_at_center,black_25%,transparent_78%)]" />
@@ -224,7 +219,7 @@ export function OnboardingClient({ userName }: OnboardingClientProps) {
         {/* ── Header ── */}
         <div className="mb-8 px-1">
           <p className="mb-1.5 text-[10px] font-bold tracking-[0.16em] text-arena-text-muted uppercase">
-            BEM-VINDO AO
+            {t("header.eyebrow")}
           </p>
           <h1 className="mb-2 font-sora text-[28px] font-extrabold lowercase leading-none tracking-tight text-arena-text">
             {APP_NAME.toLowerCase()}
