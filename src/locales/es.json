@@ -1828,6 +1828,13 @@
     "footer": {
       "changeLater": "Puedes cambiar esto más tarde en configuraciones."
     },
+    "menu": {
+      "open": "Abrir menú",
+      "close": "Cerrar menú",
+      "language": "Cambiar idioma",
+      "logout": "Cerrar sesión",
+      "loggingOut": "Cerrando sesión..."
+    },
     "errors": {
       "save": "Error al guardar preferencia. Inténtalo de nuevo.",
       "unexpected": "Error inesperado. Inténtalo de nuevo.",

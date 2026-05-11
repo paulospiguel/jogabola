@@ -3,9 +3,13 @@
 import { motion } from "framer-motion";
 import { Dumbbell } from "lucide-react";
 import Image from "next/image";
+import { useTranslations } from "next-intl";
 import logoAnimated from "@/assets/logos/logo_animado.gif";
+import { Logo } from "@/components/logo";
 
 export default function LoadingPage() {
+  const t = useTranslations("common");
+
   return (
     <div className="relative min-h-screen overflow-hidden bg-arena-bg text-arena-text">
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_50%_18%,rgba(124,255,79,.12),transparent_34%),radial-gradient(circle_at_82%_74%,rgba(56,189,248,.08),transparent_38%),linear-gradient(180deg,rgba(11,15,20,.18),rgba(11,15,20,.92))]" />
@@ -25,15 +29,7 @@ export default function LoadingPage() {
             className="relative flex items-center justify-center"
           >
             <div className="absolute inset-x-10 top-1/2 h-10 -translate-y-1/2 rounded-full bg-arena-primary/12 blur-2xl" />
-            <Image
-              unoptimized
-              priority
-              src={logoAnimated}
-              alt="JogaBola"
-              width={280}
-              height={160}
-              className="relative h-auto w-[min(72vw,280px)] drop-shadow-[0_0_26px_rgba(124,255,79,.16)]"
-            />
+            <Logo isAnimate />
           </motion.div>
 
           <motion.div
@@ -42,21 +38,13 @@ export default function LoadingPage() {
             transition={{ delay: 0.18, duration: 0.22 }}
             className="flex flex-col items-center gap-4"
           >
-            <div className="relative flex size-14 items-center justify-center rounded-[16px] border border-arena-primary/30 bg-arena-primary/10 text-arena-primary shadow-[0_0_28px_rgba(124,255,79,.18)]">
-              <motion.div
-                animate={{ rotate: 360 }}
-                transition={{ duration: 1.1, repeat: Infinity, ease: "linear" }}
-                className="absolute inset-2 rounded-full border border-arena-primary/15 border-t-arena-primary"
-              />
-              <Dumbbell size={22} strokeWidth={2.2} />
-            </div>
             <motion.p
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.26, duration: 0.2 }}
               className="font-sora text-[15px] font-bold tracking-[0.04em] text-arena-text"
             >
-              A carregar...
+              {t("loading")}
             </motion.p>
             <div className="flex items-center gap-1.5" aria-hidden="true">
               {[0, 1, 2].map(index => (

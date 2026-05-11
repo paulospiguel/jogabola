@@ -1809,6 +1809,13 @@
     "footer": {
       "changeLater": "Podes alterar isto mais tarde nas definições."
     },
+    "menu": {
+      "open": "Abrir menu",
+      "close": "Fechar menu",
+      "language": "Alterar idioma",
+      "logout": "Terminar sessão",
+      "loggingOut": "A sair..."
+    },
     "errors": {
       "save": "Erro ao guardar preferência. Tenta novamente.",
       "unexpected": "Erro inesperado. Tenta novamente.",

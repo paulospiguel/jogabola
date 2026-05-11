@@ -15,6 +15,7 @@ import playerIcon from "@/assets/images/jb-player.png";
 import jbIconReferee from "@/assets/images/jb-referee.png";
 import { APP } from "@/constants/app";
 import { cn } from "@/lib/utils";
+import { OnboardingMenu } from "./onboarding-menu";
 import { SurveyStep } from "./survey-step";
 
 type Step = "role" | "survey";
@@ -233,6 +234,11 @@ export function OnboardingClient({ userName }: OnboardingClientProps) {
       {/* Background gradients */}
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_50%_15%,rgba(124,255,79,.10),transparent_32%),radial-gradient(circle_at_82%_72%,rgba(56,189,248,.08),transparent_38%)]" />
       <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(rgba(38,50,68,.18)_1px,transparent_1px),linear-gradient(90deg,rgba(38,50,68,.18)_1px,transparent_1px)] bg-[size:72px_72px] opacity-40 [mask-image:radial-gradient(circle_at_center,black_25%,transparent_78%)]" />
+
+      {/* Hamburger menu — top-right */}
+      <div className="absolute top-4 right-4 z-50">
+        <OnboardingMenu />
+      </div>
 
       <motion.div
         initial={{ opacity: 0, y: 16 }}

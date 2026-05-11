@@ -1823,6 +1823,13 @@
     "footer": {
       "changeLater": "You can change this later in settings."
     },
+    "menu": {
+      "open": "Open menu",
+      "close": "Close menu",
+      "language": "Change language",
+      "logout": "Log out",
+      "loggingOut": "Logging out..."
+    },
     "errors": {
       "save": "Error saving preference. Please try again.",
       "unexpected": "Unexpected error. Please try again.",

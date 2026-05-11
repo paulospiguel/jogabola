@@ -1858,6 +1858,13 @@
         "migrated": "J’ai utilisé une autre app et migré",
         "manual": "Je gère manuellement (Excel/WhatsApp)"
       }
+    },
+    "menu": {
+      "open": "Ouvrir le menu",
+      "close": "Fermer le menu",
+      "language": "Changer de langue",
+      "logout": "Se déconnecter",
+      "loggingOut": "Déconnexion..."
     }
   },
   "profileDangerZone": {
