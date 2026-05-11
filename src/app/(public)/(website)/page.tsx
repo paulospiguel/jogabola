@@ -4,13 +4,13 @@ import { motion } from "framer-motion";
 import {
   ArrowRight,
   CheckCircle2,
-  Play,
   Receipt,
   Star,
   Users,
   Wallet,
   Zap,
 } from "lucide-react";
+import { DemoModal } from "@/components/demo/demo-modal";
 import { useTranslations } from "next-intl";
 import Link from "next/link";
 import { useState, type ComponentType } from "react";
@@ -198,16 +198,10 @@ const HeroSection = () => {
                   <ArrowRight className="ml-2 size-4" />
                 </Link>
               </Button>
-              <Button
-                asChild
-                variant="outline"
-                className="rounded-full border-arena-border bg-arena-bg/60 px-6 py-6 text-sm font-bold text-arena-text backdrop-blur-xl hover:bg-arena-surface"
-              >
-                <Link href="/waitlist">
-                  <Play className="mr-2 size-4" />
-                  {t("secondaryCta")}
-                </Link>
-              </Button>
+              <DemoModal
+                label={t("secondaryCta")}
+                className="inline-flex items-center rounded-full border border-arena-border bg-arena-bg/60 px-6 py-3.5 text-sm font-bold text-arena-text backdrop-blur-xl hover:bg-arena-surface transition-colors"
+              />
             </div>
 
             <div className="mt-10 flex flex-wrap items-center gap-4 rounded-[14px] border border-arena-border bg-arena-bg/45 p-4 backdrop-blur-md">
