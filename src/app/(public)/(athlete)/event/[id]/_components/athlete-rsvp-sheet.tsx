@@ -30,7 +30,7 @@ import {
   InputOTPSlot,
 } from "@/components/ui/input-otp";
 import { useEvent } from "@/hooks/use-events";
-import { useTeamPaymentSettings } from "@/hooks/use-team-payment-settings";
+import { usePublicTeamPaymentSettings } from "@/hooks/use-team-payment-settings";
 import { signIn } from "@/lib/auth-client";
 import { cn } from "@/lib/utils";
 import type { PaymentMethod, TeamPaymentConfig } from "@/types/payments";
@@ -48,7 +48,10 @@ interface AthleteRsvpSheetProps {
   eventId: number;
   userId?: string | null;
   onClose: () => void;
-  onSuccess: (status: string) => void;
+  onSuccess: (status: string, reservationId?: number) => void;
+  /** When true the user is already confirmed — skip confirmUserAttendance and just fetch reservationId */
+  resumePayment?: boolean;
+  guestReservationId?: number | null;
 }
 
 function BackButton({
@@ -165,6 +168,16 @@ function getGuestOtpErrorMessage(
   }
 
   return res.error || fallback;
+}
+
+function getAttendanceErrorMessage(
+  t: ReturnType<typeof useTranslations>,
+  error: string | undefined,
+  fallback: string,
+) {
+  if (error === "EVENT_ROSTER_ONLY") return t("errors.rosterOnly");
+  if (error === "EVENT_CANCELLED") return t("errors.eventCancelled");
+  return error || fallback;
 }
 
 function useResendTimer() {
@@ -285,10 +298,14 @@ export function AthleteRsvpSheet({
   userId,
   onClose,
   onSuccess,
+  resumePayment = false,
+  guestReservationId = null,
 }: AthleteRsvpSheetProps) {
   const t = useTranslations("athleteRsvp");
   const router = useRouter();
-  const [step, setStep] = useState<Step>(userId ? "payment" : "choose");
+  const [step, setStep] = useState<Step>(
+    resumePayment ? "payment" : userId ? "payment" : "choose"
+  );
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
@@ -299,25 +316,45 @@ export function AthleteRsvpSheet({
   const [loginEmail, setLoginEmail] = useState("");
   const [loginOtp, setLoginOtp] = useState("");
 
-  const [reservationId, setReservationId] = useState<number | null>(null);
+  const [reservationId, setReservationId] = useState<number | null>(
+    guestReservationId
+  );
+  const autoConfirmKeyRef = useRef<string | null>(null);
 
   const { event } = useEvent(eventId);
-  const { settings } = useTeamPaymentSettings(event?.teamId);
+  const { settings } = usePublicTeamPaymentSettings(event?.teamId);
 
   useEffect(() => {
-    if (userId && step === "payment" && !reservationId && !loading) {
+    const autoConfirmKey = `${eventId}:${userId ?? ""}:${resumePayment}`;
+    if (
+      userId &&
+      step === "payment" &&
+      !reservationId &&
+      autoConfirmKeyRef.current !== autoConfirmKey
+    ) {
+      autoConfirmKeyRef.current = autoConfirmKey;
       setLoading(true);
       confirmUserAttendance(eventId).then(res => {
         setLoading(false);
         if (res.success) {
           setReservationId(res.reservationId);
-          onSuccess("confirmed");
+          // When resuming payment the user is already confirmed — don't
+          // call onSuccess here or the parent will close the sheet.
+          if (!resumePayment) {
+            onSuccess("confirmed");
+          }
         } else {
-          setError(res.error || t("errors.confirmAttendance"));
+          setError(
+            getAttendanceErrorMessage(
+              t,
+              res.error,
+              t("errors.confirmAttendance"),
+            ),
+          );
         }
       });
     }
-  }, [userId, step, reservationId, eventId, loading, t, onSuccess]);
+  }, [eventId, onSuccess, reservationId, resumePayment, step, t, userId]);
 
   function clearError() {
     setError("");
@@ -367,8 +404,9 @@ export function AthleteRsvpSheet({
     const res = await verifyGuestOTP(eventId, guestEmail, guestOtp, guestName);
     setLoading(false);
     if (res.success) {
-      onSuccess("confirmed");
-      setStep("success");
+      // Pass the reservationId back to the parent so it can remember it for resume payment
+      onSuccess("confirmed", res.reservationId);
+      handleNextAfterRsvp(res.reservationId);
     } else {
       setError(res.error || t("invalidCode"));
     }
@@ -421,10 +459,16 @@ export function AthleteRsvpSheet({
     const confirm = await confirmUserAttendance(eventId);
     setLoading(false);
     if (confirm.success) {
-      onSuccess("confirmed");
+      onSuccess("confirmed", confirm.reservationId);
       handleNextAfterRsvp(confirm.reservationId);
     } else {
-      setError(t("errors.sessionCreatedAttendanceFailed"));
+      setError(
+        getAttendanceErrorMessage(
+          t,
+          confirm.error,
+          t("errors.sessionCreatedAttendanceFailed"),
+        ),
+      );
     }
   }
 

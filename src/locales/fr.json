@@ -264,6 +264,18 @@
     },
     "error": "Erreur lors de la création de l'événement. Veuillez réessayer.",
     "info": "Après avoir créé l'événement, vous pouvez ajouter des joueurs et gérer la convocation à partir de la page de l'événement.",
+    "access": {
+      "rosterOnly": "Effectif uniquement",
+      "rosterOnlyHint": "Seuls les emails appartenant à l'effectif actuel peuvent confirmer leur présence."
+    },
+    "invite": {
+      "title": "Inviter depuis l'effectif",
+      "subtitle": "Sélectionnez des athlètes ou des listes à pré-inviter.",
+      "empty": "Aucun athlète dans l'effectif pour le moment.",
+      "verified": "Athlète vérifié",
+      "manual": "Ajouté manuellement",
+      "summary": "{count} athlète{count, plural, =1 {} other {s}} pré-invité{count, plural, =1 {} other {s}}"
+    },
     "labels": {
       "date": "Date et Heure",
       "location": "Lieu",
@@ -284,12 +296,7 @@
       "training": "Ex : Entraînement technique"
     },
     "playersCount": "{count} joueurs",
-    "steps": [
-      "Type d'événement",
-      "Détails",
-      "Aperçu",
-      "Confirmer"
-    ],
+    "steps": ["Type d'événement", "Détails", "Aperçu", "Confirmer"],
     "success": "Événement créé !",
     "successSubtitle": "Convocation envoyée avec succès.",
     "types": {
@@ -385,7 +392,8 @@
   "arenaEventDetail": {
     "actions": {
       "cancel": "Annuler la présence",
-      "confirm": "Confirmer la présence"
+      "confirm": "Confirmer la présence",
+      "cancelled": "Événement annulé"
     },
     "lists": {
       "main": "Liste principale ({count})",
@@ -618,12 +626,29 @@
       "noProof": "Aucune preuve envoyée",
       "noProofSub": "Attendez que l'athlète télécharge le fichier ou validez manuellement.",
       "history": "Historique de l'Athlète",
-      "verify": "Valider manuellement",
-      "viewProof": "Voir la Preuve",
+      "verify": "Vérifier manuellement",
+      "requestProof": "Demander un Justificatif",
+      "viewProof": "Voir le Justificatif",
       "summary": "Résumé de la Transaction",
       "athlete": "Information de l'Athlète",
       "status": "Mettre à jour le Statut",
-      "memberSince": "Membre du club depuis {year}"
+      "memberSince": "Membre du club depuis {year}",
+      "requestProofAgain": "Redemander le justificatif",
+      "brokenProof": "Impossible d’ouvrir le justificatif",
+      "brokenProofSub": "Le lien du fichier semble invalide ou expiré. Demandez à l’athlète de renvoyer le justificatif.",
+      "approveSuccess": "Paiement approuvé.",
+      "rejectSuccess": "Paiement rejeté.",
+      "actionError": "Impossible de mettre à jour le paiement. Réessayez.",
+      "requestProofSuccess": "Demande envoyée à l’athlète par email.",
+      "requestProofError": "Impossible d’envoyer la demande. Réessayez.",
+      "editStatus": "Modifier la décision du paiement",
+      "closeStatusEdit": "Fermer l’édition",
+      "currentStatus": "Statut actuel",
+      "possibleStatuses": "Statuts possibles",
+      "loadingProof": "Chargement du justificatif...",
+      "proofReceivedKicker": "Justificatif",
+      "proofReceivedTitle": "Document reçu",
+      "proofReceivedDescription": "Vérifiez le montant, le titulaire et la date avant d’approuver le paiement."
     },
     "actions": {
       "back": "Retour à la liste",
@@ -650,6 +675,12 @@
     "high": "Risque Élevé"
   },
   "arenaSquad": {
+    "roles": {
+      "owner": "Capitaine",
+      "admin": "Administrateur",
+      "player": "Joueur",
+      "guest": "Invité"
+    },
     "actions": {
       "add": "Ajouter",
       "addPlayer": "Ajouter un joueur"
@@ -657,8 +688,35 @@
     "filters": {
       "all": "Tous",
       "confirmed": "Confirmé",
+      "verified": "Vérifiés",
+      "manual": "Ajouts manuels",
       "pending": "En attente",
       "reserves": "Réserves"
+    },
+    "subtitle": "Centre des athlètes récurrents : gérez les vérifiés, les ajouts manuels, les listes et la communication directe.",
+    "groups": {
+      "action": "Créer une liste",
+      "title": "Listes de participants",
+      "new": "Nouvelle liste",
+      "createTitle": "Créer une liste de participants",
+      "editTitle": "Modifier la liste de participants",
+      "namePlaceholder": "Nom de la liste",
+      "create": "Enregistrer la liste",
+      "update": "Mettre à jour la liste",
+      "edit": "Modifier la liste",
+      "count": "{count} athlète{count, plural, =1 {} other {s}}"
+    },
+    "email": {
+      "open": "Envoyer un email",
+      "title": "Email à {name}",
+      "subject": "Sujet",
+      "message": "Message",
+      "send": "Envoyer l'email",
+      "sent": "Email envoyé.",
+      "error": "Impossible d'envoyer l'email.",
+      "limitReached": "Limite mensuelle d'emails atteinte pour ce plan.",
+      "usage": "{used}/{limit} emails utilisés ce mois-ci",
+      "unlimited": "Emails illimités avec ce plan"
     },
     "kicker": "Équipe",
     "search": {
@@ -1998,6 +2056,11 @@
       "completed": "Terminé",
       "cancelled": "Annulé"
     },
+    "labels": {
+      "date": "Date",
+      "location": "Lieu",
+      "price": "Prix"
+    },
     "countdown": "COMPTE À REBOURS",
     "eventNotFound": "Événement non trouvé",
     "backToHome": "Retour à l'Accueil",
@@ -2013,13 +2076,17 @@
     "onConfirmedList": "Vous êtes sur la liste confirmée",
     "joinWaitlist": "Rejoindre la liste d'attente",
     "confirmPresence": "Confirmer la présence",
+    "eventCancelledAction": "Événement annulé",
+    "rosterOnlyNotice": "Événement réservé à l'effectif. La confirmation est validée par email.",
+    "rosterOnlyError": "Cet événement est réservé à l'effectif.",
     "cancelPresence": "Annuler la présence",
     "hasAccount": "Vous avez un compte Jogabola ? Connectez-vous pour gérer votre présence.",
     "login": "Se connecter",
     "register": "Créer un compte",
     "tabs": {
       "squad": "Convoqués",
-      "location": "Lieu"
+      "location": "Lieu",
+      "payment": "Paiement"
     },
     "type": {
       "game": "Match Officiel",
@@ -2027,7 +2094,8 @@
     },
     "price": {
       "free": "Gratuit"
-    }
+    },
+    "payNow": "Payer maintenant"
   },
   "athleteRsvp": {
     "back": "Retour",
@@ -2083,6 +2151,8 @@
       "confirmAttendance": "Erreur lors de la confirmation de présence",
       "sendCode": "Erreur lors de l'envoi du code.",
       "sessionCreatedAttendanceFailed": "Session créée mais erreur lors de la confirmation de présence. Réessayez.",
+      "rosterOnly": "Cet événement est réservé à l'effectif.",
+      "eventCancelled": "Cet événement est annulé.",
       "processPayment": "Erreur lors du traitement du paiement.",
       "resend": "Erreur lors du renvoi.",
       "resendPin": "Erreur lors du renvoi du PIN.",

@@ -1,6 +1,7 @@
 "use client";
 
 import { BadgeCheck, Check } from "lucide-react";
+import Link from "next/link";
 import type { ReactNode } from "react";
 import type { Participant } from "@/hooks/use-event-attendance";
 import { cn } from "@/lib/utils";
@@ -69,6 +70,9 @@ export function ParticipantRow({
     ? participant.paymentStatus
     : null;
   const shouldShowPayment = showPayment && paymentStatus;
+  const profileHref = String(participant.id).startsWith("guest-")
+    ? null
+    : `/arena/squads/player/${participant.id}`;
 
   return (
     <div
@@ -91,9 +95,18 @@ export function ParticipantRow({
       />
       <div className="min-w-0 flex-1">
         <div className="flex min-w-0 items-center gap-1.5">
-          <div className="truncate text-[13px] font-semibold text-arena-text">
-            {participant.name}
-          </div>
+          {profileHref ? (
+            <Link
+              href={profileHref}
+              className="truncate text-[13px] font-semibold text-arena-text transition-colors hover:text-arena-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-arena-primary/60"
+            >
+              {participant.name}
+            </Link>
+          ) : (
+            <div className="truncate text-[13px] font-semibold text-arena-text">
+              {participant.name}
+            </div>
+          )}
           {participant.verified && (
             <BadgeCheck
               size={13}

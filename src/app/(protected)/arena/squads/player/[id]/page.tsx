@@ -46,8 +46,11 @@ export default function AthleteProfilePage() {
     id as string,
   );
 
-  const arenaAthleteProfileTranslation = (sentence: string) => {
-    return t(`arenaAthleteProfile.${sentence}`);
+  const arenaAthleteProfileTranslation = (
+    sentence: string,
+    values?: Record<string, string | number>,
+  ) => {
+    return t(`arenaAthleteProfile.${sentence}`, values);
   };
 
   const isLoading = dashboardLoading || profileLoading;
@@ -260,8 +263,7 @@ export default function AthleteProfilePage() {
                     {arenaAthleteProfileTranslation("info.joined")}
                   </div>
                   <div className="mt-1 font-semibold text-arena-text">
-                    {athlete?.createdAt &&
-                      formatDate(athlete?.createdAt)}
+                    {athlete?.createdAt && formatDate(athlete?.createdAt)}
                   </div>
                 </div>
                 <div>
@@ -337,7 +339,10 @@ export default function AthleteProfilePage() {
             </section>
 
             {/* History Card */}
-            <section className="jb-card overflow-hidden">
+            <section
+              id="history"
+              className="jb-card scroll-mt-24 overflow-hidden"
+            >
               <div className="border-b border-arena-border bg-arena-surface-el/50 px-6 py-4 flex items-center justify-between">
                 <h2 className="text-xs font-bold uppercase tracking-widest text-arena-text-muted">
                   {arenaAthleteProfileTranslation("history.title")}
@@ -406,7 +411,7 @@ function RemoveFromRosterDialog({
   playerId: string;
   playerName: string;
   onRemoved: () => void;
-  t: (sentence: string) => string;
+  t: (sentence: string, values?: Record<string, string | number>) => string;
 }) {
   const queryClient = useQueryClient();
   const [open, setOpen] = useState(false);
@@ -474,7 +479,7 @@ function RemoveFromRosterDialog({
             {t("removeDialog.title")}
           </AlertDialogTitle>
           <AlertDialogDescription className="text-arena-text-sec">
-            {t("removeDialog.description").replace("{name}", playerName)}
+            {t("removeDialog.description", { name: playerName })}
           </AlertDialogDescription>
         </AlertDialogHeader>
 

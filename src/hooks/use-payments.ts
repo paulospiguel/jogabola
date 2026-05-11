@@ -14,7 +14,10 @@ export interface Payment {
   player: {
     id: string;
     name: string;
+    email?: string;
+    image?: string | null;
     isVerified: boolean;
+    createdAt: string;
   };
   event: {
     id: number;

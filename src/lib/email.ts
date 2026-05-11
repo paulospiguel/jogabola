@@ -4,6 +4,7 @@ import { AttendanceConfirmedEmail } from "@/components/emails/attendance-confirm
 import { AuthOtpEmail } from "@/components/emails/auth-otp-email";
 import { EventReminderEmail } from "@/components/emails/event-reminder-email";
 import { GuestRsvpOtpEmail } from "@/components/emails/guest-rsvp-otp-email";
+import { PaymentProofRequestEmail } from "@/components/emails/payment-proof-request-email";
 import { WelcomeEmail } from "@/components/emails/welcome-email";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
@@ -237,6 +238,26 @@ export async function sendEventReminder(
       confirmedCount: event.confirmedCount,
       totalSpots: event.totalSpots,
     }),
+  });
+}
+
+export async function sendPaymentProofRequest(
+  to: string,
+  payment: {
+    name: string;
+    eventTitle: string;
+    eventDate: string;
+    eventTime: string;
+    amountCents: number;
+    currency: string;
+    eventId: number;
+    paymentId: number;
+  },
+) {
+  return send({
+    to,
+    subject: `Comprovativo em falta — ${payment.eventTitle}`,
+    react: React.createElement(PaymentProofRequestEmail, payment),
   });
 }
 

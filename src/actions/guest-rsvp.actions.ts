@@ -9,6 +9,10 @@ import {
   sendAttendanceConfirmed,
   sendGuestRsvpOtp,
 } from "@/lib/email";
+import {
+  emailBelongsToTeamRoster,
+  normalizeRosterEmail,
+} from "@/lib/event-roster-access";
 
 function generateOTP() {
   return Math.floor(100000 + Math.random() * 900000).toString();
@@ -26,6 +30,10 @@ function formatEventTime(d: Date) {
   return d.toLocaleTimeString("pt-PT", { hour: "2-digit", minute: "2-digit" });
 }
 
+function isCancelledEventStatus(status: string | null | undefined) {
+  return status === "cancelled" || status === "canceled";
+}
+
 async function getEventDetails(eventId: number) {
   const event = await db.query.matchSessions.findFirst({
     where: eq(matchSessions.id, eventId),
@@ -37,6 +45,9 @@ async function getEventDetails(eventId: number) {
     time: formatEventTime(event.startsAt),
     location: event.location,
     capacity: event.capacity ?? 14,
+    status: event.status,
+    rosterOnly: event.rosterOnly,
+    teamId: event.teamId,
   };
 }
 
@@ -46,6 +57,25 @@ export async function requestGuestOTP(
   email: string,
 ) {
   try {
+    const event = await getEventDetails(eventId);
+    if (!event || isCancelledEventStatus(event.status)) {
+      return {
+        success: false,
+        error: "Este evento está cancelado e já não aceita confirmações.",
+      };
+    }
+
+    const normalizedEmail = normalizeRosterEmail(email);
+    if (
+      event.rosterOnly &&
+      !(await emailBelongsToTeamRoster(event.teamId, normalizedEmail))
+    ) {
+      return {
+        success: false,
+        error: "Este evento é reservado ao plantel.",
+      };
+    }
+
     const otp = generateOTP();
     const expiresAt = new Date(Date.now() + 10 * 60 * 1000);
 
@@ -53,26 +83,25 @@ export async function requestGuestOTP(
       .delete(guestEventOtp)
       .where(
         and(
-          eq(guestEventOtp.email, email),
+          eq(guestEventOtp.email, normalizedEmail),
           eq(guestEventOtp.matchSessionId, eventId),
         ),
       );
 
     await db.insert(guestEventOtp).values({
-      email,
+      email: normalizedEmail,
       matchSessionId: eventId,
       otp,
       expiresAt,
     });
 
     if (!process.env.RESEND_API_KEY && process.env.NODE_ENV !== "production") {
-      console.log(`[guest-rsvp:otp] ${email} -> ${otp}`);
+      console.log(`[guest-rsvp:otp] ${normalizedEmail} -> ${otp}`);
       return { success: true };
     }
 
-    const event = await getEventDetails(eventId);
     const emailResult = await sendGuestRsvpOtp(
-      email,
+      normalizedEmail,
       name,
       otp,
       event
@@ -107,9 +136,28 @@ export async function verifyGuestOTP(
   name: string,
 ) {
   try {
+    const event = await getEventDetails(eventId);
+    if (!event || isCancelledEventStatus(event.status)) {
+      return {
+        success: false,
+        error: "Este evento está cancelado e já não aceita confirmações.",
+      };
+    }
+
+    const normalizedEmail = normalizeRosterEmail(email);
+    if (
+      event.rosterOnly &&
+      !(await emailBelongsToTeamRoster(event.teamId, normalizedEmail))
+    ) {
+      return {
+        success: false,
+        error: "Este evento é reservado ao plantel.",
+      };
+    }
+
     const record = await db.query.guestEventOtp.findFirst({
       where: and(
-        eq(guestEventOtp.email, email),
+        eq(guestEventOtp.email, normalizedEmail),
         eq(guestEventOtp.matchSessionId, eventId),
         eq(guestEventOtp.otp, otp),
         gt(guestEventOtp.expiresAt, new Date()),
@@ -120,12 +168,12 @@ export async function verifyGuestOTP(
       return { success: false, error: "Código inválido ou expirado" };
     }
 
-    await db.insert(attendance).values({
+    const [inserted] = await db.insert(attendance).values({
       matchSessionId: eventId,
       guestName: name,
-      guestEmail: email,
+      guestEmail: normalizedEmail,
       status: "confirmed",
-    });
+    }).returning({ id: attendance.id });
 
     await db.delete(guestEventOtp).where(eq(guestEventOtp.id, record.id));
 
@@ -133,7 +181,6 @@ export async function verifyGuestOTP(
     revalidatePath(`/arena/events/${eventId}`);
 
     // Fire confirmation email (non-blocking)
-    const event = await getEventDetails(eventId);
     if (event) {
       const confirmedCount = await db.query.attendance.findMany({
         where: and(
@@ -143,7 +190,7 @@ export async function verifyGuestOTP(
       });
 
       sendAttendanceConfirmed(
-        email,
+        normalizedEmail,
         name,
         {
           id: eventId,
@@ -159,7 +206,7 @@ export async function verifyGuestOTP(
       );
     }
 
-    return { success: true };
+    return { success: true, reservationId: inserted.id };
   } catch (error) {
     console.error("[guest-rsvp] verifyGuestOTP failed:", error);
     return { success: false, error: "Erro ao verificar PIN. Tenta de novo." };

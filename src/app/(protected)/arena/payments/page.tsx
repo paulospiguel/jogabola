@@ -72,22 +72,22 @@ export default function PaymentsPage() {
         </header>
 
         {/* Methods config card */}
-        <section className="jb-card p-0 overflow-hidden">
-          <div className="flex items-center justify-between px-4 py-3 border-b border-arena-border">
+        <section className="jb-card overflow-hidden p-0">
+          <div className="flex flex-col gap-3 border-arena-border border-b px-4 py-3 sm:flex-row sm:items-center sm:justify-between">
             <span className="text-[11px] font-bold uppercase tracking-widest text-arena-text-muted">
               Métodos de pagamento
             </span>
             <button
               type="button"
               onClick={() => setShowSettings(true)}
-              className="flex items-center gap-1.5 rounded-[8px] border border-arena-border bg-arena-surface-el px-3 py-1.5 text-[11px] font-bold text-arena-text-sec transition-colors hover:border-arena-primary/40 hover:text-arena-primary"
+              className="inline-flex w-fit items-center gap-1.5 rounded-[8px] border border-arena-border bg-arena-surface-el px-3 py-1.5 text-[11px] font-bold text-arena-text-sec transition-colors hover:border-arena-primary/40 hover:text-arena-primary"
             >
               <Settings2 size={12} />
               {t("configureBtn")}
             </button>
           </div>
 
-          <div className="flex items-stretch divide-x divide-arena-border">
+          <div className="grid divide-y divide-arena-border sm:grid-cols-3 sm:divide-x sm:divide-y-0">
             {/* MBWay */}
             <div className="flex flex-1 flex-col gap-1.5 px-4 py-3">
               <div className="flex items-center gap-1.5">
@@ -184,16 +184,16 @@ export default function PaymentsPage() {
                   href={`/arena/payments/${payment.id}`}
                   className="jb-card group relative overflow-hidden transition-all hover:border-arena-primary/30"
                 >
-                  <div className="flex flex-col gap-4 p-4 md:flex-row md:items-center">
-                    <div className="flex flex-1 items-center gap-3">
+                  <div className="flex flex-col gap-3 p-3 pr-10 sm:p-4 sm:pr-4 md:flex-row md:items-center">
+                    <div className="flex min-w-0 flex-1 items-center gap-3">
                       <JbAvatar
                         id={payment.player.id}
                         name={payment.player.name}
                         size={44}
                       />
-                      <div className="flex-1">
-                        <div className="flex items-center gap-1.5">
-                          <span className="font-bold text-arena-text transition-colors group-hover:text-arena-primary">
+                      <div className="min-w-0 flex-1">
+                        <div className="flex min-w-0 items-center gap-1.5">
+                          <span className="truncate font-bold text-arena-text transition-colors group-hover:text-arena-primary">
                             {payment.player.name}
                           </span>
                           <VerifiedBadge
@@ -201,18 +201,18 @@ export default function PaymentsPage() {
                             variant="icon"
                           />
                         </div>
-                        <div className="flex items-center gap-2 text-xs text-arena-text-muted">
+                        <div className="flex min-w-0 items-center gap-2 text-xs text-arena-text-muted">
                           <MethodBadge method={payment.method} />
                           <span>·</span>
-                          <span className="max-w-[150px] truncate">
+                          <span className="min-w-0 flex-1 truncate md:max-w-[150px]">
                             {payment.event.title}
                           </span>
                         </div>
                       </div>
                     </div>
 
-                    <div className="flex flex-wrap items-center gap-4 md:gap-8">
-                      <div className="flex flex-col gap-1.5">
+                    <div className="grid grid-cols-2 gap-2 min-[430px]:grid-cols-3 md:flex md:flex-wrap md:items-center md:gap-8">
+                      <div className="min-w-0 rounded-[10px] border border-arena-border/60 bg-arena-bg/25 px-2.5 py-2 md:border-0 md:bg-transparent md:p-0">
                         <span className="text-[10px] font-bold uppercase tracking-wider text-arena-text-muted">
                           {t("table.status")}
                         </span>
@@ -222,14 +222,14 @@ export default function PaymentsPage() {
                         />
                       </div>
 
-                      <div className="flex flex-col gap-1.5">
+                      <div className="min-w-0 rounded-[10px] border border-arena-border/60 bg-arena-bg/25 px-2.5 py-2 md:border-0 md:bg-transparent md:p-0">
                         <span className="text-[10px] font-bold uppercase tracking-wider text-arena-text-muted">
                           {t("table.risk")}
                         </span>
                         <JbBadge status={payment.score as BadgeStatus} />
                       </div>
 
-                      <div className="flex flex-col gap-1 md:items-end">
+                      <div className="min-w-0 rounded-[10px] border border-arena-border/60 bg-arena-bg/25 px-2.5 py-2 md:border-0 md:bg-transparent md:p-0 md:items-end">
                         <span className="text-[10px] font-bold uppercase tracking-wider text-arena-text-muted">
                           {t("table.amount")}
                         </span>
@@ -239,7 +239,7 @@ export default function PaymentsPage() {
                       </div>
                     </div>
 
-                    <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-arena-surface-el text-arena-text-muted transition-all group-hover:bg-arena-primary group-hover:text-arena-bg">
+                    <div className="absolute top-3 right-3 flex size-8 items-center justify-center rounded-[10px] bg-arena-surface-el text-arena-text-muted transition-all group-hover:bg-arena-primary group-hover:text-arena-bg sm:size-10 md:static">
                       <ChevronRight size={20} />
                     </div>
                   </div>

@@ -1,10 +1,16 @@
 "use client";
 
-import { ChevronDown, ChevronUp, CreditCard, Loader2 } from "lucide-react";
+import {
+  ChevronDown,
+  ChevronUp,
+  CreditCard,
+  Loader2,
+  Users,
+} from "lucide-react";
+import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { updateEvent } from "@/actions/match-sessions.actions";
-import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { EventDatePicker } from "@/components/ui/event-date-picker";
 import { Label } from "@/components/ui/label";
@@ -15,17 +21,21 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { cn } from "@/lib/utils";
+import type { EventStatus } from "@/types/events";
 import { JbBottomSheet } from "./jb-bottom-sheet";
 
 interface EditEventSheetProps {
   event: {
     id: number;
+    teamId: number;
     startDate: Date | string;
-    status: string;
+    status: EventStatus;
     recurrence: string;
     priceCents?: number;
     paymentRequired?: boolean;
     paymentDeadlineHours?: number | null;
+    rosterOnly?: boolean;
   };
   onClose: () => void;
 }
@@ -35,6 +45,7 @@ const inputClass =
   "h-11 rounded-xl border-arena-border bg-arena-bg text-sm text-arena-text placeholder:text-arena-text-muted/70 focus-visible:ring-arena-primary/40 focus-visible:border-arena-primary/50";
 
 export function EditEventSheet({ event, onClose }: EditEventSheetProps) {
+  const router = useRouter();
   const t = useTranslations("arenaCreateEvent");
   const tEvents = useTranslations("arenaEvents");
   const tCommon = useTranslations("common");
@@ -46,10 +57,30 @@ export function EditEventSheet({ event, onClose }: EditEventSheetProps) {
     priceCents: event.priceCents ?? 0,
     paymentRequired: event.paymentRequired ?? false,
     paymentDeadlineHours: event.paymentDeadlineHours?.toString() ?? "",
+    rosterOnly: event.rosterOnly ?? false,
+    mbwayEnabled: false,
+    mbwayPhone: "",
   });
   const [paymentOpen, setPaymentOpen] = useState(false);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    import("@/actions/team-payment-settings.actions").then(
+      ({ getTeamPaymentSettings }) => {
+        getTeamPaymentSettings({ teamId: event.teamId }).then(res => {
+          if (res.success && res.data) {
+            const data = res.data;
+            setForm(f => ({
+              ...f,
+              mbwayEnabled: data.mbwayEnabled,
+              mbwayPhone: data.mbwayPhone || f.mbwayPhone,
+            }));
+          }
+        });
+      },
+    );
+  }, [event.teamId]);
 
   const set = <K extends keyof typeof form>(k: K, v: (typeof form)[K]) =>
     setForm(f => ({ ...f, [k]: v }));
@@ -63,12 +94,17 @@ export function EditEventSheet({ event, onClose }: EditEventSheetProps) {
       recurrence: form.recurrence,
       priceCents: form.priceCents,
       paymentRequired: form.paymentRequired,
-      paymentDeadlineHours: form.paymentRequired && form.paymentDeadlineHours
-        ? Number.parseInt(form.paymentDeadlineHours, 10)
-        : null,
+      paymentDeadlineHours:
+        form.paymentRequired && form.paymentDeadlineHours
+          ? Number.parseInt(form.paymentDeadlineHours, 10)
+          : null,
+      rosterOnly: form.rosterOnly,
+      mbwayEnabled: form.mbwayEnabled,
+      mbwayPhone: form.mbwayPhone,
     });
     setSaving(false);
     if (res.success) {
+      router.refresh();
       onClose();
     } else {
       setError("Erro ao atualizar evento. Tente novamente.");
@@ -119,7 +155,10 @@ export function EditEventSheet({ event, onClose }: EditEventSheetProps) {
 
         <div>
           <Label className={labelClass}>Status do Evento</Label>
-          <Select value={form.status} onValueChange={v => set("status", v)}>
+          <Select
+            value={form.status}
+            onValueChange={v => set("status", v as EventStatus)}
+          >
             <SelectTrigger className="h-11 w-full rounded-xl border-arena-border bg-arena-surface text-sm text-arena-text">
               <SelectValue placeholder="Status" />
             </SelectTrigger>
@@ -127,10 +166,10 @@ export function EditEventSheet({ event, onClose }: EditEventSheetProps) {
               <SelectItem value="scheduled">
                 {tEvents("status.scheduled")}
               </SelectItem>
-              <SelectItem value="completed">
+              <SelectItem value="confirmed">
                 {tEvents("status.confirmed")}
               </SelectItem>
-              <SelectItem value="canceled">
+              <SelectItem value="cancelled">
                 {tEvents("status.cancelled")}
               </SelectItem>
             </SelectContent>
@@ -168,13 +207,72 @@ export function EditEventSheet({ event, onClose }: EditEventSheetProps) {
                   min={0}
                   step={0.5}
                   placeholder="0.00"
-                  value={form.priceCents > 0 ? (form.priceCents / 100).toFixed(2) : ""}
+                  value={
+                    form.priceCents > 0
+                      ? (form.priceCents / 100).toFixed(2)
+                      : ""
+                  }
                   onChange={e => {
                     const val = Number.parseFloat(e.target.value) || 0;
                     set("priceCents", Math.round(val * 100));
                   }}
                 />
               </div>
+
+              {/* MBWay Config */}
+              {form.priceCents > 0 && (
+                <div className="flex flex-col gap-3 pt-2">
+                  <button
+                    type="button"
+                    onClick={() => set("mbwayEnabled", !form.mbwayEnabled)}
+                    className={cn(
+                      "flex items-center justify-between rounded-xl border px-4 py-3 text-left transition-colors",
+                      form.mbwayEnabled
+                        ? "border-arena-primary/40 bg-arena-primary/5"
+                        : "border-arena-border bg-arena-bg",
+                    )}
+                  >
+                    <div>
+                      <p className="text-[13px] font-semibold text-arena-text">
+                        Aceitar MBWay
+                      </p>
+                      <p className="text-[11px] text-arena-text-muted">
+                        Permitir pagamento via MBWay
+                      </p>
+                    </div>
+                    <div
+                      className={cn(
+                        "h-5 w-9 rounded-full transition-colors",
+                        form.mbwayEnabled ? "bg-arena-primary" : "bg-arena-border",
+                      )}
+                    >
+                      <div
+                        className={cn(
+                          "mt-0.5 h-4 w-4 rounded-full bg-white shadow transition-transform",
+                          form.mbwayEnabled
+                            ? "translate-x-4 ml-0.5"
+                            : "translate-x-0.5",
+                        )}
+                      />
+                    </div>
+                  </button>
+                  {form.mbwayEnabled && (
+                    <div>
+                      <Label className={labelClass} htmlFor="edit-mbway-phone">
+                        Número de Telemóvel MBWay
+                      </Label>
+                      <input
+                        className={inputClass}
+                        id="edit-mbway-phone"
+                        type="tel"
+                        placeholder="Ex: 912345678"
+                        value={form.mbwayPhone}
+                        onChange={e => set("mbwayPhone", e.target.value)}
+                      />
+                    </div>
+                  )}
+                </div>
+              )}
 
               <button
                 type="button"
@@ -191,17 +289,26 @@ export function EditEventSheet({ event, onClose }: EditEventSheetProps) {
                     {t("payment.required") || "Pagamento obrigatório"}
                   </p>
                   <p className="text-[11px] text-arena-text-muted">
-                    {t("payment.requiredHint") || "Atletas devem pagar antes de confirmar"}
+                    {t("payment.requiredHint") ||
+                      "Atletas devem pagar antes de confirmar"}
                   </p>
                 </div>
-                <div className={cn(
-                  "h-5 w-9 rounded-full transition-colors",
-                  form.paymentRequired ? "bg-arena-primary" : "bg-arena-border",
-                )}>
-                  <div className={cn(
-                    "mt-0.5 h-4 w-4 rounded-full bg-white shadow transition-transform",
-                    form.paymentRequired ? "translate-x-4 ml-0.5" : "translate-x-0.5",
-                  )} />
+                <div
+                  className={cn(
+                    "h-5 w-9 rounded-full transition-colors",
+                    form.paymentRequired
+                      ? "bg-arena-primary"
+                      : "bg-arena-border",
+                  )}
+                >
+                  <div
+                    className={cn(
+                      "mt-0.5 h-4 w-4 rounded-full bg-white shadow transition-transform",
+                      form.paymentRequired
+                        ? "translate-x-4 ml-0.5"
+                        : "translate-x-0.5",
+                    )}
+                  />
                 </div>
               </button>
 
@@ -219,7 +326,9 @@ export function EditEventSheet({ event, onClose }: EditEventSheetProps) {
                       max={168}
                       placeholder="24"
                       value={form.paymentDeadlineHours}
-                      onChange={e => set("paymentDeadlineHours", e.target.value)}
+                      onChange={e =>
+                        set("paymentDeadlineHours", e.target.value)
+                      }
                     />
                     <span className="shrink-0 text-[12px] text-arena-text-muted">
                       {t("payment.deadlineHoursUnit") || "h antes do jogo"}
@@ -230,6 +339,44 @@ export function EditEventSheet({ event, onClose }: EditEventSheetProps) {
             </div>
           )}
         </div>
+
+        <button
+          type="button"
+          onClick={() => set("rosterOnly", !form.rosterOnly)}
+          className={cn(
+            "flex items-center justify-between rounded-xl border px-4 py-3 text-left transition-colors",
+            form.rosterOnly
+              ? "border-arena-primary/40 bg-arena-primary/5"
+              : "border-arena-border bg-arena-surface",
+          )}
+        >
+          <div className="flex min-w-0 items-start gap-3">
+            <span className="grid size-8 shrink-0 place-items-center rounded-lg border border-arena-border bg-arena-bg text-arena-primary">
+              <Users size={15} />
+            </span>
+            <span className="min-w-0">
+              <span className="block text-[13px] font-semibold text-arena-text">
+                {t("access.rosterOnly")}
+              </span>
+              <span className="mt-0.5 block text-[11px] leading-snug text-arena-text-muted">
+                {t("access.rosterOnlyHint")}
+              </span>
+            </span>
+          </div>
+          <div
+            className={cn(
+              "ml-3 h-5 w-9 shrink-0 rounded-full transition-colors",
+              form.rosterOnly ? "bg-arena-primary" : "bg-arena-border",
+            )}
+          >
+            <div
+              className={cn(
+                "mt-0.5 h-4 w-4 rounded-full bg-white shadow transition-transform",
+                form.rosterOnly ? "ml-0.5 translate-x-4" : "translate-x-0.5",
+              )}
+            />
+          </div>
+        </button>
 
         {error && (
           <div className="rounded-[10px] border border-arena-danger/20 bg-arena-danger/10 px-3 py-2.5 text-[13px] text-arena-danger">

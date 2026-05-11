@@ -1,14 +1,25 @@
 "use client";
 
 import { format } from "date-fns";
-import { Check, ChevronDown, ChevronUp, CreditCard, Link2, Loader2, Send } from "lucide-react";
+import {
+  Check,
+  ChevronDown,
+  ChevronUp,
+  CreditCard,
+  Link2,
+  Loader2,
+  Send,
+  Users,
+} from "lucide-react";
 import Image from "next/image";
 import { useTranslations } from "next-intl";
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { createEvent } from "@/actions/match-sessions.actions";
 import Challenge from "@/assets/images/jb-challenge.png";
 import Game from "@/assets/images/jb-game.png";
 import Training from "@/assets/images/jb-training.png";
+import { useSquad } from "@/hooks/use-squad";
+import { useTeamPaymentSettings } from "@/hooks/use-team-payment-settings";
 import { cn } from "@/lib/utils";
 import { Button } from "../ui/button";
 import { EventDatePicker } from "../ui/event-date-picker";
@@ -21,7 +32,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../ui/select";
+import { JbAvatar } from "./jb-avatar";
 import { JbBottomSheet } from "./jb-bottom-sheet";
+import { VerifiedBadge } from "./verified-badge";
 
 interface CreateEventSheetProps {
   onClose: () => void;
@@ -39,6 +52,15 @@ interface FormState {
   priceCents: number;
   paymentRequired: boolean;
   paymentDeadlineHours: string;
+  rosterOnly: boolean;
+  mbwayEnabled: boolean;
+  mbwayPhone: string;
+}
+
+interface RosterGroup {
+  id: string;
+  name: string;
+  playerIds: string[];
 }
 
 function PaymentSection({
@@ -74,7 +96,10 @@ function PaymentSection({
         <div className="flex flex-col gap-3 border-t border-arena-border px-4 pb-4 pt-3">
           {/* Price */}
           <div>
-            <Label className="mb-1 text-xs font-semibold text-arena-text-sec" htmlFor="event-price">
+            <Label
+              className="mb-1 text-xs font-semibold text-arena-text-sec"
+              htmlFor="event-price"
+            >
               {t("payment.price") || "Valor (€)"}
             </Label>
             <Input
@@ -84,13 +109,73 @@ function PaymentSection({
               min={0}
               step={0.5}
               placeholder="0.00"
-              value={form.priceCents > 0 ? (form.priceCents / 100).toFixed(2) : ""}
+              value={
+                form.priceCents > 0 ? (form.priceCents / 100).toFixed(2) : ""
+              }
               onChange={e => {
                 const val = Number.parseFloat(e.target.value) || 0;
                 set("priceCents", Math.round(val * 100));
               }}
             />
           </div>
+
+          {/* MBWay Config */}
+          {form.priceCents > 0 && (
+            <div className="flex flex-col gap-3 pt-2">
+              <button
+                type="button"
+                onClick={() => set("mbwayEnabled", !form.mbwayEnabled)}
+                className={cn(
+                  "flex items-center justify-between rounded-xl border px-4 py-3 text-left transition-colors",
+                  form.mbwayEnabled
+                    ? "border-arena-primary/40 bg-arena-primary/5"
+                    : "border-arena-border bg-arena-bg",
+                )}
+              >
+                <div>
+                  <p className="text-[13px] font-semibold text-arena-text">
+                    Aceitar MBWay
+                  </p>
+                  <p className="text-[11px] text-arena-text-muted">
+                    Permitir pagamento via MBWay
+                  </p>
+                </div>
+                <div
+                  className={cn(
+                    "h-5 w-9 rounded-full transition-colors",
+                    form.mbwayEnabled ? "bg-arena-primary" : "bg-arena-border",
+                  )}
+                >
+                  <div
+                    className={cn(
+                      "mt-0.5 h-4 w-4 rounded-full bg-white shadow transition-transform",
+                      form.mbwayEnabled
+                        ? "translate-x-4 ml-0.5"
+                        : "translate-x-0.5",
+                    )}
+                  />
+                </div>
+              </button>
+              {form.mbwayEnabled && (
+                <div>
+                  <Label
+                    className="mb-1 text-xs font-semibold text-arena-text-sec"
+                    htmlFor="event-mbway-phone"
+                  >
+                    Número de Telemóvel MBWay
+                  </Label>
+                  <Input
+                    className="h-11 rounded-xl border-arena-border bg-arena-bg text-sm text-arena-text placeholder:text-arena-text-muted/70 focus-visible:ring-arena-primary/40 focus-visible:border-arena-primary/50"
+                    id="event-mbway-phone"
+                    type="tel"
+                    placeholder="Ex: 912345678"
+                    value={form.mbwayPhone}
+                    onChange={e => set("mbwayPhone", e.target.value)}
+                  />
+                </div>
+              )}
+            </div>
+          )}
 
           {/* Payment required toggle */}
           <button
@@ -108,24 +193,34 @@ function PaymentSection({
                 {t("payment.required") || "Pagamento obrigatório"}
               </p>
               <p className="text-[11px] text-arena-text-muted">
-                {t("payment.requiredHint") || "Atletas devem pagar antes de confirmar"}
+                {t("payment.requiredHint") ||
+                  "Atletas devem pagar antes de confirmar"}
               </p>
             </div>
-            <div className={cn(
-              "h-5 w-9 rounded-full transition-colors",
-              form.paymentRequired ? "bg-arena-primary" : "bg-arena-border",
-            )}>
-              <div className={cn(
-                "mt-0.5 h-4 w-4 rounded-full bg-white shadow transition-transform",
-                form.paymentRequired ? "translate-x-4 ml-0.5" : "translate-x-0.5",
-              )} />
+            <div
+              className={cn(
+                "h-5 w-9 rounded-full transition-colors",
+                form.paymentRequired ? "bg-arena-primary" : "bg-arena-border",
+              )}
+            >
+              <div
+                className={cn(
+                  "mt-0.5 h-4 w-4 rounded-full bg-white shadow transition-transform",
+                  form.paymentRequired
+                    ? "translate-x-4 ml-0.5"
+                    : "translate-x-0.5",
+                )}
+              />
             </div>
           </button>
 
           {/* Deadline hours — only when paymentRequired */}
           {form.paymentRequired && (
             <div>
-              <Label className="mb-1 text-xs font-semibold text-arena-text-sec" htmlFor="event-deadline">
+              <Label
+                className="mb-1 text-xs font-semibold text-arena-text-sec"
+                htmlFor="event-deadline"
+              >
                 {t("payment.deadlineHours") || "Prazo de pagamento"}
               </Label>
               <div className="flex items-center gap-2">
@@ -196,12 +291,47 @@ export function CreateEventSheet({
     priceCents: 0,
     paymentRequired: false,
     paymentDeadlineHours: "",
+    rosterOnly: false,
+    mbwayEnabled: false,
+    mbwayPhone: "",
   });
   const [sending, setSending] = useState(false);
   const [done, setDone] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [createdEventId, setCreatedEventId] = useState<number | null>(null);
   const [copiedLink, setCopiedLink] = useState(false);
+  const [selectedPlayerIds, setSelectedPlayerIds] = useState<string[]>([]);
+  const [groups, setGroups] = useState<RosterGroup[]>([]);
+  const { players } = useSquad();
+  const { settings } = useTeamPaymentSettings(teamId);
+  
+  // Pre-fill MBWay settings if available
+  useEffect(() => {
+    if (settings) {
+      setForm(f => ({
+        ...f,
+        mbwayEnabled: settings.mbwayEnabled,
+        mbwayPhone: settings.mbwayPhone || f.mbwayPhone,
+      }));
+    }
+  }, [settings]);
+
+  const rosterPlayers = useMemo(
+    () => players.filter(player => player.status !== "refused"),
+    [players],
+  );
+
+  useEffect(() => {
+    if (!teamId || typeof window === "undefined") return;
+    const raw = window.localStorage.getItem(`jogabola.rosterGroups.${teamId}`);
+    if (!raw) return;
+    try {
+      const parsed = JSON.parse(raw) as RosterGroup[];
+      setGroups(Array.isArray(parsed) ? parsed : []);
+    } catch {
+      setGroups([]);
+    }
+  }, [teamId]);
 
   const set = <K extends keyof FormState>(k: K, v: FormState[K]) =>
     setForm(f => ({ ...f, [k]: v }));
@@ -221,9 +351,21 @@ export function CreateEventSheet({
       teamId,
       priceCents: form.priceCents,
       paymentRequired: form.paymentRequired,
-      paymentDeadlineHours: form.paymentRequired && form.paymentDeadlineHours
-        ? Number.parseInt(form.paymentDeadlineHours, 10)
-        : null,
+      paymentDeadlineHours:
+        form.paymentRequired && form.paymentDeadlineHours
+          ? Number.parseInt(form.paymentDeadlineHours, 10)
+          : null,
+      rosterOnly: form.rosterOnly,
+      mbwayEnabled: form.mbwayEnabled,
+      mbwayPhone: form.mbwayPhone,
+      invitedPlayers: rosterPlayers
+        .filter(player => selectedPlayerIds.includes(player.id))
+        .map(player => ({
+          id: player.id,
+          name: player.name,
+          email: player.email,
+          isVerified: player.isVerified,
+        })),
     });
 
     setSending(false);
@@ -402,10 +544,10 @@ export function CreateEventSheet({
                   <Image
                     alt={opt.label}
                     className={cn(
-                      "rounded-2xl object-cover p-2",
+                      "rounded-2xl object-cover p-2 contrast-125 saturate-150 brightness-125 shadow-[0_10px_28px_-18px_rgba(124,255,79,.7)] ring-1",
                       form.type === opt.v
-                        ? "border border-arena-primary/55 bg-arena-primary/5"
-                        : "border border-arena-border bg-arena-surface",
+                        ? "border border-arena-primary/70 bg-arena-primary/18 ring-arena-primary/45"
+                        : "border border-arena-border bg-arena-bg/85 ring-white/8",
                     )}
                     height={60}
                     src={opt.image}
@@ -541,6 +683,46 @@ export function CreateEventSheet({
 
             {/* Payment section */}
             <PaymentSection form={form} set={set} t={t} />
+
+            <button
+              type="button"
+              onClick={() => set("rosterOnly", !form.rosterOnly)}
+              className={cn(
+                "flex items-center justify-between rounded-xl border px-4 py-3 text-left transition-colors",
+                form.rosterOnly
+                  ? "border-arena-primary/40 bg-arena-primary/5"
+                  : "border-arena-border bg-arena-surface",
+              )}
+            >
+              <div className="flex min-w-0 items-start gap-3">
+                <span className="grid size-8 shrink-0 place-items-center rounded-lg border border-arena-border bg-arena-bg text-arena-primary">
+                  <Users size={15} />
+                </span>
+                <span className="min-w-0">
+                  <span className="block text-[13px] font-semibold text-arena-text">
+                    {t("access.rosterOnly")}
+                  </span>
+                  <span className="mt-0.5 block text-[11px] leading-snug text-arena-text-muted">
+                    {t("access.rosterOnlyHint")}
+                  </span>
+                </span>
+              </div>
+              <div
+                className={cn(
+                  "ml-3 h-5 w-9 shrink-0 rounded-full transition-colors",
+                  form.rosterOnly ? "bg-arena-primary" : "bg-arena-border",
+                )}
+              >
+                <div
+                  className={cn(
+                    "mt-0.5 h-4 w-4 rounded-full bg-white shadow transition-transform",
+                    form.rosterOnly
+                      ? "ml-0.5 translate-x-4"
+                      : "translate-x-0.5",
+                  )}
+                />
+              </div>
+            </button>
           </div>
         )}
 
@@ -588,6 +770,99 @@ export function CreateEventSheet({
                 {t("info")}
               </p>
             </div>
+
+            <div className="mt-4 rounded-2xl border border-arena-border bg-arena-surface p-4">
+              <div className="mb-3 flex items-center justify-between gap-3">
+                <div>
+                  <p className="text-xs font-semibold tracking-wide uppercase text-arena-text-muted">
+                    {t("invite.title")}
+                  </p>
+                  <p className="mt-1 text-[12px] text-arena-text-muted">
+                    {t("invite.subtitle")}
+                  </p>
+                </div>
+                <span className="rounded-full border border-arena-primary/25 bg-arena-primary/10 px-2 py-1 text-[10px] font-bold text-arena-primary">
+                  {selectedPlayerIds.length}
+                </span>
+              </div>
+
+              {groups.length > 0 && (
+                <div className="mb-3 flex flex-wrap gap-2">
+                  {groups.map(group => (
+                    <button
+                      key={group.id}
+                      type="button"
+                      onClick={() =>
+                        setSelectedPlayerIds(current =>
+                          Array.from(new Set([...current, ...group.playerIds])),
+                        )
+                      }
+                      className="inline-flex items-center gap-1.5 rounded-[9px] border border-arena-border bg-arena-bg px-2.5 py-1.5 text-[11px] font-bold text-arena-text-sec hover:border-arena-primary/40 hover:text-arena-primary"
+                    >
+                      <Users size={12} />
+                      {group.name}
+                    </button>
+                  ))}
+                </div>
+              )}
+
+              <div className="max-h-52 space-y-2 overflow-auto pr-1">
+                {rosterPlayers.length === 0 ? (
+                  <p className="rounded-xl border border-dashed border-arena-border px-3 py-4 text-center text-[12px] text-arena-text-muted">
+                    {t("invite.empty")}
+                  </p>
+                ) : (
+                  rosterPlayers.map(player => {
+                    const checked = selectedPlayerIds.includes(player.id);
+                    return (
+                      <button
+                        key={player.id}
+                        type="button"
+                        onClick={() =>
+                          setSelectedPlayerIds(current =>
+                            checked
+                              ? current.filter(id => id !== player.id)
+                              : [...current, player.id],
+                          )
+                        }
+                        className={cn(
+                          "flex w-full items-center gap-3 rounded-xl border px-3 py-2 text-left transition-colors",
+                          checked
+                            ? "border-arena-primary/50 bg-arena-primary/10"
+                            : "border-arena-border bg-arena-bg",
+                        )}
+                      >
+                        <JbAvatar
+                          id={player.id}
+                          name={player.name}
+                          image={player.image}
+                          size={32}
+                        />
+                        <span className="min-w-0 flex-1">
+                          <span className="flex items-center gap-1.5">
+                            <span className="truncate text-[13px] font-bold text-arena-text">
+                              {player.name}
+                            </span>
+                            <VerifiedBadge
+                              verified={player.isVerified}
+                              variant="icon"
+                            />
+                          </span>
+                          <span className="text-[11px] text-arena-text-muted">
+                            {player.isVerified
+                              ? t("invite.verified")
+                              : t("invite.manual")}
+                          </span>
+                        </span>
+                        {checked && (
+                          <Check size={16} className="text-arena-primary" />
+                        )}
+                      </button>
+                    );
+                  })
+                )}
+              </div>
+            </div>
           </div>
         )}
 
@@ -607,6 +882,11 @@ export function CreateEventSheet({
               {form.startDate && (
                 <p className="mt-0.5 text-xs text-arena-text-sec">
                   {format(form.startDate, "dd/MM/yyyy · HH:mm")}
+                </p>
+              )}
+              {selectedPlayerIds.length > 0 && (
+                <p className="mt-2 text-xs font-semibold text-arena-primary">
+                  {t("invite.summary", { count: selectedPlayerIds.length })}
                 </p>
               )}
             </div>

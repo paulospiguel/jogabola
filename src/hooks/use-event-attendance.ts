@@ -18,12 +18,14 @@ export function useEventAttendance(eventId: number) {
   const { data, isLoading, error, refetch } = useQuery({
     queryKey: ["event", eventId, "attendance"],
     queryFn: async () => {
+      if (!eventId) return { confirmed: [], reserves: [], pending: [] };
       const response = await getEventAttendanceWithUsers(eventId);
       if (response.success) {
         return response.data;
       }
       return { confirmed: [], reserves: [], pending: [] };
     },
+    enabled: eventId > 0,
     staleTime: 1000 * 60 * 5,
   });
 

@@ -1,10 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Dumbbell } from "lucide-react";
-import Image from "next/image";
 import { useTranslations } from "next-intl";
-import logoAnimated from "@/assets/logos/logo_animado.gif";
 import { Logo } from "@/components/logo";
 
 export default function LoadingPage() {

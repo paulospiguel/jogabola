@@ -6,6 +6,7 @@ import { useTeams } from "./use-teams";
 export interface SquadPlayer {
   id: string;
   name: string;
+  email?: string | null;
   role: string;
   position?: string | null;
   status: "confirmed" | "reserve" | "pending" | "refused" | "new";

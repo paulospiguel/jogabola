@@ -24,6 +24,7 @@ export type EventView = {
   currency: string;
   paymentRequired: boolean;
   paymentDeadlineHours: number | null;
+  rosterOnly: boolean;
   organizerId: string;
   organizer: string | null;
   language: string | null;

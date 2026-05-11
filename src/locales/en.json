@@ -264,6 +264,18 @@
     },
     "error": "Error creating event. Please try again.",
     "info": "After creating the event, you can add players and manage the squad call from the event page.",
+    "access": {
+      "rosterOnly": "Roster only",
+      "rosterOnlyHint": "Only emails that belong to the current roster can confirm attendance."
+    },
+    "invite": {
+      "title": "Invite from squad",
+      "subtitle": "Select specific athletes or lists to pre-invite.",
+      "empty": "There are no athletes in the squad yet.",
+      "verified": "Verified athlete",
+      "manual": "Manually added",
+      "summary": "{count} athlete{count, plural, =1 {} other {s}} pre-invited"
+    },
     "labels": {
       "date": "Date & Time",
       "location": "Location",
@@ -284,12 +296,7 @@
       "training": "Ex: Technical Training"
     },
     "playersCount": "{count} players",
-    "steps": [
-      "Event Type",
-      "Details",
-      "Preview",
-      "Confirm"
-    ],
+    "steps": ["Event Type", "Details", "Preview", "Confirm"],
     "success": "Event created!",
     "successSubtitle": "Invitation sent successfully.",
     "types": {
@@ -385,7 +392,8 @@
   "arenaEventDetail": {
     "actions": {
       "cancel": "Cancel Attendance",
-      "confirm": "Confirm Attendance"
+      "confirm": "Confirm Attendance",
+      "cancelled": "Event cancelled"
     },
     "lists": {
       "main": "Main List ({count})",
@@ -616,11 +624,28 @@
       "noProofSub": "Wait for athlete to upload or manually verify.",
       "history": "Athlete History",
       "verify": "Manual Verify",
+      "requestProof": "Request Proof",
       "viewProof": "View Full Proof",
       "summary": "Transaction Summary",
       "athlete": "Athlete Information",
       "status": "Update Status",
-      "memberSince": "Club Member since {year}"
+      "memberSince": "Club Member since {year}",
+      "requestProofAgain": "Request proof again",
+      "brokenProof": "Could not open the proof",
+      "brokenProofSub": "The file link seems invalid or expired. Ask the athlete to upload the proof again.",
+      "approveSuccess": "Payment approved.",
+      "rejectSuccess": "Payment rejected.",
+      "actionError": "Could not update the payment. Please try again.",
+      "requestProofSuccess": "Request sent to the athlete by email.",
+      "requestProofError": "Could not send the request. Please try again.",
+      "editStatus": "Edit payment decision",
+      "closeStatusEdit": "Close editing",
+      "currentStatus": "Current status",
+      "possibleStatuses": "Possible statuses",
+      "loadingProof": "Loading proof...",
+      "proofReceivedKicker": "Proof",
+      "proofReceivedTitle": "Document received",
+      "proofReceivedDescription": "Check the amount, account holder and date before approving the payment."
     },
     "actions": {
       "back": "Back to list",
@@ -645,6 +670,12 @@
     "high": "High Risk"
   },
   "arenaSquad": {
+    "roles": {
+      "owner": "Captain",
+      "admin": "Admin",
+      "player": "Player",
+      "guest": "Guest"
+    },
     "actions": {
       "add": "Add",
       "addPlayer": "Add player"
@@ -652,8 +683,35 @@
     "filters": {
       "all": "All",
       "confirmed": "Confirm.",
+      "verified": "Verified",
+      "manual": "Manual adds",
       "pending": "Pending",
       "reserves": "Reserves"
+    },
+    "subtitle": "Recurring athlete hub: manage verified athletes, manual additions, lists and direct communication.",
+    "groups": {
+      "action": "Create list",
+      "title": "Participant lists",
+      "new": "New list",
+      "createTitle": "Create participant list",
+      "editTitle": "Edit participant list",
+      "namePlaceholder": "List name",
+      "create": "Save list",
+      "update": "Update list",
+      "edit": "Edit list",
+      "count": "{count} athlete{count, plural, =1 {} other {s}}"
+    },
+    "email": {
+      "open": "Send email",
+      "title": "Email to {name}",
+      "subject": "Subject",
+      "message": "Message",
+      "send": "Send email",
+      "sent": "Email sent.",
+      "error": "Could not send email.",
+      "limitReached": "Monthly email limit reached for this plan.",
+      "usage": "{used}/{limit} emails used this month",
+      "unlimited": "Unlimited emails on this plan"
     },
     "kicker": "Team",
     "search": {
@@ -1993,6 +2051,11 @@
       "completed": "Completed",
       "cancelled": "Cancelled"
     },
+    "labels": {
+      "date": "Date",
+      "location": "Location",
+      "price": "Price"
+    },
     "countdown": "COUNTDOWN",
     "eventNotFound": "Event not found",
     "backToHome": "Back to Home",
@@ -2008,13 +2071,17 @@
     "onConfirmedList": "You are on the confirmed list",
     "joinWaitlist": "Join waiting list",
     "confirmPresence": "Confirm attendance",
+    "eventCancelledAction": "Event cancelled",
+    "rosterOnlyNotice": "Roster-only event. Confirmation is validated by email.",
+    "rosterOnlyError": "This event is reserved for the roster.",
     "cancelPresence": "Cancel attendance",
     "hasAccount": "Have a Jogabola account? Sign in to manage your attendance.",
     "login": "Sign in",
     "register": "Create account",
     "tabs": {
       "squad": "Squad",
-      "location": "Location"
+      "location": "Location",
+      "payment": "Payment"
     },
     "type": {
       "game": "Official Match",
@@ -2022,7 +2089,8 @@
     },
     "price": {
       "free": "Free"
-    }
+    },
+    "payNow": "Pay now"
   },
   "athleteRsvp": {
     "back": "Back",
@@ -2078,6 +2146,8 @@
       "confirmAttendance": "Error confirming attendance",
       "sendCode": "Error sending code.",
       "sessionCreatedAttendanceFailed": "Session created but attendance confirmation failed. Try again.",
+      "rosterOnly": "This event is reserved for the roster.",
+      "eventCancelled": "This event is cancelled.",
       "processPayment": "Error processing payment.",
       "resend": "Error resending.",
       "resendPin": "Error resending PIN.",

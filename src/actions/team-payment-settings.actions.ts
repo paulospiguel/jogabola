@@ -53,7 +53,18 @@ export const getTeamPaymentSettings = withAuthAction(
   },
 );
 
-// Returns a typed config, merging DB settings with defaults
+import { withAction } from "@/lib/action-helpers";
+
+export const getPublicTeamPaymentSettings = withAction(
+  z.object({ teamId: z.number() }),
+  async ({ teamId }) => {
+    const settings = await db.query.teamPaymentSettings.findFirst({
+      where: eq(teamPaymentSettings.teamId, teamId),
+    });
+    return { success: true as const, data: settings ?? null };
+  },
+);
+
 export async function resolveTeamPaymentConfig(
   teamId: number,
 ): Promise<TeamPaymentConfig> {

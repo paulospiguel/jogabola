@@ -2,6 +2,7 @@
 
 import {
   Calendar,
+  ChevronLeft,
   ChevronRight,
   Clock,
   MapPin,
@@ -13,20 +14,52 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { AddPlayerSheet } from "@/components/arena/add-player-sheet";
 import { CreateEventSheet } from "@/components/arena/create-event-sheet";
 import { CreateTeamSheet } from "@/components/arena/create-team-sheet";
 import { JbAvatar } from "@/components/arena/jb-avatar";
-import { JbBadge } from "@/components/arena/jb-badge";
 import { JbPlayerRow } from "@/components/arena/jb-player-row";
 import { JbUserMenu } from "@/components/arena/jb-user-menu";
 import Loading from "@/components/loading";
 import { Button } from "@/components/ui/button";
 import { useDashboardData } from "@/hooks/use-dashboard";
+import { useEventAttendance } from "@/hooks/use-event-attendance";
+import type { EventStatus } from "@/types/events";
 
 interface ArenaDashboardProps {
   userId: string;
+}
+
+const EVENT_STATUS_CONFIG: Record<
+  EventStatus,
+  { className: string; label: string }
+> = {
+  scheduled: {
+    className: "border-arena-info/25 bg-arena-info/10 text-arena-info",
+    label: "status.scheduled",
+  },
+  confirmed: {
+    className: "border-arena-success/25 bg-arena-success/10 text-arena-success",
+    label: "status.confirmed",
+  },
+  cancelled: {
+    className: "border-arena-danger/25 bg-arena-danger/10 text-arena-danger",
+    label: "status.cancelled",
+  },
+};
+
+function EventStatusBadge({ status }: { status: EventStatus }) {
+  const t = useTranslations("arenaEvents");
+  const config = EVENT_STATUS_CONFIG[status];
+
+  return (
+    <span
+      className={`inline-flex shrink-0 items-center rounded-lg border px-2 py-[3px] text-[11px] font-bold leading-none tracking-[0.2px] ${config.className}`}
+    >
+      {t(config.label)}
+    </span>
+  );
 }
 
 export function ArenaDashboard({ userId }: ArenaDashboardProps) {
@@ -34,21 +67,42 @@ export function ArenaDashboard({ userId }: ArenaDashboardProps) {
   const [sheet, setSheet] = useState<
     "create-event" | "add-player" | "create-team" | null
   >(null);
+  const [activeEventIndex, setActiveEventIndex] = useState(0);
 
+  const { activeTeamId, myTeams, events, squad, isLoading } =
+    useDashboardData();
+
+  const resolvedEventIndex = events[activeEventIndex] ? activeEventIndex : 0;
+  const activeEvent = events[resolvedEventIndex] ?? null;
+  const hasMultipleEvents = events.length > 1;
+  const eventPosition = activeEvent ? resolvedEventIndex + 1 : 0;
   const {
-    activeTeamId,
-    myTeams,
-    events,
-    squad,
-    confirmedCount,
-    reserveCount,
-    pendingCount,
-    isLoading,
-  } = useDashboardData();
+    confirmed: eventConfirmed,
+    reserves: eventReserves,
+    pending: eventPending,
+    isLoading: eventAttendanceLoading,
+  } = useEventAttendance(activeEvent?.id ?? 0);
+
+  const goToEvent = (direction: -1 | 1) => {
+    if (events.length <= 1) return;
+    setActiveEventIndex(current => {
+      const next = current + direction;
+      if (next < 0) return events.length - 1;
+      if (next >= events.length) return 0;
+      return next;
+    });
+  };
 
   const activeTeam = myTeams.find(
     (team: { id: number }) => team.id === activeTeamId,
   );
+
+  useEffect(() => {
+    setActiveEventIndex(current => {
+      if (events.length === 0) return 0;
+      return current >= events.length ? 0 : current;
+    });
+  }, [events.length]);
 
   if (isLoading) {
     return (
@@ -89,8 +143,7 @@ export function ArenaDashboard({ userId }: ArenaDashboardProps) {
     );
   }
 
-  const nextEvent = events[0];
-  const weekEvents = events.slice(1);
+  const weekEvents = events.filter(event => event.id !== activeEvent?.id);
 
   return (
     <>
@@ -149,12 +202,9 @@ export function ArenaDashboard({ userId }: ArenaDashboardProps) {
 
           <div className="jb-dashboard-grid">
             <section className="jb-stack">
-              {nextEvent ? (
-                <Link
-                  className="jb-hero-card"
-                  href={`/arena/events/${nextEvent.id}`}
-                >
-                  <div className="mb-3 flex items-center justify-between gap-3">
+              {activeEvent ? (
+                <div className="jb-hero-card relative overflow-hidden">
+                  <div className="mb-3 flex items-start justify-between gap-3">
                     <div className="flex items-center gap-2">
                       <span className="grid size-[26px] place-items-center rounded-[7px] bg-arena-primary/[0.13]">
                         <Zap
@@ -171,48 +221,85 @@ export function ArenaDashboard({ userId }: ArenaDashboardProps) {
                         style={{ animation: "jb-pulse 2s infinite" }}
                       />
                     </div>
-                    <JbBadge status="confirmed" />
-                  </div>
-
-                  <h2 className="mb-3 text-base font-bold leading-tight text-arena-text md:text-xl">
-                    {nextEvent.title}
-                  </h2>
-
-                  <div className="flex flex-wrap gap-x-4 gap-y-2">
-                    {[
-                      { Icon: Calendar, label: nextEvent.date },
-                      { Icon: Clock, label: nextEvent.time },
-                      { Icon: MapPin, label: nextEvent.location },
-                    ].map(({ Icon, label }) => (
-                      <span className="flex items-center gap-1.5" key={label}>
-                        <Icon size={12} className="text-arena-text-muted" />
-                        <span className="text-xs text-arena-text-sec">
-                          {label}
+                    <div className="flex items-center gap-2">
+                      {hasMultipleEvents && (
+                        <span className="rounded-lg border border-arena-border bg-arena-bg/35 px-2 py-[5px] text-[10px] font-bold text-arena-text-muted">
+                          {eventPosition}/{events.length}
                         </span>
-                      </span>
-                    ))}
+                      )}
+                      <EventStatusBadge status={activeEvent.status} />
+                    </div>
                   </div>
 
-                  <div className="mt-4 flex items-center justify-between gap-3">
-                    <div className="flex -space-x-1">
-                      {squad
-                        .filter(p => p.status === "confirmed")
-                        .map(p => (
-                          <JbAvatar
-                            className="ring-2 ring-[#1B2430]"
-                            id={p.id}
-                            key={p.id}
-                            name={p.name}
-                            size={28}
-                          />
+                  <div className="flex items-center gap-2">
+                    {hasMultipleEvents && (
+                      <button
+                        aria-label="Evento anterior"
+                        className="grid size-9 shrink-0 place-items-center rounded-xl border border-arena-border bg-arena-bg/45 text-arena-text-sec transition-colors hover:border-arena-primary/35 hover:text-arena-primary"
+                        onClick={() => goToEvent(-1)}
+                        type="button"
+                      >
+                        <ChevronLeft size={17} strokeWidth={2.5} />
+                      </button>
+                    )}
+
+                    <Link
+                      className="min-w-0 flex-1 text-inherit no-underline"
+                      href={`/arena/events/${activeEvent.id}`}
+                    >
+                      <h2 className="mb-3 truncate text-base font-bold leading-tight text-arena-text md:text-xl">
+                        {activeEvent.title}
+                      </h2>
+
+                      <div className="flex flex-wrap gap-x-4 gap-y-2">
+                        {[
+                          { Icon: Calendar, label: activeEvent.date },
+                          { Icon: Clock, label: activeEvent.time },
+                          { Icon: MapPin, label: activeEvent.location },
+                        ].map(({ Icon, label }) => (
+                          <span
+                            className="flex items-center gap-1.5"
+                            key={label}
+                          >
+                            <Icon size={12} className="text-arena-text-muted" />
+                            <span className="text-xs text-arena-text-sec">
+                              {label}
+                            </span>
+                          </span>
                         ))}
-                    </div>
-                    <span className="flex items-center gap-1 text-sm font-semibold text-arena-primary">
-                      {t("hero.view")}
-                      <ChevronRight size={14} />
-                    </span>
+                      </div>
+
+                      <div className="mt-4 flex items-center justify-between gap-3">
+                        <div className="flex -space-x-1">
+                          {eventConfirmed.slice(0, 5).map(p => (
+                            <JbAvatar
+                              className="ring-2 ring-[#1B2430]"
+                              id={p.id}
+                              key={p.id}
+                              name={p.name}
+                              size={28}
+                            />
+                          ))}
+                        </div>
+                        <span className="flex items-center gap-1 text-sm font-semibold text-arena-primary">
+                          {t("hero.view")}
+                          <ChevronRight size={14} />
+                        </span>
+                      </div>
+                    </Link>
+
+                    {hasMultipleEvents && (
+                      <button
+                        aria-label="Próximo evento"
+                        className="grid size-9 shrink-0 place-items-center rounded-xl border border-arena-border bg-arena-bg/45 text-arena-text-sec transition-colors hover:border-arena-primary/35 hover:text-arena-primary"
+                        onClick={() => goToEvent(1)}
+                        type="button"
+                      >
+                        <ChevronRight size={17} strokeWidth={2.5} />
+                      </button>
+                    )}
                   </div>
-                </Link>
+                </div>
               ) : (
                 /* Empty state — no events yet */
                 <div className="jb-hero-card flex flex-col items-center justify-center gap-3 py-10 text-center">
@@ -239,17 +326,17 @@ export function ArenaDashboard({ userId }: ArenaDashboardProps) {
                   [
                     {
                       l: t("stats.confirmed"),
-                      v: confirmedCount,
+                      v: eventAttendanceLoading ? "..." : eventConfirmed.length,
                       cls: "text-arena-success",
                     },
                     {
                       l: t("stats.reserves"),
-                      v: reserveCount,
+                      v: eventAttendanceLoading ? "..." : eventReserves.length,
                       cls: "text-arena-warning",
                     },
                     {
                       l: t("stats.pending"),
-                      v: pendingCount,
+                      v: eventAttendanceLoading ? "..." : eventPending.length,
                       cls: "text-arena-text-muted",
                     },
                   ] as const
@@ -320,7 +407,7 @@ export function ArenaDashboard({ userId }: ArenaDashboardProps) {
                               {e.date} · {e.time}
                             </span>
                           </span>
-                          <JbBadge status="pending" />
+                          <EventStatusBadge status={e.status} />
                         </Link>
                       );
                     })
@@ -352,7 +439,7 @@ export function ArenaDashboard({ userId }: ArenaDashboardProps) {
                     </div>
                   )}
 
-                  <Link className="jb-action" href="/arena/squad">
+                  <Link className="jb-action" href="/arena/squads">
                     {t("sections.viewFullSquad")}
                     <ChevronRight size={14} />
                   </Link>

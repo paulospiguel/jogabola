@@ -11,6 +11,7 @@ import {
   user as userTable,
 } from "@/db/schema";
 import { withAction, withAuthAction } from "@/lib/action-helpers";
+import { sendEmail } from "@/lib/email";
 import { canCreateTeam, normalizePlanTier } from "@/lib/plan-limits";
 import { userCanAccessTeam } from "@/lib/team-access";
 import {
@@ -34,6 +35,15 @@ export interface SquadMember {
   assists: number;
   rating: number;
   games: number;
+}
+
+function escapeHtml(value: string) {
+  return value
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#039;");
 }
 
 export const createTeam = withAuthAction(
@@ -473,3 +483,65 @@ export const getUserPlanTier = withAuthAction(z.any(), async user => {
     },
   };
 });
+
+export const sendRosterPlayerEmail = withAuthAction(
+  z.object({
+    teamId: z.number(),
+    playerId: z.string(),
+    subject: z.string().min(3).max(120),
+    message: z.string().min(5).max(2000),
+  }),
+  async (user, { teamId, playerId, subject, message }) => {
+    const canAccessTeam = await userCanAccessTeam(user.id, teamId);
+    if (!canAccessTeam) {
+      return { success: false, error: { code: "TEAM_NOT_FOUND" } };
+    }
+
+    const [registered] = await db
+      .select({
+        email: userTable.email,
+        name: userTable.name,
+      })
+      .from(teamMembers)
+      .innerJoin(userTable, eq(teamMembers.playerId, userTable.id))
+      .where(
+        and(eq(teamMembers.teamId, teamId), eq(teamMembers.playerId, playerId)),
+      )
+      .limit(1);
+
+    const invited = registered
+      ? null
+      : await db.query.players.findFirst({
+          where: and(
+            eq(players.teamId, teamId),
+            eq(players.id, playerId),
+            isNull(players.userId),
+          ),
+        });
+
+    const to = registered?.email ?? invited?.email ?? null;
+    const name = registered?.name ?? invited?.displayName ?? "Atleta";
+
+    if (!to) {
+      return { success: false, error: { code: "EMAIL_NOT_AVAILABLE" } };
+    }
+
+    const result = await sendEmail({
+      to,
+      subject,
+      html: `
+        <div style="font-family:Arial,sans-serif;line-height:1.55;color:#111827">
+          <p>Olá ${escapeHtml(name)},</p>
+          <p>${escapeHtml(message).replace(/\n/g, "<br />")}</p>
+          <p style="margin-top:24px;color:#6b7280;font-size:12px">Mensagem enviada através do JogaBola.</p>
+        </div>
+      `,
+    });
+
+    if (!result.success) {
+      return { success: false, error: { code: "EMAIL_SEND_FAILED" } };
+    }
+
+    return { success: true, data: { sent: true } };
+  },
+);

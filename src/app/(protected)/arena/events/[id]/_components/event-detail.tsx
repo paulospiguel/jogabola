@@ -31,6 +31,7 @@ import Loading from "@/components/loading";
 import { Button } from "@/components/ui/button";
 import { useEventAttendance } from "@/hooks/use-event-attendance";
 import { cn, formatDate, formatTime } from "@/lib/utils";
+import type { EventStatus } from "@/types/events";
 
 interface EventDetailProps {
   event: {
@@ -39,12 +40,14 @@ interface EventDetailProps {
     type: string;
     location: string;
     startDate: Date | string;
-    status: string;
+    status: EventStatus;
     recurrence: string;
+    teamId: number;
     maxParticipants?: string | null;
     priceCents?: number;
     paymentRequired?: boolean;
     paymentDeadlineHours?: number | null;
+    rosterOnly?: boolean;
     description?: string | null;
   };
   userId: string;
@@ -151,6 +154,8 @@ export function EventDetail({
     useEventAttendance(event.id);
 
   async function handleConfirm() {
+    if (event.status === "cancelled") return;
+
     setActionLoading(true);
     const res = await confirmUserAttendance(event.id);
     if (res.success) {
@@ -179,6 +184,7 @@ export function EventDetail({
   }
 
   const isJogo = event.type === "partida" || event.type === "jogo";
+  const isCancelled = event.status === "cancelled";
   const total = Number(event.maxParticipants) || 14;
   const fillPct = (confirmed.length / total) * 100;
 
@@ -372,13 +378,15 @@ export function EventDetail({
       >
         <Button
           onClick={myStatus === "confirmed" ? handleCancel : handleConfirm}
-          disabled={actionLoading}
+          disabled={actionLoading || (isCancelled && myStatus !== "confirmed")}
           type="button"
           className={cn(
             "h-[50px] w-full rounded-[14px] text-[15px] font-bold disabled:opacity-60",
             myStatus === "confirmed"
               ? "border border-arena-border bg-arena-surface-el text-arena-text-sec hover:bg-arena-surface"
-              : "bg-arena-primary text-arena-bg hover:bg-arena-primary/90",
+              : isCancelled
+                ? "border border-arena-danger/30 bg-arena-danger/10 text-arena-danger"
+                : "bg-arena-primary text-arena-bg hover:bg-arena-primary/90",
           )}
         >
           {myStatus === "confirmed" ? (
@@ -388,8 +396,12 @@ export function EventDetail({
             </>
           ) : (
             <>
-              <Check size={18} strokeWidth={2.5} />
-              {t("actions.confirm")}
+              {isCancelled ? (
+                <X size={18} strokeWidth={2.5} />
+              ) : (
+                <Check size={18} strokeWidth={2.5} />
+              )}
+              {isCancelled ? t("actions.cancelled") : t("actions.confirm")}
             </>
           )}
         </Button>

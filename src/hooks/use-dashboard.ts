@@ -5,6 +5,7 @@ import { getEvents } from "@/actions/match-sessions.actions";
 import { getTeamSquad } from "@/actions/teams.actions";
 import type { PlayerStatus } from "@/constants/player";
 import { useTeams } from "@/hooks/use-teams";
+import type { EventStatus } from "@/types/events";
 
 export interface DashboardEvent {
   id: number;
@@ -13,6 +14,7 @@ export interface DashboardEvent {
   date: string;
   time: string;
   location: string;
+  status: EventStatus;
   confirmed: number;
   total: number;
 }
@@ -69,6 +71,7 @@ export function useDashboardData() {
         minute: "2-digit",
       }),
       location: e.location,
+      status: e.status,
       confirmed: Number(e.currentParticipants) || 0,
       total: Number(e.maxParticipants) || 14,
     };

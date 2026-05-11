@@ -16,6 +16,8 @@
   },
   "dependencies": {
     "@animateicons/react": "^0.3.3",
+    "@aws-sdk/client-s3": "^3.1045.0",
+    "@aws-sdk/s3-request-presigner": "^3.1045.0",
     "@date-fns/utc": "^1.2.0",
     "@hookform/resolvers": "^3.10.0",
     "@notionhq/client": "^5.20.0",

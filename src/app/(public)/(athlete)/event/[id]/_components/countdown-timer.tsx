@@ -7,6 +7,7 @@ import { cn } from "@/lib/utils";
 interface CountdownTimerProps {
   targetDate: Date | string;
   className?: string;
+  forceZero?: boolean;
 }
 
 interface TimeLeft {
@@ -17,7 +18,19 @@ interface TimeLeft {
   isExpired: boolean;
 }
 
-export function CountdownTimer({ targetDate, className }: CountdownTimerProps) {
+const ZERO_TIME: TimeLeft = {
+  days: 0,
+  hours: 0,
+  minutes: 0,
+  seconds: 0,
+  isExpired: false,
+};
+
+export function CountdownTimer({
+  targetDate,
+  className,
+  forceZero = false,
+}: CountdownTimerProps) {
   const [timeLeft, setTimeLeft] = useState<TimeLeft>({
     days: 0,
     hours: 0,
@@ -27,15 +40,23 @@ export function CountdownTimer({ targetDate, className }: CountdownTimerProps) {
   });
 
   useEffect(() => {
+    if (forceZero) {
+      setTimeLeft(ZERO_TIME);
+      return;
+    }
+
     const target = new Date(targetDate).getTime();
     if (Number.isNaN(target)) {
-      console.warn("Invalid targetDate provided to CountdownTimer:", targetDate);
+      console.warn(
+        "Invalid targetDate provided to CountdownTimer:",
+        targetDate,
+      );
       setTimeLeft(prev => ({ ...prev, isExpired: true }));
       return;
     }
 
     const updateCountdown = () => {
-      const now = new Date().getTime();
+      const now = Date.now();
       const difference = target - now;
 
       if (difference <= 0) {
@@ -60,7 +81,7 @@ export function CountdownTimer({ targetDate, className }: CountdownTimerProps) {
     }, 1000);
 
     return () => clearInterval(interval);
-  }, [targetDate]);
+  }, [targetDate, forceZero]);
 
   if (timeLeft.isExpired) return null;
 

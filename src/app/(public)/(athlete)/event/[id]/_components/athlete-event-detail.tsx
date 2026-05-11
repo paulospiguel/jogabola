@@ -29,6 +29,7 @@ import {
 import { cn, formatDate, formatTime } from "@/lib/utils";
 import { AthleteRsvpSheet } from "./athlete-rsvp-sheet";
 import { CountdownTimer } from "./countdown-timer";
+import { MyPaymentTab } from "./my-payment-tab";
 
 interface Event {
   id: number;
@@ -42,6 +43,7 @@ interface Event {
   maxParticipants?: string | null;
   priceCents: number;
   currency: string;
+  rosterOnly?: boolean;
   description?: string | null;
   images?: string[];
 }
@@ -53,7 +55,7 @@ interface AthleteEventDetailProps {
   initialMyStatus: string | null;
 }
 
-type Tab = "list" | "location";
+type Tab = "list" | "location" | "payment";
 type AthleteEventTranslator = ReturnType<typeof useTranslations>;
 type AttendanceLists = {
   confirmed: Participant[];
@@ -149,25 +151,36 @@ function AttendanceBar({
 }) {
   const pct = Math.min((confirmed / total) * 100, 100);
   const isFull = confirmed >= total;
+  const almost = !isFull && pct >= 80;
 
   return (
     <div className="rounded-[14px] border border-arena-border bg-arena-surface p-4">
-      <div className="mb-2 flex items-center justify-between">
-        <span className="text-[13px] font-semibold text-arena-text-sec">
+      <div className="mb-3 flex items-center justify-between">
+        <span className="text-[12px] font-semibold uppercase tracking-wider text-arena-text-muted">
           {t("filledSlots")}
         </span>
-        <span className="text-[13px] font-bold text-arena-text">
-          <span className={isFull ? "text-arena-danger" : "text-arena-success"}>
-            {confirmed}
-          </span>{" "}
-          / {total}
+        <span
+          className={cn(
+            "rounded-full px-2.5 py-0.5 text-[12px] font-black tabular-nums",
+            isFull
+              ? "bg-arena-danger/15 text-arena-danger"
+              : almost
+                ? "bg-arena-warning/15 text-arena-warning"
+                : "bg-arena-success/15 text-arena-success",
+          )}
+        >
+          {confirmed} / {total}
         </span>
       </div>
-      <div className="h-2 overflow-hidden rounded-full bg-arena-border">
+      <div className="h-1.5 overflow-hidden rounded-full bg-arena-border">
         <div
           className={cn(
-            "h-full rounded-full transition-all duration-500",
-            isFull ? "bg-arena-danger" : "bg-arena-success",
+            "h-full rounded-full transition-all duration-700",
+            isFull
+              ? "bg-arena-danger"
+              : almost
+                ? "bg-arena-warning"
+                : "bg-arena-success",
           )}
           style={{ width: `${pct}%` }}
         />
@@ -191,19 +204,26 @@ export function AthleteEventDetail({
   const queryClient = useQueryClient();
   const [tab, setTab] = useState<Tab>("list");
   const [myStatus, setMyStatus] = useState<string | null>(initialMyStatus);
+  const [guestReservationId, setGuestReservationId] = useState<number | null>(null);
   const [showRsvpSheet, setShowRsvpSheet] = useState(false);
+  const [resumePayment, setResumePayment] = useState(false);
   const [actionLoading, setActionLoading] = useState(false);
+  const [actionError, setActionError] = useState("");
 
   const { confirmed, reserves, pending, isLoading, refetch } =
     useEventAttendance(event.id);
 
   const isJogo = event.type === "partida" || event.type === "jogo";
+  const isCancelled =
+    event.status === "cancelled" || event.status === "canceled";
+  const isRosterOnly = event.rosterOnly ?? false;
   const total = Number(event.maxParticipants) || 14;
   const isFull = confirmed.length >= total;
   const myPaymentStatus =
     confirmed.find(p => p.id === userId)?.paymentStatus ?? null;
   const canResumePayment =
     myStatus === "confirmed" &&
+    !isCancelled &&
     !isLoading &&
     event.priceCents > 0 &&
     (!myPaymentStatus ||
@@ -229,7 +249,10 @@ export function AthleteEventDetail({
     );
   }
 
-  function handleAttendanceSuccess(status: string) {
+  function handleAttendanceSuccess(status: string, reservationId?: number) {
+    if (reservationId && !userId) {
+      setGuestReservationId(reservationId);
+    }
     setMyStatus(status);
     setShowRsvpSheet(false);
     updateAttendanceCache(current => {
@@ -248,8 +271,12 @@ export function AthleteEventDetail({
   }
 
   async function handleConfirm() {
+    if (isCancelled) return;
+    setActionError("");
+
     // If not logged in OR if it's a paid event, use the RSVP sheet flow
     if (!userId || (event.priceCents && event.priceCents > 0)) {
+      setResumePayment(false);
       setShowRsvpSheet(true);
       return;
     }
@@ -259,6 +286,10 @@ export function AthleteEventDetail({
     const res = await confirmUserAttendance(event.id);
     if (res.success) {
       handleAttendanceSuccess("confirmed");
+    } else if (res.error === "EVENT_ROSTER_ONLY") {
+      setActionError(t("rosterOnlyError"));
+    } else {
+      setActionError(t("errors.confirmAttendance"));
     }
     setActionLoading(false);
   }
@@ -283,35 +314,40 @@ export function AthleteEventDetail({
     { id: "location" as Tab, label: t("tabs.location") },
   ];
 
+  if (userId && event.priceCents > 0) {
+    TABS.push({ id: "payment" as Tab, label: t("tabs.payment") });
+  }
+
   return (
     <div className="flex min-h-screen flex-col bg-arena-bg">
       {/* Event Hero */}
       <div
-        className="border-b border-arena-border px-4 pb-5 pt-4"
+        className="border-b border-arena-border/60 px-4 pb-5 pt-2"
         style={{
           background:
-            "linear-gradient(180deg, #0F1E2E 0%, var(--color-arena-bg) 100%)",
+            "linear-gradient(170deg, #0d1e30 0%, var(--color-arena-bg) 100%)",
         }}
       >
-        <div className="mb-4 flex items-start gap-3">
+        {/* Title row */}
+        <div className="mb-5 flex items-start gap-3">
           <div
             className={cn(
-              "flex size-11 shrink-0 items-center justify-center rounded-[13px] border",
+              "flex size-12 shrink-0 items-center justify-center rounded-[14px] border shadow-lg",
               isJogo
-                ? "border-arena-primary/30 bg-arena-primary/10"
-                : "border-arena-info/30 bg-arena-info/10",
+                ? "border-arena-primary/30 bg-arena-primary/10 shadow-arena-primary/10"
+                : "border-arena-info/30 bg-arena-info/10 shadow-arena-info/10",
             )}
           >
             <Trophy
-              size={20}
+              size={22}
               className={isJogo ? "text-arena-primary" : "text-arena-info"}
             />
           </div>
-          <div className="flex-1 min-w-0">
-            <div className="mb-1 flex items-center gap-2">
+          <div className="min-w-0 flex-1">
+            <div className="mb-1 flex flex-wrap items-center gap-2">
               <span
                 className={cn(
-                  "text-[10px] font-bold uppercase tracking-widest",
+                  "text-[10px] font-bold uppercase tracking-[0.18em]",
                   isJogo ? "text-arena-primary" : "text-arena-info",
                 )}
               >
@@ -319,57 +355,119 @@ export function AthleteEventDetail({
               </span>
               <StatusBadge status={event.status} t={t} />
             </div>
-            <h1 className="text-[18px] font-bold leading-snug text-arena-text">
+            <h1 className="text-[20px] font-extrabold leading-tight tracking-tight text-arena-text">
               {event.title}
             </h1>
           </div>
-
           <EventShare eventTitle={event.title} t={t} />
         </div>
 
-        <div className="mb-6 flex flex-col items-center justify-center rounded-[24px] border border-arena-border/50 bg-arena-surface-el/30 py-5 shadow-inner backdrop-blur-sm">
-          <div className="mb-3.5 flex items-center gap-2">
-            <div className="size-1.5 rounded-full bg-arena-primary animate-pulse" />
+        {/* Countdown */}
+        <div className="mb-5 flex flex-col items-center justify-center rounded-[20px] border border-arena-border/50 bg-arena-surface-el/30 py-4 shadow-inner backdrop-blur-sm">
+          <div className="mb-3 flex items-center gap-2">
+            <div className="size-1.5 animate-pulse rounded-full bg-arena-primary" />
             <p className="text-[10px] font-black uppercase tracking-[0.25em] text-arena-text-muted">
               {t("countdown")}
             </p>
           </div>
-          <CountdownTimer targetDate={event.startDate} />
+          <CountdownTimer
+            targetDate={event.startDate}
+            forceZero={isCancelled}
+          />
         </div>
 
-        <div className="mb-4 flex flex-col gap-2">
-          {[
-            {
-              Icon: <Calendar size={14} className="text-arena-text-muted" />,
-              label: formatDate(event.startDate),
-            },
-            {
-              Icon: <Clock size={14} className="text-arena-text-muted" />,
-              label: formatTime(event.startDate),
-            },
-            {
-              Icon: <MapPinIcon size={14} color="currentColor" />,
-              label: event.location,
-            },
-            {
-              Icon: <Banknote size={14} className="text-arena-text-muted" />,
-              label:
-                event.priceCents > 0
-                  ? `${(event.priceCents / 100).toFixed(2).replace(".", ",")} ${event.currency}`
-                  : t("price.free"),
-            },
-          ].map(({ Icon, label }) => (
-            <div key={label} className="flex items-center gap-2.5">
-              <div className="flex size-7 shrink-0 items-center justify-center rounded-[8px] bg-arena-surface text-arena-text-muted">
-                {Icon}
-              </div>
-              <span className="text-[13px] text-arena-text-sec">{label}</span>
+        {/* Info grid — elegant card layout */}
+        <div className="mb-4 grid grid-cols-2 gap-2">
+          {/* Date + Time merged card */}
+          <div className="col-span-2 flex items-center gap-3 rounded-[12px] border border-arena-border/60 bg-arena-surface/70 px-3.5 py-3">
+            <div className="flex size-8 shrink-0 items-center justify-center rounded-[9px] border border-arena-border bg-arena-bg text-arena-primary">
+              <Calendar size={14} strokeWidth={2.2} />
             </div>
-          ))}
+            <div className="min-w-0 flex-1">
+              <p className="text-[11px] font-semibold uppercase tracking-wider text-arena-text-muted">
+                {t("labels.date")}
+              </p>
+              <p className="text-[14px] font-bold text-arena-text">
+                {formatDate(event.startDate)}
+              </p>
+            </div>
+            <div className="flex items-center gap-2 rounded-[8px] border border-arena-border/60 bg-arena-bg/60 px-3 py-1.5">
+              <Clock
+                size={12}
+                className="text-arena-text-muted"
+                strokeWidth={2.2}
+              />
+              <span className="text-[13px] font-bold tabular-nums text-arena-text">
+                {formatTime(event.startDate)}
+              </span>
+            </div>
+          </div>
+
+          {/* Location */}
+          <div className="col-span-2 flex items-center gap-3 rounded-[12px] border border-arena-border/60 bg-arena-surface/70 px-3.5 py-3">
+            <div className="flex size-8 shrink-0 items-center justify-center rounded-[9px] border border-arena-border bg-arena-bg text-arena-info">
+              <MapPinIcon size={14} color="currentColor" />
+            </div>
+            <div className="min-w-0 flex-1">
+              <p className="text-[11px] font-semibold uppercase tracking-wider text-arena-text-muted">
+                {t("labels.location")}
+              </p>
+              <p className="truncate text-[14px] font-bold text-arena-text">
+                {event.location}
+              </p>
+            </div>
+          </div>
+
+          {/* Price */}
+          {event.priceCents > 0 && (
+            <div
+              className={cn(
+                "col-span-2 flex items-center gap-3 rounded-[12px] border px-3.5 py-3",
+                event.priceCents > 0
+                  ? "border-arena-warning/25 bg-arena-warning/5"
+                  : "border-arena-success/20 bg-arena-success/5",
+              )}
+            >
+              <div
+                className={cn(
+                  "flex size-8 shrink-0 items-center justify-center rounded-[9px] border",
+                  event.priceCents > 0
+                    ? "border-arena-warning/30 bg-arena-warning/10 text-arena-warning"
+                    : "border-arena-success/30 bg-arena-success/10 text-arena-success",
+                )}
+              >
+                <Banknote size={14} strokeWidth={2.2} />
+              </div>
+              <div className="min-w-0 flex-1">
+                <p className="text-[11px] font-semibold uppercase tracking-wider text-arena-text-muted">
+                  {t("labels.price")}
+                </p>
+                <p
+                  className={cn(
+                    "text-[14px] font-extrabold",
+                    event.priceCents > 0
+                      ? "text-arena-warning"
+                      : "text-arena-success",
+                  )}
+                >
+                  {event.priceCents > 0
+                    ? `${(event.priceCents / 100).toFixed(2).replace(".", ",")} ${event.currency}`
+                    : t("price.free")}
+                </p>
+              </div>
+            </div>
+          )}
         </div>
 
+        {/* Attendance bar */}
         {!isLoading && (
           <AttendanceBar confirmed={confirmed.length} total={total} t={t} />
+        )}
+
+        {isRosterOnly && (
+          <div className="mt-3 rounded-[12px] border border-arena-primary/25 bg-arena-primary/10 px-3.5 py-2.5 text-[12px] font-semibold text-arena-primary">
+            {t("rosterOnlyNotice")}
+          </div>
         )}
 
         {/* My status card */}
@@ -511,6 +609,10 @@ export function AthleteEventDetail({
             )}
           </div>
         )}
+
+        {tab === "payment" && userId && event.priceCents > 0 && (
+          <MyPaymentTab eventId={event.id} />
+        )}
       </div>
 
       {/* Sticky RSVP bar */}
@@ -521,13 +623,21 @@ export function AthleteEventDetail({
             "linear-gradient(0deg, var(--color-arena-bg) 60%, transparent)",
         }}
       >
+        {actionError && (
+          <div className="mb-2 rounded-[12px] border border-arena-danger/25 bg-arena-danger/10 px-3 py-2 text-center text-[12px] font-semibold text-arena-danger">
+            {actionError}
+          </div>
+        )}
         {myStatus === "confirmed" ? (
           <div className="flex flex-col gap-2">
             {canResumePayment && (
               <button
                 type="button"
                 disabled={actionLoading}
-                onClick={() => setShowRsvpSheet(true)}
+                onClick={() => {
+                  setResumePayment(true);
+                  setShowRsvpSheet(true);
+                }}
                 className="flex h-[54px] w-full items-center justify-center gap-2 rounded-[16px] bg-arena-primary text-[15px] font-bold text-arena-bg shadow-[0_0_24px_rgba(124,255,79,0.25)] transition-all hover:bg-arena-primary/90 disabled:opacity-60"
               >
                 <Banknote size={18} />
@@ -548,19 +658,29 @@ export function AthleteEventDetail({
           <div className="flex flex-col gap-2">
             <button
               type="button"
-              disabled={actionLoading}
+              disabled={actionLoading || isCancelled}
               onClick={handleConfirm}
               className={cn(
                 "flex h-[54px] w-full items-center justify-center gap-2 rounded-[16px] text-[15px] font-bold transition-all disabled:opacity-60",
-                isFull
-                  ? "border border-arena-border bg-arena-surface-el text-arena-text-sec hover:bg-arena-surface"
-                  : "bg-arena-primary text-arena-bg shadow-[0_0_24px_rgba(124,255,79,0.25)] hover:bg-arena-primary/90",
+                isCancelled
+                  ? "border border-arena-danger/30 bg-arena-danger/10 text-arena-danger"
+                  : isFull
+                    ? "border border-arena-border bg-arena-surface-el text-arena-text-sec hover:bg-arena-surface"
+                    : "bg-arena-primary text-arena-bg shadow-[0_0_24px_rgba(124,255,79,0.25)] hover:bg-arena-primary/90",
               )}
             >
-              <CheckIcon size={18} color="currentColor" />
-              {isFull ? t("joinWaitlist") : t("confirmPresence")}
+              {isCancelled ? (
+                <XIcon size={18} color="currentColor" />
+              ) : (
+                <CheckIcon size={18} color="currentColor" />
+              )}
+              {isCancelled
+                ? t("eventCancelledAction")
+                : isFull
+                  ? t("joinWaitlist")
+                  : t("confirmPresence")}
             </button>
-            {!userId && (
+            {!userId && !isCancelled && (
               <div className="rounded-[14px] border border-arena-border bg-arena-surface p-3.5">
                 <p className="mb-2.5 text-center text-[12px] font-semibold text-arena-text-sec">
                   {t("hasAccount")}
@@ -589,7 +709,12 @@ export function AthleteEventDetail({
         <AthleteRsvpSheet
           eventId={event.id}
           userId={userId}
-          onClose={() => setShowRsvpSheet(false)}
+          resumePayment={resumePayment}
+          guestReservationId={guestReservationId}
+          onClose={() => {
+            setShowRsvpSheet(false);
+            setResumePayment(false);
+          }}
           onSuccess={handleAttendanceSuccess}
         />
       )}

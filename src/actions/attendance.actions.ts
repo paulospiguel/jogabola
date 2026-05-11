@@ -4,10 +4,21 @@ import { and, eq } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { headers } from "next/headers";
 import { db } from "@/db/client";
-import { attendance, matchReservations, payments, user } from "@/db/schema";
+import {
+  attendance,
+  matchReservations,
+  matchSessions,
+  payments,
+  user,
+} from "@/db/schema";
 import { withAction } from "@/lib/action-helpers";
 import { auth } from "@/lib/auth";
+import { userBelongsToTeamRoster } from "@/lib/event-roster-access";
 import { upsertAttendanceSchema } from "@/schemas/attendance.schema";
+
+function isCancelledEventStatus(status: string | null | undefined) {
+  return status === "cancelled" || status === "canceled";
+}
 
 export const upsertAttendance = withAction(
   upsertAttendanceSchema,
@@ -99,6 +110,22 @@ export async function confirmUserAttendance(eventId: number) {
   const userId = session.user.id;
 
   try {
+    const event = await db.query.matchSessions.findFirst({
+      columns: { rosterOnly: true, status: true, teamId: true },
+      where: eq(matchSessions.id, eventId),
+    });
+
+    if (isCancelledEventStatus(event?.status)) {
+      return { success: false as const, error: "EVENT_CANCELLED" };
+    }
+
+    if (
+      event?.rosterOnly &&
+      !(await userBelongsToTeamRoster(event.teamId, userId))
+    ) {
+      return { success: false as const, error: "EVENT_ROSTER_ONLY" };
+    }
+
     // 1. Upsert attendance
     await db
       .insert(attendance)

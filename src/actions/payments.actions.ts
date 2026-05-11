@@ -1,7 +1,10 @@
 "use server";
 
 import { and, desc, eq } from "drizzle-orm";
+import { revalidatePath } from "next/cache";
+import { headers } from "next/headers";
 import { z } from "zod";
+import { notifyPaymentValidationRequired } from "@/actions/notifications.actions";
 import { db } from "@/db/client";
 import {
   matchReservations,
@@ -11,16 +14,30 @@ import {
   teams,
   user,
 } from "@/db/schema";
-import { headers } from "next/headers";
-import { revalidatePath } from "next/cache";
 import { withAction, withAuthAction } from "@/lib/action-helpers";
 import { auth } from "@/lib/auth";
+import { sendPaymentProofRequest } from "@/lib/email";
 import { userCanAccessTeam } from "@/lib/team-access";
-import { notifyPaymentValidationRequired } from "@/actions/notifications.actions";
 import {
   createPaymentSchema,
   submitPaymentProofSchema,
 } from "@/schemas/payments.schema";
+
+const updatePaymentStatusSchema = z.object({
+  paymentId: z.number().int().positive(),
+  status: z.enum(["approved", "rejected"]),
+});
+
+const requestPaymentProofSchema = z.object({
+  paymentId: z.number().int().positive(),
+});
+
+function toUiPaymentStatus(status: string) {
+  if (status === "paid_unverified") return "validating";
+  if (status === "approved") return "confirmed";
+  if (status === "rejected") return "refused";
+  return status;
+}
 
 export const createPayment = withAction(createPaymentSchema, async data => {
   const [payment] = await db
@@ -49,8 +66,14 @@ export const submitPaymentProof = withAction(
           eventId: matchSessions.id,
         })
         .from(payments)
-        .innerJoin(matchReservations, eq(matchReservations.id, payments.matchReservationId))
-        .innerJoin(matchSessions, eq(matchSessions.id, matchReservations.matchSessionId))
+        .innerJoin(
+          matchReservations,
+          eq(matchReservations.id, payments.matchReservationId),
+        )
+        .innerJoin(
+          matchSessions,
+          eq(matchSessions.id, matchReservations.matchSessionId),
+        )
         .innerJoin(teams, eq(teams.id, matchSessions.teamId))
         .innerJoin(user, eq(user.id, matchReservations.playerId))
         .where(eq(payments.id, data.paymentId))
@@ -91,7 +114,10 @@ export const getTeamPayments = withAuthAction(
         proofUrl: paymentProofs.fileUrl,
         playerId: user.id,
         playerName: user.name,
+        playerEmail: user.email,
+        playerImage: user.image,
         playerVerified: user.emailVerified,
+        playerCreatedAt: user.createdAt,
         matchId: matchSessions.id,
         matchTitle: matchSessions.title,
       })
@@ -113,7 +139,7 @@ export const getTeamPayments = withAuthAction(
       id: `PAY-${p.id}`,
       amount: `€${(p.amountCents / 100).toFixed(2).replace(".", ",")}`,
       method: p.method,
-      status: p.status === "paid_unverified" ? "validating" : p.status,
+      status: toUiPaymentStatus(p.status),
       score: "low" as const,
       date: p.createdAt
         ? p.createdAt.toISOString().slice(0, 16).replace("T", " ")
@@ -122,7 +148,12 @@ export const getTeamPayments = withAuthAction(
       player: {
         id: p.playerId,
         name: p.playerName,
+        email: p.playerEmail,
+        image: p.playerImage,
         isVerified: p.playerVerified ?? false,
+        createdAt: p.playerCreatedAt
+          ? p.playerCreatedAt.toISOString()
+          : new Date().toISOString(),
       },
       event: {
         id: p.matchId,
@@ -131,6 +162,119 @@ export const getTeamPayments = withAuthAction(
     }));
 
     return { success: true, data: formattedPayments };
+  },
+);
+
+export const updatePaymentStatus = withAuthAction(
+  updatePaymentStatusSchema,
+  async (currentUser, { paymentId, status }) => {
+    const [paymentRow] = await db
+      .select({
+        id: payments.id,
+        teamId: matchSessions.teamId,
+        eventId: matchSessions.id,
+      })
+      .from(payments)
+      .innerJoin(
+        matchReservations,
+        eq(payments.matchReservationId, matchReservations.id),
+      )
+      .innerJoin(
+        matchSessions,
+        eq(matchReservations.matchSessionId, matchSessions.id),
+      )
+      .where(eq(payments.id, paymentId))
+      .limit(1);
+
+    if (!paymentRow) {
+      return { success: false, error: { code: "PAYMENT_NOT_FOUND" } };
+    }
+
+    const canAccessTeam = await userCanAccessTeam(
+      currentUser.id,
+      paymentRow.teamId,
+    );
+    if (!canAccessTeam) {
+      return { success: false, error: { code: "TEAM_NOT_FOUND" } };
+    }
+
+    await db
+      .update(payments)
+      .set({ status, updatedAt: new Date() })
+      .where(eq(payments.id, paymentId));
+
+    revalidatePath("/arena/payments");
+    revalidatePath(`/arena/payments/PAY-${paymentId}`);
+    revalidatePath(`/arena/events/${paymentRow.eventId}`);
+    revalidatePath(`/event/${paymentRow.eventId}`);
+
+    return { success: true, data: { status } };
+  },
+);
+
+export const requestPaymentProof = withAuthAction(
+  requestPaymentProofSchema,
+  async (currentUser, { paymentId }) => {
+    const [paymentRow] = await db
+      .select({
+        id: payments.id,
+        amountCents: payments.amountCents,
+        currency: payments.currency,
+        teamId: matchSessions.teamId,
+        eventId: matchSessions.id,
+        eventTitle: matchSessions.title,
+        eventStartsAt: matchSessions.startsAt,
+        playerName: user.name,
+        playerEmail: user.email,
+      })
+      .from(payments)
+      .innerJoin(
+        matchReservations,
+        eq(payments.matchReservationId, matchReservations.id),
+      )
+      .innerJoin(
+        matchSessions,
+        eq(matchReservations.matchSessionId, matchSessions.id),
+      )
+      .innerJoin(user, eq(matchReservations.playerId, user.id))
+      .where(eq(payments.id, paymentId))
+      .limit(1);
+
+    if (!paymentRow) {
+      return { success: false, error: { code: "PAYMENT_NOT_FOUND" } };
+    }
+
+    const canAccessTeam = await userCanAccessTeam(
+      currentUser.id,
+      paymentRow.teamId,
+    );
+    if (!canAccessTeam) {
+      return { success: false, error: { code: "TEAM_NOT_FOUND" } };
+    }
+
+    const emailResult = await sendPaymentProofRequest(paymentRow.playerEmail, {
+      name: paymentRow.playerName,
+      eventTitle: paymentRow.eventTitle,
+      eventDate: paymentRow.eventStartsAt.toLocaleDateString("pt-PT", {
+        day: "2-digit",
+        month: "2-digit",
+        year: "numeric",
+      }),
+      eventTime: paymentRow.eventStartsAt.toLocaleTimeString("pt-PT", {
+        hour: "2-digit",
+        minute: "2-digit",
+      }),
+      amountCents: paymentRow.amountCents,
+      currency: paymentRow.currency,
+      eventId: paymentRow.eventId,
+      paymentId: paymentRow.id,
+    });
+
+    if (!emailResult.success) {
+      return { success: false, error: { code: "EMAIL_SEND_FAILED" } };
+    }
+
+    return { success: true, data: { sent: true } };
   },
 );
 
@@ -150,7 +294,11 @@ export async function markPaymentManually(
   try {
     // Verify manager has access to the team that owns this event
     const [matchSession] = await db
-      .select({ teamId: matchSessions.teamId, priceCents: matchSessions.priceCents, currency: matchSessions.currency })
+      .select({
+        teamId: matchSessions.teamId,
+        priceCents: matchSessions.priceCents,
+        currency: matchSessions.currency,
+      })
       .from(matchSessions)
       .where(eq(matchSessions.id, eventId))
       .limit(1);
@@ -217,20 +365,23 @@ export async function markPaymentManually(
   }
 }
 
-export async function getPaymentById(paymentId: number): Promise<{
-  success: true;
-  data: {
-    id: number;
-    status: string;
-    method: string;
-    amountCents: number;
-    currency: string;
-    payerName: string | null;
-    teamName: string;
-    eventTitle: string;
-    eventId: number;
-  };
-} | { success: false; error: string }> {
+export async function getPaymentById(paymentId: number): Promise<
+  | {
+      success: true;
+      data: {
+        id: number;
+        status: string;
+        method: string;
+        amountCents: number;
+        currency: string;
+        payerName: string | null;
+        teamName: string;
+        eventTitle: string;
+        eventId: number;
+      };
+    }
+  | { success: false; error: string }
+> {
   try {
     const session = await auth.api.getSession({ headers: await headers() });
 
@@ -292,6 +443,63 @@ export async function getPaymentById(paymentId: number): Promise<{
       },
     };
   } catch {
+    return { success: false, error: "Erro ao carregar pagamento" };
+  }
+}
+
+export async function getMyPaymentForEvent(eventId: number): Promise<
+  | {
+      success: true;
+      data: {
+        id: number;
+        amountCents: number;
+        currency: string;
+        method: string;
+        status: string;
+        createdAt: Date | null;
+        updatedAt: Date | null;
+        proofUrl: string | null;
+      } | null;
+    }
+  | { success: false; error: string }
+> {
+  try {
+    const session = await auth.api.getSession({ headers: await headers() });
+    if (!session?.user?.id) {
+      return { success: false, error: "Não autenticado" };
+    }
+
+    const userId = session.user.id;
+
+    const [row] = await db
+      .select({
+        id: payments.id,
+        amountCents: payments.amountCents,
+        currency: payments.currency,
+        method: payments.method,
+        status: payments.status,
+        createdAt: payments.createdAt,
+        updatedAt: payments.updatedAt,
+        proofUrl: paymentProofs.fileUrl,
+      })
+      .from(payments)
+      .innerJoin(
+        matchReservations,
+        eq(payments.matchReservationId, matchReservations.id),
+      )
+      .leftJoin(paymentProofs, eq(paymentProofs.paymentId, payments.id))
+      .where(
+        and(
+          eq(matchReservations.matchSessionId, eventId),
+          eq(matchReservations.playerId, userId),
+        ),
+      )
+      .orderBy(desc(paymentProofs.createdAt))
+      .limit(1);
+
+    return { success: true, data: row || null };
+  } catch (error) {
+    console.error("[getMyPaymentForEvent]", error);
     return { success: false, error: "Erro ao carregar pagamento" };
   }
 }
