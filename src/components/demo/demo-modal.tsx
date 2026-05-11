@@ -1,8 +1,9 @@
 "use client";
 
-import { Player } from "@remotion/player";
+import { Player, type PlayerRef } from "@remotion/player";
 import { Play, X } from "lucide-react";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
+import { useTranslations } from "next-intl";
 import {
   DEMO_FPS,
   DEMO_FRAMES,
@@ -15,8 +16,9 @@ interface DemoModalProps {
 }
 
 export function DemoModal({ label = "Ver demo · 0:42", className }: DemoModalProps) {
+  const t = useTranslations("videoDemo");
   const [open, setOpen] = useState(false);
-  // Increment key each time modal opens → forces Player remount → ensures autoPlay
+  // Increment key each time modal opens → forces Player remount
   const [sessionKey, setSessionKey] = useState(0);
 
   const handleOpen = useCallback(() => {
@@ -33,7 +35,16 @@ export function DemoModal({ label = "Ver demo · 0:42", className }: DemoModalPr
     [handleClose],
   );
 
-  // Close on Escape key
+  const playerRefCallback = useCallback((player: PlayerRef | null) => {
+    if (player) {
+      setTimeout(() => {
+        if (!player.isPlaying()) {
+          player.play();
+        }
+      }, 50);
+    }
+  }, []);
+
   useEffect(() => {
     if (!open) return;
     const onKey = (e: KeyboardEvent) => {
@@ -51,7 +62,6 @@ export function DemoModal({ label = "Ver demo · 0:42", className }: DemoModalPr
         {label}
       </button>
 
-      {/* Modal (always in DOM when open, unmounted when closed for clean state) */}
       {open && (
         // biome-ignore lint/a11y/useKeyWithClickEvents: backdrop click-to-close
         <div
@@ -67,16 +77,13 @@ export function DemoModal({ label = "Ver demo · 0:42", className }: DemoModalPr
               type="button"
               onClick={handleClose}
               className="absolute top-3 right-3 z-10 flex size-8 items-center justify-center rounded-full bg-arena-surface/80 text-arena-text-muted hover:text-arena-text hover:bg-arena-surface transition-all"
-              aria-label="Fechar demo"
+              aria-label={t("closeModal")}
             >
               <X size={16} />
             </button>
 
-            {/* Remotion Player
-                key={sessionKey} forces fresh mount on each open → guarantees autoPlay.
-                Browser autoPlay works here because user just clicked the button
-                (user gesture unlocks audio context). */}
             <Player
+              ref={playerRefCallback}
               key={sessionKey}
               component={JogabolaDemo}
               durationInFrames={DEMO_FRAMES}
@@ -89,7 +96,7 @@ export function DemoModal({ label = "Ver demo · 0:42", className }: DemoModalPr
                 display: "block",
               }}
               controls
-              autoPlay
+              autoPlay={false}
               loop={false}
               clickToPlay
               doubleClickToFullscreen

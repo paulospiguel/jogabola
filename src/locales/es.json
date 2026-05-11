@@ -2254,5 +2254,41 @@
     "backToEvent": "Volver al evento",
     "tryAgain": "Intentar de nuevo",
     "loadError": "No se pudo cargar el pago."
+  },
+  "videoDemo": {
+    "closeModal": "Cerrar demo",
+    "intro": {
+      "tagline": "Gestiona tu equipo. <highlight>Convoca. Juega.</highlight>"
+    },
+    "scenes": {
+      "journey": {
+        "eyebrow": "EMPIEZA AQUÍ",
+        "title": "Elige tu camino",
+        "subtitle": "Capitán o Atleta — configurado en segundos"
+      },
+      "team": {
+        "eyebrow": "PLANTILLA",
+        "title": "Gestiona tu plantilla",
+        "subtitle": "Todos los jugadores en un solo lugar"
+      },
+      "convoca": {
+        "eyebrow": "CONVOCATORIA",
+        "title": "Convoca a tu equipo",
+        "subtitle": "Presencias confirmadas en tiempo real"
+      },
+      "create": {
+        "eyebrow": "EVENTOS",
+        "title": "Programa partidos fácilmente",
+        "subtitle": "Crea un evento en menos de 1 minuto"
+      },
+      "paid": {
+        "eyebrow": "PAGOS",
+        "title": "Pagos integrados",
+        "subtitle": "MBWay, tarjeta o efectivo"
+      }
+    },
+    "outro": {
+      "tagline": "El campo te llama. La victoria te espera."
+    }
   }
 }

@@ -2249,5 +2249,41 @@
     "backToEvent": "Back to event",
     "tryAgain": "Try again",
     "loadError": "Could not load payment."
+  },
+  "videoDemo": {
+    "closeModal": "Close demo",
+    "intro": {
+      "tagline": "Manage your team. <highlight>Summon. Play.</highlight>"
+    },
+    "scenes": {
+      "journey": {
+        "eyebrow": "START HERE",
+        "title": "Choose your journey",
+        "subtitle": "Captain or Athlete — set up in seconds"
+      },
+      "team": {
+        "eyebrow": "SQUAD",
+        "title": "Manage your squad",
+        "subtitle": "All players in one place"
+      },
+      "convoca": {
+        "eyebrow": "CALL-UP",
+        "title": "Summon your team",
+        "subtitle": "Real-time presence tracking"
+      },
+      "create": {
+        "eyebrow": "EVENTS",
+        "title": "Schedule games easily",
+        "subtitle": "Create an event in under 1 minute"
+      },
+      "paid": {
+        "eyebrow": "PAYMENTS",
+        "title": "Integrated payments",
+        "subtitle": "MBWay, card, or cash"
+      }
+    },
+    "outro": {
+      "tagline": "The field calls you. Victory awaits."
+    }
   }
 }

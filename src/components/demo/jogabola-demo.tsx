@@ -4,24 +4,18 @@ import { Audio } from "@remotion/media";
 import {
   AbsoluteFill,
   Easing,
-  Sequence,
   interpolate,
+  Sequence,
   staticFile,
   useCurrentFrame,
-  useVideoConfig,
 } from "remotion";
 import {
   PhoneMockup,
   type PhoneScreen,
 } from "@/components/landing/phone-mockup";
+import { useTranslations } from "next-intl";
 
-/**
- * Background music:
- * Place your audio file at: public/assets/demo/bg-music.mp3
- * Recommended: ~60s loop, instrumental, ~80-100 BPM, low-fi/electronic
- * Free sources: pixabay.com/music, freemusicarchive.org, zapsplat.com
- */
-const MUSIC_SRC = staticFile("assets/demo/bg-music.mp3");
+const MUSIC_SRC = staticFile("assets/audios/into-audio-demo.mp3");
 
 export const DEMO_FPS = 30;
 export const DEMO_DURATION_S = 42;
@@ -29,13 +23,20 @@ export const DEMO_FRAMES = DEMO_DURATION_S * DEMO_FPS; // 1260
 
 const PRIMARY = "#7CFF4F";
 const BG = "#0B0F14";
-const SURFACE = "#151C26";
 const BORDER = "#263244";
 const TEXT = "#F5F7FA";
 const TEXT_SEC = "#A7B0BE";
 const TEXT_MUTED = "#6B7280";
 
 // ─── Scene config ────────────────────────────────────────────────────────────
+
+type SceneKey = "journey" | "team" | "convoca" | "create" | "paid";
+
+interface SceneDefinition {
+  id: number;
+  screen: PhoneScreen;
+  key: SceneKey;
+}
 
 interface SceneConfig {
   id: number;
@@ -45,48 +46,18 @@ interface SceneConfig {
   subtitle: string;
 }
 
-const SCENES: SceneConfig[] = [
-  {
-    id: 0,
-    screen: "journey",
-    eyebrow: "COMEÇA AQUI",
-    title: "Escolhe a tua jornada",
-    subtitle: "Capitão ou Atleta — configurado em segundos",
-  },
-  {
-    id: 1,
-    screen: "team",
-    eyebrow: "PLANTEL",
-    title: "Gere o teu plantel",
-    subtitle: "Todos os jogadores num só lugar",
-  },
-  {
-    id: 2,
-    screen: "convoca",
-    eyebrow: "CONVOCATÓRIA",
-    title: "Convoca a tua equipa",
-    subtitle: "Presenças confirmadas em tempo real",
-  },
-  {
-    id: 3,
-    screen: "create",
-    eyebrow: "EVENTOS",
-    title: "Agenda jogos facilmente",
-    subtitle: "Cria um evento em menos de 1 minuto",
-  },
-  {
-    id: 4,
-    screen: "paid",
-    eyebrow: "PAGAMENTOS",
-    title: "Pagamentos integrados",
-    subtitle: "MBWay, cartão ou numerário",
-  },
+const SCENES_DEF: SceneDefinition[] = [
+  { id: 0, screen: "journey", key: "journey" },
+  { id: 1, screen: "team", key: "team" },
+  { id: 2, screen: "convoca", key: "convoca" },
+  { id: 3, screen: "create", key: "create" },
+  { id: 4, screen: "paid", key: "paid" },
 ];
 
 // Frame boundaries
 const INTRO_END = 4 * DEMO_FPS; // 0-4s: intro
 const SCENE_DURATION = 7 * DEMO_FPS; // 7s per scene
-const OUTRO_START = INTRO_END + SCENES.length * SCENE_DURATION; // 39s
+const OUTRO_START = INTRO_END + SCENES_DEF.length * SCENE_DURATION; // 39s
 // Total: 4 + 5*7 + 3 = 42s ✓
 
 function sceneStart(i: number) {
@@ -115,6 +86,7 @@ function fadeOut(frame: number, end: number, dur = 12) {
 // ─── IntroScene ───────────────────────────────────────────────────────────────
 
 function IntroScene() {
+  const t = useTranslations("videoDemo.intro");
   const frame = useCurrentFrame();
 
   const logoOpacity = fadeIn(frame, 5, 20);
@@ -177,6 +149,7 @@ function IntroScene() {
             strokeLinecap="round"
             strokeLinejoin="round"
           >
+            <title>jogabola</title>
             <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
           </svg>
         </div>
@@ -209,8 +182,11 @@ function IntroScene() {
           lineHeight: 1.5,
         }}
       >
-        Gere a tua equipa.{" "}
-        <span style={{ color: PRIMARY, fontWeight: 700 }}>Convoca. Joga.</span>
+        {t.rich("tagline", {
+          highlight: (chunks) => (
+            <span style={{ color: PRIMARY, fontWeight: 700 }}>{chunks}</span>
+          ),
+        })}
       </div>
     </AbsoluteFill>
   );
@@ -239,11 +215,16 @@ function PhoneScene({ config, sceneIndex, totalScenes }: PhoneSceneProps) {
 
   // Phone exit
   const phoneExitOpacity = fadeOut(frame, SCENE_DURATION, 12);
-  const phoneExitY = interpolate(frame, [EXIT_START, SCENE_DURATION], [0, -40], {
-    extrapolateLeft: "clamp",
-    extrapolateRight: "clamp",
-    easing: ease,
-  });
+  const phoneExitY = interpolate(
+    frame,
+    [EXIT_START, SCENE_DURATION],
+    [0, -40],
+    {
+      extrapolateLeft: "clamp",
+      extrapolateRight: "clamp",
+      easing: ease,
+    },
+  );
 
   const phoneFinalOpacity = phoneOpacity * phoneExitOpacity;
   const phoneFinalY = phoneY + (frame >= EXIT_START ? phoneExitY : 0);
@@ -395,6 +376,7 @@ function PhoneScene({ config, sceneIndex, totalScenes }: PhoneSceneProps) {
 // ─── OutroScene ───────────────────────────────────────────────────────────────
 
 function OutroScene() {
+  const t = useTranslations("videoDemo.outro");
   const frame = useCurrentFrame();
   const OUTRO_DURATION = DEMO_FRAMES - OUTRO_START;
 
@@ -468,6 +450,7 @@ function OutroScene() {
             strokeLinecap="round"
             strokeLinejoin="round"
           >
+            <title>jogabola</title>
             <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
           </svg>
         </div>
@@ -496,7 +479,7 @@ function OutroScene() {
           textAlign: "center",
         }}
       >
-        O campo chama-te. A vitória espera por ti.
+        {t("tagline")}
       </div>
     </AbsoluteFill>
   );
@@ -526,7 +509,11 @@ function Background() {
           width: 600,
           height: 600,
           borderRadius: "50%",
-          background: `radial-gradient(circle, ${PRIMARY}${Math.round(glowOpacity * 255).toString(16).padStart(2, "0")} 0%, transparent 70%)`,
+          background: `radial-gradient(circle, ${PRIMARY}${Math.round(
+            glowOpacity * 255,
+          )
+            .toString(16)
+            .padStart(2, "0")} 0%, transparent 70%)`,
           pointerEvents: "none",
         }}
       />
@@ -572,7 +559,7 @@ function BackgroundMusic() {
       src={MUSIC_SRC}
       loop
       // Fade in: 0→1 over first 2s; fade out: 1→0 over last 3s
-      volume={(f) => {
+      volume={f => {
         const fadeInFrames = 2 * DEMO_FPS;
         const fadeOutStart = DEMO_FRAMES - 3 * DEMO_FPS;
         if (f < fadeInFrames) {
@@ -596,6 +583,17 @@ function BackgroundMusic() {
 // ─── Main composition ─────────────────────────────────────────────────────────
 
 export function JogabolaDemo() {
+  const t = useTranslations("videoDemo.scenes");
+
+  // Build translated scene configs from base definition
+  const scenes: SceneConfig[] = SCENES_DEF.map((def) => ({
+    id: def.id,
+    screen: def.screen,
+    eyebrow: t(`${def.key}.eyebrow`),
+    title: t(`${def.key}.title`),
+    subtitle: t(`${def.key}.subtitle`),
+  }));
+
   return (
     <AbsoluteFill style={{ fontFamily: "'Inter', sans-serif" }}>
       <Background />
@@ -607,7 +605,7 @@ export function JogabolaDemo() {
       </Sequence>
 
       {/* Phone scenes */}
-      {SCENES.map((config, i) => (
+      {scenes.map((config, i) => (
         <Sequence
           key={config.id}
           from={sceneStart(i)}
@@ -616,7 +614,7 @@ export function JogabolaDemo() {
           <PhoneScene
             config={config}
             sceneIndex={i}
-            totalScenes={SCENES.length}
+            totalScenes={scenes.length}
           />
         </Sequence>
       ))}

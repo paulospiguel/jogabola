@@ -2255,5 +2255,41 @@
     "backToEvent": "Voltar ao evento",
     "tryAgain": "Tentar novamente",
     "loadError": "Não foi possível carregar o pagamento."
+  },
+  "videoDemo": {
+    "closeModal": "Fechar demo",
+    "intro": {
+      "tagline": "Gere a tua equipa. <highlight>Convoca. Joga.</highlight>"
+    },
+    "scenes": {
+      "journey": {
+        "eyebrow": "COMEÇA AQUI",
+        "title": "Escolhe a tua jornada",
+        "subtitle": "Capitão ou Atleta — configurado em segundos"
+      },
+      "team": {
+        "eyebrow": "PLANTEL",
+        "title": "Gere o teu plantel",
+        "subtitle": "Todos os jogadores num só lugar"
+      },
+      "convoca": {
+        "eyebrow": "CONVOCATÓRIA",
+        "title": "Convoca a tua equipa",
+        "subtitle": "Presenças confirmadas em tempo real"
+      },
+      "create": {
+        "eyebrow": "EVENTOS",
+        "title": "Agenda jogos facilmente",
+        "subtitle": "Cria um evento em menos de 1 minuto"
+      },
+      "paid": {
+        "eyebrow": "PAGAMENTOS",
+        "title": "Pagamentos integrados",
+        "subtitle": "MBWay, cartão ou numerário"
+      }
+    },
+    "outro": {
+      "tagline": "O campo chama-te. A vitória espera por ti."
+    }
   }
 }
