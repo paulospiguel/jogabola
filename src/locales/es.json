@@ -2217,5 +2217,42 @@
       "transfer": "Transferencia bancaria",
       "other": "Otro"
     }
+  },
+  "paymentResult": {
+    "paid": {
+      "title": "Pago completado",
+      "subtitle": "{amount} · {eventTitle}",
+      "caption": "Comprobante enviado al capitán."
+    },
+    "paid_unverified": {
+      "title": "Esperando confirmación",
+      "subtitle": "{amount} · {eventTitle}",
+      "caption": "El capitán validará tu pago."
+    },
+    "failed": {
+      "title": "Pago fallido",
+      "subtitle": "Inténtalo de nuevo o usa otro método.",
+      "caption": ""
+    },
+    "pending": {
+      "title": "Pago pendiente",
+      "subtitle": "{amount} · {eventTitle}",
+      "caption": "Completa el pago para confirmar asistencia."
+    },
+    "details": {
+      "from": "De",
+      "to": "Para",
+      "method": "Método",
+      "total": "Total"
+    },
+    "methods": {
+      "mbway": "MB Way",
+      "cash": "Efectivo",
+      "stripe": "Tarjeta",
+      "unknown": "Otro"
+    },
+    "backToEvent": "Volver al evento",
+    "tryAgain": "Intentar de nuevo",
+    "loadError": "No se pudo cargar el pago."
   }
 }

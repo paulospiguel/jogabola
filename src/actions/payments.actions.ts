@@ -232,6 +232,8 @@ export async function getPaymentById(paymentId: number): Promise<{
   };
 } | { success: false; error: string }> {
   try {
+    const session = await auth.api.getSession({ headers: await headers() });
+
     const [row] = await db
       .select({
         id: payments.id,
@@ -240,6 +242,8 @@ export async function getPaymentById(paymentId: number): Promise<{
         amountCents: payments.amountCents,
         currency: payments.currency,
         payerName: user.name,
+        payerId: matchReservations.playerId,
+        teamOwnerId: teams.ownerId,
         teamName: teams.name,
         eventTitle: matchSessions.title,
         eventId: matchSessions.id,
@@ -261,6 +265,17 @@ export async function getPaymentById(paymentId: number): Promise<{
     if (!row) {
       return { success: false, error: "Pagamento não encontrado" };
     }
+
+    // If authenticated, verify ownership: must be payer or team owner
+    if (session?.user?.id) {
+      const userId = session.user.id;
+      const isPayer = row.payerId === userId;
+      const isTeamOwner = row.teamOwnerId === userId;
+      if (!isPayer && !isTeamOwner) {
+        return { success: false, error: "Sem permissão" };
+      }
+    }
+    // No session = guest user; allow (they were redirected here immediately after paying)
 
     return {
       success: true,

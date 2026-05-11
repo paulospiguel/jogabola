@@ -81,7 +81,7 @@ export function PaymentResultClient({ paymentId, eventId }: PaymentResultClientP
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-[#0B0F14] flex flex-col items-center justify-center">
+      <div className="min-h-screen bg-arena-bg flex flex-col items-center justify-center">
         <div className="w-10 h-10 border-2 border-arena-primary/30 border-t-arena-primary rounded-full animate-spin" />
       </div>
     );
@@ -89,9 +89,9 @@ export function PaymentResultClient({ paymentId, eventId }: PaymentResultClientP
 
   if (error || !payment) {
     return (
-      <div className="min-h-screen bg-[#0B0F14] flex flex-col items-center justify-center px-5 gap-4">
+      <div className="min-h-screen bg-arena-bg flex flex-col items-center justify-center px-5 gap-4">
         <p className="text-arena-text-muted text-sm text-center">
-          {error instanceof Error ? error.message : "Não foi possível carregar o pagamento."}
+          {error instanceof Error ? error.message : t("loadError")}
         </p>
         <Link
           href={`/event/${eventId}`}
@@ -109,7 +109,7 @@ export function PaymentResultClient({ paymentId, eventId }: PaymentResultClientP
   const formattedCurrency = formatCurrency(payment.amountCents, payment.currency);
 
   return (
-    <div className="min-h-screen bg-[#0B0F14] flex flex-col max-w-[480px] mx-auto w-full">
+    <div className="min-h-screen bg-arena-bg flex flex-col max-w-[480px] mx-auto w-full">
       {/* Header */}
       <div className="px-5 pt-6 pb-2">
         <Link

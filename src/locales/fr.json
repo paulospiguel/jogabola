@@ -2217,5 +2217,42 @@
       "transfer": "Virement bancaire",
       "other": "Autre"
     }
+  },
+  "paymentResult": {
+    "paid": {
+      "title": "Paiement terminé",
+      "subtitle": "{amount} · {eventTitle}",
+      "caption": "Justificatif envoyé au capitaine."
+    },
+    "paid_unverified": {
+      "title": "En attente de confirmation",
+      "subtitle": "{amount} · {eventTitle}",
+      "caption": "Le capitaine va valider votre paiement."
+    },
+    "failed": {
+      "title": "Paiement échoué",
+      "subtitle": "Réessayez ou utilisez une autre méthode.",
+      "caption": ""
+    },
+    "pending": {
+      "title": "Paiement en attente",
+      "subtitle": "{amount} · {eventTitle}",
+      "caption": "Complétez le paiement pour confirmer la présence."
+    },
+    "details": {
+      "from": "De",
+      "to": "À",
+      "method": "Méthode",
+      "total": "Total"
+    },
+    "methods": {
+      "mbway": "MB Way",
+      "cash": "Espèces",
+      "stripe": "Carte",
+      "unknown": "Autre"
+    },
+    "backToEvent": "Retour à l'événement",
+    "tryAgain": "Réessayer",
+    "loadError": "Impossible de charger le paiement."
   }
 }

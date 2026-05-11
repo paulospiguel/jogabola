@@ -2253,6 +2253,7 @@
       "unknown": "Outro"
     },
     "backToEvent": "Voltar ao evento",
-    "tryAgain": "Tentar novamente"
+    "tryAgain": "Tentar novamente",
+    "loadError": "Não foi possível carregar o pagamento."
   }
 }

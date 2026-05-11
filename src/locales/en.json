@@ -2247,6 +2247,7 @@
       "unknown": "Other"
     },
     "backToEvent": "Back to event",
-    "tryAgain": "Try again"
+    "tryAgain": "Try again",
+    "loadError": "Could not load payment."
   }
 }
