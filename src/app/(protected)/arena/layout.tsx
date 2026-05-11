@@ -17,8 +17,8 @@ export default async function ArenaLayout({
   children: React.ReactNode;
 }) {
   const session = await auth.api.getSession({ headers: await headers() });
-  const user = session?.user as any;
-  const sessionData = session?.session as any;
+  const user = session?.user;
+  const sessionData = session?.session;
 
   if (!user?.onboardingCompleted) {
     redirect("/onboarding");

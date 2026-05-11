@@ -7,8 +7,8 @@
 @custom-variant dark (&:is(.dark *));
 
 .dark {
-  --background: var(--color-blue-850);
-  --foreground: oklch(0.985 0 0);
+  --background: #0b0f14;
+  --foreground: #f5f7fa;
   --card: oklch(0.205 0 0);
   --card-foreground: oklch(0.985 0 0);
   --popover: oklch(0.205 0 0);
@@ -43,8 +43,8 @@
 
 :root {
   /* Usar valores dark como padrão */
-  --background: var(--color-background-dark);
-  --foreground: oklch(0.985 0 0);
+  --background: #0b0f14;
+  --foreground: #f5f7fa;
   --card: oklch(0.205 0 0);
   --card-foreground: oklch(0.985 0 0);
   --popover: oklch(0.205 0 0);
@@ -608,7 +608,7 @@
 
 @theme inline {
   --font-sora: var(--font-sora);
-  --color-background: #18193b;
+  --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-card: var(--card);
   --color-card-foreground: var(--card-foreground);
@@ -659,7 +659,7 @@
     @apply border-border outline-ring/50;
   }
   body {
-    @apply bg-background text-foreground;
+    @apply bg-arena-bg text-arena-text;
   }
 }
 

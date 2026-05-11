@@ -1,43 +1,78 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Loader2 } from "lucide-react";
-import { Logo } from "@/components/logo";
+import { Dumbbell } from "lucide-react";
+import Image from "next/image";
+import logoAnimated from "@/assets/logos/logo_animado.gif";
 
 export default function LoadingPage() {
   return (
-    <div className="from-background-gradient-start via-background-gradient-mid to-background-gradient-end relative min-h-screen overflow-hidden bg-gradient-to-br">
-      <div className="relative z-10 flex min-h-screen flex-col items-center justify-center">
+    <div className="relative min-h-screen overflow-hidden bg-arena-bg text-arena-text">
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_50%_18%,rgba(124,255,79,.12),transparent_34%),radial-gradient(circle_at_82%_74%,rgba(56,189,248,.08),transparent_38%),linear-gradient(180deg,rgba(11,15,20,.18),rgba(11,15,20,.92))]" />
+      <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(rgba(38,50,68,.20)_1px,transparent_1px),linear-gradient(90deg,rgba(38,50,68,.20)_1px,transparent_1px)] bg-[size:64px_64px] opacity-45 [mask-image:radial-gradient(circle_at_center,black_20%,transparent_76%)]" />
+
+      <div className="relative z-10 flex min-h-screen flex-col items-center justify-center px-6">
         <motion.div
-          initial={{ opacity: 0, scale: 0.9 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.5 }}
-          className="flex flex-col items-center gap-8"
+          initial={{ opacity: 0, y: 14 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.28, ease: [0.4, 0, 0.2, 1] }}
+          className="flex flex-col items-center gap-7"
         >
           <motion.div
-            initial={{ scale: 0 }}
-            animate={{ scale: 1 }}
-            transition={{ delay: 0.2, type: "spring", stiffness: 200 }}
-            className="relative"
+            initial={{ opacity: 0, scale: 0.94 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ delay: 0.08, duration: 0.24, ease: [0.4, 0, 0.2, 1] }}
+            className="relative flex items-center justify-center"
           >
-            <Logo size="large" isAnimate variant="white" />
+            <div className="absolute inset-x-10 top-1/2 h-10 -translate-y-1/2 rounded-full bg-arena-primary/12 blur-2xl" />
+            <Image
+              unoptimized
+              priority
+              src={logoAnimated}
+              alt="JogaBola"
+              width={280}
+              height={160}
+              className="relative h-auto w-[min(72vw,280px)] drop-shadow-[0_0_26px_rgba(124,255,79,.16)]"
+            />
           </motion.div>
 
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ delay: 0.4 }}
+            transition={{ delay: 0.18, duration: 0.22 }}
             className="flex flex-col items-center gap-4"
           >
-            <Loader2 className="text-brand-green h-8 w-8 animate-spin" />
+            <div className="relative flex size-14 items-center justify-center rounded-[16px] border border-arena-primary/30 bg-arena-primary/10 text-arena-primary shadow-[0_0_28px_rgba(124,255,79,.18)]">
+              <motion.div
+                animate={{ rotate: 360 }}
+                transition={{ duration: 1.1, repeat: Infinity, ease: "linear" }}
+                className="absolute inset-2 rounded-full border border-arena-primary/15 border-t-arena-primary"
+              />
+              <Dumbbell size={22} strokeWidth={2.2} />
+            </div>
             <motion.p
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              transition={{ delay: 0.6 }}
-              className="from-brand-green bg-gradient-to-r to-[#1effbf] bg-clip-text text-xl font-semibold text-transparent"
+              transition={{ delay: 0.26, duration: 0.2 }}
+              className="font-sora text-[15px] font-bold tracking-[0.04em] text-arena-text"
             >
               A carregar...
             </motion.p>
+            <div className="flex items-center gap-1.5" aria-hidden="true">
+              {[0, 1, 2].map(index => (
+                <motion.span
+                  key={index}
+                  animate={{ opacity: [0.35, 1, 0.35], scale: [0.9, 1, 0.9] }}
+                  transition={{
+                    duration: 0.9,
+                    repeat: Infinity,
+                    delay: index * 0.14,
+                    ease: "easeInOut",
+                  }}
+                  className="size-1.5 rounded-full bg-arena-primary"
+                />
+              ))}
+            </div>
           </motion.div>
         </motion.div>
       </div>

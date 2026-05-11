@@ -7,6 +7,7 @@ import { useTranslations } from "next-intl";
 import { useState } from "react";
 import {
   completeOnboarding,
+  saveSurvey,
   type UserRole,
 } from "@/actions/onboarding.actions";
 import coachIcon from "@/assets/images/jb-coach.png";
@@ -14,6 +15,9 @@ import playerIcon from "@/assets/images/jb-player.png";
 import jbIconReferee from "@/assets/images/jb-referee.png";
 import { APP } from "@/constants/app";
 import { cn } from "@/lib/utils";
+import { SurveyStep } from "./survey-step";
+
+type Step = "role" | "survey";
 
 // ---------------------------------------------------------------------------
 // RoleCardLarge — full-width card for Capitão and Atleta
@@ -144,6 +148,7 @@ interface OnboardingClientProps {
 
 export function OnboardingClient({ userName }: OnboardingClientProps) {
   const t = useTranslations("onboarding");
+  const [step, setStep] = useState<Step>("role");
   const [selected, setSelected] = useState<UserRole | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -181,11 +186,9 @@ export function OnboardingClient({ userName }: OnboardingClientProps) {
     />
   );
 
-  const fanIconEl = (
-    <Users size={24} className="text-arena-text-muted" />
-  );
+  const fanIconEl = <Users size={24} className="text-arena-text-muted" />;
 
-  async function handleContinue() {
+  async function handleRoleConfirm() {
     if (!selected) return;
     setLoading(true);
     setError(null);
@@ -196,12 +199,33 @@ export function OnboardingClient({ userName }: OnboardingClientProps) {
         setError(t("errors.save"));
         return;
       }
-      window.location.href = "/arena";
+      setStep("survey");
     } catch {
       setError(t("errors.unexpected"));
     } finally {
       setLoading(false);
     }
+  }
+
+  async function handleSurveySubmit(intentions: string[], context: string) {
+    setError(null);
+    let errorMessage = t("errors.unexpected");
+
+    try {
+      const result = await saveSurvey({ intentions, context });
+      if (!result.success) {
+        errorMessage = t("errors.surveySave");
+        throw new Error("Survey save failed");
+      }
+      window.location.href = "/arena";
+    } catch {
+      setError(errorMessage);
+      throw new Error("Survey save failed");
+    }
+  }
+
+  function handleSurveySkip() {
+    window.location.href = "/arena";
   }
 
   return (
@@ -216,52 +240,100 @@ export function OnboardingClient({ userName }: OnboardingClientProps) {
         transition={{ duration: 0.3, ease: [0.4, 0, 0.2, 1] }}
         className="relative w-full max-w-[480px]"
       >
-        {/* ── Header ── */}
-        <div className="mb-8 px-1">
-          <p className="mb-1.5 text-[10px] font-bold tracking-[0.16em] text-arena-text-muted uppercase">
-            {t("header.eyebrow")}
-          </p>
-          <h1 className="mb-2 font-sora text-[28px] font-extrabold lowercase leading-none tracking-tight text-arena-text">
-            {APP_NAME.toLowerCase()}
-          </h1>
-          <p className="text-[13px] text-arena-text-sec">
-            {t("header.description")}
-          </p>
-        </div>
+        <AnimatePresence mode="wait">
+          {step === "role" ? (
+            <motion.div
+              key="role"
+              initial={{ opacity: 0, x: 0 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: -60 }}
+              transition={{ duration: 0.24, ease: [0.4, 0, 0.2, 1] }}
+            >
+              {/* ── Header ── */}
+              <div className="mb-8 px-1">
+                <p className="mb-1.5 text-[10px] font-bold tracking-[0.16em] text-arena-text-muted uppercase">
+                  {t("header.eyebrow")}
+                </p>
+                <h1 className="mb-2 font-sora text-[28px] font-extrabold lowercase leading-none tracking-tight text-arena-text">
+                  {APP_NAME.toLowerCase()}
+                </h1>
+                <p className="mb-1 text-[13px] font-semibold text-arena-text">
+                  {t("header.greeting", { name: userName })}
+                </p>
+                <p className="text-[13px] text-arena-text-sec">
+                  {t("header.description")}
+                </p>
+              </div>
 
-        {/* ── Role cards ── */}
-        <div className="mb-5 flex flex-col gap-3">
-          {/* Capitão — selectable */}
-          <RoleCardLarge
-            icon={coachIconEl}
-            title={t("roles.coach.title")}
-            description={t("roles.coach.description")}
-            selected={selected === "captain"}
-            onClick={() => setSelected("captain")}
-          />
+              {/* ── Role cards ── */}
+              <div className="mb-5 flex flex-col gap-3">
+                {/* Capitão — selectable */}
+                <RoleCardLarge
+                  icon={coachIconEl}
+                  title={t("roles.coach.title")}
+                  description={t("roles.coach.description")}
+                  selected={selected === "captain"}
+                  onClick={() => setSelected("captain")}
+                />
 
-          {/* Atleta — EM BREVE */}
-          <RoleCardLarge
-            icon={playerIconEl}
-            title={t("roles.athlete.title")}
-            description={t("roles.athlete.description")}
-            selected={false}
-            disabled
-            onClick={() => undefined}
-          />
-        </div>
+                {/* Atleta — EM BREVE */}
+                <RoleCardLarge
+                  icon={playerIconEl}
+                  title={t("roles.athlete.title")}
+                  description={t("roles.athlete.description")}
+                  selected={false}
+                  disabled
+                  onClick={() => undefined}
+                />
+              </div>
 
-        {/* ── Small cards grid (Árbitro + Adepto) ── */}
-        <div className="mb-7 grid grid-cols-2 gap-3">
-          <RoleCardSmall
-            icon={refereeIconEl}
-            title={t("roles.referee.title")}
-          />
-          <RoleCardSmall
-            icon={fanIconEl}
-            title={t("roles.fan.title")}
-          />
-        </div>
+              {/* ── Small cards grid (Árbitro + Adepto) ── */}
+              <div className="mb-7 grid grid-cols-2 gap-3">
+                <RoleCardSmall
+                  icon={refereeIconEl}
+                  title={t("roles.referee.title")}
+                />
+                <RoleCardSmall icon={fanIconEl} title={t("roles.fan.title")} />
+              </div>
+
+              {/* ── CTA ── */}
+              <motion.button
+                type="button"
+                onClick={handleRoleConfirm}
+                disabled={!selected || loading}
+                whileTap={selected && !loading ? { scale: 0.97 } : undefined}
+                transition={{ duration: 0.12, ease: [0.4, 0, 0.2, 1] }}
+                className={cn(
+                  "w-full rounded-[14px] py-3.5 text-[15px] font-bold transition-all duration-200",
+                  selected && !loading
+                    ? "bg-arena-primary text-[#0B0F14] shadow-[0_0_20px_rgba(124,255,79,0.25)] hover:bg-arena-primary/90"
+                    : "cursor-not-allowed bg-white/8 text-white/25",
+                )}
+              >
+                {loading ? t("cta.saving") : t("cta.continue")}
+              </motion.button>
+
+              {/* ── Footer ── */}
+              <p className="mt-5 text-center text-[11px] text-arena-text-muted/60">
+                {t("footer.changeLater")}
+              </p>
+            </motion.div>
+          ) : (
+            <motion.div
+              key="survey"
+              initial={{ opacity: 0, x: 60 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: -60 }}
+              transition={{ duration: 0.24, ease: [0.4, 0, 0.2, 1] }}
+            >
+              <SurveyStep
+                role={selected ?? "captain"}
+                onSubmit={handleSurveySubmit}
+                onSkip={handleSurveySkip}
+              />
+            </motion.div>
+          )}
+        </AnimatePresence>
 
         {/* ── Error message ── */}
         <AnimatePresence>
@@ -270,34 +342,12 @@ export function OnboardingClient({ userName }: OnboardingClientProps) {
               initial={{ opacity: 0, y: -4 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0 }}
-              className="mb-4 text-center text-sm text-red-400"
+              className="mt-4 text-center text-sm text-red-400"
             >
               {error}
             </motion.p>
           )}
         </AnimatePresence>
-
-        {/* ── CTA ── */}
-        <motion.button
-          type="button"
-          onClick={handleContinue}
-          disabled={!selected || loading}
-          whileTap={selected && !loading ? { scale: 0.97 } : undefined}
-          transition={{ duration: 0.12, ease: [0.4, 0, 0.2, 1] }}
-          className={cn(
-            "w-full rounded-[14px] py-3.5 text-[15px] font-bold transition-all duration-200",
-            selected && !loading
-              ? "bg-arena-primary text-[#0B0F14] shadow-[0_0_20px_rgba(124,255,79,0.25)] hover:bg-arena-primary/90"
-              : "cursor-not-allowed bg-white/8 text-white/25",
-          )}
-        >
-          {loading ? t("cta.saving") : t("cta.continue")}
-        </motion.button>
-
-        {/* ── Footer ── */}
-        <p className="mt-5 text-center text-[11px] text-arena-text-muted/60">
-          {t("footer.changeLater")}
-        </p>
       </motion.div>
     </div>
   );

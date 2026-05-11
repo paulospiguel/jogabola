@@ -284,7 +284,12 @@
       "training": "Ej: Entrenamiento Técnico"
     },
     "playersCount": "{count} jugadores",
-    "steps": ["Tipo de evento", "Detalles", "Vista previa", "Confirmar"],
+    "steps": [
+      "Tipo de evento",
+      "Detalles",
+      "Vista previa",
+      "Confirmar"
+    ],
     "success": "¡Evento creado!",
     "successSubtitle": "Convocatoria enviada con éxito.",
     "types": {
@@ -1825,7 +1830,34 @@
     },
     "errors": {
       "save": "Error al guardar preferencia. Inténtalo de nuevo.",
-      "unexpected": "Error inesperado. Inténtalo de nuevo."
+      "unexpected": "Error inesperado. Inténtalo de nuevo.",
+      "surveySave": "Error al guardar respuestas. Inténtalo de nuevo."
+    },
+    "survey": {
+      "eyebrow": "Cuéntanos más",
+      "header": "Cuéntanos más",
+      "tagline": "2 preguntas rápidas para mejorar tu experiencia.",
+      "q1Label": "¿Cuál es tu principal objetivo con JogaBola?",
+      "q1Hint": "Selecciona hasta 3",
+      "q2Label": "¿Cómo describirías tu equipo hoy?",
+      "skip": "Saltar por ahora",
+      "submit": "Continuar",
+      "submitting": "Guardando...",
+      "intentions": {
+        "organize_games": "Organizar partidos semanales",
+        "payments": "Simplificar pagos",
+        "grow_team": "Hacer crecer la plantilla",
+        "stats": "Seguir estadísticas",
+        "communication": "Comunicarse con atletas",
+        "competitions": "Jugar en competiciones"
+      },
+      "context": {
+        "new_team": "Estoy creando un equipo nuevo",
+        "casual": "Equipo informal/recreativo",
+        "league": "Equipo en una liga organizada",
+        "migrated": "Ya usé otra app y migré",
+        "manual": "Gestiono manualmente (Excel/WhatsApp)"
+      }
     }
   },
   "profileDangerZone": {
@@ -2290,5 +2322,8 @@
     "outro": {
       "tagline": "El campo te llama. La victoria te espera."
     }
+  },
+  "loadingPage": {
+    "loading": "Cargando..."
   }
 }

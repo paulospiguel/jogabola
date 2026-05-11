@@ -284,7 +284,12 @@
       "training": "Ex : Entraînement technique"
     },
     "playersCount": "{count} joueurs",
-    "steps": ["Type d'événement", "Détails", "Aperçu", "Confirmer"],
+    "steps": [
+      "Type d'événement",
+      "Détails",
+      "Aperçu",
+      "Confirmer"
+    ],
     "success": "Événement créé !",
     "successSubtitle": "Convocation envoyée avec succès.",
     "types": {
@@ -1825,7 +1830,34 @@
     },
     "errors": {
       "save": "Erreur lors de l'enregistrement de la préférence. Veuillez réessayer.",
-      "unexpected": "Erreur inattendue. Veuillez réessayer."
+      "unexpected": "Erreur inattendue. Veuillez réessayer.",
+      "surveySave": "Erreur lors de l’enregistrement des réponses. Veuillez réessayer."
+    },
+    "survey": {
+      "eyebrow": "Dites-nous en plus",
+      "header": "Dites-nous en plus",
+      "tagline": "2 questions rapides pour améliorer votre expérience.",
+      "q1Label": "Quel est votre objectif principal avec JogaBola ?",
+      "q1Hint": "Sélectionnez jusqu’à 3",
+      "q2Label": "Comment décririez-vous votre équipe aujourd’hui ?",
+      "skip": "Passer pour le moment",
+      "submit": "Continuer",
+      "submitting": "Enregistrement...",
+      "intentions": {
+        "organize_games": "Organiser des matchs hebdomadaires",
+        "payments": "Simplifier les paiements",
+        "grow_team": "Développer l’effectif",
+        "stats": "Suivre les statistiques",
+        "communication": "Communiquer avec les athlètes",
+        "competitions": "Jouer en compétition"
+      },
+      "context": {
+        "new_team": "Je crée une nouvelle équipe",
+        "casual": "Équipe informelle/loisir",
+        "league": "Équipe dans une ligue organisée",
+        "migrated": "J’ai utilisé une autre app et migré",
+        "manual": "Je gère manuellement (Excel/WhatsApp)"
+      }
     }
   },
   "profileDangerZone": {
@@ -2290,5 +2322,8 @@
     "outro": {
       "tagline": "Le terrain vous appelle. La victoire vous attend."
     }
+  },
+  "loadingPage": {
+    "loading": "Chargement..."
   }
 }

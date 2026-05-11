@@ -1,6 +1,7 @@
 import {
   boolean,
   integer,
+  jsonb,
   pgTable,
   serial,
   text,
@@ -23,6 +24,21 @@ export const user = pgTable("user", {
   planTier: text("plan_tier").notNull().default("free"),
   createdAt: timestamp("created_at").notNull().defaultNow(),
   updatedAt: timestamp("updated_at").notNull().defaultNow(),
+});
+
+export const profile = pgTable("profile", {
+  id: serial("id").primaryKey(),
+  userId: text("user_id")
+    .notNull()
+    .references(() => user.id, { onDelete: "cascade" })
+    .unique(),
+  role: text("role").notNull(),
+  name: text("name").notNull(),
+  completed: boolean("completed").default(false),
+  customFields: jsonb("custom_fields")
+    .$type<Record<string, unknown>>()
+    .default({}),
+  createdAt: timestamp("created_at").defaultNow(),
 });
 
 export const session = pgTable("session", {

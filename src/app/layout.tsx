@@ -30,7 +30,7 @@ export default async function RootLayout({
     <html lang={locale} className="dark" suppressHydrationWarning>
       <body
         className={cn(
-          "bg-background text-foreground min-h-screen antialiased",
+          "min-h-screen bg-arena-bg text-arena-text antialiased",
           fonts,
         )}
         suppressHydrationWarning

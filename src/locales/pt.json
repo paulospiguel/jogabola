@@ -287,7 +287,12 @@
       "training": "Ex: Treino Técnico"
     },
     "playersCount": "{count} jogadores",
-    "steps": ["Tipo de evento", "Detalhes", "Pré-visualização", "Confirmar"],
+    "steps": [
+      "Tipo de evento",
+      "Detalhes",
+      "Pré-visualização",
+      "Confirmar"
+    ],
     "success": "Evento criado!",
     "successSubtitle": "Convocatória enviada com sucesso.",
     "types": {
@@ -1806,7 +1811,34 @@
     },
     "errors": {
       "save": "Erro ao guardar preferência. Tenta novamente.",
-      "unexpected": "Erro inesperado. Tenta novamente."
+      "unexpected": "Erro inesperado. Tenta novamente.",
+      "surveySave": "Erro ao guardar respostas. Tenta novamente."
+    },
+    "survey": {
+      "eyebrow": "Conta-nos mais",
+      "header": "Conta-nos mais",
+      "tagline": "2 perguntas rápidas para melhorar a tua experiência.",
+      "q1Label": "Qual é o teu principal objetivo com a JogaBola?",
+      "q1Hint": "Seleciona até 3",
+      "q2Label": "Como descreves a tua equipa hoje?",
+      "skip": "Saltar por agora",
+      "submit": "Continuar",
+      "submitting": "A guardar...",
+      "intentions": {
+        "organize_games": "Organizar jogos semanais",
+        "payments": "Simplificar pagamentos",
+        "grow_team": "Crescer o plantel",
+        "stats": "Acompanhar estatísticas",
+        "communication": "Comunicar com atletas",
+        "competitions": "Jogar em competições"
+      },
+      "context": {
+        "new_team": "Estou a criar equipa nova",
+        "casual": "Equipa informal/recreativa",
+        "league": "Equipa em liga organizada",
+        "migrated": "Já usei outra app, migrei",
+        "manual": "Giro manualmente (Excel/WhatsApp)"
+      }
     }
   },
   "profileDangerZone": {
@@ -2291,5 +2323,8 @@
     "outro": {
       "tagline": "O campo chama-te. A vitória espera por ti."
     }
+  },
+  "loadingPage": {
+    "loading": "A carregar..."
   }
 }

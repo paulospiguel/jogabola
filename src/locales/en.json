@@ -284,7 +284,12 @@
       "training": "Ex: Technical Training"
     },
     "playersCount": "{count} players",
-    "steps": ["Event Type", "Details", "Preview", "Confirm"],
+    "steps": [
+      "Event Type",
+      "Details",
+      "Preview",
+      "Confirm"
+    ],
     "success": "Event created!",
     "successSubtitle": "Invitation sent successfully.",
     "types": {
@@ -1820,7 +1825,34 @@
     },
     "errors": {
       "save": "Error saving preference. Please try again.",
-      "unexpected": "Unexpected error. Please try again."
+      "unexpected": "Unexpected error. Please try again.",
+      "surveySave": "Error saving answers. Please try again."
+    },
+    "survey": {
+      "eyebrow": "Tell us more",
+      "header": "Tell us more",
+      "tagline": "2 quick questions to improve your experience.",
+      "q1Label": "What is your main goal with JogaBola?",
+      "q1Hint": "Select up to 3",
+      "q2Label": "How would you describe your team today?",
+      "skip": "Skip for now",
+      "submit": "Continue",
+      "submitting": "Saving...",
+      "intentions": {
+        "organize_games": "Organize weekly matches",
+        "payments": "Simplify payments",
+        "grow_team": "Grow the squad",
+        "stats": "Track statistics",
+        "communication": "Communicate with athletes",
+        "competitions": "Play in competitions"
+      },
+      "context": {
+        "new_team": "I am creating a new team",
+        "casual": "Informal/recreational team",
+        "league": "Team in an organized league",
+        "migrated": "I used another app and migrated",
+        "manual": "I manage manually (Excel/WhatsApp)"
+      }
     }
   },
   "profileDangerZone": {
@@ -2285,5 +2317,8 @@
     "outro": {
       "tagline": "The field calls you. Victory awaits."
     }
+  },
+  "loadingPage": {
+    "loading": "Loading..."
   }
 }
