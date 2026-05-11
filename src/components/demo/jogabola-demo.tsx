@@ -1,10 +1,12 @@
 "use client";
 
+import { Audio } from "@remotion/media";
 import {
   AbsoluteFill,
   Easing,
   Sequence,
   interpolate,
+  staticFile,
   useCurrentFrame,
   useVideoConfig,
 } from "remotion";
@@ -12,6 +14,14 @@ import {
   PhoneMockup,
   type PhoneScreen,
 } from "@/components/landing/phone-mockup";
+
+/**
+ * Background music:
+ * Place your audio file at: public/assets/demo/bg-music.mp3
+ * Recommended: ~60s loop, instrumental, ~80-100 BPM, low-fi/electronic
+ * Free sources: pixabay.com/music, freemusicarchive.org, zapsplat.com
+ */
+const MUSIC_SRC = staticFile("assets/demo/bg-music.mp3");
 
 export const DEMO_FPS = 30;
 export const DEMO_DURATION_S = 42;
@@ -554,12 +564,42 @@ function Background() {
   );
 }
 
+// ─── Background music ────────────────────────────────────────────────────────
+
+function BackgroundMusic() {
+  return (
+    <Audio
+      src={MUSIC_SRC}
+      loop
+      // Fade in: 0→1 over first 2s; fade out: 1→0 over last 3s
+      volume={(f) => {
+        const fadeInFrames = 2 * DEMO_FPS;
+        const fadeOutStart = DEMO_FRAMES - 3 * DEMO_FPS;
+        if (f < fadeInFrames) {
+          return interpolate(f, [0, fadeInFrames], [0, 0.35], {
+            extrapolateLeft: "clamp",
+            extrapolateRight: "clamp",
+          });
+        }
+        if (f >= fadeOutStart) {
+          return interpolate(f, [fadeOutStart, DEMO_FRAMES], [0.35, 0], {
+            extrapolateLeft: "clamp",
+            extrapolateRight: "clamp",
+          });
+        }
+        return 0.35;
+      }}
+    />
+  );
+}
+
 // ─── Main composition ─────────────────────────────────────────────────────────
 
 export function JogabolaDemo() {
   return (
     <AbsoluteFill style={{ fontFamily: "'Inter', sans-serif" }}>
       <Background />
+      <BackgroundMusic />
 
       {/* Intro */}
       <Sequence from={0} durationInFrames={INTRO_END + 15}>

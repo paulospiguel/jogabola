@@ -38,6 +38,7 @@
     "@radix-ui/react-tabs": "^1.1.13",
     "@radix-ui/react-toast": "^1.2.15",
     "@react-email/components": "^1.0.12",
+    "@remotion/media": "^4.0.459",
     "@remotion/player": "^4.0.459",
     "@supabase/ssr": "^0.6.1",
     "@supabase/supabase-js": "^2.105.3",
