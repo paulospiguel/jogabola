@@ -104,17 +104,24 @@ export function PaymentMethodDetailSheet({
     <JbBottomSheet title={TITLES[type]} onClose={onClose}>
       <div className="flex flex-col gap-5 p-5 pb-8">
         {/* Method header */}
-        <div className="flex items-center gap-3 rounded-[12px] border p-3.5"
+        <div
+          className="flex items-center gap-3 rounded-[12px] border p-3.5"
           style={{ borderColor: `${color}30`, backgroundColor: `${color}08` }}
         >
           <div
             className="flex size-10 items-center justify-center rounded-[10px] border"
-            style={{ backgroundColor: `${color}15`, borderColor: `${color}30`, color }}
+            style={{
+              backgroundColor: `${color}15`,
+              borderColor: `${color}30`,
+              color,
+            }}
           >
             <Icon size={20} />
           </div>
           <div>
-            <p className="text-[14px] font-bold text-arena-text">{TITLES[type].replace("Configurar ", "")}</p>
+            <p className="text-[14px] font-bold text-arena-text">
+              {TITLES[type].replace("Configurar ", "")}
+            </p>
             <p className="text-[11px] text-arena-text-muted">
               {type === "stripe" && "Pagamento automático por cartão"}
               {type === "mbway" && "Transferência manual por telemóvel"}
@@ -132,7 +139,8 @@ export function PaymentMethodDetailSheet({
         {/* Stripe */}
         {type === "stripe" && (
           <div className="rounded-[12px] border border-arena-border bg-arena-surface p-4 text-[13px] text-arena-text-muted">
-            A integração com Stripe será configurada através do painel de equipa. Contacta o suporte para mais informações.
+            A integração com Stripe será configurada através do painel de
+            equipa. Contacta o suporte para mais informações.
           </div>
         )}
 

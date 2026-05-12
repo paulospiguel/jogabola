@@ -19,7 +19,6 @@ const Loading = ({ size = "small", text }: Props) => {
     <div
       className={cn(
         "mx-auto flex w-full flex-col items-center justify-center p-2",
-
       )}
     >
       <div className={cn(sizes[size], "relative")}>

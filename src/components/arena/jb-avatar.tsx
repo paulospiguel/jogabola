@@ -28,13 +28,7 @@ export function JbAvatar({
         border: `1.5px solid ${col}44`,
       }}
     >
-      {image && (
-        <AvatarImage
-          src={image}
-          alt={name}
-          className="object-cover"
-        />
-      )}
+      {image && <AvatarImage src={image} alt={name} className="object-cover" />}
       <AvatarFallback
         style={{
           background: `${col}22`,

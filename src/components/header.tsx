@@ -80,8 +80,6 @@ export default function Header() {
         </div>
 
         <div className="flex items-center space-x-4">
-
-
           {!isLoading &&
             buttons.map(button => {
               const key = button.href || button.label;
@@ -167,8 +165,12 @@ export default function Header() {
                   <div className="flex flex-col items-center gap-4 py-4">
                     <UserMenu user={session.user as any} />
                     <div className="flex flex-col items-center">
-                      <p className="text-sm font-medium text-white">{session.user.name}</p>
-                      <p className="text-xs text-white/50">{session.user.email}</p>
+                      <p className="text-sm font-medium text-white">
+                        {session.user.name}
+                      </p>
+                      <p className="text-xs text-white/50">
+                        {session.user.email}
+                      </p>
                     </div>
                   </div>
                 )}

@@ -26,21 +26,21 @@ interface EventsListProps {
 }
 
 const STATUS_CONFIG: Record<EventStatus, { label: string; className: string }> =
-{
-  scheduled: {
-    label: "status.scheduled",
-    className: "text-arena-info bg-arena-info/10 border-arena-info/25",
-  },
-  confirmed: {
-    label: "status.confirmed",
-    className:
-      "text-arena-success bg-arena-success/10 border-arena-success/25",
-  },
-  cancelled: {
-    label: "status.cancelled",
-    className: "text-arena-danger bg-arena-danger/10 border-arena-danger/25",
-  },
-};
+  {
+    scheduled: {
+      label: "status.scheduled",
+      className: "text-arena-info bg-arena-info/10 border-arena-info/25",
+    },
+    confirmed: {
+      label: "status.confirmed",
+      className:
+        "text-arena-success bg-arena-success/10 border-arena-success/25",
+    },
+    cancelled: {
+      label: "status.cancelled",
+      className: "text-arena-danger bg-arena-danger/10 border-arena-danger/25",
+    },
+  };
 
 function EventStatusBadge({ status }: { status: EventStatus }) {
   const t = useTranslations("arenaEvents");
@@ -186,7 +186,10 @@ export function EventsList({ upcoming, past }: EventsListProps) {
             </div>
 
             <div className="flex w-full gap-2 flex-wrap justify-end">
-              <Link href="/arena/calendar" className="jb-action h-12 flex-1 sm:flex-none">
+              <Link
+                href="/arena/calendar"
+                className="jb-action h-12 flex-1 sm:flex-none"
+              >
                 <CalendarDays size={14} strokeWidth={2} />
                 {t("actions.viewCalendar")}
               </Link>
@@ -201,7 +204,6 @@ export function EventsList({ upcoming, past }: EventsListProps) {
                 {t("actions.create")}
               </Button>
             </div>
-
           </header>
 
           {!hasEvents ? (

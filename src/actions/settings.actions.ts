@@ -12,7 +12,8 @@ export async function updateUserSettings(data: {
   notificationsEnabled?: boolean;
 }) {
   const authUser = await getAuthUser();
-  if (!authUser) return { success: false as const, error: { code: "UNAUTHORIZED" } };
+  if (!authUser)
+    return { success: false as const, error: { code: "UNAUTHORIZED" } };
 
   const updateData: Record<string, string | boolean> = {};
   if (data.locale !== undefined) updateData.locale = data.locale;

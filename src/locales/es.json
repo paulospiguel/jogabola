@@ -265,22 +265,38 @@
     "error": "Error al crear el evento. Inténtalo de nuevo.",
     "info": "Tras crear el evento, puedes añadir jugadores y gestionar la convocatoria desde la página del evento.",
     "access": {
-      "rosterOnly": "Solo plantilla",
-      "rosterOnlyHint": "Solo emails que pertenecen a la plantilla actual pueden confirmar asistencia."
+      "rosterOnly": "Solo Plantilla",
+      "rosterOnlyHint": "Solo emails que pertenecen a la plantilla actual pueden confirmar asistencia.",
+      "rosterPriority": "Prioridad para la plantilla",
+      "rosterPriorityHint": "Solo la plantilla puede confirmar hasta {hours}h antes.",
+      "rosterPriorityOff": "Sin prioridad"
     },
     "invite": {
       "title": "Invitar desde la plantilla",
       "subtitle": "Selecciona atletas específicos o listas para preconvocar.",
+      "lastSquad": "Re-convocar última plantilla",
       "empty": "Aún no hay atletas en la plantilla.",
       "verified": "Atleta verificado",
       "manual": "Añadido manualmente",
       "summary": "{count} atleta{count, plural, =1 {} other {s}} preconvocado{count, plural, =1 {} other {s}}"
     },
     "labels": {
+      "title": "Título del evento",
       "date": "Fecha y Hora",
       "location": "Lugar",
-      "maxPlayers": "Máx. jugadores",
+      "maxPlayers": "Nº Jugadores",
       "recurrence": "Modalidad"
+    },
+    "payment": {
+      "section": "Pago",
+      "price": "Valor (€)",
+      "required": "Pago obligatorio",
+      "requiredHint": "Los atletas deben pagar antes de confirmar",
+      "deadlineHours": "Plazo de pago",
+      "deadlineHoursUnit": "h antes del partido",
+      "acceptMbway": "Aceptar MBWay",
+      "acceptMbwayHint": "Permitir pago por MBWay",
+      "mbwayPhone": "Número de Teléfono MBWay"
     },
     "recurrence": {
       "once": "Una vez",
@@ -399,7 +415,25 @@
       "main": "Lista Principal ({count})",
       "reserves": "Reservas / Pendientes ({count})"
     },
+    "locationMap": {
+      "notFound": "Ubicación no encontrada",
+      "placeholder": "Dirección del lugar...",
+      "errorSaving": "Error al guardar. Inténtalo de nuevo.",
+      "shareTitle": "Compartir ubicación",
+      "copyLink": "Copiar enlace",
+      "copied": "¡Copiado!"
+    },
     "officialMatch": "Partido Oficial",
+    "noticeWall": {
+      "title": "Muro de Avisos",
+      "empty": "Aún no hay avisos para este partido.",
+      "placeholder": "Escribe un aviso para el equipo...",
+      "send": "Publicar",
+      "delete": "Eliminar",
+      "urgent": "Urgente",
+      "fieldChange": "Cambio de Campo",
+      "chatter": "Avisar Pendientes"
+    },
     "share": {
       "label": "Convocar por",
       "copyLink": "Copiar enlace",
@@ -435,6 +469,9 @@
       "upcoming": "Próximos"
     },
     "title": "Eventos",
+    "editInfo": "Editar Información",
+    "statusLabel": "Estado del Evento",
+    "errorUpdating": "Error al actualizar el evento. Inténtalo de nuevo.",
     "types": {
       "match": "Partido",
       "training": "Entrenamiento"
@@ -770,14 +807,23 @@
     "join": "Unirse",
     "knowMore": "Conozca más",
     "light": "Claro",
+    "loadError": "Error al cargar",
     "loading": "Cargando",
-    "logo": "Logo",
+    "logo": "Logotipo",
     "manage": "Gestionar",
-    "myAccount": "Mi Cuenta",
+    "myAccount": "Mi cuenta",
     "name": "Nombre",
-    "next": "Siguiente",
-    "notFilled": "No rellenado",
-    "notifications": "Notificaciones",
+    "next": "Próximo",
+    "nextSlide": "Diapositiva siguiente",
+    "notFilled": "No llenado",
+    "previousSlide": "Diapositiva anterior",
+    "retry": "Reintentar",
+    "selectDate": "Seleccionar fecha",
+    "selectDates": "Seleccionar fechas",
+    "clear": "Limpiar",
+    "toggleSidebar": "Alternar barra lateral",
+    "toggleTheme": "Cambiar tema",
+    "notifications": "Notificações",
     "password": "Contraseña",
     "performance": "Actuación",
     "player": "Jugador",
@@ -2112,8 +2158,13 @@
       "guestInfo": "Confirmar como Invitado",
       "guestOtp": "Verificar email",
       "payment": "Pago",
-      "success": "¡Asistencia Confirmada!"
+      "success": "¡Asistencia Confirmada!",
+      "welcomeBack": "Bienvenido de nuevo"
     },
+    "welcomeBackGreeting": "¡Hola, {name}!",
+    "welcomeBackPrompt": "¿Quieres confirmar tu asistencia a este partido?",
+    "confirmWithEmail": "Confirmar con mi email",
+    "notMe": "No soy yo / Usar otro email",
     "choosePrompt": "¿Cómo quieres confirmar tu asistencia?",
     "hasAccountOption": "Tengo cuenta JogaBola",
     "hasAccountHint": "Historial de asistencias y pagos",
@@ -2140,7 +2191,45 @@
     "createFreeAccount": "Crear cuenta gratuita",
     "close": "Cerrar",
     "cashInstructions": "Paga al capitán al inicio del partido.",
-    "paymentNotes": "Pago via MBWay confirmado por el atleta",
+    "paymentNotes": "Pago vía MBWay confirmado por el atleta",
+    "paymentMethodCard": {
+      "title": "¿Cómo quieres pagar?",
+      "noMethods": "Ningún método de pago configurado por el capitán.",
+      "copy": "Copiar",
+      "copied": "¡Copiado!",
+      "status": {
+        "pending": "Esperando",
+        "paid": "Pagado",
+        "rejected": "Rechazado"
+      },
+      "actions": {
+        "pay": "Pagar {amount}",
+        "sent": "Envié el pago",
+        "willPayCash": "Pagaré en efectivo"
+      },
+      "methods": {
+        "stripe": {
+          "label": "Tarjeta",
+          "desc": "Débito o crédito — pago inmediato",
+          "info": "Paga con tarjeta de forma inmediata y segura a través de Stripe.",
+          "confirmMsg": "Pago confirmado — {amount}"
+        },
+        "mbway": {
+          "label": "MBWay",
+          "desc": "Transferencia por teléfono",
+          "sendTo": "Enviar a",
+          "amount": "Valor",
+          "proofMsg": "Comprobante recibido — verificando",
+          "waitingMsg": "Esperando confirmación del capitán"
+        },
+        "cash": {
+          "label": "Efectivo",
+          "desc": "Pagar en persona",
+          "amount": "Valor",
+          "paidMsg": "Marcado como pagado por el capitán"
+        }
+      }
+    },
     "terms": {
       "prefix": "Al continuar, aceptas los",
       "terms": "Términos",
@@ -2151,8 +2240,10 @@
       "confirmAttendance": "Error al confirmar asistencia",
       "sendCode": "Error al enviar código.",
       "sessionCreatedAttendanceFailed": "Sesión creada pero error al confirmar asistencia. Inténtalo de nuevo.",
-      "rosterOnly": "Este evento está reservado a la plantilla.",
+      "rosterOnly": "Este evento está reservado para la plantilla.",
+      "rosterPriority": "Solo los miembros de la plantilla pueden confirmar su asistencia hasta {hours}h antes del partido.",
       "eventCancelled": "Este evento está cancelado.",
+      "hasFines": "Tienes multas pendientes. Regulariza tu situación para confirmar asistencia.",
       "processPayment": "Error al procesar el pago.",
       "resend": "Error al reenviar.",
       "resendPin": "Error al reenviar PIN.",

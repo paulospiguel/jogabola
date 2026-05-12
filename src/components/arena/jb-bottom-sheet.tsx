@@ -1,6 +1,7 @@
 "use client";
 
 import { X } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { useEffect, useRef } from "react";
 import { createPortal } from "react-dom";
 import { Button } from "@/components/ui/button";
@@ -19,6 +20,7 @@ export function JbBottomSheet({
   noPad,
   children,
 }: JbBottomSheetProps) {
+  const t = useTranslations("common");
   const portalRef = useRef<HTMLElement | null>(null);
 
   useEffect(() => {
@@ -52,7 +54,7 @@ export function JbBottomSheet({
               type="button"
               variant="ghost"
               size="icon-sm"
-              aria-label="Fechar"
+              aria-label={t("close")}
             >
               <X size={14} strokeWidth={2} />
             </Button>

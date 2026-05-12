@@ -14,6 +14,7 @@ import {
 import { withAction } from "@/lib/action-helpers";
 import { auth } from "@/lib/auth";
 import { userBelongsToTeamRoster } from "@/lib/event-roster-access";
+import { hasPendingFines } from "@/lib/fines";
 import { upsertAttendanceSchema } from "@/schemas/attendance.schema";
 
 function isCancelledEventStatus(status: string | null | undefined) {
@@ -111,19 +112,44 @@ export async function confirmUserAttendance(eventId: number) {
 
   try {
     const event = await db.query.matchSessions.findFirst({
-      columns: { rosterOnly: true, status: true, teamId: true },
+      columns: {
+        rosterOnly: true,
+        status: true,
+        teamId: true,
+        startsAt: true,
+        rosterPriorityHours: true,
+      },
       where: eq(matchSessions.id, eventId),
     });
 
-    if (isCancelledEventStatus(event?.status)) {
+    if (!event) {
+      return { success: false as const, error: "Evento não encontrado" };
+    }
+
+    if (isCancelledEventStatus(event.status)) {
       return { success: false as const, error: "EVENT_CANCELLED" };
     }
 
-    if (
-      event?.rosterOnly &&
-      !(await userBelongsToTeamRoster(event.teamId, userId))
-    ) {
+    const isRoster = await userBelongsToTeamRoster(event.teamId, userId);
+
+    if (event.rosterOnly && !isRoster) {
       return { success: false as const, error: "EVENT_ROSTER_ONLY" };
+    }
+
+    if ((event.rosterPriorityHours ?? 0) > 0 && !isRoster) {
+      const startsAt = new Date(event.startsAt ?? 0);
+      const priorityDeadline = new Date(
+        startsAt.getTime() - (event.rosterPriorityHours ?? 0) * 60 * 60 * 1000,
+      );
+
+      if (new Date() < priorityDeadline) {
+        return { success: false as const, error: "EVENT_ROSTER_PRIORITY" };
+      }
+    }
+
+    const isBlocked = await hasPendingFines(userId);
+    if (isBlocked) {
+      return { success: false as const, error: "EVENT_HAS_FINES" };
     }
 
     // 1. Upsert attendance
@@ -170,6 +196,30 @@ export async function cancelUserAttendance(eventId: number) {
   }
 
   try {
+    const event = await db.query.matchSessions.findFirst({
+      columns: { startsAt: true, priceCents: true },
+      where: eq(matchSessions.id, eventId),
+    });
+
+    if (event) {
+      const startsAt = new Date(event.startsAt);
+      const hoursUntilEvent =
+        (startsAt.getTime() - Date.now()) / (1000 * 60 * 60);
+
+      // Late cancellation: less than 24 hours before the event
+      if (hoursUntilEvent > 0 && hoursUntilEvent < 24) {
+        const { fines } = await import("@/db/schema/fines");
+        await db.insert(fines).values({
+          playerId: session.user.id,
+          matchSessionId: eventId,
+          amountCents: event.priceCents || 500, // Default 5 EUR fine if price is 0
+          currency: "EUR",
+          reason: "late_cancellation",
+          status: "pending",
+        });
+      }
+    }
+
     await db
       .delete(attendance)
       .where(

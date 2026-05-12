@@ -16,7 +16,9 @@ export default async function ArenaProfilePage() {
   }
 
   const t = await getTranslations("profilePage");
-  const pendingTransfer = await getPendingTransferRequest(session.user.id).catch(() => null);
+  const pendingTransfer = await getPendingTransferRequest(
+    session.user.id,
+  ).catch(() => null);
   const locale = await getLocale();
   const createdAt = session.user.createdAt
     ? new Date(session.user.createdAt)

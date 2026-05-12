@@ -10,14 +10,9 @@ export default async function PaymentResultPage({ params }: Props) {
   const eventId = parseInt(id, 10);
   const paymentIdNum = parseInt(paymentId, 10);
 
-  if (isNaN(eventId) || isNaN(paymentIdNum)) {
+  if (Number.isNaN(eventId) || Number.isNaN(paymentIdNum)) {
     notFound();
   }
 
-  return (
-    <PaymentResultClient
-      paymentId={paymentIdNum}
-      eventId={eventId}
-    />
-  );
+  return <PaymentResultClient paymentId={paymentIdNum} eventId={eventId} />;
 }

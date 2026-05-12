@@ -10,11 +10,15 @@ import {
   Loader2,
   Send,
   Users,
+  RotateCcw,
 } from "lucide-react";
 import Image from "next/image";
 import { useTranslations } from "next-intl";
 import { useEffect, useMemo, useState } from "react";
-import { createEvent } from "@/actions/match-sessions.actions";
+import {
+  createEvent,
+  getLastEventSquad,
+} from "@/actions/match-sessions.actions";
 import Challenge from "@/assets/images/jb-challenge.png";
 import Game from "@/assets/images/jb-game.png";
 import Training from "@/assets/images/jb-training.png";
@@ -53,6 +57,7 @@ interface FormState {
   paymentRequired: boolean;
   paymentDeadlineHours: string;
   rosterOnly: boolean;
+  rosterPriorityHours: number;
   mbwayEnabled: boolean;
   mbwayPhone: string;
 }
@@ -83,7 +88,7 @@ function PaymentSection({
       >
         <span className="flex items-center gap-2 text-[13px] font-semibold text-arena-text">
           <CreditCard size={15} className="text-arena-primary" />
-          {t("payment.section") || "Pagamento"}
+          {t("payment.section")}
         </span>
         {open ? (
           <ChevronUp size={15} className="text-arena-text-muted" />
@@ -100,7 +105,7 @@ function PaymentSection({
               className="mb-1 text-xs font-semibold text-arena-text-sec"
               htmlFor="event-price"
             >
-              {t("payment.price") || "Valor (€)"}
+              {t("payment.price")}
             </Label>
             <Input
               className="h-11 rounded-xl border-arena-border bg-arena-bg text-sm text-arena-text placeholder:text-arena-text-muted/70 focus-visible:ring-arena-primary/40 focus-visible:border-arena-primary/50"
@@ -134,10 +139,10 @@ function PaymentSection({
               >
                 <div>
                   <p className="text-[13px] font-semibold text-arena-text">
-                    Aceitar MBWay
+                    {t("payment.acceptMbway")}
                   </p>
                   <p className="text-[11px] text-arena-text-muted">
-                    Permitir pagamento via MBWay
+                    {t("payment.acceptMbwayHint")}
                   </p>
                 </div>
                 <div
@@ -162,7 +167,7 @@ function PaymentSection({
                     className="mb-1 text-xs font-semibold text-arena-text-sec"
                     htmlFor="event-mbway-phone"
                   >
-                    Número de Telemóvel MBWay
+                    {t("payment.mbwayPhone")}
                   </Label>
                   <Input
                     className="h-11 rounded-xl border-arena-border bg-arena-bg text-sm text-arena-text placeholder:text-arena-text-muted/70 focus-visible:ring-arena-primary/40 focus-visible:border-arena-primary/50"
@@ -190,13 +195,11 @@ function PaymentSection({
           >
             <div>
               <p className="text-[13px] font-semibold text-arena-text">
-                {t("payment.required") || "Pagamento obrigatório"}
+                {t("payment.required")}
               </p>
               <p className="text-[11px] text-arena-text-muted">
-                {t("payment.requiredHint") ||
-                  "Atletas devem pagar antes de confirmar"}
-              </p>
-            </div>
+                {t("payment.requiredHint")}
+              </p>            </div>
             <div
               className={cn(
                 "h-5 w-9 rounded-full transition-colors",
@@ -221,7 +224,7 @@ function PaymentSection({
                 className="mb-1 text-xs font-semibold text-arena-text-sec"
                 htmlFor="event-deadline"
               >
-                {t("payment.deadlineHours") || "Prazo de pagamento"}
+                {t("payment.deadlineHours")}
               </Label>
               <div className="flex items-center gap-2">
                 <Input
@@ -234,8 +237,8 @@ function PaymentSection({
                   value={form.paymentDeadlineHours}
                   onChange={e => set("paymentDeadlineHours", e.target.value)}
                 />
-                <span className="shrink-0 text-[12px] text-arena-text-muted">
-                  {t("payment.deadlineHoursUnit") || "h antes do jogo"}
+                <span className="text-[12px] text-arena-text-muted">
+                  {t("payment.deadlineHoursUnit")}
                 </span>
               </div>
             </div>
@@ -292,6 +295,7 @@ export function CreateEventSheet({
     paymentRequired: false,
     paymentDeadlineHours: "",
     rosterOnly: false,
+    rosterPriorityHours: 0,
     mbwayEnabled: false,
     mbwayPhone: "",
   });
@@ -301,10 +305,11 @@ export function CreateEventSheet({
   const [createdEventId, setCreatedEventId] = useState<number | null>(null);
   const [copiedLink, setCopiedLink] = useState(false);
   const [selectedPlayerIds, setSelectedPlayerIds] = useState<string[]>([]);
+  const [loadingLastSquad, setLoadingLastSquad] = useState(false);
   const [groups, setGroups] = useState<RosterGroup[]>([]);
   const { players } = useSquad();
   const { settings } = useTeamPaymentSettings(teamId);
-  
+
   // Pre-fill MBWay settings if available
   useEffect(() => {
     if (settings) {
@@ -336,6 +341,22 @@ export function CreateEventSheet({
   const set = <K extends keyof FormState>(k: K, v: FormState[K]) =>
     setForm(f => ({ ...f, [k]: v }));
 
+  const handleCloneLastSquad = async () => {
+    if (!teamId) return;
+    setLoadingLastSquad(true);
+    try {
+      const res = await getLastEventSquad(teamId);
+      if (res.success && res.data.length > 0) {
+        const ids = res.data.map(p => p.id).filter(id => !!id);
+        setSelectedPlayerIds(current =>
+          Array.from(new Set([...current, ...ids])),
+        );
+      }
+    } finally {
+      setLoadingLastSquad(false);
+    }
+  };
+
   const handleSend = async () => {
     setSending(true);
     setError(null);
@@ -351,11 +372,11 @@ export function CreateEventSheet({
       teamId,
       priceCents: form.priceCents,
       paymentRequired: form.paymentRequired,
-      paymentDeadlineHours:
-        form.paymentRequired && form.paymentDeadlineHours
-          ? Number.parseInt(form.paymentDeadlineHours, 10)
-          : null,
+      paymentDeadlineHours: form.paymentDeadlineHours
+        ? Number.parseInt(form.paymentDeadlineHours, 10)
+        : null,
       rosterOnly: form.rosterOnly,
+      rosterPriorityHours: form.rosterPriorityHours,
       mbwayEnabled: form.mbwayEnabled,
       mbwayPhone: form.mbwayPhone,
       invitedPlayers: rosterPlayers
@@ -652,7 +673,7 @@ export function CreateEventSheet({
 
             <div className="">
               <Label className={labelClass} htmlFor="event-recurrence">
-                {t("labels.recurrence") || "Modalidade"}
+                {t("labels.recurrence")}
               </Label>
               <Select
                 defaultValue="once"
@@ -665,17 +686,17 @@ export function CreateEventSheet({
                   className="h-11 w-full rounded-xl border-arena-border bg-arena-surface text-sm text-arena-text"
                   id="event-recurrence"
                 >
-                  <SelectValue placeholder="Modalidade" />
+                  <SelectValue placeholder={t("labels.recurrence")} />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="once">
-                    {t("recurrence.once") || "Único"}
+                    {t("recurrence.once")}
                   </SelectItem>
                   <SelectItem value="weekly">
-                    {t("recurrence.weekly") || "Semanal"}
+                    {t("recurrence.weekly")}
                   </SelectItem>
                   <SelectItem value="monthly">
-                    {t("recurrence.monthly") || "Mensal"}
+                    {t("recurrence.monthly")}
                   </SelectItem>
                 </SelectContent>
               </Select>
@@ -723,6 +744,45 @@ export function CreateEventSheet({
                 />
               </div>
             </button>
+
+            {/* Roster Priority Hours */}
+            {!form.rosterOnly && (
+              <div className="mt-2">
+                <Label
+                  className="mb-2 block text-xs font-semibold tracking-wide uppercase text-arena-text-muted"
+                  htmlFor="roster-priority"
+                >
+                  {t("access.rosterPriority")}
+                </Label>
+                <Select
+                  value={form.rosterPriorityHours.toString()}
+                  onValueChange={value =>
+                    set("rosterPriorityHours", Number.parseInt(value, 10))
+                  }
+                >
+                  <SelectTrigger
+                    id="roster-priority"
+                    className="h-11 w-full rounded-xl border-arena-border bg-arena-surface text-sm text-arena-text"
+                  >
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="0">
+                      {t("access.rosterPriorityOff")}
+                    </SelectItem>
+                    <SelectItem value="24">
+                      {t("access.rosterPriorityHint", { hours: 24 })}
+                    </SelectItem>
+                    <SelectItem value="48">
+                      {t("access.rosterPriorityHint", { hours: 48 })}
+                    </SelectItem>
+                    <SelectItem value="72">
+                      {t("access.rosterPriorityHint", { hours: 72 })}
+                    </SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            )}
           </div>
         )}
 
@@ -804,6 +864,23 @@ export function CreateEventSheet({
                     </button>
                   ))}
                 </div>
+              )}
+
+              {/* Re-convocar Último Plantel */}
+              {teamId && (
+                <button
+                  type="button"
+                  disabled={loadingLastSquad}
+                  onClick={handleCloneLastSquad}
+                  className="mb-3 flex w-full items-center justify-center gap-2 rounded-xl border border-dashed border-arena-primary/40 bg-arena-primary/5 py-2.5 text-[12px] font-bold text-arena-primary transition-all hover:bg-arena-primary/10 disabled:opacity-50"
+                >
+                  {loadingLastSquad ? (
+                    <Loader2 size={14} className="animate-spin" />
+                  ) : (
+                    <RotateCcw size={14} strokeWidth={2.5} />
+                  )}
+                  {t("invite.lastSquad")}
+                </button>
               )}
 
               <div className="max-h-52 space-y-2 overflow-auto pr-1">

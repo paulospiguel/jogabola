@@ -1,5 +1,7 @@
 "use server";
 
+import { PutObjectCommand } from "@aws-sdk/client-s3";
+import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import { and, desc, eq } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { headers } from "next/headers";
@@ -17,9 +19,11 @@ import {
 import { withAction, withAuthAction } from "@/lib/action-helpers";
 import { auth } from "@/lib/auth";
 import { sendPaymentProofRequest } from "@/lib/email";
+import { getR2Client, R2_BUCKET, R2_PUBLIC_URL } from "@/lib/r2";
 import { userCanAccessTeam } from "@/lib/team-access";
 import {
   createPaymentSchema,
+  requestPresignedUrlSchema,
   submitPaymentProofSchema,
 } from "@/schemas/payments.schema";
 
@@ -93,6 +97,79 @@ export const submitPaymentProof = withAction(
     }
 
     return { success: true, data: proof };
+  },
+);
+
+const ALLOWED_TYPES = new Set([
+  "image/jpeg",
+  "image/jpg",
+  "image/png",
+  "image/webp",
+  "image/heic",
+  "image/heif",
+]);
+
+const MAX_SIZE_BYTES = 2 * 1024 * 1024; // 8 MB
+
+export const requestPresignedUrl = withAction(
+  requestPresignedUrlSchema,
+  async data => {
+    const { paymentId, contentType, sizeBytes } = data;
+
+    if (!ALLOWED_TYPES.has(contentType)) {
+      return {
+        success: false,
+        error: {
+          code: "INVALID_FILE_TYPE",
+          message: "Tipo de ficheiro não permitido. Use JPEG, PNG ou WebP.",
+        },
+      };
+    }
+
+    if (sizeBytes > MAX_SIZE_BYTES) {
+      return {
+        success: false,
+        error: {
+          code: "FILE_TOO_LARGE",
+          message: "Ficheiro demasiado grande. Máximo 2 MB.",
+        },
+      };
+    }
+
+    // Auth check: guests are allowed
+    const session = await auth.api.getSession({ headers: await headers() });
+    const uploaderLabel = session?.user?.id ?? "guest";
+
+    // Unique object key
+    const ext = contentType.split("/")[1]?.replace("jpeg", "jpg") ?? "jpg";
+    const key = `payment-proofs/${paymentId}/${uploaderLabel}-${Date.now()}.${ext}`;
+
+    try {
+      const r2 = getR2Client();
+      const command = new PutObjectCommand({
+        Bucket: R2_BUCKET,
+        Key: key,
+        ContentType: contentType,
+        // ContentLength removed to avoid browser CORS/SignedHeaders issues
+      });
+
+      const uploadUrl = await getSignedUrl(r2, command, { expiresIn: 300 });
+      const publicUrl = `${R2_PUBLIC_URL}/${key}`;
+
+      return {
+        success: true,
+        data: { uploadUrl, publicUrl, key },
+      };
+    } catch (err) {
+      console.error("[requestPresignedUrl]", err);
+      return {
+        success: false,
+        error: {
+          code: "PRESIGNED_URL_ERROR",
+          message: "Erro ao gerar URL de upload.",
+        },
+      };
+    }
   },
 );
 

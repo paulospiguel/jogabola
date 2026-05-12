@@ -35,13 +35,17 @@ interface DangerZoneProps {
   pendingTransfer: PendingTransfer | null;
 }
 
-export function DangerZone({ pendingTransfer: initialPending }: DangerZoneProps) {
+export function DangerZone({
+  pendingTransfer: initialPending,
+}: DangerZoneProps) {
   const t = useTranslations();
   const [newEmail, setNewEmail] = useState("");
   const [isDeleting, startDelete] = useTransition();
   const [isTransferring, startTransfer] = useTransition();
   const [isCancelling, startCancel] = useTransition();
-  const [pending, setPending] = useState<PendingTransfer | null>(initialPending);
+  const [pending, setPending] = useState<PendingTransfer | null>(
+    initialPending,
+  );
   const [error, setError] = useState<string | null>(null);
 
   const profileDangerZoneLabel = (sentence: string) => {
@@ -134,7 +138,9 @@ export function DangerZone({ pendingTransfer: initialPending }: DangerZoneProps)
                           {profileDangerZoneLabel("transfer.pending.title")}
                         </p>
                         <p className="text-xs text-arena-text-muted">
-                          {profileDangerZoneLabel("transfer.pending.description")}{" "}
+                          {profileDangerZoneLabel(
+                            "transfer.pending.description",
+                          )}{" "}
                           <span className="font-mono font-semibold text-arena-warning">
                             {pending.newEmail}
                           </span>
@@ -180,7 +186,9 @@ export function DangerZone({ pendingTransfer: initialPending }: DangerZoneProps)
                       className="flex-1 border-arena-border bg-arena-surface text-arena-text"
                       id="transfer-email"
                       onChange={e => setNewEmail(e.target.value)}
-                      placeholder={profileDangerZoneLabel("transfer.placeholder")}
+                      placeholder={profileDangerZoneLabel(
+                        "transfer.placeholder",
+                      )}
                       type="email"
                       value={newEmail}
                     />
@@ -205,7 +213,9 @@ export function DangerZone({ pendingTransfer: initialPending }: DangerZoneProps)
                             {profileDangerZoneLabel("transfer.confirm.title")}
                           </AlertDialogTitle>
                           <AlertDialogDescription className="text-arena-text-sec">
-                            {profileDangerZoneLabel("transfer.confirm.description")}
+                            {profileDangerZoneLabel(
+                              "transfer.confirm.description",
+                            )}
                           </AlertDialogDescription>
                         </AlertDialogHeader>
                         <AlertDialogFooter>
@@ -236,12 +246,13 @@ export function DangerZone({ pendingTransfer: initialPending }: DangerZoneProps)
           </div>
         </div>
 
-
         {/* Account Deletion */}
         <div className="jb-card border-red-500/20 bg-red-500/5 p-4">
           <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
             <div className="space-y-1">
-              <h3 className="font-bold text-red-500">{profileDangerZoneLabel("delete.title")}</h3>
+              <h3 className="font-bold text-red-500">
+                {profileDangerZoneLabel("delete.title")}
+              </h3>
               <p className="text-sm text-arena-text-sec">
                 {profileDangerZoneLabel("delete.description")}
               </p>

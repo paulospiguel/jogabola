@@ -3,8 +3,8 @@
 import { eq } from "drizzle-orm";
 import { db } from "@/db/client";
 import { paymentPrechecks, paymentProofs, payments } from "@/db/schema";
-import { verifyPaymentProofSchema } from "@/schemas/payments.schema";
 import { withAction } from "@/lib/action-helpers";
+import { verifyPaymentProofSchema } from "@/schemas/payments.schema";
 
 export const verifyPaymentProof = withAction(
   verifyPaymentProofSchema,

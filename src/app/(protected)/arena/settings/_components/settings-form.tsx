@@ -4,8 +4,6 @@ import { Bell, Check, Languages, Loader2 } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useState, useTransition } from "react";
 import { updateUserSettings } from "@/actions/settings.actions";
-import { locales } from "@/i18n/configs";
-import { cn } from "@/lib/utils";
 import {
   Select,
   SelectContent,
@@ -14,6 +12,8 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
+import { locales } from "@/i18n/configs";
+import { cn } from "@/lib/utils";
 
 const LANGUAGES = {
   en: {
@@ -92,7 +92,7 @@ export function SettingsForm({ initialSettings }: SettingsFormProps) {
         <div className="p-4">
           <Select
             value={settings.locale}
-            onValueChange={(val) => handleUpdate({ locale: val })}
+            onValueChange={val => handleUpdate({ locale: val })}
             disabled={isPending}
           >
             <SelectTrigger className="h-12 w-full rounded-full border-arena-border bg-arena-surface-el/50 px-4 text-arena-text hover:border-arena-border/80 hover:bg-arena-surface-el">
@@ -108,7 +108,7 @@ export function SettingsForm({ initialSettings }: SettingsFormProps) {
               </SelectValue>
             </SelectTrigger>
             <SelectContent className="border-arena-border bg-arena-surface">
-              {locales.map((loc) => (
+              {locales.map(loc => (
                 <SelectItem
                   key={loc}
                   value={loc}
@@ -118,9 +118,7 @@ export function SettingsForm({ initialSettings }: SettingsFormProps) {
                     <span className="text-lg">
                       {LANGUAGES[loc as keyof typeof LANGUAGES].icon}
                     </span>
-                    <span>
-                      {tLoc(loc as any)}
-                    </span>
+                    <span>{tLoc(loc as any)}</span>
                   </div>
                 </SelectItem>
               ))}

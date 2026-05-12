@@ -1,6 +1,7 @@
 "use client";
 
 import { Audio } from "@remotion/media";
+import { useTranslations } from "next-intl";
 import {
   AbsoluteFill,
   Easing,
@@ -13,7 +14,6 @@ import {
   PhoneMockup,
   type PhoneScreen,
 } from "@/components/landing/phone-mockup";
-import { useTranslations } from "next-intl";
 
 const MUSIC_SRC = staticFile("assets/audios/into-audio-demo.mp3");
 
@@ -183,7 +183,7 @@ function IntroScene() {
         }}
       >
         {t.rich("tagline", {
-          highlight: (chunks) => (
+          highlight: chunks => (
             <span style={{ color: PRIMARY, fontWeight: 700 }}>{chunks}</span>
           ),
         })}
@@ -586,7 +586,7 @@ export function JogabolaDemo() {
   const t = useTranslations("videoDemo.scenes");
 
   // Build translated scene configs from base definition
-  const scenes: SceneConfig[] = SCENES_DEF.map((def) => ({
+  const scenes: SceneConfig[] = SCENES_DEF.map(def => ({
     id: def.id,
     screen: def.screen,
     eyebrow: t(`${def.key}.eyebrow`),

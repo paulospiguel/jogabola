@@ -37,7 +37,9 @@ export function usePublicTeamPaymentSettings(teamId?: number | string) {
       const { getPublicTeamPaymentSettings } = await import(
         "@/actions/team-payment-settings.actions"
       );
-      const res = await getPublicTeamPaymentSettings({ teamId: Number(teamId) });
+      const res = await getPublicTeamPaymentSettings({
+        teamId: Number(teamId),
+      });
 
       if (!res.success) {
         throw new Error("Failed to fetch public team payment settings");

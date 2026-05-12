@@ -38,7 +38,12 @@ export function ManualMarkPaidSheet({
   async function handleSave() {
     setSaving(true);
     setError("");
-    const res = await markPaymentManually(eventId, athleteId, method, note.trim() || undefined);
+    const res = await markPaymentManually(
+      eventId,
+      athleteId,
+      method,
+      note.trim() || undefined,
+    );
     setSaving(false);
     if (res.success) {
       onSuccess();

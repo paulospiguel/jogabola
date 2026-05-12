@@ -1,6 +1,6 @@
 "use server";
 
-import { and, desc, eq, isNull, lt } from "drizzle-orm";
+import { and, desc, eq, lt } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { db } from "@/db/client";
 import { matchSessions, notifications } from "@/db/schema";
@@ -8,7 +8,8 @@ import { getAuthUser } from "@/lib/action-helpers";
 
 export async function getNotifications() {
   const user = await getAuthUser();
-  if (!user) return { success: false as const, error: { code: "UNAUTHORIZED" } };
+  if (!user)
+    return { success: false as const, error: { code: "UNAUTHORIZED" } };
 
   const data = await db
     .select()
@@ -21,7 +22,8 @@ export async function getNotifications() {
 
 export async function markNotificationAsRead(id: string) {
   const user = await getAuthUser();
-  if (!user) return { success: false as const, error: { code: "UNAUTHORIZED" } };
+  if (!user)
+    return { success: false as const, error: { code: "UNAUTHORIZED" } };
 
   await db
     .update(notifications)
@@ -34,7 +36,8 @@ export async function markNotificationAsRead(id: string) {
 
 export async function markAllAsRead() {
   const user = await getAuthUser();
-  if (!user) return { success: false as const, error: { code: "UNAUTHORIZED" } };
+  if (!user)
+    return { success: false as const, error: { code: "UNAUTHORIZED" } };
 
   await db
     .update(notifications)

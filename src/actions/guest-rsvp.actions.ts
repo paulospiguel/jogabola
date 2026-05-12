@@ -3,7 +3,13 @@
 import { and, eq, gt } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { db } from "@/db/client";
-import { attendance, guestEventOtp, matchSessions } from "@/db/schema";
+import {
+  attendance,
+  guestEventOtp,
+  matchReservations,
+  matchSessions,
+  user,
+} from "@/db/schema";
 import {
   getEmailDeliveryErrorCode,
   sendAttendanceConfirmed,
@@ -13,6 +19,7 @@ import {
   emailBelongsToTeamRoster,
   normalizeRosterEmail,
 } from "@/lib/event-roster-access";
+import { hasPendingFines } from "@/lib/fines";
 
 function generateOTP() {
   return Math.floor(100000 + Math.random() * 900000).toString();
@@ -47,8 +54,30 @@ async function getEventDetails(eventId: number) {
     capacity: event.capacity ?? 14,
     status: event.status,
     rosterOnly: event.rosterOnly,
+    rosterPriorityHours: event.rosterPriorityHours ?? 0,
+    startsAt: event.startsAt,
     teamId: event.teamId,
   };
+}
+
+async function ensureUser(email: string, name: string) {
+  const existing = await db.query.user.findFirst({
+    where: eq(user.email, email),
+  });
+
+  if (existing) return existing;
+
+  const [ghostUser] = await db
+    .insert(user)
+    .values({
+      id: crypto.randomUUID(),
+      email,
+      name,
+      emailVerified: false,
+    })
+    .returning();
+
+  return ghostUser;
 }
 
 export async function requestGuestOTP(
@@ -66,14 +95,45 @@ export async function requestGuestOTP(
     }
 
     const normalizedEmail = normalizeRosterEmail(email);
-    if (
-      event.rosterOnly &&
-      !(await emailBelongsToTeamRoster(event.teamId, normalizedEmail))
-    ) {
+    const isRoster = await emailBelongsToTeamRoster(
+      event.teamId,
+      normalizedEmail,
+    );
+
+    if (event.rosterOnly && !isRoster) {
       return {
         success: false,
         error: "Este evento é reservado ao plantel.",
       };
+    }
+
+    if (event.rosterPriorityHours > 0 && !isRoster) {
+      const startsAt = new Date(event.startsAt);
+      const priorityDeadline = new Date(
+        startsAt.getTime() - event.rosterPriorityHours * 60 * 60 * 1000,
+      );
+
+      if (new Date() < priorityDeadline) {
+        return {
+          success: false,
+          errorCode: "ROSTER_PRIORITY_ACTIVE",
+          error: `Apenas membros do plantel podem confirmar presença até ${event.rosterPriorityHours}h antes do jogo.`,
+        };
+      }
+    }
+
+    const existingUser = await db.query.user.findFirst({
+      where: eq(user.email, normalizedEmail),
+    });
+
+    if (existingUser) {
+      const isBlocked = await hasPendingFines(existingUser.id);
+      if (isBlocked) {
+        return {
+          success: false,
+          error: "EVENT_HAS_FINES",
+        };
+      }
     }
 
     const otp = generateOTP();
@@ -145,14 +205,30 @@ export async function verifyGuestOTP(
     }
 
     const normalizedEmail = normalizeRosterEmail(email);
-    if (
-      event.rosterOnly &&
-      !(await emailBelongsToTeamRoster(event.teamId, normalizedEmail))
-    ) {
+    const isRoster = await emailBelongsToTeamRoster(
+      event.teamId,
+      normalizedEmail,
+    );
+
+    if (event.rosterOnly && !isRoster) {
       return {
         success: false,
         error: "Este evento é reservado ao plantel.",
       };
+    }
+
+    if (event.rosterPriorityHours > 0 && !isRoster) {
+      const startsAt = new Date(event.startsAt);
+      const priorityDeadline = new Date(
+        startsAt.getTime() - event.rosterPriorityHours * 60 * 60 * 1000,
+      );
+
+      if (new Date() < priorityDeadline) {
+        return {
+          success: false,
+          error: "EVENT_ROSTER_PRIORITY",
+        };
+      }
     }
 
     const record = await db.query.guestEventOtp.findFirst({
@@ -168,12 +244,43 @@ export async function verifyGuestOTP(
       return { success: false, error: "Código inválido ou expirado" };
     }
 
-    const [inserted] = await db.insert(attendance).values({
-      matchSessionId: eventId,
-      guestName: name,
-      guestEmail: normalizedEmail,
-      status: "confirmed",
-    }).returning({ id: attendance.id });
+    // Ensure we have a user (Ghost or real)
+    const targetUser = await ensureUser(normalizedEmail, name);
+
+    const [_inserted] = await db
+      .insert(attendance)
+      .values({
+        matchSessionId: eventId,
+        playerId: targetUser.id,
+        guestName: name,
+        guestEmail: normalizedEmail,
+        status: "confirmed",
+      })
+      .onConflictDoUpdate({
+        target: [attendance.matchSessionId, attendance.playerId],
+        set: {
+          guestName: name,
+          guestEmail: normalizedEmail,
+          status: "confirmed",
+          updatedAt: new Date(),
+        },
+      })
+      .returning({ id: attendance.id });
+
+    // 2. Upsert match_reservation (required for payments)
+    const [reservation] = await db
+      .insert(matchReservations)
+      .values({
+        matchSessionId: eventId,
+        playerId: targetUser.id,
+        status: "reserved_unpaid",
+        updatedAt: new Date(),
+      })
+      .onConflictDoUpdate({
+        target: [matchReservations.matchSessionId, matchReservations.playerId],
+        set: { updatedAt: new Date() },
+      })
+      .returning();
 
     await db.delete(guestEventOtp).where(eq(guestEventOtp.id, record.id));
 
@@ -206,7 +313,15 @@ export async function verifyGuestOTP(
       );
     }
 
-    return { success: true, reservationId: inserted.id };
+    return {
+      success: true,
+      reservationId: reservation.id,
+      guestData: {
+        id: targetUser.id,
+        email: normalizedEmail,
+        name: name,
+      },
+    };
   } catch (error) {
     console.error("[guest-rsvp] verifyGuestOTP failed:", error);
     return { success: false, error: "Erro ao verificar PIN. Tenta de novo." };

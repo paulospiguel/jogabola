@@ -15,7 +15,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { confirmUserAttendance } from "@/actions/attendance.actions";
 import { requestAuthSignInOTP } from "@/actions/auth-otp.actions";
 import { requestGuestOTP, verifyGuestOTP } from "@/actions/guest-rsvp.actions";
-import { createPayment, submitPaymentProof } from "@/actions/payments.actions";
+import { createPayment } from "@/actions/payments.actions";
 import { JbBottomSheet } from "@/components/arena/jb-bottom-sheet";
 import { PaymentMethodCard } from "@/components/arena/payment-method-card";
 import {
@@ -30,6 +30,7 @@ import {
   InputOTPSlot,
 } from "@/components/ui/input-otp";
 import { useEvent } from "@/hooks/use-events";
+import { useGuestSession } from "@/hooks/use-guest-session";
 import { usePublicTeamPaymentSettings } from "@/hooks/use-team-payment-settings";
 import { signIn } from "@/lib/auth-client";
 import { cn } from "@/lib/utils";
@@ -42,7 +43,8 @@ type Step =
   | "guest-info"
   | "guest-otp"
   | "payment"
-  | "success";
+  | "success"
+  | "welcome-back";
 
 interface AthleteRsvpSheetProps {
   eventId: number;
@@ -132,15 +134,18 @@ function OtpField({
 
 function SubmitBtn({
   loading,
+  onClick,
   children,
 }: {
   loading: boolean;
+  onClick?: () => void;
   children: React.ReactNode;
 }) {
   return (
     <button
-      type="submit"
+      type={onClick ? "button" : "submit"}
       disabled={loading}
+      onClick={onClick}
       className="flex h-[50px] w-full items-center justify-center gap-2 rounded-[14px] bg-arena-primary text-[14px] font-bold text-arena-bg shadow-[0_0_20px_rgba(124,255,79,0.2)] transition-all hover:bg-arena-primary/90 disabled:opacity-60"
     >
       {loading ? <LoaderIcon size={18} color="currentColor" /> : children}
@@ -162,9 +167,18 @@ function getGuestOtpErrorMessage(
   t: ReturnType<typeof useTranslations>,
   res: { error?: string; errorCode?: string },
   fallback: string,
+  rosterPriorityHours?: number,
 ) {
   if (res.errorCode && EMAIL_ERROR_CODES.has(res.errorCode)) {
     return t(`errors.email.${res.errorCode}`);
+  }
+
+  if (res.errorCode === "ROSTER_PRIORITY_ACTIVE") {
+    return t("errors.rosterPriority", { hours: rosterPriorityHours || 0 });
+  }
+
+  if (res.error === "EVENT_HAS_FINES") {
+    return t("errors.hasFines");
   }
 
   return res.error || fallback;
@@ -174,9 +188,14 @@ function getAttendanceErrorMessage(
   t: ReturnType<typeof useTranslations>,
   error: string | undefined,
   fallback: string,
+  rosterPriorityHours?: number,
 ) {
   if (error === "EVENT_ROSTER_ONLY") return t("errors.rosterOnly");
   if (error === "EVENT_CANCELLED") return t("errors.eventCancelled");
+  if (error === "EVENT_ROSTER_PRIORITY") {
+    return t("errors.rosterPriority", { hours: rosterPriorityHours || 0 });
+  }
+  if (error === "EVENT_HAS_FINES") return t("errors.hasFines");
   return error || fallback;
 }
 
@@ -303,9 +322,9 @@ export function AthleteRsvpSheet({
 }: AthleteRsvpSheetProps) {
   const t = useTranslations("athleteRsvp");
   const router = useRouter();
-  const [step, setStep] = useState<Step>(
-    resumePayment ? "payment" : userId ? "payment" : "choose"
-  );
+  const { guest, saveGuest, isLoaded } = useGuestSession();
+
+  const [step, setStep] = useState<Step>("choose");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
@@ -317,12 +336,27 @@ export function AthleteRsvpSheet({
   const [loginOtp, setLoginOtp] = useState("");
 
   const [reservationId, setReservationId] = useState<number | null>(
-    guestReservationId
+    guestReservationId,
   );
   const autoConfirmKeyRef = useRef<string | null>(null);
 
   const { event } = useEvent(eventId);
   const { settings } = usePublicTeamPaymentSettings(event?.teamId);
+
+  // Initial step logic based on user/guest status
+  useEffect(() => {
+    if (!isLoaded) return;
+
+    if (resumePayment || userId) {
+      setStep("payment");
+    } else if (guest) {
+      setGuestName(guest.name);
+      setGuestEmail(guest.email);
+      setStep("welcome-back");
+    } else {
+      setStep("choose");
+    }
+  }, [resumePayment, userId, guest, isLoaded]);
 
   useEffect(() => {
     const autoConfirmKey = `${eventId}:${userId ?? ""}:${resumePayment}`;
@@ -349,6 +383,7 @@ export function AthleteRsvpSheet({
               t,
               res.error,
               t("errors.confirmAttendance"),
+              event?.rosterPriorityHours,
             ),
           );
         }
@@ -372,8 +407,8 @@ export function AthleteRsvpSheet({
     [event],
   );
 
-  async function handleGuestSendOTP(e: React.FormEvent) {
-    e.preventDefault();
+  async function handleGuestSendOTP(e?: React.FormEvent) {
+    if (e) e.preventDefault();
     if (!guestName.trim() || !guestEmail.trim()) {
       setError(t("fillNameEmail"));
       return;
@@ -389,7 +424,14 @@ export function AthleteRsvpSheet({
     if (res.success) {
       setStep("guest-otp");
     } else {
-      setError(getGuestOtpErrorMessage(t, res, t("errors.sendCode")));
+      setError(
+        getGuestOtpErrorMessage(
+          t,
+          res,
+          t("errors.sendCode"),
+          event?.rosterPriorityHours,
+        ),
+      );
     }
   }
 
@@ -404,6 +446,10 @@ export function AthleteRsvpSheet({
     const res = await verifyGuestOTP(eventId, guestEmail, guestOtp, guestName);
     setLoading(false);
     if (res.success) {
+      // Persist session
+      if (res.guestData) {
+        saveGuest(res.guestData);
+      }
       // Pass the reservationId back to the parent so it can remember it for resume payment
       onSuccess("confirmed", res.reservationId);
       handleNextAfterRsvp(res.reservationId);
@@ -467,6 +513,7 @@ export function AthleteRsvpSheet({
           t,
           confirm.error,
           t("errors.sessionCreatedAttendanceFailed"),
+          event?.rosterPriorityHours,
         ),
       );
     }
@@ -491,13 +538,6 @@ export function AthleteRsvpSheet({
   }
 
   async function handleMbwayProof(paymentId: number) {
-    // Placeholder for real proof upload
-    // For now, we'll just submit a dummy URL to mark as paid_unverified
-    await submitPaymentProof({
-      paymentId,
-      fileUrl: "https://example.com/placeholder-proof.jpg",
-      notes: t("paymentNotes"),
-    });
     router.push(`/event/${eventId}/payment/result/${paymentId}`);
   }
 
@@ -509,6 +549,7 @@ export function AthleteRsvpSheet({
     "guest-otp": t("titles.guestOtp"),
     payment: t("titles.payment"),
     success: t("titles.success"),
+    "welcome-back": t("titles.welcomeBack"),
   };
 
   const defaultPaymentConfig: TeamPaymentConfig = {
@@ -547,6 +588,45 @@ export function AthleteRsvpSheet({
         {error && (
           <div className="mb-4 rounded-[10px] bg-arena-danger/10 p-3 text-[13px] text-arena-danger">
             {error}
+          </div>
+        )}
+
+        {/* STEP: welcome-back */}
+        {step === "welcome-back" && guest && (
+          <div className="flex flex-col gap-4">
+            <div className="flex items-center gap-4 rounded-[16px] border border-arena-primary/20 bg-arena-primary/5 p-4">
+              <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-arena-primary/10 text-arena-primary ring-1 ring-arena-primary/20">
+                <UserIcon size={24} color="currentColor" />
+              </div>
+              <div>
+                <p className="text-[15px] font-bold text-arena-text">
+                  {t("welcomeBackGreeting", { name: guest.name })}
+                </p>
+                <p className="text-[12px] text-arena-text-muted">
+                  {guest.email}
+                </p>
+              </div>
+            </div>
+
+            <p className="text-center text-[13px] text-arena-text-muted px-2">
+              {t("welcomeBackPrompt")}
+            </p>
+
+            <SubmitBtn loading={loading} onClick={() => handleGuestSendOTP()}>
+              {t("confirmWithEmail")} <ArrowRight size={16} />
+            </SubmitBtn>
+
+            <button
+              type="button"
+              onClick={() => {
+                setStep("choose");
+                setGuestName("");
+                setGuestEmail("");
+              }}
+              className="text-center text-[12px] font-medium text-arena-text-muted hover:text-arena-text transition-colors"
+            >
+              {t("notMe")}
+            </button>
           </div>
         )}
 

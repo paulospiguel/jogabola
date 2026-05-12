@@ -1,17 +1,17 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { format } from "date-fns"
+import { format } from "date-fns";
+import { useState } from "react";
 
-import { Button } from "@/components/ui/button"
-import { Calendar } from "@/components/ui/calendar"
-import { Card, CardContent } from "@/components/ui/card"
-import { ScrollArea } from "@/components/ui/scroll-area"
+import { Button } from "@/components/ui/button";
+import { Calendar } from "@/components/ui/calendar";
+import { Card, CardContent } from "@/components/ui/card";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 export function Pattern() {
-  const today = new Date()
-  const [date, setDate] = useState<Date>(today)
-  const [time, setTime] = useState<string | null>(null)
+  const today = new Date();
+  const [date, setDate] = useState<Date>(today);
+  const [time, setTime] = useState<string | null>(null);
 
   // Mock time slots data
   const timeSlots = [
@@ -33,7 +33,7 @@ export function Pattern() {
     { available: true, time: "16:30" },
     { available: true, time: "17:00" },
     { available: true, time: "17:30" },
-  ]
+  ];
 
   return (
     <Card className="p-0">
@@ -42,10 +42,10 @@ export function Pattern() {
           <Calendar
             disabled={[{ before: today }]}
             mode="single"
-            onSelect={(newDate) => {
+            onSelect={newDate => {
               if (newDate) {
-                setDate(newDate)
-                setTime(null)
+                setDate(newDate);
+                setTime(null);
               }
             }}
             selected={date}
@@ -80,5 +80,5 @@ export function Pattern() {
         </div>
       </CardContent>
     </Card>
-  )
+  );
 }

@@ -29,7 +29,10 @@ export default async function AthleteEventPage({ params }: Params) {
       <div className="flex min-h-screen items-center gap-2 flex-col justify-center bg-arena-bg">
         <Logo size="medium" className="" />
         <p className="text-arena-text-muted text-md">{t("eventNotFound")}</p>
-        <Link href="/" className="flex items-center text-arena-primary hover:text-arena-primary/75">
+        <Link
+          href="/"
+          className="flex items-center text-arena-primary hover:text-arena-primary/75"
+        >
           <ArrowLeft className="inline-block mr-1" size={16} />
           {t("backToHome")}
         </Link>

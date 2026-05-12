@@ -265,22 +265,38 @@
     "error": "Error creating event. Please try again.",
     "info": "After creating the event, you can add players and manage the squad call from the event page.",
     "access": {
-      "rosterOnly": "Roster only",
-      "rosterOnlyHint": "Only emails that belong to the current roster can confirm attendance."
+      "rosterOnly": "Roster Only",
+      "rosterOnlyHint": "Only emails that belong to the current roster can confirm attendance.",
+      "rosterPriority": "Roster priority",
+      "rosterPriorityHint": "Only the roster can confirm until {hours}h before.",
+      "rosterPriorityOff": "No priority"
     },
     "invite": {
       "title": "Invite from squad",
       "subtitle": "Select specific athletes or lists to pre-invite.",
+      "lastSquad": "Re-convoke last squad",
       "empty": "There are no athletes in the squad yet.",
       "verified": "Verified athlete",
       "manual": "Manually added",
       "summary": "{count} athlete{count, plural, =1 {} other {s}} pre-invited"
     },
     "labels": {
+      "title": "Event Title",
       "date": "Date & Time",
       "location": "Location",
-      "maxPlayers": "Max Players",
-      "recurrence": "Modality"
+      "maxPlayers": "Nº Players",
+      "recurrence": "Recurrence"
+    },
+    "payment": {
+      "section": "Payment",
+      "price": "Amount (€)",
+      "required": "Required payment",
+      "requiredHint": "Athletes must pay before confirming",
+      "deadlineHours": "Payment deadline",
+      "deadlineHoursUnit": "h before the game",
+      "acceptMbway": "Accept MBWay",
+      "acceptMbwayHint": "Allow payment via MBWay",
+      "mbwayPhone": "MBWay Phone Number"
     },
     "recurrence": {
       "once": "Once",
@@ -399,7 +415,25 @@
       "main": "Main List ({count})",
       "reserves": "Reserves / Pending ({count})"
     },
+    "locationMap": {
+      "notFound": "Location not found",
+      "placeholder": "Location address...",
+      "errorSaving": "Error saving. Please try again.",
+      "shareTitle": "Share location",
+      "copyLink": "Copy link",
+      "copied": "Copied!"
+    },
     "officialMatch": "Official Match",
+    "noticeWall": {
+      "title": "Notice Wall",
+      "empty": "No notices for this game yet.",
+      "placeholder": "Write a notice for the team...",
+      "send": "Post",
+      "delete": "Delete",
+      "urgent": "Urgent",
+      "fieldChange": "Field Change",
+      "chatter": "Poke Pending"
+    },
     "share": {
       "label": "Invite via",
       "copyLink": "Copy link",
@@ -435,6 +469,9 @@
       "upcoming": "Upcoming"
     },
     "title": "Events",
+    "editInfo": "Edit Information",
+    "statusLabel": "Event Status",
+    "errorUpdating": "Error updating event. Please try again.",
     "types": {
       "match": "Match",
       "training": "Training"
@@ -765,13 +802,22 @@
     "join": "Joining",
     "knowMore": "Know more",
     "light": "Light",
+    "loadError": "Error loading",
     "loading": "Loading",
-    "logo": "Then",
+    "logo": "Logo",
     "manage": "Manage",
     "myAccount": "My Account",
     "name": "Name",
     "next": "Next",
+    "nextSlide": "Next slide",
     "notFilled": "Not filled",
+    "previousSlide": "Previous slide",
+    "retry": "Retry",
+    "selectDate": "Select date",
+    "selectDates": "Select dates",
+    "clear": "Clear",
+    "toggleSidebar": "Toggle sidebar",
+    "toggleTheme": "Toggle theme",
     "notifications": "Notifications",
     "password": "Password",
     "performance": "Performance",
@@ -2107,8 +2153,13 @@
       "guestInfo": "Confirm as Guest",
       "guestOtp": "Verify email",
       "payment": "Payment",
-      "success": "Attendance Confirmed!"
+      "success": "Attendance Confirmed!",
+      "welcomeBack": "Welcome back"
     },
+    "welcomeBackGreeting": "Hello, {name}!",
+    "welcomeBackPrompt": "Do you want to confirm your presence for this match?",
+    "confirmWithEmail": "Confirm with my email",
+    "notMe": "Not me / Use another email",
     "choosePrompt": "How do you want to confirm your attendance?",
     "hasAccountOption": "I have a JogaBola account",
     "hasAccountHint": "Attendance and payment history",
@@ -2135,7 +2186,45 @@
     "createFreeAccount": "Create free account",
     "close": "Close",
     "cashInstructions": "Pay the captain at the start of the game.",
-    "paymentNotes": "Payment via MBWay confirmed by athlete",
+    "paymentNotes": "Payment via MBWay confirmed by the athlete",
+    "paymentMethodCard": {
+      "title": "How do you want to pay?",
+      "noMethods": "No payment method configured by the captain.",
+      "copy": "Copy",
+      "copied": "Copied!",
+      "status": {
+        "pending": "Waiting",
+        "paid": "Paid",
+        "rejected": "Rejected"
+      },
+      "actions": {
+        "pay": "Pay {amount}",
+        "sent": "I sent the payment",
+        "willPayCash": "I will pay in cash"
+      },
+      "methods": {
+        "stripe": {
+          "label": "Card",
+          "desc": "Debit or credit — immediate payment",
+          "info": "Pay with card immediately and securely via Stripe.",
+          "confirmMsg": "Payment confirmed — {amount}"
+        },
+        "mbway": {
+          "label": "MBWay",
+          "desc": "Transfer by phone",
+          "sendTo": "Send to",
+          "amount": "Amount",
+          "proofMsg": "Proof received — verifying",
+          "waitingMsg": "Waiting for captain's confirmation"
+        },
+        "cash": {
+          "label": "Cash",
+          "desc": "Pay in person",
+          "amount": "Amount",
+          "paidMsg": "Marked as paid by the captain"
+        }
+      }
+    },
     "terms": {
       "prefix": "By continuing, you accept the",
       "terms": "Terms",
@@ -2146,8 +2235,10 @@
       "confirmAttendance": "Error confirming attendance",
       "sendCode": "Error sending code.",
       "sessionCreatedAttendanceFailed": "Session created but attendance confirmation failed. Try again.",
-      "rosterOnly": "This event is reserved for the roster.",
+      "rosterOnly": "This event is reserved for the squad.",
+      "rosterPriority": "Only roster members can confirm attendance until {hours}h before the game.",
       "eventCancelled": "This event is cancelled.",
+      "hasFines": "You have pending fines. Settle your debts to confirm attendance.",
       "processPayment": "Error processing payment.",
       "resend": "Error resending.",
       "resendPin": "Error resending PIN.",

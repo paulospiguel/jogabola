@@ -12,9 +12,9 @@ export function useAthleteProfile(playerId: string | string[]) {
     queryKey: ["athlete-profile", id, activeTeamId],
     queryFn: async () => {
       if (!id || !activeTeamId) return null;
-      const response = await getAthleteProfile({ 
-        playerId: id, 
-        teamId: activeTeamId 
+      const response = await getAthleteProfile({
+        playerId: id,
+        teamId: activeTeamId,
       });
       return response.success ? response.data : null;
     },

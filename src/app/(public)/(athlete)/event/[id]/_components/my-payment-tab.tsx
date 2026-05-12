@@ -1,6 +1,6 @@
 "use client";
 
-import { Check, Clock, X, Info } from "lucide-react";
+import { Check, Clock, Info, X } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useMyPaymentForEvent } from "@/hooks/use-my-payment-for-event";
 import { cn } from "@/lib/utils";
@@ -102,7 +102,9 @@ export function MyPaymentTab({ eventId }: MyPaymentTabProps) {
   if (error) {
     return (
       <div className="flex h-32 items-center justify-center text-arena-danger text-sm px-4 py-4">
-        {error instanceof Error ? error.message : "Erro ao carregar o pagamento"}
+        {error instanceof Error
+          ? error.message
+          : "Erro ao carregar o pagamento"}
       </div>
     );
   }
@@ -117,7 +119,8 @@ export function MyPaymentTab({ eventId }: MyPaymentTabProps) {
           Ainda não pagaste
         </p>
         <p className="text-[13px] text-arena-text-muted mt-1">
-          Confirma a presença e escolhe o método de pagamento para garantir a tua vaga.
+          Confirma a presença e escolhe o método de pagamento para garantir a
+          tua vaga.
         </p>
       </div>
     );

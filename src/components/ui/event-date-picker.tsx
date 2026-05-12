@@ -1,7 +1,7 @@
 "use client";
 
 import { format, type Locale, startOfDay } from "date-fns";
-import { enUS, es, fr, ptBR } from "date-fns/locale";
+import { enUS, es, fr, pt } from "date-fns/locale";
 import { CalendarIcon } from "lucide-react";
 import { useLocale } from "next-intl";
 import * as React from "react";
@@ -16,21 +16,45 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { cn } from "@/lib/utils";
 
 const LOCALE_MAP: Record<string, Locale> = {
-  pt: ptBR,
+  pt: pt,
   en: enUS,
   es,
   fr,
 };
 
 const TIME_SLOTS = [
-  "07:00", "07:30", "08:00", "08:30",
-  "09:00", "09:30", "10:00", "10:30",
-  "11:00", "11:30", "12:00", "12:30",
-  "13:00", "13:30", "14:00", "14:30",
-  "15:00", "15:30", "16:00", "16:30",
-  "17:00", "17:30", "18:00", "18:30",
-  "19:00", "19:30", "20:00", "20:30",
-  "21:00", "21:30", "22:00", "22:30",
+  "07:00",
+  "07:30",
+  "08:00",
+  "08:30",
+  "09:00",
+  "09:30",
+  "10:00",
+  "10:30",
+  "11:00",
+  "11:30",
+  "12:00",
+  "12:30",
+  "13:00",
+  "13:30",
+  "14:00",
+  "14:30",
+  "15:00",
+  "15:30",
+  "16:00",
+  "16:30",
+  "17:00",
+  "17:30",
+  "18:00",
+  "18:30",
+  "19:00",
+  "19:30",
+  "20:00",
+  "20:30",
+  "21:00",
+  "21:30",
+  "22:00",
+  "22:30",
 ];
 
 type EventDatePickerProps = {
@@ -49,7 +73,7 @@ export function EventDatePicker({
   id,
 }: EventDatePickerProps) {
   const locale = useLocale();
-  const dateFnsLocale = LOCALE_MAP[locale] ?? ptBR;
+  const dateFnsLocale = LOCALE_MAP[locale] ?? pt;
   const [open, setOpen] = React.useState(false);
 
   const selectedTimeStr = value
@@ -61,7 +85,9 @@ export function EventDatePicker({
       onChange?.(null);
       return;
     }
-    const [h, m] = selectedTimeStr ? selectedTimeStr.split(":").map(Number) : [0, 0];
+    const [h, m] = selectedTimeStr
+      ? selectedTimeStr.split(":").map(Number)
+      : [0, 0];
     const merged = new Date(day);
     merged.setHours(h, m, 0, 0);
     onChange?.(merged);
@@ -111,7 +137,8 @@ export function EventDatePicker({
               className="bg-transparent"
               classNames={{
                 root: "text-arena-text",
-                today: "border border-arena-primary/40 text-arena-primary rounded-md",
+                today:
+                  "border border-arena-primary/40 text-arena-primary rounded-md",
                 selected:
                   "[&_button]:!bg-arena-primary [&_button]:!text-arena-bg [&_button]:font-semibold",
                 disabled: "opacity-30 cursor-not-allowed",
@@ -124,7 +151,9 @@ export function EventDatePicker({
                   <div className="space-y-2.5">
                     <div className="flex h-5 shrink-0 items-center px-4">
                       <p className="text-[11px] font-semibold text-arena-text-muted uppercase tracking-wide">
-                        {value ? format(value, "EEE, d", { locale: dateFnsLocale }) : "Hora"}
+                        {value
+                          ? format(value, "EEE, d", { locale: dateFnsLocale })
+                          : "Hora"}
                       </p>
                     </div>
                     <div className="grid gap-1 px-3">
@@ -133,7 +162,9 @@ export function EventDatePicker({
                           key={slot}
                           type="button"
                           size="sm"
-                          variant={selectedTimeStr === slot ? "default" : "outline"}
+                          variant={
+                            selectedTimeStr === slot ? "default" : "outline"
+                          }
                           onClick={() => handleTimeSelect(slot)}
                           className={cn(
                             "w-full h-8 text-[12px] font-semibold rounded-lg border transition-colors",

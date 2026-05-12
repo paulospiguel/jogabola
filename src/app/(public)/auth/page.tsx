@@ -271,7 +271,9 @@ export default function LoginPage() {
                       ) : (
                         <div className="flex items-center gap-2">
                           <GoogleIcon className="h-6 w-6" />
-                          <p className="text-sm font-bold tracking-wider uppercase">{t("googleLogin")}</p>
+                          <p className="text-sm font-bold tracking-wider uppercase">
+                            {t("googleLogin")}
+                          </p>
                         </div>
                       )}
                       <div className="absolute inset-0 rounded-2xl bg-arena-primary/5 opacity-0 transition-opacity group-hover:opacity-100" />

@@ -1,6 +1,6 @@
 "use server";
 
-import { and, eq, gte, lt } from "drizzle-orm";
+import { and, desc, eq, gte, lt } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { db } from "@/db/client";
 import { queryEventById, queryEvents } from "@/db/queries/events";
@@ -63,6 +63,7 @@ export async function createEvent(input: {
   paymentRequired?: boolean;
   paymentDeadlineHours?: number | null;
   rosterOnly?: boolean;
+  rosterPriorityHours?: number;
   mbwayEnabled?: boolean;
   mbwayPhone?: string;
   invitedPlayers?: {
@@ -124,11 +125,18 @@ export async function createEvent(input: {
       paymentRequired: input.paymentRequired ?? false,
       paymentDeadlineHours: input.paymentDeadlineHours ?? null,
       rosterOnly: input.rosterOnly ?? false,
+      rosterPriorityHours: input.rosterPriorityHours ?? 0,
     })
     .returning();
 
-  if (input.priceCents && input.priceCents > 0 && input.mbwayEnabled !== undefined) {
-    const { upsertTeamPaymentSettings, getTeamPaymentSettings } = await import("./team-payment-settings.actions");
+  if (
+    input.priceCents &&
+    input.priceCents > 0 &&
+    input.mbwayEnabled !== undefined
+  ) {
+    const { upsertTeamPaymentSettings, getTeamPaymentSettings } = await import(
+      "./team-payment-settings.actions"
+    );
     const { getAuthUser } = await import("@/lib/action-helpers");
     const authUser = await getAuthUser();
     let existingSettings = null;
@@ -236,13 +244,21 @@ export async function updateEvent(
     .where(eq(matchSessions.id, eventId))
     .returning();
 
-  if (input.priceCents !== undefined && input.priceCents > 0 && input.mbwayEnabled !== undefined) {
-    const { upsertTeamPaymentSettings, getTeamPaymentSettings } = await import("./team-payment-settings.actions");
+  if (
+    input.priceCents !== undefined &&
+    input.priceCents > 0 &&
+    input.mbwayEnabled !== undefined
+  ) {
+    const { upsertTeamPaymentSettings, getTeamPaymentSettings } = await import(
+      "./team-payment-settings.actions"
+    );
     const { getAuthUser } = await import("@/lib/action-helpers");
     const authUser = await getAuthUser();
     let existingSettings = null;
     if (authUser) {
-      const res = await getTeamPaymentSettings({ teamId: existingEvent.teamId });
+      const res = await getTeamPaymentSettings({
+        teamId: existingEvent.teamId,
+      });
       if (res.success) existingSettings = res.data;
     }
     await upsertTeamPaymentSettings({
@@ -352,6 +368,55 @@ export async function getEvents(options?: {
   return { success: true as const, data: events.map(toEventView) };
 }
 
+export async function getLastEventSquad(teamId: number) {
+  const authUser = await getAuthUser();
+  if (!authUser) {
+    return { success: false as const, error: { code: "UNAUTHORIZED" } };
+  }
+
+  const canAccess = await userCanAccessTeam(authUser.id, teamId);
+  if (!canAccess) {
+    return { success: false as const, error: { code: "TEAM_NOT_FOUND" } };
+  }
+
+  const lastEvent = await db.query.matchSessions.findFirst({
+    where: eq(matchSessions.teamId, teamId),
+    orderBy: desc(matchSessions.startsAt),
+  });
+
+  if (!lastEvent) {
+    return { success: true as const, data: [] };
+  }
+
+  const participants = await db
+    .select({
+      id: user.id,
+      name: user.name,
+      email: user.email,
+      isVerified: user.emailVerified,
+      guestName: attendance.guestName,
+      guestEmail: attendance.guestEmail,
+    })
+    .from(attendance)
+    .leftJoin(user, eq(attendance.playerId, user.id))
+    .where(
+      and(
+        eq(attendance.matchSessionId, lastEvent.id),
+        eq(attendance.status, "confirmed"),
+      ),
+    );
+
+  return {
+    success: true as const,
+    data: participants.map(p => ({
+      id: p.id ?? "",
+      name: p.guestName || p.name || "",
+      email: p.guestEmail || p.email || "",
+      isVerified: !!p.id && p.isVerified,
+    })),
+  };
+}
+
 function toEventView(event: typeof matchSessions.$inferSelect) {
   return {
     id: event.id,
@@ -378,6 +443,7 @@ function toEventView(event: typeof matchSessions.$inferSelect) {
     paymentRequired: event.paymentRequired,
     paymentDeadlineHours: event.paymentDeadlineHours ?? null,
     rosterOnly: event.rosterOnly ?? false,
+    rosterPriorityHours: event.rosterPriorityHours ?? 0,
     organizerId: "",
     organizer: null,
     language: null,

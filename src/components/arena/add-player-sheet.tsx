@@ -18,12 +18,7 @@ import {
 import { JbAvatar } from "./jb-avatar";
 import { JbBottomSheet } from "./jb-bottom-sheet";
 
-const POSITIONS = [
-  "GK",
-  "CB",
-  "MID",
-  "FW",
-];
+const POSITIONS = ["GK", "CB", "MID", "FW"];
 
 interface AddPlayerSheetProps {
   onClose: () => void;
@@ -44,7 +39,11 @@ const inputClass =
   "h-11 rounded-xl border border-arena-border bg-arena-surface text-sm text-arena-text placeholder:text-arena-text-muted/70 focus-visible:ring-arena-primary/40 focus-visible:border-arena-primary/50";
 const labelClass = "mb-1 text-xs font-semibold text-arena-text-sec";
 
-export function AddPlayerSheet({ onClose, managerId, teamId }: AddPlayerSheetProps) {
+export function AddPlayerSheet({
+  onClose,
+  managerId,
+  teamId,
+}: AddPlayerSheetProps) {
   const t = useTranslations("arenaAddPlayer");
   const commonTranslations = useTranslations("common");
   const [form, setForm] = useState<FormState>({

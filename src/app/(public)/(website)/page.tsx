@@ -10,11 +10,11 @@ import {
   Wallet,
   Zap,
 } from "lucide-react";
-import { DemoModal } from "@/components/demo/demo-modal";
-import { useTranslations } from "next-intl";
 import Link from "next/link";
-import { useState, type ComponentType } from "react";
 import { useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
+import { type ComponentType, useState } from "react";
+import { DemoModal } from "@/components/demo/demo-modal";
 import {
   PhoneMockup,
   type PhoneScreen,
@@ -575,7 +575,7 @@ const FinalCta = () => {
           <input
             type="email"
             value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            onChange={e => setEmail(e.target.value)}
             aria-label={t("emailLabel")}
             placeholder={t("emailPlaceholder")}
             className="min-h-13 flex-1 bg-transparent px-4 text-arena-text placeholder:text-arena-text-muted focus-visible:outline-none"

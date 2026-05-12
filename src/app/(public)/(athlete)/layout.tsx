@@ -5,8 +5,10 @@ export default function AthleteLayout({
 }: {
   children: React.ReactNode;
 }) {
-  return <div className="min-h-screen bg-arena-bg">
-    <AthleteHeader />
-    {children}
-  </div>;
+  return (
+    <div className="min-h-screen bg-arena-bg">
+      <AthleteHeader />
+      {children}
+    </div>
+  );
 }

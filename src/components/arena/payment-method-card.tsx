@@ -11,13 +11,14 @@ import {
   Loader2,
   Smartphone,
 } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
 import type { PaymentMethod, TeamPaymentConfig } from "@/types/payments";
 
 // ── Method metadata ───────────────────────────────────────────────────────────
 
-const METHOD_META: Record<
+function useMethodMeta(): Record<
   PaymentMethod,
   {
     label: string;
@@ -25,26 +26,29 @@ const METHOD_META: Record<
     icon: React.ElementType;
     accent: string;
   }
-> = {
-  stripe: {
-    label: "Cartão",
-    description: "Débito ou crédito — pagamento imediato",
-    icon: CreditCard,
-    accent: "#6366f1",
-  },
-  mbway: {
-    label: "MBWay",
-    description: "Transferência pelo telemóvel",
-    icon: Smartphone,
-    accent: "#ef4444",
-  },
-  cash: {
-    label: "Dinheiro",
-    description: "Paga presencialmente",
-    icon: Banknote,
-    accent: "#22c55e",
-  },
-};
+> {
+  const t = useTranslations("athleteRsvp.paymentMethodCard");
+  return {
+    stripe: {
+      label: t("methods.stripe.label"),
+      description: t("methods.stripe.desc"),
+      icon: CreditCard,
+      accent: "#6366f1",
+    },
+    mbway: {
+      label: t("methods.mbway.label"),
+      description: t("methods.mbway.desc"),
+      icon: Smartphone,
+      accent: "#ef4444",
+    },
+    cash: {
+      label: t("methods.cash.label"),
+      description: t("methods.cash.desc"),
+      icon: Banknote,
+      accent: "#22c55e",
+    },
+  };
+}
 
 export type PaymentMethodStatus = "idle" | "pending" | "paid" | "rejected";
 
@@ -57,18 +61,19 @@ interface MethodState {
 // ── Sub-components ────────────────────────────────────────────────────────────
 
 function StatusPill({ status }: { status: PaymentMethodStatus }) {
+  const t = useTranslations("athleteRsvp.paymentMethodCard");
   if (status === "idle") return null;
   const map = {
     pending: {
-      label: "A aguardar",
+      label: t("status.pending"),
       cls: "text-arena-info bg-arena-info/10 border-arena-info/30",
     },
     paid: {
-      label: "Pago",
+      label: t("status.paid"),
       cls: "text-arena-success bg-arena-success/10 border-arena-success/30",
     },
     rejected: {
-      label: "Recusado",
+      label: t("status.rejected"),
       cls: "text-arena-danger bg-arena-danger/10 border-arena-danger/30",
     },
   } as const;
@@ -89,6 +94,7 @@ function StatusPill({ status }: { status: PaymentMethodStatus }) {
 }
 
 function CopyButton({ value }: { value: string }) {
+  const t = useTranslations("athleteRsvp.paymentMethodCard");
   const [copied, setCopied] = useState(false);
   return (
     <button
@@ -99,14 +105,14 @@ function CopyButton({ value }: { value: string }) {
         setTimeout(() => setCopied(false), 2000);
       }}
       className="flex h-8 items-center gap-1.5 rounded-[8px] border border-arena-border bg-arena-surface-el px-3 text-[11px] font-semibold text-arena-text-sec transition-colors hover:border-arena-primary/30 hover:text-arena-primary"
-      aria-label="Copiar"
+      aria-label={t("copy")}
     >
       {copied ? (
         <Check size={12} className="text-arena-success" strokeWidth={2.5} />
       ) : (
         <Copy size={12} />
       )}
-      {copied ? "Copiado!" : "Copiar"}
+      {copied ? t("copied") : t("copy")}
     </button>
   );
 }
@@ -124,19 +130,20 @@ function StripeMethodCard({
   currency: string;
   onPay: () => void;
 }) {
+  const t = useTranslations("athleteRsvp.paymentMethodCard");
   const amount = `${(amountCents / 100).toFixed(2).replace(".", ",")} ${currency}`;
   const isPaid = status === "paid";
 
   return (
     <div className="flex flex-col gap-3">
       <p className="text-[12px] text-arena-text-muted">
-        Paga com cartão de forma imediata e segura via Stripe.
+        {t("methods.stripe.info")}
       </p>
       {isPaid ? (
         <div className="flex items-center gap-2 rounded-[10px] border border-arena-success/30 bg-arena-success/10 px-3 py-2.5">
           <Check size={14} className="text-arena-success" strokeWidth={2.5} />
           <span className="text-[12px] font-semibold text-arena-success">
-            Pagamento confirmado — {amount}
+            {t("methods.stripe.confirmMsg", { amount })}
           </span>
         </div>
       ) : (
@@ -151,7 +158,7 @@ function StripeMethodCard({
           ) : (
             <>
               <CreditCard size={15} />
-              Pagar {amount}
+              {t("actions.pay", { amount })}
               <ExternalLink size={13} className="opacity-70" />
             </>
           )}
@@ -174,6 +181,7 @@ function MbwayMethodCard({
   currency: string;
   onProofSubmit: () => void;
 }) {
+  const t = useTranslations("athleteRsvp.paymentMethodCard");
   const amount = `${(amountCents / 100).toFixed(2).replace(".", ",")} ${currency}`;
 
   return (
@@ -181,7 +189,7 @@ function MbwayMethodCard({
       {config.phone && (
         <div className="rounded-[10px] border border-arena-border bg-arena-bg-sec/60 p-3">
           <p className="mb-1.5 text-[10px] font-bold uppercase tracking-wider text-arena-text-muted">
-            Envia para
+            {t("methods.mbway.sendTo")}
           </p>
           <div className="flex items-center justify-between gap-2">
             <div>
@@ -197,7 +205,9 @@ function MbwayMethodCard({
             <CopyButton value={config.phone} />
           </div>
           <div className="mt-2 flex items-center justify-between border-t border-arena-border pt-2">
-            <span className="text-[11px] text-arena-text-muted">Valor</span>
+            <span className="text-[11px] text-arena-text-muted">
+              {t("methods.mbway.amount")}
+            </span>
             <span className="text-[13px] font-bold text-arena-text">
               {amount}
             </span>
@@ -209,7 +219,7 @@ function MbwayMethodCard({
         <div className="flex items-center gap-2 rounded-[10px] border border-arena-success/30 bg-arena-success/10 px-3 py-2.5">
           <Check size={14} className="text-arena-success" strokeWidth={2.5} />
           <span className="text-[12px] font-semibold text-arena-success">
-            Comprovativo recebido — a verificar
+            {t("methods.mbway.proofMsg")}
           </span>
         </div>
       ) : (
@@ -224,7 +234,7 @@ function MbwayMethodCard({
           ) : (
             <>
               <Smartphone size={15} />
-              Enviei o pagamento
+              {t("actions.sent")}
             </>
           )}
         </button>
@@ -232,7 +242,7 @@ function MbwayMethodCard({
 
       {status === "pending" && (
         <p className="text-center text-[11px] text-arena-text-muted">
-          A aguardar confirmação do capitão
+          {t("methods.mbway.waitingMsg")}
         </p>
       )}
     </div>
@@ -252,16 +262,18 @@ function CashMethodCard({
   currency: string;
   onConfirmIntent: () => void;
 }) {
+  const t = useTranslations("athleteRsvp.paymentMethodCard");
   const amount = `${(amountCents / 100).toFixed(2).replace(".", ",")} ${currency}`;
 
   return (
     <div className="flex flex-col gap-3">
       <div className="rounded-[10px] border border-arena-border bg-arena-bg-sec/60 px-3 py-3">
         <p className="text-[12px] text-arena-text-sec">
-          {config.instructions ?? "Paga ao capitão no início do jogo."}
+          {config.instructions ?? t("methods.cash.defaultInstructions")}
         </p>
         <p className="mt-2 text-[11px] text-arena-text-muted">
-          Valor: <strong className="text-arena-text">{amount}</strong>
+          {t("methods.cash.amount")}:{" "}
+          <strong className="text-arena-text">{amount}</strong>
         </p>
       </div>
 
@@ -269,14 +281,14 @@ function CashMethodCard({
         <div className="flex items-center gap-2 rounded-[10px] border border-arena-success/30 bg-arena-success/10 px-3 py-2.5">
           <Check size={14} className="text-arena-success" strokeWidth={2.5} />
           <span className="text-[12px] font-semibold text-arena-success">
-            Marcado como pago pelo capitão
+            {t("methods.cash.paidMsg")}
           </span>
         </div>
       ) : status === "pending" ? (
         <div className="flex items-center gap-2 rounded-[10px] border border-arena-info/30 bg-arena-info/10 px-3 py-2.5">
           <Loader2 size={14} className="animate-spin text-arena-info" />
           <span className="text-[12px] font-semibold text-arena-info">
-            A aguardar confirmação do capitão
+            {t("methods.mbway.waitingMsg")}
           </span>
         </div>
       ) : (
@@ -286,7 +298,7 @@ function CashMethodCard({
           className="flex h-[46px] w-full items-center justify-center gap-2 rounded-[12px] border border-arena-success/40 bg-arena-success/10 text-[13px] font-bold text-arena-success transition-all hover:bg-arena-success/15"
         >
           <Banknote size={15} />
-          Vou pagar em dinheiro
+          {t("actions.willPayCash")}
         </button>
       )}
     </div>
@@ -314,6 +326,9 @@ export function PaymentMethodCard({
   onMbwayProof,
   onCashIntent,
 }: PaymentMethodCardProps) {
+  const t = useTranslations("athleteRsvp.paymentMethodCard");
+  const methodMeta = useMethodMeta();
+
   const enabledMethods: PaymentMethod[] = (
     ["stripe", "mbway", "cash"] as PaymentMethod[]
   ).filter(m => config[m].enabled);
@@ -331,7 +346,7 @@ export function PaymentMethodCard({
   if (enabledMethods.length === 0) {
     return (
       <div className="rounded-[14px] border border-arena-border bg-arena-surface p-4 text-center text-[13px] text-arena-text-muted">
-        Nenhum método de pagamento configurado pelo capitão.
+        {t("noMethods")}
       </div>
     );
   }
@@ -340,12 +355,12 @@ export function PaymentMethodCard({
     <div className="flex flex-col gap-0 overflow-hidden rounded-[16px] border border-arena-border bg-arena-surface">
       <div className="border-b border-arena-border px-4 py-3">
         <p className="text-[10px] font-bold uppercase tracking-widest text-arena-text-muted">
-          Como queres pagar?
+          {t("title")}
         </p>
       </div>
 
       {enabledMethods.map((method, idx) => {
-        const meta = METHOD_META[method];
+        const meta = methodMeta[method];
         const Icon = meta.icon;
         const isOpen = expanded === method;
         const s = status[method];

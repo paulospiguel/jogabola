@@ -4,10 +4,10 @@ import {
   APP_URL,
   CardBody,
   CardFooter,
+  colors,
   EmailLayout,
   OtpBox,
   SectionTitle,
-  colors,
 } from "./base/email-layout";
 
 interface AuthOtpEmailProps {

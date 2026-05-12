@@ -39,7 +39,9 @@ export const players = pgTable("players", {
   invitedByManagerId: text("invited_by_manager_id").references(() => user.id, {
     onDelete: "set null",
   }),
-  teamId: integer("team_id").references(() => teams.id, { onDelete: "cascade" }),
+  teamId: integer("team_id").references(() => teams.id, {
+    onDelete: "cascade",
+  }),
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at").defaultNow(),
 });

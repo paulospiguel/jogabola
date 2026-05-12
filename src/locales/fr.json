@@ -265,22 +265,38 @@
     "error": "Erreur lors de la création de l'événement. Veuillez réessayer.",
     "info": "Après avoir créé l'événement, vous pouvez ajouter des joueurs et gérer la convocation à partir de la page de l'événement.",
     "access": {
-      "rosterOnly": "Effectif uniquement",
-      "rosterOnlyHint": "Seuls les emails appartenant à l'effectif actuel peuvent confirmer leur présence."
+      "rosterOnly": "Effectif Uniquement",
+      "rosterOnlyHint": "Seuls les emails appartenant à l'effectif actuel peuvent confirmer leur présence.",
+      "rosterPriority": "Priorité à l'effectif",
+      "rosterPriorityHint": "Seul l'effectif peut confirmer jusqu'à {hours}h avant.",
+      "rosterPriorityOff": "Pas de priorité"
     },
     "invite": {
       "title": "Inviter depuis l'effectif",
       "subtitle": "Sélectionnez des athlètes ou des listes à pré-inviter.",
+      "lastSquad": "Re-convoquer le dernier effectif",
       "empty": "Aucun athlète dans l'effectif pour le moment.",
       "verified": "Athlète vérifié",
       "manual": "Ajouté manuellement",
       "summary": "{count} athlète{count, plural, =1 {} other {s}} pré-invité{count, plural, =1 {} other {s}}"
     },
     "labels": {
+      "title": "Titre de l'événement",
       "date": "Date et Heure",
       "location": "Lieu",
-      "maxPlayers": "Max. joueurs",
-      "recurrence": "Modalité"
+      "maxPlayers": "Nº Joueurs",
+      "recurrence": "Périodicité"
+    },
+    "payment": {
+      "section": "Paiement",
+      "price": "Montant (€)",
+      "required": "Paiement obligatoire",
+      "requiredHint": "Les athlètes doivent payer avant de confirmer",
+      "deadlineHours": "Délai de paiement",
+      "deadlineHoursUnit": "h avant le match",
+      "acceptMbway": "Accepter MBWay",
+      "acceptMbwayHint": "Autoriser le paiement par MBWay",
+      "mbwayPhone": "Numéro de téléphone MBWay"
     },
     "recurrence": {
       "once": "Une fois",
@@ -399,7 +415,25 @@
       "main": "Liste principale ({count})",
       "reserves": "Réserves / En attente ({count})"
     },
+    "locationMap": {
+      "notFound": "Localisation non trouvée",
+      "placeholder": "Adresse du lieu...",
+      "errorSaving": "Erreur lors de l'enregistrement. Veuillez réessayer.",
+      "shareTitle": "Partager la localisation",
+      "copyLink": "Copier le lien",
+      "copied": "Copié !"
+    },
     "officialMatch": "Match Officiel",
+    "noticeWall": {
+      "title": "Mur d'Avis",
+      "empty": "Pas encore d'avis pour ce match.",
+      "placeholder": "Écrivez um avis para l'équipe...",
+      "send": "Publier",
+      "delete": "Supprimer",
+      "urgent": "Urgent",
+      "fieldChange": "Changement de Terrain",
+      "chatter": "Relancer les Pendus"
+    },
     "share": {
       "label": "Convoquer via",
       "copyLink": "Copier le lien",
@@ -435,6 +469,9 @@
       "upcoming": "À venir"
     },
     "title": "Événements",
+    "editInfo": "Modifier les informations",
+    "statusLabel": "Statut de l'événement",
+    "errorUpdating": "Erreur lors de la mise à jour de l'événement. Veuillez réessayer.",
     "types": {
       "match": "Match",
       "training": "Entraînement"
@@ -770,13 +807,22 @@
     "join": "Adhérer",
     "knowMore": "En savoir plus",
     "light": "Clair",
+    "loadError": "Erreur de chargement",
     "loading": "Chargement",
     "logo": "Logo",
-    "manage": "Gérez",
-    "myAccount": "Mon Compte",
+    "manage": "Gérer",
+    "myAccount": "Mon compte",
     "name": "Nom",
-    "next": "Suivant(e)",
-    "notFilled": "Non rempli",
+    "next": "Suivant",
+    "nextSlide": "Diapositive suivante",
+    "notFilled": "Pas rempli",
+    "previousSlide": "Diapositive précédente",
+    "retry": "Réessayer",
+    "selectDate": "Choisir une date",
+    "selectDates": "Choisir les dates",
+    "clear": "Effacer",
+    "toggleSidebar": "Basculer la barre latérale",
+    "toggleTheme": "Changer le thème",
     "notifications": "Notifications",
     "password": "Mot de passe",
     "performance": "Rendement",
@@ -2112,8 +2158,13 @@
       "guestInfo": "Confirmer en tant qu'invité",
       "guestOtp": "Vérifier l'email",
       "payment": "Paiement",
-      "success": "Présence Confirmée !"
+      "success": "Présence Confirmée !",
+      "welcomeBack": "Bon retour"
     },
+    "welcomeBackGreeting": "Bonjour, {name} !",
+    "welcomeBackPrompt": "Voulez-vous confirmer votre présence pour ce match ?",
+    "confirmWithEmail": "Confirmer avec mon email",
+    "notMe": "Ce n'est pas moi / Utiliser un autre email",
     "choosePrompt": "Comment voulez-vous confirmer votre présence ?",
     "hasAccountOption": "J'ai un compte JogaBola",
     "hasAccountHint": "Historique des présences et paiements",
@@ -2141,6 +2192,44 @@
     "close": "Fermer",
     "cashInstructions": "Payez le capitaine au début du match.",
     "paymentNotes": "Paiement via MBWay confirmé par l'athlète",
+    "paymentMethodCard": {
+      "title": "Comment voulez-vous payer ?",
+      "noMethods": "Aucun mode de paiement configuré par le capitaine.",
+      "copy": "Copier",
+      "copied": "Copié !",
+      "status": {
+        "pending": "En attente",
+        "paid": "Payé",
+        "rejected": "Rejeté"
+      },
+      "actions": {
+        "pay": "Payer {amount}",
+        "sent": "J'ai envoyé le paiement",
+        "willPayCash": "Je vais payer en espèces"
+      },
+      "methods": {
+        "stripe": {
+          "label": "Carte",
+          "desc": "Débit ou crédit — paiement immédiat",
+          "info": "Payez par carte immédiatement et en toute sécurité via Stripe.",
+          "confirmMsg": "Paiement confirmé — {amount}"
+        },
+        "mbway": {
+          "label": "MBWay",
+          "desc": "Transfert par téléphone",
+          "sendTo": "Envoyer à",
+          "amount": "Montant",
+          "proofMsg": "Preuve reçue — vérification en cours",
+          "waitingMsg": "En attente de confirmation du capitaine"
+        },
+        "cash": {
+          "label": "Espèces",
+          "desc": "Payer en personne",
+          "amount": "Montant",
+          "paidMsg": "Marqué comme payé par le capitaine"
+        }
+      }
+    },
     "terms": {
       "prefix": "En continuant, vous acceptez les",
       "terms": "Conditions",
@@ -2152,7 +2241,9 @@
       "sendCode": "Erreur lors de l'envoi du code.",
       "sessionCreatedAttendanceFailed": "Session créée mais erreur lors de la confirmation de présence. Réessayez.",
       "rosterOnly": "Cet événement est réservé à l'effectif.",
+      "rosterPriority": "Seuls les membres de l'effectif peuvent confirmer leur présence jusqu'à {hours}h avant le match.",
       "eventCancelled": "Cet événement est annulé.",
+      "hasFines": "Vous avez des amendes en attente. Réglez vos dettes pour confirmer votre présence.",
       "processPayment": "Erreur lors du traitement du paiement.",
       "resend": "Erreur lors du renvoi.",
       "resendPin": "Erreur lors du renvoi du PIN.",

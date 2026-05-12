@@ -92,9 +92,7 @@ export function NoTeamModal({ open, onClose }: NoTeamModalProps) {
         )}
       </AnimatePresence>
 
-      {showCreateSheet && (
-        <CreateTeamSheet onClose={handleCloseAll} />
-      )}
+      {showCreateSheet && <CreateTeamSheet onClose={handleCloseAll} />}
     </>
   );
 }

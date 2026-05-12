@@ -1,8 +1,9 @@
 "use client";
 
 import { format } from "date-fns";
-import { ptBR } from "date-fns/locale";
+import { pt, enUS, es, fr } from "date-fns/locale";
 import { CalendarIcon } from "lucide-react";
+import { useLocale, useTranslations } from "next-intl";
 import * as React from "react";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
@@ -21,13 +22,24 @@ type DatePickerProps = {
   id?: string;
 };
 
+const LOCALE_MAP = {
+  pt: pt,
+  en: enUS,
+  es: es,
+  fr: fr,
+};
+
 export function DatePicker({
-  placeholder = "Select date",
+  placeholder,
   value,
   onChange,
   className,
   id,
 }: DatePickerProps) {
+  const t = useTranslations("common");
+  const locale = useLocale() as keyof typeof LOCALE_MAP;
+  const dfLocale = LOCALE_MAP[locale] || pt;
+  const currentPlaceholder = placeholder || t("selectDate");
   const [open, setOpen] = React.useState(false);
 
   const handleDateChange = (date: Date | null) => {
@@ -55,16 +67,16 @@ export function DatePicker({
           >
             {(() => {
               if (!value) {
-                return <span>{placeholder}</span>;
+                return <span>{currentPlaceholder}</span>;
               }
               const today = new Date();
               today.setHours(0, 0, 0, 0);
               const birthDate = new Date(value);
               birthDate.setHours(0, 0, 0, 0);
               return birthDate <= today ? (
-                format(value, "dd/MM/yyyy", { locale: ptBR })
+                format(value, "dd/MM/yyyy", { locale: dfLocale })
               ) : (
-                <span>{placeholder}</span>
+                <span>{currentPlaceholder}</span>
               );
             })()}
             <CalendarIcon className="ml-2 h-4 w-4 opacity-50" />
@@ -105,7 +117,7 @@ export function DatePicker({
             fromYear={1900}
             toYear={new Date().getFullYear()}
             initialFocus
-            locale={ptBR}
+            locale={dfLocale}
             className="bg-transparent p-0"
             classNames={{
               root: "text-white [&_*]:text-white",

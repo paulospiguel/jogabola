@@ -27,6 +27,12 @@ export const submitPaymentProofSchema = z.object({
     .optional(),
 });
 
+export const requestPresignedUrlSchema = z.object({
+  paymentId: z.number().int().positive(),
+  contentType: z.string(),
+  sizeBytes: z.number().int().positive(),
+});
+
 export const verifyPaymentProofSchema = z.object({
   paymentProofId: z
     .number()

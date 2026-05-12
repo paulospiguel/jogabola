@@ -96,9 +96,7 @@ export const Logo: React.FC<LogoProps> = ({
 
   if (!href) {
     return (
-      <div className={cn("relative flex", logoSize, className)}>
-        {content}
-      </div>
+      <div className={cn("relative flex", logoSize, className)}>{content}</div>
     );
   }
 

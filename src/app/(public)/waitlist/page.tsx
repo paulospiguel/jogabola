@@ -3,12 +3,12 @@
 import { AnimatePresence, motion } from "framer-motion";
 import { ArrowRight, CheckCircle, Loader2 } from "lucide-react";
 import Link from "next/link";
-import { useTranslations } from "next-intl";
-import { useState, useEffect, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
+import { useTranslations } from "next-intl";
+import { Suspense, useEffect, useState } from "react";
 import { joinWaitlist } from "@/actions/waitlist.actions";
 import { Logo } from "@/components/logo";
-import { useSession, signOut } from "@/lib/auth-client";
+import { signOut, useSession } from "@/lib/auth-client";
 
 function WaitlistContent() {
   const searchParams = useSearchParams();
@@ -171,7 +171,11 @@ function WaitlistContent() {
                   {session ? (
                     <>
                       {tWaitlist.rich("sessionActive", {
-                        email: (chunks) => <span className="text-white/45 font-semibold">{session.user.email}</span>
+                        email: chunks => (
+                          <span className="text-white/45 font-semibold">
+                            {session.user.email}
+                          </span>
+                        ),
                       })}{" "}
                       <button
                         type="button"

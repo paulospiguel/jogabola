@@ -27,6 +27,7 @@ export const matchSessions = pgTable("match_sessions", {
   paymentRequired: boolean("payment_required").notNull().default(false),
   paymentDeadlineHours: integer("payment_deadline_hours"),
   rosterOnly: boolean("roster_only").notNull().default(false),
+  rosterPriorityHours: integer("roster_priority_hours").default(0),
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at").defaultNow(),
 });

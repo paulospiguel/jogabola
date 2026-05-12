@@ -56,15 +56,9 @@ export function PaymentStatusBadge({
           isPending && "bg-arena-text-muted/15",
         )}
       >
-        {isPaid && (
-          <div className="size-2.5 rounded-full bg-arena-success" />
-        )}
-        {isReview && (
-          <Clock size={10} className="text-amber-500" />
-        )}
-        {isRejected && (
-          <X size={10} className="text-arena-danger" />
-        )}
+        {isPaid && <div className="size-2.5 rounded-full bg-arena-success" />}
+        {isReview && <Clock size={10} className="text-amber-500" />}
+        {isRejected && <X size={10} className="text-arena-danger" />}
         {isPending && (
           <div className="size-2 rounded-full bg-arena-text-muted/50" />
         )}
@@ -72,10 +66,7 @@ export function PaymentStatusBadge({
 
       {/* Method icon — only when paid */}
       {isPaid && MethodIcon && (
-        <MethodIcon
-          size={12}
-          className="text-arena-text-muted"
-        />
+        <MethodIcon size={12} className="text-arena-text-muted" />
       )}
     </div>
   );

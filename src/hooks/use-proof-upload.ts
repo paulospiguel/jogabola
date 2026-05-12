@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { requestPresignedUrl } from "@/actions/payments.actions";
 
 export type UploadState =
   | { status: "idle" }
@@ -13,35 +14,29 @@ interface UseProofUploadOptions {
   onSuccess?: (publicUrl: string) => void;
 }
 
-export function useProofUpload({ paymentId, onSuccess }: UseProofUploadOptions) {
+export function useProofUpload({
+  paymentId,
+  onSuccess,
+}: UseProofUploadOptions) {
   const [state, setState] = useState<UploadState>({ status: "idle" });
 
   async function upload(file: File) {
     setState({ status: "uploading", progress: 0 });
 
     try {
-      // 1. Get presigned URL from our API
-      const res = await fetch("/api/upload-proof", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          paymentId,
-          contentType: file.type,
-          sizeBytes: file.size,
-        }),
+      const res = await requestPresignedUrl({
+        paymentId,
+        contentType: file.type,
+        sizeBytes: file.size,
       });
 
-      if (!res.ok) {
-        const json = await res.json().catch(() => ({}));
+      if (!res.success) {
         throw new Error(
-          (json as { error?: string }).error ?? "Erro ao obter URL de upload",
+          res.error.message || res.error.code || "Erro ao obter URL de upload",
         );
       }
 
-      const { uploadUrl, publicUrl } = (await res.json()) as {
-        uploadUrl: string;
-        publicUrl: string;
-      };
+      const { uploadUrl, publicUrl } = res.data;
 
       setState({ status: "uploading", progress: 30 });
 

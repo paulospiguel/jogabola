@@ -4,10 +4,10 @@ import {
   APP_URL,
   CardBody,
   CardFooter,
+  colors,
   EmailLayout,
   PrimaryButton,
   SectionTitle,
-  colors,
 } from "./base/email-layout";
 
 interface WelcomeEmailProps {
@@ -19,7 +19,9 @@ export function WelcomeEmail({ name, email }: WelcomeEmailProps) {
   const firstName = name.split(" ")[0] ?? name;
 
   return (
-    <EmailLayout preview={`Bem-vindo, ${firstName}! A tua conta JogaBola está pronta.`}>
+    <EmailLayout
+      preview={`Bem-vindo, ${firstName}! A tua conta JogaBola está pronta.`}
+    >
       {/* Green accent stripe */}
       <div
         style={{

@@ -268,12 +268,16 @@
     "error": "Erro ao criar evento. Tente novamente.",
     "info": "Após criar o evento, pode adicionar jogadores e gerir a convocatória a partir da página do evento.",
     "access": {
-      "rosterOnly": "Apenas plantel",
-      "rosterOnlyHint": "Só emails que pertencem ao plantel atual podem confirmar presença."
+      "rosterOnly": "Apenas Plantel",
+      "rosterOnlyHint": "Só emails que pertencem ao plantel atual podem confirmar presença.",
+      "rosterPriority": "Prioridade ao plantel",
+      "rosterPriorityHint": "Só o plantel pode confirmar até {hours}h antes.",
+      "rosterPriorityOff": "Sem prioridade"
     },
     "invite": {
       "title": "Convidar do plantel",
       "subtitle": "Seleciona atletas específicos ou listas para pré-convocar.",
+      "lastSquad": "Re-convocar último plantel",
       "empty": "Ainda não há atletas no plantel.",
       "verified": "Atleta verificado",
       "manual": "Adicionado manualmente",
@@ -285,6 +289,17 @@
       "location": "Local",
       "maxPlayers": "Nº Jogadores",
       "recurrence": "Modalidade"
+    },
+    "payment": {
+      "section": "Pagamento",
+      "price": "Valor (€)",
+      "required": "Pagamento obrigatório",
+      "requiredHint": "Atletas devem pagar antes de confirmar",
+      "deadlineHours": "Prazo de pagamento",
+      "deadlineHoursUnit": "h antes do jogo",
+      "acceptMbway": "Aceitar MBWay",
+      "acceptMbwayHint": "Permitir pagamento via MBWay",
+      "mbwayPhone": "Número de Telemóvel MBWay"
     },
     "recurrence": {
       "once": "Único",
@@ -403,7 +418,25 @@
       "main": "Lista Principal ({count})",
       "reserves": "Reservas / Pendentes ({count})"
     },
+    "locationMap": {
+      "notFound": "Localização não encontrada",
+      "placeholder": "Morada do local...",
+      "errorSaving": "Erro ao guardar. Tente novamente.",
+      "shareTitle": "Partilhar localização",
+      "copyLink": "Copiar link",
+      "copied": "Copiado!"
+    },
     "officialMatch": "Jogo Oficial",
+    "noticeWall": {
+      "title": "Mural de Avisos",
+      "empty": "Ainda não há avisos para este jogo.",
+      "placeholder": "Escreve um aviso para a equipa...",
+      "send": "Publicar",
+      "delete": "Eliminar",
+      "urgent": "Urgente",
+      "fieldChange": "Alteração de Campo",
+      "chatter": "Chatear Pendentes"
+    },
     "share": {
       "label": "Convocar via",
       "copyLink": "Copiar link",
@@ -439,6 +472,9 @@
       "upcoming": "Próximos"
     },
     "title": "Eventos",
+    "editInfo": "Editar Informações",
+    "statusLabel": "Status do Evento",
+    "errorUpdating": "Erro ao atualizar evento. Tente novamente.",
     "types": {
       "match": "Jogo",
       "training": "Treino"
@@ -807,13 +843,22 @@
     "join": "Juntando-se",
     "knowMore": "Saber mais",
     "light": "Claro",
+    "loadError": "Erro ao carregar",
     "loading": "Carregando",
-    "logo": "Então",
+    "logo": "Logótipo",
     "manage": "Gerir",
     "myAccount": "Minha Conta",
     "name": "Nome",
     "next": "Próximo",
+    "nextSlide": "Próximo slide",
     "notFilled": "Não preenchido",
+    "previousSlide": "Slide anterior",
+    "retry": "Tentar novamente",
+    "selectDate": "Selecionar data",
+    "selectDates": "Selecione as datas",
+    "clear": "Limpar",
+    "toggleSidebar": "Alternar barra lateral",
+    "toggleTheme": "Alternar tema",
     "notifications": "Notificações",
     "password": "Palavra-passe",
     "performance": "Desempenho",
@@ -2129,8 +2174,13 @@
       "guestInfo": "Confirmar como Convidado",
       "guestOtp": "Verificar email",
       "payment": "Pagamento",
-      "success": "Presença Confirmada!"
+      "success": "Presença Confirmada!",
+      "welcomeBack": "Bem-vindo de volta"
     },
+    "welcomeBackGreeting": "Olá, {name}!",
+    "welcomeBackPrompt": "Queres confirmar a tua presença neste jogo?",
+    "confirmWithEmail": "Confirmar com o meu email",
+    "notMe": "Não sou eu / Usar outro email",
     "choosePrompt": "Como queres confirmar a tua presença?",
     "hasAccountOption": "Tenho conta JogaBola",
     "hasAccountHint": "Histórico de presenças e pagamentos",
@@ -2158,6 +2208,44 @@
     "close": "Fechar",
     "cashInstructions": "Paga ao capitão no início do jogo.",
     "paymentNotes": "Pagamento via MBWay confirmado pelo atleta",
+    "paymentMethodCard": {
+      "title": "Como queres pagar?",
+      "noMethods": "Nenhum método de pagamento configurado pelo capitão.",
+      "copy": "Copiar",
+      "copied": "Copiado!",
+      "status": {
+        "pending": "A aguardar",
+        "paid": "Pago",
+        "rejected": "Recusado"
+      },
+      "actions": {
+        "pay": "Pagar {amount}",
+        "sent": "Enviei o pagamento",
+        "willPayCash": "Vou pagar em dinheiro"
+      },
+      "methods": {
+        "stripe": {
+          "label": "Cartão",
+          "desc": "Débito ou crédito — pagamento imediato",
+          "info": "Paga com cartão de forma imediata e segura via Stripe.",
+          "confirmMsg": "Pagamento confirmado — {amount}"
+        },
+        "mbway": {
+          "label": "MBWay",
+          "desc": "Transferência pelo telemóvel",
+          "sendTo": "Envia para",
+          "amount": "Valor",
+          "proofMsg": "Comprovativo recebido — a verificar",
+          "waitingMsg": "A aguardar confirmação do capitão"
+        },
+        "cash": {
+          "label": "Dinheiro",
+          "desc": "Paga presencialmente",
+          "amount": "Valor",
+          "paidMsg": "Marcado como pago pelo capitão"
+        }
+      }
+    },
     "terms": {
       "prefix": "Ao continuar, aceitas os",
       "terms": "Termos",
@@ -2169,7 +2257,9 @@
       "sendCode": "Erro ao enviar código.",
       "sessionCreatedAttendanceFailed": "Sessão criada mas erro ao confirmar presença. Tenta de novo.",
       "rosterOnly": "Este evento é reservado ao plantel.",
+      "rosterPriority": "Apenas membros do plantel podem confirmar presença até {hours}h antes do jogo.",
       "eventCancelled": "Este evento está cancelado.",
+      "hasFines": "Tens multas pendentes. Regulariza a tua situação para poderes confirmar presença.",
       "processPayment": "Erro ao processar pagamento.",
       "resend": "Erro ao reenviar.",
       "resendPin": "Erro ao reenviar PIN.",

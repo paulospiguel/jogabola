@@ -16,6 +16,7 @@ import {
   cancelUserAttendance,
   confirmUserAttendance,
 } from "@/actions/attendance.actions";
+import { EventNoticeWall } from "@/components/arena/event-notice-wall";
 import { JbBadge } from "@/components/arena/jb-badge";
 import { LocationMap } from "@/components/arena/location-map";
 import {
@@ -204,7 +205,9 @@ export function AthleteEventDetail({
   const queryClient = useQueryClient();
   const [tab, setTab] = useState<Tab>("list");
   const [myStatus, setMyStatus] = useState<string | null>(initialMyStatus);
-  const [guestReservationId, setGuestReservationId] = useState<number | null>(null);
+  const [guestReservationId, setGuestReservationId] = useState<number | null>(
+    null,
+  );
   const [showRsvpSheet, setShowRsvpSheet] = useState(false);
   const [resumePayment, setResumePayment] = useState(false);
   const [actionLoading, setActionLoading] = useState(false);
@@ -514,6 +517,7 @@ export function AthleteEventDetail({
       <div className="flex-1 overflow-auto pb-5">
         {tab === "list" && (
           <div className="px-4 py-4">
+            <EventNoticeWall eventId={event.id} isManager={false} />
             {isLoading ? (
               <div className="flex h-32 items-center justify-center text-arena-text-muted text-sm">
                 {t("loading")}

@@ -2,8 +2,8 @@
 
 import { Player, type PlayerRef } from "@remotion/player";
 import { Play, X } from "lucide-react";
-import { useCallback, useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
+import { useCallback, useEffect, useState } from "react";
 import {
   DEMO_FPS,
   DEMO_FRAMES,
@@ -15,14 +15,17 @@ interface DemoModalProps {
   className?: string;
 }
 
-export function DemoModal({ label = "Ver demo · 0:42", className }: DemoModalProps) {
+export function DemoModal({
+  label = "Ver demo · 0:42",
+  className,
+}: DemoModalProps) {
   const t = useTranslations("videoDemo");
   const [open, setOpen] = useState(false);
   // Increment key each time modal opens → forces Player remount
   const [sessionKey, setSessionKey] = useState(0);
 
   const handleOpen = useCallback(() => {
-    setSessionKey((k) => k + 1);
+    setSessionKey(k => k + 1);
     setOpen(true);
   }, []);
 

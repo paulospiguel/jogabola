@@ -23,8 +23,14 @@ import { cn } from "@/lib/utils";
 import { CreateTeamSheet } from "./create-team-sheet";
 
 export function JbTeamSwitcher() {
-  const { activeTeamId, setActiveTeamId, myTeams, isLoading, canCreateTeam, isPlanLoading } =
-    useTeams();
+  const {
+    activeTeamId,
+    setActiveTeamId,
+    myTeams,
+    isLoading,
+    canCreateTeam,
+    isPlanLoading,
+  } = useTeams();
   const { state } = useSidebar();
   const t = useTranslations("arenaNav.teamSwitcher");
   const collapsed = state === "collapsed";
@@ -87,9 +93,7 @@ export function JbTeamSwitcher() {
   }
 
   const subLabel =
-    myTeams.length > 1
-      ? t("myTeams", { count: myTeams.length })
-      : t("myTeam");
+    myTeams.length > 1 ? t("myTeams", { count: myTeams.length }) : t("myTeam");
 
   return (
     <>
@@ -104,7 +108,8 @@ export function JbTeamSwitcher() {
                   "h-12 rounded-xl border border-arena-border/50 bg-arena-surface-el/60 transition-all",
                   "hover:bg-arena-surface-el hover:border-arena-border",
                   "data-[state=open]:bg-arena-surface-el data-[state=open]:border-arena-primary/30",
-                  collapsed && "h-10 w-10 justify-center border-none bg-transparent p-0",
+                  collapsed &&
+                    "h-10 w-10 justify-center border-none bg-transparent p-0",
                 )}
                 tooltip={activeTeam?.name ?? t("select")}
               >

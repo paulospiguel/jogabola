@@ -16,8 +16,9 @@ export const attendance = pgTable(
     matchSessionId: integer("match_session_id")
       .notNull()
       .references(() => matchSessions.id, { onDelete: "cascade" }),
-    playerId: text("player_id")
-      .references(() => user.id, { onDelete: "cascade" }),
+    playerId: text("player_id").references(() => user.id, {
+      onDelete: "cascade",
+    }),
     guestName: text("guest_name"),
     guestEmail: text("guest_email"),
     status: text("status").notNull(),

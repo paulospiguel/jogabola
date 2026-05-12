@@ -107,7 +107,7 @@ export function EditEventSheet({ event, onClose }: EditEventSheetProps) {
       router.refresh();
       onClose();
     } else {
-      setError("Erro ao atualizar evento. Tente novamente.");
+      setError(tEvents("errorUpdating"));
     }
   };
 
@@ -116,51 +116,51 @@ export function EditEventSheet({ event, onClose }: EditEventSheetProps) {
       <div className="flex flex-col gap-4 px-5 pb-8 pt-6">
         <div className="mb-2 flex items-center justify-between">
           <h2 className="text-lg font-bold text-arena-text">
-            Editar Informações
+            {tEvents("editInfo")}
           </h2>
         </div>
 
         <div>
-          <Label className={labelClass}>Data e Hora</Label>
+          <Label className={labelClass}>{t("labels.date")}</Label>
           <EventDatePicker
             id="edit-date"
             value={form.startDate}
             onChange={date => date && set("startDate", date)}
-            placeholder="Data e Hora"
+            placeholder={t("labels.date")}
           />
         </div>
 
         <div>
-          <Label className={labelClass}>Modalidade</Label>
+          <Label className={labelClass}>{t("labels.recurrence")}</Label>
           <Select
             value={form.recurrence}
             onValueChange={v => set("recurrence", v)}
           >
             <SelectTrigger className="h-11 w-full rounded-xl border-arena-border bg-arena-surface text-sm text-arena-text">
-              <SelectValue placeholder="Modalidade" />
+              <SelectValue placeholder={t("labels.recurrence")} />
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="once">
-                {t("recurrence.once") || "Único"}
+                {t("recurrence.once")}
               </SelectItem>
               <SelectItem value="weekly">
-                {t("recurrence.weekly") || "Semanal"}
+                {t("recurrence.weekly")}
               </SelectItem>
               <SelectItem value="monthly">
-                {t("recurrence.monthly") || "Mensal"}
+                {t("recurrence.monthly")}
               </SelectItem>
             </SelectContent>
           </Select>
         </div>
 
         <div>
-          <Label className={labelClass}>Status do Evento</Label>
+          <Label className={labelClass}>{tEvents("statusLabel")}</Label>
           <Select
             value={form.status}
             onValueChange={v => set("status", v as EventStatus)}
           >
             <SelectTrigger className="h-11 w-full rounded-xl border-arena-border bg-arena-surface text-sm text-arena-text">
-              <SelectValue placeholder="Status" />
+              <SelectValue placeholder={tEvents("statusLabel")} />
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="scheduled">
@@ -185,7 +185,7 @@ export function EditEventSheet({ event, onClose }: EditEventSheetProps) {
           >
             <span className="flex items-center gap-2 text-[13px] font-semibold text-arena-text">
               <CreditCard size={15} className="text-arena-primary" />
-              {t("payment.section") || "Pagamento"}
+              {t("payment.section")}
             </span>
             {paymentOpen ? (
               <ChevronUp size={15} className="text-arena-text-muted" />
@@ -198,7 +198,7 @@ export function EditEventSheet({ event, onClose }: EditEventSheetProps) {
             <div className="flex flex-col gap-3 border-t border-arena-border px-4 pb-4 pt-3">
               <div>
                 <Label className={labelClass} htmlFor="edit-price">
-                  {t("payment.price") || "Valor (€)"}
+                  {t("payment.price")}
                 </Label>
                 <input
                   className={inputClass}
@@ -234,16 +234,18 @@ export function EditEventSheet({ event, onClose }: EditEventSheetProps) {
                   >
                     <div>
                       <p className="text-[13px] font-semibold text-arena-text">
-                        Aceitar MBWay
+                        {t("payment.acceptMbway")}
                       </p>
                       <p className="text-[11px] text-arena-text-muted">
-                        Permitir pagamento via MBWay
+                        {t("payment.acceptMbwayHint")}
                       </p>
                     </div>
                     <div
                       className={cn(
                         "h-5 w-9 rounded-full transition-colors",
-                        form.mbwayEnabled ? "bg-arena-primary" : "bg-arena-border",
+                        form.mbwayEnabled
+                          ? "bg-arena-primary"
+                          : "bg-arena-border",
                       )}
                     >
                       <div
@@ -259,7 +261,7 @@ export function EditEventSheet({ event, onClose }: EditEventSheetProps) {
                   {form.mbwayEnabled && (
                     <div>
                       <Label className={labelClass} htmlFor="edit-mbway-phone">
-                        Número de Telemóvel MBWay
+                        {t("payment.mbwayPhone")}
                       </Label>
                       <input
                         className={inputClass}
@@ -286,11 +288,10 @@ export function EditEventSheet({ event, onClose }: EditEventSheetProps) {
               >
                 <div>
                   <p className="text-[13px] font-semibold text-arena-text">
-                    {t("payment.required") || "Pagamento obrigatório"}
+                    {t("payment.required")}
                   </p>
                   <p className="text-[11px] text-arena-text-muted">
-                    {t("payment.requiredHint") ||
-                      "Atletas devem pagar antes de confirmar"}
+                    {t("payment.requiredHint")}
                   </p>
                 </div>
                 <div
@@ -315,7 +316,7 @@ export function EditEventSheet({ event, onClose }: EditEventSheetProps) {
               {form.paymentRequired && (
                 <div>
                   <Label className={labelClass} htmlFor="edit-deadline">
-                    {t("payment.deadlineHours") || "Prazo de pagamento"}
+                    {t("payment.deadlineHours")}
                   </Label>
                   <div className="flex items-center gap-2">
                     <input
@@ -331,7 +332,7 @@ export function EditEventSheet({ event, onClose }: EditEventSheetProps) {
                       }
                     />
                     <span className="shrink-0 text-[12px] text-arena-text-muted">
-                      {t("payment.deadlineHoursUnit") || "h antes do jogo"}
+                      {t("payment.deadlineHoursUnit")}
                     </span>
                   </div>
                 </div>

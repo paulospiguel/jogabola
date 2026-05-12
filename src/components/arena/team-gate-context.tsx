@@ -25,7 +25,11 @@ interface TeamGateProviderProps {
   children: React.ReactNode;
 }
 
-export function TeamGateProvider({ hasTeam, role, children }: TeamGateProviderProps) {
+export function TeamGateProvider({
+  hasTeam,
+  role,
+  children,
+}: TeamGateProviderProps) {
   const [modalOpen, setModalOpen] = useState(false);
 
   function requireTeam() {

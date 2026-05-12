@@ -6,8 +6,8 @@ import { upsertTeamPaymentSettings } from "@/actions/team-payment-settings.actio
 import { JbBottomSheet } from "@/components/arena/jb-bottom-sheet";
 import { PaymentMethodDetailSheet } from "./payment-method-detail-sheet";
 import {
-  PaymentMethodList,
   type PaymentMethodConfig,
+  PaymentMethodList,
   type PaymentMethodType,
 } from "./payment-method-list";
 
@@ -50,14 +50,16 @@ export function PaymentSettingsSheet({
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
 
-  async function persist(overrides?: Partial<{
-    stripeEnabled: boolean;
-    mbwayEnabled: boolean;
-    mbwayPhone: string;
-    mbwayName: string;
-    cashEnabled: boolean;
-    cashInstructions: string;
-  }>) {
+  async function persist(
+    overrides?: Partial<{
+      stripeEnabled: boolean;
+      mbwayEnabled: boolean;
+      mbwayPhone: string;
+      mbwayName: string;
+      cashEnabled: boolean;
+      cashInstructions: string;
+    }>,
+  ) {
     setSaving(true);
     setError("");
     const res = await upsertTeamPaymentSettings({
@@ -143,12 +145,17 @@ export function PaymentSettingsSheet({
           />
 
           <p className="text-[11px] text-arena-text-muted">
-            {saving ? "A guardar..." : "Clica num método para configurar os detalhes."}
+            {saving
+              ? "A guardar..."
+              : "Clica num método para configurar os detalhes."}
           </p>
 
           <button
             type="button"
-            onClick={() => { onSaved?.(); onClose(); }}
+            onClick={() => {
+              onSaved?.();
+              onClose();
+            }}
             className="flex h-[50px] w-full items-center justify-center gap-2 rounded-[14px] bg-arena-primary text-[14px] font-bold text-arena-bg shadow-[0_0_20px_rgba(124,255,79,0.2)] transition-all hover:bg-arena-primary/90"
           >
             <Settings2 size={16} />

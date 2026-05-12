@@ -9,8 +9,8 @@ import {
   markAllAsRead,
   markNotificationAsRead,
 } from "@/actions/notifications.actions";
-import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 
 interface Notification {
   id: string;

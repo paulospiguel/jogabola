@@ -1,8 +1,9 @@
 "use client";
 
 import { format } from "date-fns";
-import { ptBR } from "date-fns/locale";
+import { enUS, es, fr, pt } from "date-fns/locale";
 import { Calendar as CalendarIcon, Check, X } from "lucide-react";
+import { useLocale, useTranslations } from "next-intl";
 import * as React from "react";
 import type { DateRange } from "react-day-picker";
 import { Button } from "@/components/ui/button";
@@ -21,12 +22,23 @@ interface DateRangePickerProps {
   placeholder?: string;
 }
 
+const LOCALE_MAP = {
+  pt: pt,
+  en: enUS,
+  es: es,
+  fr: fr,
+};
+
 export function DateRangePicker({
   date,
   onDateChange,
   className,
-  placeholder = "Selecione as datas",
+  placeholder,
 }: DateRangePickerProps) {
+  const t = useTranslations("common");
+  const locale = useLocale() as keyof typeof LOCALE_MAP;
+  const dfLocale = LOCALE_MAP[locale] || pt;
+  const currentPlaceholder = placeholder || t("selectDates");
   const [open, setOpen] = React.useState(false);
 
   return (
@@ -46,14 +58,14 @@ export function DateRangePicker({
           {date?.from ? (
             date.to ? (
               <>
-                {format(date.from, "dd MMM", { locale: ptBR })} -{" "}
-                {format(date.to, "dd MMM yyyy", { locale: ptBR })}
+                {format(date.from, "dd MMM", { locale: dfLocale })} -{" "}
+                {format(date.to, "dd MMM yyyy", { locale: dfLocale })}
               </>
             ) : (
-              format(date.from, "dd MMM yyyy", { locale: ptBR })
+              format(date.from, "dd MMM yyyy", { locale: dfLocale })
             )
           ) : (
-            <span>{placeholder}</span>
+            <span>{currentPlaceholder}</span>
           )}
         </Button>
       </PopoverTrigger>
@@ -67,7 +79,7 @@ export function DateRangePicker({
           selected={date}
           onSelect={onDateChange}
           numberOfMonths={2}
-          locale={ptBR}
+          locale={dfLocale}
           className="rounded-md"
           classNames={{
             root: "text-white [&_*]:text-white",
@@ -113,7 +125,7 @@ export function DateRangePicker({
             className="min-h-[44px] w-fit justify-start rounded-full border-2 border-white/20 bg-white/10 px-4 py-2.5 text-left font-normal text-white backdrop-blur-sm transition-all hover:bg-white/20 hover:text-white"
           >
             <Check className="text-neon-secondary mr-2 h-5 w-5" />
-            Confirmar
+            {t("confirm")}
           </Button>
           <Button
             onClick={() => onDateChange?.(undefined)}
@@ -121,7 +133,7 @@ export function DateRangePicker({
             className="min-h-[44px] w-fit justify-start rounded-full border-2 border-white/20 bg-white/10 px-4 py-2.5 text-left font-normal text-white backdrop-blur-sm transition-all hover:bg-white/20 hover:text-white"
           >
             <X className="text-neon-secondary mr-2 h-5 w-5" />
-            Limpar
+            {t("clear")}
           </Button>
         </div>
       </PopoverContent>

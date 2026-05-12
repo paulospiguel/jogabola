@@ -14,8 +14,8 @@ import Link from "next/link";
 import { useTranslations } from "next-intl";
 import { useCallback, useRef, useState } from "react";
 import { submitPaymentProof } from "@/actions/payments.actions";
-import { useProofUpload } from "@/hooks/use-proof-upload";
 import { usePayment } from "@/hooks/use-payments";
+import { useProofUpload } from "@/hooks/use-proof-upload";
 import { cn } from "@/lib/utils";
 
 interface PaymentResultClientProps {
@@ -114,7 +114,7 @@ function ProofUpload({ paymentId, onUploaded }: ProofUploadProps) {
 
   const { state, upload, reset } = useProofUpload({
     paymentId,
-    onSuccess: async (publicUrl) => {
+    onSuccess: async publicUrl => {
       // After R2 upload succeeds, record the proof URL in our DB
       setSubmitting(true);
       const res = await submitPaymentProof({ paymentId, fileUrl: publicUrl });
@@ -153,8 +153,7 @@ function ProofUpload({ paymentId, onUploaded }: ProofUploadProps) {
     if (file) handleFile(file);
   }
 
-  const isUploading =
-    state.status === "uploading" || submitting;
+  const isUploading = state.status === "uploading" || submitting;
   const uploadError =
     state.status === "error" ? state.message : submitError || "";
 
@@ -308,7 +307,10 @@ export function PaymentResultClient({
   const status = payment.status ?? "pending";
   const { Icon, iconBg, iconColor, iconBorder, titleKey, captionKey } =
     getStatusConfig(proofUploaded ? "paid_unverified" : status);
-  const formattedCurrency = formatCurrency(payment.amountCents, payment.currency);
+  const formattedCurrency = formatCurrency(
+    payment.amountCents,
+    payment.currency,
+  );
 
   // Show upload section when payment is pending (mbway) and proof not yet uploaded
   const showUpload =

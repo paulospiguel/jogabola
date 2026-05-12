@@ -20,6 +20,7 @@ import {
   confirmUserAttendance,
 } from "@/actions/attendance.actions";
 import { EditEventSheet } from "@/components/arena/edit-event-sheet";
+import { EventNoticeWall } from "@/components/arena/event-notice-wall";
 import { JbBadge } from "@/components/arena/jb-badge";
 import { JbScreenHeader } from "@/components/arena/jb-screen-header";
 import { LocationMap } from "@/components/arena/location-map";
@@ -309,6 +310,7 @@ export function EventDetail({
       <div className="flex-1 overflow-auto pb-20">
         {tab === "conv" && (
           <div className="px-5 py-3.5">
+            <EventNoticeWall eventId={event.id} isManager={canEdit} />
             <ShareBar eventId={event.id} eventTitle={event.title} />
 
             <div className="jb-section-label pb-2">

@@ -19,6 +19,7 @@ export function getR2Client(): S3Client {
   _r2 = new S3Client({
     region: "auto",
     endpoint: requireEnv("R2_ENDPOINT"),
+    requestChecksumCalculation: "WHEN_REQUIRED",
     credentials: {
       accessKeyId: requireEnv("R2_ACCESS_KEY_ID"),
       secretAccessKey: requireEnv("R2_SECRET_ACCESS_KEY"),

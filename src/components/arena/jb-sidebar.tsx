@@ -41,7 +41,12 @@ const ITEMS = [
     labelKey: "events",
     requiresTeam: true,
   },
-  { href: "/arena/squads", icon: Users, labelKey: "squads", requiresTeam: true },
+  {
+    href: "/arena/squads",
+    icon: Users,
+    labelKey: "squads",
+    requiresTeam: true,
+  },
   {
     href: "/arena/notifications",
     icon: Bell,
@@ -175,9 +180,11 @@ export function JbSidebar() {
                 title={state === "collapsed" ? t("expand") : t("collapse")}
                 className="flex aspect-square size-8 items-center justify-center rounded-lg bg-arena-surface-el text-arena-primary group-data-[collapsible=icon]:size-7"
               >
-                {state === "collapsed"
-                  ? <ChevronsRight className="size-4" />
-                  : <ChevronsLeft className="size-4" />}
+                {state === "collapsed" ? (
+                  <ChevronsRight className="size-4" />
+                ) : (
+                  <ChevronsLeft className="size-4" />
+                )}
               </div>
               <div
                 className={cn(

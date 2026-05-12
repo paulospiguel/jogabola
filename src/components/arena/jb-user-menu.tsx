@@ -44,7 +44,6 @@ export function JbUserMenu({
     return null;
   }
 
-
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>

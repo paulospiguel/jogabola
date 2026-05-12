@@ -4,8 +4,8 @@ import { eq } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { db } from "@/db/client";
 import { user } from "@/db/schema";
-import { updateProfileSchema } from "@/schemas/profile.schema";
 import { withAuthAction } from "@/lib/action-helpers";
+import { updateProfileSchema } from "@/schemas/profile.schema";
 
 export const updateUserProfile = withAuthAction(
   updateProfileSchema,

@@ -6,8 +6,8 @@ import { useRouter } from "next/navigation";
 import { useLocale, useTranslations } from "next-intl";
 import { useRef, useState, useTransition } from "react";
 import { setLocale } from "@/actions/locale.actions";
-import { signOut } from "@/lib/auth-client";
 import { type Locale, locales } from "@/i18n/configs";
+import { signOut } from "@/lib/auth-client";
 import { cn } from "@/lib/utils";
 
 type Language = {
@@ -18,13 +18,39 @@ type Language = {
 };
 
 const LANGUAGES: Record<Locale, Language> = {
-  en: { nativeName: "English", code: "EN", flag: "england", flagLabel: "England flag" },
-  pt: { nativeName: "Português", code: "PT", flag: "🇵🇹", flagLabel: "Bandeira de Portugal" },
-  es: { nativeName: "Español", code: "ES", flag: "🇪🇸", flagLabel: "Bandera de España" },
-  fr: { nativeName: "Français", code: "FR", flag: "🇫🇷", flagLabel: "Drapeau de France" },
+  en: {
+    nativeName: "English",
+    code: "EN",
+    flag: "england",
+    flagLabel: "England flag",
+  },
+  pt: {
+    nativeName: "Português",
+    code: "PT",
+    flag: "🇵🇹",
+    flagLabel: "Bandeira de Portugal",
+  },
+  es: {
+    nativeName: "Español",
+    code: "ES",
+    flag: "🇪🇸",
+    flagLabel: "Bandera de España",
+  },
+  fr: {
+    nativeName: "Français",
+    code: "FR",
+    flag: "🇫🇷",
+    flagLabel: "Drapeau de France",
+  },
 };
 
-function LanguageFlag({ language, className }: { language: Language; className?: string }) {
+function LanguageFlag({
+  language,
+  className,
+}: {
+  language: Language;
+  className?: string;
+}) {
   if (language.flag === "england") {
     return (
       <span
@@ -171,7 +197,11 @@ export function OnboardingMenu() {
                         onClick={() => setView("language")}
                         className="flex w-full items-center gap-3 rounded-[10px] px-3 py-2.5 text-left text-sm font-medium text-arena-text-sec transition-colors hover:bg-arena-primary/10 hover:text-arena-text"
                       >
-                        <Globe size={16} className="shrink-0 text-arena-primary" strokeWidth={2.2} />
+                        <Globe
+                          size={16}
+                          className="shrink-0 text-arena-primary"
+                          strokeWidth={2.2}
+                        />
                         <span className="flex-1">{t("menu.language")}</span>
                         <span className="text-[11px] font-bold tracking-[0.10em] text-arena-text-muted">
                           {LANGUAGES[locale]?.code}
@@ -188,8 +218,16 @@ export function OnboardingMenu() {
                         disabled={isLoggingOut}
                         className="flex w-full items-center gap-3 rounded-[10px] px-3 py-2.5 text-left text-sm font-medium text-arena-text-sec transition-colors hover:bg-arena-danger/10 hover:text-arena-danger disabled:cursor-not-allowed disabled:opacity-60"
                       >
-                        <LogOut size={16} className="shrink-0" strokeWidth={2.2} />
-                        <span>{isLoggingOut ? t("menu.loggingOut") : t("menu.logout")}</span>
+                        <LogOut
+                          size={16}
+                          className="shrink-0"
+                          strokeWidth={2.2}
+                        />
+                        <span>
+                          {isLoggingOut
+                            ? t("menu.loggingOut")
+                            : t("menu.logout")}
+                        </span>
                       </button>
                     </motion.div>
                   ) : (
@@ -211,7 +249,7 @@ export function OnboardingMenu() {
                       </button>
 
                       <div className="p-1.5">
-                        {locales.map((lang) => {
+                        {locales.map(lang => {
                           const language = LANGUAGES[lang];
                           const isSelected = lang === locale;
                           return (
@@ -230,7 +268,9 @@ export function OnboardingMenu() {
                               <span className="text-base leading-none">
                                 <LanguageFlag language={language} />
                               </span>
-                              <span className="flex-1">{language.nativeName}</span>
+                              <span className="flex-1">
+                                {language.nativeName}
+                              </span>
                               {isSelected && (
                                 <span className="size-4 rounded-full bg-arena-primary/20 text-center text-[10px] font-bold leading-4 text-arena-primary">
                                   ✓

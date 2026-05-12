@@ -4,10 +4,10 @@ import {
   APP_URL,
   CardBody,
   CardFooter,
+  colors,
   EmailLayout,
   PrimaryButton,
   SectionTitle,
-  colors,
 } from "./base/email-layout";
 
 interface EventReminderEmailProps {
@@ -82,8 +82,9 @@ export function EventReminderEmail({
             lineHeight: 1.6,
           }}
         >
-          Confirmaste presença em <strong style={{ color: colors.text }}>{eventTitle}</strong>.
-          Não te esqueças!
+          Confirmaste presença em{" "}
+          <strong style={{ color: colors.text }}>{eventTitle}</strong>. Não te
+          esqueças!
         </Text>
 
         {/* Event card */}
@@ -137,16 +138,15 @@ export function EventReminderEmail({
               marginBottom: 6,
             }}
           >
-            <Text
-              style={{ fontSize: 12, color: colors.textMuted, margin: 0 }}
-            >
+            <Text style={{ fontSize: 12, color: colors.textMuted, margin: 0 }}>
               Confirmados
             </Text>
             <Text
               style={{
                 fontSize: 12,
                 fontWeight: 700,
-                color: confirmedCount >= totalSpots ? colors.danger : colors.success,
+                color:
+                  confirmedCount >= totalSpots ? colors.danger : colors.success,
                 margin: 0,
               }}
             >
@@ -181,7 +181,12 @@ export function EventReminderEmail({
 
       <CardFooter>
         <Text
-          style={{ fontSize: 11, color: colors.textFaint, margin: 0, lineHeight: 1.5 }}
+          style={{
+            fontSize: 11,
+            color: colors.textFaint,
+            margin: 0,
+            lineHeight: 1.5,
+          }}
         >
           Não podes comparecer? Acede ao evento e cancela a presença para
           liberares a vaga para um colega.

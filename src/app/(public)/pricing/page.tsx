@@ -27,12 +27,7 @@ export default async function PricingPage() {
 
       <section className="relative z-10 mx-auto max-w-7xl px-4 pb-28 md:px-6">
         <div className="mx-auto mb-14 max-w-3xl text-center">
-          <Logo
-            href="home"
-            isAnimate
-            size="medium"
-            className="mx-auto mb-6"
-          />
+          <Logo href="home" isAnimate size="medium" className="mx-auto mb-6" />
 
           <p className="mb-3 text-xs font-black uppercase tracking-[0.3em] text-arena-primary">
             {t("eyebrow")}
