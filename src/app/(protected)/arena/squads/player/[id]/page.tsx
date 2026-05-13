@@ -41,8 +41,7 @@ export default function AthleteProfilePage() {
   const router = useRouter();
   const t = useTranslations();
   const { activeTeamId } = useTeams();
-  const { events, isLoading: dashboardLoading } = useDashboardData();
-  const { profile: athlete, isLoading: profileLoading } = useAthleteProfile(
+  const { profile: athlete, history, isLoading: profileLoading } = useAthleteProfile(
     id as string,
   );
 
@@ -53,7 +52,7 @@ export default function AthleteProfilePage() {
     return t(`arenaAthleteProfile.${sentence}`, values);
   };
 
-  const isLoading = dashboardLoading || profileLoading;
+  const isLoading = profileLoading;
 
   if (isLoading) {
     return (
@@ -109,8 +108,8 @@ export default function AthleteProfilePage() {
             </div>
           </header>
 
-          <div className="max-w-md mx-auto">
-            <section className="jb-card p-6 flex flex-col items-center text-center gap-4">
+          <div className="grid gap-6 lg:grid-cols-[350px_1fr]">
+            <section className="jb-card p-6 flex flex-col items-center text-center gap-4 h-fit">
               <div className="flex size-16 items-center justify-center rounded-[18px] border border-arena-border bg-arena-surface">
                 <Clock
                   size={28}
@@ -122,7 +121,7 @@ export default function AthleteProfilePage() {
                 id={athlete.id.toString()}
                 name={athlete.name}
                 image={null}
-                size={72}
+                size={80}
               />
               <div>
                 <h2 className="text-lg font-bold text-arena-text">
@@ -135,7 +134,7 @@ export default function AthleteProfilePage() {
                   </div>
                 )}
               </div>
-              <div className="rounded-[10px] border border-arena-warning/30 bg-arena-warning/10 px-4 py-3 text-sm text-arena-warning">
+              <div className="rounded-[10px] border border-arena-warning/30 bg-arena-warning/10 px-4 py-3 text-sm text-arena-warning text-left">
                 <p className="font-semibold">
                   {arenaAthleteProfileTranslation("notValidated")}
                 </p>
@@ -150,6 +149,58 @@ export default function AthleteProfilePage() {
                 onRemoved={() => router.push("/arena/squads")}
                 t={arenaAthleteProfileTranslation}
               />
+            </section>
+
+            <section className="jb-card overflow-hidden h-fit">
+              <div className="border-b border-arena-border bg-arena-surface-el/50 px-6 py-4">
+                <h2 className="text-xs font-bold uppercase tracking-widest text-arena-text-muted">
+                  {arenaAthleteProfileTranslation("history.title")}
+                </h2>
+              </div>
+              <div className="divide-y divide-arena-border">
+                {history && history.length > 0 ? (
+                  history.map((item, i) => (
+                    <div
+                      key={`${item.title}-${item.startsAt}-${i}`}
+                      className="flex items-center gap-4 px-6 py-4 hover:bg-arena-surface-el transition-colors"
+                    >
+                      <div className="flex-1 min-w-0">
+                        <div className="font-bold text-arena-text truncate">
+                          {item.title}
+                        </div>
+                        <div className="text-xs text-arena-text-muted flex items-center gap-2">
+                          <span>{formatDate(item.startsAt)}</span>
+                          <span>•</span>
+                          <span className="font-semibold text-arena-primary capitalize">
+                            {item.type}
+                          </span>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-4">
+                        <div className={cn(
+                          "px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider",
+                          item.status === "confirmed" ? "bg-arena-success/20 text-arena-success" :
+                          item.status === "reserve" ? "bg-arena-warning/20 text-arena-warning" :
+                          "bg-arena-text-muted/20 text-arena-text-muted"
+                        )}>
+                          {item.status}
+                        </div>
+                        <ChevronRight
+                          size={16}
+                          className="text-arena-text-muted"
+                        />
+                      </div>
+                    </div>
+                  ))
+                ) : (
+                  <div className="p-12 text-center text-arena-text-muted">
+                    <Calendar className="mx-auto mb-3 opacity-20" size={32} />
+                    <p className="text-sm font-medium opacity-60">
+                      Sem atividade registada
+                    </p>
+                  </div>
+                )}
+              </div>
             </section>
           </div>
         </div>
@@ -207,19 +258,6 @@ export default function AthleteProfilePage() {
               </div>
             </div>
           </div>
-          <div className="flex gap-2">
-            {/* <Button
-              variant="outline"
-              className="border-arena-border hover:bg-arena-primary/10 hover:text-arena-primary"
-            >
-              <Edit2 className="mr-2" size={16} />
-              {t("common.edit")}
-            </Button>
-            <Button className="jb-action-primary">
-              <MessageSquare className="mr-2" size={16} />
-              {arenaAthleteProfileTranslation("actions.message")}
-            </Button> */}
-          </div>
         </header>
 
         <div className="grid gap-6 lg:grid-cols-[300px_1fr]">
@@ -245,7 +283,6 @@ export default function AthleteProfilePage() {
                 </h2>
               </div>
               <div className="mt-2 flex items-center gap-2">
-                {/* <JbBadge status={athlete.status as BadgeStatus} /> */}
                 <VerifiedBadge verified={!!athlete.isVerified} />
               </div>
 
@@ -356,39 +393,48 @@ export default function AthleteProfilePage() {
                 </Button>
               </div>
               <div className="divide-y divide-arena-border">
-                {events.map((item, i) => (
-                  <div
-                    key={`${item.title}-${item.date}-${i}`}
-                    className="flex items-center gap-4 px-6 py-4 hover:bg-arena-surface-el transition-colors"
-                  >
-                    <div className="flex-1 min-w-0">
-                      <div className="font-bold text-arena-text truncate">
-                        {item.title}
-                      </div>
-                      <div className="text-xs text-arena-text-muted flex items-center gap-2">
-                        <span>{item.date}</span>
-                        <span>•</span>
-                        <span className="font-semibold text-arena-primary">
-                          {item.type}
-                        </span>
-                      </div>
-                    </div>
-                    <div className="flex items-center gap-6">
-                      <div className="text-right">
-                        <div className="text-[14px] font-black text-arena-text">
-                          {item.total}
+                {history && history.length > 0 ? (
+                  history.map((item, i) => (
+                    <div
+                      key={`${item.title}-${item.startsAt}-${i}`}
+                      className="flex items-center gap-4 px-6 py-4 hover:bg-arena-surface-el transition-colors"
+                    >
+                      <div className="flex-1 min-w-0">
+                        <div className="font-bold text-arena-text truncate">
+                          {item.title}
                         </div>
-                        <div className="text-[9px] font-bold uppercase tracking-widest text-arena-text-muted">
-                          {arenaAthleteProfileTranslation("history.players")}
+                        <div className="text-xs text-arena-text-muted flex items-center gap-2">
+                          <span>{formatDate(item.startsAt)}</span>
+                          <span>•</span>
+                          <span className="font-semibold text-arena-primary capitalize">
+                            {item.type}
+                          </span>
                         </div>
                       </div>
-                      <ChevronRight
-                        size={16}
-                        className="text-arena-text-muted"
-                      />
+                      <div className="flex items-center gap-4">
+                        <div className={cn(
+                          "px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider",
+                          item.status === "confirmed" ? "bg-arena-success/20 text-arena-success" :
+                          item.status === "reserve" ? "bg-arena-warning/20 text-arena-warning" :
+                          "bg-arena-text-muted/20 text-arena-text-muted"
+                        )}>
+                          {item.status}
+                        </div>
+                        <ChevronRight
+                          size={16}
+                          className="text-arena-text-muted"
+                        />
+                      </div>
                     </div>
+                  ))
+                ) : (
+                  <div className="p-12 text-center text-arena-text-muted">
+                    <Calendar className="mx-auto mb-3 opacity-20" size={32} />
+                    <p className="text-sm font-medium opacity-60">
+                      Sem atividade registada
+                    </p>
                   </div>
-                ))}
+                )}
               </div>
             </section>
           </main>

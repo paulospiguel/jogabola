@@ -414,6 +414,15 @@
       "confirm": "Confirmar Presença",
       "cancelled": "Evento cancelado"
     },
+    "management": {
+      "revokeTitle": "Revogar Presença?",
+      "revokeDescription": "Tens a certeza que desejas remover {name} da lista de participantes? Esta ação irá apagar o registo de presença.",
+      "revokeConfirm": "Revogar",
+      "blockTitle": "Bloquear Participante?",
+      "blockDescription": "Ao bloquear {name}, o participante será removido e poderá ser aplicada uma multa de não comparência. Tens a certeza?",
+      "blockConfirm": "Bloquear",
+      "cancel": "Voltar"
+    },
     "lists": {
       "main": "Lista Principal ({count})",
       "reserves": "Reservas / Pendentes ({count})"

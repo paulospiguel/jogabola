@@ -411,6 +411,15 @@
       "confirm": "Confirm Attendance",
       "cancelled": "Event cancelled"
     },
+    "management": {
+      "revokeTitle": "Revoke Attendance?",
+      "revokeDescription": "Are you sure you want to remove {name} from the participants list? This will delete the attendance record.",
+      "revokeConfirm": "Revoke",
+      "blockTitle": "Block Participant?",
+      "blockDescription": "By blocking {name}, the participant will be removed and a no-show fine may be applied. Are you sure?",
+      "blockConfirm": "Block",
+      "cancel": "Go back"
+    },
     "lists": {
       "main": "Main List ({count})",
       "reserves": "Reserves / Pending ({count})"

@@ -1,6 +1,6 @@
 "use server";
 
-import { and, eq } from "drizzle-orm";
+import { and, desc, eq } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { headers } from "next/headers";
 import { db } from "@/db/client";
@@ -9,6 +9,7 @@ import {
   matchReservations,
   matchSessions,
   payments,
+  players,
   user,
 } from "@/db/schema";
 import { withAction } from "@/lib/action-helpers";
@@ -254,10 +255,61 @@ export async function getUserEventAttendanceStatus(
   return record?.status ?? null;
 }
 
+export async function getPlayerHistory(playerId: string, teamId: number) {
+  try {
+    // 1. Find the player (registered or guest)
+    const [registeredUser] = await db
+      .select({ id: user.id, email: user.email })
+      .from(user)
+      .where(eq(user.id, playerId))
+      .limit(1);
+
+    const guestPlayer = registeredUser
+      ? null
+      : await db.query.players.findFirst({
+          where: and(eq(players.id, playerId), eq(players.teamId, teamId)),
+        });
+
+    const playerEmail = registeredUser?.email || guestPlayer?.email;
+
+    if (!playerEmail && !registeredUser) {
+      return { success: false as const, error: "Player not found" };
+    }
+
+    // 2. Fetch attendance records
+    const history = await db
+      .select({
+        id: matchSessions.id,
+        title: matchSessions.title,
+        startsAt: matchSessions.startsAt,
+        status: attendance.status,
+      })
+      .from(attendance)
+      .innerJoin(
+        matchSessions,
+        eq(attendance.matchSessionId, matchSessions.id),
+      )
+      .where(
+        and(
+          eq(matchSessions.teamId, teamId),
+          registeredUser
+            ? eq(attendance.playerId, registeredUser.id)
+            : eq(attendance.guestEmail, playerEmail!),
+        ),
+      )
+      .orderBy(desc(matchSessions.startsAt));
+
+    return { success: true as const, data: history.map(h => ({ ...h, type: "Partida" })) };
+  } catch (error) {
+    console.error("Error fetching player history:", error);
+    return { success: false as const, error: "Failed to fetch history" };
+  }
+}
+
 export async function managerUpdateParticipantStatus(
   eventId: number,
   targetUserId: string,
-  newStatus: "confirmed" | "reserve",
+  newStatus: string,
 ) {
   const session = await auth.api.getSession({ headers: await headers() });
   if (!session?.user?.id) {
@@ -265,7 +317,6 @@ export async function managerUpdateParticipantStatus(
   }
 
   try {
-    // 1. Validar se o utilizador atual tem permissão para gerir este evento
     const event = await db.query.matchSessions.findFirst({
       columns: { teamId: true },
       where: eq(matchSessions.id, eventId),
@@ -275,19 +326,25 @@ export async function managerUpdateParticipantStatus(
       return { success: false as const, error: "Evento não encontrado" };
     }
 
-    // Nota: Aqui deveríamos verificar se session.user.id é capitão/admin da equipa event.teamId
-    // Por agora, assumimos que se chegou aqui com canEdit=true no front, a ação é legítima,
-    // mas em produção reforçaríamos com lib/team-access.ts
+    const isGuest = targetUserId.startsWith("guest-");
 
-    await db
-      .update(attendance)
-      .set({ status: newStatus, updatedAt: new Date() })
-      .where(
-        and(
-          eq(attendance.matchSessionId, eventId),
-          eq(attendance.playerId, targetUserId),
-        ),
-      );
+    if (isGuest) {
+      const attendanceId = parseInt(targetUserId.replace("guest-", ""), 10);
+      await db
+        .update(attendance)
+        .set({ status: newStatus, updatedAt: new Date() })
+        .where(eq(attendance.id, attendanceId));
+    } else {
+      await db
+        .update(attendance)
+        .set({ status: newStatus, updatedAt: new Date() })
+        .where(
+          and(
+            eq(attendance.matchSessionId, eventId),
+            eq(attendance.playerId, targetUserId),
+          ),
+        );
+    }
 
     revalidatePath(`/event/${eventId}`);
     revalidatePath(`/arena/events/${eventId}`);
@@ -320,14 +377,21 @@ export async function managerRemoveParticipant(
       return { success: false as const, error: "Evento não encontrado" };
     }
 
-    await db
-      .delete(attendance)
-      .where(
-        and(
-          eq(attendance.matchSessionId, eventId),
-          eq(attendance.playerId, targetUserId),
-        ),
-      );
+    const isGuest = targetUserId.startsWith("guest-");
+
+    if (isGuest) {
+      const attendanceId = parseInt(targetUserId.replace("guest-", ""), 10);
+      await db.delete(attendance).where(eq(attendance.id, attendanceId));
+    } else {
+      await db
+        .delete(attendance)
+        .where(
+          and(
+            eq(attendance.matchSessionId, eventId),
+            eq(attendance.playerId, targetUserId),
+          ),
+        );
+    }
 
     revalidatePath(`/event/${eventId}`);
     revalidatePath(`/arena/events/${eventId}`);
@@ -335,5 +399,66 @@ export async function managerRemoveParticipant(
   } catch (error) {
     console.error("Error removing participant:", error);
     return { success: false as const, error: "Erro ao remover participante" };
+  }
+}
+
+export async function managerBlockParticipant(
+  eventId: number,
+  targetUserId: string,
+) {
+  const session = await auth.api.getSession({ headers: await headers() });
+  if (!session?.user?.id) {
+    return { success: false as const, error: "Não autenticado" };
+  }
+
+  try {
+    const event = await db.query.matchSessions.findFirst({
+      columns: { teamId: true, priceCents: true },
+      where: eq(matchSessions.id, eventId),
+    });
+
+    if (!event) {
+      return { success: false as const, error: "Evento não encontrado" };
+    }
+
+    const isGuest = targetUserId.startsWith("guest-");
+
+    // Para utilizadores registados, podemos também aplicar uma multa como forma de "bloqueio"
+    if (!isGuest) {
+      const { fines } = await import("@/db/schema/fines");
+      await db.insert(fines).values({
+        playerId: targetUserId,
+        matchSessionId: eventId,
+        amountCents: event.priceCents || 500,
+        currency: "EUR",
+        reason: "manager_blocked",
+        status: "pending",
+      });
+    }
+
+    if (isGuest) {
+      const attendanceId = parseInt(targetUserId.replace("guest-", ""), 10);
+      await db
+        .update(attendance)
+        .set({ status: "refused", note: "Bloqueado pelo gestor", updatedAt: new Date() })
+        .where(eq(attendance.id, attendanceId));
+    } else {
+      await db
+        .update(attendance)
+        .set({ status: "refused", note: "Bloqueado pelo gestor", updatedAt: new Date() })
+        .where(
+          and(
+            eq(attendance.matchSessionId, eventId),
+            eq(attendance.playerId, targetUserId),
+          ),
+        );
+    }
+
+    revalidatePath(`/event/${eventId}`);
+    revalidatePath(`/arena/events/${eventId}`);
+    return { success: true as const };
+  } catch (error) {
+    console.error("Error blocking participant:", error);
+    return { success: false as const, error: "Erro ao bloquear participante" };
   }
 }

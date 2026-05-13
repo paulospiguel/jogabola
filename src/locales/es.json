@@ -411,6 +411,15 @@
       "confirm": "Confirmar Asistencia",
       "cancelled": "Evento cancelado"
     },
+    "management": {
+      "revokeTitle": "¿Revocar Asistencia?",
+      "revokeDescription": "¿Estás seguro de que quieres eliminar a {name} de la lista de participantes? Esta acción borrará el registro de asistencia.",
+      "revokeConfirm": "Revocar",
+      "blockTitle": "¿Bloquear Participante?",
+      "blockDescription": "Al bloquear a {name}, el participante será eliminado y se podrá aplicar una multa por inasistencia. ¿Estás seguro?",
+      "blockConfirm": "Bloquear",
+      "cancel": "Volver"
+    },
     "lists": {
       "main": "Lista Principal ({count})",
       "reserves": "Reservas / Pendientes ({count})"
