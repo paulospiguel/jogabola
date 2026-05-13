@@ -1,7 +1,6 @@
 "use server";
 
-import { PutObjectCommand } from "@aws-sdk/client-s3";
-import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
+import { randomUUID } from "node:crypto";
 import { and, desc, eq } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { headers } from "next/headers";
@@ -19,7 +18,7 @@ import {
 import { withAction, withAuthAction } from "@/lib/action-helpers";
 import { auth } from "@/lib/auth";
 import { sendPaymentProofRequest } from "@/lib/email";
-import { getR2Client, R2_BUCKET, R2_PUBLIC_URL } from "@/lib/r2";
+import { getPresignedUploadUrl, getR2PublicUrl } from "@/lib/s3";
 import { userCanAccessTeam } from "@/lib/team-access";
 import {
   createPaymentSchema,
@@ -102,26 +101,40 @@ export const submitPaymentProof = withAction(
 
 const ALLOWED_TYPES = new Set([
   "image/jpeg",
-  "image/jpg",
   "image/png",
   "image/webp",
   "image/heic",
   "image/heif",
 ]);
 
-const MAX_SIZE_BYTES = 2 * 1024 * 1024; // 8 MB
+const MAX_SIZE_BYTES = 2 * 1024 * 1024;
+
+const EXTENSION_BY_CONTENT_TYPE: Record<string, string> = {
+  "image/jpeg": "jpg",
+  "image/png": "png",
+  "image/webp": "webp",
+  "image/heic": "heic",
+  "image/heif": "heif",
+};
+
+function normalizeContentType(contentType: string) {
+  const normalized = contentType.trim().toLowerCase();
+  return normalized === "image/jpg" ? "image/jpeg" : normalized;
+}
 
 export const requestPresignedUrl = withAction(
   requestPresignedUrlSchema,
   async data => {
-    const { paymentId, contentType, sizeBytes } = data;
+    const { paymentId, sizeBytes } = data;
+    const contentType = normalizeContentType(data.contentType);
 
     if (!ALLOWED_TYPES.has(contentType)) {
       return {
         success: false,
         error: {
           code: "INVALID_FILE_TYPE",
-          message: "Tipo de ficheiro não permitido. Use JPEG, PNG ou WebP.",
+          message:
+            "Tipo de ficheiro não permitido. Use JPEG, PNG, WebP, HEIC ou HEIF.",
         },
       };
     }
@@ -136,29 +149,41 @@ export const requestPresignedUrl = withAction(
       };
     }
 
+    const [paymentRow] = await db
+      .select({ id: payments.id })
+      .from(payments)
+      .where(eq(payments.id, paymentId))
+      .limit(1);
+
+    if (!paymentRow) {
+      return {
+        success: false,
+        error: {
+          code: "PAYMENT_NOT_FOUND",
+          message: "Pagamento não encontrado.",
+        },
+      };
+    }
+
     // Auth check: guests are allowed
     const session = await auth.api.getSession({ headers: await headers() });
-    const uploaderLabel = session?.user?.id ?? "guest";
+    const uploaderLabel = session?.user?.id ? "user" : "guest";
 
-    // Unique object key
-    const ext = contentType.split("/")[1]?.replace("jpeg", "jpg") ?? "jpg";
-    const key = `payment-proofs/${paymentId}/${uploaderLabel}-${Date.now()}.${ext}`;
+    const ext = EXTENSION_BY_CONTENT_TYPE[contentType] ?? "jpg";
+    const key = `payment-proofs/${paymentId}/${uploaderLabel}-${randomUUID()}.${ext}`;
 
     try {
-      const r2 = getR2Client();
-      const command = new PutObjectCommand({
-        Bucket: R2_BUCKET,
-        Key: key,
-        ContentType: contentType,
-        // ContentLength removed to avoid browser CORS/SignedHeaders issues
-      });
-
-      const uploadUrl = await getSignedUrl(r2, command, { expiresIn: 300 });
-      const publicUrl = `${R2_PUBLIC_URL}/${key}`;
+      const uploadUrl = await getPresignedUploadUrl(key, contentType);
+      const publicUrl = getR2PublicUrl(key);
 
       return {
         success: true,
-        data: { uploadUrl, publicUrl, key },
+        data: {
+          uploadUrl,
+          publicUrl,
+          key,
+          headers: { "Content-Type": contentType },
+        },
       };
     } catch (err) {
       console.error("[requestPresignedUrl]", err);

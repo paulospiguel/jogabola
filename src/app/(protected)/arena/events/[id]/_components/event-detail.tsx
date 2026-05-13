@@ -21,7 +21,7 @@ import {
 } from "@/actions/attendance.actions";
 import { EditEventSheet } from "@/components/arena/edit-event-sheet";
 import { EventNoticeWall } from "@/components/arena/event-notice-wall";
-import { JbBadge } from "@/components/arena/jb-badge";
+import { JbBadge, type BadgeStatus } from "@/components/arena/jb-badge";
 import { JbScreenHeader } from "@/components/arena/jb-screen-header";
 import { LocationMap } from "@/components/arena/location-map";
 import {
@@ -325,6 +325,8 @@ export function EventDetail({
                   position={participantRowPosition(i, confirmed.length)}
                   currentUserId={userId}
                   showPayment={(event.priceCents ?? 0) > 0}
+                  isManager={canEdit}
+                  eventId={event.id}
                   trailing={
                     <Check
                       size={15}
@@ -342,10 +344,7 @@ export function EventDetail({
               })}
             </div>
             <div className="flex flex-col">
-              {[
-                ...reserves.map(p => ({ ...p, status: "reserve" as const })),
-                ...pending.map(p => ({ ...p, status: "pending" as const })),
-              ].map((p, i, arr) => (
+              {[...reserves, ...pending].map((p, i, arr) => (
                 <ParticipantRow
                   key={p.id}
                   participant={p}
@@ -353,7 +352,9 @@ export function EventDetail({
                   currentUserId={userId}
                   showPayment={(event.priceCents ?? 0) > 0}
                   dimmed
-                  trailing={<JbBadge status={p.status} />}
+                  isManager={canEdit}
+                  eventId={event.id}
+                  trailing={<JbBadge status={p.status as BadgeStatus} />}
                 />
               ))}
             </div>

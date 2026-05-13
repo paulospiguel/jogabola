@@ -36,14 +36,14 @@ export function useProofUpload({
         );
       }
 
-      const { uploadUrl, publicUrl } = res.data;
+      const { uploadUrl, publicUrl, headers } = res.data;
 
       setState({ status: "uploading", progress: 30 });
 
       // 2. PUT directly to R2 via presigned URL (no bytes through Next.js)
       const putRes = await fetch(uploadUrl, {
         method: "PUT",
-        headers: { "Content-Type": file.type },
+        headers,
         body: file,
       });
 
