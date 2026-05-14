@@ -312,7 +312,12 @@
       "training": "Ej: Entrenamiento Técnico"
     },
     "playersCount": "{count} jugadores",
-    "steps": ["Tipo de evento", "Detalles", "Vista previa", "Confirmar"],
+    "steps": [
+      "Tipo de evento",
+      "Detalles",
+      "Vista previa",
+      "Confirmar"
+    ],
     "success": "¡Evento creado!",
     "successSubtitle": "Convocatoria enviada con éxito.",
     "types": {
@@ -328,14 +333,6 @@
         "desc": "Sesión de entrenamiento",
         "label": "Entrenamiento"
       }
-    },
-    "payment": {
-      "section": "Pago",
-      "price": "Importe (€)",
-      "required": "Pago obligatorio",
-      "requiredHint": "Los atletas deben pagar antes de confirmar",
-      "deadlineHours": "Plazo de pago",
-      "deadlineHoursUnit": "h antes del partido"
     }
   },
   "arenaCreateTeam": {
@@ -718,7 +715,8 @@
     "validating": "Validando",
     "low": "Riesgo Bajo",
     "medium": "Riesgo Medio",
-    "high": "Riesgo Alto"
+    "high": "Riesgo Alto",
+    "scoreIs": "Puntuación de riesgo"
   },
   "arenaSquad": {
     "roles": {
@@ -871,7 +869,6 @@
     "verified": "Verificado",
     "teamStats": "Estadísticas del equipo",
     "title": "Título",
-    "toggleTheme": "Cambiar tema",
     "positions": {
       "GK": "Portero",
       "CB": "Defensa",

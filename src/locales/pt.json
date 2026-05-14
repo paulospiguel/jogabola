@@ -315,7 +315,12 @@
       "training": "Ex: Treino Técnico"
     },
     "playersCount": "{count} jogadores",
-    "steps": ["Tipo de evento", "Detalhes", "Pré-visualização", "Confirmar"],
+    "steps": [
+      "Tipo de evento",
+      "Detalhes",
+      "Pré-visualização",
+      "Confirmar"
+    ],
     "success": "Evento criado!",
     "successSubtitle": "Convocatória enviada com sucesso.",
     "types": {
@@ -331,14 +336,6 @@
         "desc": "Sessão de treino",
         "label": "Treino"
       }
-    },
-    "payment": {
-      "section": "Pagamento",
-      "price": "Valor (€)",
-      "required": "Pagamento obrigatório",
-      "requiredHint": "Atletas devem pagar antes de confirmar",
-      "deadlineHours": "Prazo de pagamento",
-      "deadlineHoursUnit": "h antes do jogo"
     }
   },
   "arenaCreateTeam": {
@@ -647,6 +644,46 @@
     "notFound": "Pagamento não encontrado",
     "loading": "A carregar pagamentos...",
     "noPayments": "Nenhum pagamento encontrado.",
+    "settings": {
+      "title": "Configurar Métodos de Pagamento",
+      "subtitle": "Ativa e personaliza como os atletas podem pagar à equipa.",
+      "methods": "Métodos aceites",
+      "saving": "A guardar...",
+      "help": "Clica num método para configurar os detalhes.",
+      "done": "Concluir",
+      "error": "Erro ao guardar. Tenta de novo.",
+      "active": "Ativo",
+      "inactive": "Inativo",
+      "notConfigured": "Não configurado",
+      "noNumber": "Sem número",
+      "soon": "Em breve",
+      "mbway": {
+        "title": "MBWay",
+        "description": "Transferência manual por telemóvel",
+        "phone": "Número de telemóvel",
+        "name": "Nome do destinatário (opcional)",
+        "placeholderName": "Ex: João Silva",
+        "errorPhone": "Insere o número de telemóvel para MBWay."
+      },
+      "cash": {
+        "title": "Dinheiro",
+        "description": "Pagamento presencial no jogo",
+        "instructions": "Instruções para pagamento em dinheiro",
+        "placeholder": "Paga ao capitão no início do jogo."
+      },
+      "stripe": {
+        "title": "Stripe — Cartão",
+        "description": "Pagamento automático por cartão",
+        "info": "A integração com Stripe será configurada através do painel de equipa. Contacta o suporte para mais informações."
+      }
+    },
+    "methods": {
+      "mbway": "MBWay",
+      "cash": "Numerário",
+      "stripe": "Stripe",
+      "cashSub": "Presencial no jogo",
+      "creditCard": "Cartão de crédito"
+    },
     "table": {
       "title": "Histórico de pagamentos",
       "player": "Atleta",
@@ -753,7 +790,8 @@
     "validating": "A validar",
     "low": "Risco Baixo",
     "medium": "Risco Médio",
-    "high": "Risco Alto"
+    "high": "Risco Alto",
+    "scoreIs": "Score de risco"
   },
   "arenaSquad": {
     "roles": {
@@ -907,7 +945,6 @@
     "verified": "Verificado",
     "teamStats": "Estatísticas da equipa",
     "title": "Título",
-    "toggleTheme": "Mudar o tema",
     "positions": {
       "GK": "Guarda-Redes",
       "CB": "Defesa",

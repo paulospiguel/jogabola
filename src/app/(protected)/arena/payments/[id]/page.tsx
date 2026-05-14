@@ -27,6 +27,7 @@ import {
 } from "@/actions/payments.actions";
 import { JbAvatar } from "@/components/arena/jb-avatar";
 import { type BadgeStatus, JbBadge } from "@/components/arena/jb-badge";
+import { type ScoreLevel, JbScoreBar } from "@/components/arena/jb-score-bar";
 import { VerifiedBadge } from "@/components/arena/verified-badge";
 import { Button } from "@/components/ui/button";
 import { usePayments } from "@/hooks/use-payments";
@@ -573,6 +574,13 @@ export default function PaymentDetailPage() {
                   ))}
                 </div>
               </div>
+            </section>
+
+            <section className="jb-card px-5 pb-5 pt-4">
+              <h2 className="mb-4 text-xs font-bold uppercase tracking-widest text-arena-text-muted">
+                {t("table.risk")}
+              </h2>
+              <JbScoreBar score={payment.score as ScoreLevel} />
             </section>
           </aside>
         </div>

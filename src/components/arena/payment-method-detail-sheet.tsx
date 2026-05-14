@@ -1,6 +1,7 @@
 "use client";
 
 import { Banknote, CreditCard, Loader2, Smartphone } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { useState } from "react";
 import { JbBottomSheet } from "@/components/arena/jb-bottom-sheet";
 import { cn } from "@/lib/utils";
@@ -23,12 +24,6 @@ interface PaymentMethodDetailSheetProps {
 
 const inputCls =
   "h-[46px] w-full rounded-[10px] border border-arena-border bg-arena-bg-sec/50 px-3.5 text-[13px] text-arena-text placeholder:text-arena-text-muted outline-none transition-all focus:border-arena-primary focus:ring-2 focus:ring-arena-primary/10";
-
-const TITLES: Record<PaymentMethodType, string> = {
-  stripe: "Configurar Stripe",
-  mbway: "Configurar MBWay",
-  cash: "Configurar Dinheiro",
-};
 
 const ICONS: Record<PaymentMethodType, React.ElementType> = {
   stripe: CreditCard,
@@ -68,6 +63,7 @@ export function PaymentMethodDetailSheet({
   onSave,
   onClose,
 }: PaymentMethodDetailSheetProps) {
+  const t = useTranslations("arenaPayments.settings");
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
   const [mbwayPhone, setMbwayPhone] = useState(initial.mbwayPhone ?? "");
@@ -81,7 +77,7 @@ export function PaymentMethodDetailSheet({
 
   async function handleSave() {
     if (type === "mbway" && !mbwayPhone.trim()) {
-      setError("Insere o número de telemóvel para MBWay.");
+      setError(t("mbway.errorPhone"));
       return;
     }
     setSaving(true);
@@ -94,14 +90,16 @@ export function PaymentMethodDetailSheet({
       });
       onClose();
     } catch {
-      setError("Erro ao guardar. Tenta de novo.");
+      setError(t("error"));
     } finally {
       setSaving(false);
     }
   }
 
+  const methodKey = type as keyof typeof t;
+
   return (
-    <JbBottomSheet title={TITLES[type]} onClose={onClose}>
+    <JbBottomSheet title={t(`${type}.title` as any)} onClose={onClose}>
       <div className="flex flex-col gap-5 p-5 pb-8">
         {/* Method header */}
         <div
@@ -120,12 +118,10 @@ export function PaymentMethodDetailSheet({
           </div>
           <div>
             <p className="text-[14px] font-bold text-arena-text">
-              {TITLES[type].replace("Configurar ", "")}
+              {t(`${type}.title` as any)}
             </p>
             <p className="text-[11px] text-arena-text-muted">
-              {type === "stripe" && "Pagamento automático por cartão"}
-              {type === "mbway" && "Transferência manual por telemóvel"}
-              {type === "cash" && "Pagamento presencial no jogo"}
+              {t(`${type}.description` as any)}
             </p>
           </div>
         </div>
@@ -139,15 +135,14 @@ export function PaymentMethodDetailSheet({
         {/* Stripe */}
         {type === "stripe" && (
           <div className="rounded-[12px] border border-arena-border bg-arena-surface p-4 text-[13px] text-arena-text-muted">
-            A integração com Stripe será configurada através do painel de
-            equipa. Contacta o suporte para mais informações.
+            {t("stripe.info")}
           </div>
         )}
 
         {/* MBWay */}
         {type === "mbway" && (
           <div className="flex flex-col gap-3">
-            <FieldRow label="Número de telemóvel" required>
+            <FieldRow label={t("mbway.phone")} required>
               <input
                 type="tel"
                 value={mbwayPhone}
@@ -156,12 +151,12 @@ export function PaymentMethodDetailSheet({
                 className={inputCls}
               />
             </FieldRow>
-            <FieldRow label="Nome do destinatário (opcional)">
+            <FieldRow label={t("mbway.name")}>
               <input
                 type="text"
                 value={mbwayName}
                 onChange={e => setMbwayName(e.target.value)}
-                placeholder="Ex: João Silva"
+                placeholder={t("mbway.placeholderName")}
                 className={inputCls}
               />
             </FieldRow>
@@ -170,11 +165,11 @@ export function PaymentMethodDetailSheet({
 
         {/* Cash */}
         {type === "cash" && (
-          <FieldRow label="Instruções para pagamento em dinheiro">
+          <FieldRow label={t("cash.instructions")}>
             <textarea
               value={cashInstructions}
               onChange={e => setCashInstructions(e.target.value)}
-              placeholder="Paga ao capitão no início do jogo."
+              placeholder={t("cash.placeholder")}
               rows={3}
               maxLength={300}
               className={cn(
@@ -197,7 +192,7 @@ export function PaymentMethodDetailSheet({
             {saving ? (
               <Loader2 size={18} className="animate-spin" />
             ) : (
-              "Guardar"
+              t("done")
             )}
           </button>
         )}

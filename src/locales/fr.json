@@ -312,7 +312,12 @@
       "training": "Ex : Entraînement technique"
     },
     "playersCount": "{count} joueurs",
-    "steps": ["Type d'événement", "Détails", "Aperçu", "Confirmer"],
+    "steps": [
+      "Type d'événement",
+      "Détails",
+      "Aperçu",
+      "Confirmer"
+    ],
     "success": "Événement créé !",
     "successSubtitle": "Convocation envoyée avec succès.",
     "types": {
@@ -328,14 +333,6 @@
         "desc": "Séance d'entraînement",
         "label": "Entraînement"
       }
-    },
-    "payment": {
-      "section": "Paiement",
-      "price": "Montant (€)",
-      "required": "Paiement obligatoire",
-      "requiredHint": "Les athlètes doivent payer avant de confirmer",
-      "deadlineHours": "Délai de paiement",
-      "deadlineHoursUnit": "h avant le match"
     }
   },
   "arenaCreateTeam": {
@@ -718,7 +715,8 @@
     "validating": "Validation",
     "low": "Risque Faible",
     "medium": "Risque Moyen",
-    "high": "Risque Élevé"
+    "high": "Risque Élevé",
+    "scoreIs": "Score de risque"
   },
   "arenaSquad": {
     "roles": {
@@ -831,7 +829,6 @@
     "selectDates": "Choisir les dates",
     "clear": "Effacer",
     "toggleSidebar": "Basculer la barre latérale",
-    "toggleTheme": "Changer le thème",
     "notifications": "Notifications",
     "password": "Mot de passe",
     "performance": "Rendement",

@@ -9,6 +9,10 @@ if (!databaseUrl) {
   throw new Error("DATABASE_URL is required");
 }
 
-const client = postgres(databaseUrl, { ssl: "require" });
+const client = postgres(databaseUrl, {
+  ssl: "require",
+  max: 1,
+  idle_timeout: 20,
+});
 
 export const db = drizzle(client, { schema });

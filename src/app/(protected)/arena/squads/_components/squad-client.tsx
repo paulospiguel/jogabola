@@ -146,10 +146,10 @@ export function SquadClient({ userId }: { userId: string }) {
         groups.map(group =>
           group.id === editingGroupId
             ? {
-                ...group,
-                name: groupName.trim(),
-                playerIds: groupSelection,
-              }
+              ...group,
+              name: groupName.trim(),
+              playerIds: groupSelection,
+            }
             : group,
         ),
       );
@@ -350,7 +350,7 @@ export function SquadClient({ userId }: { userId: string }) {
                     {t("subtitle")}
                   </p>
                 </div>
-                <JbUserMenu onlyAvatar />
+                <JbUserMenu onlyAvatar className="hidden md:block" />
               </div>
             </header>
             <div className="mb-4 grid grid-cols-2 gap-2 md:flex md:justify-end">

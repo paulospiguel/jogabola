@@ -26,6 +26,7 @@ export type BadgeStatus =
 interface JbBadgeProps {
   status: BadgeStatus;
   animate?: boolean;
+  size?: "sm" | "md";
 }
 
 const STATUS_MAP: Record<
@@ -91,7 +92,7 @@ const STATUS_MAP: Record<
   },
 };
 
-export function JbBadge({ status, animate }: JbBadgeProps) {
+export function JbBadge({ status, animate, size = "md" }: JbBadgeProps) {
   const t = useTranslations("arenaBadges");
 
   const m = STATUS_MAP[status] ?? STATUS_MAP.pending;
@@ -100,12 +101,15 @@ export function JbBadge({ status, animate }: JbBadgeProps) {
   return (
     <span
       className={cn(
-        "inline-flex items-center gap-1 whitespace-nowrap rounded-lg border px-2 py-[3px] text-[11px] font-bold tracking-[0.2px]",
+        "inline-flex items-center gap-1 whitespace-nowrap rounded-lg border font-bold tracking-[0.2px]",
+        size === "sm"
+          ? "px-1.5 py-[2px] text-[10px]"
+          : "px-2 py-[3px] text-[11px]",
         animate && "animate-[badgePop_.4s_ease]",
         m.className,
       )}
     >
-      <Icon size={10} strokeWidth={2.5} />
+      <Icon size={size === "sm" ? 9 : 10} strokeWidth={2.5} />
       {t(m.label)}
     </span>
   );

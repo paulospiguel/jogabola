@@ -312,7 +312,12 @@
       "training": "Ex: Technical Training"
     },
     "playersCount": "{count} players",
-    "steps": ["Event Type", "Details", "Preview", "Confirm"],
+    "steps": [
+      "Event Type",
+      "Details",
+      "Preview",
+      "Confirm"
+    ],
     "success": "Event created!",
     "successSubtitle": "Invitation sent successfully.",
     "types": {
@@ -328,14 +333,6 @@
         "desc": "Training session",
         "label": "Training"
       }
-    },
-    "payment": {
-      "section": "Payment",
-      "price": "Amount (€)",
-      "required": "Payment required",
-      "requiredHint": "Athletes must pay before confirming",
-      "deadlineHours": "Payment deadline",
-      "deadlineHoursUnit": "h before the match"
     }
   },
   "arenaCreateTeam": {
@@ -644,7 +641,47 @@
       "validating": "Paid to validate"
     },
     "notFound": "Payment not found",
-    "loading": "Loading payments...",
+    "noPayments": "No payments found.",
+    "settings": {
+      "title": "Configure Payment Methods",
+      "subtitle": "Enable and customize how athletes can pay the team.",
+      "methods": "Accepted methods",
+      "saving": "Saving...",
+      "help": "Click a method to configure details.",
+      "done": "Done",
+      "error": "Error saving. Try again.",
+      "active": "Active",
+      "inactive": "Inactive",
+      "notConfigured": "Not configured",
+      "noNumber": "No number",
+      "soon": "Soon",
+      "mbway": {
+        "title": "MBWay",
+        "description": "Manual mobile transfer",
+        "phone": "Phone number",
+        "name": "Recipient name (optional)",
+        "placeholderName": "Ex: John Doe",
+        "errorPhone": "Please enter a phone number for MBWay."
+      },
+      "cash": {
+        "title": "Cash",
+        "description": "In-person payment at the game",
+        "instructions": "Cash payment instructions",
+        "placeholder": "Pay the captain at the start of the game."
+      },
+      "stripe": {
+        "title": "Stripe — Card",
+        "description": "Automatic card payment",
+        "info": "Stripe integration will be configured through the team dashboard. Contact support for more info."
+      }
+    },
+    "methods": {
+      "mbway": "MBWay",
+      "cash": "Cash",
+      "stripe": "Stripe",
+      "cashSub": "In-person at the game",
+      "creditCard": "Credit card"
+    },
     "table": {
       "title": "Weekly payments",
       "player": "Athlete",
@@ -713,7 +750,8 @@
     "validating": "Validating",
     "low": "Low Risk",
     "medium": "Medium Risk",
-    "high": "High Risk"
+    "high": "High Risk",
+    "scoreIs": "Risk score"
   },
   "arenaSquad": {
     "roles": {
@@ -866,7 +904,6 @@
     "verified": "Verified",
     "teamStats": "Team statistics",
     "title": "Title",
-    "toggleTheme": "Toggle theme",
     "positions": {
       "GK": "Goalkeeper",
       "CB": "Defender",

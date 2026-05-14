@@ -17,14 +17,47 @@ export default async function AthleteEventPage({ params }: Params) {
   const t = await getTranslations("athleteEventPublic");
   const eventId = Number.parseInt(id, 10);
 
-  const session = await auth.api.getSession({ headers: await headers() });
-  const userId = session?.user?.id ?? "";
-  const userName = session?.user?.name ?? "";
+  try {
+    const h = await headers();
 
-  const result = await getEvent(eventId);
-  const event = result.success ? result.data : null;
+    const [session, eventResult] = await Promise.all([
+      auth.api.getSession({ headers: h }),
+      getEvent(eventId),
+    ]);
 
-  if (!event) {
+    const userId = session?.user?.id ?? "";
+    const userName = session?.user?.name ?? "";
+    const event = eventResult.success ? eventResult.data : null;
+
+    if (!event) {
+      return (
+        <div className="flex min-h-screen items-center gap-2 flex-col justify-center bg-arena-bg">
+          <Logo size="medium" className="" />
+          <p className="text-arena-text-muted text-md">{t("eventNotFound")}</p>
+          <Link
+            href="/"
+            className="flex items-center text-arena-primary hover:text-arena-primary/75"
+          >
+            <ArrowLeft className="inline-block mr-1" size={16} />
+            {t("backToHome")}
+          </Link>
+        </div>
+      );
+    }
+
+    const myStatus = userId
+      ? await getUserEventAttendanceStatus(eventId, userId)
+      : null;
+
+    return (
+      <AthleteEventDetail
+        event={event}
+        userId={userId}
+        userName={userName}
+        initialMyStatus={myStatus}
+      />
+    );
+  } catch {
     return (
       <div className="flex min-h-screen items-center gap-2 flex-col justify-center bg-arena-bg">
         <Logo size="medium" className="" />
@@ -39,17 +72,4 @@ export default async function AthleteEventPage({ params }: Params) {
       </div>
     );
   }
-
-  const myStatus = userId
-    ? await getUserEventAttendanceStatus(eventId, userId)
-    : null;
-
-  return (
-    <AthleteEventDetail
-      event={event}
-      userId={userId}
-      userName={userName}
-      initialMyStatus={myStatus}
-    />
-  );
 }

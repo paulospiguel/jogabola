@@ -13,16 +13,19 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { signOut, useSession } from "@/lib/auth-client";
+import { cn } from "@/lib/utils";
 import { JbAvatar } from "./jb-avatar";
 
 interface JbUserMenuProps {
   collapsed?: boolean;
   onlyAvatar?: boolean;
+  className?: string;
 }
 
 export function JbUserMenu({
   collapsed = false,
   onlyAvatar = false,
+  className,
 }: JbUserMenuProps) {
   const { data: session } = useSession();
   const router = useRouter();
@@ -48,7 +51,12 @@ export function JbUserMenu({
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         {onlyAvatar ? (
-          <button className="outline-none transition-transform hover:scale-105 active:scale-95">
+          <button
+            className={cn(
+              "outline-none transition-transform hover:scale-105 active:scale-95",
+              className,
+            )}
+          >
             <JbAvatar id={id} name={name} image={image} size={40} />
           </button>
         ) : (

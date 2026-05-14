@@ -32,14 +32,24 @@ const METHOD_META: Record<
 };
 
 function MethodBadge({ method }: { method: string }) {
-  const meta = METHOD_META[method as PaymentMethod];
-  if (!meta)
+  const t = useTranslations("arenaPayments.methods");
+  const meta: Record<
+    PaymentMethod,
+    { labelKey: string; icon: React.ElementType; color: string }
+  > = {
+    stripe: { labelKey: "stripe", icon: CreditCard, color: "#6366f1" },
+    mbway: { labelKey: "mbway", icon: Smartphone, color: "#ef4444" },
+    cash: { labelKey: "cash", icon: Banknote, color: "#22c55e" },
+  };
+
+  const data = meta[method as PaymentMethod];
+  if (!data)
     return <span className="text-[11px] text-arena-text-muted">{method}</span>;
-  const Icon = meta.icon;
+  const Icon = data.icon;
   return (
-    <span className="flex items-center gap-1" style={{ color: meta.color }}>
+    <span className="flex items-center gap-1" style={{ color: data.color }}>
       <Icon size={11} />
-      <span className="text-[11px] font-semibold">{meta.label}</span>
+      <span className="text-[11px] font-semibold">{t(data.labelKey)}</span>
     </span>
   );
 }
@@ -68,14 +78,14 @@ export default function PaymentsPage() {
               {t("titleSub")}
             </p>
           </div>
-          <JbUserMenu onlyAvatar />
+          <JbUserMenu onlyAvatar className="hidden md:block" />
         </header>
 
         {/* Methods config card */}
         <section className="jb-card overflow-hidden p-0">
           <div className="flex flex-col gap-3 border-arena-border border-b px-4 py-3 sm:flex-row sm:items-center sm:justify-between">
             <span className="text-[11px] font-bold uppercase tracking-widest text-arena-text-muted">
-              Métodos de pagamento
+              {t("settings.methods")}
             </span>
             <button
               type="button"
@@ -93,15 +103,15 @@ export default function PaymentsPage() {
               <div className="flex items-center gap-1.5">
                 <Smartphone size={13} style={{ color: "#ef4444" }} />
                 <span className="text-[11px] font-bold text-arena-text">
-                  MBWay
+                  {t("settings.mbway.title")}
                 </span>
                 {settings?.mbwayEnabled ? (
                   <span className="rounded-full bg-arena-success/15 px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-wider text-arena-success">
-                    Ativo
+                    {t("settings.active")}
                   </span>
                 ) : (
                   <span className="rounded-full bg-arena-border px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-wider text-arena-text-muted">
-                    Inativo
+                    {t("settings.inactive")}
                   </span>
                 )}
               </div>
@@ -111,7 +121,7 @@ export default function PaymentsPage() {
                 </p>
               ) : (
                 <p className="text-[11px] text-arena-text-muted">
-                  {settings?.mbwayEnabled ? "Sem número" : "Não configurado"}
+                  {settings?.mbwayEnabled ? t("settings.noNumber") : t("settings.notConfigured")}
                 </p>
               )}
             </div>
@@ -121,20 +131,20 @@ export default function PaymentsPage() {
               <div className="flex items-center gap-1.5">
                 <Banknote size={13} style={{ color: "#22c55e" }} />
                 <span className="text-[11px] font-bold text-arena-text">
-                  Numerário
+                  {t("settings.cash.title")}
                 </span>
                 {settings?.cashEnabled !== false ? (
                   <span className="rounded-full bg-arena-success/15 px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-wider text-arena-success">
-                    Ativo
+                    {t("settings.active")}
                   </span>
                 ) : (
                   <span className="rounded-full bg-arena-border px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-wider text-arena-text-muted">
-                    Inativo
+                    {t("settings.inactive")}
                   </span>
                 )}
               </div>
               <p className="text-[11px] text-arena-text-muted">
-                Presencial no jogo
+                {t("methods.cashSub")}
               </p>
             </div>
 
@@ -143,15 +153,15 @@ export default function PaymentsPage() {
               <div className="flex items-center gap-1.5">
                 <CreditCard size={13} style={{ color: "#6366f1" }} />
                 <span className="text-[11px] font-bold text-arena-text">
-                  Stripe
+                  {t("settings.stripe.title")}
                 </span>
                 <span className="flex items-center gap-0.5 rounded-full bg-arena-info/10 px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-wider text-arena-info">
                   <Clock size={8} />
-                  Em breve
+                  {t("settings.soon")}
                 </span>
               </div>
               <p className="text-[11px] text-arena-text-muted">
-                Cartão de crédito
+                {t("methods.creditCard")}
               </p>
             </div>
           </div>
@@ -184,16 +194,17 @@ export default function PaymentsPage() {
                   href={`/arena/payments/${payment.id}`}
                   className="jb-card group relative overflow-hidden transition-all hover:border-arena-primary/30"
                 >
-                  <div className="flex flex-col gap-3 p-3 pr-10 sm:p-4 sm:pr-4 md:flex-row md:items-center">
-                    <div className="flex min-w-0 flex-1 items-center gap-3">
+                  <div className="flex flex-col gap-2.5 p-3 sm:p-4">
+                    {/* Header: avatar + info + chevron */}
+                    <div className="flex min-w-0 items-center gap-3">
                       <JbAvatar
                         id={payment.player.id}
                         name={payment.player.name}
-                        size={44}
+                        size={40}
                       />
                       <div className="min-w-0 flex-1">
                         <div className="flex min-w-0 items-center gap-1.5">
-                          <span className="truncate font-bold text-arena-text transition-colors group-hover:text-arena-primary">
+                          <span className="truncate text-[13px] font-bold text-arena-text transition-colors group-hover:text-arena-primary">
                             {payment.player.name}
                           </span>
                           <VerifiedBadge
@@ -201,46 +212,47 @@ export default function PaymentsPage() {
                             variant="icon"
                           />
                         </div>
-                        <div className="flex min-w-0 items-center gap-2 text-xs text-arena-text-muted">
+                        <div className="flex min-w-0 items-center gap-1.5 text-xs text-arena-text-muted">
                           <MethodBadge method={payment.method} />
-                          <span>·</span>
-                          <span className="min-w-0 flex-1 truncate md:max-w-[150px]">
+                          <span className="text-arena-border">·</span>
+                          <span className="min-w-0 truncate text-[11px]">
                             {payment.event.title}
                           </span>
                         </div>
                       </div>
+                      <div className="flex size-7 shrink-0 items-center justify-center rounded-[8px] bg-arena-surface-el text-arena-text-muted transition-all group-hover:bg-arena-primary group-hover:text-arena-bg">
+                        <ChevronRight size={15} />
+                      </div>
                     </div>
 
-                    <div className="grid grid-cols-2 gap-2 min-[430px]:grid-cols-3 md:flex md:flex-wrap md:items-center md:gap-8">
-                      <div className="min-w-0 rounded-[10px] border border-arena-border/60 bg-arena-bg/25 px-2.5 py-2 md:border-0 md:bg-transparent md:p-0">
-                        <span className="text-[10px] font-bold uppercase tracking-wider text-arena-text-muted">
+                    {/* Stats row: always 3 equal columns */}
+                    <div className="grid grid-cols-3 gap-1.5">
+                      <div className="flex min-w-0 flex-col gap-1 rounded-[10px] border border-arena-border/60 bg-arena-bg/25 px-2 py-1.5">
+                        <span className="text-[9px] font-bold uppercase tracking-wider text-arena-text-muted">
                           {t("table.status")}
                         </span>
                         <JbBadge
                           status={payment.status as BadgeStatus}
+                          size="sm"
                           animate
                         />
                       </div>
 
-                      <div className="min-w-0 rounded-[10px] border border-arena-border/60 bg-arena-bg/25 px-2.5 py-2 md:border-0 md:bg-transparent md:p-0">
-                        <span className="text-[10px] font-bold uppercase tracking-wider text-arena-text-muted">
+                      <div className="flex min-w-0 flex-col gap-1 rounded-[10px] border border-arena-border/60 bg-arena-bg/25 px-2 py-1.5">
+                        <span className="text-[9px] font-bold uppercase tracking-wider text-arena-text-muted">
                           {t("table.risk")}
                         </span>
-                        <JbBadge status={payment.score as BadgeStatus} />
+                        <JbBadge status={payment.score as BadgeStatus} size="sm" />
                       </div>
 
-                      <div className="min-w-0 rounded-[10px] border border-arena-border/60 bg-arena-bg/25 px-2.5 py-2 md:border-0 md:bg-transparent md:p-0 md:items-end">
-                        <span className="text-[10px] font-bold uppercase tracking-wider text-arena-text-muted">
+                      <div className="flex min-w-0 flex-col gap-1 overflow-hidden rounded-[10px] border border-arena-border/60 bg-arena-bg/25 px-2 py-1.5">
+                        <span className="text-[9px] font-bold uppercase tracking-wider text-arena-text-muted">
                           {t("table.amount")}
                         </span>
-                        <span className="text-lg font-black text-arena-primary">
+                        <span className="text-base font-black text-arena-primary">
                           {payment.amount}
                         </span>
                       </div>
-                    </div>
-
-                    <div className="absolute top-3 right-3 flex size-8 items-center justify-center rounded-[10px] bg-arena-surface-el text-arena-text-muted transition-all group-hover:bg-arena-primary group-hover:text-arena-bg sm:size-10 md:static">
-                      <ChevronRight size={20} />
                     </div>
                   </div>
 
@@ -258,13 +270,13 @@ export default function PaymentsPage() {
           initial={
             settings
               ? {
-                  stripeEnabled: settings.stripeEnabled,
-                  mbwayEnabled: settings.mbwayEnabled,
-                  mbwayPhone: settings.mbwayPhone ?? undefined,
-                  mbwayName: settings.mbwayName ?? undefined,
-                  cashEnabled: settings.cashEnabled,
-                  cashInstructions: settings.cashInstructions ?? undefined,
-                }
+                stripeEnabled: settings.stripeEnabled,
+                mbwayEnabled: settings.mbwayEnabled,
+                mbwayPhone: settings.mbwayPhone ?? undefined,
+                mbwayName: settings.mbwayName ?? undefined,
+                cashEnabled: settings.cashEnabled,
+                cashInstructions: settings.cashInstructions ?? undefined,
+              }
               : undefined
           }
           onClose={() => setShowSettings(false)}

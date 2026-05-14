@@ -1,6 +1,7 @@
 "use client";
 
 import { Settings2 } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { useState } from "react";
 import { upsertTeamPaymentSettings } from "@/actions/team-payment-settings.actions";
 import { JbBottomSheet } from "@/components/arena/jb-bottom-sheet";
@@ -31,6 +32,7 @@ export function PaymentSettingsSheet({
   onClose,
   onSaved,
 }: PaymentSettingsSheetProps) {
+  const t = useTranslations("arenaPayments.settings");
   const [stripeEnabled, setStripeEnabled] = useState(
     initial?.stripeEnabled ?? false,
   );
@@ -74,7 +76,7 @@ export function PaymentSettingsSheet({
     });
     setSaving(false);
     if (!res.success) {
-      setError("Erro ao guardar. Tenta de novo.");
+      setError(t("error"));
     }
     return res.success;
   }
@@ -114,7 +116,7 @@ export function PaymentSettingsSheet({
     {
       type: "stripe",
       enabled: stripeEnabled,
-      summary: stripeEnabled ? "Cartão ativo" : undefined,
+      summary: stripeEnabled ? t("stripe.title") : undefined,
     },
     {
       type: "mbway",
@@ -130,7 +132,7 @@ export function PaymentSettingsSheet({
 
   return (
     <>
-      <JbBottomSheet title="Métodos de Pagamento" onClose={onClose}>
+      <JbBottomSheet title={t("title")} onClose={onClose}>
         <div className="flex flex-col gap-5 p-5 pb-8">
           {error && (
             <div className="rounded-[10px] bg-arena-danger/10 p-3 text-[13px] text-arena-danger">
@@ -146,8 +148,8 @@ export function PaymentSettingsSheet({
 
           <p className="text-[11px] text-arena-text-muted">
             {saving
-              ? "A guardar..."
-              : "Clica num método para configurar os detalhes."}
+              ? t("saving")
+              : t("help")}
           </p>
 
           <button
@@ -159,7 +161,7 @@ export function PaymentSettingsSheet({
             className="flex h-[50px] w-full items-center justify-center gap-2 rounded-[14px] bg-arena-primary text-[14px] font-bold text-arena-bg shadow-[0_0_20px_rgba(124,255,79,0.2)] transition-all hover:bg-arena-primary/90"
           >
             <Settings2 size={16} />
-            Concluir
+            {t("done")}
           </button>
         </div>
       </JbBottomSheet>

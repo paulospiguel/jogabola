@@ -1,6 +1,7 @@
 "use client";
 
 import { Banknote, ChevronRight, CreditCard, Smartphone } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { cn } from "@/lib/utils";
 
 export type PaymentMethodType = "stripe" | "mbway" | "cash";
@@ -17,44 +18,51 @@ interface PaymentMethodListProps {
   onToggle: (type: PaymentMethodType, enabled: boolean) => void;
 }
 
-const METHOD_META: Record<
-  PaymentMethodType,
-  { label: string; description: string; icon: React.ElementType; color: string }
-> = {
-  stripe: {
-    label: "Stripe — Cartão",
-    description: "Pagamento automático por cartão",
-    icon: CreditCard,
-    color: "#6366f1",
-  },
-  mbway: {
-    label: "MBWay",
-    description: "Transferência manual por telemóvel",
-    icon: Smartphone,
-    color: "#ef4444",
-  },
-  cash: {
-    label: "Dinheiro",
-    description: "Pagamento presencial no jogo",
-    icon: Banknote,
-    color: "#22c55e",
-  },
-};
-
 export function PaymentMethodList({
   methods,
   onMethodClick,
   onToggle,
 }: PaymentMethodListProps) {
+  const t = useTranslations("arenaPayments.settings");
+
+  const meta: Record<
+    PaymentMethodType,
+    {
+      labelKey: string;
+      descKey: string;
+      icon: React.ElementType;
+      color: string;
+    }
+  > = {
+    stripe: {
+      labelKey: "stripe.title",
+      descKey: "stripe.description",
+      icon: CreditCard,
+      color: "#6366f1",
+    },
+    mbway: {
+      labelKey: "mbway.title",
+      descKey: "mbway.description",
+      icon: Smartphone,
+      color: "#ef4444",
+    },
+    cash: {
+      labelKey: "cash.title",
+      descKey: "cash.description",
+      icon: Banknote,
+      color: "#22c55e",
+    },
+  };
+
   return (
     <div className="flex flex-col gap-2.5">
       <p className="text-[11px] font-bold uppercase tracking-wider text-arena-text-muted">
-        Métodos aceites
+        {t("methods")}
       </p>
 
       {methods.map(m => {
-        const meta = METHOD_META[m.type];
-        const Icon = meta.icon;
+        const mData = meta[m.type];
+        const Icon = mData.icon;
 
         return (
           <div
@@ -68,9 +76,9 @@ export function PaymentMethodList({
             style={
               m.enabled
                 ? {
-                    borderColor: `${meta.color}50`,
-                    backgroundColor: `${meta.color}08`,
-                  }
+                  borderColor: `${mData.color}50`,
+                  backgroundColor: `${mData.color}08`,
+                }
                 : {}
             }
           >
@@ -78,9 +86,9 @@ export function PaymentMethodList({
             <div
               className="flex size-9 shrink-0 items-center justify-center rounded-[9px] border"
               style={{
-                backgroundColor: `${meta.color}15`,
-                borderColor: `${meta.color}30`,
-                color: meta.color,
+                backgroundColor: `${mData.color}15`,
+                borderColor: `${mData.color}30`,
+                color: mData.color,
               }}
             >
               <Icon size={17} />
@@ -93,10 +101,10 @@ export function PaymentMethodList({
               onClick={() => onMethodClick(m.type)}
             >
               <p className="text-[13px] font-bold text-arena-text">
-                {meta.label}
+                {t(mData.labelKey)}
               </p>
               <p className="truncate text-[11px] text-arena-text-muted">
-                {m.enabled && m.summary ? m.summary : meta.description}
+                {m.enabled && m.summary ? m.summary : t(mData.descKey)}
               </p>
             </button>
 
@@ -119,7 +127,7 @@ export function PaymentMethodList({
                 "relative ml-1 h-5 w-9 shrink-0 rounded-full transition-colors duration-200",
                 m.enabled ? "bg-arena-primary" : "bg-arena-border",
               )}
-              aria-label={m.enabled ? "Desativar" : "Ativar"}
+              aria-label={m.enabled ? t("inactive") : t("active")}
             >
               <div
                 className={cn(
