@@ -101,6 +101,7 @@
     "emailLabel": "Email Address",
     "emailPlaceholder": "email@example.com",
     "signIn": "Sign In",
+    "passkeyLogin": "Sign in with Passkey",
     "googleLogin": "Sign in with Google",
     "appleLogin": "Sign in with Apple",
     "orEmail": "or sign in with email",
@@ -1762,7 +1763,10 @@
   "profilePage": {
     "actions": {
       "save": "Save profile",
-      "saving": "Saving..."
+      "saving": "Saving...",
+      "addPasskey": "Register Passkey",
+      "passkeyAdded": "Passkey registered successfully!",
+      "passkeyError": "Could not register passkey."
     },
     "attributes": {
       "finishing": "Finishing",
@@ -1800,6 +1804,12 @@
       "image": "Photo URL",
       "memberSince": "Member since",
       "name": "Name"
+    },
+    "security": {
+      "title": "Quick Access",
+      "passkeys": "Passkeys (Biometrics)",
+      "passkeysDesc": "Link your device (FaceID, TouchID, or PIN) to sign in instantly without email codes.",
+      "noPasskeys": "No passkeys linked yet."
     },
     "form": {
       "description": "Used in rosters, attendance confirmations, and payments.",

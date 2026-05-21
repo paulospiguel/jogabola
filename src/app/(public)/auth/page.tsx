@@ -2,7 +2,7 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { AnimatePresence, motion } from "framer-motion";
-import { ArrowLeft, ArrowRight, Loader2, X } from "lucide-react";
+import { ArrowLeft, ArrowRight, Loader2, X, Fingerprint } from "lucide-react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useTranslations } from "next-intl";
@@ -68,7 +68,7 @@ export default function LoginPage() {
 
   const [step, setStep] = useState<AuthStep>("email");
   const [loading, setLoading] = useState(false);
-  const [socialLoading, setSocialLoading] = useState<"google" | null>(null);
+  const [socialLoading, setSocialLoading] = useState<"google" | "passkey" | null>(null);
   const [collectedEmail, setCollectedEmail] = useState(
     searchParams.get("email") || "",
   );
@@ -186,6 +186,22 @@ export default function LoginPage() {
     }
   }
 
+  async function handlePasskeyLogin() {
+    setSocialLoading("passkey");
+    try {
+      const result = await signIn.passkey();
+      if (result?.error)
+        throw new Error(result.error.message || t("messages.socialError"));
+      if (result?.data) window.location.href = callbackURL;
+    } catch (err: unknown) {
+      const message =
+        err instanceof Error ? err.message : t("messages.socialError");
+      toast.error(t("messages.loginErrorTitle"), message);
+    } finally {
+      setSocialLoading(null);
+    }
+  }
+
   return (
     <div className="relative min-h-screen overflow-hidden bg-arena-bg font-body selection:bg-arena-primary/30 selection:text-arena-primary">
       {/* Interactive Background */}
@@ -259,7 +275,26 @@ export default function LoginPage() {
                     </p>
                   </div>
 
-                  <div>
+                  <div className="space-y-3">
+                    <button
+                      className="group relative flex h-14 w-full items-center justify-center rounded-2xl border border-arena-border bg-arena-bg-sec/50 transition-all hover:border-arena-primary/30 hover:bg-arena-surface-el active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-60"
+                      disabled={loading || socialLoading !== null}
+                      onClick={handlePasskeyLogin}
+                      type="button"
+                    >
+                      {socialLoading === "passkey" ? (
+                        <Loader2 className="h-5 w-5 animate-spin text-arena-text-muted" />
+                      ) : (
+                        <div className="flex items-center gap-2">
+                          <Fingerprint className="h-6 w-6 text-arena-primary" />
+                          <p className="text-sm font-bold tracking-wider uppercase">
+                            {t("passkeyLogin")}
+                          </p>
+                        </div>
+                      )}
+                      <div className="absolute inset-0 rounded-2xl bg-arena-primary/5 opacity-0 transition-opacity group-hover:opacity-100" />
+                    </button>
+
                     <button
                       className="group relative flex h-14 w-full items-center justify-center rounded-2xl border border-arena-border bg-arena-bg-sec/50 transition-all hover:border-arena-primary/30 hover:bg-arena-surface-el active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-60"
                       disabled={loading || socialLoading !== null}

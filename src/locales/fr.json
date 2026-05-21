@@ -101,7 +101,8 @@
     "emailLabel": "Adresse email",
     "emailPlaceholder": "email@exemple.com",
     "signIn": "Connexion",
-    "googleLogin": "Connexion avec Google",
+    "passkeyLogin": "Se connecter avec Passkey",
+    "googleLogin": "Se connecter avec Google",
     "appleLogin": "Connexion avec Apple",
     "orEmail": "ou connexion avec email",
     "verifyEmail": "Vérifie ton email",
@@ -1767,7 +1768,10 @@
   "profilePage": {
     "actions": {
       "save": "Enregistrer le profil",
-      "saving": "Enregistrement..."
+      "saving": "Enregistrement...",
+      "addPasskey": "Enregistrer la Passkey",
+      "passkeyAdded": "Passkey enregistrée avec succès !",
+      "passkeyError": "Impossible d'enregistrer la passkey."
     },
     "attributes": {
       "finishing": "Finition",
@@ -1805,6 +1809,12 @@
       "image": "URL de la photo",
       "memberSince": "Membre depuis",
       "name": "Nom"
+    },
+    "security": {
+      "title": "Accès Rapide",
+      "passkeys": "Passkeys (Biométrie)",
+      "passkeysDesc": "Associez votre appareil (FaceID, TouchID ou PIN) pour vous connecter instantanément, sans codes par email.",
+      "noPasskeys": "Aucune passkey associée pour l'instant."
     },
     "form": {
       "description": "Utilisées dans les effectifs, confirmations de présence et paiements.",

@@ -101,7 +101,8 @@
     "emailLabel": "Dirección de email",
     "emailPlaceholder": "email@ejemplo.com",
     "signIn": "Iniciar sesión",
-    "googleLogin": "Iniciar sesión con Google",
+    "passkeyLogin": "Iniciar sesión con Passkey",
+    "googleLogin": "Entrar con Google",
     "appleLogin": "Iniciar sesión con Apple",
     "orEmail": "o iniciar sesión con email",
     "verifyEmail": "Verifica tu email",
@@ -1767,7 +1768,10 @@
   "profilePage": {
     "actions": {
       "save": "Guardar perfil",
-      "saving": "Guardando..."
+      "saving": "Guardando...",
+      "addPasskey": "Registrar Passkey",
+      "passkeyAdded": "¡Passkey registrada con éxito!",
+      "passkeyError": "No fue posible registrar la passkey."
     },
     "attributes": {
       "finishing": "Definición",
@@ -1805,6 +1809,12 @@
       "image": "URL de la foto",
       "memberSince": "Miembro desde",
       "name": "Nombre"
+    },
+    "security": {
+      "title": "Acceso Rápido",
+      "passkeys": "Passkeys (Biometría)",
+      "passkeysDesc": "Vincula tu dispositivo (FaceID, TouchID o PIN) para iniciar sesión al instante, sin códigos por correo.",
+      "noPasskeys": "Aún no hay passkeys vinculadas."
     },
     "form": {
       "description": "Usados en plantillas, confirmaciones de asistencia y pagos.",

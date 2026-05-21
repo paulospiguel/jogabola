@@ -1,9 +1,10 @@
 "use client";
 
-import { CheckCircle2, Loader2, Save } from "lucide-react";
+import { CheckCircle2, Loader2, Save, Fingerprint } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useState, useTransition } from "react";
 import { updateUserProfile } from "@/actions/profile.actions";
+import { passkey } from "@/lib/auth-client";
 import { JbAvatar } from "@/components/arena/jb-avatar";
 import { VerifiedBadge } from "@/components/arena/verified-badge";
 import { Button } from "@/components/ui/button";
@@ -28,6 +29,18 @@ export function ProfileForm({ profile }: ProfileFormProps) {
   const [status, setStatus] = useState<"idle" | "saved" | "error">("idle");
   const [errorCode, setErrorCode] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();
+  const [passkeyStatus, setPasskeyStatus] = useState<"idle" | "adding" | "added" | "error">("idle");
+
+  async function handleAddPasskey() {
+    setPasskeyStatus("adding");
+    try {
+      const result = await passkey.addPasskey();
+      if (result?.error) throw new Error(result.error.message);
+      setPasskeyStatus("added");
+    } catch (err) {
+      setPasskeyStatus("error");
+    }
+  }
 
   function updateField(field: keyof FormState, value: string) {
     setForm(current => ({ ...current, [field]: value }));
@@ -57,7 +70,8 @@ export function ProfileForm({ profile }: ProfileFormProps) {
   }
 
   return (
-    <section className="jb-card overflow-hidden">
+    <div className="space-y-6">
+      <section className="jb-card overflow-hidden">
       <div className="border-arena-border border-b px-4 py-4">
         <div className="flex items-center gap-3">
           <JbAvatar
@@ -137,6 +151,55 @@ export function ProfileForm({ profile }: ProfileFormProps) {
           {isPending ? t("actions.saving") : t("actions.save")}
         </Button>
       </div>
-    </section>
+      </section>
+
+      <section className="jb-card overflow-hidden">
+        <div className="border-arena-border border-b px-4 py-4">
+          <div className="flex items-center gap-3">
+            <div className="flex h-12 w-12 items-center justify-center rounded-full bg-arena-primary/10 text-arena-primary">
+              <Fingerprint className="h-6 w-6" />
+            </div>
+            <div>
+              <h2 className="text-base font-bold text-arena-text">
+                {t("security.title")}
+              </h2>
+              <p className="text-sm text-arena-text-sec">
+                {t("security.passkeysDesc")}
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div className="space-y-5 p-4">
+          {passkeyStatus === "added" && (
+            <div className="flex items-center gap-2 rounded-lg border border-green-500/20 bg-green-500/10 px-3 py-2 text-sm text-green-300">
+              <CheckCircle2 size={16} />
+              {t("actions.passkeyAdded")}
+            </div>
+          )}
+
+          {passkeyStatus === "error" && (
+            <div className="rounded-lg border border-red-500/20 bg-red-500/10 px-3 py-2 text-sm text-red-300">
+              {t("actions.passkeyError")}
+            </div>
+          )}
+
+          <Button
+            className="w-full bg-arena-bg-sec font-bold text-arena-text hover:bg-arena-surface"
+            disabled={passkeyStatus === "adding"}
+            onClick={handleAddPasskey}
+            type="button"
+            variant="outline"
+          >
+            {passkeyStatus === "adding" ? (
+              <Loader2 className="mr-2 size-4 animate-spin" />
+            ) : (
+              <Fingerprint className="mr-2 size-4" />
+            )}
+            {t("actions.addPasskey")}
+          </Button>
+        </div>
+      </section>
+    </div>
   );
 }

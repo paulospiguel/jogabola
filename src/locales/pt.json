@@ -101,6 +101,7 @@
     "emailLabel": "Endereço de Email",
     "emailPlaceholder": "email@exemplo.com",
     "signIn": "Entrar",
+    "passkeyLogin": "Entrar com Passkey",
     "googleLogin": "Entrar com Google",
     "appleLogin": "Entrar com Apple",
     "orEmail": "ou entrar com email",
@@ -1783,7 +1784,10 @@
   "profilePage": {
     "actions": {
       "save": "Guardar perfil",
-      "saving": "A guardar..."
+      "saving": "A guardar...",
+      "addPasskey": "Registar Passkey",
+      "passkeyAdded": "Passkey registada com sucesso!",
+      "passkeyError": "Não foi possível registar a passkey."
     },
     "attributes": {
       "finishing": "Finalização",
@@ -1821,6 +1825,12 @@
       "image": "URL da fotografia",
       "memberSince": "Membro desde",
       "name": "Nome"
+    },
+    "security": {
+      "title": "Acesso Rápido",
+      "passkeys": "Passkeys (Biometria)",
+      "passkeysDesc": "Associa o teu dispositivo (FaceID, TouchID ou PIN) para entrares de forma instantânea, sem códigos por email.",
+      "noPasskeys": "Nenhuma passkey associada."
     },
     "form": {
       "description": "Usados no plantel, confirmações de presença e pagamentos.",

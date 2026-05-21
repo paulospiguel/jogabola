@@ -24,3 +24,4 @@ export const authClient = createAuthClient({
 
 export const { signIn, signOut, signUp, getSession, useSession } = authClient;
 export const emailOtp = authClient.emailOtp;
+export const passkey = authClient.passkey;
