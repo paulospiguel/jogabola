@@ -1,6 +1,12 @@
 "use client";
 
-import { Banknote, ChevronRight, CreditCard, Smartphone, Landmark } from "lucide-react";
+import {
+  Banknote,
+  ChevronRight,
+  CreditCard,
+  Landmark,
+  Smartphone,
+} from "lucide-react";
 import { useTranslations } from "next-intl";
 import { cn } from "@/lib/utils";
 
@@ -82,9 +88,9 @@ export function PaymentMethodList({
             style={
               m.enabled
                 ? {
-                  borderColor: `${mData.color}50`,
-                  backgroundColor: `${mData.color}08`,
-                }
+                    borderColor: `${mData.color}50`,
+                    backgroundColor: `${mData.color}08`,
+                  }
                 : {}
             }
           >

@@ -14,7 +14,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
   ({ className, isError, type, icon, ...props }, ref) => {
     const Icon = icon as React.ElementType | undefined;
     return (
-      <div className="relative">
+      <div className="relative w-full">
         {Icon && (
           <Icon className="absolute top-1/2 left-3 z-0 h-5 w-5 -translate-y-1/2 text-brand-green" />
         )}

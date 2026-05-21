@@ -318,12 +318,7 @@
       "training": "Ex: Treino Técnico"
     },
     "playersCount": "{count} jogadores",
-    "steps": [
-      "Tipo de evento",
-      "Detalhes",
-      "Pré-visualização",
-      "Confirmar"
-    ],
+    "steps": ["Tipo de evento", "Detalhes", "Pré-visualização", "Confirmar"],
     "success": "Evento criado!",
     "successSubtitle": "Convocatória enviada com sucesso.",
     "types": {
@@ -371,6 +366,12 @@
     },
     "limitReachedTitle": "Limite do plano gratuito",
     "upgradeCta": "Ver planos"
+  },
+  "arenaNoTeamModal": {
+    "title": "Cria uma equipa primeiro",
+    "description": "Para acederes a esta funcionalidade precisas de criar ou ter uma equipa associada à tua conta.",
+    "createTeam": "Criar equipa",
+    "notNow": "Agora não"
   },
   "arenaDashboard": {
     "actions": {
@@ -421,7 +422,11 @@
       "blockTitle": "Bloquear Participante?",
       "blockDescription": "Ao bloquear {name}, o participante será removido e poderá ser aplicada uma multa de não comparência. Tens a certeza?",
       "blockConfirm": "Bloquear",
-      "cancel": "Voltar"
+      "cancel": "Voltar",
+      "moveToConfirmed": "Mover para Titular",
+      "moveToReserve": "Mover para Suplente",
+      "revokePresence": "Revogar Presença",
+      "blockParticipant": "Bloquear Atleta"
     },
     "lists": {
       "main": "Lista Principal ({count})",
@@ -467,6 +472,9 @@
       "pitchDescription": "Usa a nossa Inteligência Artificial para analisar o histórico e a pontuação dos atletas e criar equipas 100% equilibradas. Uma partida justa é uma partida melhor!",
       "guestPrompt": "Quantos convidados temos hoje?",
       "guestLabel": "Número de convidados (sem conta)",
+      "fakePlayer": "Jogador Temp.",
+      "fakePlayerDesc": "Sem histórico (convidado)",
+      "fillWithFakes": "Completar com Temporários",
       "balanceAction": "Gerar Equipas",
       "loading": "A analisar histórico e a equilibrar pesos...",
       "teamA": "Equipa A",
@@ -824,6 +832,8 @@
     "roles": {
       "owner": "Capitão",
       "admin": "Administrador",
+      "manager": "Gestor",
+      "coach": "Treinador",
       "player": "Jogador",
       "guest": "Convidado"
     },
@@ -1690,6 +1700,14 @@
       "approved": "Aprovado",
       "rejected": "Rejeitado",
       "refunded": "Reembolsado"
+    },
+    "statusBadge": {
+      "pending": "Pagamento pendente",
+      "paid_unverified": "A aguardar validação",
+      "review_required": "Revisão necessária",
+      "approved": "Pagamento aprovado",
+      "rejected": "Pagamento rejeitado",
+      "refunded": "Pagamento reembolsado"
     },
     "receipt": {
       "confirmed": "Pagamento confirmado",
@@ -2621,5 +2639,14 @@
   },
   "loadingPage": {
     "loading": "A carregar..."
+  },
+  "passkeyPrompt": {
+    "title": "Ativar Passkey ⚡",
+    "description": "Queres associar o teu dispositivo (FaceID, TouchID ou PIN) para entrares de forma instantânea na próxima vez, sem precisar de esperar por códigos por e-mail?",
+    "yes": "Associar agora",
+    "no": "Não associar",
+    "skip": "Pular",
+    "success": "Passkey associada com sucesso!",
+    "error": "Não foi possível associar a passkey."
   }
 }

@@ -1,7 +1,7 @@
 "use client";
 
-import { useState } from "react";
 import { useTranslations } from "next-intl";
+import { useState } from "react";
 import { cn } from "@/lib/utils";
 
 export type ScoreLevel = "low" | "medium" | "high";
@@ -11,34 +11,25 @@ interface JbScoreBarProps {
   className?: string;
 }
 
-const SCORE_CONFIG: Record<
-  ScoreLevel,
-  { position: number; color: string }
-> = {
-  high:   { position: 10, color: "#EF4444" },
+const SCORE_CONFIG: Record<ScoreLevel, { position: number; color: string }> = {
+  high: { position: 10, color: "#EF4444" },
   medium: { position: 50, color: "#F59E0B" },
-  low:    { position: 90, color: "#22C55E" },
+  low: { position: 90, color: "#22C55E" },
 };
 
 const TOOLTIP_TRANSLATE: Record<ScoreLevel, string> = {
-  high:   "translateX(0%)",
+  high: "translateX(0%)",
   medium: "translateX(-50%)",
-  low:    "translateX(-100%)",
+  low: "translateX(-100%)",
 };
 
 const ARROW_LEFT: Record<ScoreLevel, string> = {
-  high:   "16px",
+  high: "16px",
   medium: "50%",
-  low:    "calc(100% - 16px)",
+  low: "calc(100% - 16px)",
 };
 
-const BAR_SEGMENTS = [
-  "#EF4444",
-  "#F97316",
-  "#F59E0B",
-  "#14B8A6",
-  "#22C55E",
-];
+const BAR_SEGMENTS = ["#EF4444", "#F97316", "#F59E0B", "#14B8A6", "#22C55E"];
 
 export function JbScoreBar({ score, className }: JbScoreBarProps) {
   const t = useTranslations("arenaBadges");

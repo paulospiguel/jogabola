@@ -27,6 +27,7 @@ import {
   useSidebar,
 } from "@/components/ui/sidebar";
 import { RELEASE } from "@/constants/app";
+import { useUnreadNotificationsCount } from "@/hooks/use-notifications";
 import { cn } from "@/lib/utils";
 import { Logo } from "../logo";
 import { JbTeamSwitcher } from "./jb-team-switcher";
@@ -66,6 +67,7 @@ export function JbSidebar() {
   const { state, toggleSidebar } = useSidebar();
   const t = useTranslations("arenaNav");
   const { requireTeam, hasTeam, role } = useTeamGate();
+  const { unreadCount } = useUnreadNotificationsCount();
 
   const isCaptainWithoutTeam = role === "captain" && !hasTeam;
 
@@ -139,23 +141,36 @@ export function JbSidebar() {
                       ) : (
                         <Link
                           href={item.href}
-                          className="flex items-center gap-3 group-data-[collapsible=icon]:gap-0 group-data-[collapsible=icon]:justify-center"
+                          className="flex items-center gap-3 group-data-[collapsible=icon]:gap-0 group-data-[collapsible=icon]:justify-center w-full"
                         >
-                          <Icon
-                            className={cn(
-                              "size-[18px] shrink-0",
-                              isActive ? "stroke-[2.5px]" : "stroke-[1.8px]",
-                            )}
-                          />
+                          <div className="relative flex items-center justify-center">
+                            <Icon
+                              className={cn(
+                                "size-[18px] shrink-0",
+                                isActive ? "stroke-[2.5px]" : "stroke-[1.8px]",
+                              )}
+                            />
+                            {item.href === "/arena/notifications" &&
+                              unreadCount > 0 &&
+                              state === "collapsed" && (
+                                <span className="absolute -top-1 -right-1 flex h-2 w-2 rounded-full bg-arena-primary shadow-[0_0_6px_rgba(124,255,79,0.5)] animate-pulse" />
+                              )}
+                          </div>
                           <span
                             className={cn(
-                              "font-semibold transition-opacity duration-200",
+                              "font-semibold transition-opacity duration-200 flex flex-1 items-center justify-between",
                               state === "collapsed"
-                                ? "opacity-0 w-0"
+                                ? "opacity-0 w-0 pointer-events-none"
                                 : "opacity-100",
                             )}
                           >
-                            {t(item.labelKey)}
+                            <span>{t(item.labelKey)}</span>
+                            {item.href === "/arena/notifications" &&
+                              unreadCount > 0 && (
+                                <span className="flex h-5 min-w-[20px] items-center justify-center rounded-full bg-arena-primary px-1.5 text-[10px] font-black text-arena-bg shadow-[0_0_8px_rgba(124,255,79,0.3)] animate-pulse ml-2 shrink-0">
+                                  {unreadCount}
+                                </span>
+                              )}
                           </span>
                         </Link>
                       )}

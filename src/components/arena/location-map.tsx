@@ -10,8 +10,8 @@ import {
   Send,
   X,
 } from "lucide-react";
-import { Map, Marker } from "pigeon-maps";
 import { useTranslations } from "next-intl";
+import { Map, Marker } from "pigeon-maps";
 import { useEffect, useRef, useState } from "react";
 import { updateEvent } from "@/actions/match-sessions.actions";
 

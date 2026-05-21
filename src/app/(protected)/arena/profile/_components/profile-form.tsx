@@ -1,15 +1,15 @@
 "use client";
 
-import { CheckCircle2, Loader2, Save, Fingerprint } from "lucide-react";
+import { CheckCircle2, Fingerprint, Loader2, Save } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useState, useTransition } from "react";
 import { updateUserProfile } from "@/actions/profile.actions";
-import { passkey } from "@/lib/auth-client";
 import { JbAvatar } from "@/components/arena/jb-avatar";
 import { VerifiedBadge } from "@/components/arena/verified-badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { passkey } from "@/lib/auth-client";
 import type { UserProfile } from "@/types/profile";
 
 type ProfileFormProps = {
@@ -29,7 +29,9 @@ export function ProfileForm({ profile }: ProfileFormProps) {
   const [status, setStatus] = useState<"idle" | "saved" | "error">("idle");
   const [errorCode, setErrorCode] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();
-  const [passkeyStatus, setPasskeyStatus] = useState<"idle" | "adding" | "added" | "error">("idle");
+  const [passkeyStatus, setPasskeyStatus] = useState<
+    "idle" | "adding" | "added" | "error"
+  >("idle");
 
   async function handleAddPasskey() {
     setPasskeyStatus("adding");
@@ -72,85 +74,85 @@ export function ProfileForm({ profile }: ProfileFormProps) {
   return (
     <div className="space-y-6">
       <section className="jb-card overflow-hidden">
-      <div className="border-arena-border border-b px-4 py-4">
-        <div className="flex items-center gap-3">
-          <JbAvatar
-            id={profile.id}
-            name={form.name || profile.email}
-            image={profile.image}
-            size={48}
-          />
-          <div>
-            <h2 className="text-base font-bold text-arena-text">
-              {t("form.title")}
-            </h2>
-            <p className="text-sm text-arena-text-sec">
-              {t("form.description")}
-            </p>
-          </div>
-        </div>
-      </div>
-
-      <div className="space-y-5 p-4">
-        <div className="space-y-2">
-          <Label className="text-arena-text-sec" htmlFor="profile-name">
-            {t("fields.name")}
-          </Label>
-          <Input
-            className="border-arena-border bg-arena-surface text-arena-text"
-            id="profile-name"
-            onChange={event => updateField("name", event.target.value)}
-            value={form.name}
-          />
-          {fieldErrors.name?.map(error => (
-            <p className="text-xs text-red-400" key={error}>
-              {t(`errors.${error}`)}
-            </p>
-          ))}
-        </div>
-
-        <div className="rounded-lg border border-arena-border bg-arena-surface/70 p-3">
-          <div className="flex items-center justify-between gap-2">
-            <div className="text-xs font-semibold uppercase tracking-wide text-arena-text-muted">
-              {t("fields.email")}
+        <div className="border-arena-border border-b px-4 py-4">
+          <div className="flex items-center gap-3">
+            <JbAvatar
+              id={profile.id}
+              name={form.name || profile.email}
+              image={profile.image}
+              size={48}
+            />
+            <div>
+              <h2 className="text-base font-bold text-arena-text">
+                {t("form.title")}
+              </h2>
+              <p className="text-sm text-arena-text-sec">
+                {t("form.description")}
+              </p>
             </div>
-            <VerifiedBadge verified={profile.emailVerified} />
-          </div>
-          <div className="mt-1 text-sm font-semibold text-arena-text">
-            {profile.email}
-          </div>
-          <div className="mt-1 text-xs text-arena-text-muted">
-            {t("fields.emailReadOnly")}
           </div>
         </div>
 
-        {status === "saved" && (
-          <div className="flex items-center gap-2 rounded-lg border border-green-500/20 bg-green-500/10 px-3 py-2 text-sm text-green-300">
-            <CheckCircle2 size={16} />
-            {t("feedback.updatedDescription")}
+        <div className="space-y-5 p-4">
+          <div className="space-y-2">
+            <Label className="text-arena-text-sec" htmlFor="profile-name">
+              {t("fields.name")}
+            </Label>
+            <Input
+              className="border-arena-border bg-arena-surface text-arena-text"
+              id="profile-name"
+              onChange={event => updateField("name", event.target.value)}
+              value={form.name}
+            />
+            {fieldErrors.name?.map(error => (
+              <p className="text-xs text-red-400" key={error}>
+                {t(`errors.${error}`)}
+              </p>
+            ))}
           </div>
-        )}
 
-        {status === "error" && (
-          <div className="rounded-lg border border-red-500/20 bg-red-500/10 px-3 py-2 text-sm text-red-300">
-            {errorCode ? t(`errors.${errorCode}`) : t("feedback.saveError")}
+          <div className="rounded-lg border border-arena-border bg-arena-surface/70 p-3">
+            <div className="flex items-center justify-between gap-2">
+              <div className="text-xs font-semibold uppercase tracking-wide text-arena-text-muted">
+                {t("fields.email")}
+              </div>
+              <VerifiedBadge verified={profile.emailVerified} />
+            </div>
+            <div className="mt-1 text-sm font-semibold text-arena-text">
+              {profile.email}
+            </div>
+            <div className="mt-1 text-xs text-arena-text-muted">
+              {t("fields.emailReadOnly")}
+            </div>
           </div>
-        )}
 
-        <Button
-          className="w-full bg-arena-primary font-bold text-[#0B0F14] hover:bg-arena-primary/90"
-          disabled={isPending}
-          onClick={submit}
-          type="button"
-        >
-          {isPending ? (
-            <Loader2 className="mr-2 size-4 animate-spin" />
-          ) : (
-            <Save className="mr-2 size-4" />
+          {status === "saved" && (
+            <div className="flex items-center gap-2 rounded-lg border border-green-500/20 bg-green-500/10 px-3 py-2 text-sm text-green-300">
+              <CheckCircle2 size={16} />
+              {t("feedback.updatedDescription")}
+            </div>
           )}
-          {isPending ? t("actions.saving") : t("actions.save")}
-        </Button>
-      </div>
+
+          {status === "error" && (
+            <div className="rounded-lg border border-red-500/20 bg-red-500/10 px-3 py-2 text-sm text-red-300">
+              {errorCode ? t(`errors.${errorCode}`) : t("feedback.saveError")}
+            </div>
+          )}
+
+          <Button
+            className="w-full bg-arena-primary font-bold text-[#0B0F14] hover:bg-arena-primary/90"
+            disabled={isPending}
+            onClick={submit}
+            type="button"
+          >
+            {isPending ? (
+              <Loader2 className="mr-2 size-4 animate-spin" />
+            ) : (
+              <Save className="mr-2 size-4" />
+            )}
+            {isPending ? t("actions.saving") : t("actions.save")}
+          </Button>
+        </div>
       </section>
 
       <section className="jb-card overflow-hidden">

@@ -24,6 +24,7 @@ import { JbAvatar } from "@/components/arena/jb-avatar";
 import { JbBottomSheet } from "@/components/arena/jb-bottom-sheet";
 import { JbUserMenu } from "@/components/arena/jb-user-menu";
 import { VerifiedBadge } from "@/components/arena/verified-badge";
+import { RadialProgressIcon } from "@/components/arena/radial-progress-icon";
 import Loading from "@/components/loading";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -146,10 +147,10 @@ export function SquadClient({ userId }: { userId: string }) {
         groups.map(group =>
           group.id === editingGroupId
             ? {
-              ...group,
-              name: groupName.trim(),
-              playerIds: groupSelection,
-            }
+                ...group,
+                name: groupName.trim(),
+                playerIds: groupSelection,
+              }
             : group,
         ),
       );
@@ -547,13 +548,16 @@ export function SquadClient({ userId }: { userId: string }) {
                               verified={p.isVerified}
                             />
                           </div>
-                          <div className="flex min-w-0 items-center gap-1.5">
-                            <span className="rounded-[5px] border border-arena-border bg-arena-surface-el px-1.5 py-0.5 text-[10px] font-bold text-arena-text-muted">
-                              {p.role}
+                          <div className="flex min-w-0 items-center gap-2">
+                            <span className="rounded-[5px] border border-arena-border bg-arena-surface-el px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-arena-text-muted">
+                              {t(`roles.${p.role.toLowerCase()}`)}
                             </span>
-                            <span className="text-[11px] text-arena-text-muted">
-                              ⭐ {p.rating}
-                            </span>
+                            <RadialProgressIcon 
+                              progress={p.rating * 10} 
+                              valueText={p.rating % 1 === 0 ? p.rating.toFixed(0) : p.rating.toFixed(1)} 
+                              size={28} 
+                              strokeWidth={2}
+                            />
                           </div>
                         </div>
                         <div className="flex gap-1">

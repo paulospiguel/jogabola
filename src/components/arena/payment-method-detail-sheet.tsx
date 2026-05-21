@@ -1,6 +1,12 @@
 "use client";
 
-import { Banknote, CreditCard, Loader2, Smartphone, Landmark } from "lucide-react";
+import {
+  Banknote,
+  CreditCard,
+  Landmark,
+  Loader2,
+  Smartphone,
+} from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useState } from "react";
 import { JbBottomSheet } from "@/components/arena/jb-bottom-sheet";
@@ -257,4 +263,3 @@ export function PaymentMethodDetailSheet({
     </JbBottomSheet>
   );
 }
-

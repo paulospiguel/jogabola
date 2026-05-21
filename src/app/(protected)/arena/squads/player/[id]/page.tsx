@@ -41,9 +41,11 @@ export default function AthleteProfilePage() {
   const router = useRouter();
   const t = useTranslations();
   const { activeTeamId } = useTeams();
-  const { profile: athlete, history, isLoading: profileLoading } = useAthleteProfile(
-    id as string,
-  );
+  const {
+    profile: athlete,
+    history,
+    isLoading: profileLoading,
+  } = useAthleteProfile(id as string);
 
   const arenaAthleteProfileTranslation = (
     sentence: string,
@@ -177,12 +179,16 @@ export default function AthleteProfilePage() {
                         </div>
                       </div>
                       <div className="flex items-center gap-4">
-                        <div className={cn(
-                          "px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider",
-                          item.status === "confirmed" ? "bg-arena-success/20 text-arena-success" :
-                          item.status === "reserve" ? "bg-arena-warning/20 text-arena-warning" :
-                          "bg-arena-text-muted/20 text-arena-text-muted"
-                        )}>
+                        <div
+                          className={cn(
+                            "px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider",
+                            item.status === "confirmed"
+                              ? "bg-arena-success/20 text-arena-success"
+                              : item.status === "reserve"
+                                ? "bg-arena-warning/20 text-arena-warning"
+                                : "bg-arena-text-muted/20 text-arena-text-muted",
+                          )}
+                        >
                           {item.status}
                         </div>
                         <ChevronRight
@@ -412,12 +418,16 @@ export default function AthleteProfilePage() {
                         </div>
                       </div>
                       <div className="flex items-center gap-4">
-                        <div className={cn(
-                          "px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider",
-                          item.status === "confirmed" ? "bg-arena-success/20 text-arena-success" :
-                          item.status === "reserve" ? "bg-arena-warning/20 text-arena-warning" :
-                          "bg-arena-text-muted/20 text-arena-text-muted"
-                        )}>
+                        <div
+                          className={cn(
+                            "px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider",
+                            item.status === "confirmed"
+                              ? "bg-arena-success/20 text-arena-success"
+                              : item.status === "reserve"
+                                ? "bg-arena-warning/20 text-arena-warning"
+                                : "bg-arena-text-muted/20 text-arena-text-muted",
+                          )}
+                        >
                           {item.status}
                         </div>
                         <ChevronRight

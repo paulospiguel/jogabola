@@ -22,6 +22,7 @@ import { type Payment, usePayments } from "@/hooks/use-payments";
 import { useTeamPaymentSettings } from "@/hooks/use-team-payment-settings";
 import { useTeams } from "@/hooks/use-teams";
 import type { PaymentMethod } from "@/types/payments";
+import { cn } from "@/lib/utils";
 
 const METHOD_META: Record<
   PaymentMethod,
@@ -66,6 +67,57 @@ export default function PaymentsPage() {
   );
   const [showSettings, setShowSettings] = useState(false);
 
+  // List of active payment methods to show
+  const activeMethods = [];
+
+  if (settings?.mbwayEnabled) {
+    activeMethods.push({
+      type: "mbway",
+      title: t("settings.mbway.title"),
+      icon: Smartphone,
+      color: "#ef4444",
+      detail: settings.mbwayPhone || t("settings.noNumber"),
+    });
+  }
+
+  // Cash is active by default (if settings is not loaded yet or explicit)
+  const isCashActive = settings ? settings.cashEnabled : true;
+  if (isCashActive) {
+    activeMethods.push({
+      type: "cash",
+      title: t("settings.cash.title"),
+      icon: Banknote,
+      color: "#22c55e",
+      detail: settings?.cashInstructions || t("methods.cashSub"),
+    });
+  }
+
+  if (settings?.transferEnabled) {
+    const cleanIban = settings.transferIban
+      ? settings.transferIban.replace(/\s+/g, "").toUpperCase()
+      : "";
+    const formattedIban = cleanIban
+      ? `IBAN: ${cleanIban.replace(/(.{4})/g, "$1 ").trim()}`
+      : "";
+    activeMethods.push({
+      type: "transfer",
+      title: t("settings.transfer.title"),
+      icon: Landmark,
+      color: "#06b6d4",
+      detail: formattedIban || t("settings.notConfigured"),
+    });
+  }
+
+  if (settings?.stripeEnabled) {
+    activeMethods.push({
+      type: "stripe",
+      title: t("settings.stripe.title"),
+      icon: CreditCard,
+      color: "#6366f1",
+      detail: t("methods.creditCard"),
+    });
+  }
+
   return (
     <div className="jb-page">
       <div className="jb-page-inner">
@@ -100,74 +152,51 @@ export default function PaymentsPage() {
             </button>
           </div>
 
-          <div className="grid divide-y divide-arena-border sm:grid-cols-3 sm:divide-x sm:divide-y-0">
-            {/* MBWay */}
-            <div className="flex flex-1 flex-col gap-1.5 px-4 py-3">
-              <div className="flex items-center gap-1.5">
-                <Smartphone size={13} style={{ color: "#ef4444" }} />
-                <span className="text-[11px] font-bold text-arena-text">
-                  {t("settings.mbway.title")}
-                </span>
-                {settings?.mbwayEnabled ? (
-                  <span className="rounded-full bg-arena-success/15 px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-wider text-arena-success">
-                    {t("settings.active")}
-                  </span>
-                ) : (
-                  <span className="rounded-full bg-arena-border px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-wider text-arena-text-muted">
-                    {t("settings.inactive")}
-                  </span>
-                )}
-              </div>
-              {settings?.mbwayEnabled && settings.mbwayPhone ? (
-                <p className="font-mono text-[12px] text-arena-text-sec">
-                  {settings.mbwayPhone}
-                </p>
-              ) : (
-                <p className="text-[11px] text-arena-text-muted">
-                  {settings?.mbwayEnabled ? t("settings.noNumber") : t("settings.notConfigured")}
-                </p>
+          {activeMethods.length === 0 ? (
+            <div className="flex flex-col items-center justify-center gap-2 p-8 text-center bg-arena-surface-el/5">
+              <Settings2 size={24} className="text-arena-text-muted/40" />
+              <p className="text-[12px] font-semibold text-arena-text-sec">
+                Nenhum método de pagamento ativo
+              </p>
+              <p className="text-[11px] text-arena-text-muted max-w-[280px]">
+                Ativa pelo menos um método de pagamento para que os teus atletas possam pagar os jogos.
+              </p>
+            </div>
+          ) : (
+            <div
+              className={cn(
+                "grid divide-y divide-arena-border sm:divide-y-0 sm:divide-x",
+                activeMethods.length === 1 && "grid-cols-1",
+                activeMethods.length === 2 && "grid-cols-1 sm:grid-cols-2",
+                activeMethods.length === 3 && "grid-cols-1 sm:grid-cols-3",
+                activeMethods.length >= 4 &&
+                  "grid-cols-1 sm:grid-cols-2 md:grid-cols-4",
               )}
+            >
+              {activeMethods.map(m => {
+                const Icon = m.icon;
+                return (
+                  <div
+                    key={m.type}
+                    className="flex flex-1 flex-col gap-1.5 px-4 py-3 bg-arena-surface-el/5"
+                  >
+                    <div className="flex items-center gap-1.5">
+                      <Icon size={13} style={{ color: m.color }} />
+                      <span className="text-[11px] font-bold text-arena-text">
+                        {m.title}
+                      </span>
+                      <span className="rounded-full bg-arena-success/15 px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-wider text-arena-success">
+                        {t("settings.active")}
+                      </span>
+                    </div>
+                    <p className="text-[11px] text-arena-text-muted truncate font-medium">
+                      {m.detail}
+                    </p>
+                  </div>
+                );
+              })}
             </div>
-
-            {/* Cash */}
-            <div className="flex flex-1 flex-col gap-1.5 px-4 py-3">
-              <div className="flex items-center gap-1.5">
-                <Banknote size={13} style={{ color: "#22c55e" }} />
-                <span className="text-[11px] font-bold text-arena-text">
-                  {t("settings.cash.title")}
-                </span>
-                {settings?.cashEnabled !== false ? (
-                  <span className="rounded-full bg-arena-success/15 px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-wider text-arena-success">
-                    {t("settings.active")}
-                  </span>
-                ) : (
-                  <span className="rounded-full bg-arena-border px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-wider text-arena-text-muted">
-                    {t("settings.inactive")}
-                  </span>
-                )}
-              </div>
-              <p className="text-[11px] text-arena-text-muted">
-                {t("methods.cashSub")}
-              </p>
-            </div>
-
-            {/* Stripe — em breve */}
-            <div className="flex flex-1 flex-col gap-1.5 px-4 py-3 opacity-50">
-              <div className="flex items-center gap-1.5">
-                <CreditCard size={13} style={{ color: "#6366f1" }} />
-                <span className="text-[11px] font-bold text-arena-text">
-                  {t("settings.stripe.title")}
-                </span>
-                <span className="flex items-center gap-0.5 rounded-full bg-arena-info/10 px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-wider text-arena-info">
-                  <Clock size={8} />
-                  {t("settings.soon")}
-                </span>
-              </div>
-              <p className="text-[11px] text-arena-text-muted">
-                {t("methods.creditCard")}
-              </p>
-            </div>
-          </div>
+          )}
         </section>
 
         {/* Payments list */}
@@ -245,7 +274,10 @@ export default function PaymentsPage() {
                         <span className="text-[9px] font-bold uppercase tracking-wider text-arena-text-muted">
                           {t("table.risk")}
                         </span>
-                        <JbBadge status={payment.score as BadgeStatus} size="sm" />
+                        <JbBadge
+                          status={payment.score as BadgeStatus}
+                          size="sm"
+                        />
                       </div>
 
                       <div className="flex min-w-0 flex-col gap-1 overflow-hidden rounded-[10px] border border-arena-border/60 bg-arena-bg/25 px-2 py-1.5">
@@ -273,13 +305,13 @@ export default function PaymentsPage() {
           initial={
             settings
               ? {
-                stripeEnabled: settings.stripeEnabled,
-                mbwayEnabled: settings.mbwayEnabled,
-                mbwayPhone: settings.mbwayPhone ?? undefined,
-                mbwayName: settings.mbwayName ?? undefined,
-                cashEnabled: settings.cashEnabled,
-                cashInstructions: settings.cashInstructions ?? undefined,
-              }
+                  stripeEnabled: settings.stripeEnabled,
+                  mbwayEnabled: settings.mbwayEnabled,
+                  mbwayPhone: settings.mbwayPhone ?? undefined,
+                  mbwayName: settings.mbwayName ?? undefined,
+                  cashEnabled: settings.cashEnabled,
+                  cashInstructions: settings.cashInstructions ?? undefined,
+                }
               : undefined
           }
           onClose={() => setShowSettings(false)}

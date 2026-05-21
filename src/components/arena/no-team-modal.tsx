@@ -2,6 +2,7 @@
 
 import { AnimatePresence, motion } from "framer-motion";
 import { Lock, Plus, X } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { useState } from "react";
 import { CreateTeamSheet } from "./create-team-sheet";
 
@@ -11,6 +12,7 @@ interface NoTeamModalProps {
 }
 
 export function NoTeamModal({ open, onClose }: NoTeamModalProps) {
+  const t = useTranslations("arenaNoTeamModal");
   const [showCreateSheet, setShowCreateSheet] = useState(false);
 
   const handleCreateClick = () => {
@@ -63,11 +65,10 @@ export function NoTeamModal({ open, onClose }: NoTeamModalProps) {
 
               {/* Content */}
               <h2 className="mb-2 text-base font-bold text-white">
-                Cria uma equipa primeiro
+                {t("title")}
               </h2>
               <p className="mb-6 text-sm leading-relaxed text-white/50">
-                Para acederes a esta funcionalidade precisas de criar ou ter uma
-                equipa associada à tua conta.
+                {t("description")}
               </p>
 
               {/* Actions */}
@@ -77,14 +78,14 @@ export function NoTeamModal({ open, onClose }: NoTeamModalProps) {
                   className="flex h-10 items-center justify-center gap-2 rounded-xl bg-arena-primary text-sm font-semibold text-black transition-all hover:bg-arena-primary/90"
                 >
                   <Plus size={15} />
-                  Criar equipa
+                  {t("createTeam")}
                 </button>
                 <button
                   type="button"
                   onClick={onClose}
                   className="h-10 rounded-xl text-sm font-medium text-white/40 transition-colors hover:text-white/70"
                 >
-                  Agora não
+                  {t("notNow")}
                 </button>
               </div>
             </motion.div>

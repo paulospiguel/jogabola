@@ -1,6 +1,7 @@
 "use client";
 
-import { Banknote, Clock, CreditCard, Smartphone, X } from "lucide-react";
+import { AlertTriangle, Banknote, CircleDollarSign, Clock, CreditCard, Hourglass, Smartphone, X } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { cn } from "@/lib/utils";
 import type { PaymentMethod, PaymentStatus } from "@/types/payments";
 
@@ -26,57 +27,58 @@ export function PaymentStatusBadge({
   canViewRejected = false,
   className,
 }: PaymentStatusBadgeProps) {
+  const t = useTranslations("payment");
+
   // Hide rejected/refunded from other participants
   const effectiveStatus =
     !canViewRejected && (status === "rejected" || status === "refunded")
       ? "pending"
       : status;
 
-  const isPaid =
-    effectiveStatus === "approved" || effectiveStatus === "paid_unverified";
-  const isReview = effectiveStatus === "review_required";
-  const isRejected =
-    effectiveStatus === "rejected" || effectiveStatus === "refunded";
-  const isPending = effectiveStatus === "pending";
-
   const MethodIcon = method ? (METHOD_ICONS[method] ?? CreditCard) : null;
+  const statusLabel = t(`statusBadge.${effectiveStatus}`);
 
   return (
     <div
-      className={cn("flex items-center gap-1", className)}
-      title={STATUS_LABEL[effectiveStatus]}
+      className={cn("flex items-center gap-1.5", className)}
+      title={statusLabel}
     >
-      {/* Status dot */}
-      <div
-        className={cn(
-          "flex size-5 shrink-0 items-center justify-center rounded-full",
-          isPaid && "bg-arena-success/20",
-          isReview && "bg-amber-500/20",
-          isRejected && "bg-arena-danger/20",
-          isPending && "bg-arena-text-muted/15",
-        )}
-      >
-        {isPaid && <div className="size-2.5 rounded-full bg-arena-success" />}
-        {isReview && <Clock size={10} className="text-amber-500" />}
-        {isRejected && <X size={10} className="text-arena-danger" />}
-        {isPending && (
-          <div className="size-2 rounded-full bg-arena-text-muted/50" />
-        )}
-      </div>
+      {/* Status Badge Icon */}
+      {effectiveStatus === "approved" && (
+        <div className="flex size-6 shrink-0 items-center justify-center rounded-full border border-arena-success/30 bg-arena-success/15 text-arena-success shadow-[0_0_12px_rgba(76,175,80,0.15)] transition-transform hover:scale-105">
+          <CircleDollarSign size={13} strokeWidth={2.5} />
+        </div>
+      )}
 
-      {/* Method icon — only when paid */}
-      {isPaid && MethodIcon && (
-        <MethodIcon size={12} className="text-arena-text-muted" />
+      {effectiveStatus === "paid_unverified" && (
+        <div className="flex size-6 shrink-0 items-center justify-center rounded-full border border-amber-500/20 bg-amber-500/10 text-amber-500 shadow-[0_0_12px_rgba(245,158,11,0.15)] animate-pulse">
+          <Hourglass size={12} strokeWidth={2.5} />
+        </div>
+      )}
+
+      {effectiveStatus === "pending" && (
+        <div className="flex size-6 shrink-0 items-center justify-center rounded-full border border-arena-border bg-arena-surface-el text-arena-text-muted/60">
+          <Clock size={12} strokeWidth={2} />
+        </div>
+      )}
+
+      {effectiveStatus === "review_required" && (
+        <div className="flex size-6 shrink-0 items-center justify-center rounded-full border border-arena-warning/30 bg-arena-warning/15 text-arena-warning animate-pulse">
+          <AlertTriangle size={12} strokeWidth={2} />
+        </div>
+      )}
+
+      {(effectiveStatus === "rejected" || effectiveStatus === "refunded") && (
+        <div className="flex size-6 shrink-0 items-center justify-center rounded-full border border-arena-danger/25 bg-arena-danger/10 text-arena-danger">
+          <X size={12} strokeWidth={2.5} />
+        </div>
+      )}
+
+      {/* Method icon — only when paid or verifying */}
+      {(effectiveStatus === "approved" || effectiveStatus === "paid_unverified") && MethodIcon && (
+        <MethodIcon size={12} className="text-arena-text-muted transition-colors hover:text-arena-text" />
       )}
     </div>
   );
 }
 
-const STATUS_LABEL: Record<PaymentStatus, string> = {
-  pending: "Pagamento pendente",
-  paid_unverified: "Pagamento em validação",
-  review_required: "Pagamento em revisão",
-  approved: "Pagamento aprovado",
-  rejected: "Pagamento rejeitado",
-  refunded: "Pagamento reembolsado",
-};

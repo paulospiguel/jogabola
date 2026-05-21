@@ -1,5 +1,6 @@
 "use client";
 
+import { useQueryClient } from "@tanstack/react-query";
 import { formatDistanceToNow } from "date-fns";
 import { enUS, es, pt } from "date-fns/locale";
 import { Bell, Calendar, Check, CreditCard, UserPlus } from "lucide-react";
@@ -59,16 +60,19 @@ export function NotificationsList({
   const t = useTranslations("notificationsPage");
   const locale = useLocale();
   const [isPending, startTransition] = useTransition();
+  const queryClient = useQueryClient();
 
   const handleMarkAsRead = (id: string) => {
     startTransition(async () => {
       await markNotificationAsRead(id);
+      queryClient.invalidateQueries({ queryKey: ["notifications"] });
     });
   };
 
   const handleMarkAllAsRead = () => {
     startTransition(async () => {
       await markAllAsRead();
+      queryClient.invalidateQueries({ queryKey: ["notifications"] });
     });
   };
 
@@ -116,17 +120,23 @@ export function NotificationsList({
 
       <div className="jb-stack">
         {initialNotifications.map(notification => (
-          <Button
-            type="button"
-            variant="ghost"
+          // biome-ignore lint/a11y/useSemanticElements: Elemento de bloco responsivo necessário para suportar conteúdo complexo proibido em botões HTML5
+          <div
+            role="button"
+            tabIndex={0}
             key={notification.id}
             onClick={() =>
               !notification.read && handleMarkAsRead(notification.id)
             }
+            onKeyDown={e => {
+              if (e.key === "Enter" || e.key === " ") {
+                !notification.read && handleMarkAsRead(notification.id);
+              }
+            }}
             className={cn(
-              "jb-card group relative h-auto w-full gap-4 border-l-4 p-4 text-left transition-all duration-200",
+              "jb-card group relative flex w-full gap-3 md:gap-4 border-l-4 p-3.5 md:p-4 text-left cursor-pointer transition-all duration-200 press select-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-arena-primary",
               notification.read
-                ? "border-transparent opacity-70 hover:bg-transparent"
+                ? "border-transparent opacity-70 hover:bg-arena-surface-el/10"
                 : "border-arena-primary bg-arena-surface-el/20 hover:bg-arena-surface-el/30",
             )}
           >
@@ -140,10 +150,10 @@ export function NotificationsList({
             </div>
 
             <div className="min-w-0 flex-1">
-              <div className="flex items-start justify-between gap-2">
+              <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-1 sm:gap-2">
                 <h4
                   className={cn(
-                    "truncate text-sm font-bold transition-colors",
+                    "text-sm font-bold transition-colors line-clamp-2 sm:line-clamp-none leading-snug",
                     notification.read
                       ? "text-arena-text-sec"
                       : "text-arena-text",
@@ -151,7 +161,7 @@ export function NotificationsList({
                 >
                   {notification.title}
                 </h4>
-                <span className="whitespace-nowrap text-[10px] font-bold uppercase tracking-wider text-arena-text-muted">
+                <span className="whitespace-nowrap text-[9px] sm:text-[10px] font-bold uppercase tracking-wider text-arena-text-muted mt-0.5 sm:mt-0">
                   {formatDistanceToNow(new Date(notification.createdAt), {
                     addSuffix: true,
                     locale: dateLocales[locale] || pt,
@@ -175,7 +185,7 @@ export function NotificationsList({
                 <div className="h-2 w-2 rounded-full bg-arena-primary shadow-[0_0_8px_rgba(124,255,79,0.5)]" />
               </div>
             )}
-          </Button>
+          </div>
         ))}
       </div>
     </div>

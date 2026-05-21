@@ -1,10 +1,12 @@
 import { eq } from "drizzle-orm";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
+import { getTranslations } from "next-intl/server";
 import DotGrid from "@/components/arena/dot-grid";
 import { JbBottomNav } from "@/components/arena/jb-bottom-nav";
 import { JbMobileTopBar } from "@/components/arena/jb-mobile-top-bar";
 import { JbSidebar } from "@/components/arena/jb-sidebar";
+import { PasskeyPromptGate } from "@/components/arena/passkey-prompt-gate";
 import { TeamGateProvider } from "@/components/arena/team-gate-context";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import { db } from "@/db/client";
@@ -20,7 +22,11 @@ export default async function ArenaLayout({
   const user = session?.user;
   const sessionData = session?.session;
 
-  if (!user?.onboardingCompleted) {
+  if (!user) {
+    redirect("/auth");
+  }
+
+  if (!user.onboardingCompleted) {
     redirect("/onboarding");
   }
 
@@ -36,9 +42,33 @@ export default async function ArenaLayout({
     }
   }
 
+  let hasPasskey = false;
+  if (user?.id) {
+    const passkeyRecord = await db.query.passkey.findFirst({
+      where: eq(schema.passkey.userId, user.id),
+    });
+    hasPasskey = Boolean(passkeyRecord);
+  }
+
+  const t = await getTranslations("passkeyPrompt");
+  const passkeyTranslations = {
+    title: t("title"),
+    description: t("description"),
+    yes: t("yes"),
+    no: t("no"),
+    skip: t("skip"),
+    success: t("success"),
+    error: t("error"),
+  };
+
   return (
     <SidebarProvider>
       <TeamGateProvider role={role} hasTeam={hasTeam}>
+        <PasskeyPromptGate
+          hasPasskey={hasPasskey}
+          userId={user.id}
+          translations={passkeyTranslations}
+        />
         <div className="jb-arena flex min-h-screen w-full">
           <div className="jb-arena-bg" aria-hidden="true">
             <DotGrid

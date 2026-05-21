@@ -8,9 +8,9 @@ import {
   CreditCard,
   Link2,
   Loader2,
+  RotateCcw,
   Send,
   Users,
-  RotateCcw,
 } from "lucide-react";
 import Image from "next/image";
 import { useTranslations } from "next-intl";
@@ -187,7 +187,9 @@ function PaymentSection({
               {transferEnabled && (
                 <button
                   type="button"
-                  onClick={() => set("transferRequiresProof", !form.transferRequiresProof)}
+                  onClick={() =>
+                    set("transferRequiresProof", !form.transferRequiresProof)
+                  }
                   className={cn(
                     "flex items-center justify-between rounded-xl border px-4 py-3 text-left transition-colors",
                     form.transferRequiresProof
@@ -206,7 +208,9 @@ function PaymentSection({
                   <div
                     className={cn(
                       "h-5 w-9 rounded-full transition-colors",
-                      form.transferRequiresProof ? "bg-arena-primary" : "bg-arena-border",
+                      form.transferRequiresProof
+                        ? "bg-arena-primary"
+                        : "bg-arena-border",
                     )}
                   >
                     <div
@@ -240,7 +244,8 @@ function PaymentSection({
               </p>
               <p className="text-[11px] text-arena-text-muted">
                 {t("payment.requiredHint")}
-              </p>            </div>
+              </p>{" "}
+            </div>
             <div
               className={cn(
                 "h-5 w-9 rounded-full transition-colors",
@@ -732,9 +737,7 @@ export function CreateEventSheet({
                   <SelectValue placeholder={t("labels.recurrence")} />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="once">
-                    {t("recurrence.once")}
-                  </SelectItem>
+                  <SelectItem value="once">{t("recurrence.once")}</SelectItem>
                   <SelectItem value="weekly">
                     {t("recurrence.weekly")}
                   </SelectItem>

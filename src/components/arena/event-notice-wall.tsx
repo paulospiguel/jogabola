@@ -1,16 +1,26 @@
 "use client";
 
-import { useTranslations } from "next-intl";
-import { useState, useEffect } from "react";
-import { Megaphone, Trash2, Send, AlertTriangle, MapPin, Info } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
-import { pt, enUS, es, fr } from "date-fns/locale";
-import { getEventNotices, createEventNotice, deleteEventNotice } from "@/actions/notices.actions";
+import { enUS, es, fr, pt } from "date-fns/locale";
+import {
+  AlertTriangle,
+  Info,
+  MapPin,
+  Megaphone,
+  Send,
+  Trash2,
+} from "lucide-react";
+import { useLocale, useTranslations } from "next-intl";
+import { useEffect, useState } from "react";
+import {
+  createEventNotice,
+  deleteEventNotice,
+  getEventNotices,
+} from "@/actions/notices.actions";
+import { JbAvatar } from "@/components/arena/jb-avatar";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { JbAvatar } from "@/components/arena/jb-avatar";
 import { cn } from "@/lib/utils";
-import { useLocale } from "next-intl";
 
 interface Notice {
   id: number;
@@ -63,7 +73,7 @@ export function EventNoticeWall({ eventId, isManager }: EventNoticeWallProps) {
     const res = await createEventNotice({
       matchSessionId: eventId,
       message: message.trim(),
-      type: "info"
+      type: "info",
     });
     if (res.success) {
       setMessage("");
@@ -108,7 +118,7 @@ export function EventNoticeWall({ eventId, isManager }: EventNoticeWallProps) {
         <div className="flex flex-col gap-2 rounded-xl border border-arena-primary/30 bg-arena-primary/5 p-3 animate-in fade-in slide-in-from-top-2">
           <Textarea
             value={message}
-            onChange={(e) => setMessage(e.target.value)}
+            onChange={e => setMessage(e.target.value)}
             placeholder={t("placeholder")}
             className="min-h-[80px] bg-arena-bg border-arena-border text-sm"
           />
@@ -140,15 +150,17 @@ export function EventNoticeWall({ eventId, isManager }: EventNoticeWallProps) {
             {t("empty")}
           </p>
         )}
-        {notices.map((notice) => (
+        {notices.map(notice => (
           <div
             key={notice.id}
             className={cn(
               "group relative flex flex-col gap-2 rounded-xl border-l-4 p-4 transition-all",
               "bg-arena-surface border-arena-border",
-              notice.type === "urgent" && "border-l-arena-danger bg-arena-danger/5",
-              notice.type === "field_change" && "border-l-arena-warning bg-arena-warning/5",
-              notice.type === "info" && "border-l-arena-info bg-arena-info/5"
+              notice.type === "urgent" &&
+                "border-l-arena-danger bg-arena-danger/5",
+              notice.type === "field_change" &&
+                "border-l-arena-warning bg-arena-warning/5",
+              notice.type === "info" && "border-l-arena-info bg-arena-info/5",
             )}
           >
             <div className="flex items-start justify-between gap-4">
@@ -166,7 +178,7 @@ export function EventNoticeWall({ eventId, isManager }: EventNoticeWallProps) {
                 </button>
               )}
             </div>
-            
+
             <div className="flex items-center justify-between mt-1">
               <div className="flex items-center gap-2">
                 <JbAvatar

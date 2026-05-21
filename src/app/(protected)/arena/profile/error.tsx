@@ -19,9 +19,7 @@ export default function ProfileError({
   return (
     <div className="jb-page flex items-center justify-center">
       <div className="jb-page-inner text-center space-y-4">
-        <h2 className="text-lg font-bold text-red-400">
-          {t("loadError")}
-        </h2>
+        <h2 className="text-lg font-bold text-red-400">{t("loadError")}</h2>
         <p className="text-sm text-arena-text-muted font-mono break-all max-w-lg">
           {error.message}
         </p>

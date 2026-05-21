@@ -26,21 +26,21 @@ interface EventsListProps {
 }
 
 const STATUS_CONFIG: Record<EventStatus, { label: string; className: string }> =
-{
-  scheduled: {
-    label: "status.scheduled",
-    className: "text-arena-info bg-arena-info/10 border-arena-info/25",
-  },
-  confirmed: {
-    label: "status.confirmed",
-    className:
-      "text-arena-success bg-arena-success/10 border-arena-success/25",
-  },
-  cancelled: {
-    label: "status.cancelled",
-    className: "text-arena-danger bg-arena-danger/10 border-arena-danger/25",
-  },
-};
+  {
+    scheduled: {
+      label: "status.scheduled",
+      className: "text-arena-info bg-arena-info/10 border-arena-info/25",
+    },
+    confirmed: {
+      label: "status.confirmed",
+      className:
+        "text-arena-success bg-arena-success/10 border-arena-success/25",
+    },
+    cancelled: {
+      label: "status.cancelled",
+      className: "text-arena-danger bg-arena-danger/10 border-arena-danger/25",
+    },
+  };
 
 function EventStatusBadge({ status }: { status: EventStatus }) {
   const t = useTranslations("arenaEvents");

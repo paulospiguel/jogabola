@@ -285,10 +285,7 @@ export async function getPlayerHistory(playerId: string, teamId: number) {
         status: attendance.status,
       })
       .from(attendance)
-      .innerJoin(
-        matchSessions,
-        eq(attendance.matchSessionId, matchSessions.id),
-      )
+      .innerJoin(matchSessions, eq(attendance.matchSessionId, matchSessions.id))
       .where(
         and(
           eq(matchSessions.teamId, teamId),
@@ -299,7 +296,10 @@ export async function getPlayerHistory(playerId: string, teamId: number) {
       )
       .orderBy(desc(matchSessions.startsAt));
 
-    return { success: true as const, data: history.map(h => ({ ...h, type: "Partida" })) };
+    return {
+      success: true as const,
+      data: history.map(h => ({ ...h, type: "Partida" })),
+    };
   } catch (error) {
     console.error("Error fetching player history:", error);
     return { success: false as const, error: "Failed to fetch history" };
@@ -440,12 +440,20 @@ export async function managerBlockParticipant(
       const attendanceId = parseInt(targetUserId.replace("guest-", ""), 10);
       await db
         .update(attendance)
-        .set({ status: "refused", note: "Bloqueado pelo gestor", updatedAt: new Date() })
+        .set({
+          status: "refused",
+          note: "Bloqueado pelo gestor",
+          updatedAt: new Date(),
+        })
         .where(eq(attendance.id, attendanceId));
     } else {
       await db
         .update(attendance)
-        .set({ status: "refused", note: "Bloqueado pelo gestor", updatedAt: new Date() })
+        .set({
+          status: "refused",
+          note: "Bloqueado pelo gestor",
+          updatedAt: new Date(),
+        })
         .where(
           and(
             eq(attendance.matchSessionId, eventId),

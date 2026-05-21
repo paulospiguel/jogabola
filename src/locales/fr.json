@@ -315,12 +315,7 @@
       "training": "Ex : Entraînement technique"
     },
     "playersCount": "{count} joueurs",
-    "steps": [
-      "Type d'événement",
-      "Détails",
-      "Aperçu",
-      "Confirmer"
-    ],
+    "steps": ["Type d'événement", "Détails", "Aperçu", "Confirmer"],
     "success": "Événement créé !",
     "successSubtitle": "Convocation envoyée avec succès.",
     "types": {
@@ -368,6 +363,12 @@
     },
     "limitReachedTitle": "Limite du plan gratuit",
     "upgradeCta": "Voir les plans"
+  },
+  "arenaNoTeamModal": {
+    "title": "Créez une équipe d'abord",
+    "description": "Pour accéder à cette fonctionnalité, vous devez créer ou avoir une équipe associée à votre compte.",
+    "createTeam": "Créer une équipe",
+    "notNow": "Pas maintenant"
   },
   "arenaDashboard": {
     "loadingArena": "Chargement de l'arena...",
@@ -418,7 +419,11 @@
       "blockTitle": "Bloquer le participant ?",
       "blockDescription": "En bloquant {name}, le participant sera retiré et une amende pour non-présentation pourra être appliquée. Êtes-vous sûr ?",
       "blockConfirm": "Bloquer",
-      "cancel": "Retour"
+      "cancel": "Retour",
+      "moveToConfirmed": "Déplacer en Titulaire",
+      "moveToReserve": "Déplacer en Remplaçant",
+      "revokePresence": "Révoquer la Présence",
+      "blockParticipant": "Bloquer l'Athlète"
     },
     "lists": {
       "main": "Liste principale ({count})",
@@ -464,6 +469,9 @@
       "pitchDescription": "Utilisez notre Intelligence Artificielle pour analyser l'historique et la note des athlètes et créer des équipes 100% équilibrées. Un match juste est un meilleur match !",
       "guestPrompt": "Combien d'invités avons-nous aujourd'hui ?",
       "guestLabel": "Nombre d'invités (sans compte)",
+      "fakePlayer": "Joueur Temp.",
+      "fakePlayerDesc": "Sans historique (invité)",
+      "fillWithFakes": "Compléter avec Temp.",
       "balanceAction": "Générer les Équipes",
       "loading": "Analyse de l'historique et équilibrage des poids...",
       "teamA": "Équipe A",
@@ -789,6 +797,8 @@
     "roles": {
       "owner": "Capitaine",
       "admin": "Administrateur",
+      "manager": "Gestionnaire",
+      "coach": "Entraîneur",
       "player": "Joueur",
       "guest": "Invité"
     },
@@ -1674,6 +1684,14 @@
       "approved": "Approuvé",
       "rejected": "Refusé",
       "refunded": "Remboursé"
+    },
+    "statusBadge": {
+      "pending": "Paiement en attente",
+      "paid_unverified": "En attente de validation",
+      "review_required": "Révision nécessaire",
+      "approved": "Paiement approuvé",
+      "rejected": "Paiement rejeté",
+      "refunded": "Paiement remboursé"
     },
     "receipt": {
       "confirmed": "Paiement confirmé",
@@ -2585,5 +2603,14 @@
   },
   "loadingPage": {
     "loading": "Chargement..."
+  },
+  "passkeyPrompt": {
+    "title": "Activer Passkey ⚡",
+    "description": "Voulez-vous associer votre appareil (FaceID, TouchID ou PIN) pour vous connecter instantanément la prochaine fois, sans attendre de codes par e-mail ?",
+    "yes": "Oui, associer maintenant",
+    "no": "Ne plus me demander",
+    "skip": "Pas maintenant",
+    "success": "Passkey associée avec succès !",
+    "error": "Impossible d'associer la passkey."
   }
 }

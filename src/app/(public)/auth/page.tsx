@@ -2,7 +2,7 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { AnimatePresence, motion } from "framer-motion";
-import { ArrowLeft, ArrowRight, Loader2, X, Fingerprint } from "lucide-react";
+import { ArrowLeft, ArrowRight, Fingerprint, Loader2, X } from "lucide-react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useTranslations } from "next-intl";
@@ -68,7 +68,9 @@ export default function LoginPage() {
 
   const [step, setStep] = useState<AuthStep>("email");
   const [loading, setLoading] = useState(false);
-  const [socialLoading, setSocialLoading] = useState<"google" | "passkey" | null>(null);
+  const [socialLoading, setSocialLoading] = useState<
+    "google" | "passkey" | null
+  >(null);
   const [collectedEmail, setCollectedEmail] = useState(
     searchParams.get("email") || "",
   );

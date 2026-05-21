@@ -85,8 +85,10 @@ export function PaymentSettingsSheet({
       cashInstructions:
         (overrides?.cashInstructions ?? cashInstructions).trim() || undefined,
       transferEnabled: overrides?.transferEnabled ?? transferEnabled,
-      transferIban: (overrides?.transferIban ?? transferIban).trim() || undefined,
-      transferName: (overrides?.transferName ?? transferName).trim() || undefined,
+      transferIban:
+        (overrides?.transferIban ?? transferIban).trim() || undefined,
+      transferName:
+        (overrides?.transferName ?? transferName).trim() || undefined,
     });
     setSaving(false);
     if (!res.success) {
@@ -153,7 +155,10 @@ export function PaymentSettingsSheet({
     {
       type: "transfer",
       enabled: transferEnabled,
-      summary: transferEnabled && transferIban ? formatIbanForSummary(transferIban) : undefined,
+      summary:
+        transferEnabled && transferIban
+          ? formatIbanForSummary(transferIban)
+          : undefined,
     },
     {
       type: "cash",
@@ -179,9 +184,7 @@ export function PaymentSettingsSheet({
           />
 
           <p className="text-[11px] text-arena-text-muted">
-            {saving
-              ? t("saving")
-              : t("help")}
+            {saving ? t("saving") : t("help")}
           </p>
 
           <button

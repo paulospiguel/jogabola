@@ -28,7 +28,9 @@ export const matchSessions = pgTable("match_sessions", {
   paymentDeadlineHours: integer("payment_deadline_hours"),
   rosterOnly: boolean("roster_only").notNull().default(false),
   rosterPriorityHours: integer("roster_priority_hours").default(0),
-  transferRequiresProof: boolean("transfer_requires_proof").notNull().default(true),
+  transferRequiresProof: boolean("transfer_requires_proof")
+    .notNull()
+    .default(true),
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at").defaultNow(),
 });

@@ -9,15 +9,17 @@ interface AiBalancerModalProps {
   isOpen: boolean;
   onClose: () => void;
   onGenerate: (guestsCount: number) => Promise<void>;
+  initialGuestsCount?: number;
 }
 
 export function AiBalancerModal({
   isOpen,
   onClose,
   onGenerate,
+  initialGuestsCount = 0,
 }: AiBalancerModalProps) {
   const t = useTranslations("arenaEventDetail.aiBalancer");
-  const [guestsCount, setGuestsCount] = useState<number>(0);
+  const [guestsCount, setGuestsCount] = useState<number>(initialGuestsCount);
   const [isGenerating, setIsGenerating] = useState(false);
 
   if (!isOpen) return null;
@@ -32,20 +34,19 @@ export function AiBalancerModal({
   return (
     <>
       {/* Backdrop */}
-      <div 
-        className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm" 
-        onClick={!isGenerating ? onClose : undefined} 
+      <div
+        className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm"
+        onClick={!isGenerating ? onClose : undefined}
       />
-      
+
       {/* Modal Content */}
       <div className="fixed left-1/2 top-1/2 z-50 w-full max-w-[400px] -translate-x-1/2 -translate-y-1/2 p-5">
         <div className="relative flex flex-col overflow-hidden rounded-[24px] border border-arena-border bg-arena-surface shadow-2xl">
-          
           {/* Top Decorative Header */}
           <div className="relative h-[120px] w-full overflow-hidden bg-gradient-to-br from-[#1c1c1e] to-arena-bg">
             <div className="absolute -right-10 -top-10 h-32 w-32 rounded-full bg-arena-primary opacity-20 blur-3xl" />
             <div className="absolute -left-10 -bottom-10 h-32 w-32 rounded-full bg-blue-500 opacity-20 blur-3xl" />
-            
+
             <button
               onClick={onClose}
               disabled={isGenerating}
@@ -67,9 +68,11 @@ export function AiBalancerModal({
                 <Zap size={12} className="fill-arena-primary" />
                 {t("modalSubtitle")}
               </div>
-              <h3 className="text-xl font-bold text-white">{t("modalTitle")}</h3>
+              <h3 className="text-xl font-bold text-white">
+                {t("modalTitle")}
+              </h3>
             </div>
-            
+
             <p className="mb-6 text-center text-sm leading-relaxed text-arena-text-muted">
               {t("pitchDescription")}
             </p>
@@ -88,7 +91,7 @@ export function AiBalancerModal({
                   min="0"
                   max="20"
                   value={guestsCount}
-                  onChange={(e) => setGuestsCount(parseInt(e.target.value) || 0)}
+                  onChange={e => setGuestsCount(parseInt(e.target.value) || 0)}
                   disabled={isGenerating}
                   className="flex-1 rounded-[12px] border border-arena-border bg-arena-surface px-4 py-2.5 text-white outline-none focus:border-arena-primary focus:ring-1 focus:ring-arena-primary"
                   placeholder="0"

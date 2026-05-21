@@ -27,7 +27,7 @@ import {
 } from "@/actions/payments.actions";
 import { JbAvatar } from "@/components/arena/jb-avatar";
 import { type BadgeStatus, JbBadge } from "@/components/arena/jb-badge";
-import { type ScoreLevel, JbScoreBar } from "@/components/arena/jb-score-bar";
+import { JbScoreBar, type ScoreLevel } from "@/components/arena/jb-score-bar";
 import { VerifiedBadge } from "@/components/arena/verified-badge";
 import { Button } from "@/components/ui/button";
 import { usePayments } from "@/hooks/use-payments";

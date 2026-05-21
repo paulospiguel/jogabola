@@ -196,7 +196,6 @@ export function ArenaDashboard({ userId }: ArenaDashboardProps) {
                 <Plus size={15} />
                 {t("actions.event")}
               </Button>
-              <JbUserMenu onlyAvatar />
             </div>
           </header>
 

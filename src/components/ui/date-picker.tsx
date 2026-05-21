@@ -1,7 +1,7 @@
 "use client";
 
 import { format } from "date-fns";
-import { pt, enUS, es, fr } from "date-fns/locale";
+import { enUS, es, fr, pt } from "date-fns/locale";
 import { CalendarIcon } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 import * as React from "react";

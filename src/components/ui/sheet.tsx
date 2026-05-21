@@ -2,8 +2,8 @@
 
 import * as SheetPrimitive from "@radix-ui/react-dialog";
 import { cva, type VariantProps } from "class-variance-authority";
-import * as React from "react";
 import { useTranslations } from "next-intl";
+import * as React from "react";
 import { LuX as X } from "@/components/icons";
 
 import { cn } from "@/lib/utils";

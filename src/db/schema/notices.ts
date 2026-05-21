@@ -1,6 +1,6 @@
 import { integer, pgTable, serial, text, timestamp } from "drizzle-orm/pg-core";
-import { user } from "./users";
 import { matchSessions } from "./match-sessions";
+import { user } from "./users";
 
 export const eventNotices = pgTable("event_notices", {
   id: serial("id").primaryKey(),

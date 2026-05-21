@@ -1,10 +1,5 @@
 "use client";
 
-import {
-  managerBlockParticipant,
-  managerRemoveParticipant,
-  managerUpdateParticipantStatus,
-} from "@/actions/attendance.actions";
 import { useQueryClient } from "@tanstack/react-query";
 import {
   ArrowDownCircle,
@@ -18,6 +13,11 @@ import {
 import Link from "next/link";
 import { useTranslations } from "next-intl";
 import { type ReactNode, useState } from "react";
+import {
+  managerBlockParticipant,
+  managerRemoveParticipant,
+  managerUpdateParticipantStatus,
+} from "@/actions/attendance.actions";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -102,6 +102,7 @@ export function ParticipantRow({
   eventId,
 }: ParticipantRowProps) {
   const t = useTranslations("arenaEventDetail");
+  const tSquad = useTranslations("arenaSquad");
   const queryClient = useQueryClient();
   const [loading, setLoading] = useState(false);
   const [isRemoveDialogOpen, setIsRemoveDialogOpen] = useState(false);
@@ -109,7 +110,7 @@ export function ParticipantRow({
 
   const paymentStatus = isPaymentStatus(participant.paymentStatus)
     ? participant.paymentStatus
-    : null;
+    : (showPayment ? ("pending" as const) : null);
   const shouldShowPayment = showPayment && paymentStatus;
   const profileHref = String(participant.id).startsWith("guest-")
     ? null
@@ -125,7 +126,9 @@ export function ParticipantRow({
         newStatus,
       );
       if (res.success) {
-        queryClient.invalidateQueries({ queryKey: ["event", eventId, "attendance"] });
+        queryClient.invalidateQueries({
+          queryKey: ["event", eventId, "attendance"],
+        });
       }
     } finally {
       setLoading(false);
@@ -136,9 +139,14 @@ export function ParticipantRow({
     if (!eventId) return;
     setLoading(true);
     try {
-      const res = await managerRemoveParticipant(eventId, String(participant.id));
+      const res = await managerRemoveParticipant(
+        eventId,
+        String(participant.id),
+      );
       if (res.success) {
-        queryClient.invalidateQueries({ queryKey: ["event", eventId, "attendance"] });
+        queryClient.invalidateQueries({
+          queryKey: ["event", eventId, "attendance"],
+        });
         setIsRemoveDialogOpen(false);
       }
     } finally {
@@ -150,9 +158,14 @@ export function ParticipantRow({
     if (!eventId) return;
     setLoading(true);
     try {
-      const res = await managerBlockParticipant(eventId, String(participant.id));
+      const res = await managerBlockParticipant(
+        eventId,
+        String(participant.id),
+      );
       if (res.success) {
-        queryClient.invalidateQueries({ queryKey: ["event", eventId, "attendance"] });
+        queryClient.invalidateQueries({
+          queryKey: ["event", eventId, "attendance"],
+        });
         setIsBlockDialogOpen(false);
       }
     } finally {
@@ -160,56 +173,55 @@ export function ParticipantRow({
     }
   }
 
-  const managerActions =
-    isManager ? (
-      <DropdownMenu>
-        <DropdownMenuTrigger asChild disabled={loading}>
-          <button className="flex h-8 w-8 items-center justify-center rounded-full text-arena-text-muted transition-colors hover:bg-arena-surface-el focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-arena-primary/50 active:scale-95">
-            <MoreVertical size={16} />
-          </button>
-        </DropdownMenuTrigger>
-        <DropdownMenuContent
-          align="end"
-          className="w-52 rounded-[12px] border-arena-border bg-arena-surface shadow-xl shadow-black/40"
+  const managerActions = isManager ? (
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild disabled={loading}>
+        <button className="flex h-8 w-8 items-center justify-center rounded-full text-arena-text-muted transition-colors hover:bg-arena-surface-el focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-arena-primary/50 active:scale-95">
+          <MoreVertical size={16} />
+        </button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent
+        align="end"
+        className="w-52 rounded-[12px] border-arena-border bg-arena-surface shadow-xl shadow-black/40"
+      >
+        {participant.status === "reserve" ? (
+          <DropdownMenuItem
+            onClick={() => handleStatusChange("confirmed")}
+            className="gap-2.5 px-3 py-2.5 text-[13px] font-medium text-arena-text focus:bg-arena-surface-el focus:text-arena-primary"
+          >
+            <ArrowUpCircle className="h-4 w-4 text-arena-success" />
+            <span>{t("management.moveToConfirmed")}</span>
+          </DropdownMenuItem>
+        ) : (
+          <DropdownMenuItem
+            onClick={() => handleStatusChange("reserve")}
+            className="gap-2.5 px-3 py-2.5 text-[13px] font-medium text-arena-text focus:bg-arena-surface-el focus:text-arena-info"
+          >
+            <ArrowDownCircle className="h-4 w-4 text-arena-info" />
+            <span>{t("management.moveToReserve")}</span>
+          </DropdownMenuItem>
+        )}
+
+        <div className="mx-1 my-1 h-px bg-arena-border" />
+
+        <DropdownMenuItem
+          onClick={() => setIsRemoveDialogOpen(true)}
+          className="gap-2.5 px-3 py-2.5 text-[13px] font-medium text-arena-text focus:bg-arena-surface-el focus:text-arena-warning"
         >
-          {participant.status === "reserve" ? (
-            <DropdownMenuItem
-              onClick={() => handleStatusChange("confirmed")}
-              className="gap-2.5 px-3 py-2.5 text-[13px] font-medium text-arena-text focus:bg-arena-surface-el focus:text-arena-primary"
-            >
-              <ArrowUpCircle className="h-4 w-4 text-arena-success" />
-              <span>Mover para Titular</span>
-            </DropdownMenuItem>
-          ) : (
-            <DropdownMenuItem
-              onClick={() => handleStatusChange("reserve")}
-              className="gap-2.5 px-3 py-2.5 text-[13px] font-medium text-arena-text focus:bg-arena-surface-el focus:text-arena-info"
-            >
-              <ArrowDownCircle className="h-4 w-4 text-arena-info" />
-              <span>Mover para Suplente</span>
-            </DropdownMenuItem>
-          )}
+          <Trash2 className="h-4 w-4 text-arena-warning" />
+          <span>{t("management.revokePresence")}</span>
+        </DropdownMenuItem>
 
-          <div className="mx-1 my-1 h-px bg-arena-border" />
-
-          <DropdownMenuItem
-            onClick={() => setIsRemoveDialogOpen(true)}
-            className="gap-2.5 px-3 py-2.5 text-[13px] font-medium text-arena-text focus:bg-arena-surface-el focus:text-arena-warning"
-          >
-            <Trash2 className="h-4 w-4 text-arena-warning" />
-            <span>Revogar Presença</span>
-          </DropdownMenuItem>
-
-          <DropdownMenuItem
-            onClick={() => setIsBlockDialogOpen(true)}
-            className="gap-2.5 px-3 py-2.5 text-[13px] font-medium text-arena-danger focus:bg-arena-danger/10 focus:text-arena-danger"
-          >
-            <ShieldAlert className="h-4 w-4" />
-            <span>Bloquear Participante</span>
-          </DropdownMenuItem>
-        </DropdownMenuContent>
-      </DropdownMenu>
-    ) : null;
+        <DropdownMenuItem
+          onClick={() => setIsBlockDialogOpen(true)}
+          className="gap-2.5 px-3 py-2.5 text-[13px] font-medium text-arena-danger focus:bg-arena-danger/10 focus:text-arena-danger"
+        >
+          <ShieldAlert className="h-4 w-4" />
+          <span>{t("management.blockParticipant")}</span>
+        </DropdownMenuItem>
+      </DropdownMenuContent>
+    </DropdownMenu>
+  ) : null;
 
   return (
     <>
@@ -255,7 +267,11 @@ export function ParticipantRow({
             )}
           </div>
           <div className="truncate text-[10px] text-arena-text-muted">
-            {participant.role}
+            {participant.role
+              ? (tSquad.has(`roles.${participant.role.toLowerCase()}`)
+                ? tSquad(`roles.${participant.role.toLowerCase()}`)
+                : participant.role)
+              : ""}
           </div>
         </div>
 
@@ -280,7 +296,10 @@ export function ParticipantRow({
       </div>
 
       {/* Revoke Presence Dialog */}
-      <AlertDialog open={isRemoveDialogOpen} onOpenChange={setIsRemoveDialogOpen}>
+      <AlertDialog
+        open={isRemoveDialogOpen}
+        onOpenChange={setIsRemoveDialogOpen}
+      >
         <AlertDialogContent className="border-arena-border bg-arena-surface shadow-2xl">
           <AlertDialogHeader>
             <div className="mb-2 flex size-12 items-center justify-center rounded-2xl border border-arena-warning/25 bg-arena-warning/10 text-arena-warning">

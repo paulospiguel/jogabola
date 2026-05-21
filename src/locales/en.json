@@ -315,12 +315,7 @@
       "training": "Ex: Technical Training"
     },
     "playersCount": "{count} players",
-    "steps": [
-      "Event Type",
-      "Details",
-      "Preview",
-      "Confirm"
-    ],
+    "steps": ["Event Type", "Details", "Preview", "Confirm"],
     "success": "Event created!",
     "successSubtitle": "Invitation sent successfully.",
     "types": {
@@ -368,6 +363,12 @@
     },
     "limitReachedTitle": "Free plan limit",
     "upgradeCta": "View plans"
+  },
+  "arenaNoTeamModal": {
+    "title": "Create a team first",
+    "description": "To access this feature you need to create or have a team associated with your account.",
+    "createTeam": "Create team",
+    "notNow": "Not now"
   },
   "arenaDashboard": {
     "loadingArena": "Loading arena...",
@@ -418,7 +419,11 @@
       "blockTitle": "Block Participant?",
       "blockDescription": "By blocking {name}, the participant will be removed and a no-show fine may be applied. Are you sure?",
       "blockConfirm": "Block",
-      "cancel": "Go back"
+      "cancel": "Go back",
+      "moveToConfirmed": "Move to Starter",
+      "moveToReserve": "Move to Reserve",
+      "revokePresence": "Revoke Presence",
+      "blockParticipant": "Block Athlete"
     },
     "lists": {
       "main": "Main List ({count})",
@@ -464,6 +469,9 @@
       "pitchDescription": "Use our Artificial Intelligence to analyze history and athlete ratings to create 100% balanced teams. A fair match is a better match!",
       "guestPrompt": "How many guests today?",
       "guestLabel": "Number of guests (without account)",
+      "fakePlayer": "Temp Player",
+      "fakePlayerDesc": "No history (guest)",
+      "fillWithFakes": "Fill with Temps",
       "balanceAction": "Generate Teams",
       "loading": "Analyzing history and balancing weights...",
       "teamA": "Team A",
@@ -784,6 +792,8 @@
     "roles": {
       "owner": "Captain",
       "admin": "Admin",
+      "manager": "Manager",
+      "coach": "Coach",
       "player": "Player",
       "guest": "Guest"
     },
@@ -1669,6 +1679,14 @@
       "approved": "Approved",
       "rejected": "Rejected",
       "refunded": "Refunded"
+    },
+    "statusBadge": {
+      "pending": "Payment pending",
+      "paid_unverified": "Awaiting verification",
+      "review_required": "Review required",
+      "approved": "Payment approved",
+      "rejected": "Payment rejected",
+      "refunded": "Payment refunded"
     },
     "receipt": {
       "confirmed": "Payment confirmed",
@@ -2580,5 +2598,14 @@
   },
   "loadingPage": {
     "loading": "Loading..."
+  },
+  "passkeyPrompt": {
+    "title": "Enable Passkey ⚡",
+    "description": "Do you want to link your device (FaceID, TouchID, or PIN) to sign in instantly next time, without waiting for email codes?",
+    "yes": "Yes, link now",
+    "no": "Don't ask again",
+    "skip": "Not now",
+    "success": "Passkey linked successfully!",
+    "error": "Could not link passkey."
   }
 }

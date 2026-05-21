@@ -3,10 +3,10 @@
 import { desc, eq } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { db } from "@/db/client";
+import { matchSessions, user as userTable } from "@/db/schema";
 import { eventNotices } from "@/db/schema/notices";
 import { getAuthUser } from "@/lib/action-helpers";
 import { userCanAccessTeam } from "@/lib/team-access";
-import { matchSessions, user as userTable } from "@/db/schema";
 
 export async function getEventNotices(matchSessionId: number) {
   try {
@@ -47,7 +47,8 @@ export async function createEventNotice(input: {
       columns: { teamId: true },
     });
 
-    if (!event) return { success: false as const, error: "Evento não encontrado" };
+    if (!event)
+      return { success: false as const, error: "Evento não encontrado" };
 
     const canManage = await userCanAccessTeam(user.id, event.teamId);
     if (!canManage) return { success: false as const, error: "Sem permissão" };
@@ -81,16 +82,20 @@ export async function deleteEventNotice(noticeId: number) {
       where: eq(eventNotices.id, noticeId),
     });
 
-    if (!notice) return { success: false as const, error: "Aviso não encontrado" };
+    if (!notice)
+      return { success: false as const, error: "Aviso não encontrado" };
 
     if (notice.authorId !== user.id) {
-       // Also allow team owner to delete
-       const event = await db.query.matchSessions.findFirst({
-         where: eq(matchSessions.id, notice.matchSessionId),
-         columns: { teamId: true },
-       });
-       const canManage = event ? await userCanAccessTeam(user.id, event.teamId) : false;
-       if (!canManage) return { success: false as const, error: "Sem permissão" };
+      // Also allow team owner to delete
+      const event = await db.query.matchSessions.findFirst({
+        where: eq(matchSessions.id, notice.matchSessionId),
+        columns: { teamId: true },
+      });
+      const canManage = event
+        ? await userCanAccessTeam(user.id, event.teamId)
+        : false;
+      if (!canManage)
+        return { success: false as const, error: "Sem permissão" };
     }
 
     await db.delete(eventNotices).where(eq(eventNotices.id, noticeId));

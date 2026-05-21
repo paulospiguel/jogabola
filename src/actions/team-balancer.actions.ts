@@ -15,7 +15,10 @@ export async function balanceTeamsWithAI(eventId: number, guestsCount: number) {
     // 1. Get current attendance
     const attendanceResult = await getEventAttendanceWithUsers(eventId);
     if (!attendanceResult.success) {
-      return { success: false as const, error: "Falha ao obter jogadores confirmados" };
+      return {
+        success: false as const,
+        error: "Falha ao obter jogadores confirmados",
+      };
     }
 
     const confirmedPlayers = attendanceResult.data.confirmed;
@@ -59,8 +62,8 @@ export async function balanceTeamsWithAI(eventId: number, guestsCount: number) {
     });
 
     // 6. Calculate averages
-    const calcAvg = (team: BalancedPlayer[]) => 
-      team.length > 0 
+    const calcAvg = (team: BalancedPlayer[]) =>
+      team.length > 0
         ? (team.reduce((acc, p) => acc + p.rating, 0) / team.length).toFixed(1)
         : "0.0";
 

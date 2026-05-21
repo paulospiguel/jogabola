@@ -26,20 +26,23 @@ export default async function ArenaNotificationsPage() {
         <header className="jb-topbar">
           <div>
             <div className="jb-kicker">{t("header.eyebrow")}</div>
-            <h1 className="jb-title flex items-center gap-3">
-              {t("header.title")}
-              {notifications &&
-                notifications.filter(n => !n.read).length > 0 && (
-                  <span className="flex h-6 min-w-[24px] items-center justify-center rounded-full bg-arena-primary px-1.5 text-[11px] font-black text-arena-bg">
-                    {notifications.filter(n => !n.read).length}
-                  </span>
-                )}
-            </h1>
-            <p className="mt-1 max-w-xl text-sm text-arena-text-sec">
+            <div className="flex items-center gap-2 mt-1">
+              <Bell className="size-6 text-arena-primary shrink-0" />
+              <h1 className="jb-title flex items-center gap-3">
+                {t("header.title")}
+                {notifications &&
+                  notifications.filter(n => !n.read).length > 0 && (
+                    <span className="flex h-6 min-w-[24px] items-center justify-center rounded-full bg-arena-primary px-1.5 text-[11px] font-black text-arena-bg">
+                      {notifications.filter(n => !n.read).length}
+                    </span>
+                  )}
+              </h1>
+            </div>
+            <p className="mt-1.5 max-w-xl text-sm text-arena-text-sec">
               {t("header.description")}
             </p>
           </div>
-          <div className="flex items-center gap-3">
+          <div className="hidden md:flex items-center gap-3">
             <div className="h-11 w-11 rounded-full bg-arena-surface border border-arena-border flex items-center justify-center text-arena-text-sec">
               <Bell size={20} />
             </div>

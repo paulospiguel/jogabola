@@ -1,6 +1,6 @@
 "use server";
 
-import { and, desc, eq, lt } from "drizzle-orm";
+import { and, desc, eq, lt, sql } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { db } from "@/db/client";
 import { matchSessions, notifications } from "@/db/schema";
@@ -18,6 +18,21 @@ export async function getNotifications() {
     .orderBy(desc(notifications.createdAt));
 
   return { success: true as const, data };
+}
+
+export async function getUnreadNotificationsCount() {
+  const user = await getAuthUser();
+  if (!user)
+    return { success: false as const, error: { code: "UNAUTHORIZED" } };
+
+  const [result] = await db
+    .select({ count: sql<number>`count(*)::int` })
+    .from(notifications)
+    .where(
+      and(eq(notifications.userId, user.id), eq(notifications.read, false)),
+    );
+
+  return { success: true as const, count: result?.count ?? 0 };
 }
 
 export async function markNotificationAsRead(id: string) {

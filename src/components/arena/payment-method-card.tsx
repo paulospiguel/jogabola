@@ -8,9 +8,9 @@ import {
   Copy,
   CreditCard,
   ExternalLink,
+  Landmark,
   Loader2,
   Smartphone,
-  Landmark,
 } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useState } from "react";
