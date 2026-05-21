@@ -5,6 +5,7 @@ import {
   ChevronRight,
   Clock,
   CreditCard,
+  Landmark,
   Settings2,
   Smartphone,
   Wallet,
@@ -29,6 +30,7 @@ const METHOD_META: Record<
   stripe: { label: "Stripe", icon: CreditCard, color: "#6366f1" },
   mbway: { label: "MBWay", icon: Smartphone, color: "#ef4444" },
   cash: { label: "Numerário", icon: Banknote, color: "#22c55e" },
+  transfer: { label: "Transferência", icon: Landmark, color: "#06b6d4" },
 };
 
 function MethodBadge({ method }: { method: string }) {
@@ -40,6 +42,7 @@ function MethodBadge({ method }: { method: string }) {
     stripe: { labelKey: "stripe", icon: CreditCard, color: "#6366f1" },
     mbway: { labelKey: "mbway", icon: Smartphone, color: "#ef4444" },
     cash: { labelKey: "cash", icon: Banknote, color: "#22c55e" },
+    transfer: { labelKey: "transfer", icon: Landmark, color: "#06b6d4" },
   };
 
   const data = meta[method as PaymentMethod];

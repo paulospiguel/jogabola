@@ -556,6 +556,7 @@ export function AthleteRsvpSheet({
     stripe: { enabled: false },
     mbway: { enabled: false },
     cash: { enabled: true, instructions: t("cashInstructions") },
+    transfer: { enabled: false },
   };
 
   // When payment is required upfront, cash is not a valid option (manager can override manually)
@@ -575,6 +576,11 @@ export function AthleteRsvpSheet({
         cash: {
           enabled: settings.cashEnabled && cashAllowed,
           instructions: settings.cashInstructions ?? undefined,
+        },
+        transfer: {
+          enabled: settings.transferEnabled,
+          iban: settings.transferIban ?? undefined,
+          name: settings.transferName ?? undefined,
         },
       }
     : {
@@ -877,6 +883,10 @@ export function AthleteRsvpSheet({
               onCashIntent={() => handlePaymentIntent("cash")}
               onMbwayProof={async () => {
                 const p = await handlePaymentIntent("mbway");
+                if (p) handleMbwayProof(p.id);
+              }}
+              onTransferProof={async () => {
+                const p = await handlePaymentIntent("transfer");
                 if (p) handleMbwayProof(p.id);
               }}
             />

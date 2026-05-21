@@ -64,6 +64,7 @@ export async function createEvent(input: {
   paymentDeadlineHours?: number | null;
   rosterOnly?: boolean;
   rosterPriorityHours?: number;
+  transferRequiresProof?: boolean;
   mbwayEnabled?: boolean;
   mbwayPhone?: string;
   invitedPlayers?: {
@@ -126,6 +127,7 @@ export async function createEvent(input: {
       paymentDeadlineHours: input.paymentDeadlineHours ?? null,
       rosterOnly: input.rosterOnly ?? false,
       rosterPriorityHours: input.rosterPriorityHours ?? 0,
+      transferRequiresProof: input.transferRequiresProof ?? true,
     })
     .returning();
 
@@ -197,6 +199,7 @@ export async function updateEvent(
     paymentRequired?: boolean;
     paymentDeadlineHours?: number | null;
     rosterOnly?: boolean;
+    transferRequiresProof?: boolean;
     mbwayEnabled?: boolean;
     mbwayPhone?: string;
   },
@@ -239,6 +242,9 @@ export async function updateEvent(
         paymentDeadlineHours: input.paymentDeadlineHours,
       }),
       ...(input.rosterOnly !== undefined && { rosterOnly: input.rosterOnly }),
+      ...(input.transferRequiresProof !== undefined && {
+        transferRequiresProof: input.transferRequiresProof,
+      }),
       updatedAt: new Date(),
     })
     .where(eq(matchSessions.id, eventId))
@@ -450,6 +456,7 @@ function toEventView(event: typeof matchSessions.$inferSelect) {
     images: [] as string[],
     status: toEventStatus(event.status),
     recurrence: event.recurrence,
+    transferRequiresProof: event.transferRequiresProof,
     createdAt: event.createdAt ?? new Date(),
     updatedAt: event.updatedAt ?? new Date(),
   };

@@ -1,6 +1,6 @@
 "use client";
 
-import { Banknote, CreditCard, Loader2, Smartphone } from "lucide-react";
+import { Banknote, CreditCard, Loader2, Smartphone, Landmark } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useState } from "react";
 import { JbBottomSheet } from "@/components/arena/jb-bottom-sheet";
@@ -13,11 +13,15 @@ interface PaymentMethodDetailSheetProps {
     mbwayPhone?: string;
     mbwayName?: string;
     cashInstructions?: string;
+    transferIban?: string;
+    transferName?: string;
   };
   onSave: (data: {
     mbwayPhone?: string;
     mbwayName?: string;
     cashInstructions?: string;
+    transferIban?: string;
+    transferName?: string;
   }) => Promise<void>;
   onClose: () => void;
 }
@@ -29,12 +33,23 @@ const ICONS: Record<PaymentMethodType, React.ElementType> = {
   stripe: CreditCard,
   mbway: Smartphone,
   cash: Banknote,
+  transfer: Landmark,
 };
 
 const COLORS: Record<PaymentMethodType, string> = {
   stripe: "#6366f1",
   mbway: "#ef4444",
   cash: "#22c55e",
+  transfer: "#06b6d4",
+};
+
+const formatIban = (value: string) => {
+  const v = value.replace(/\s+/g, "").toUpperCase();
+  const parts = [];
+  for (let i = 0; i < v.length; i += 4) {
+    parts.push(v.slice(i, i + 4));
+  }
+  return parts.join(" ");
 };
 
 function FieldRow({
@@ -71,6 +86,10 @@ export function PaymentMethodDetailSheet({
   const [cashInstructions, setCashInstructions] = useState(
     initial.cashInstructions ?? "",
   );
+  const [transferIban, setTransferIban] = useState(
+    initial.transferIban ? formatIban(initial.transferIban) : "",
+  );
+  const [transferName, setTransferName] = useState(initial.transferName ?? "");
 
   const Icon = ICONS[type];
   const color = COLORS[type];
@@ -80,6 +99,18 @@ export function PaymentMethodDetailSheet({
       setError(t("mbway.errorPhone"));
       return;
     }
+    if (type === "transfer") {
+      const strippedIban = transferIban.replace(/\s+/g, "");
+      const ibanRegex = /^[A-Z]{2}[0-9]{2}[A-Z0-9]{11,30}$/i;
+      if (!strippedIban || !ibanRegex.test(strippedIban)) {
+        setError(t("transfer.errorIban"));
+        return;
+      }
+      if (!transferName.trim()) {
+        setError(t("transfer.errorName"));
+        return;
+      }
+    }
     setSaving(true);
     setError("");
     try {
@@ -87,6 +118,8 @@ export function PaymentMethodDetailSheet({
         mbwayPhone: mbwayPhone.trim() || undefined,
         mbwayName: mbwayName.trim() || undefined,
         cashInstructions: cashInstructions.trim() || undefined,
+        transferIban: transferIban.replace(/\s+/g, "") || undefined,
+        transferName: transferName.trim() || undefined,
       });
       onClose();
     } catch {
@@ -163,6 +196,30 @@ export function PaymentMethodDetailSheet({
           </div>
         )}
 
+        {/* Transfer */}
+        {type === "transfer" && (
+          <div className="flex flex-col gap-3">
+            <FieldRow label={t("transfer.iban")} required>
+              <input
+                type="text"
+                value={transferIban}
+                onChange={e => setTransferIban(formatIban(e.target.value))}
+                placeholder="PT50 0000 0000 0000 0000 0000 0"
+                className={inputCls}
+              />
+            </FieldRow>
+            <FieldRow label={t("transfer.name")} required>
+              <input
+                type="text"
+                value={transferName}
+                onChange={e => setTransferName(e.target.value)}
+                placeholder={t("transfer.placeholderName")}
+                className={inputCls}
+              />
+            </FieldRow>
+          </div>
+        )}
+
         {/* Cash */}
         {type === "cash" && (
           <FieldRow label={t("cash.instructions")}>
@@ -200,3 +257,4 @@ export function PaymentMethodDetailSheet({
     </JbBottomSheet>
   );
 }
+

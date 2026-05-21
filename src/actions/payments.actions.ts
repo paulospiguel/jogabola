@@ -43,9 +43,30 @@ function toUiPaymentStatus(status: string) {
 }
 
 export const createPayment = withAction(createPaymentSchema, async data => {
+  let initialStatus: "pending" | "paid_unverified" = "pending";
+
+  if (data.method === "transfer") {
+    const matchSessionRow = await db
+      .select({
+        transferRequiresProof: matchSessions.transferRequiresProof,
+      })
+      .from(matchReservations)
+      .innerJoin(
+        matchSessions,
+        eq(matchSessions.id, matchReservations.matchSessionId),
+      )
+      .where(eq(matchReservations.id, data.matchReservationId))
+      .limit(1)
+      .then(rows => rows[0]);
+
+    if (matchSessionRow && !matchSessionRow.transferRequiresProof) {
+      initialStatus = "paid_unverified";
+    }
+  }
+
   const [payment] = await db
     .insert(payments)
-    .values({ ...data, status: "pending" })
+    .values({ ...data, status: initialStatus })
     .returning();
   return { success: true, data: payment };
 });
@@ -480,6 +501,7 @@ export async function getPaymentById(paymentId: number): Promise<
         teamName: string;
         eventTitle: string;
         eventId: number;
+        transferRequiresProof: boolean;
       };
     }
   | { success: false; error: string }
@@ -500,6 +522,7 @@ export async function getPaymentById(paymentId: number): Promise<
         teamName: teams.name,
         eventTitle: matchSessions.title,
         eventId: matchSessions.id,
+        transferRequiresProof: matchSessions.transferRequiresProof,
       })
       .from(payments)
       .innerJoin(
@@ -542,6 +565,7 @@ export async function getPaymentById(paymentId: number): Promise<
         teamName: row.teamName,
         eventTitle: row.eventTitle,
         eventId: row.eventId,
+        transferRequiresProof: row.transferRequiresProof,
       },
     };
   } catch {

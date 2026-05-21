@@ -296,7 +296,9 @@
       "deadlineHoursUnit": "h before the game",
       "acceptMbway": "Accept MBWay",
       "acceptMbwayHint": "Allow payment via MBWay",
-      "mbwayPhone": "MBWay Phone Number"
+      "mbwayPhone": "MBWay Phone Number",
+      "transferRequiresProof": "Require proof",
+      "transferRequiresProofHint": "Require upload of transfer receipt"
     },
     "recurrence": {
       "once": "Once",
@@ -451,7 +453,21 @@
     "spots": "Spots",
     "tabs": {
       "call": "Squad Call",
-      "local": "Venue"
+      "local": "Venue",
+      "lineup": "Lineup"
+    },
+    "aiBalancer": {
+      "button": "AI Balancer ⚡",
+      "modalTitle": "AI Team Balancer",
+      "modalSubtitle": "Early Access / Beta",
+      "pitchDescription": "Use our Artificial Intelligence to analyze history and athlete ratings to create 100% balanced teams. A fair match is a better match!",
+      "guestPrompt": "How many guests today?",
+      "guestLabel": "Number of guests (without account)",
+      "balanceAction": "Generate Teams",
+      "loading": "Analyzing history and balancing weights...",
+      "teamA": "Team A",
+      "teamB": "Team B",
+      "avgRating": "Avg Rating:"
     },
     "titleJogo": "Match Details",
     "titleTreino": "Training",
@@ -669,6 +685,15 @@
         "instructions": "Cash payment instructions",
         "placeholder": "Pay the captain at the start of the game."
       },
+      "transfer": {
+        "title": "Bank Transfer",
+        "description": "Manual payment via IBAN",
+        "iban": "IBAN",
+        "name": "Account holder name",
+        "placeholderName": "Ex: John Doe",
+        "errorIban": "Please enter a valid IBAN.",
+        "errorName": "Please enter the account holder's name."
+      },
       "stripe": {
         "title": "Stripe — Card",
         "description": "Automatic card payment",
@@ -679,6 +704,7 @@
       "mbway": "MBWay",
       "cash": "Cash",
       "stripe": "Stripe",
+      "transfer": "Transfer",
       "cashSub": "In-person at the game",
       "creditCard": "Credit card"
     },
@@ -2268,6 +2294,15 @@
           "desc": "Pay in person",
           "amount": "Amount",
           "paidMsg": "Marked as paid by the captain"
+        },
+        "transfer": {
+          "label": "Transfer",
+          "desc": "Manual bank transfer",
+          "iban": "IBAN",
+          "holder": "Account holder",
+          "proofMsg": "Proof received — verifying",
+          "waitingMsg": "Waiting for manager's confirmation",
+          "waitingMsgNoProof": "Waiting for manager's confirmation"
         }
       }
     },
@@ -2490,6 +2525,7 @@
       "mbway": "MB Way",
       "cash": "Cash",
       "stripe": "Card",
+      "transfer": "Bank Transfer",
       "unknown": "Other"
     },
     "backToEvent": "Back to event",

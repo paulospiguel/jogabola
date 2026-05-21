@@ -299,7 +299,9 @@
       "deadlineHoursUnit": "h antes do jogo",
       "acceptMbway": "Aceitar MBWay",
       "acceptMbwayHint": "Permitir pagamento via MBWay",
-      "mbwayPhone": "Número de Telemóvel MBWay"
+      "mbwayPhone": "Número de Telemóvel MBWay",
+      "transferRequiresProof": "Exigir comprovativo",
+      "transferRequiresProofHint": "Exigir upload do comprovativo de transferência"
     },
     "recurrence": {
       "once": "Único",
@@ -454,7 +456,21 @@
     "spots": "Vagas",
     "tabs": {
       "call": "Convocatória",
-      "local": "Local"
+      "local": "Local",
+      "lineup": "Escalação"
+    },
+    "aiBalancer": {
+      "button": "Balanceamento IA ⚡",
+      "modalTitle": "Balanceamento de Equipas por IA",
+      "modalSubtitle": "Acesso Antecipado / Beta",
+      "pitchDescription": "Usa a nossa Inteligência Artificial para analisar o histórico e a pontuação dos atletas e criar equipas 100% equilibradas. Uma partida justa é uma partida melhor!",
+      "guestPrompt": "Quantos convidados temos hoje?",
+      "guestLabel": "Número de convidados (sem conta)",
+      "balanceAction": "Gerar Equipas",
+      "loading": "A analisar histórico e a equilibrar pesos...",
+      "teamA": "Equipa A",
+      "teamB": "Equipa B",
+      "avgRating": "Rating Médio:"
     },
     "titleJogo": "Detalhe do Jogo",
     "titleTreino": "Treino",
@@ -671,6 +687,15 @@
         "instructions": "Instruções para pagamento em dinheiro",
         "placeholder": "Paga ao capitão no início do jogo."
       },
+      "transfer": {
+        "title": "Transferência Bancária",
+        "description": "Pagamento manual via IBAN",
+        "iban": "IBAN",
+        "name": "Nome do titular da conta",
+        "placeholderName": "Ex: João Silva",
+        "errorIban": "Insere um IBAN válido.",
+        "errorName": "Insere o nome do titular da conta."
+      },
       "stripe": {
         "title": "Stripe — Cartão",
         "description": "Pagamento automático por cartão",
@@ -681,6 +706,7 @@
       "mbway": "MBWay",
       "cash": "Numerário",
       "stripe": "Stripe",
+      "transfer": "Transferência",
       "cashSub": "Presencial no jogo",
       "creditCard": "Cartão de crédito"
     },
@@ -2289,6 +2315,15 @@
           "desc": "Paga presencialmente",
           "amount": "Valor",
           "paidMsg": "Marcado como pago pelo capitão"
+        },
+        "transfer": {
+          "label": "Transferência",
+          "desc": "Transferência bancária manual",
+          "iban": "IBAN",
+          "holder": "Titular da conta",
+          "proofMsg": "Comprovativo recebido — a verificar",
+          "waitingMsg": "A aguardar confirmação do gestor",
+          "waitingMsgNoProof": "A aguardar confirmação do gestor"
         }
       }
     },
@@ -2531,6 +2566,7 @@
       "mbway": "MB Way",
       "cash": "Numerário",
       "stripe": "Cartão",
+      "transfer": "Transferência Bancária",
       "unknown": "Outro"
     },
     "backToEvent": "Voltar ao evento",

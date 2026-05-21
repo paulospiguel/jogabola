@@ -60,6 +60,7 @@ interface FormState {
   rosterPriorityHours: number;
   mbwayEnabled: boolean;
   mbwayPhone: string;
+  transferRequiresProof: boolean;
 }
 
 interface RosterGroup {
@@ -72,10 +73,12 @@ function PaymentSection({
   form,
   set,
   t,
+  transferEnabled,
 }: {
   form: FormState;
   set: <K extends keyof FormState>(k: K, v: FormState[K]) => void;
   t: ReturnType<typeof useTranslations<"arenaCreateEvent">>;
+  transferEnabled: boolean;
 }) {
   const [open, setOpen] = useState(false);
 
@@ -178,6 +181,44 @@ function PaymentSection({
                     onChange={e => set("mbwayPhone", e.target.value)}
                   />
                 </div>
+              )}
+
+              {/* Transfer Proof Toggle */}
+              {transferEnabled && (
+                <button
+                  type="button"
+                  onClick={() => set("transferRequiresProof", !form.transferRequiresProof)}
+                  className={cn(
+                    "flex items-center justify-between rounded-xl border px-4 py-3 text-left transition-colors",
+                    form.transferRequiresProof
+                      ? "border-arena-primary/40 bg-arena-primary/5"
+                      : "border-arena-border bg-arena-bg",
+                  )}
+                >
+                  <div>
+                    <p className="text-[13px] font-semibold text-arena-text">
+                      {t("payment.transferRequiresProof")}
+                    </p>
+                    <p className="text-[11px] text-arena-text-muted">
+                      {t("payment.transferRequiresProofHint")}
+                    </p>
+                  </div>
+                  <div
+                    className={cn(
+                      "h-5 w-9 rounded-full transition-colors",
+                      form.transferRequiresProof ? "bg-arena-primary" : "bg-arena-border",
+                    )}
+                  >
+                    <div
+                      className={cn(
+                        "mt-0.5 h-4 w-4 rounded-full bg-white shadow transition-transform",
+                        form.transferRequiresProof
+                          ? "translate-x-4 ml-0.5"
+                          : "translate-x-0.5",
+                      )}
+                    />
+                  </div>
+                </button>
               )}
             </div>
           )}
@@ -298,6 +339,7 @@ export function CreateEventSheet({
     rosterPriorityHours: 0,
     mbwayEnabled: false,
     mbwayPhone: "",
+    transferRequiresProof: true,
   });
   const [sending, setSending] = useState(false);
   const [done, setDone] = useState(false);
@@ -379,6 +421,7 @@ export function CreateEventSheet({
       rosterPriorityHours: form.rosterPriorityHours,
       mbwayEnabled: form.mbwayEnabled,
       mbwayPhone: form.mbwayPhone,
+      transferRequiresProof: form.transferRequiresProof,
       invitedPlayers: rosterPlayers
         .filter(player => selectedPlayerIds.includes(player.id))
         .map(player => ({
@@ -703,7 +746,12 @@ export function CreateEventSheet({
             </div>
 
             {/* Payment section */}
-            <PaymentSection form={form} set={set} t={t} />
+            <PaymentSection
+              form={form}
+              set={set}
+              t={t}
+              transferEnabled={!!settings?.transferEnabled}
+            />
 
             <button
               type="button"

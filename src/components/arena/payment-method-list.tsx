@@ -1,10 +1,10 @@
 "use client";
 
-import { Banknote, ChevronRight, CreditCard, Smartphone } from "lucide-react";
+import { Banknote, ChevronRight, CreditCard, Smartphone, Landmark } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { cn } from "@/lib/utils";
 
-export type PaymentMethodType = "stripe" | "mbway" | "cash";
+export type PaymentMethodType = "stripe" | "mbway" | "cash" | "transfer";
 
 export interface PaymentMethodConfig {
   type: PaymentMethodType;
@@ -51,6 +51,12 @@ export function PaymentMethodList({
       descKey: "cash.description",
       icon: Banknote,
       color: "#22c55e",
+    },
+    transfer: {
+      labelKey: "transfer.title",
+      descKey: "transfer.description",
+      icon: Landmark,
+      color: "#06b6d4",
     },
   };
 

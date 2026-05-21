@@ -36,6 +36,7 @@ interface EditEventSheetProps {
     paymentRequired?: boolean;
     paymentDeadlineHours?: number | null;
     rosterOnly?: boolean;
+    transferRequiresProof?: boolean;
   };
   onClose: () => void;
 }
@@ -60,7 +61,9 @@ export function EditEventSheet({ event, onClose }: EditEventSheetProps) {
     rosterOnly: event.rosterOnly ?? false,
     mbwayEnabled: false,
     mbwayPhone: "",
+    transferRequiresProof: event.transferRequiresProof ?? true,
   });
+  const [transferEnabled, setTransferEnabled] = useState(false);
   const [paymentOpen, setPaymentOpen] = useState(false);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -71,6 +74,7 @@ export function EditEventSheet({ event, onClose }: EditEventSheetProps) {
         getTeamPaymentSettings({ teamId: event.teamId }).then(res => {
           if (res.success && res.data) {
             const data = res.data;
+            setTransferEnabled(data.transferEnabled);
             setForm(f => ({
               ...f,
               mbwayEnabled: data.mbwayEnabled,
@@ -101,6 +105,7 @@ export function EditEventSheet({ event, onClose }: EditEventSheetProps) {
       rosterOnly: form.rosterOnly,
       mbwayEnabled: form.mbwayEnabled,
       mbwayPhone: form.mbwayPhone,
+      transferRequiresProof: form.transferRequiresProof,
     });
     setSaving(false);
     if (res.success) {
@@ -272,6 +277,44 @@ export function EditEventSheet({ event, onClose }: EditEventSheetProps) {
                         onChange={e => set("mbwayPhone", e.target.value)}
                       />
                     </div>
+                  )}
+
+                  {/* Transfer Proof Toggle */}
+                  {transferEnabled && (
+                    <button
+                      type="button"
+                      onClick={() => set("transferRequiresProof", !form.transferRequiresProof)}
+                      className={cn(
+                        "flex items-center justify-between rounded-xl border px-4 py-3 text-left transition-colors",
+                        form.transferRequiresProof
+                          ? "border-arena-primary/40 bg-arena-primary/5"
+                          : "border-arena-border bg-arena-bg",
+                      )}
+                    >
+                      <div>
+                        <p className="text-[13px] font-semibold text-arena-text">
+                          {t("payment.transferRequiresProof")}
+                        </p>
+                        <p className="text-[11px] text-arena-text-muted">
+                          {t("payment.transferRequiresProofHint")}
+                        </p>
+                      </div>
+                      <div
+                        className={cn(
+                          "h-5 w-9 rounded-full transition-colors",
+                          form.transferRequiresProof ? "bg-arena-primary" : "bg-arena-border",
+                        )}
+                      >
+                        <div
+                          className={cn(
+                            "mt-0.5 h-4 w-4 rounded-full bg-white shadow transition-transform",
+                            form.transferRequiresProof
+                              ? "translate-x-4 ml-0.5"
+                              : "translate-x-0.5",
+                          )}
+                        />
+                      </div>
+                    </button>
                   )}
                 </div>
               )}

@@ -296,7 +296,9 @@
       "deadlineHoursUnit": "h avant le match",
       "acceptMbway": "Accepter MBWay",
       "acceptMbwayHint": "Autoriser le paiement par MBWay",
-      "mbwayPhone": "Numéro de téléphone MBWay"
+      "mbwayPhone": "Numéro de téléphone MBWay",
+      "transferRequiresProof": "Exiger un justificatif",
+      "transferRequiresProofHint": "Exiger le téléchargement du justificatif de virement"
     },
     "recurrence": {
       "once": "Une fois",
@@ -451,7 +453,21 @@
     "spots": "Places",
     "tabs": {
       "call": "Convocation",
-      "local": "Lieu"
+      "local": "Lieu",
+      "lineup": "Composition"
+    },
+    "aiBalancer": {
+      "button": "Équilibre IA ⚡",
+      "modalTitle": "Équilibrage d'Équipes par IA",
+      "modalSubtitle": "Accès Anticipé / Beta",
+      "pitchDescription": "Utilisez notre Intelligence Artificielle pour analyser l'historique et la note des athlètes et créer des équipes 100% équilibrées. Un match juste est un meilleur match !",
+      "guestPrompt": "Combien d'invités avons-nous aujourd'hui ?",
+      "guestLabel": "Nombre d'invités (sans compte)",
+      "balanceAction": "Générer les Équipes",
+      "loading": "Analyse de l'historique et équilibrage des poids...",
+      "teamA": "Équipe A",
+      "teamB": "Équipe B",
+      "avgRating": "Note Moyenne :"
     },
     "titleJogo": "Détails du match",
     "titleTreino": "Entraînement",
@@ -702,7 +718,57 @@
       "relevant": "Autres Actions"
     },
     "noPayments": "Aucun paiement trouvé",
-    "configureBtn": "Configurer les méthodes"
+    "configureBtn": "Configurer les méthodes",
+    "settings": {
+      "title": "Configurer les Méthodes de Paiement",
+      "subtitle": "Activez et personnalisez la manière dont les athlètes peuvent payer l'équipe.",
+      "methods": "Méthodes acceptées",
+      "saving": "Enregistrement...",
+      "help": "Cliquez sur une méthode pour configurer ses détails.",
+      "done": "Terminer",
+      "error": "Erreur lors de l'enregistrement. Réessayez.",
+      "active": "Actif",
+      "inactive": "Inactif",
+      "notConfigured": "Non configuré",
+      "noNumber": "Sans numéro",
+      "soon": "Bientôt",
+      "mbway": {
+        "title": "MBWay",
+        "description": "Transfert manuel par téléphone portable",
+        "phone": "Numéro de téléphone portable",
+        "name": "Nom du destinataire (facultatif)",
+        "placeholderName": "Ex : João Silva",
+        "errorPhone": "Veuillez entrer le numéro de téléphone portable pour MBWay."
+      },
+      "cash": {
+        "title": "Espèces",
+        "description": "Paiement en espèces au match",
+        "instructions": "Instructions de paiement en espèces",
+        "placeholder": "Payez le capitaine au début du match."
+      },
+      "transfer": {
+        "title": "Virement Bancaire",
+        "description": "Paiement manuel via IBAN",
+        "iban": "IBAN",
+        "name": "Nom du titulaire du compte",
+        "placeholderName": "Ex : João Silva",
+        "errorIban": "Veuillez entrer un IBAN valide.",
+        "errorName": "Veuillez entrer le nom du titulaire du compte."
+      },
+      "stripe": {
+        "title": "Stripe — Carte",
+        "description": "Paiement automatique par carte",
+        "info": "L'intégration avec Stripe sera configurée via le tableau de bord de l'équipe. Contactez le support pour plus d'informations."
+      }
+    },
+    "methods": {
+      "mbway": "MBWay",
+      "cash": "Espèces",
+      "stripe": "Stripe",
+      "transfer": "Virement",
+      "cashSub": "En personne au match",
+      "creditCard": "Carte de crédit"
+    }
   },
   "arenaBadges": {
     "new": "Nouveau",
@@ -2233,6 +2299,15 @@
           "desc": "Payer en personne",
           "amount": "Montant",
           "paidMsg": "Marqué comme payé par le capitaine"
+        },
+        "transfer": {
+          "label": "Virement",
+          "desc": "Virement bancaire manuel",
+          "iban": "IBAN",
+          "holder": "Titular du compte",
+          "proofMsg": "Justificatif reçu — vérification en cours",
+          "waitingMsg": "En attente de confirmation du gestionnaire",
+          "waitingMsgNoProof": "En attente de confirmation du gestionnaire"
         }
       }
     },
@@ -2455,6 +2530,7 @@
       "mbway": "MB Way",
       "cash": "Espèces",
       "stripe": "Carte",
+      "transfer": "Virement Bancaire",
       "unknown": "Autre"
     },
     "backToEvent": "Retour à l'événement",

@@ -11,6 +11,7 @@ export const createMatchSessionSchema = z.object({
   capacity: z.number().int().positive().optional(),
   priceCents: z.number().int().min(0).optional(),
   currency: z.string().length(3).default("EUR"),
+  transferRequiresProof: z.boolean().default(true).optional(),
 });
 
 export const createMatchReservationSchema = z.object({

@@ -35,6 +35,7 @@ export type PaymentDetail = {
   teamName: string;
   eventTitle: string;
   eventId: number;
+  transferRequiresProof: boolean;
 };
 
 export function usePayments() {

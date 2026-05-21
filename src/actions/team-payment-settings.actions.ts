@@ -87,5 +87,10 @@ export async function resolveTeamPaymentConfig(
       instructions:
         settings?.cashInstructions ?? "Paga ao capitão no início do jogo.",
     },
+    transfer: {
+      enabled: settings?.transferEnabled ?? false,
+      iban: settings?.transferIban ?? undefined,
+      name: settings?.transferName ?? undefined,
+    },
   };
 }

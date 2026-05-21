@@ -6,7 +6,7 @@ export type PaymentStatus =
   | "rejected"
   | "refunded";
 
-export type PaymentMethod = "stripe" | "mbway" | "cash";
+export type PaymentMethod = "stripe" | "mbway" | "cash" | "transfer";
 
 export type AiPaymentCheck = {
   decision: "likely_valid" | "needs_review" | "likely_invalid";
@@ -31,10 +31,16 @@ export interface TeamPaymentConfig {
     enabled: boolean;
     instructions?: string;
   };
+  transfer: {
+    enabled: boolean;
+    iban?: string;
+    name?: string;
+  };
 }
 
 export const DEFAULT_PAYMENT_CONFIG: TeamPaymentConfig = {
   stripe: { enabled: false },
   mbway: { enabled: false },
   cash: { enabled: true, instructions: "Paga ao capitão no início do jogo." },
+  transfer: { enabled: false },
 };

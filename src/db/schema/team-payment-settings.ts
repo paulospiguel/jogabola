@@ -30,6 +30,11 @@ export const teamPaymentSettings = pgTable(
     cashEnabled: boolean("cash_enabled").notNull().default(true),
     cashInstructions: text("cash_instructions"),
 
+    // Transfer
+    transferEnabled: boolean("transfer_enabled").notNull().default(false),
+    transferIban: text("transfer_iban"),
+    transferName: text("transfer_name"),
+
     createdAt: timestamp("created_at").defaultNow(),
     updatedAt: timestamp("updated_at").defaultNow(),
   },

@@ -21,6 +21,9 @@ interface PaymentSettingsSheetProps {
     mbwayName?: string;
     cashEnabled?: boolean;
     cashInstructions?: string;
+    transferEnabled?: boolean;
+    transferIban?: string;
+    transferName?: string;
   };
   onClose: () => void;
   onSaved?: () => void;
@@ -45,6 +48,11 @@ export function PaymentSettingsSheet({
   const [cashInstructions, setCashInstructions] = useState(
     initial?.cashInstructions ?? "",
   );
+  const [transferEnabled, setTransferEnabled] = useState(
+    initial?.transferEnabled ?? false,
+  );
+  const [transferIban, setTransferIban] = useState(initial?.transferIban ?? "");
+  const [transferName, setTransferName] = useState(initial?.transferName ?? "");
 
   const [activeDetail, setActiveDetail] = useState<PaymentMethodType | null>(
     null,
@@ -60,6 +68,9 @@ export function PaymentSettingsSheet({
       mbwayName: string;
       cashEnabled: boolean;
       cashInstructions: string;
+      transferEnabled: boolean;
+      transferIban: string;
+      transferName: string;
     }>,
   ) {
     setSaving(true);
@@ -73,6 +84,9 @@ export function PaymentSettingsSheet({
       cashEnabled: overrides?.cashEnabled ?? cashEnabled,
       cashInstructions:
         (overrides?.cashInstructions ?? cashInstructions).trim() || undefined,
+      transferEnabled: overrides?.transferEnabled ?? transferEnabled,
+      transferIban: (overrides?.transferIban ?? transferIban).trim() || undefined,
+      transferName: (overrides?.transferName ?? transferName).trim() || undefined,
     });
     setSaving(false);
     if (!res.success) {
@@ -85,11 +99,13 @@ export function PaymentSettingsSheet({
     if (type === "stripe") setStripeEnabled(enabled);
     if (type === "mbway") setMbwayEnabled(enabled);
     if (type === "cash") setCashEnabled(enabled);
+    if (type === "transfer") setTransferEnabled(enabled);
 
     await persist({
       stripeEnabled: type === "stripe" ? enabled : stripeEnabled,
       mbwayEnabled: type === "mbway" ? enabled : mbwayEnabled,
       cashEnabled: type === "cash" ? enabled : cashEnabled,
+      transferEnabled: type === "transfer" ? enabled : transferEnabled,
     });
     onSaved?.();
   }
@@ -98,19 +114,30 @@ export function PaymentSettingsSheet({
     mbwayPhone?: string;
     mbwayName?: string;
     cashInstructions?: string;
+    transferIban?: string;
+    transferName?: string;
   }) {
     if (data.mbwayPhone !== undefined) setMbwayPhone(data.mbwayPhone);
     if (data.mbwayName !== undefined) setMbwayName(data.mbwayName);
     if (data.cashInstructions !== undefined)
       setCashInstructions(data.cashInstructions);
+    if (data.transferIban !== undefined) setTransferIban(data.transferIban);
+    if (data.transferName !== undefined) setTransferName(data.transferName);
 
     const ok = await persist({
       mbwayPhone: data.mbwayPhone ?? mbwayPhone,
       mbwayName: data.mbwayName ?? mbwayName,
       cashInstructions: data.cashInstructions ?? cashInstructions,
+      transferIban: data.transferIban ?? transferIban,
+      transferName: data.transferName ?? transferName,
     });
     if (ok) onSaved?.();
   }
+
+  const formatIbanForSummary = (iban: string) => {
+    const clean = iban.replace(/\s+/g, "").toUpperCase();
+    return `IBAN: ${clean.replace(/(.{4})/g, "$1 ").trim()}`;
+  };
 
   const methods: PaymentMethodConfig[] = [
     {
@@ -122,6 +149,11 @@ export function PaymentSettingsSheet({
       type: "mbway",
       enabled: mbwayEnabled,
       summary: mbwayEnabled && mbwayPhone ? mbwayPhone : undefined,
+    },
+    {
+      type: "transfer",
+      enabled: transferEnabled,
+      summary: transferEnabled && transferIban ? formatIbanForSummary(transferIban) : undefined,
     },
     {
       type: "cash",
@@ -169,7 +201,13 @@ export function PaymentSettingsSheet({
       {activeDetail && (
         <PaymentMethodDetailSheet
           type={activeDetail}
-          initial={{ mbwayPhone, mbwayName, cashInstructions }}
+          initial={{
+            mbwayPhone,
+            mbwayName,
+            cashInstructions,
+            transferIban,
+            transferName,
+          }}
           onSave={handleDetailSave}
           onClose={() => setActiveDetail(null)}
         />

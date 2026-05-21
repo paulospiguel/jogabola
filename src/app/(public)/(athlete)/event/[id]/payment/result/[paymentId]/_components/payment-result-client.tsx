@@ -30,6 +30,7 @@ function formatMethod(
   if (method === "mbway") return t("methods.mbway");
   if (method === "cash") return t("methods.cash");
   if (method === "stripe") return t("methods.stripe");
+  if (method === "transfer") return t("methods.transfer");
   return t("methods.unknown");
 }
 
@@ -276,6 +277,7 @@ export function PaymentResultClient({
   eventId,
 }: PaymentResultClientProps) {
   const t = useTranslations("paymentResult");
+  const tRsvp = useTranslations("athleteRsvpSheet");
   const { payment, isLoading, error, refetch } = usePayment(paymentId);
   const [proofUploaded, setProofUploaded] = useState(false);
 
@@ -312,11 +314,21 @@ export function PaymentResultClient({
     payment.currency,
   );
 
-  // Show upload section when payment is pending (mbway) and proof not yet uploaded
+  // Show upload section when payment is pending (mbway/transfer) and proof not yet uploaded
   const showUpload =
     !proofUploaded &&
     (status === "pending" || status === "paid_unverified") &&
-    payment.method === "mbway";
+    (payment.method === "mbway" ||
+      (payment.method === "transfer" && payment.transferRequiresProof));
+
+  let caption = t(captionKey);
+  if (payment.method === "transfer") {
+    if (status === "paid_unverified" || proofUploaded) {
+      caption = payment.transferRequiresProof
+        ? tRsvp("payment.methods.transfer.waitingMsg")
+        : tRsvp("payment.methods.transfer.waitingMsgNoProof");
+    }
+  }
 
   return (
     <div className="mx-auto flex min-h-screen w-full max-w-[480px] flex-col bg-arena-bg">
@@ -352,14 +364,14 @@ export function PaymentResultClient({
           <p className="text-[14px] text-arena-text-sec">
             {formattedCurrency} · {payment.eventTitle}
           </p>
-          {t(captionKey) && (
+          {caption && (
             <p className="mt-0.5 text-[13px] text-arena-text-muted">
-              {t(captionKey)}
+              {caption}
             </p>
           )}
         </div>
 
-        {/* ── Proof upload (mbway pending) ── */}
+        {/* ── Proof upload (mbway/transfer pending) ── */}
         {showUpload && (
           <div className="w-full">
             <ProofUpload

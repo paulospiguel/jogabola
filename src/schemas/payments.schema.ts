@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-export const PAYMENT_METHODS = ["stripe", "mbway", "cash"] as const;
+export const PAYMENT_METHODS = ["stripe", "mbway", "cash", "transfer"] as const;
 
 export const createPaymentSchema = z.object({
   matchReservationId: z
@@ -61,6 +61,16 @@ export const upsertTeamPaymentSettingsSchema = z.object({
   mbwayName: z.string().max(80).optional(),
   cashEnabled: z.boolean().default(true),
   cashInstructions: z.string().max(300).optional(),
+  transferEnabled: z.boolean().default(false),
+  transferIban: z.preprocess(
+    val => (typeof val === "string" ? val.replace(/\s+/g, "") : val),
+    z
+      .string()
+      .regex(/^[A-Z]{2}[0-9]{2}[A-Z0-9]{11,30}$/i, "IBAN inválido")
+      .optional()
+      .or(z.literal("")),
+  ),
+  transferName: z.string().max(80).optional(),
 });
 
 export type CreatePaymentInput = z.infer<typeof createPaymentSchema>;
