@@ -11,7 +11,7 @@ const withBundleAnalyzer = bundleAnalyzer({
 const nextConfig: NextConfig = {
   poweredByHeader: false,
   reactStrictMode: true,
-  serverComponentsExternalPackages: ["postgres"],
+  serverExternalPackages: ["postgres"],
   images: {
     remotePatterns: [
       {
