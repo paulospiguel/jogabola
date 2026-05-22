@@ -21,3 +21,5 @@
    Do instead: use existing project tokens/patterns first: dark transparent surfaces, `border-default`, `text-*`, neon mint focus, arena green selection/primary states, and repo typography before introducing external visual styles.
 2. **[2026-03-13] Use required skills when the task matches**
    Do instead: load the named or obviously relevant skill, follow its workflow, and keep the explanation concise.
+3. **[2026-05-22] Evitar comentários supérfluos no código**
+   Do instead: nunca adicionar múltiplos comentários pelo código; adicionar apenas os comentários estritamente essenciais para lógica complexa ou decisões de design não óbvias.

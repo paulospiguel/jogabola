@@ -42,7 +42,30 @@ const socialProviders = {
     }),
 };
 
+import fs from "fs";
+import path from "path";
+
 export const auth = betterAuth({
+  onAPIError: {
+    onError: (error, ctx: any) => {
+      try {
+        const logPath = path.join(process.cwd(), "auth-error.log");
+        const logData = {
+          timestamp: new Date().toISOString(),
+          error: error instanceof Error ? {
+            name: error.name,
+            message: error.message,
+            stack: error.stack,
+          } : error,
+          url: ctx?.request?.url || "unknown",
+          method: ctx?.request?.method || "unknown",
+        };
+        fs.appendFileSync(logPath, JSON.stringify(logData, null, 2) + "\n");
+      } catch (e) {
+        console.error("Failed to write to auth-error.log", e);
+      }
+    }
+  },
   baseURL: env.baseURL,
   trustedOrigins,
   database: drizzleAdapter(db, {

@@ -982,9 +982,33 @@
   "cookieConsent": {
     "accept": "Accepter",
     "decline": "Refuser",
-    "description": "Nous utilisons des cookies pour améliorer votre expérience sur notre site. En naviguant, vous acceptez notre",
+    "description": "Nous apprécions votre vie privée. Nous utilisons des cookies pour assurer le bon fonctionnement du site, analyser le trafic et améliorer votre expérience.",
     "privacyPolicy": "Politique de Confidentialité",
-    "title": "Contrôle des Cookies"
+    "title": "Contrôle des Cookies",
+    "acceptAll": "Accepter tout",
+    "rejectAll": "Refuser tout",
+    "customize": "Personnaliser",
+    "savePreferences": "Enregistrer les préférences",
+    "back": "Retour",
+    "alwaysActive": "Toujours actif",
+    "categories": {
+      "necessary": {
+        "title": "Strictement Nécessaires",
+        "description": "Essentiels au fonctionnement de base du site (comme les sessions de connexion et les préférences de cookies)."
+      },
+      "functional": {
+        "title": "Fonctionnalités et Préférences",
+        "description": "Permettent au site de mémoriser vos choix (comme la langue préférée ou le thème)."
+      },
+      "analytics": {
+        "title": "Performance et Statistiques",
+        "description": "Nous aident à analyser et améliorer les performances de l'application en suivant le trafic de manière anonyme."
+      },
+      "marketing": {
+        "title": "Marketing et Publicité",
+        "description": "Utilisés pour présenter des mises à jour pertinentes et des campagnes de votre club ou de vos partenaires."
+      }
+    }
   },
   "currency": {
     "dollar": "$",
@@ -2183,7 +2207,27 @@
       ]
     },
     "privacy": {
-      "title": "Politique de Confidentialité"
+      "title": "Politique de Confidentialité",
+      "subtitle": "Votre vie privée est notre priorité.",
+      "backHome": "Retour à l'Accueil",
+      "sections": [
+        {
+          "title": "Informations que Nous Collectons",
+          "body": "Nous collectons des informations pour fournir de meilleurs services à tous nos utilisateurs. Cela inclut votre nom, votre adresse e-mail et vos données de participation aux événements."
+        },
+        {
+          "title": "Comment Nous Utilisons les Informations",
+          "body": "Nous utilisons les informations collectées pour fournir, maintenir, protéger et améliorer nos services, ainsi que pour développer de nouveaux services."
+        },
+        {
+          "title": "Partage d'Informations",
+          "body": "Nous ne partageons pas d'informations personnelles avec des entreprises, des organisations ou des personnes externes à JogaBola, sauf si nous avons votre consentement ou pour des raisons légales."
+        },
+        {
+          "title": "Sécurité des Données",
+          "body": "Nous travaillons dur pour protéger JogaBola et nos utilisateurs contre l'accès non autorisé, la modification, la divulgation ou la destruction des informations que nous détenons."
+        }
+      ]
     },
     "disclaimer": {
       "title": "Mentions Légales"

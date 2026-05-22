@@ -977,9 +977,33 @@
   "cookieConsent": {
     "accept": "Accept",
     "decline": "Decline",
-    "description": "We use cookies to improve your experience on our site. By browsing you agree to our",
+    "description": "We value your privacy. We use cookies to ensure the website functions properly, analyze traffic, and improve your experience.",
     "privacyPolicy": "Privacy Policy",
-    "title": "Cookie Control"
+    "title": "Cookie Control",
+    "acceptAll": "Accept all",
+    "rejectAll": "Reject all",
+    "customize": "Customize",
+    "savePreferences": "Save preferences",
+    "back": "Back",
+    "alwaysActive": "Always active",
+    "categories": {
+      "necessary": {
+        "title": "Strictly Necessary",
+        "description": "Essential for the basic functioning of the website (such as login sessions and cookie preferences)."
+      },
+      "functional": {
+        "title": "Functionality and Preferences",
+        "description": "Allow the website to remember your choices (like preferred language or theme)."
+      },
+      "analytics": {
+        "title": "Performance and Analytics",
+        "description": "Help us analyze and improve the application performance by tracking traffic anonymously."
+      },
+      "marketing": {
+        "title": "Marketing and Advertising",
+        "description": "Used to present relevant updates and club or partner campaigns."
+      }
+    }
   },
   "currency": {
     "dollar": "$",
@@ -2178,7 +2202,27 @@
       ]
     },
     "privacy": {
-      "title": "Privacy Policy"
+      "title": "Privacy Policy",
+      "subtitle": "Your privacy is our priority.",
+      "backHome": "Back to Home",
+      "sections": [
+        {
+          "title": "Information We Collect",
+          "body": "We collect information to provide better services to all our users. This includes your name, email address, and event participation data."
+        },
+        {
+          "title": "How We Use Information",
+          "body": "We use the information collected to provide, maintain, protect, and improve our services, as well as to develop new services."
+        },
+        {
+          "title": "Information Sharing",
+          "body": "We do not share personal information with companies, organizations, or individuals outside of JogaBola, unless we have your consent or for legal reasons."
+        },
+        {
+          "title": "Data Security",
+          "body": "We work hard to protect JogaBola and our users from unauthorized access, alteration, disclosure, or destruction of information we hold."
+        }
+      ]
     },
     "disclaimer": {
       "title": "Disclaimer"
