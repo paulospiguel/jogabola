@@ -4,8 +4,8 @@ import { Calendar, CreditCard, Lock, Shield, Users } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useTranslations } from "next-intl";
-import { useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
+import { useDevice } from "@/hooks/use-device";
 import { useTeamGate } from "./team-gate-context";
 
 const ITEMS = [
@@ -34,19 +34,12 @@ export function JbBottomNav() {
   const pathname = usePathname();
   const t = useTranslations("arenaNav");
   const { requireTeam, hasTeam, role } = useTeamGate();
-  const [isMobile, setIsMobile] = useState(false);
+  const { isMobile } = useDevice();
 
   const isCaptainWithoutTeam = role === "captain" && !hasTeam;
 
-  useEffect(() => {
-    const query = window.matchMedia("(max-width: 767px)");
-    const update = () => setIsMobile(query.matches);
-    update();
-    query.addEventListener("change", update);
-    return () => query.removeEventListener("change", update);
-  }, []);
-
   if (!isMobile) return null;
+
 
   return (
     <nav className="fixed right-0 bottom-0 left-0 z-50 flex h-[72px] items-center justify-around border-arena-border border-t bg-arena-bg-sec px-0.5 pb-2">

@@ -33,6 +33,8 @@ export const CONFIG = {
   DEFAULT_LOCALE: "pt",
   SUPPORTED_LOCALES: ["pt", "en", "es", "fr"],
   COOKIE_PREFIX: "JOGABOLA",
+  MAIN_DOMAIN: process.env.NEXT_PUBLIC_MAIN_DOMAIN as string,
+  SHOW_MOBILE_ONLY: process.env.NEXT_PUBLIC_SHOW_MOBILE_ONLY as string,
 };
 
 export const RELEASE = {

@@ -62,7 +62,7 @@ export default async function ArenaLayout({
   };
 
   return (
-    <SidebarProvider>
+    <SidebarProvider defaultOpen={false}>
       <TeamGateProvider role={role} hasTeam={hasTeam}>
         <PasskeyPromptGate
           hasPasskey={hasPasskey}

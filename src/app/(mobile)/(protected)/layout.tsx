@@ -8,8 +8,10 @@ export default async function ProtectedLayout({
 }: {
   children: React.ReactNode;
 }) {
+  const headerStore = await headers();
+
   const session = await auth.api.getSession({
-    headers: await headers(),
+    headers: headerStore,
   });
 
   if (!session) {
@@ -26,5 +28,5 @@ export default async function ProtectedLayout({
     }
   }
 
-  return children;
+  return <>{children}</>;
 }
