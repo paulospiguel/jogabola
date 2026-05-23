@@ -28,7 +28,6 @@ import {
   CalendarDays,
   ChevronLeft,
   ChevronRight,
-  Plus,
 } from "lucide-react";
 import Link from "next/link";
 import { useLocale, useTranslations } from "next-intl";
@@ -355,13 +354,6 @@ export function CalendarEvents({
             <div className="jb-kicker">{t("hero.eyebrow")}</div>
             <h1 className="jb-title">{t("hero.title")}</h1>
           </div>
-          <Link
-            href="/arena/events/create"
-            className="jb-action h-12 jb-action-primary hidden md:inline-flex"
-          >
-            <Plus size={15} strokeWidth={2.5} />
-            {t("hero.create")}
-          </Link>
         </header>
 
         {/* View mode tabs */}
@@ -923,15 +915,6 @@ export function CalendarEvents({
         {/* Empty state for week/month/year */}
         {viewMode !== "range" && totalEvents === 0 && !isPending && (
           <ArenaEmptyState
-            action={
-              <Link
-                href="/arena/events/create"
-                className="jb-action jb-action-primary"
-              >
-                <Plus size={15} strokeWidth={2.5} />
-                {t("hero.create")}
-              </Link>
-            }
             className="mt-8 py-10"
             description={t("emptyState.description")}
             icon={Calendar}
@@ -964,19 +947,6 @@ export function CalendarEvents({
             </div>
           ))}
         </div>
-
-        {/* Mobile FAB */}
-        <Link
-          href="/arena/events/create"
-          className="md:hidden fixed bottom-24 right-5 z-30 flex h-12 w-12 items-center justify-center rounded-full shadow-lg"
-          style={{
-            backgroundColor: "var(--color-arena-primary)",
-            color: "var(--color-arena-bg)",
-          }}
-          aria-label={t("hero.create")}
-        >
-          <Plus size={22} strokeWidth={2.5} />
-        </Link>
       </div>
     </div>
   );
