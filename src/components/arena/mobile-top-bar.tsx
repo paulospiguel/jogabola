@@ -2,12 +2,14 @@
 
 import { Bell } from "lucide-react";
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 import { RELEASE } from "@/constants/app";
 import { useUnreadNotificationsCount } from "@/hooks/use-notifications";
 import { Logo } from "../logo";
 import { UserMenu } from "./user-menu";
 
 export function MobileTopBar() {
+  const t = useTranslations("arenaNav");
   const { unreadCount } = useUnreadNotificationsCount();
 
   return (
@@ -22,9 +24,10 @@ export function MobileTopBar() {
       <div className="flex shrink-0 items-center gap-2">
         <Link
           href="/arena/notifications"
+          aria-label={t("notifications")}
           className="press relative flex h-10 w-10 items-center justify-center rounded-xl border border-arena-border bg-arena-surface text-arena-text-sec transition-all duration-200 hover:bg-arena-surface-el hover:text-arena-text"
         >
-          <Bell size={20} strokeWidth={1.7} />
+          <Bell aria-hidden="true" size={20} strokeWidth={1.7} />
           {unreadCount > 0 && (
             <span className="absolute -top-1 -right-1 flex h-4 min-w-[16px] items-center justify-center rounded-full bg-arena-primary px-1 text-[9px] font-black text-arena-bg animate-pulse shadow-[0_0_8px_rgba(124,255,79,0.4)]">
               {unreadCount > 9 ? "9+" : unreadCount}
