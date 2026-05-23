@@ -4,13 +4,13 @@ import { useQueryClient } from "@tanstack/react-query";
 import { formatDistanceToNow } from "date-fns";
 import { enUS, es, pt } from "date-fns/locale";
 import { Bell, Calendar, Check, CreditCard, UserPlus } from "lucide-react";
+import { motion } from "framer-motion";
 import { useLocale, useTranslations } from "next-intl";
 import { useTransition } from "react";
 import {
   markAllAsRead,
   markNotificationAsRead,
 } from "@/actions/notifications.actions";
-import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
 interface Notification {
@@ -95,7 +95,12 @@ export function NotificationsList({
   const unreadCount = initialNotifications.filter(n => !n.read).length;
 
   return (
-    <div className="space-y-4">
+    <motion.div
+      className="space-y-4"
+      initial={{ opacity: 0, y: 8 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.22, ease: [0.4, 0, 0.2, 1] }}
+    >
       <div className="flex items-center justify-between px-1">
         <div className="text-sm font-medium text-arena-text-sec">
           {unreadCount > 0 ? (
@@ -105,26 +110,28 @@ export function NotificationsList({
           )}
         </div>
         {unreadCount > 0 && (
-          <Button
+          <button
             onClick={handleMarkAllAsRead}
             disabled={isPending}
-            variant="ghost"
-            size="sm"
-            className="h-auto gap-1.5 p-0 text-xs font-bold text-arena-primary hover:bg-transparent hover:underline"
+            type="button"
+            className="flex items-center gap-1.5 text-xs font-bold text-arena-primary transition-opacity hover:underline disabled:opacity-50 active:scale-[0.97]"
           >
             <Check size={14} />
             {t("actions.markAllRead")}
-          </Button>
+          </button>
         )}
       </div>
 
       <div className="jb-stack">
-        {initialNotifications.map(notification => (
+        {initialNotifications.map((notification, i) => (
           // biome-ignore lint/a11y/useSemanticElements: Elemento de bloco responsivo necessário para suportar conteúdo complexo proibido em botões HTML5
-          <div
+          <motion.div
             role="button"
             tabIndex={0}
             key={notification.id}
+            initial={{ opacity: 0, y: 6 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.16, delay: i * 0.04, ease: [0.4, 0, 0.2, 1] }}
             onClick={() =>
               !notification.read && handleMarkAsRead(notification.id)
             }
@@ -185,9 +192,9 @@ export function NotificationsList({
                 <div className="h-2 w-2 rounded-full bg-arena-primary shadow-[0_0_8px_rgba(124,255,79,0.5)]" />
               </div>
             )}
-          </div>
+          </motion.div>
         ))}
       </div>
-    </div>
+    </motion.div>
   );
 }
