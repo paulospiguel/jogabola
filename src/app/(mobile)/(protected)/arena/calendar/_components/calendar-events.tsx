@@ -35,6 +35,7 @@ import {
   useCallback,
   useEffect,
   useMemo,
+  useRef,
   useState,
   useTransition,
 } from "react";
@@ -200,6 +201,7 @@ export function CalendarEvents({
   const { activeTeamId } = useTeams();
   const dfLocale = DATE_LOCALES[locale] ?? pt;
   const [isPending, startTransition] = useTransition();
+  const fetchRequestId = useRef(0);
 
   const [viewMode, setViewMode] = useState<ViewMode>("month");
   const [weekStart, setWeekStart] = useState<Date>(
@@ -258,13 +260,18 @@ export function CalendarEvents({
 
   const fetchPeriod = useCallback(
     (f: Date, t_: Date) => {
+      fetchRequestId.current += 1;
+      const requestId = fetchRequestId.current;
+
       startTransition(async () => {
         const result = await getCalendarEvents(
           f,
           t_,
           activeTeamId ?? undefined,
         );
-        if (result.success) setEvents(result.data as SessionRow[]);
+        if (requestId === fetchRequestId.current && result.success) {
+          setEvents(result.data as SessionRow[]);
+        }
       });
     },
     [activeTeamId],
@@ -272,6 +279,7 @@ export function CalendarEvents({
 
   useEffect(() => {
     if (!activeTeamId) {
+      fetchRequestId.current += 1;
       setEvents([]);
       return;
     }
@@ -286,7 +294,6 @@ export function CalendarEvents({
           dir === "prev" ? subWeeks(weekStart, 1) : addWeeks(weekStart, 1);
         const f = startOfWeek(next, { weekStartsOn: 1 });
         setWeekStart(f);
-        fetchPeriod(f, endOfWeek(f, { weekStartsOn: 1 }));
         break;
       }
       case "month": {
@@ -294,7 +301,6 @@ export function CalendarEvents({
           dir === "prev" ? subMonths(monthStart, 1) : addMonths(monthStart, 1);
         const f = startOfMonth(next);
         setMonthStart(f);
-        fetchPeriod(f, endOfMonth(f));
         break;
       }
       case "year": {
@@ -302,7 +308,6 @@ export function CalendarEvents({
           dir === "prev" ? subYears(yearStart, 1) : addYears(yearStart, 1);
         const f = startOfYear(next);
         setYearStart(f);
-        fetchPeriod(f, endOfYear(f));
         break;
       }
     }
@@ -310,12 +315,6 @@ export function CalendarEvents({
 
   function switchMode(mode: ViewMode) {
     setViewMode(mode);
-    if (mode === "week")
-      fetchPeriod(weekStart, endOfWeek(weekStart, { weekStartsOn: 1 }));
-    else if (mode === "month")
-      fetchPeriod(startOfMonth(monthStart), endOfMonth(monthStart));
-    else if (mode === "year")
-      fetchPeriod(startOfYear(yearStart), endOfYear(yearStart));
   }
 
   const eventsByDate = useMemo(() => {
@@ -340,10 +339,6 @@ export function CalendarEvents({
     if (!status || status === "scheduled") return undefined;
     return t(`status.${status}`);
   };
-
-  // suppress unused warning — from/to used to trigger memo
-  void from;
-  void to;
 
   return (
     <div className="jb-page">
@@ -442,7 +437,6 @@ export function CalendarEvents({
                   onSelect={range => {
                     setCustomRange(range);
                     if (range?.from && range?.to) {
-                      fetchPeriod(range.from, endOfDay(range.to));
                       setRangeOpen(false);
                     }
                   }}
@@ -779,7 +773,6 @@ export function CalendarEvents({
                     onClick={() => {
                       setMonthStart(mStart);
                       setViewMode("month");
-                      fetchPeriod(startOfMonth(mStart), endOfMonth(mStart));
                     }}
                     className="flex flex-col gap-2 rounded-xl p-4 text-left transition-all hover:brightness-110 active:scale-[0.98]"
                     style={{
