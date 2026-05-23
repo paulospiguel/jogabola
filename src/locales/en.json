@@ -224,6 +224,11 @@
       "description": "Create a game, training session or event for your team.",
       "title": "No events"
     },
+    "hero": {
+      "create": "Create event",
+      "eyebrow": "Arena",
+      "title": "Events calendar"
+    },
     "kicker": "Arena",
     "legend": {
       "event": "Event",
@@ -238,9 +243,20 @@
       "rangePlaceholder": "Select date range",
       "rangeHint": "Click above to choose a period"
     },
+    "status": {
+      "cancelled": "Cancelled",
+      "confirmed": "Confirmed"
+    },
     "title": "Events Calendar",
     "today": "Today",
     "view": {
+      "month": "Month",
+      "range": "Range",
+      "week": "Week",
+      "year": "Year"
+    },
+    "views": {
+      "ariaLabel": "Calendar view",
       "month": "Month",
       "range": "Range",
       "week": "Week",

@@ -224,6 +224,11 @@
       "description": "Crea un partido, entrenamiento o evento para tu equipo.",
       "title": "Ningún evento"
     },
+    "hero": {
+      "create": "Crear evento",
+      "eyebrow": "Arena",
+      "title": "Calendario de eventos"
+    },
     "kicker": "Arena",
     "legend": {
       "event": "Evento",
@@ -238,9 +243,20 @@
       "rangePlaceholder": "Seleccionar rango de fechas",
       "rangeHint": "Haz clic arriba para elegir el período"
     },
+    "status": {
+      "cancelled": "Cancelado",
+      "confirmed": "Confirmado"
+    },
     "title": "Calendario de Eventos",
     "today": "Hoy",
     "view": {
+      "month": "Mes",
+      "range": "Intervalo",
+      "week": "Semana",
+      "year": "Año"
+    },
+    "views": {
+      "ariaLabel": "Vista del calendario",
       "month": "Mes",
       "range": "Intervalo",
       "week": "Semana",

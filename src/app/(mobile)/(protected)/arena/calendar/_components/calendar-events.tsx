@@ -28,8 +28,6 @@ import {
   CalendarDays,
   ChevronLeft,
   ChevronRight,
-  Clock,
-  MapPin,
   Plus,
 } from "lucide-react";
 import Link from "next/link";
@@ -43,6 +41,9 @@ import {
 } from "react";
 import type { DateRange } from "react-day-picker";
 import { getCalendarEvents } from "@/actions/match-sessions.actions";
+import { ArenaEmptyState } from "@/components/arena/empty-state";
+import { EventRow } from "@/components/arena/event-row";
+import { SegmentedControl } from "@/components/arena/segmented-control";
 import { Calendar as CalendarPicker } from "@/components/ui/calendar";
 import {
   Popover,
@@ -89,22 +90,22 @@ const TYPE_CONFIG: Record<
   { bg: string; border: string; text: string; dot: string }
 > = {
   game: {
-    bg: "rgba(124,255,79,0.07)",
-    border: "rgba(124,255,79,0.28)",
-    text: "#7cff4f",
-    dot: "#7cff4f",
+    bg: "color-mix(in srgb, var(--color-arena-primary) 7%, transparent)",
+    border: "color-mix(in srgb, var(--color-arena-primary) 28%, transparent)",
+    text: "var(--color-arena-primary)",
+    dot: "var(--color-arena-primary)",
   },
   training: {
-    bg: "rgba(56,189,248,0.07)",
-    border: "rgba(56,189,248,0.28)",
-    text: "#38bdf8",
-    dot: "#38bdf8",
+    bg: "color-mix(in srgb, var(--color-arena-info) 7%, transparent)",
+    border: "color-mix(in srgb, var(--color-arena-info) 28%, transparent)",
+    text: "var(--color-arena-info)",
+    dot: "var(--color-arena-info)",
   },
   event: {
-    bg: "rgba(245,158,11,0.07)",
-    border: "rgba(245,158,11,0.28)",
-    text: "#f59e0b",
-    dot: "#f59e0b",
+    bg: "color-mix(in srgb, var(--color-arena-warning) 7%, transparent)",
+    border: "color-mix(in srgb, var(--color-arena-warning) 28%, transparent)",
+    text: "var(--color-arena-warning)",
+    dot: "var(--color-arena-warning)",
   },
 };
 
@@ -162,55 +163,23 @@ function getMonthGrid(monthStart: Date): Date[] {
 /*  Sub-components                                                      */
 /* ------------------------------------------------------------------ */
 
-function EventCard({ session }: { session: SessionRow }) {
+function EventCard({
+  session,
+  statusLabel,
+}: {
+  session: SessionRow;
+  statusLabel?: string;
+}) {
   const type = inferType(session.title);
-  const cfg = TYPE_CONFIG[type];
   return (
-    <Link
+    <EventRow
       href={`/arena/events/${session.id}`}
-      className="group flex items-center gap-3 rounded-xl px-3 py-2.5 transition-all hover:brightness-110"
-      style={{ backgroundColor: cfg.bg, border: `1px solid ${cfg.border}` }}
-    >
-      <div
-        className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg"
-        style={{ backgroundColor: `${cfg.dot}18` }}
-      >
-        <span
-          className="w-2 h-2 rounded-full"
-          style={{ backgroundColor: cfg.dot }}
-        />
-      </div>
-      <div className="min-w-0 flex-1">
-        <div className="flex items-center gap-1.5 mb-0.5">
-          <p className="font-bold text-[13px] text-arena-text truncate">
-            {session.title}
-          </p>
-          {session.status && session.status !== "scheduled" && (
-            <span
-              className={cn(
-                "shrink-0 rounded-[4px] border px-1 py-px text-[9px] font-bold uppercase tracking-wide",
-                session.status === "confirmed"
-                  ? "text-arena-success bg-arena-success/10 border-arena-success/25"
-                  : "text-arena-danger bg-arena-danger/10 border-arena-danger/25",
-              )}
-            >
-              {session.status === "confirmed" ? "Confirmado" : "Cancelado"}
-            </span>
-          )}
-        </div>
-        <div className="flex items-center gap-2">
-          <span className="flex items-center gap-1 text-[11px] text-arena-text-sec">
-            <Clock size={10} />
-            {formatDuration(session.startsAt, session.endsAt)}
-          </span>
-          <span className="flex items-center gap-1 text-[11px] text-arena-text-muted truncate">
-            <MapPin size={10} />
-            {session.location}
-          </span>
-        </div>
-      </div>
-      <ChevronRight size={13} className="text-arena-text-muted shrink-0" />
-    </Link>
+      title={session.title}
+      type={type}
+      timeLabel={formatDuration(session.startsAt, session.endsAt)}
+      location={session.location}
+      statusLabel={statusLabel}
+    />
   );
 }
 
@@ -233,7 +202,7 @@ export function CalendarEvents({
   const dfLocale = DATE_LOCALES[locale] ?? pt;
   const [isPending, startTransition] = useTransition();
 
-  const [viewMode, setViewMode] = useState<ViewMode>("week");
+  const [viewMode, setViewMode] = useState<ViewMode>("month");
   const [weekStart, setWeekStart] = useState<Date>(
     () => new Date(initialWeekStart),
   );
@@ -362,7 +331,16 @@ export function CalendarEvents({
 
   const totalEvents = events.length;
   const weekDays = useMemo(() => getWeekDays(weekStart), [weekStart]);
-  const VIEW_MODES: ViewMode[] = ["week", "month", "year", "range"];
+  const viewOptions = [
+    { id: "week", label: t("views.week") },
+    { id: "month", label: t("views.month") },
+    { id: "year", label: t("views.year") },
+    { id: "range", label: t("views.range") },
+  ] satisfies Array<{ id: ViewMode; label: string }>;
+  const getStatusLabel = (status: SessionRow["status"]) => {
+    if (!status || status === "scheduled") return undefined;
+    return t(`status.${status}`);
+  };
 
   // suppress unused warning — from/to used to trigger memo
   void from;
@@ -374,30 +352,26 @@ export function CalendarEvents({
         {/* Header */}
         <header className="jb-topbar">
           <div>
-            <div className="jb-kicker">{t("kicker")}</div>
-            <h1 className="jb-title">{t("title")}</h1>
+            <div className="jb-kicker">{t("hero.eyebrow")}</div>
+            <h1 className="jb-title">{t("hero.title")}</h1>
           </div>
           <Link
             href="/arena/events/create"
             className="jb-action h-12 jb-action-primary hidden md:inline-flex"
           >
             <Plus size={15} strokeWidth={2.5} />
-            {t("actions.create")}
+            {t("hero.create")}
           </Link>
         </header>
 
         {/* View mode tabs */}
-        <div className="jb-toolbar mb-4">
-          {VIEW_MODES.map(mode => (
-            <button
-              key={mode}
-              type="button"
-              onClick={() => switchMode(mode)}
-              className={cn("jb-chip", viewMode === mode && "jb-chip-active")}
-            >
-              {t(`view.${mode}`)}
-            </button>
-          ))}
+        <div className="mb-4 flex">
+          <SegmentedControl
+            ariaLabel={t("views.ariaLabel")}
+            onChange={switchMode}
+            options={viewOptions}
+            value={viewMode}
+          />
         </div>
 
         {/* Nav bar — week / month / year */}
@@ -519,8 +493,10 @@ export function CalendarEvents({
                       style={
                         today
                           ? {
-                              backgroundColor: "rgba(124,255,79,0.12)",
-                              border: "1px solid rgba(124,255,79,0.3)",
+                              backgroundColor:
+                                "color-mix(in srgb, var(--color-arena-primary) 12%, transparent)",
+                              border:
+                                "1px solid color-mix(in srgb, var(--color-arena-primary) 30%, transparent)",
                             }
                           : {
                               backgroundColor: "var(--color-arena-surface)",
@@ -532,7 +508,7 @@ export function CalendarEvents({
                         className="text-[10px] font-bold uppercase tracking-wider"
                         style={{
                           color: today
-                            ? "#7cff4f"
+                            ? "var(--color-arena-primary)"
                             : "var(--color-arena-text-muted)",
                         }}
                       >
@@ -541,7 +517,9 @@ export function CalendarEvents({
                       <p
                         className="text-[17px] font-extrabold"
                         style={{
-                          color: today ? "#7cff4f" : "var(--color-arena-text)",
+                          color: today
+                            ? "var(--color-arena-primary)"
+                            : "var(--color-arena-text)",
                         }}
                       >
                         {format(day, "d")}
@@ -611,8 +589,10 @@ export function CalendarEvents({
                       style={
                         today
                           ? {
-                              backgroundColor: "rgba(124,255,79,0.12)",
-                              border: "1px solid rgba(124,255,79,0.3)",
+                              backgroundColor:
+                                "color-mix(in srgb, var(--color-arena-primary) 12%, transparent)",
+                              border:
+                                "1px solid color-mix(in srgb, var(--color-arena-primary) 30%, transparent)",
                             }
                           : {
                               backgroundColor: "var(--color-arena-surface)",
@@ -623,7 +603,9 @@ export function CalendarEvents({
                       <span
                         className="text-[15px] font-extrabold"
                         style={{
-                          color: today ? "#7cff4f" : "var(--color-arena-text)",
+                          color: today
+                            ? "var(--color-arena-primary)"
+                            : "var(--color-arena-text)",
                         }}
                       >
                         {format(day, "d")}
@@ -632,7 +614,7 @@ export function CalendarEvents({
                         className="text-[12px] font-bold uppercase tracking-wider"
                         style={{
                           color: today
-                            ? "#7cff4f"
+                            ? "var(--color-arena-primary)"
                             : "var(--color-arena-text-muted)",
                         }}
                       >
@@ -651,7 +633,11 @@ export function CalendarEvents({
                     ) : (
                       <div className="flex flex-col gap-2">
                         {dayEvents.map(ev => (
-                          <EventCard key={ev.id} session={ev} />
+                          <EventCard
+                            key={ev.id}
+                            session={ev}
+                            statusLabel={getStatusLabel(ev.status)}
+                          />
                         ))}
                       </div>
                     )}
@@ -674,18 +660,21 @@ export function CalendarEvents({
           >
             {/* Day-of-week headers */}
             <div className="grid grid-cols-7 gap-1 mb-1">
-              {Array.from({ length: 7 }, (_, i) => (
-                <div
-                  key={i}
-                  className="text-center text-[10px] font-bold uppercase tracking-wider text-arena-text-muted py-1.5"
-                >
-                  {format(
-                    addDays(startOfWeek(new Date(), { weekStartsOn: 1 }), i),
-                    "EEE",
-                    { locale: dfLocale },
-                  )}
-                </div>
-              ))}
+              {Array.from({ length: 7 }, (_, i) => {
+                const day = addDays(
+                  startOfWeek(new Date(), { weekStartsOn: 1 }),
+                  i,
+                );
+
+                return (
+                  <div
+                    key={format(day, "yyyy-MM-dd")}
+                    className="text-center text-[10px] font-bold uppercase tracking-wider text-arena-text-muted py-1.5"
+                  >
+                    {format(day, "EEE", { locale: dfLocale })}
+                  </div>
+                );
+              })}
             </div>
 
             {/* Day cells */}
@@ -703,12 +692,12 @@ export function CalendarEvents({
                     className="flex flex-col items-center rounded-xl p-1.5 min-h-14 transition-colors"
                     style={{
                       backgroundColor: today
-                        ? "rgba(124,255,79,0.1)"
+                        ? "color-mix(in srgb, var(--color-arena-primary) 10%, transparent)"
                         : dayEvents.length > 0 && inMonth
                           ? "var(--color-arena-surface)"
                           : "transparent",
                       border: today
-                        ? "1px solid rgba(124,255,79,0.3)"
+                        ? "1px solid color-mix(in srgb, var(--color-arena-primary) 30%, transparent)"
                         : "1px solid transparent",
                       opacity: inMonth ? 1 : 0.3,
                     }}
@@ -716,7 +705,9 @@ export function CalendarEvents({
                     <span
                       className="text-[13px] font-bold mb-1"
                       style={{
-                        color: today ? "#7cff4f" : "var(--color-arena-text)",
+                        color: today
+                          ? "var(--color-arena-primary)"
+                          : "var(--color-arena-text)",
                       }}
                     >
                       {format(day, "d")}
@@ -759,7 +750,11 @@ export function CalendarEvents({
                         toDate(b.startsAt).getTime(),
                     )
                     .map(ev => (
-                      <EventCard key={ev.id} session={ev} />
+                      <EventCard
+                        key={ev.id}
+                        session={ev}
+                        statusLabel={getStatusLabel(ev.status)}
+                      />
                     ))}
                 </div>
               </div>
@@ -787,7 +782,7 @@ export function CalendarEvents({
                 const isCurrent = isSameMonth(mStart, new Date());
                 return (
                   <button
-                    key={i}
+                    key={format(mStart, "yyyy-MM")}
                     type="button"
                     onClick={() => {
                       setMonthStart(mStart);
@@ -797,10 +792,10 @@ export function CalendarEvents({
                     className="flex flex-col gap-2 rounded-xl p-4 text-left transition-all hover:brightness-110 active:scale-[0.98]"
                     style={{
                       backgroundColor: isCurrent
-                        ? "rgba(124,255,79,0.08)"
+                        ? "color-mix(in srgb, var(--color-arena-primary) 8%, transparent)"
                         : "var(--color-arena-surface)",
                       border: isCurrent
-                        ? "1px solid rgba(124,255,79,0.25)"
+                        ? "1px solid color-mix(in srgb, var(--color-arena-primary) 25%, transparent)"
                         : "1px solid var(--color-arena-border)",
                     }}
                   >
@@ -808,7 +803,7 @@ export function CalendarEvents({
                       className="text-[13px] font-extrabold capitalize"
                       style={{
                         color: isCurrent
-                          ? "#7cff4f"
+                          ? "var(--color-arena-primary)"
                           : "var(--color-arena-text)",
                       }}
                     >
@@ -853,29 +848,12 @@ export function CalendarEvents({
         {/*  RANGE VIEW                                                   */}
         {/* ============================================================ */}
         {viewMode === "range" && !customRange?.from && (
-          <div className="flex flex-col items-center gap-4 py-16 text-center">
-            <div
-              className="flex h-16 w-16 items-center justify-center rounded-2xl"
-              style={{
-                backgroundColor: "var(--color-arena-surface-el)",
-                border: "1px solid var(--color-arena-border)",
-              }}
-            >
-              <CalendarDays
-                size={28}
-                className="text-arena-text-muted"
-                strokeWidth={1.5}
-              />
-            </div>
-            <div>
-              <p className="font-bold text-[15px] text-arena-text">
-                {t("nav.rangePlaceholder")}
-              </p>
-              <p className="mt-1 text-[13px] text-arena-text-muted">
-                {t("nav.rangeHint")}
-              </p>
-            </div>
-          </div>
+          <ArenaEmptyState
+            className="py-12"
+            description={t("nav.rangeHint")}
+            icon={CalendarDays}
+            title={t("nav.rangePlaceholder")}
+          />
         )}
 
         {viewMode === "range" && customRange?.from && customRange?.to && (
@@ -886,24 +864,12 @@ export function CalendarEvents({
             )}
           >
             {totalEvents === 0 ? (
-              <div className="flex flex-col items-center gap-4 py-12 text-center">
-                <div
-                  className="flex h-14 w-14 items-center justify-center rounded-2xl"
-                  style={{
-                    backgroundColor: "var(--color-arena-surface-el)",
-                    border: "1px solid var(--color-arena-border)",
-                  }}
-                >
-                  <CalendarDays
-                    size={24}
-                    className="text-arena-text-muted"
-                    strokeWidth={1.5}
-                  />
-                </div>
-                <p className="text-[14px] text-arena-text-muted">
-                  {t("emptyState.title")}
-                </p>
-              </div>
+              <ArenaEmptyState
+                className="py-10"
+                description={t("emptyState.description")}
+                icon={CalendarDays}
+                title={t("emptyState.title")}
+              />
             ) : (
               (() => {
                 const grouped: Record<string, SessionRow[]> = {};
@@ -925,7 +891,7 @@ export function CalendarEvents({
                           className="text-[12px] font-bold uppercase tracking-wider"
                           style={{
                             color: today
-                              ? "#7cff4f"
+                              ? "var(--color-arena-primary)"
                               : "var(--color-arena-text-muted)",
                           }}
                         >
@@ -939,7 +905,11 @@ export function CalendarEvents({
                       </div>
                       <div className="flex flex-col gap-2">
                         {dayEvents.map(ev => (
-                          <EventCard key={ev.id} session={ev} />
+                          <EventCard
+                            key={ev.id}
+                            session={ev}
+                            statusLabel={getStatusLabel(ev.status)}
+                          />
                         ))}
                       </div>
                     </div>
@@ -952,36 +922,21 @@ export function CalendarEvents({
 
         {/* Empty state for week/month/year */}
         {viewMode !== "range" && totalEvents === 0 && !isPending && (
-          <div className="mt-8 flex flex-col items-center gap-4 py-12 text-center">
-            <div
-              className="flex h-16 w-16 items-center justify-center rounded-2xl"
-              style={{
-                backgroundColor: "var(--color-arena-surface-el)",
-                border: "1px solid var(--color-arena-border)",
-              }}
-            >
-              <Calendar
-                size={28}
-                className="text-arena-text-muted"
-                strokeWidth={1.5}
-              />
-            </div>
-            <div>
-              <p className="font-bold text-[15px] text-arena-text">
-                {t("emptyState.title")}
-              </p>
-              <p className="mt-1 text-[13px] text-arena-text-muted">
-                {t("emptyState.description")}
-              </p>
-            </div>
-            <Link
-              href="/arena/events/create"
-              className="jb-action jb-action-primary mt-1"
-            >
-              <Plus size={15} strokeWidth={2.5} />
-              {t("actions.create")}
-            </Link>
-          </div>
+          <ArenaEmptyState
+            action={
+              <Link
+                href="/arena/events/create"
+                className="jb-action jb-action-primary"
+              >
+                <Plus size={15} strokeWidth={2.5} />
+                {t("hero.create")}
+              </Link>
+            }
+            className="mt-8 py-10"
+            description={t("emptyState.description")}
+            icon={Calendar}
+            title={t("emptyState.title")}
+          />
         )}
 
         {/* Legend */}
@@ -1014,8 +969,11 @@ export function CalendarEvents({
         <Link
           href="/arena/events/create"
           className="md:hidden fixed bottom-24 right-5 z-30 flex h-12 w-12 items-center justify-center rounded-full shadow-lg"
-          style={{ backgroundColor: "#7cff4f", color: "#0b0f14" }}
-          aria-label={t("actions.create")}
+          style={{
+            backgroundColor: "var(--color-arena-primary)",
+            color: "var(--color-arena-bg)",
+          }}
+          aria-label={t("hero.create")}
         >
           <Plus size={22} strokeWidth={2.5} />
         </Link>
