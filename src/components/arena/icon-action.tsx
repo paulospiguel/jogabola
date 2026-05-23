@@ -28,11 +28,13 @@ export function IconAction({
   tone = "neutral",
   className,
   type = "button",
+  "aria-pressed": ariaPressed,
   ...props
 }: IconActionProps) {
   return (
     <button
       aria-label={label}
+      aria-pressed={ariaPressed ?? (active !== undefined ? active : undefined)}
       className={cn(
         "inline-flex size-9 shrink-0 items-center justify-center rounded-xl border transition duration-100 active:scale-[0.97] disabled:cursor-not-allowed disabled:opacity-50",
         active

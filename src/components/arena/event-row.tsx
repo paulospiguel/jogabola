@@ -1,8 +1,8 @@
-import { Calendar, ChevronRight, Shield, Trophy } from "lucide-react";
+import { Calendar, ChevronRight, Shield, Swords, Trophy } from "lucide-react";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 
-type EventRowType = "game" | "training" | "event";
+type EventRowType = "game" | "training" | "challenge" | "event";
 
 type EventRowProps = {
   href: string;
@@ -26,6 +26,10 @@ const typeStyles: Record<
   training: {
     Icon: Shield,
     className: "border-arena-info/25 bg-arena-info/10 text-arena-info",
+  },
+  challenge: {
+    Icon: Swords,
+    className: "border-arena-warning/25 bg-arena-warning/10 text-arena-warning",
   },
   event: {
     Icon: Calendar,
