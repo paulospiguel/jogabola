@@ -9,12 +9,13 @@ import {
   Plus,
   Shield,
 } from "lucide-react";
+import { motion } from "framer-motion";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
 import { useMemo, useState } from "react";
 import { CreateEventSheet } from "@/components/arena/create-event-sheet";
+import { Cta } from "@/components/arena/cta";
 import { UserMenu } from "@/components/arena/user-menu";
-import { Button } from "@/components/ui/button";
 import { useEvents } from "@/hooks/use-events";
 import { useTeams } from "@/hooks/use-teams";
 import { cn } from "@/lib/utils";
@@ -74,11 +75,26 @@ function formatTime(d: Date | string) {
   });
 }
 
-function EventCard({ event }: { event: EventView }) {
+const cardVariants = {
+  hidden: { opacity: 0, y: 8 },
+  visible: (i: number) => ({
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.18, delay: i * 0.03, ease: [0.4, 0, 0.2, 1] },
+  }),
+};
+
+function EventCard({ event, index = 0 }: { event: EventView; index?: number }) {
   const t = useTranslations("arenaEvents");
   const isGame = event.type === "partida" || event.type === "jogo";
 
   return (
+    <motion.div
+      custom={index}
+      variants={cardVariants}
+      initial="hidden"
+      animate="visible"
+    >
     <Link
       className="jb-card block p-3.5 no-underline md:p-4"
       href={`/arena/events/${event.id}`}
@@ -136,6 +152,7 @@ function EventCard({ event }: { event: EventView }) {
         ) : null}
       </div>
     </Link>
+    </motion.div>
   );
 }
 
@@ -170,7 +187,12 @@ export function EventsList({ upcoming, past }: EventsListProps) {
         />
       ) : null}
 
-      <div className="jb-page">
+      <motion.div
+        className="jb-page"
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.22, ease: [0.4, 0, 0.2, 1] }}
+      >
         <div className="jb-page-inner">
           <header className="jb-topbar flex w-full flex-col gap-2">
             <div className="flex w-full items-center justify-between">
@@ -193,16 +215,15 @@ export function EventsList({ upcoming, past }: EventsListProps) {
                 <CalendarDays size={14} strokeWidth={2} />
                 {t("actions.viewCalendar")}
               </Link>
-              <Button
-                className="jb-action jb-action-primary min-w-[135px] flex-1 md:flex-none"
-                onClick={() => setSheet(true)}
-                type="button"
-                variant="ghost"
+              <Cta
+                variant="primary"
                 size="sm"
+                className="min-w-[135px] flex-1 md:flex-none"
+                onClick={() => setSheet(true)}
               >
                 <Plus size={14} strokeWidth={2.5} />
                 {t("actions.create")}
-              </Button>
+              </Cta>
             </div>
           </header>
 
@@ -221,23 +242,22 @@ export function EventsList({ upcoming, past }: EventsListProps) {
               <div className="mt-1 text-sm text-arena-text-muted">
                 {t("empty.subtitle")}
               </div>
-              <Button
-                className="jb-action jb-action-primary mt-5 px-5"
-                onClick={() => setSheet(true)}
-                type="button"
-                variant="ghost"
+              <Cta
+                variant="primary"
                 size="sm"
+                className="mt-5"
+                onClick={() => setSheet(true)}
               >
                 {t("actions.createEvent")}
-              </Button>
+              </Cta>
             </div>
           ) : (
             <div className="grid gap-4 md:grid-cols-[minmax(0,1.35fr)_minmax(300px,0.75fr)]">
               <section>
                 <div className="jb-section-label">{t("sections.upcoming")}</div>
                 <div className="jb-stack">
-                  {visibleUpcoming.map(event => (
-                    <EventCard event={event} key={event.id} />
+                  {visibleUpcoming.map((event, i) => (
+                    <EventCard event={event} index={i} key={event.id} />
                   ))}
                 </div>
               </section>
@@ -246,8 +266,8 @@ export function EventsList({ upcoming, past }: EventsListProps) {
                 <div className="jb-section-label">{t("sections.past")}</div>
                 <div className="jb-stack">
                   {visiblePast.length > 0 ? (
-                    visiblePast.map(event => (
-                      <EventCard event={event} key={event.id} />
+                    visiblePast.map((event, i) => (
+                      <EventCard event={event} index={i} key={event.id} />
                     ))
                   ) : (
                     <div className="jb-card p-4 text-sm text-arena-text-muted">
@@ -259,7 +279,7 @@ export function EventsList({ upcoming, past }: EventsListProps) {
             </div>
           )}
         </div>
-      </div>
+      </motion.div>
     </>
   );
 }
