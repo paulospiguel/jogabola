@@ -828,6 +828,12 @@
     "high": "Risco Alto",
     "scoreIs": "Score de risco"
   },
+  "arenaShared": {
+    "calendar": "Calendario",
+    "createEvent": "Criar evento",
+    "emptyTitle": "Sem resultados",
+    "emptyDescription": "Tenta ajustar os filtros."
+  },
   "arenaSquad": {
     "roles": {
       "owner": "Capitão",
