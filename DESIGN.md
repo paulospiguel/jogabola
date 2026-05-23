@@ -181,6 +181,60 @@ Inspirado em Lucide. Sempre `strokeLinecap=round` + `strokeLinejoin=round`.
 | `JogaBola v2.html` | 📱 Mobile (iOS frame) — protótipo completo |
 | `JogaBola Desktop v2.html` | 🖥️ Desktop (Chrome frame) — versão admin |
 | `JogaBola.html` | (legacy) v1 mobile |
+| `JogaBola v3 - Standalone.html` | 📱 v3 Claude Designer prototype — referência de implementação |
 
 **Stack:** HTML único · React 18 (UMD) · Babel inline · zero dependências
 **Frames:** iOS 26 (mobile) e Chrome (desktop) via starter components
+
+---
+
+## 12. Token Mapping (Next.js — Tailwind v4)
+
+### Namespaces ativos
+
+| Namespace | Onde vive | Uso |
+|---|---|---|
+| `--color-arena-*` | `src/styles/globals.css` (`@theme`) | **App** (arena, autenticação, onboarding) |
+| `--color-neon-*` | `src/styles/globals.css` (`@theme`) | **Landing page** e website público |
+
+### Tokens arena (canónicos)
+
+| CSS var | Tailwind utility | Hex |
+|---|---|---|
+| `--color-arena-bg` | `bg-arena-bg` | `#0B0F14` |
+| `--color-arena-bg-sec` | `bg-arena-bg-sec` | `#111827` |
+| `--color-arena-surface` | `bg-arena-surface` | `#151C26` |
+| `--color-arena-surface-el` | `bg-arena-surface-el` | `#1B2430` |
+| `--color-arena-border` | `border-arena-border` | `#263244` |
+| `--color-arena-text` | `text-arena-text` | `#F5F7FA` |
+| `--color-arena-text-sec` | `text-arena-text-sec` | `#A7B0BE` |
+| `--color-arena-text-muted` | `text-arena-text-muted` | `#6B7280` |
+| `--color-arena-primary` | `bg-arena-primary` | `#7CFF4F` |
+| `--color-arena-success` | `bg-arena-success` | `#22C55E` |
+| `--color-arena-warning` | `bg-arena-warning` | `#F59E0B` |
+| `--color-arena-danger` | `bg-arena-danger` | `#EF4444` |
+| `--color-arena-info` | `bg-arena-info` | `#38BDF8` |
+| `--color-arena-highlight` | `bg-arena-highlight` | `#FACC15` |
+
+### Regras de uso
+- Nunca misturar namespaces: componentes `arena/*` usam `arena-*`, landing usa `neon-*`.
+- `--jb-*` e `--color-journey-*` **removidos** (era dead code — não usar).
+- Texto sobre `arena-primary` → sempre `text-arena-bg` (#0B0F14), nunca branco.
+
+### Componentes base (arena)
+
+| Componente | Ficheiro | Notas |
+|---|---|---|
+| `<Cta>` | `arena/cta.tsx` | variant: primary/secondary/danger/ghost · size: sm/md/lg |
+| `<ProgressBar>` | `arena/progress-bar.tsx` | gradient roxo→ciano→lima, `showPercent` |
+| `<JbAvatar>` | `arena/avatar.tsx` | Prefixo `Jb` mantido (colisão shadcn `Avatar`) |
+| `<JbBadge>` | `arena/badge.tsx` | Prefixo `Jb` mantido (colisão shadcn `Badge`) |
+| `<ArenaSidebar>` | `arena/sidebar.tsx` | Renomeado de `Sidebar` (colisão shadcn) |
+| `<BottomNav>` | `arena/bottom-nav.tsx` | |
+| `<BottomSheet>` | `arena/bottom-sheet.tsx` | spring cubic-bezier(.16,1,.3,1) 320ms |
+| `<MobileTopBar>` | `arena/mobile-top-bar.tsx` | |
+| `<ScreenHeader>` | `arena/screen-header.tsx` | |
+| `<PlayerRow>` | `arena/player-row.tsx` | |
+| `<ScoreBar>` | `arena/score-bar.tsx` | |
+| `<TeamSwitcher>` | `arena/team-switcher.tsx` | |
+| `<UserMenu>` | `arena/user-menu.tsx` | |

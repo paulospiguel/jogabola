@@ -13,6 +13,8 @@ import {
 import coachIcon from "@/assets/images/jb-coach.png";
 import playerIcon from "@/assets/images/jb-player.png";
 import jbIconReferee from "@/assets/images/jb-referee.png";
+import { Cta } from "@/components/arena/cta";
+import { ProgressBar } from "@/components/arena/progress-bar";
 import { APP } from "@/constants/app";
 import { cn } from "@/lib/utils";
 import { OnboardingMenu } from "./onboarding-menu";
@@ -20,9 +22,6 @@ import { SurveyStep } from "./survey-step";
 
 type Step = "role" | "survey";
 
-// ---------------------------------------------------------------------------
-// RoleCardLarge — full-width card for Capitão and Atleta
-// ---------------------------------------------------------------------------
 interface RoleCardLargeProps {
   icon: React.ReactNode;
   title: string;
@@ -58,27 +57,23 @@ function RoleCardLarge({
             : "cursor-pointer border-arena-border bg-arena-surface/80 hover:border-arena-primary/35 hover:bg-arena-surface-el/80",
       )}
     >
-      {/* subtle radial glow when selected */}
       {selected && !disabled && (
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_18%_12%,rgba(124,255,79,.18),transparent_36%),radial-gradient(circle_at_88%_100%,rgba(56,189,248,.10),transparent_42%)]" />
       )}
 
-      {/* EM BREVE badge */}
       {disabled && (
         <span className="absolute top-3 right-3 rounded-full border border-arena-border/60 bg-arena-surface/80 px-2 py-0.5 text-[10px] font-bold tracking-[0.14em] text-arena-text-muted uppercase">
           {t("badge.soon")}
         </span>
       )}
 
-      {/* Selected check badge */}
       {selected && !disabled && (
-        <span className="absolute top-3 right-3 flex size-6 items-center justify-center rounded-full bg-arena-primary text-[#0B0F14]">
+        <span className="absolute top-3 right-3 flex size-6 items-center justify-center rounded-full bg-arena-primary text-arena-bg">
           <Check size={13} strokeWidth={2.8} />
         </span>
       )}
 
       <div className="relative flex items-center gap-4">
-        {/* Icon container */}
         <div
           className={cn(
             "flex size-14 shrink-0 items-center justify-center overflow-hidden rounded-[14px] border transition-all duration-300",
@@ -92,7 +87,6 @@ function RoleCardLarge({
           {icon}
         </div>
 
-        {/* Text */}
         <div className="min-w-0 flex-1">
           <h3
             className={cn(
@@ -111,9 +105,6 @@ function RoleCardLarge({
   );
 }
 
-// ---------------------------------------------------------------------------
-// RoleCardSmall — compact card for Árbitro and Adepto (side-by-side)
-// ---------------------------------------------------------------------------
 interface RoleCardSmallProps {
   icon: React.ReactNode;
   title: string;
@@ -124,7 +115,6 @@ function RoleCardSmall({ icon, title }: RoleCardSmallProps) {
 
   return (
     <div className="relative flex cursor-not-allowed flex-col items-center gap-2.5 overflow-hidden rounded-[16px] border border-dashed border-arena-border/45 bg-arena-bg/30 px-3 py-4 opacity-55 transition-opacity">
-      {/* icon */}
       <div className="flex size-12 items-center justify-center overflow-hidden rounded-[12px] border border-arena-border/40 bg-arena-bg/50">
         {icon}
       </div>
@@ -140,9 +130,6 @@ function RoleCardSmall({ icon, title }: RoleCardSmallProps) {
   );
 }
 
-// ---------------------------------------------------------------------------
-// OnboardingClient
-// ---------------------------------------------------------------------------
 interface OnboardingClientProps {
   userName: string;
 }
@@ -156,7 +143,6 @@ export function OnboardingClient({ userName }: OnboardingClientProps) {
 
   const APP_NAME = APP.APP_NAME;
 
-  // Icon elements
   const coachIconEl = (
     <Image
       src={coachIcon}
@@ -231,11 +217,9 @@ export function OnboardingClient({ userName }: OnboardingClientProps) {
 
   return (
     <div className="relative flex min-h-screen items-center justify-center overflow-hidden bg-arena-bg px-4 py-12">
-      {/* Background gradients */}
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_50%_15%,rgba(124,255,79,.10),transparent_32%),radial-gradient(circle_at_82%_72%,rgba(56,189,248,.08),transparent_38%)]" />
       <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(rgba(38,50,68,.18)_1px,transparent_1px),linear-gradient(90deg,rgba(38,50,68,.18)_1px,transparent_1px)] bg-[size:72px_72px] opacity-40 [mask-image:radial-gradient(circle_at_center,black_25%,transparent_78%)]" />
 
-      {/* Hamburger menu — top-right */}
       <div className="absolute top-4 right-4 z-50">
         <OnboardingMenu />
       </div>
@@ -246,6 +230,14 @@ export function OnboardingClient({ userName }: OnboardingClientProps) {
         transition={{ duration: 0.3, ease: [0.4, 0, 0.2, 1] }}
         className="relative w-full max-w-[480px]"
       >
+        <div className="mb-6">
+          <ProgressBar
+            value={step === "role" ? 50 : 100}
+            max={100}
+            showPercent={false}
+          />
+        </div>
+
         <AnimatePresence mode="wait">
           {step === "role" ? (
             <motion.div
@@ -255,7 +247,6 @@ export function OnboardingClient({ userName }: OnboardingClientProps) {
               exit={{ opacity: 0, x: -60 }}
               transition={{ duration: 0.24, ease: [0.4, 0, 0.2, 1] }}
             >
-              {/* ── Header ── */}
               <div className="mb-8 px-1">
                 <p className="mb-1.5 text-[10px] font-bold tracking-[0.16em] text-arena-text-muted uppercase">
                   {t("header.eyebrow")}
@@ -271,9 +262,7 @@ export function OnboardingClient({ userName }: OnboardingClientProps) {
                 </p>
               </div>
 
-              {/* ── Role cards ── */}
               <div className="mb-5 flex flex-col gap-3">
-                {/* Capitão — selectable */}
                 <RoleCardLarge
                   icon={coachIconEl}
                   title={t("roles.coach.title")}
@@ -282,7 +271,6 @@ export function OnboardingClient({ userName }: OnboardingClientProps) {
                   onClick={() => setSelected("captain")}
                 />
 
-                {/* Atleta — EM BREVE */}
                 <RoleCardLarge
                   icon={playerIconEl}
                   title={t("roles.athlete.title")}
@@ -293,7 +281,6 @@ export function OnboardingClient({ userName }: OnboardingClientProps) {
                 />
               </div>
 
-              {/* ── Small cards grid (Árbitro + Adepto) ── */}
               <div className="mb-7 grid grid-cols-2 gap-3">
                 <RoleCardSmall
                   icon={refereeIconEl}
@@ -302,24 +289,21 @@ export function OnboardingClient({ userName }: OnboardingClientProps) {
                 <RoleCardSmall icon={fanIconEl} title={t("roles.fan.title")} />
               </div>
 
-              {/* ── CTA ── */}
-              <motion.button
+              <Cta
                 type="button"
                 onClick={handleRoleConfirm}
                 disabled={!selected || loading}
-                whileTap={selected && !loading ? { scale: 0.97 } : undefined}
-                transition={{ duration: 0.12, ease: [0.4, 0, 0.2, 1] }}
+                fullWidth
+                size="lg"
                 className={cn(
-                  "w-full rounded-[14px] py-3.5 text-[15px] font-bold transition-all duration-200",
-                  selected && !loading
-                    ? "bg-arena-primary text-[#0B0F14] shadow-[0_0_20px_rgba(124,255,79,0.25)] hover:bg-arena-primary/90"
-                    : "cursor-not-allowed bg-white/8 text-white/25",
+                  selected &&
+                    !loading &&
+                    "shadow-[0_0_20px_rgba(124,255,79,0.25)]",
                 )}
               >
                 {loading ? t("cta.saving") : t("cta.continue")}
-              </motion.button>
+              </Cta>
 
-              {/* ── Footer ── */}
               <p className="mt-5 text-center text-[11px] text-arena-text-muted/60">
                 {t("footer.changeLater")}
               </p>
@@ -341,7 +325,6 @@ export function OnboardingClient({ userName }: OnboardingClientProps) {
           )}
         </AnimatePresence>
 
-        {/* ── Error message ── */}
         <AnimatePresence>
           {error && (
             <motion.p
