@@ -22,11 +22,12 @@ import { sendRosterPlayerEmail } from "@/actions/teams.actions";
 import { AddPlayerSheet } from "@/components/arena/add-player-sheet";
 import { JbAvatar } from "@/components/arena/avatar";
 import { BottomSheet } from "@/components/arena/bottom-sheet";
+import { Cta } from "@/components/arena/cta";
 import { UserMenu } from "@/components/arena/user-menu";
 import { VerifiedBadge } from "@/components/arena/verified-badge";
 import { RadialProgressIcon } from "@/components/arena/radial-progress-icon";
+import { motion } from "framer-motion";
 import Loading from "@/components/loading";
-import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
@@ -251,8 +252,10 @@ export function SquadClient({ userId }: { userId: string }) {
                 {emailFeedback}
               </div>
             )}
-            <Button
-              type="button"
+            <Cta
+              variant="primary"
+              size="md"
+              fullWidth
               onClick={sendEmailToPlayer}
               disabled={
                 isSendingEmail ||
@@ -260,11 +263,10 @@ export function SquadClient({ userId }: { userId: string }) {
                 !emailMessage.trim() ||
                 emailUsage >= emailLimit
               }
-              className="h-11 w-full rounded-[14px] bg-arena-primary font-bold text-arena-bg hover:bg-arena-primary/90"
             >
               <Send size={15} />
               {t("email.send")}
-            </Button>
+            </Cta>
           </div>
         </BottomSheet>
       )}
@@ -323,20 +325,26 @@ export function SquadClient({ userId }: { userId: string }) {
                 );
               })}
             </div>
-            <Button
-              type="button"
+            <Cta
+              variant="primary"
+              size="md"
+              fullWidth
               onClick={saveGroup}
               disabled={!groupName.trim() || groupSelection.length === 0}
-              className="h-11 w-full rounded-[14px] bg-arena-primary font-bold text-arena-bg hover:bg-arena-primary/90"
             >
               <ListPlus size={15} />
               {editingGroupId ? t("groups.update") : t("groups.create")}
-            </Button>
+            </Cta>
           </div>
         </BottomSheet>
       )}
 
-      <div className="jb-page px-3 pt-4 sm:px-5 md:px-7">
+      <motion.div
+        className="jb-page px-3 pt-4 sm:px-5 md:px-7"
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.22, ease: [0.4, 0, 0.2, 1] }}
+      >
         <div className="jb-page-inner">
           <div className="w-full">
             <header className="jb-topbar">
@@ -355,26 +363,14 @@ export function SquadClient({ userId }: { userId: string }) {
               </div>
             </header>
             <div className="mb-4 grid grid-cols-2 gap-2 md:flex md:justify-end">
-              <Button
-                className="jb-action justify-center"
-                onClick={openCreateGroup}
-                type="button"
-                variant="ghost"
-                size="sm"
-              >
+              <Cta variant="secondary" size="sm" onClick={openCreateGroup}>
                 <ListPlus size={15} strokeWidth={2.5} />
                 {t("groups.action")}
-              </Button>
-              <Button
-                className="jb-action jb-action-primary justify-center"
-                onClick={() => setShowAdd(true)}
-                type="button"
-                variant="ghost"
-                size="sm"
-              >
+              </Cta>
+              <Cta variant="primary" size="sm" onClick={() => setShowAdd(true)}>
                 <Plus size={15} strokeWidth={2.5} />
                 {t("actions.add")}
-              </Button>
+              </Cta>
             </div>
           </div>
 
@@ -405,16 +401,14 @@ export function SquadClient({ userId }: { userId: string }) {
                 <h2 className="text-xs font-bold uppercase tracking-widest text-arena-text-muted">
                   {t("groups.title")}
                 </h2>
-                <Button
+                <button
                   type="button"
-                  variant="ghost"
-                  size="sm"
-                  className="h-8 text-[11px] text-arena-text-sec hover:text-arena-primary"
+                  className="flex h-8 items-center gap-1 rounded-lg px-2 text-[11px] text-arena-text-sec transition-colors hover:text-arena-primary"
                   onClick={openCreateGroup}
                 >
                   <Plus size={13} />
                   {t("groups.new")}
-                </Button>
+                </button>
               </div>
               <div className="flex gap-2 overflow-auto pb-1">
                 {groups.map(group => (
@@ -433,16 +427,14 @@ export function SquadClient({ userId }: { userId: string }) {
                           })}
                         </div>
                       </div>
-                      <Button
+                      <button
                         type="button"
-                        variant="ghost"
-                        size="icon-sm"
                         aria-label={t("groups.edit")}
-                        className="size-7 rounded-[8px] border border-arena-border bg-arena-surface text-arena-text-muted hover:text-arena-primary"
+                        className="flex size-7 items-center justify-center rounded-[8px] border border-arena-border bg-arena-surface text-arena-text-muted transition-colors hover:text-arena-primary active:scale-[0.97]"
                         onClick={() => openEditGroup(group)}
                       >
                         <Pencil size={12} />
-                      </Button>
+                      </button>
                     </div>
                   </div>
                 ))}
@@ -460,16 +452,14 @@ export function SquadClient({ userId }: { userId: string }) {
                 className="flex-1 border-none bg-transparent p-0 text-sm text-arena-text shadow-none placeholder:text-arena-text-muted/70 focus-visible:ring-0"
               />
               {search && (
-                <Button
+                <button
                   onClick={() => setSearch("")}
-                  variant="ghost"
-                  size="icon-sm"
                   type="button"
-                  className="h-6 w-6 min-h-0 min-w-0 text-arena-text-muted hover:text-arena-text"
+                  className="flex size-6 items-center justify-center text-arena-text-muted transition-colors hover:text-arena-text active:scale-[0.97]"
                   aria-label="Limpar pesquisa"
                 >
                   <X size={14} strokeWidth={2} />
-                </Button>
+                </button>
               )}
             </div>
 
@@ -509,13 +499,9 @@ export function SquadClient({ userId }: { userId: string }) {
                 <div className="text-[15px] font-semibold text-arena-text">
                   {t("search.noResults")}
                 </div>
-                <Button
-                  onClick={() => setShowAdd(true)}
-                  className="h-[42px] rounded-[12px] bg-arena-primary px-5 text-[13px] font-bold text-arena-bg hover:bg-arena-primary/90"
-                  type="button"
-                >
+                <Cta variant="primary" size="sm" onClick={() => setShowAdd(true)}>
                   {t("actions.addPlayer")}
-                </Button>
+                </Cta>
               </div>
             ) : (
               <>
@@ -523,9 +509,12 @@ export function SquadClient({ userId }: { userId: string }) {
                   {t("stats.playerCount", { count: filtered.length })}
                 </div>
                 <div className="grid gap-2 md:grid-cols-2 xl:grid-cols-3">
-                  {filtered.map(p => (
-                    <div
+                  {filtered.map((p, i) => (
+                    <motion.div
                       key={p.id}
+                      initial={{ opacity: 0, y: 6 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.16, delay: i * 0.025, ease: [0.4, 0, 0.2, 1] }}
                       className="rounded-[14px] border border-arena-border bg-arena-surface px-3 py-3 transition-all hover:border-arena-primary/30 hover:bg-arena-primary/5 sm:px-3.5"
                     >
                       <div className="flex items-center gap-3">
@@ -561,27 +550,20 @@ export function SquadClient({ userId }: { userId: string }) {
                           </div>
                         </div>
                         <div className="flex gap-1">
-                          <Button
-                            asChild
-                            type="button"
-                            size="icon-sm"
-                            variant="ghost"
-                            className="size-8 rounded-[10px] border border-arena-border bg-arena-bg text-arena-text-muted hover:text-arena-primary"
+                          <Link
+                            href={`/arena/squads/player/${p.id}/chat`}
+                            className="flex size-8 items-center justify-center rounded-[10px] border border-arena-border bg-arena-bg text-arena-text-muted transition-colors hover:text-arena-primary active:scale-[0.97]"
                           >
-                            <Link href={`/arena/squads/player/${p.id}/chat`}>
-                              <MessageCircle size={14} />
-                            </Link>
-                          </Button>
-                          <Button
+                            <MessageCircle size={14} />
+                          </Link>
+                          <button
                             type="button"
-                            size="icon-sm"
-                            variant="ghost"
                             onClick={() => openEmail(p)}
-                            className="size-8 rounded-[10px] border border-arena-border bg-arena-bg text-arena-text-muted hover:text-arena-primary"
+                            className="flex size-8 items-center justify-center rounded-[10px] border border-arena-border bg-arena-bg text-arena-text-muted transition-colors hover:text-arena-primary active:scale-[0.97]"
                             aria-label={t("email.open")}
                           >
                             <Mail size={14} />
-                          </Button>
+                          </button>
                         </div>
                       </div>
                       <div className="mt-3 flex min-w-0 items-center justify-between gap-2 border-arena-border border-t pt-2">
@@ -603,7 +585,7 @@ export function SquadClient({ userId }: { userId: string }) {
                           </span>
                         )}
                       </div>
-                    </div>
+                    </motion.div>
                   ))}
                 </div>
               </>
@@ -611,15 +593,15 @@ export function SquadClient({ userId }: { userId: string }) {
           </div>
         </div>
 
-        <Button
+        <button
           onClick={() => setShowAdd(true)}
-          className="fixed bottom-[90px] right-6 z-[100] flex size-[52px] items-center justify-center rounded-full bg-arena-primary text-arena-bg shadow-[0_4px_20px_color-mix(in_srgb,var(--color-arena-primary)_33%,transparent)] hover:bg-arena-primary/90 md:hidden"
+          className="fixed bottom-[90px] right-6 z-[100] flex size-[52px] items-center justify-center rounded-full bg-arena-primary text-arena-bg shadow-[0_4px_20px_color-mix(in_srgb,var(--color-arena-primary)_33%,transparent)] transition-all hover:bg-arena-primary/90 active:scale-[0.97] md:hidden"
           type="button"
           aria-label={t("actions.add")}
         >
           <Plus size={22} strokeWidth={2.5} />
-        </Button>
-      </div>
+        </button>
+      </motion.div>
     </>
   );
 }
