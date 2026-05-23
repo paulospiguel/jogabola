@@ -12,17 +12,17 @@ import {
   Users,
   Zap,
 } from "lucide-react";
+import { motion } from "framer-motion";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
 import { useEffect, useState } from "react";
 import { AddPlayerSheet } from "@/components/arena/add-player-sheet";
+import { Cta } from "@/components/arena/cta";
 import { CreateEventSheet } from "@/components/arena/create-event-sheet";
 import { CreateTeamSheet } from "@/components/arena/create-team-sheet";
 import { JbAvatar } from "@/components/arena/avatar";
 import { PlayerRow } from "@/components/arena/player-row";
-import { UserMenu } from "@/components/arena/user-menu";
 import Loading from "@/components/loading";
-import { Button } from "@/components/ui/button";
 import { useDashboardData } from "@/hooks/use-dashboard";
 import { useEventAttendance } from "@/hooks/use-event-attendance";
 import type { EventStatus } from "@/types/events";
@@ -131,13 +131,14 @@ export function ArenaDashboard({ userId }: ArenaDashboardProps) {
               {t("noTeam.description")}
             </p>
           </div>
-          <Button
+          <Cta
             onClick={() => setSheet("create-team")}
-            className="jb-action jb-action-primary text-sm h-10"
+            variant="primary"
+            size="md"
           >
             <Plus size={15} />
             {t("noTeam.cta")}
-          </Button>
+          </Cta>
         </div>
       </>
     );
@@ -164,7 +165,12 @@ export function ArenaDashboard({ userId }: ArenaDashboardProps) {
         <CreateTeamSheet onClose={() => setSheet(null)} />
       )}
 
-      <div className="jb-page">
+      <motion.div
+        className="jb-page"
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.22, ease: [0.4, 0, 0.2, 1] }}
+      >
         <div className="jb-page-inner">
           <header className="jb-topbar">
             <div>
@@ -176,26 +182,24 @@ export function ArenaDashboard({ userId }: ArenaDashboardProps) {
             </div>
 
             <div className="flex items-center gap-2">
-              <Button
-                className="jb-action hidden md:inline-flex"
-                onClick={() => setSheet("add-player")}
-                type="button"
-                variant="ghost"
+              <Cta
+                variant="secondary"
                 size="sm"
+                className="hidden md:inline-flex"
+                onClick={() => setSheet("add-player")}
               >
                 <Users size={15} />
                 {t("actions.player")}
-              </Button>
-              <Button
-                className="jb-action jb-action-primary hidden md:inline-flex"
-                onClick={() => setSheet("create-event")}
-                type="button"
-                variant="ghost"
+              </Cta>
+              <Cta
+                variant="primary"
                 size="sm"
+                className="hidden md:inline-flex"
+                onClick={() => setSheet("create-event")}
               >
                 <Plus size={15} />
                 {t("actions.event")}
-              </Button>
+              </Cta>
             </div>
           </header>
 
@@ -308,15 +312,14 @@ export function ArenaDashboard({ userId }: ArenaDashboardProps) {
                   <p className="text-sm font-semibold text-arena-text-sec">
                     {t("hero.noEvents")}
                   </p>
-                  <Button
-                    className="jb-action jb-action-primary"
-                    onClick={() => setSheet("create-event")}
-                    variant="ghost"
+                  <Cta
+                    variant="primary"
                     size="sm"
+                    onClick={() => setSheet("create-event")}
                   >
                     <Plus size={14} />
                     {t("actions.createEvent")}
-                  </Button>
+                  </Cta>
                 </div>
               )}
 
@@ -351,16 +354,16 @@ export function ArenaDashboard({ userId }: ArenaDashboardProps) {
                 ))}
               </div>
 
-              <Button
-                className="jb-action jb-action-primary md:hidden"
+              <Cta
+                variant="primary"
+                size="md"
+                fullWidth
+                className="md:hidden"
                 onClick={() => setSheet("create-event")}
-                type="button"
-                variant="ghost"
-                size="sm"
               >
                 <Plus size={16} strokeWidth={2.5} />
                 {t("actions.createEvent")}
-              </Button>
+              </Cta>
             </section>
 
             <aside className="jb-stack">
@@ -447,7 +450,7 @@ export function ArenaDashboard({ userId }: ArenaDashboardProps) {
             </aside>
           </div>
         </div>
-      </div>
+      </motion.div>
     </>
   );
 }
