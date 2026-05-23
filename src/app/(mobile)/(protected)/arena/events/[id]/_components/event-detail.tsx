@@ -14,6 +14,7 @@ import {
   X,
   Zap,
 } from "lucide-react";
+import { motion } from "framer-motion";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
 import { useEffect, useState } from "react";
@@ -26,6 +27,7 @@ import {
   balanceTeamsWithAI,
 } from "@/actions/team-balancer.actions";
 import { AiBalancerModal } from "@/components/arena/ai-balancer-modal";
+import { Cta } from "@/components/arena/cta";
 import { EditEventSheet } from "@/components/arena/edit-event-sheet";
 import { EventNoticeWall } from "@/components/arena/event-notice-wall";
 import { type BadgeStatus, JbBadge } from "@/components/arena/badge";
@@ -36,7 +38,6 @@ import {
   participantRowPosition,
 } from "@/components/arena/participant-row";
 import Loading from "@/components/loading";
-import { Button } from "@/components/ui/button";
 import { useEventAttendance } from "@/hooks/use-event-attendance";
 import { cn, formatDate, formatTime } from "@/lib/utils";
 import type { EventStatus } from "@/types/events";
@@ -220,18 +221,22 @@ export function EventDetail({
   }
 
   return (
-    <div className="flex min-h-screen flex-col bg-arena-bg">
+    <motion.div
+      className="flex min-h-screen flex-col bg-arena-bg"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.2, ease: [0.4, 0, 0.2, 1] }}
+    >
       <ScreenHeader
         title={isJogo ? t("titleJogo") : t("titleTreino")}
         right={
-          <Button
-            variant="ghost"
-            size="icon-sm"
-            className="text-arena-text-muted hover:text-arena-text"
+          <button
+            type="button"
+            className="flex size-9 items-center justify-center rounded-xl text-arena-text-muted transition-colors hover:bg-arena-surface-el hover:text-arena-text active:scale-[0.97]"
             onClick={() => setIsEditing(true)}
           >
             <Settings2 size={18} />
-          </Button>
+          </button>
         }
       />
 
@@ -445,16 +450,18 @@ export function EventDetail({
             </div>
 
             {missingPlayers > 0 && (
-              <Button
-                variant="outline"
+              <Cta
+                variant="secondary"
+                size="md"
+                fullWidth
+                className="mb-6"
                 onClick={() =>
                   setFakePlayersCount(fakePlayersCount + missingPlayers)
                 }
-                className="mb-6 h-[44px] w-full rounded-[12px] border-arena-border bg-arena-surface-el text-[13px] font-semibold text-arena-text-sec hover:bg-arena-surface hover:text-white"
               >
-                <Users size={16} className="mr-2" />
+                <Users size={16} />
                 {t("aiBalancer.fillWithFakes")} ({missingPlayers})
-              </Button>
+              </Cta>
             )}
 
             <div className="mb-4 flex flex-col gap-3 rounded-[16px] border border-arena-border bg-arena-surface p-4">
@@ -466,14 +473,16 @@ export function EventDetail({
                   {t("aiBalancer.pitchDescription")}
                 </p>
               </div>
-              <Button
+              <Cta
+                variant="primary"
+                size="md"
+                fullWidth
                 onClick={() => setIsAiModalOpen(true)}
                 disabled={confirmed.length + fakePlayersCount === 0}
-                className="h-[44px] w-full gap-2 rounded-[12px] bg-arena-primary text-[13px] font-bold text-arena-bg hover:bg-arena-primary/90 disabled:opacity-50"
               >
                 <Zap size={16} className="fill-arena-bg" />
                 {t("aiBalancer.button")}
-              </Button>
+              </Cta>
             </div>
 
             <AiBalancerModal
@@ -548,25 +557,28 @@ export function EventDetail({
         )}
       </div>
 
-      <div
+      <motion.div
         className="fixed bottom-[72px] left-0 right-0 px-5 pb-3.5 pt-2.5 md:hidden"
         style={{
           background:
             "linear-gradient(0deg,var(--color-arena-bg) 60%,transparent)",
         }}
+        initial={{ opacity: 0, y: 8 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.2, delay: 0.1 }}
       >
-        <Button
+        <Cta
           onClick={myStatus === "confirmed" ? handleCancel : handleConfirm}
           disabled={actionLoading || (isCancelled && myStatus !== "confirmed")}
-          type="button"
-          className={cn(
-            "h-[50px] w-full rounded-[14px] text-[15px] font-bold disabled:opacity-60",
+          variant={
             myStatus === "confirmed"
-              ? "border border-arena-border bg-arena-surface-el text-arena-text-sec hover:bg-arena-surface"
+              ? "secondary"
               : isCancelled
-                ? "border border-arena-danger/30 bg-arena-danger/10 text-arena-danger"
-                : "bg-arena-primary text-arena-bg hover:bg-arena-primary/90",
-          )}
+                ? "danger"
+                : "primary"
+          }
+          size="lg"
+          fullWidth
         >
           {myStatus === "confirmed" ? (
             <>
@@ -583,8 +595,8 @@ export function EventDetail({
               {isCancelled ? t("actions.cancelled") : t("actions.confirm")}
             </>
           )}
-        </Button>
-      </div>
-    </div>
+        </Cta>
+      </motion.div>
+    </motion.div>
   );
 }
