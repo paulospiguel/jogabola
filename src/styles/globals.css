@@ -104,15 +104,6 @@
   --color-active-text: #1effbf;
   --color-secondary-text: #ba93ff;
 
-  /* Journey primary colors */
-  --color-journey-arena: #bcff00;
-  --color-journey-arena-hover: #a8e600;
-  --color-journey-arena-muted: rgba(188, 255, 0, 0.12);
-  --color-journey-arena-glow: rgba(188, 255, 0, 0.35);
-  --color-journey-playzone: #ff6b2b;
-  --color-journey-fanzone: #a855f7;
-  --color-journey-organizer: #0ea5e9;
-
   /* Countdown colors */
   --color-countdown-bg: #343650;
   --color-countdown-dot: #191a24;
