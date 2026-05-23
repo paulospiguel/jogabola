@@ -13,7 +13,7 @@ import Link from "next/link";
 import { useTranslations } from "next-intl";
 import { useMemo, useState } from "react";
 import { CreateEventSheet } from "@/components/arena/create-event-sheet";
-import { JbUserMenu } from "@/components/arena/jb-user-menu";
+import { UserMenu } from "@/components/arena/user-menu";
 import { Button } from "@/components/ui/button";
 import { useEvents } from "@/hooks/use-events";
 import { useTeams } from "@/hooks/use-teams";
@@ -182,7 +182,7 @@ export function EventsList({ upcoming, past }: EventsListProps) {
                 </div>
               </div>
 
-              <JbUserMenu onlyAvatar className="hidden md:block" />
+              <UserMenu onlyAvatar className="hidden md:block" />
             </div>
 
             <div className="flex w-full gap-2 flex-wrap justify-end">

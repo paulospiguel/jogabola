@@ -16,7 +16,7 @@ import { confirmUserAttendance } from "@/actions/attendance.actions";
 import { requestAuthSignInOTP } from "@/actions/auth-otp.actions";
 import { requestGuestOTP, verifyGuestOTP } from "@/actions/guest-rsvp.actions";
 import { createPayment } from "@/actions/payments.actions";
-import { JbBottomSheet } from "@/components/arena/jb-bottom-sheet";
+import { BottomSheet } from "@/components/arena/bottom-sheet";
 import { PaymentMethodCard } from "@/components/arena/payment-method-card";
 import {
   InputGroup,
@@ -589,7 +589,7 @@ export function AthleteRsvpSheet({
       };
 
   return (
-    <JbBottomSheet title={TITLES[step]} onClose={onClose}>
+    <BottomSheet title={TITLES[step]} onClose={onClose}>
       <div className="flex flex-col p-5">
         {error && (
           <div className="mb-4 rounded-[10px] bg-arena-danger/10 p-3 text-[13px] text-arena-danger">
@@ -950,6 +950,6 @@ export function AthleteRsvpSheet({
           </div>
         )}
       </div>
-    </JbBottomSheet>
+    </BottomSheet>
   );
 }

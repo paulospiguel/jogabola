@@ -1,7 +1,7 @@
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { getLocale, getTranslations } from "next-intl/server";
-import { JbUserMenu } from "@/components/arena/jb-user-menu";
+import { UserMenu } from "@/components/arena/user-menu";
 import { VerifiedBadge } from "@/components/arena/verified-badge";
 import { getPendingTransferRequest } from "@/db/queries/account";
 import { auth } from "@/lib/auth";
@@ -42,7 +42,7 @@ export default async function ArenaProfilePage() {
               {t("header.description")}
             </p>
           </div>
-          <JbUserMenu onlyAvatar />
+          <UserMenu onlyAvatar />
         </header>
 
         <div className="grid gap-8 lg:grid-cols-[1fr_360px]">

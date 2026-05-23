@@ -3,9 +3,6 @@
 import { formatDistanceToNow } from "date-fns";
 import { enUS, es, fr, pt } from "date-fns/locale";
 import {
-  AlertTriangle,
-  Info,
-  MapPin,
   Megaphone,
   Send,
   Trash2,
@@ -17,7 +14,7 @@ import {
   deleteEventNotice,
   getEventNotices,
 } from "@/actions/notices.actions";
-import { JbAvatar } from "@/components/arena/jb-avatar";
+import { JbAvatar } from "@/components/arena/avatar";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
@@ -157,9 +154,9 @@ export function EventNoticeWall({ eventId, isManager }: EventNoticeWallProps) {
               "group relative flex flex-col gap-2 rounded-xl border-l-4 p-4 transition-all",
               "bg-arena-surface border-arena-border",
               notice.type === "urgent" &&
-                "border-l-arena-danger bg-arena-danger/5",
+              "border-l-arena-danger bg-arena-danger/5",
               notice.type === "field_change" &&
-                "border-l-arena-warning bg-arena-warning/5",
+              "border-l-arena-warning bg-arena-warning/5",
               notice.type === "info" && "border-l-arena-info bg-arena-info/5",
             )}
           >

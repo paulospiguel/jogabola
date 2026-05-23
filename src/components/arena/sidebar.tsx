@@ -30,9 +30,9 @@ import { RELEASE } from "@/constants/app";
 import { useUnreadNotificationsCount } from "@/hooks/use-notifications";
 import { cn } from "@/lib/utils";
 import { Logo } from "../logo";
-import { JbTeamSwitcher } from "./jb-team-switcher";
-import { JbUserMenu } from "./jb-user-menu";
 import { useTeamGate } from "./team-gate-context";
+import { TeamSwitcher } from "./team-switcher";
+import { UserMenu } from "./user-menu";
 
 const ITEMS = [
   { href: "/arena", icon: Shield, labelKey: "dashboard", requiresTeam: false },
@@ -62,7 +62,7 @@ const ITEMS = [
   },
 ];
 
-export function JbSidebar() {
+export function ArenaSidebar() {
   const pathname = usePathname();
   const { state, toggleSidebar } = useSidebar();
   const t = useTranslations("arenaNav");
@@ -89,7 +89,7 @@ export function JbSidebar() {
       </SidebarHeader>
 
       <SidebarContent className="px-2 py-4 group-data-[collapsible=icon]:px-0">
-        <JbTeamSwitcher />
+        <TeamSwitcher />
 
         <SidebarGroup className="group-data-[collapsible=icon]:p-0">
           <SidebarGroupContent>
@@ -215,7 +215,7 @@ export function JbSidebar() {
           </SidebarMenuItem>
 
           <SidebarMenuItem className="group-data-[collapsible=icon]:flex group-data-[collapsible=icon]:justify-center">
-            <JbUserMenu collapsed={state === "collapsed"} />
+            <UserMenu collapsed={state === "collapsed"} />
           </SidebarMenuItem>
         </SidebarMenu>
       </SidebarFooter>

@@ -9,7 +9,7 @@ import {
 } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useState } from "react";
-import { JbBottomSheet } from "@/components/arena/jb-bottom-sheet";
+import { BottomSheet } from "@/components/arena/bottom-sheet";
 import { cn } from "@/lib/utils";
 import type { PaymentMethodType } from "./payment-method-list";
 
@@ -138,7 +138,7 @@ export function PaymentMethodDetailSheet({
   const methodKey = type as keyof typeof t;
 
   return (
-    <JbBottomSheet title={t(`${type}.title` as any)} onClose={onClose}>
+    <BottomSheet title={t(`${type}.title` as any)} onClose={onClose}>
       <div className="flex flex-col gap-5 p-5 pb-8">
         {/* Method header */}
         <div
@@ -260,6 +260,6 @@ export function PaymentMethodDetailSheet({
           </button>
         )}
       </div>
-    </JbBottomSheet>
+    </BottomSheet>
   );
 }

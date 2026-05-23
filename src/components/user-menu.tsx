@@ -4,7 +4,7 @@ import { LayoutDashboard, LogOut, Settings, User } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
-import { JbAvatar } from "@/components/arena/jb-avatar";
+import { JbAvatar } from "@/components/arena/avatar";
 import {
   DropdownMenu,
   DropdownMenuContent,

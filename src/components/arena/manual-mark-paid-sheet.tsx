@@ -3,7 +3,7 @@
 import { Loader2 } from "lucide-react";
 import { useState } from "react";
 import { markPaymentManually } from "@/actions/payments.actions";
-import { JbBottomSheet } from "@/components/arena/jb-bottom-sheet";
+import { BottomSheet } from "@/components/arena/bottom-sheet";
 import { cn } from "@/lib/utils";
 
 const METHODS = [
@@ -54,7 +54,7 @@ export function ManualMarkPaidSheet({
   }
 
   return (
-    <JbBottomSheet title="Marcar como pago" onClose={onClose}>
+    <BottomSheet title="Marcar como pago" onClose={onClose}>
       <div className="flex flex-col gap-5 p-5 pb-8">
         {/* Athlete name */}
         <div className="rounded-[10px] border border-arena-border bg-arena-surface px-4 py-3">
@@ -124,6 +124,6 @@ export function ManualMarkPaidSheet({
           )}
         </button>
       </div>
-    </JbBottomSheet>
+    </BottomSheet>
   );
 }

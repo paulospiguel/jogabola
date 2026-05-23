@@ -28,8 +28,8 @@ import {
 import { AiBalancerModal } from "@/components/arena/ai-balancer-modal";
 import { EditEventSheet } from "@/components/arena/edit-event-sheet";
 import { EventNoticeWall } from "@/components/arena/event-notice-wall";
-import { type BadgeStatus, JbBadge } from "@/components/arena/jb-badge";
-import { JbScreenHeader } from "@/components/arena/jb-screen-header";
+import { type BadgeStatus, JbBadge } from "@/components/arena/badge";
+import { ScreenHeader } from "@/components/arena/screen-header";
 import { LocationMap } from "@/components/arena/location-map";
 import {
   ParticipantRow,
@@ -221,7 +221,7 @@ export function EventDetail({
 
   return (
     <div className="flex min-h-screen flex-col bg-arena-bg">
-      <JbScreenHeader
+      <ScreenHeader
         title={isJogo ? t("titleJogo") : t("titleTreino")}
         right={
           <Button

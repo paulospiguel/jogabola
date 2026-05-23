@@ -22,7 +22,7 @@ import { useTeams } from "@/hooks/use-teams";
 import { cn } from "@/lib/utils";
 import { CreateTeamSheet } from "./create-team-sheet";
 
-export function JbTeamSwitcher() {
+export function TeamSwitcher() {
   const {
     activeTeamId,
     setActiveTeamId,

@@ -1,7 +1,7 @@
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { getTranslations } from "next-intl/server";
-import { JbUserMenu } from "@/components/arena/jb-user-menu";
+import { UserMenu } from "@/components/arena/user-menu";
 import { auth } from "@/lib/auth";
 import { SettingsForm } from "./_components/settings-form";
 
@@ -25,7 +25,7 @@ export default async function ArenaSettingsPage() {
               {t("header.description")}
             </p>
           </div>
-          <JbUserMenu onlyAvatar />
+          <UserMenu onlyAvatar />
         </header>
 
         <div className="max-w-2xl">

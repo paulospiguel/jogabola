@@ -23,7 +23,7 @@ import {
 } from "@/components/ui/select";
 import { cn } from "@/lib/utils";
 import type { EventStatus } from "@/types/events";
-import { JbBottomSheet } from "./jb-bottom-sheet";
+import { BottomSheet } from "./bottom-sheet";
 
 interface EditEventSheetProps {
   event: {
@@ -117,7 +117,7 @@ export function EditEventSheet({ event, onClose }: EditEventSheetProps) {
   };
 
   return (
-    <JbBottomSheet onClose={onClose}>
+    <BottomSheet onClose={onClose}>
       <div className="flex flex-col gap-4 px-5 pb-8 pt-6">
         <div className="mb-2 flex items-center justify-between">
           <h2 className="text-lg font-bold text-arena-text">
@@ -453,6 +453,6 @@ export function EditEventSheet({ event, onClose }: EditEventSheetProps) {
           </Button>
         </div>
       </div>
-    </JbBottomSheet>
+    </BottomSheet>
   );
 }

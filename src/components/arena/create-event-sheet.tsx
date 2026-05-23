@@ -36,8 +36,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../ui/select";
-import { JbAvatar } from "./jb-avatar";
-import { JbBottomSheet } from "./jb-bottom-sheet";
+import { JbAvatar } from "./avatar";
+import { BottomSheet } from "./bottom-sheet";
 import { VerifiedBadge } from "./verified-badge";
 
 interface CreateEventSheetProps {
@@ -465,7 +465,7 @@ export function CreateEventSheet({
     };
 
     return (
-      <JbBottomSheet onClose={onClose}>
+      <BottomSheet onClose={onClose}>
         <div className="flex flex-col gap-5 overflow-auto px-5 pt-8 pb-8">
           {/* Success indicator */}
           <div className="flex flex-col items-center gap-3 text-center">
@@ -556,14 +556,14 @@ export function CreateEventSheet({
             {t("actions.close")}
           </button>
         </div>
-      </JbBottomSheet>
+      </BottomSheet>
     );
   }
 
   const canAdvance = step === 1 ? form.title.trim().length > 0 : true;
 
   return (
-    <JbBottomSheet onClose={onClose} noPad>
+    <BottomSheet onClose={onClose} noPad>
       {/* ── Step progress bar ────────────────────────────────── */}
       <div className="shrink-0 px-5">
         <div className="flex gap-1.5 py-3.5">
@@ -1055,6 +1055,6 @@ export function CreateEventSheet({
           {step === 3 ? t("actions.create") : t("actions.continue")}
         </Button>
       </div>
-    </JbBottomSheet>
+    </BottomSheet>
   );
 }

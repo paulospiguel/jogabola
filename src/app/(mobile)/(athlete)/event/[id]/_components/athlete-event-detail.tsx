@@ -17,7 +17,7 @@ import {
   confirmUserAttendance,
 } from "@/actions/attendance.actions";
 import { EventNoticeWall } from "@/components/arena/event-notice-wall";
-import { JbBadge } from "@/components/arena/jb-badge";
+import { JbBadge } from "@/components/arena/badge";
 import { LocationMap } from "@/components/arena/location-map";
 import {
   ParticipantRow,

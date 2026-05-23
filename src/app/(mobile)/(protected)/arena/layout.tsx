@@ -3,9 +3,9 @@ import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 import DotGrid from "@/components/arena/dot-grid";
-import { JbBottomNav } from "@/components/arena/jb-bottom-nav";
-import { JbMobileTopBar } from "@/components/arena/jb-mobile-top-bar";
-import { JbSidebar } from "@/components/arena/jb-sidebar";
+import { BottomNav } from "@/components/arena/bottom-nav";
+import { MobileTopBar } from "@/components/arena/mobile-top-bar";
+import { ArenaSidebar } from "@/components/arena/sidebar";
 import { PasskeyPromptGate } from "@/components/arena/passkey-prompt-gate";
 import { TeamGateProvider } from "@/components/arena/team-gate-context";
 import { SidebarProvider } from "@/components/ui/sidebar";
@@ -85,15 +85,15 @@ export default async function ArenaLayout({
             />
           </div>
 
-          <JbSidebar />
+          <ArenaSidebar />
 
-          <JbMobileTopBar />
+          <MobileTopBar />
 
           <main className="jb-arena-shell relative flex-1 md:pt-0 pt-20">
             {children}
           </main>
 
-          <JbBottomNav />
+          <BottomNav />
         </div>
       </TeamGateProvider>
     </SidebarProvider>

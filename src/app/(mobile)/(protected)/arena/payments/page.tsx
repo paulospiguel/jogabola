@@ -13,9 +13,9 @@ import {
 import Link from "next/link";
 import { useTranslations } from "next-intl";
 import { useState } from "react";
-import { JbAvatar } from "@/components/arena/jb-avatar";
-import { type BadgeStatus, JbBadge } from "@/components/arena/jb-badge";
-import { JbUserMenu } from "@/components/arena/jb-user-menu";
+import { JbAvatar } from "@/components/arena/avatar";
+import { type BadgeStatus, JbBadge } from "@/components/arena/badge";
+import { UserMenu } from "@/components/arena/user-menu";
 import { PaymentSettingsSheet } from "@/components/arena/payment-settings-sheet";
 import { VerifiedBadge } from "@/components/arena/verified-badge";
 import { type Payment, usePayments } from "@/hooks/use-payments";
@@ -133,7 +133,7 @@ export default function PaymentsPage() {
               {t("titleSub")}
             </p>
           </div>
-          <JbUserMenu onlyAvatar className="hidden md:block" />
+          <UserMenu onlyAvatar className="hidden md:block" />
         </header>
 
         {/* Methods config card */}

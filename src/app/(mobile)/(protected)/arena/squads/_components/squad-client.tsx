@@ -20,9 +20,9 @@ import { useTranslations } from "next-intl";
 import { useEffect, useMemo, useState, useTransition } from "react";
 import { sendRosterPlayerEmail } from "@/actions/teams.actions";
 import { AddPlayerSheet } from "@/components/arena/add-player-sheet";
-import { JbAvatar } from "@/components/arena/jb-avatar";
-import { JbBottomSheet } from "@/components/arena/jb-bottom-sheet";
-import { JbUserMenu } from "@/components/arena/jb-user-menu";
+import { JbAvatar } from "@/components/arena/avatar";
+import { BottomSheet } from "@/components/arena/bottom-sheet";
+import { UserMenu } from "@/components/arena/user-menu";
 import { VerifiedBadge } from "@/components/arena/verified-badge";
 import { RadialProgressIcon } from "@/components/arena/radial-progress-icon";
 import Loading from "@/components/loading";
@@ -224,7 +224,7 @@ export function SquadClient({ userId }: { userId: string }) {
         />
       )}
       {emailPlayer && (
-        <JbBottomSheet
+        <BottomSheet
           title={t("email.title", { name: emailPlayer.name })}
           onClose={() => setEmailPlayer(null)}
         >
@@ -266,11 +266,11 @@ export function SquadClient({ userId }: { userId: string }) {
               {t("email.send")}
             </Button>
           </div>
-        </JbBottomSheet>
+        </BottomSheet>
       )}
 
       {groupOpen && (
-        <JbBottomSheet
+        <BottomSheet
           title={
             editingGroupId ? t("groups.editTitle") : t("groups.createTitle")
           }
@@ -333,7 +333,7 @@ export function SquadClient({ userId }: { userId: string }) {
               {editingGroupId ? t("groups.update") : t("groups.create")}
             </Button>
           </div>
-        </JbBottomSheet>
+        </BottomSheet>
       )}
 
       <div className="jb-page px-3 pt-4 sm:px-5 md:px-7">
@@ -351,7 +351,7 @@ export function SquadClient({ userId }: { userId: string }) {
                     {t("subtitle")}
                   </p>
                 </div>
-                <JbUserMenu onlyAvatar className="hidden md:block" />
+                <UserMenu onlyAvatar className="hidden md:block" />
               </div>
             </header>
             <div className="mb-4 grid grid-cols-2 gap-2 md:flex md:justify-end">

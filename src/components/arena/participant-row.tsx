@@ -37,7 +37,7 @@ import {
 import type { Participant } from "@/hooks/use-event-attendance";
 import { cn } from "@/lib/utils";
 import type { PaymentStatus } from "@/types/payments";
-import { JbAvatar } from "./jb-avatar";
+import { JbAvatar } from "./avatar";
 import { PaymentStatusBadge } from "./payment-status-badge";
 
 type RowPosition = "first" | "middle" | "last" | "only";

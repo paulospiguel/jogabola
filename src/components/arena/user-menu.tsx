@@ -1,6 +1,6 @@
 "use client";
 
-import { LogOut, Settings, User2, UserRound } from "lucide-react";
+import { LogOut, Settings, UserRound } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
@@ -14,19 +14,19 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { signOut, useSession } from "@/lib/auth-client";
 import { cn } from "@/lib/utils";
-import { JbAvatar } from "./jb-avatar";
+import { JbAvatar } from "./avatar";
 
-interface JbUserMenuProps {
+interface UserMenuProps {
   collapsed?: boolean;
   onlyAvatar?: boolean;
   className?: string;
 }
 
-export function JbUserMenu({
+export function UserMenu({
   collapsed = false,
   onlyAvatar = false,
   className,
-}: JbUserMenuProps) {
+}: UserMenuProps) {
   const { data: session } = useSession();
   const router = useRouter();
   const t = useTranslations("arenaNav");

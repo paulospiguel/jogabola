@@ -4,11 +4,11 @@ import Link from "next/link";
 import { useTranslations } from "next-intl";
 import type { PlayerStatus } from "@/constants/player";
 import { cn } from "@/lib/utils";
-import { JbAvatar } from "./jb-avatar";
-import { JbBadge } from "./jb-badge";
+import { JbAvatar } from "./avatar";
+import { JbBadge } from "./badge";
 import { VerifiedBadge } from "./verified-badge";
 
-interface JbPlayerRowProps {
+interface PlayerRowProps {
   id: string | number;
   name: string;
   image?: string | null;
@@ -20,7 +20,7 @@ interface JbPlayerRowProps {
   className?: string;
 }
 
-export function JbPlayerRow({
+export function PlayerRow({
   id,
   name,
   image,
@@ -29,7 +29,7 @@ export function JbPlayerRow({
   isVerified,
   href,
   className,
-}: JbPlayerRowProps) {
+}: PlayerRowProps) {
   const tCommon = useTranslations("common");
 
   return (

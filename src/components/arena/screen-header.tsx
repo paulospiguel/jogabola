@@ -4,13 +4,13 @@ import { ArrowLeft } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 
-interface JbScreenHeaderProps {
+interface ScreenHeaderProps {
   title: string;
   backHref?: string;
   right?: React.ReactNode;
 }
 
-export function JbScreenHeader({ title, right }: JbScreenHeaderProps) {
+export function ScreenHeader({ title, right }: ScreenHeaderProps) {
   const router = useRouter();
 
   return (

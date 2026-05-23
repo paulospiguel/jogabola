@@ -15,8 +15,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../ui/select";
-import { JbAvatar } from "./jb-avatar";
-import { JbBottomSheet } from "./jb-bottom-sheet";
+import { JbAvatar } from "./avatar";
+import { BottomSheet } from "./bottom-sheet";
 
 const POSITIONS = ["GK", "CB", "MID", "FW"];
 
@@ -87,7 +87,7 @@ export function AddPlayerSheet({
   /* ── Success state ─────────────────────────────────────────── */
   if (done) {
     return (
-      <JbBottomSheet onClose={onClose}>
+      <BottomSheet onClose={onClose}>
         <div className="flex flex-col items-center gap-3.5 overflow-auto px-5 pt-8 pb-12 text-center">
           <JbAvatar id={form.name} name={form.name} size={64} />
           <p className="text-lg font-bold text-arena-text">
@@ -95,14 +95,14 @@ export function AddPlayerSheet({
           </p>
           <p className="text-sm text-arena-text-sec">{t("successSubtitle")}</p>
         </div>
-      </JbBottomSheet>
+      </BottomSheet>
     );
   }
 
   const canSave = !!form.name.trim() && !!form.email.trim();
 
   return (
-    <JbBottomSheet onClose={onClose} noPad title={t("title")}>
+    <BottomSheet onClose={onClose} noPad title={t("title")}>
       {/* ── Player preview ───────────────────────────────────── */}
       <div className="min-h-0 flex-1 overflow-auto px-5 pb-8">
         <div className="mb-4 flex items-center gap-3.5 border-b border-arena-border py-4">
@@ -229,6 +229,6 @@ export function AddPlayerSheet({
           {t("actions.add")}
         </Button>
       </div>
-    </JbBottomSheet>
+    </BottomSheet>
   );
 }

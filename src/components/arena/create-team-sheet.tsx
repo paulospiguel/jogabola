@@ -11,7 +11,7 @@ import { cn } from "@/lib/utils";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
-import { JbBottomSheet } from "./jb-bottom-sheet";
+import { BottomSheet } from "./bottom-sheet";
 
 interface CreateTeamSheetProps {
   onClose: () => void;
@@ -114,7 +114,7 @@ export function CreateTeamSheet({ onClose }: CreateTeamSheetProps) {
   /* ── Success state ─────────────────────────────────────────── */
   if (done) {
     return (
-      <JbBottomSheet onClose={onClose}>
+      <BottomSheet onClose={onClose}>
         <div className="flex flex-col items-center gap-3.5 overflow-auto px-5 pt-8 pb-12 text-center">
           <div className="flex size-16 items-center justify-center rounded-2xl bg-arena-primary/10 text-arena-primary">
             <Shield size={32} />
@@ -124,7 +124,7 @@ export function CreateTeamSheet({ onClose }: CreateTeamSheetProps) {
           </p>
           <p className="text-sm text-arena-text-sec">{t("successSubtitle")}</p>
         </div>
-      </JbBottomSheet>
+      </BottomSheet>
     );
   }
 
@@ -133,7 +133,7 @@ export function CreateTeamSheet({ onClose }: CreateTeamSheetProps) {
 
   if (isAtLimit) {
     return (
-      <JbBottomSheet onClose={onClose} noPad title={t("limitReachedTitle")}>
+      <BottomSheet onClose={onClose} noPad title={t("limitReachedTitle")}>
         <div className="flex flex-col items-center gap-4 px-5 pb-12 pt-10 text-center">
           <div className="flex size-16 items-center justify-center rounded-2xl bg-arena-warning/10 text-arena-warning">
             <Shield size={32} />
@@ -151,12 +151,12 @@ export function CreateTeamSheet({ onClose }: CreateTeamSheetProps) {
             {t("upgradeCta")}
           </Button>
         </div>
-      </JbBottomSheet>
+      </BottomSheet>
     );
   }
 
   return (
-    <JbBottomSheet onClose={onClose} noPad title={t("title")}>
+    <BottomSheet onClose={onClose} noPad title={t("title")}>
       <div className="min-h-0 flex-1 overflow-auto px-5 pb-8 pt-4">
         {/* Team Name */}
         <div className="mb-4">
@@ -271,6 +271,6 @@ export function CreateTeamSheet({ onClose }: CreateTeamSheetProps) {
           {t("actions.create")}
         </Button>
       </div>
-    </JbBottomSheet>
+    </BottomSheet>
   );
 }

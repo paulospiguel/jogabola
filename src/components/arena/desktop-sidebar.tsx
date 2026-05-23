@@ -15,7 +15,7 @@ const ITEMS = [
   { href: "/arena/profile", icon: UserRound, labelKey: "profile" },
 ];
 
-export function JbDesktopSidebar() {
+export function DesktopSidebar() {
   const pathname = usePathname();
   const t = useTranslations("arenaNav");
 

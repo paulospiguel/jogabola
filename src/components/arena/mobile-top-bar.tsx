@@ -5,9 +5,9 @@ import Link from "next/link";
 import { RELEASE } from "@/constants/app";
 import { useUnreadNotificationsCount } from "@/hooks/use-notifications";
 import { Logo } from "../logo";
-import { JbUserMenu } from "./jb-user-menu";
+import { UserMenu } from "./user-menu";
 
-export function JbMobileTopBar() {
+export function MobileTopBar() {
   const { unreadCount } = useUnreadNotificationsCount();
 
   return (
@@ -31,7 +31,7 @@ export function JbMobileTopBar() {
             </span>
           )}
         </Link>
-        <JbUserMenu onlyAvatar />
+        <UserMenu onlyAvatar />
       </div>
     </header>
   );

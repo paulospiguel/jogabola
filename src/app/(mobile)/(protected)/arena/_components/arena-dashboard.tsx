@@ -18,9 +18,9 @@ import { useEffect, useState } from "react";
 import { AddPlayerSheet } from "@/components/arena/add-player-sheet";
 import { CreateEventSheet } from "@/components/arena/create-event-sheet";
 import { CreateTeamSheet } from "@/components/arena/create-team-sheet";
-import { JbAvatar } from "@/components/arena/jb-avatar";
-import { JbPlayerRow } from "@/components/arena/jb-player-row";
-import { JbUserMenu } from "@/components/arena/jb-user-menu";
+import { JbAvatar } from "@/components/arena/avatar";
+import { PlayerRow } from "@/components/arena/player-row";
+import { UserMenu } from "@/components/arena/user-menu";
 import Loading from "@/components/loading";
 import { Button } from "@/components/ui/button";
 import { useDashboardData } from "@/hooks/use-dashboard";
@@ -426,7 +426,7 @@ export function ArenaDashboard({ userId }: ArenaDashboardProps) {
                     squad
                       .slice(0, 5)
                       .map(p => (
-                        <JbPlayerRow
+                        <PlayerRow
                           {...p}
                           key={p.id}
                           href={`/arena/squads/player/${p.id}`}

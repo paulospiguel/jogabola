@@ -4,7 +4,7 @@ import { Settings2 } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useState } from "react";
 import { upsertTeamPaymentSettings } from "@/actions/team-payment-settings.actions";
-import { JbBottomSheet } from "@/components/arena/jb-bottom-sheet";
+import { BottomSheet } from "@/components/arena/bottom-sheet";
 import { PaymentMethodDetailSheet } from "./payment-method-detail-sheet";
 import {
   type PaymentMethodConfig,
@@ -169,7 +169,7 @@ export function PaymentSettingsSheet({
 
   return (
     <>
-      <JbBottomSheet title={t("title")} onClose={onClose}>
+      <BottomSheet title={t("title")} onClose={onClose}>
         <div className="flex flex-col gap-5 p-5 pb-8">
           {error && (
             <div className="rounded-[10px] bg-arena-danger/10 p-3 text-[13px] text-arena-danger">
@@ -199,7 +199,7 @@ export function PaymentSettingsSheet({
             {t("done")}
           </button>
         </div>
-      </JbBottomSheet>
+      </BottomSheet>
 
       {activeDetail && (
         <PaymentMethodDetailSheet

@@ -4,7 +4,7 @@ import { CheckCircle2, Fingerprint, Loader2, Save } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useState, useTransition } from "react";
 import { updateUserProfile } from "@/actions/profile.actions";
-import { JbAvatar } from "@/components/arena/jb-avatar";
+import { JbAvatar } from "@/components/arena/avatar";
 import { VerifiedBadge } from "@/components/arena/verified-badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";

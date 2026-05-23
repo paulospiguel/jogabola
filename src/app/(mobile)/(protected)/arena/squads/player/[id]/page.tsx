@@ -17,7 +17,7 @@ import { useParams, useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { useState } from "react";
 import { removePlayerFromRoster } from "@/actions/teams.actions";
-import { JbAvatar } from "@/components/arena/jb-avatar";
+import { JbAvatar } from "@/components/arena/avatar";
 import { VerifiedBadge } from "@/components/arena/verified-badge";
 import Loading from "@/components/loading";
 import {

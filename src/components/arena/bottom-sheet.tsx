@@ -7,19 +7,19 @@ import { createPortal } from "react-dom";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
-interface JbBottomSheetProps {
+interface BottomSheetProps {
   onClose: () => void;
   title?: string;
   noPad?: boolean;
   children: React.ReactNode;
 }
 
-export function JbBottomSheet({
+export function BottomSheet({
   onClose,
   title,
   noPad,
   children,
-}: JbBottomSheetProps) {
+}: BottomSheetProps) {
   const t = useTranslations("common");
   const portalRef = useRef<HTMLElement | null>(null);
 

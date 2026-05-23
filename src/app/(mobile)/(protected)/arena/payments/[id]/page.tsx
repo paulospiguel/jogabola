@@ -25,9 +25,9 @@ import {
   requestPaymentProof,
   updatePaymentStatus,
 } from "@/actions/payments.actions";
-import { JbAvatar } from "@/components/arena/jb-avatar";
-import { type BadgeStatus, JbBadge } from "@/components/arena/jb-badge";
-import { JbScoreBar, type ScoreLevel } from "@/components/arena/jb-score-bar";
+import { JbAvatar } from "@/components/arena/avatar";
+import { type BadgeStatus, JbBadge } from "@/components/arena/badge";
+import { ScoreBar, type ScoreLevel } from "@/components/arena/score-bar";
 import { VerifiedBadge } from "@/components/arena/verified-badge";
 import { Button } from "@/components/ui/button";
 import { usePayments } from "@/hooks/use-payments";
@@ -580,7 +580,7 @@ export default function PaymentDetailPage() {
               <h2 className="mb-4 text-xs font-bold uppercase tracking-widest text-arena-text-muted">
                 {t("table.risk")}
               </h2>
-              <JbScoreBar score={payment.score as ScoreLevel} />
+              <ScoreBar score={payment.score as ScoreLevel} />
             </section>
           </aside>
         </div>

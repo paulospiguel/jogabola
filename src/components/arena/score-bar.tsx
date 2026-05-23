@@ -6,7 +6,7 @@ import { cn } from "@/lib/utils";
 
 export type ScoreLevel = "low" | "medium" | "high";
 
-interface JbScoreBarProps {
+interface ScoreBarProps {
   score: ScoreLevel;
   className?: string;
 }
@@ -31,7 +31,7 @@ const ARROW_LEFT: Record<ScoreLevel, string> = {
 
 const BAR_SEGMENTS = ["#EF4444", "#F97316", "#F59E0B", "#14B8A6", "#22C55E"];
 
-export function JbScoreBar({ score, className }: JbScoreBarProps) {
+export function ScoreBar({ score, className }: ScoreBarProps) {
   const t = useTranslations("arenaBadges");
   const cfg = SCORE_CONFIG[score] ?? SCORE_CONFIG.medium;
   const [open, setOpen] = useState(false);
