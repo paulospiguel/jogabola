@@ -193,7 +193,10 @@
         "PLAYER_NOT_IN_TEAM": "Cet athlète n'appartient plus à cet effectif.",
         "UNKNOWN_ERROR": "Impossible de retirer l'athlète. Réessayez."
       }
-    }
+    },
+    "notValidated": "Athlète non validé",
+    "notValidatedDesc": "Cet athlète n'a pas encore créé de compte Jogabola. Les statistiques et le profil complet seront disponibles après validation.",
+    "pendingValidation": "Validation en attente"
   },
   "arenaAddPlayer": {
     "actions": {
@@ -523,7 +526,9 @@
       "training": "Entraînement"
     },
     "status": {
-      "scheduled": "Programmé"
+      "scheduled": "Programmé",
+      "confirmed": "Confirmé",
+      "cancelled": "Annulé"
     }
   },
   "arenaNav": {
@@ -662,6 +667,11 @@
   },
   "arenaPayments": {
     "kicker": "Paiements",
+    "title": "Paiements",
+    "titleSub": "Suivez les charges, les preuves et les méthodes acceptées par l'équipe.",
+    "mocks": {
+      "match": "Match hebdomadaire"
+    },
     "stats": {
       "method": "Méthode",
       "methodValue": "MBWay manuel",
@@ -832,6 +842,7 @@
       "confirmed": "Confirmé",
       "verified": "Vérifiés",
       "manual": "Ajouts manuels",
+      "new": "Nouveaux",
       "pending": "En attente",
       "reserves": "Réserves"
     },
