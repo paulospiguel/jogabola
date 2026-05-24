@@ -193,7 +193,10 @@
         "PLAYER_NOT_IN_TEAM": "Este atleta ya no pertenece a esta plantilla.",
         "UNKNOWN_ERROR": "No se pudo eliminar al atleta. Inténtalo de nuevo."
       }
-    }
+    },
+    "notValidated": "Atleta no validado",
+    "notValidatedDesc": "Este atleta aún no ha creado una cuenta en Jogabola. Las estadísticas y el perfil completo estarán disponibles tras la validación.",
+    "pendingValidation": "Validación pendiente"
   },
   "arenaAddPlayer": {
     "actions": {
@@ -523,7 +526,9 @@
       "training": "Entrenamiento"
     },
     "status": {
-      "scheduled": "Programado"
+      "scheduled": "Programado",
+      "confirmed": "Confirmado",
+      "cancelled": "Cancelado"
     }
   },
   "arenaNav": {
@@ -662,6 +667,11 @@
   },
   "arenaPayments": {
     "kicker": "Pagos",
+    "title": "Pagos",
+    "titleSub": "Controla cobros, comprobantes y métodos aceptados por el equipo.",
+    "mocks": {
+      "match": "Partido semanal"
+    },
     "stats": {
       "method": "Método",
       "methodValue": "MBWay manual",
@@ -832,6 +842,7 @@
       "confirmed": "Confirmado",
       "verified": "Verificados",
       "manual": "Añadidos manualmente",
+      "new": "Nuevos",
       "pending": "Pendientes",
       "reserves": "Reservas"
     },

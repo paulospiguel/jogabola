@@ -193,7 +193,10 @@
         "PLAYER_NOT_IN_TEAM": "This athlete is no longer in this squad.",
         "UNKNOWN_ERROR": "Could not remove the athlete. Try again."
       }
-    }
+    },
+    "notValidated": "Athlete not validated",
+    "notValidatedDesc": "This athlete has not yet created a Jogabola account. Full stats and profile will be available after validation.",
+    "pendingValidation": "Validation pending"
   },
   "arenaAddPlayer": {
     "actions": {
@@ -521,6 +524,11 @@
     "types": {
       "match": "Match",
       "training": "Training"
+    },
+    "status": {
+      "scheduled": "Scheduled",
+      "confirmed": "Confirmed",
+      "cancelled": "Cancelled"
     }
   },
   "arenaNav": {
@@ -659,6 +667,13 @@
   },
   "arenaPayments": {
     "kicker": "Payments",
+    "title": "Payments",
+    "titleSub": "Track charges, proofs and payment methods accepted by the team.",
+    "configureBtn": "Configure methods",
+    "loading": "Loading payments...",
+    "mocks": {
+      "match": "Weekly match"
+    },
     "stats": {
       "method": "Method",
       "methodValue": "Manual MBWay",
@@ -827,6 +842,7 @@
       "confirmed": "Confirm.",
       "verified": "Verified",
       "manual": "Manual adds",
+      "new": "New",
       "pending": "Pending",
       "reserves": "Reserves"
     },
