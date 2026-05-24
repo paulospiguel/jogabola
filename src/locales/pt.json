@@ -227,6 +227,10 @@
       "description": "Crie um jogo, treino ou evento para a sua equipa.",
       "title": "Nenhum evento"
     },
+    "hero": {
+      "eyebrow": "Arena",
+      "title": "Calendário de eventos"
+    },
     "kicker": "Arena",
     "legend": {
       "event": "Evento",
@@ -241,9 +245,20 @@
       "rangePlaceholder": "Selecionar intervalo de datas",
       "rangeHint": "Clique acima para escolher o período"
     },
+    "status": {
+      "cancelled": "Cancelado",
+      "confirmed": "Confirmado"
+    },
     "title": "Calendário de Eventos",
     "today": "Hoje",
     "view": {
+      "month": "Mês",
+      "range": "Intervalo",
+      "week": "Semana",
+      "year": "Ano"
+    },
+    "views": {
+      "ariaLabel": "Vista do calendário",
       "month": "Mês",
       "range": "Intervalo",
       "week": "Semana",
@@ -827,6 +842,12 @@
     "medium": "Risco Médio",
     "high": "Risco Alto",
     "scoreIs": "Score de risco"
+  },
+  "arenaShared": {
+    "calendar": "Calendário",
+    "createEvent": "Criar evento",
+    "emptyTitle": "Sem resultados",
+    "emptyDescription": "Tenta ajustar os filtros."
   },
   "arenaSquad": {
     "roles": {

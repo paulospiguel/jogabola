@@ -2,11 +2,11 @@ import { eq } from "drizzle-orm";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { getTranslations } from "next-intl/server";
-import DotGrid from "@/components/arena/dot-grid";
 import { BottomNav } from "@/components/arena/bottom-nav";
+import DotGrid from "@/components/arena/dot-grid";
 import { MobileTopBar } from "@/components/arena/mobile-top-bar";
-import { ArenaSidebar } from "@/components/arena/sidebar";
 import { PasskeyPromptGate } from "@/components/arena/passkey-prompt-gate";
+import { ArenaSidebar } from "@/components/arena/sidebar";
 import { TeamGateProvider } from "@/components/arena/team-gate-context";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import { db } from "@/db/client";
@@ -89,7 +89,7 @@ export default async function ArenaLayout({
 
           <MobileTopBar />
 
-          <main className="jb-arena-shell relative flex-1 md:pt-0 pt-20">
+          <main className="jb-arena-shell relative flex-1 pt-16 md:pt-0">
             {children}
           </main>
 

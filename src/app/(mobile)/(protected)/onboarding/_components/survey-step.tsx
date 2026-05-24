@@ -5,6 +5,7 @@ import { ArrowRight } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useState } from "react";
 import type { UserRole } from "@/actions/onboarding.actions";
+import { Cta } from "@/components/arena/cta";
 import { cn } from "@/lib/utils";
 
 const INTENTION_OPTIONS = [
@@ -148,28 +149,27 @@ export function SurveyStep({ role, onSubmit, onSkip }: SurveyStepProps) {
       </div>
 
       <div className="mt-8 flex flex-col-reverse gap-3 sm:flex-row">
-        <motion.button
+        <Cta
           type="button"
           onClick={onSkip}
           disabled={submitting}
-          whileTap={submitting ? undefined : { scale: 0.97 }}
-          transition={{ duration: 0.12, ease: [0.4, 0, 0.2, 1] }}
-          className="rounded-[14px] px-4 py-3.5 text-[14px] font-bold text-arena-text-muted transition-colors hover:text-arena-text disabled:opacity-50 sm:flex-1"
+          variant="ghost"
+          size="lg"
+          className="sm:flex-1"
         >
           {t("skip")}
-        </motion.button>
+        </Cta>
 
-        <motion.button
+        <Cta
           type="button"
           onClick={handleSubmit}
           disabled={submitting}
-          whileTap={submitting ? undefined : { scale: 0.97 }}
-          transition={{ duration: 0.12, ease: [0.4, 0, 0.2, 1] }}
-          className="inline-flex items-center justify-center gap-2 rounded-[14px] bg-arena-primary px-4 py-3.5 text-[15px] font-bold text-[#0B0F14] shadow-[0_0_20px_rgba(124,255,79,0.25)] transition-colors hover:bg-arena-primary/90 disabled:opacity-70 sm:flex-1"
+          size="lg"
+          className="gap-2 shadow-[0_0_20px_rgba(124,255,79,0.25)] sm:flex-1"
         >
           {submitting ? t("submitting") : t("submit")}
           {!submitting && <ArrowRight size={16} strokeWidth={2.5} />}
-        </motion.button>
+        </Cta>
       </div>
     </div>
   );
