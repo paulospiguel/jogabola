@@ -413,7 +413,12 @@
       "squad": "Plantilla",
       "thisWeek": "Esta semana",
       "viewCalendar": "Calendario",
-      "viewFullSquad": "Ver plantilla completa"
+      "viewFullSquad": "Ver plantilla completa",
+      "discover": "Descubrir",
+      "rankings": "Rankings",
+      "rankingsSub": "Liga · Goleadores",
+      "historico": "Historial",
+      "historicoSub": "Temporadas · Resultados"
     },
     "stats": {
       "confirmed": "Confirmados",
@@ -478,7 +483,8 @@
     "tabs": {
       "call": "Convocatoria",
       "local": "Lugar",
-      "lineup": "Alineación"
+      "lineup": "Alineación",
+      "equipa": "Equipos"
     },
     "aiBalancer": {
       "button": "Balance IA ⚡",
@@ -2688,5 +2694,76 @@
     "skip": "Ahora no",
     "success": "¡Passkey vinculada con éxito!",
     "error": "No se pudo vincular la passkey."
+  },
+  "arenaEquipas": {
+    "status": {
+      "complete": "Equipo completo",
+      "missing": "Faltan {count} jugador(es)",
+      "overflow": "+{count} reservas",
+      "teams": "equipos"
+    },
+    "format": {
+      "label": "Formato",
+      "numTeams": "Número de equipos"
+    },
+    "confirmed": {
+      "label": "Plantilla",
+      "empty": "Sin jugadores confirmados aún"
+    },
+    "guests": {
+      "label": "Invitados",
+      "edit": "Editar",
+      "addTitle": "Añadir invitados",
+      "addSub": "Personas sin cuenta en la app",
+      "addSubMissing": "Completa {count} plaza(s) con personas de fuera",
+      "addMore": "Añadir más invitados",
+      "title": "Invitados",
+      "infoText": "Personas sin cuenta en la app que van a jugar este partido. Define un nivel para que la IA balancee mejor.",
+      "cancel": "Cancelar",
+      "save": "Guardar {count} invitado(s)"
+    },
+    "ai": {
+      "title": "Equilibrio IA",
+      "sub": "Equipos justos en segundos",
+      "cta": "Generar {count} equipos",
+      "ctaDisabled": "Faltan {count} para empezar",
+      "generating": "Equilibrando equipos…",
+      "generatingDesc": "Analizando historial, puntuaciones y formato para crear un partido justo."
+    },
+    "result": {
+      "title": "Equipos generados",
+      "balanced": "IA equilibró {count} jugadores",
+      "diffLabel": "Diferencia de puntuación:",
+      "balanced_ok": "Equilibrado",
+      "balanced_ok_rough": "Aceptable",
+      "avgRating": "Punt. Media",
+      "rebalance": "Reequilibrar",
+      "adjust": "Ajustar",
+      "swapInstructions": "Toca 2 jugadores para intercambiar",
+      "swapPick": "Elige jugador para intercambiar con {name}"
+    }
+  },
+  "arenaRankings": {
+    "title": "Rankings",
+    "tabs": {
+      "liga": "Liga",
+      "marcadores": "Goleadores",
+      "assist": "Asistencias"
+    }
+  },
+  "arenaHistorico": {
+    "title": "Historial",
+    "champion": "CAMPEÓN",
+    "sections": {
+      "seasons": "Temporadas",
+      "recent": "Últimos resultados"
+    },
+    "stats": {
+      "pos": "Pos",
+      "pts": "Pts",
+      "v": "V",
+      "e": "E",
+      "d": "D"
+    }
   }
 }

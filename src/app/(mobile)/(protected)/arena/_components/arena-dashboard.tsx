@@ -5,6 +5,7 @@ import {
   ChevronLeft,
   ChevronRight,
   Clock,
+  History,
   MapPin,
   Plus,
   Shield,
@@ -444,6 +445,37 @@ export function ArenaDashboard({ userId }: ArenaDashboardProps) {
                   <Link className="jb-action" href="/arena/squads">
                     {t("sections.viewFullSquad")}
                     <ChevronRight size={14} />
+                  </Link>
+                </div>
+              </section>
+
+              {/* Discover cards */}
+              <section>
+                <div className="jb-section-label">{t("sections.discover")}</div>
+                <div className="grid grid-cols-2 gap-2.5">
+                  <Link
+                    href="/arena/rankings"
+                    className="flex flex-col gap-2 rounded-[14px] border border-arena-border bg-arena-surface p-3.5 transition-all duration-150 hover:border-arena-primary/35 hover:bg-arena-surface-el active:scale-[0.97]"
+                  >
+                    <div className="flex size-9 items-center justify-center rounded-[11px] bg-arena-highlight/15 border border-arena-highlight/30">
+                      <Trophy size={18} className="text-arena-highlight" strokeWidth={1.7} />
+                    </div>
+                    <div>
+                      <div className="text-[13px] font-bold text-arena-text">{t("sections.rankings")}</div>
+                      <div className="mt-0.5 text-[11px] text-arena-text-muted">{t("sections.rankingsSub")}</div>
+                    </div>
+                  </Link>
+                  <Link
+                    href="/arena/historico"
+                    className="flex flex-col gap-2 rounded-[14px] border border-arena-border bg-arena-surface p-3.5 transition-all duration-150 hover:border-arena-primary/35 hover:bg-arena-surface-el active:scale-[0.97]"
+                  >
+                    <div className="flex size-9 items-center justify-center rounded-[11px] bg-arena-info/15 border border-arena-info/30">
+                      <History size={18} className="text-arena-info" strokeWidth={1.7} />
+                    </div>
+                    <div>
+                      <div className="text-[13px] font-bold text-arena-text">{t("sections.historico")}</div>
+                      <div className="mt-0.5 text-[11px] text-arena-text-muted">{t("sections.historicoSub")}</div>
+                    </div>
                   </Link>
                 </div>
               </section>

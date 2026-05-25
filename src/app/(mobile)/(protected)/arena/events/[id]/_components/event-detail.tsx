@@ -9,10 +9,10 @@ import {
   MapPin,
   Send,
   Settings2,
+  Shield,
   Trophy,
   Users,
   X,
-  Zap,
 } from "lucide-react";
 import { motion } from "framer-motion";
 import Link from "next/link";
@@ -22,13 +22,9 @@ import {
   cancelUserAttendance,
   confirmUserAttendance,
 } from "@/actions/attendance.actions";
-import {
-  type BalancedPlayer,
-  balanceTeamsWithAI,
-} from "@/actions/team-balancer.actions";
-import { AiBalancerModal } from "@/components/arena/ai-balancer-modal";
 import { Cta } from "@/components/arena/cta";
 import { EditEventSheet } from "@/components/arena/edit-event-sheet";
+import { EquipasTab } from "@/components/arena/equipas-tab";
 import { EventNoticeWall } from "@/components/arena/event-notice-wall";
 import { type BadgeStatus, JbBadge } from "@/components/arena/badge";
 import { ScreenHeader } from "@/components/arena/screen-header";
@@ -64,7 +60,7 @@ interface EventDetailProps {
   initialMyStatus?: string | null;
 }
 
-type Tab = "conv" | "local" | "lineup";
+type Tab = "conv" | "local" | "equipa";
 
 function ShareBar({
   eventId,
@@ -159,12 +155,6 @@ export function EventDetail({
   const [isEditing, setIsEditing] = useState(false);
   const [actionLoading, setActionLoading] = useState(false);
 
-  const [isAiModalOpen, setIsAiModalOpen] = useState(false);
-  const [fakePlayersCount, setFakePlayersCount] = useState(0);
-  const [teamA, setTeamA] = useState<BalancedPlayer[]>([]);
-  const [teamB, setTeamB] = useState<BalancedPlayer[]>([]);
-  const [avgA, setAvgA] = useState<string>("0.0");
-  const [avgB, setAvgB] = useState<string>("0.0");
 
   const { confirmed, reserves, pending, isLoading, refetch } =
     useEventAttendance(event.id);
@@ -203,20 +193,16 @@ export function EventDetail({
   const isCancelled = event.status === "cancelled";
   const total = Number(event.maxParticipants) || 14;
   const fillPct = (confirmed.length / total) * 100;
-  const missingPlayers = Math.max(
-    0,
-    total - (confirmed.length + fakePlayersCount),
-  );
 
-  const TABS_DATA = [
-    { id: "conv" as Tab, label: t("tabs.call"), icon: List },
-    { id: "local" as Tab, label: t("tabs.local"), icon: MapPin },
+  const TABS_DATA: { id: Tab; label: string; icon: React.ElementType }[] = [
+    { id: "conv", label: t("tabs.call"), icon: List },
+    { id: "local", label: t("tabs.local"), icon: MapPin },
   ];
-  if (canEdit) {
+  if (canEdit && isJogo) {
     TABS_DATA.push({
-      id: "lineup" as Tab,
-      label: t("tabs.lineup"),
-      icon: Users,
+      id: "equipa",
+      label: t("tabs.equipa"),
+      icon: Shield,
     });
   }
 
@@ -401,162 +387,20 @@ export function EventDetail({
           </div>
         )}
 
-        {tab === "lineup" && canEdit && (
-          <div className="px-5 py-3.5">
-            <div className="jb-section-label pb-2">
-              {t("lists.main", { count: confirmed.length + fakePlayersCount })}
-            </div>
-            <div className="mb-6 flex flex-col">
-              {confirmed.map((p, i) => (
-                <ParticipantRow
-                  key={p.id}
-                  participant={p}
-                  index={i}
-                  position={participantRowPosition(
-                    i,
-                    confirmed.length + fakePlayersCount,
-                  )}
-                  currentUserId={userId}
-                  showPayment={(event.priceCents ?? 0) > 0}
-                  isManager={canEdit}
-                  eventId={event.id}
-                  trailing={
-                    <Check
-                      size={15}
-                      className="text-arena-success"
-                      strokeWidth={2.5}
-                    />
-                  }
-                />
-              ))}
-              {Array.from({ length: fakePlayersCount }).map((_, i) => (
-                <div
-                  key={`fake-${i}`}
-                  className="flex items-center gap-3 border-b border-arena-border py-3"
-                >
-                  <div className="flex size-[38px] shrink-0 items-center justify-center rounded-[12px] bg-arena-surface-el">
-                    <Users size={18} className="text-arena-text-muted" />
-                  </div>
-                  <div className="flex-1">
-                    <div className="text-[14px] font-bold text-arena-text">
-                      {t("aiBalancer.fakePlayer")} {i + 1}
-                    </div>
-                    <div className="text-[12px] text-arena-text-muted">
-                      {t("aiBalancer.fakePlayerDesc")}
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-
-            {missingPlayers > 0 && (
-              <Cta
-                variant="secondary"
-                size="md"
-                fullWidth
-                className="mb-6"
-                onClick={() =>
-                  setFakePlayersCount(fakePlayersCount + missingPlayers)
-                }
-              >
-                <Users size={16} />
-                {t("aiBalancer.fillWithFakes")} ({missingPlayers})
-              </Cta>
-            )}
-
-            <div className="mb-4 flex flex-col gap-3 rounded-[16px] border border-arena-border bg-arena-surface p-4">
-              <div>
-                <h3 className="text-[14px] font-bold text-white">
-                  {t("aiBalancer.modalTitle")}
-                </h3>
-                <p className="mt-1 text-[12px] text-arena-text-sec">
-                  {t("aiBalancer.pitchDescription")}
-                </p>
-              </div>
-              <Cta
-                variant="primary"
-                size="md"
-                fullWidth
-                onClick={() => setIsAiModalOpen(true)}
-                disabled={confirmed.length + fakePlayersCount === 0}
-              >
-                <Zap size={16} className="fill-arena-bg" />
-                {t("aiBalancer.button")}
-              </Cta>
-            </div>
-
-            <AiBalancerModal
-              isOpen={isAiModalOpen}
-              onClose={() => setIsAiModalOpen(false)}
-              initialGuestsCount={fakePlayersCount}
-              onGenerate={async guests => {
-                const res = await balanceTeamsWithAI(event.id, guests);
-                if (res.success && res.data) {
-                  setTeamA(res.data.teamA);
-                  setTeamB(res.data.teamB);
-                  setAvgA(res.data.avgA);
-                  setAvgB(res.data.avgB);
-                }
-              }}
-            />
-
-            {(teamA.length > 0 || teamB.length > 0) && (
-              <div className="grid grid-cols-2 gap-3">
-                {/* Team A */}
-                <div className="flex flex-col gap-2">
-                  <div className="flex flex-col rounded-[12px] border border-arena-border bg-arena-surface-el p-2">
-                    <div className="text-[11px] font-bold uppercase tracking-wider text-arena-primary">
-                      {t("aiBalancer.teamA")}
-                    </div>
-                    <div className="text-[10px] text-arena-text-muted">
-                      {t("aiBalancer.avgRating")} {avgA}
-                    </div>
-                  </div>
-                  {teamA.map(p => (
-                    <div
-                      key={p.id}
-                      className="flex items-center gap-2 rounded-[10px] bg-arena-surface px-2.5 py-2"
-                    >
-                      <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-arena-bg text-[10px] font-bold text-white">
-                        {p.name.charAt(0)}
-                      </div>
-                      <span className="truncate text-[12px] text-arena-text-sec">
-                        {p.name} {p.isGuest && "(C)"}
-                      </span>
-                    </div>
-                  ))}
-                </div>
-
-                {/* Team B */}
-                <div className="flex flex-col gap-2">
-                  <div className="flex flex-col rounded-[12px] border border-arena-border bg-arena-surface-el p-2">
-                    <div className="text-[11px] font-bold uppercase tracking-wider text-blue-400">
-                      {t("aiBalancer.teamB")}
-                    </div>
-                    <div className="text-[10px] text-arena-text-muted">
-                      {t("aiBalancer.avgRating")} {avgB}
-                    </div>
-                  </div>
-                  {teamB.map(p => (
-                    <div
-                      key={p.id}
-                      className="flex items-center gap-2 rounded-[10px] bg-arena-surface px-2.5 py-2"
-                    >
-                      <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-arena-bg text-[10px] font-bold text-white">
-                        {p.name.charAt(0)}
-                      </div>
-                      <span className="truncate text-[12px] text-arena-text-sec">
-                        {p.name} {p.isGuest && "(C)"}
-                      </span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
-          </div>
+        {tab === "equipa" && canEdit && (
+          <EquipasTab
+            eventId={event.id}
+            confirmed={confirmed.map(p => ({
+              id: p.id,
+              name: p.name,
+              image: p.image ?? null,
+            }))}
+            canEdit={canEdit}
+          />
         )}
       </div>
 
+      {tab !== "equipa" && (
       <motion.div
         className="fixed bottom-[72px] left-0 right-0 px-5 pb-3.5 pt-2.5 md:hidden"
         style={{
@@ -597,6 +441,7 @@ export function EventDetail({
           )}
         </Cta>
       </motion.div>
+      )}
     </motion.div>
   );
 }
