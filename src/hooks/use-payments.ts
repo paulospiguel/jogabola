@@ -1,13 +1,14 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
+import type { PaymentOverviewStatus } from "@/constants/payments";
 import { useTeams } from "./use-teams";
 
 export interface Payment {
   id: string;
   amount: string;
   method: string;
-  status: "pending" | "validating" | "confirmed" | "refused";
+  status: PaymentOverviewStatus;
   score: "low" | "medium" | "high";
   date: string;
   proofUrl?: string;

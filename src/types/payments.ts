@@ -1,10 +1,4 @@
-export type PaymentStatus =
-  | "pending"
-  | "paid_unverified"
-  | "review_required"
-  | "approved"
-  | "rejected"
-  | "refunded";
+export type { PaymentStatus } from "@/constants/payments";
 
 export type PaymentMethod = "stripe" | "mbway" | "cash" | "transfer";
 

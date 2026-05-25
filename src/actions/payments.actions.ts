@@ -6,6 +6,11 @@ import { revalidatePath } from "next/cache";
 import { headers } from "next/headers";
 import { z } from "zod";
 import { notifyPaymentValidationRequired } from "@/actions/notifications.actions";
+import {
+  PAYMENT_OVERVIEW_STATUS,
+  PAYMENT_REVIEW_STATUS,
+  PAYMENT_STATUS,
+} from "@/constants/payments";
 import { db } from "@/db/client";
 import {
   matchReservations,
@@ -28,7 +33,10 @@ import {
 
 const updatePaymentStatusSchema = z.object({
   paymentId: z.number().int().positive(),
-  status: z.enum(["approved", "rejected"]),
+  status: z.enum([
+    PAYMENT_REVIEW_STATUS.APPROVED,
+    PAYMENT_REVIEW_STATUS.REJECTED,
+  ]),
 });
 
 const requestPaymentProofSchema = z.object({
@@ -36,14 +44,22 @@ const requestPaymentProofSchema = z.object({
 });
 
 function toUiPaymentStatus(status: string) {
-  if (status === "paid_unverified") return "validating";
-  if (status === "approved") return "confirmed";
-  if (status === "rejected") return "refused";
+  if (status === PAYMENT_STATUS.PAID_UNVERIFIED) {
+    return PAYMENT_OVERVIEW_STATUS.VALIDATING;
+  }
+  if (status === PAYMENT_STATUS.APPROVED) {
+    return PAYMENT_OVERVIEW_STATUS.CONFIRMED;
+  }
+  if (status === PAYMENT_STATUS.REJECTED) {
+    return PAYMENT_OVERVIEW_STATUS.REFUSED;
+  }
   return status;
 }
 
 export const createPayment = withAction(createPaymentSchema, async data => {
-  let initialStatus: "pending" | "paid_unverified" = "pending";
+  let initialStatus:
+    | typeof PAYMENT_STATUS.PENDING
+    | typeof PAYMENT_STATUS.PAID_UNVERIFIED = PAYMENT_STATUS.PENDING;
 
   if (data.method === "transfer") {
     const matchSessionRow = await db
@@ -60,7 +76,7 @@ export const createPayment = withAction(createPaymentSchema, async data => {
       .then(rows => rows[0]);
 
     if (matchSessionRow && !matchSessionRow.transferRequiresProof) {
-      initialStatus = "paid_unverified";
+      initialStatus = PAYMENT_STATUS.PAID_UNVERIFIED;
     }
   }
 
@@ -77,7 +93,7 @@ export const submitPaymentProof = withAction(
     const [proof] = await db.insert(paymentProofs).values(data).returning();
     await db
       .update(payments)
-      .set({ status: "paid_unverified", updatedAt: new Date() })
+      .set({ status: PAYMENT_STATUS.PAID_UNVERIFIED, updatedAt: new Date() })
       .where(eq(payments.id, data.paymentId));
 
     // Notify team manager that proof needs validation

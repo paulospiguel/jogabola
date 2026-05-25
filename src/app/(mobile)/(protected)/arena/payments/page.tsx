@@ -22,10 +22,13 @@ import { ArenaEmptyState } from "@/components/arena/empty-state";
 import { MetricCard } from "@/components/arena/metric-card";
 import { PaymentSettingsSheet } from "@/components/arena/payment-settings-sheet";
 import { ProofReviewSheet } from "@/components/arena/proof-review-sheet";
-import { UserMenu } from "@/components/arena/user-menu";
 import { VerifiedBadge } from "@/components/arena/verified-badge";
 import { ButtonGroup } from "@/components/ui/button-group";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import {
+  PAYMENT_OVERVIEW_STATUS,
+  type PaymentOverviewStatus,
+} from "@/constants/payments";
 import { type Payment, usePayments } from "@/hooks/use-payments";
 import { useTeamPaymentSettings } from "@/hooks/use-team-payment-settings";
 import { useTeams } from "@/hooks/use-teams";
@@ -44,7 +47,7 @@ export default function PaymentsPage() {
     "payments",
   );
   const [activeFilter, setActiveFilter] = useState<
-    "all" | "validating" | "pending" | "confirmed" | "refused"
+    "all" | PaymentOverviewStatus
   >("all");
   const [showSettings, setShowSettings] = useState(false);
   const [selectedProofPayment, setSelectedProofPayment] =
@@ -58,7 +61,7 @@ export default function PaymentsPage() {
 
   // 1. Dynamic volume calculations
   const totalReceived = payments
-    .filter(p => p.status === "confirmed")
+    .filter(p => p.status === PAYMENT_OVERVIEW_STATUS.CONFIRMED)
     .reduce((sum, p) => sum + parseAmount(p.amount), 0);
 
   const totalExpected = payments.reduce(
@@ -68,10 +71,14 @@ export default function PaymentsPage() {
 
   // Status counts for Metric Cards
   const validatingCount = payments.filter(
-    p => p.status === "validating",
+    p => p.status === PAYMENT_OVERVIEW_STATUS.VALIDATING,
   ).length;
-  const pendingCount = payments.filter(p => p.status === "pending").length;
-  const confirmedCount = payments.filter(p => p.status === "confirmed").length;
+  const pendingCount = payments.filter(
+    p => p.status === PAYMENT_OVERVIEW_STATUS.PENDING,
+  ).length;
+  const confirmedCount = payments.filter(
+    p => p.status === PAYMENT_OVERVIEW_STATUS.CONFIRMED,
+  ).length;
 
   // Filter payments
   const filteredPayments = payments.filter(p => {
@@ -208,10 +215,10 @@ export default function PaymentsPage() {
                 {(
                   [
                     "all",
-                    "validating",
-                    "pending",
-                    "confirmed",
-                    "refused",
+                    PAYMENT_OVERVIEW_STATUS.VALIDATING,
+                    PAYMENT_OVERVIEW_STATUS.PENDING,
+                    PAYMENT_OVERVIEW_STATUS.CONFIRMED,
+                    PAYMENT_OVERVIEW_STATUS.REFUSED,
                   ] as const
                 ).map(f => (
                   <button
@@ -227,11 +234,11 @@ export default function PaymentsPage() {
                   >
                     {f === "all"
                       ? t("filters.all")
-                      : f === "validating"
+                      : f === PAYMENT_OVERVIEW_STATUS.VALIDATING
                         ? t("filters.validating")
-                        : f === "pending"
+                        : f === PAYMENT_OVERVIEW_STATUS.PENDING
                           ? t("filters.pending")
-                          : f === "confirmed"
+                          : f === PAYMENT_OVERVIEW_STATUS.CONFIRMED
                             ? t("filters.confirmed")
                             : t("filters.overdue")}
                   </button>
@@ -252,10 +259,14 @@ export default function PaymentsPage() {
                 />
               ) : (
                 filteredPayments.map((payment: Payment) => {
-                  const isVal = payment.status === "validating";
-                  const isConf = payment.status === "confirmed";
-                  const isPend = payment.status === "pending";
-                  const isRef = payment.status === "refused";
+                  const isVal =
+                    payment.status === PAYMENT_OVERVIEW_STATUS.VALIDATING;
+                  const isConf =
+                    payment.status === PAYMENT_OVERVIEW_STATUS.CONFIRMED;
+                  const isPend =
+                    payment.status === PAYMENT_OVERVIEW_STATUS.PENDING;
+                  const isRef =
+                    payment.status === PAYMENT_OVERVIEW_STATUS.REFUSED;
 
                   return (
                     <div
@@ -611,16 +622,16 @@ export default function PaymentsPage() {
           initial={
             settings
               ? {
-                stripeEnabled: settings.stripeEnabled,
-                mbwayEnabled: settings.mbwayEnabled,
-                mbwayPhone: settings.mbwayPhone ?? undefined,
-                mbwayName: settings.mbwayName ?? undefined,
-                cashEnabled: settings.cashEnabled,
-                cashInstructions: settings.cashInstructions ?? undefined,
-                transferEnabled: settings.transferEnabled,
-                transferIban: settings.transferIban ?? undefined,
-                transferName: settings.transferName ?? undefined,
-              }
+                  stripeEnabled: settings.stripeEnabled,
+                  mbwayEnabled: settings.mbwayEnabled,
+                  mbwayPhone: settings.mbwayPhone ?? undefined,
+                  mbwayName: settings.mbwayName ?? undefined,
+                  cashEnabled: settings.cashEnabled,
+                  cashInstructions: settings.cashInstructions ?? undefined,
+                  transferEnabled: settings.transferEnabled,
+                  transferIban: settings.transferIban ?? undefined,
+                  transferName: settings.transferName ?? undefined,
+                }
               : undefined
           }
           onClose={() => setShowSettings(false)}

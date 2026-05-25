@@ -30,22 +30,25 @@ import { type BadgeStatus, JbBadge } from "@/components/arena/badge";
 import { ScoreBar, type ScoreLevel } from "@/components/arena/score-bar";
 import { VerifiedBadge } from "@/components/arena/verified-badge";
 import { Button } from "@/components/ui/button";
+import {
+  PAYMENT_OVERVIEW_STATUS,
+  PAYMENT_OVERVIEW_STATUSES,
+  PAYMENT_REVIEW_STATUS,
+  PAYMENT_STATUS,
+  type PaymentOverviewStatus,
+  type PaymentReviewStatus,
+  type PaymentStatus,
+} from "@/constants/payments";
 import { usePayments } from "@/hooks/use-payments";
 import { cn } from "@/lib/utils";
 
 type Feedback = { type: "success" | "error"; message: string } | null;
-const PAYMENT_STATUSES = [
-  "pending",
-  "validating",
-  "confirmed",
-  "refused",
-] as const satisfies BadgeStatus[];
 
-const STATUS_DOT_CLASS: Record<(typeof PAYMENT_STATUSES)[number], string> = {
-  pending: "bg-arena-text-muted",
-  validating: "bg-arena-warning",
-  confirmed: "bg-arena-success",
-  refused: "bg-arena-danger",
+const STATUS_DOT_CLASS: Record<PaymentOverviewStatus, string> = {
+  [PAYMENT_OVERVIEW_STATUS.PENDING]: "bg-arena-text-muted",
+  [PAYMENT_OVERVIEW_STATUS.VALIDATING]: "bg-arena-warning",
+  [PAYMENT_OVERVIEW_STATUS.CONFIRMED]: "bg-arena-success",
+  [PAYMENT_OVERVIEW_STATUS.REFUSED]: "bg-arena-danger",
 };
 
 function parsePaymentId(id: string | string[] | undefined) {
@@ -55,10 +58,16 @@ function parsePaymentId(id: string | string[] | undefined) {
   return Number.isFinite(numeric) && numeric > 0 ? numeric : null;
 }
 
-function statusToDb(status: string) {
-  if (status === "confirmed") return "approved";
-  if (status === "refused") return "rejected";
-  if (status === "validating") return "paid_unverified";
+function statusToDb(status: PaymentOverviewStatus): PaymentStatus {
+  if (status === PAYMENT_OVERVIEW_STATUS.CONFIRMED) {
+    return PAYMENT_STATUS.APPROVED;
+  }
+  if (status === PAYMENT_OVERVIEW_STATUS.REFUSED) {
+    return PAYMENT_STATUS.REJECTED;
+  }
+  if (status === PAYMENT_OVERVIEW_STATUS.VALIDATING) {
+    return PAYMENT_STATUS.PAID_UNVERIFIED;
+  }
   return status;
 }
 
@@ -232,15 +241,17 @@ export default function PaymentDetailPage() {
     () => (payment ? statusToDb(payment.status) : ""),
     [payment],
   );
-  const isApproved = dbStatus === "approved";
-  const isRejected = dbStatus === "rejected";
+  const isApproved = dbStatus === PAYMENT_STATUS.APPROVED;
+  const isRejected = dbStatus === PAYMENT_STATUS.REJECTED;
   const hasFinalDecision = isApproved || isRejected;
   const showDecisionActions = !hasFinalDecision || isEditingDecision;
   const actionDisabled = isPending || !paymentId;
 
-  function runStatusAction(status: "approved" | "rejected") {
+  function runStatusAction(status: PaymentReviewStatus) {
     if (!paymentId) return;
-    setPendingAction(status === "approved" ? "approve" : "reject");
+    setPendingAction(
+      status === PAYMENT_REVIEW_STATUS.APPROVED ? "approve" : "reject",
+    );
     setFeedback(null);
 
     startTransition(async () => {
@@ -250,7 +261,7 @@ export default function PaymentDetailPage() {
         setFeedback({
           type: "success",
           message:
-            status === "approved"
+            status === PAYMENT_REVIEW_STATUS.APPROVED
               ? t("detail.approveSuccess")
               : t("detail.rejectSuccess"),
         });
@@ -555,7 +566,7 @@ export default function PaymentDetailPage() {
                   {t("detail.possibleStatuses")}
                 </div>
                 <div className="flex flex-wrap gap-x-3 gap-y-2">
-                  {PAYMENT_STATUSES.map(status => (
+                  {PAYMENT_OVERVIEW_STATUSES.map(status => (
                     <span
                       key={status}
                       className={cn(
@@ -569,7 +580,7 @@ export default function PaymentDetailPage() {
                           STATUS_DOT_CLASS[status],
                         )}
                       />
-                      {badgeT(status)}
+                      {badgeT(status as BadgeStatus)}
                     </span>
                   ))}
                 </div>
