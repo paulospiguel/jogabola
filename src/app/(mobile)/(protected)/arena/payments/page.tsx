@@ -7,124 +7,44 @@ import {
   Clock,
   Coins,
   CreditCard,
-  FileText,
   Landmark,
   Settings2,
   Smartphone,
   Sparkles,
-  Wallet,
 } from "lucide-react";
-import Link from "next/link";
 import { useTranslations } from "next-intl";
-import { useState } from "react";
-import { JbAvatar } from "@/components/arena/avatar";
-import { ArenaEmptyState } from "@/components/arena/empty-state";
 import { MetricCard } from "@/components/arena/metric-card";
 import { PaymentSettingsSheet } from "@/components/arena/payment-settings-sheet";
 import { ProofReviewSheet } from "@/components/arena/proof-review-sheet";
-import { VerifiedBadge } from "@/components/arena/verified-badge";
-import { ButtonGroup } from "@/components/ui/button-group";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import {
-  PAYMENT_OVERVIEW_STATUS,
-  type PaymentOverviewStatus,
-} from "@/constants/payments";
-import { type Payment, usePayments } from "@/hooks/use-payments";
-import { useTeamPaymentSettings } from "@/hooks/use-team-payment-settings";
-import { useTeams } from "@/hooks/use-teams";
 import { cn } from "@/lib/utils";
+import { PaymentsListTab } from "./_components/payments-list-tab";
+import {
+  type PaymentsTab,
+  usePaymentsPageState,
+} from "./_hooks/use-payments-page-state";
 
 export default function PaymentsPage() {
   const t = useTranslations("arenaPayments");
   const badgeT = useTranslations("arenaBadges");
-  const { payments, isLoading, refetch } = usePayments();
-  const { activeTeamId } = useTeams();
-  const { settings, refetch: refetchSettings } = useTeamPaymentSettings(
-    activeTeamId ?? undefined,
-  );
-
-  const [activeTab, setActiveTab] = useState<"payments" | "methods" | "iapro">(
-    "payments",
-  );
-  const [activeFilter, setActiveFilter] = useState<
-    "all" | PaymentOverviewStatus
-  >("all");
-  const [showSettings, setShowSettings] = useState(false);
-  const [selectedProofPayment, setSelectedProofPayment] =
-    useState<Payment | null>(null);
-
-  // Helper to parse amount strings like "€5.00" to Float
-  const parseAmount = (amountStr: string) => {
-    const cleaned = amountStr.replace(/[^\d,.-]/g, "").replace(",", ".");
-    return parseFloat(cleaned) || 0;
-  };
-
-  // 1. Dynamic volume calculations
-  const totalReceived = payments
-    .filter(p => p.status === PAYMENT_OVERVIEW_STATUS.CONFIRMED)
-    .reduce((sum, p) => sum + parseAmount(p.amount), 0);
-
-  const totalExpected = payments.reduce(
-    (sum, p) => sum + parseAmount(p.amount),
-    0,
-  );
-
-  // Status counts for Metric Cards
-  const validatingCount = payments.filter(
-    p => p.status === PAYMENT_OVERVIEW_STATUS.VALIDATING,
-  ).length;
-  const pendingCount = payments.filter(
-    p => p.status === PAYMENT_OVERVIEW_STATUS.PENDING,
-  ).length;
-  const confirmedCount = payments.filter(
-    p => p.status === PAYMENT_OVERVIEW_STATUS.CONFIRMED,
-  ).length;
-
-  // Filter payments
-  const filteredPayments = payments.filter(p => {
-    if (activeFilter === "all") return true;
-    return p.status === activeFilter;
-  });
-
-  // Get active methods count and info
-  const activeMethodsList = [];
-  if (settings?.mbwayEnabled) {
-    activeMethodsList.push({
-      type: "mbway",
-      title: t("settings.mbway.title"),
-      icon: Smartphone,
-      color: "#ef4444",
-      detail: settings.mbwayPhone || t("settings.noNumber"),
-      status: "active",
-    });
-  }
-  if (settings?.transferEnabled) {
-    const cleanIban = settings.transferIban
-      ? settings.transferIban.replace(/\s+/g, "").toUpperCase()
-      : "";
-    const formattedIban = cleanIban
-      ? cleanIban.replace(/(.{4})/g, "$1 ").trim()
-      : "";
-    activeMethodsList.push({
-      type: "transfer",
-      title: t("settings.transfer.title"),
-      icon: Landmark,
-      color: "#06b6d4",
-      detail: formattedIban || t("settings.notConfigured"),
-      status: "active",
-    });
-  }
-  const isCashActive = settings ? settings.cashEnabled : true;
-  if (isCashActive) {
-    activeMethodsList.push({
-      type: "cash",
-      title: t("settings.cash.title"),
-      icon: Banknote,
-      color: "#22c55e",
-      detail: settings?.cashInstructions || t("methods.cashSub"),
-      status: "active",
-    });
-  }
+  const {
+    activeFilter,
+    activeTab,
+    activeTeamId,
+    filteredPayments,
+    isLoading,
+    refetch,
+    refetchSettings,
+    selectedProofPayment,
+    setActiveFilter,
+    setActiveTab,
+    setSelectedProofPayment,
+    setShowSettings,
+    settings,
+    showSettings,
+    statusCounts,
+    totals,
+  } = usePaymentsPageState();
 
   return (
     <div className="jb-page">
@@ -134,9 +54,9 @@ export default function PaymentsPage() {
           <div>
             <div className="jb-kicker">{t("kicker")}</div>
             <strong className="font-sora text-3xl font-black tracking-tight text-arena-text">
-              €{totalReceived.toFixed(2).replace(".", ",")}
+              €{totals.received.toFixed(2).replace(".", ",")}
               <span className="text-xs font-semibold text-arena-text-muted ml-1.5">
-                / €{totalExpected.toFixed(2).replace(".", ",")}{" "}
+                / €{totals.expected.toFixed(2).replace(".", ",")}{" "}
                 {t("stats.received")}
               </span>
             </strong>
@@ -147,19 +67,19 @@ export default function PaymentsPage() {
         <div className="grid grid-cols-3 gap-2 mt-4">
           <MetricCard
             label={t("stats.toValidate").toUpperCase()}
-            value={validatingCount}
+            value={statusCounts.validating}
             tone="warning"
             icon={Clock}
           />
           <MetricCard
             label={t("stats.overdue").toUpperCase()}
-            value={pendingCount}
+            value={statusCounts.pending}
             tone="danger"
             icon={AlertCircle}
           />
           <MetricCard
             label={t("stats.paid").toUpperCase()}
-            value={confirmedCount}
+            value={statusCounts.confirmed}
             tone="success"
             icon={CheckCircleIcon}
           />
@@ -167,9 +87,7 @@ export default function PaymentsPage() {
 
         <Tabs
           value={activeTab}
-          onValueChange={val =>
-            setActiveTab(val as "payments" | "methods" | "iapro")
-          }
+          onValueChange={val => setActiveTab(val as PaymentsTab)}
           className="w-full mt-6"
         >
           <div className="flex justify-center">
@@ -207,189 +125,16 @@ export default function PaymentsPage() {
             </TabsList>
           </div>
 
-          {/* TAB 1: Payments List */}
           <TabsContent value="payments" className="mt-0 outline-none">
-            {/* Filter Pills using ButtonGroup */}
-            <div className="overflow-x-auto pb-3 scrollbar-none w-full">
-              <ButtonGroup className="!flex border border-arena-border rounded-[10px] p-[3px] bg-arena-surface min-w-max w-full">
-                {(
-                  [
-                    "all",
-                    PAYMENT_OVERVIEW_STATUS.VALIDATING,
-                    PAYMENT_OVERVIEW_STATUS.PENDING,
-                    PAYMENT_OVERVIEW_STATUS.CONFIRMED,
-                    PAYMENT_OVERVIEW_STATUS.REFUSED,
-                  ] as const
-                ).map(f => (
-                  <button
-                    key={f}
-                    type="button"
-                    onClick={() => setActiveFilter(f)}
-                    className={cn(
-                      "press flex-1 text-center py-2 px-3 text-[11px] font-bold tracking-wide rounded-[8px] transition-all cursor-pointer whitespace-nowrap",
-                      activeFilter === f
-                        ? "bg-arena-primary text-arena-bg font-extrabold"
-                        : "text-arena-text-sec hover:text-arena-text",
-                    )}
-                  >
-                    {f === "all"
-                      ? t("filters.all")
-                      : f === PAYMENT_OVERVIEW_STATUS.VALIDATING
-                        ? t("filters.validating")
-                        : f === PAYMENT_OVERVIEW_STATUS.PENDING
-                          ? t("filters.pending")
-                          : f === PAYMENT_OVERVIEW_STATUS.CONFIRMED
-                            ? t("filters.confirmed")
-                            : t("filters.overdue")}
-                  </button>
-                ))}
-              </ButtonGroup>
-            </div>
-
-            <div className="grid gap-3 mt-2">
-              {isLoading ? (
-                <div className="jb-card flex items-center justify-center p-12 text-arena-text-muted">
-                  <span className="animate-pulse">{t("loading")}</span>
-                </div>
-              ) : filteredPayments.length === 0 ? (
-                <ArenaEmptyState
-                  icon={Wallet}
-                  title={t("noPayments")}
-                  description={t("noPaymentsSub")}
-                />
-              ) : (
-                filteredPayments.map((payment: Payment) => {
-                  const isVal =
-                    payment.status === PAYMENT_OVERVIEW_STATUS.VALIDATING;
-                  const isConf =
-                    payment.status === PAYMENT_OVERVIEW_STATUS.CONFIRMED;
-                  const isPend =
-                    payment.status === PAYMENT_OVERVIEW_STATUS.PENDING;
-                  const isRef =
-                    payment.status === PAYMENT_OVERVIEW_STATUS.REFUSED;
-
-                  return (
-                    <div
-                      key={payment.id}
-                      className="jb-card group relative overflow-hidden p-3.5 transition-all hover:border-arena-primary/30"
-                    >
-                      <div className="flex flex-col gap-3">
-                        {/* Upper row: Avatar, Info, and Amount */}
-                        <div className="flex items-center gap-3">
-                          <JbAvatar
-                            id={payment.player.id}
-                            name={payment.player.name}
-                            size={40}
-                          />
-                          <div className="min-w-0 flex-1">
-                            <div className="flex items-center gap-1.5 min-w-0">
-                              <span className="truncate text-xs font-bold text-arena-text">
-                                {payment.player.name}
-                              </span>
-                              <VerifiedBadge
-                                verified={payment.player.isVerified}
-                                variant="icon"
-                              />
-                            </div>
-                            <p className="text-[11px] text-arena-text-muted truncate mt-0.5">
-                              {t(`methods.${payment.method}`)} ·{" "}
-                              {payment.event.title}
-                            </p>
-                          </div>
-
-                          <div className="text-right">
-                            <strong className="font-sora text-base font-black text-arena-primary">
-                              {payment.amount}
-                            </strong>
-                            <p className="text-[9px] text-arena-text-muted mt-0.5">
-                              {t("ago", {
-                                time:
-                                  payment.id === "PAY-1"
-                                    ? "1h"
-                                    : payment.id === "PAY-2"
-                                      ? "30 min"
-                                      : payment.id === "PAY-3"
-                                        ? "3h"
-                                        : "2h",
-                              })}
-                            </p>
-                          </div>
-                        </div>
-
-                        {/* Lower row: Badges and Buttons */}
-                        <div className="flex flex-wrap gap-2 items-center justify-between border-t border-arena-border/30 pt-3">
-                          <div className="flex flex-wrap items-center gap-1.5 min-w-0">
-                            {isConf && (
-                              <span className="rounded-full bg-arena-success/15 border border-arena-success/35 px-2 py-0.5 text-[9px] font-black uppercase tracking-wider text-arena-success">
-                                {badgeT("confirmed")}
-                              </span>
-                            )}
-                            {isVal && (
-                              <span className="rounded-full bg-arena-warning/15 border border-arena-warning/35 px-2 py-0.5 text-[9px] font-black uppercase tracking-wider text-arena-warning">
-                                {badgeT("validating")}
-                              </span>
-                            )}
-                            {isPend && (
-                              <span className="rounded-full bg-arena-danger/15 border border-arena-danger/35 px-2 py-0.5 text-[9px] font-black uppercase tracking-wider text-arena-danger">
-                                {badgeT("pending")}
-                              </span>
-                            )}
-                            {isRef && (
-                              <span className="rounded-full bg-arena-danger/15 border border-arena-danger/35 px-2 py-0.5 text-[9px] font-black uppercase tracking-wider text-arena-danger">
-                                {badgeT("refused")}
-                              </span>
-                            )}
-
-                            {/* IA Risk Score badge */}
-                            <span
-                              className={cn(
-                                "rounded-full px-2 py-0.5 text-[9px] font-black uppercase tracking-wider border",
-                                payment.score === "low"
-                                  ? "bg-arena-success/10 border-arena-success/30 text-arena-success"
-                                  : payment.score === "medium"
-                                    ? "bg-arena-warning/10 border-arena-warning/30 text-arena-warning"
-                                    : "bg-arena-danger/10 border-arena-danger/30 text-arena-danger",
-                              )}
-                            >
-                              {payment.score === "low"
-                                ? badgeT("low")
-                                : payment.score === "medium"
-                                  ? badgeT("medium")
-                                  : badgeT("high")}
-                            </span>
-                          </div>
-
-                          {/* Quick review CTA */}
-                          {isVal && (
-                            <button
-                              type="button"
-                              onClick={e => {
-                                e.preventDefault();
-                                e.stopPropagation();
-                                setSelectedProofPayment(payment);
-                              }}
-                              className="press flex items-center gap-1 rounded-lg border border-arena-primary/30 bg-arena-primary/5 px-2.5 py-1 text-[10px] font-bold text-arena-primary transition-all hover:bg-arena-primary/15"
-                            >
-                              <FileText size={11} />
-                              {t("verifyProof")}
-                            </button>
-                          )}
-                          {!isVal && (
-                            <Link
-                              href={`/arena/payments/${payment.id}`}
-                              className="press flex items-center gap-0.5 text-[10px] font-bold text-arena-text-sec hover:text-arena-primary"
-                            >
-                              {t("viewDetail")}
-                              <ChevronRight size={10} />
-                            </Link>
-                          )}
-                        </div>
-                      </div>
-                    </div>
-                  );
-                })
-              )}
-            </div>
+            <PaymentsListTab
+              activeFilter={activeFilter}
+              badgeT={badgeT}
+              filteredPayments={filteredPayments}
+              isLoading={isLoading}
+              onSelectProofPayment={setSelectedProofPayment}
+              setActiveFilter={setActiveFilter}
+              t={t}
+            />
           </TabsContent>
 
           {/* TAB 2: Active Payment Methods */}
