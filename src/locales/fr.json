@@ -413,7 +413,12 @@
       "squad": "Effectif",
       "thisWeek": "Cette semaine",
       "viewCalendar": "Calendrier",
-      "viewFullSquad": "Voir l'effectif complet"
+      "viewFullSquad": "Voir l'effectif complet",
+      "discover": "Découvrir",
+      "rankings": "Classements",
+      "rankingsSub": "Ligue · Buteurs",
+      "historico": "Historique",
+      "historicoSub": "Saisons · Résultats"
     },
     "stats": {
       "confirmed": "Confirmés",
@@ -478,7 +483,8 @@
     "tabs": {
       "call": "Convocation",
       "local": "Lieu",
-      "lineup": "Composition"
+      "lineup": "Composition",
+      "equipa": "Équipes"
     },
     "aiBalancer": {
       "button": "Équilibre IA ⚡",
@@ -2688,5 +2694,76 @@
     "skip": "Pas maintenant",
     "success": "Passkey associée avec succès !",
     "error": "Impossible d'associer la passkey."
+  },
+  "arenaEquipas": {
+    "status": {
+      "complete": "Équipe complète",
+      "missing": "Il manque {count} joueur(s)",
+      "overflow": "+{count} remplaçants",
+      "teams": "équipes"
+    },
+    "format": {
+      "label": "Format",
+      "numTeams": "Nombre d'équipes"
+    },
+    "confirmed": {
+      "label": "Effectif",
+      "empty": "Aucun joueur confirmé pour l'instant"
+    },
+    "guests": {
+      "label": "Invités",
+      "edit": "Modifier",
+      "addTitle": "Ajouter des invités",
+      "addSub": "Personnes sans compte dans l'app",
+      "addSubMissing": "Remplis {count} place(s) avec des joueurs extérieurs",
+      "addMore": "Ajouter d'autres invités",
+      "title": "Invités",
+      "infoText": "Personnes sans compte dans l'app qui vont jouer ce match. Définissez un niveau pour que l'IA équilibre mieux.",
+      "cancel": "Annuler",
+      "save": "Enregistrer {count} invité(s)"
+    },
+    "ai": {
+      "title": "Équilibrage IA",
+      "sub": "Des équipes équilibrées en secondes",
+      "cta": "Générer {count} équipes",
+      "ctaDisabled": "Il manque {count} pour commencer",
+      "generating": "Équilibrage des équipes…",
+      "generatingDesc": "Analyse de l'historique, des notes et du format pour créer un match équitable."
+    },
+    "result": {
+      "title": "Équipes générées",
+      "balanced": "L'IA a équilibré {count} joueurs",
+      "diffLabel": "Différence de note :",
+      "balanced_ok": "Équilibré",
+      "balanced_ok_rough": "Acceptable",
+      "avgRating": "Note moy.",
+      "rebalance": "Rééquilibrer",
+      "adjust": "Ajuster",
+      "swapInstructions": "Touche 2 joueurs pour échanger",
+      "swapPick": "Choisis un joueur à échanger avec {name}"
+    }
+  },
+  "arenaRankings": {
+    "title": "Classements",
+    "tabs": {
+      "liga": "Ligue",
+      "marcadores": "Buteurs",
+      "assist": "Passeurs"
+    }
+  },
+  "arenaHistorico": {
+    "title": "Historique",
+    "champion": "CHAMPION",
+    "sections": {
+      "seasons": "Saisons",
+      "recent": "Derniers résultats"
+    },
+    "stats": {
+      "pos": "Pos",
+      "pts": "Pts",
+      "v": "V",
+      "e": "N",
+      "d": "D"
+    }
   }
 }

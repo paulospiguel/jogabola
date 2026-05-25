@@ -413,7 +413,12 @@
       "squad": "Squad",
       "thisWeek": "This week",
       "viewCalendar": "Calendar",
-      "viewFullSquad": "View full squad"
+      "viewFullSquad": "View full squad",
+      "discover": "Discover",
+      "rankings": "Rankings",
+      "rankingsSub": "League · Top Scorers",
+      "historico": "History",
+      "historicoSub": "Seasons · Results"
     },
     "stats": {
       "confirmed": "Confirmed",
@@ -478,7 +483,8 @@
     "tabs": {
       "call": "Squad Call",
       "local": "Venue",
-      "lineup": "Lineup"
+      "lineup": "Lineup",
+      "equipa": "Teams"
     },
     "aiBalancer": {
       "button": "AI Balancer ⚡",
@@ -2688,5 +2694,76 @@
     "skip": "Not now",
     "success": "Passkey linked successfully!",
     "error": "Could not link passkey."
+  },
+  "arenaEquipas": {
+    "status": {
+      "complete": "Squad complete",
+      "missing": "Need {count} more player(s)",
+      "overflow": "+{count} reserves",
+      "teams": "teams"
+    },
+    "format": {
+      "label": "Format",
+      "numTeams": "Number of teams"
+    },
+    "confirmed": {
+      "label": "Squad",
+      "empty": "No confirmed players yet"
+    },
+    "guests": {
+      "label": "Guests",
+      "edit": "Edit",
+      "addTitle": "Add guests",
+      "addSub": "People without an app account",
+      "addSubMissing": "Fill {count} spot(s) with outside players",
+      "addMore": "Add more guests",
+      "title": "Guests",
+      "infoText": "People without an app account who will play this game. Set a level so AI can balance better.",
+      "cancel": "Cancel",
+      "save": "Save {count} guest(s)"
+    },
+    "ai": {
+      "title": "AI Balancing",
+      "sub": "Fair teams in seconds",
+      "cta": "Generate {count} teams",
+      "ctaDisabled": "Need {count} more to start",
+      "generating": "Balancing teams…",
+      "generatingDesc": "Analysing history, ratings and format to create a fair match."
+    },
+    "result": {
+      "title": "Generated teams",
+      "balanced": "AI balanced {count} players",
+      "diffLabel": "Rating difference:",
+      "balanced_ok": "Balanced",
+      "balanced_ok_rough": "Reasonable",
+      "avgRating": "Avg. Rating",
+      "rebalance": "Rebalance",
+      "adjust": "Adjust",
+      "swapInstructions": "Tap 2 players to swap",
+      "swapPick": "Pick a player to swap with {name}"
+    }
+  },
+  "arenaRankings": {
+    "title": "Rankings",
+    "tabs": {
+      "liga": "League",
+      "marcadores": "Top Scorers",
+      "assist": "Assists"
+    }
+  },
+  "arenaHistorico": {
+    "title": "History",
+    "champion": "CHAMPION",
+    "sections": {
+      "seasons": "Seasons",
+      "recent": "Recent results"
+    },
+    "stats": {
+      "pos": "Pos",
+      "pts": "Pts",
+      "v": "W",
+      "e": "D",
+      "d": "L"
+    }
   }
 }
