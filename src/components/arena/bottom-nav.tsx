@@ -1,6 +1,6 @@
 "use client";
 
-import { Calendar, CreditCard, Lock, Shield, User, Users } from "lucide-react";
+import { Calendar, Lock, Shield, User, Users, Wallet } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useTranslations } from "next-intl";
@@ -24,7 +24,7 @@ const ITEMS = [
   },
   {
     href: "/arena/payments",
-    icon: CreditCard,
+    icon: Wallet,
     labelKey: "payments",
     requiresTeam: true,
   },

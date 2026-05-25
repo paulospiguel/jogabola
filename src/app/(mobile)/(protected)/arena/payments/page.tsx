@@ -123,7 +123,7 @@ export default function PaymentsPage() {
     <div className="jb-page">
       <div className="jb-page-inner pb-24">
         {/* Header */}
-        <header className="jb-topbar flex flex-col gap-2">
+        <header className="jb-topbar flex gap-2 ">
           <div>
             <div className="jb-kicker">{t("kicker")}</div>
             <strong className="font-sora text-3xl font-black tracking-tight text-arena-text">
@@ -134,7 +134,6 @@ export default function PaymentsPage() {
               </span>
             </strong>
           </div>
-          <UserMenu onlyAvatar className="hidden md:block" />
         </header>
 
         {/* Dynamic Metric Cards Strip */}

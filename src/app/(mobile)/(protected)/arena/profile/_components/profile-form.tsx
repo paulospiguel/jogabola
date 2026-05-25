@@ -39,7 +39,7 @@ export function ProfileForm({ profile }: ProfileFormProps) {
       const result = await passkey.addPasskey();
       if (result?.error) throw new Error(result.error.message);
       setPasskeyStatus("added");
-    } catch (err) {
+    } catch (_err) {
       setPasskeyStatus("error");
     }
   }

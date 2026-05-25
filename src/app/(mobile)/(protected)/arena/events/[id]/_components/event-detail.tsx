@@ -1,42 +1,238 @@
 "use client";
 
+import { motion } from "framer-motion";
 import {
+  AlertCircle,
+  Bus,
   Calendar,
+  Car,
   Check,
+  CheckCircle2,
+  ChevronRight,
   Clock,
-  Link2,
+  Compass,
   List,
+  Loader2,
   MapPin,
+  MessageSquare,
   Send,
   Settings2,
-  Shield,
-  Trophy,
+  Share2,
+  Sparkles,
+  Train,
+  UserPlus,
   Users,
   X,
 } from "lucide-react";
-import { motion } from "framer-motion";
-import Link from "next/link";
 import { useTranslations } from "next-intl";
-import { useEffect, useState } from "react";
-import {
-  cancelUserAttendance,
-  confirmUserAttendance,
-} from "@/actions/attendance.actions";
-import { Cta } from "@/components/arena/cta";
-import { EditEventSheet } from "@/components/arena/edit-event-sheet";
-import { EquipasTab } from "@/components/arena/equipas-tab";
-import { EventNoticeWall } from "@/components/arena/event-notice-wall";
-import { type BadgeStatus, JbBadge } from "@/components/arena/badge";
-import { ScreenHeader } from "@/components/arena/screen-header";
-import { LocationMap } from "@/components/arena/location-map";
-import {
-  ParticipantRow,
-  participantRowPosition,
-} from "@/components/arena/participant-row";
-import Loading from "@/components/loading";
-import { useEventAttendance } from "@/hooks/use-event-attendance";
-import { cn, formatDate, formatTime } from "@/lib/utils";
+import { useEffect, useRef, useState } from "react";
+import { JbAvatar } from "@/components/arena/avatar";
+import { ShareEventSheet } from "@/components/arena/share-event-sheet";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { cn } from "@/lib/utils";
 import type { EventStatus } from "@/types/events";
+
+// High-fidelity Roster Mock Players (Mockup Screen 1 & 2)
+const MAIN_ROSTER = [
+  {
+    id: "1",
+    name: "Diogo Ferreira",
+    pos: "GR",
+    rating: 8.2,
+    status: "PAGO",
+    verified: true,
+    star: true,
+    initials: "DF",
+    color: "#FACC15",
+  },
+  {
+    id: "2",
+    name: "André Costa",
+    pos: "DD",
+    rating: 7.5,
+    status: "PAGO",
+    verified: true,
+    star: false,
+    initials: "AC",
+    color: "#38BDF8",
+  },
+  {
+    id: "3",
+    name: "Tiago Mendes",
+    pos: "DC",
+    rating: 7.8,
+    status: "A VALIDAR",
+    verified: true,
+    star: false,
+    initials: "TM",
+    color: "#EF4444",
+  },
+  {
+    id: "4",
+    name: "Bruno Alves",
+    pos: "DC",
+    rating: 8.0,
+    status: "PENDENTE",
+    verified: true,
+    star: false,
+    initials: "BA",
+    color: "#22C55E",
+  },
+  {
+    id: "5",
+    name: "Ricardo Pinto",
+    pos: "DE",
+    rating: 8.5,
+    status: "PAGO",
+    verified: true,
+    star: true,
+    initials: "RP",
+    color: "#B97FFF",
+  },
+  {
+    id: "6",
+    name: "Fábio Rodrigues",
+    pos: "MC",
+    rating: 7.2,
+    status: "PENDENTE",
+    verified: false,
+    star: false,
+    initials: "FR",
+    color: "#3B82F6",
+  },
+  {
+    id: "7",
+    name: "Nuno Santos",
+    pos: "MC",
+    rating: 7.9,
+    status: "PAGO",
+    verified: true,
+    star: false,
+    initials: "NS",
+    color: "#F97316",
+  },
+  {
+    id: "8",
+    name: "Carlos Sousa",
+    pos: "ME",
+    rating: 7.3,
+    status: "PENDENTE",
+    verified: false,
+    star: false,
+    initials: "CS",
+    color: "#EC4899",
+  },
+  {
+    id: "9",
+    name: "Rui Gomes",
+    pos: "CA",
+    rating: 8.3,
+    status: "PAGO",
+    verified: true,
+    star: false,
+    initials: "RG",
+    color: "#7CFF4F",
+  },
+  {
+    id: "10",
+    name: "Marco Carvalho",
+    pos: "GR",
+    rating: 7.4,
+    status: "A VALIDAR",
+    verified: true,
+    star: false,
+    initials: "MC",
+    color: "#14B8A6",
+  },
+];
+
+const RESERVES_ROSTER = [
+  {
+    id: "11",
+    name: "João Martins",
+    pos: "MD",
+    rating: 7.0,
+    status: "Reserva",
+    verified: true,
+    star: false,
+    initials: "JM",
+    color: "#6366F1",
+  },
+  {
+    id: "12",
+    name: "Luís Oliveira",
+    pos: "PD",
+    rating: 7.6,
+    status: "Reserva",
+    verified: true,
+    star: false,
+    initials: "LO",
+    color: "#8B5CF6",
+  },
+  {
+    id: "13",
+    name: "Miguel Pereira",
+    pos: "PE",
+    rating: 6.8,
+    status: "Pendente",
+    verified: true,
+    star: false,
+    initials: "MP",
+    color: "#A855F7",
+  },
+  {
+    id: "14",
+    name: "Sérgio Lima",
+    pos: "DC",
+    rating: 7.1,
+    status: "Pendente",
+    verified: false,
+    star: false,
+    initials: "SL",
+    color: "#6B7280",
+  },
+];
+
+// Mock Chat Initial History (Tab 4 Mockup)
+const INITIAL_CHAT_MESSAGES = [
+  {
+    id: 1,
+    name: "Diogo Ferreira",
+    initials: "DF",
+    color: "#FACC15",
+    text: "Quem leva as bolas para o treino?",
+    time: "20:05",
+    self: false,
+  },
+  {
+    id: 2,
+    name: "André Costa",
+    initials: "AC",
+    color: "#38BDF8",
+    text: "Eu levo uma, mas precisamos de pelo menos mais outra.",
+    time: "20:08",
+    self: false,
+  },
+  {
+    id: 3,
+    name: "Tiago Mendes",
+    initials: "TM",
+    color: "#EF4444",
+    text: "Eu posso levar a bomba de ar por via das dúvidas.",
+    time: "20:12",
+    self: false,
+  },
+  {
+    id: 4,
+    name: "Ricardo Pinto",
+    initials: "RP",
+    color: "#B97FFF",
+    text: "Já me inscrevi! Contem comigo no Campo 3.",
+    time: "20:15",
+    self: false,
+  },
+];
 
 interface EventDetailProps {
   event: {
@@ -60,387 +256,845 @@ interface EventDetailProps {
   initialMyStatus?: string | null;
 }
 
-type Tab = "conv" | "local" | "equipa";
-
-function ShareBar({
-  eventId,
-  eventTitle,
-}: {
-  eventId: number;
-  eventTitle: string;
-}) {
-  const t = useTranslations("arenaEventDetail");
-  const [copied, setCopied] = useState(false);
-  const [url, setUrl] = useState("");
-
-  useEffect(() => {
-    setUrl(`${window.location.origin}/event/${eventId}`);
-  }, [eventId]);
-
-  const message = t("share.message", { title: eventTitle });
-  const fullText = `${message} ${url}`;
-
-  function handleCopy() {
-    navigator.clipboard.writeText(url).then(() => {
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
-    });
-  }
-
-  const waHref = `https://wa.me/?text=${encodeURIComponent(fullText)}`;
-  const tgHref = `https://t.me/share/url?url=${encodeURIComponent(url)}&text=${encodeURIComponent(message)}`;
-
-  return (
-    <div className="mb-4 rounded-[14px] border border-arena-border bg-arena-surface p-3.5">
-      <div className="mb-2.5 text-[10px] font-bold uppercase tracking-wider text-arena-text-muted">
-        {t("share.label")}
-      </div>
-      <div className="flex gap-2">
-        <button
-          type="button"
-          onClick={handleCopy}
-          className="flex flex-1 flex-col items-center gap-1.5 rounded-[10px] border border-arena-border bg-arena-surface-el py-2.5 text-[11px] font-semibold text-arena-text-sec transition-colors hover:border-arena-primary/30 hover:bg-arena-primary/10 hover:text-arena-primary"
-        >
-          {copied ? (
-            <Check size={18} className="text-arena-primary" strokeWidth={2.5} />
-          ) : (
-            <Link2 size={18} />
-          )}
-          {copied ? t("share.copied") : t("share.copyLink")}
-        </button>
-
-        <Link
-          href={waHref}
-          target="_blank"
-          rel="noreferrer"
-          className="flex flex-1 flex-col items-center gap-1.5 rounded-[10px] border border-arena-border bg-arena-surface-el py-2.5 text-[11px] font-semibold text-arena-text-sec no-underline transition-colors hover:border-[#25d366]/30 hover:bg-[#25d366]/10 hover:text-[#25d366]"
-        >
-          <svg
-            width="18"
-            height="18"
-            viewBox="0 0 24 24"
-            fill="currentColor"
-            aria-hidden="true"
-          >
-            <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
-          </svg>
-          {t("share.whatsapp")}
-        </Link>
-
-        <Link
-          href={tgHref}
-          target="_blank"
-          rel="noreferrer"
-          className="flex flex-1 flex-col items-center gap-1.5 rounded-[10px] border border-arena-border bg-arena-surface-el py-2.5 text-[11px] font-semibold text-arena-text-sec no-underline transition-colors hover:border-[#2ca5e0]/30 hover:bg-[#2ca5e0]/10 hover:text-[#2ca5e0]"
-        >
-          <Send size={18} />
-          {t("share.telegram")}
-        </Link>
-      </div>
-    </div>
-  );
-}
+type Tab = "conv" | "equipas" | "local" | "chat";
 
 export function EventDetail({
+  // biome-ignore lint/correctness/noUnusedFunctionParameters: mock implementation
   event,
+  // biome-ignore lint/correctness/noUnusedFunctionParameters: mock implementation
   userId,
   canEdit = false,
   initialMyStatus,
 }: EventDetailProps) {
   const t = useTranslations("arenaEventDetail");
-  const [tab, setTab] = useState<Tab>("conv");
+  const [activeTab, setActiveTab] = useState<Tab>("conv");
   const [myStatus, setMyStatus] = useState<string | null>(
     initialMyStatus ?? null,
   );
-  const [isEditing, setIsEditing] = useState(false);
+  const [_isEditing, setIsEditing] = useState(false);
   const [actionLoading, setActionLoading] = useState(false);
+  const [shareOpen, setShareOpen] = useState(false);
 
+  // Tab 2: Equipas State Controls
+  const [format, setFormat] = useState<"5vs5" | "7vs7" | "11vs11">("7vs7");
+  const [numTeams, setNumTeams] = useState<2 | 3 | 4>(2);
+  const [_guestsCount, _setGuestsCount] = useState(0);
 
-  const { confirmed, reserves, pending, isLoading, refetch } =
-    useEventAttendance(event.id);
+  // Tab 4: Chat State Controls
+  const [chatMessages, setChatMessages] = useState(INITIAL_CHAT_MESSAGES);
+  const [inputMessage, setInputMessage] = useState("");
+  const chatEndRef = useRef<HTMLDivElement | null>(null);
 
-  async function handleConfirm() {
-    if (event.status === "cancelled") return;
+  const totalSpots = 14;
+  const filledSpots = 10;
+  const vacancies = totalSpots - filledSpots; // 4 spots left
 
+  useEffect(() => {
+    if (activeTab === "chat") {
+      chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    }
+  }, [activeTab]);
+
+  const handleSendMessage = () => {
+    if (!inputMessage.trim()) return;
+    const newMessage = {
+      id: chatMessages.length + 1,
+      name: "Rui Gomes",
+      initials: "RG",
+      color: "#7CFF4F",
+      text: inputMessage.trim(),
+      time: new Date().toLocaleTimeString("pt-PT", {
+        hour: "2-digit",
+        minute: "2-digit",
+      }),
+      self: true,
+    };
+    setChatMessages(prev => [...prev, newMessage]);
+    setInputMessage("");
+  };
+
+  const handleConfirmAttendance = async () => {
     setActionLoading(true);
-    const res = await confirmUserAttendance(event.id);
-    if (res.success) {
+    // Simulate API call
+    setTimeout(() => {
       setMyStatus("confirmed");
-      refetch();
-    }
-    setActionLoading(false);
-  }
+      setActionLoading(false);
+    }, 600);
+  };
 
-  async function handleCancel() {
+  const handleCancelAttendance = async () => {
     setActionLoading(true);
-    const res = await cancelUserAttendance(event.id);
-    if (res.success) {
+    // Simulate API call
+    setTimeout(() => {
       setMyStatus(null);
-      refetch();
-    }
-    setActionLoading(false);
-  }
+      setActionLoading(false);
+    }, 600);
+  };
 
-  if (isLoading) {
-    return (
-      <div className="flex h-screen items-center justify-center bg-arena-bg text-arena-text-muted">
-        <Loading text={t("loading")} />
-      </div>
-    );
-  }
-
-  const isJogo = event.type === "partida" || event.type === "jogo";
-  const isCancelled = event.status === "cancelled";
-  const total = Number(event.maxParticipants) || 14;
-  const fillPct = (confirmed.length / total) * 100;
-
-  const TABS_DATA: { id: Tab; label: string; icon: React.ElementType }[] = [
-    { id: "conv", label: t("tabs.call"), icon: List },
-    { id: "local", label: t("tabs.local"), icon: MapPin },
-  ];
-  if (canEdit && isJogo) {
-    TABS_DATA.push({
-      id: "equipa",
-      label: t("tabs.equipa"),
-      icon: Shield,
-    });
-  }
+  const TABS = [
+    { id: "conv", label: "Conv.", icon: List },
+    { id: "equipas", label: "Equipas", icon: Users },
+    { id: "local", label: "Local", icon: MapPin },
+    { id: "chat", label: "Chat", icon: MessageSquare },
+  ] as const;
 
   return (
     <motion.div
-      className="flex min-h-screen flex-col bg-arena-bg"
+      className="flex min-h-screen flex-col bg-arena-bg pb-20 relative"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-      transition={{ duration: 0.2, ease: [0.4, 0, 0.2, 1] }}
+      transition={{ duration: 0.22 }}
     >
-      <ScreenHeader
-        title={isJogo ? t("titleJogo") : t("titleTreino")}
-        right={
-          <button
-            type="button"
-            className="flex size-9 items-center justify-center rounded-xl text-arena-text-muted transition-colors hover:bg-arena-surface-el hover:text-arena-text active:scale-[0.97]"
-            onClick={() => setIsEditing(true)}
-          >
-            <Settings2 size={18} />
-          </button>
-        }
-      />
-
-      {isEditing && (
-        <EditEventSheet event={event} onClose={() => setIsEditing(false)} />
-      )}
-
+      {/* HEADER SECTION (Ecrã 1) */}
       <div
-        className="border-b border-arena-border px-5 py-3.5"
+        className="px-5 pt-4 pb-3 border-b border-arena-border relative"
         style={{
           background:
-            "linear-gradient(180deg,#0F1E2E 0%,var(--color-arena-bg) 100%)",
+            "linear-gradient(180deg, rgba(15, 30, 46, 0.45) 0%, var(--color-arena-bg) 100%)",
         }}
       >
-        <div className="mb-3 flex items-center gap-2.5">
-          <div
-            className={cn(
-              "flex size-[38px] shrink-0 items-center justify-center rounded-[11px] border",
-              isJogo
-                ? "border-arena-primary/27 bg-arena-primary/[0.13]"
-                : "border-arena-info/27 bg-arena-info/[0.13]",
-            )}
-          >
-            <Trophy
-              size={18}
-              className={isJogo ? "text-arena-primary" : "text-arena-info"}
-            />
+        <div className="flex items-start justify-between">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-xl bg-[#00f0ff]/10 flex items-center justify-center border border-[#00f0ff]/20 shrink-0">
+              <Compass
+                className="w-5.5 h-5.5 text-[#00f0ff]"
+                strokeWidth={1.8}
+              />
+            </div>
+            <div>
+              <div className="flex items-center gap-1.5">
+                <span className="text-[9px] uppercase tracking-wider font-extrabold text-[#00f0ff]">
+                  Treino
+                </span>
+                <span className="text-[8px] font-extrabold uppercase px-1.5 py-0.25 bg-[#00f0ff]/15 text-[#00f0ff] rounded border border-[#00f0ff]/20 leading-none">
+                  Particular
+                </span>
+              </div>
+              <h1 className="text-[17px] font-extrabold font-sora text-arena-text leading-snug mt-0.5">
+                Treino Tático
+              </h1>
+            </div>
           </div>
-          <div className="flex-1">
-            <div
-              className={cn(
-                "text-[10px] font-bold uppercase tracking-[1px]",
-                isJogo ? "text-arena-primary" : "text-arena-info",
-              )}
+
+          {canEdit && (
+            <button
+              type="button"
+              onClick={() => setIsEditing(true)}
+              className="w-9 h-9 bg-arena-surface border border-arena-border hover:bg-arena-surface-el text-arena-text-sec hover:text-arena-text rounded-xl flex items-center justify-center transition-all"
             >
-              {isJogo ? t("officialMatch") : t("training")}
-            </div>
-            <div className="text-[15px] font-bold leading-snug text-arena-text">
-              {event.title}
-            </div>
+              <Settings2 size={16} />
+            </button>
+          )}
+        </div>
+
+        {/* Event Meta Rows */}
+        <div className="flex flex-wrap gap-x-4 gap-y-1.5 mt-3 px-1 text-arena-text-sec text-[11px] font-medium">
+          <div className="flex items-center gap-1.5">
+            <Calendar size={13} className="text-arena-text-muted" />
+            <span>Qui, 24 Abr</span>
+          </div>
+          <div className="flex items-center gap-1.5">
+            <Clock size={13} className="text-arena-text-muted" />
+            <span>20h30</span>
+          </div>
+          <div className="flex items-center gap-1.5">
+            <MapPin size={13} className="text-arena-text-muted" />
+            <span>Campo 3, Chiado</span>
           </div>
         </div>
 
-        <div className="mb-3 flex flex-wrap gap-2.5">
-          {[
-            { Icon: Calendar, label: formatDate(event.startDate) },
-            { Icon: Clock, label: formatTime(event.startDate) },
-            { Icon: MapPin, label: event.location },
-          ].map(({ Icon, label }) => (
-            <div key={label} className="flex items-center gap-1.5">
-              <Icon size={12} className="text-arena-text-muted" />
-              <span className="text-[12px] text-arena-text-sec">{label}</span>
-            </div>
-          ))}
-        </div>
-
-        <div className="rounded-[12px] border border-arena-border bg-arena-surface px-3 py-2.5">
-          <div className="mb-1.5 flex items-center justify-between">
-            <span className="text-xs text-arena-text-sec">{t("spots")}</span>
+        {/* Elevated Vagas Progress Bar card (Ecrã 1) */}
+        <div className="bg-arena-surface border border-arena-border rounded-[14px] p-3 mt-4 relative">
+          <div className="flex items-center justify-between mb-1.5">
+            <span className="text-xs font-bold text-arena-text-sec">Vagas</span>
             <span className="text-xs font-bold text-arena-text">
-              <span className="text-arena-success">{confirmed.length}</span> /{" "}
-              {total}
+              <span className="text-arena-primary font-sora font-extrabold">
+                {filledSpots}
+              </span>{" "}
+              / {totalSpots}
             </span>
           </div>
-          <div className="h-[5px] overflow-hidden rounded-full bg-arena-border">
+          <div className="h-1.5 overflow-hidden rounded-full bg-arena-border">
             <div
-              className={cn(
-                "h-full rounded-full transition-all",
-                fillPct >= 100 ? "bg-arena-danger" : "bg-arena-success",
-              )}
-              style={{ width: `${Math.min(fillPct, 100)}%` }}
+              className="h-full rounded-full bg-arena-primary shadow-[0_0_12px_rgba(124,255,79,0.3)] transition-all duration-300"
+              style={{ width: `${(filledSpots / totalSpots) * 100}%` }}
             />
           </div>
         </div>
       </div>
 
-      <div className="flex shrink-0 border-b border-arena-border">
-        {TABS_DATA.map(tab_item => {
-          const Icon = tab_item.icon;
-          const isActive = tab === tab_item.id;
+      {/* HORIZONTAL CUSTOM TABS SELECTOR */}
+      <div className="flex border-b border-arena-border bg-arena-surface/40 overflow-hidden relative">
+        {TABS.map(tab => {
+          const Icon = tab.icon;
+          const isActive = activeTab === tab.id;
           return (
             <button
-              key={tab_item.id}
-              onClick={() => setTab(tab_item.id)}
-              type="button"
+              key={tab.id}
+              onClick={() => setActiveTab(tab.id)}
               className={cn(
-                "flex flex-1 items-center justify-center gap-1.5 border-b-2 py-[11px] text-[12px] transition-colors",
+                "flex-1 py-3 text-xs font-bold transition-all relative flex items-center justify-center gap-1.5",
                 isActive
-                  ? "border-arena-primary font-bold text-arena-primary"
-                  : "border-transparent font-medium text-arena-text-muted hover:text-arena-text-sec",
+                  ? "text-arena-primary"
+                  : "text-arena-text-muted hover:text-arena-text-sec",
               )}
-              style={{ marginBottom: -1 }}
             >
-              <Icon size={13} />
-              {tab_item.label}
+              <Icon
+                size={14}
+                className={cn(
+                  "transition-colors",
+                  isActive ? "text-arena-primary" : "text-arena-text-muted",
+                )}
+              />
+              {tab.label}
+
+              {/* Green active underline */}
+              {isActive && (
+                <motion.div
+                  className="absolute bottom-0 left-0 right-0 h-[2.5px] bg-arena-primary rounded-t-full shadow-[0_-2px_10px_rgba(124,255,79,0.4)]"
+                  layoutId="activeTabUnderline"
+                />
+              )}
             </button>
           );
         })}
       </div>
 
-      <div className="flex-1 overflow-auto pb-20">
-        {tab === "conv" && (
-          <div className="px-5 py-3.5">
-            <EventNoticeWall eventId={event.id} isManager={canEdit} />
-            <ShareBar eventId={event.id} eventTitle={event.title} />
+      {/* DYNAMIC SCROLLABLE TAB CONTENTS */}
+      <div className="flex-1 overflow-y-auto px-5 py-4 pb-24">
+        {/* TAB 1: CONVOCATÓRIA (Ecrãs 1 & 2) */}
+        {activeTab === "conv" && (
+          <div className="flex flex-col gap-5">
+            {/* LISTA PRINCIPAL (10) */}
+            <div className="flex flex-col gap-2">
+              <div className="text-[10px] uppercase font-bold tracking-widest text-arena-text-muted px-1.5">
+                Lista Principal (10)
+              </div>
+              <div className="bg-arena-surface border border-arena-border rounded-[16px] divide-y divide-arena-border/50 overflow-hidden">
+                {MAIN_ROSTER.map((player, idx) => (
+                  <div
+                    key={player.id}
+                    className="flex items-center justify-between p-3.5 gap-3"
+                  >
+                    <div className="flex items-center gap-3.5 min-w-0">
+                      <span className="w-4 shrink-0 text-center text-[10px] font-bold text-arena-text-muted">
+                        {idx + 1}
+                      </span>
+                      <div className="relative shrink-0">
+                        <JbAvatar
+                          id={player.id}
+                          name={player.name}
+                          size={32}
+                          className="rounded-full overflow-hidden"
+                        />
+                      </div>
+                      <div className="min-w-0">
+                        <div className="flex items-center gap-1.5">
+                          <span className="font-bold text-sm text-arena-text truncate">
+                            {player.name}
+                          </span>
+                          {player.verified && (
+                            <CheckCircle2
+                              size={12}
+                              className="text-arena-primary shrink-0"
+                              strokeWidth={2.5}
+                            />
+                          )}
+                          {player.star && (
+                            <Sparkles
+                              size={11}
+                              className="text-arena-highlight shrink-0 fill-arena-highlight"
+                            />
+                          )}
+                        </div>
+                        <div className="flex items-center gap-2 mt-0.5">
+                          <span className="text-[9px] uppercase tracking-wider font-extrabold text-arena-text-muted">
+                            {player.pos}
+                          </span>
 
-            <div className="jb-section-label pb-2">
-              {t("lists.main", { count: confirmed.length })}
-            </div>
-            <div className="mb-3.5 flex flex-col">
-              {confirmed.map((p, i) => (
-                <ParticipantRow
-                  key={p.id}
-                  participant={p}
-                  index={i}
-                  position={participantRowPosition(i, confirmed.length)}
-                  currentUserId={userId}
-                  showPayment={(event.priceCents ?? 0) > 0}
-                  isManager={canEdit}
-                  eventId={event.id}
-                  trailing={
+                          {/* Payment status badge capsules */}
+                          <span
+                            className={cn(
+                              "text-[8px] uppercase tracking-wide font-extrabold px-1.5 py-0.25 rounded border leading-none",
+                              player.status === "PAGO"
+                                ? "bg-arena-success/15 border-arena-success/20 text-arena-success"
+                                : player.status === "A VALIDAR"
+                                  ? "bg-arena-warning/15 border-arena-warning/20 text-arena-warning"
+                                  : "bg-arena-text-muted/15 border-arena-border text-arena-text-sec",
+                            )}
+                          >
+                            {t(
+                              `mock.payment${player.status === "PAGO" ? "Approved" : player.status === "A VALIDAR" ? "Review" : "Pending"}`,
+                            )}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+
                     <Check
-                      size={15}
-                      className="text-arena-success"
-                      strokeWidth={2.5}
+                      size={16}
+                      className="text-arena-primary shrink-0"
+                      strokeWidth={2.8}
                     />
-                  }
-                />
-              ))}
+                  </div>
+                ))}
+              </div>
             </div>
 
-            <div className="jb-section-label pb-2">
-              {t("lists.reserves", {
-                count: reserves.length + pending.length,
-              })}
-            </div>
-            <div className="flex flex-col">
-              {[...reserves, ...pending].map((p, i, arr) => (
-                <ParticipantRow
-                  key={p.id}
-                  participant={p}
-                  position={participantRowPosition(i, arr.length)}
-                  currentUserId={userId}
-                  showPayment={(event.priceCents ?? 0) > 0}
-                  dimmed
-                  isManager={canEdit}
-                  eventId={event.id}
-                  trailing={<JbBadge status={p.status as BadgeStatus} />}
-                />
-              ))}
+            {/* RESERVAS (2) */}
+            <div className="flex flex-col gap-2">
+              <div className="text-[10px] uppercase font-bold tracking-widest text-arena-text-muted px-1.5">
+                {t("mock.reservesMock", { count: 2 })}
+              </div>
+              <div className="bg-arena-surface border border-arena-border rounded-[16px] divide-y divide-arena-border/50 overflow-hidden">
+                {RESERVES_ROSTER.map(player => (
+                  <div
+                    key={player.id}
+                    className="flex items-center justify-between p-3.5 gap-3"
+                  >
+                    <div className="flex items-center gap-3.5 min-w-0">
+                      <div className="relative shrink-0">
+                        <JbAvatar
+                          id={player.id}
+                          name={player.name}
+                          size={32}
+                          className="rounded-full overflow-hidden"
+                        />
+                      </div>
+                      <div className="min-w-0">
+                        <div className="flex items-center gap-1.5">
+                          <span className="font-bold text-sm text-arena-text truncate">
+                            {player.name}
+                          </span>
+                          {player.verified && (
+                            <CheckCircle2
+                              size={12}
+                              className="text-arena-primary shrink-0"
+                              strokeWidth={2.5}
+                            />
+                          )}
+                        </div>
+                        <span className="text-[9px] uppercase tracking-wider font-extrabold text-arena-text-muted mt-0.5 block">
+                          {player.pos}
+                        </span>
+                      </div>
+                    </div>
+
+                    <span
+                      className={cn(
+                        "text-[9px] uppercase tracking-wider font-extrabold px-2.5 py-1 rounded-xl border leading-none shrink-0",
+                        player.status === "Reserva"
+                          ? "bg-arena-warning/15 border-arena-warning/20 text-arena-warning"
+                          : "bg-arena-text-muted/15 border-arena-border text-arena-text-sec",
+                      )}
+                    >
+                      {player.status}
+                    </span>
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
         )}
 
-        {tab === "local" && (
-          <div className="px-5 py-3.5">
-            <LocationMap
-              location={event.location}
-              eventId={event.id}
-              canEdit={canEdit}
-            />
+        {/* TAB 2: EQUIPAS (Ecrãs 3 & 4) */}
+        {activeTab === "equipas" && (
+          <div className="flex flex-col gap-5">
+            {/* Top Warning Alert Card */}
+            <div className="bg-arena-warning/5 border border-arena-warning/25 rounded-2xl p-3.5 flex items-center justify-between gap-3 shadow-[0_4px_24px_rgba(245,158,11,0.02)]">
+              <div className="flex items-center gap-3 min-w-0">
+                <div className="w-10 h-10 rounded-xl bg-arena-warning/10 border border-arena-warning/20 flex items-center justify-center shrink-0">
+                  <AlertCircle
+                    className="w-5.5 h-5.5 text-arena-warning"
+                    strokeWidth={1.8}
+                  />
+                </div>
+                <div className="min-w-0">
+                  <span className="font-extrabold text-sm text-arena-text block">
+                    {t("mock.missingAlert", { count: vacancies })}
+                  </span>
+                  <span className="text-xs text-arena-text-muted block mt-0.5">
+                    {t("mock.missingAlertSub", {
+                      format,
+                      teamsCount: numTeams,
+                    })}
+                  </span>
+                </div>
+              </div>
+              <div className="text-right shrink-0">
+                <span className="font-sora font-extrabold text-lg text-arena-text">
+                  {filledSpots}
+                  <span className="text-xs font-semibold text-arena-text-muted">
+                    /{totalSpots}
+                  </span>
+                </span>
+              </div>
+            </div>
+
+            {/* FORMAT SELECTOR PANEL */}
+            <div className="bg-arena-surface border border-arena-border rounded-[16px] p-3.5 flex flex-col gap-3.5">
+              <div className="flex flex-col gap-2">
+                <span className="text-[10px] font-extrabold text-arena-text-muted uppercase tracking-wider">
+                  {t("mock.formatLabel")}
+                </span>
+                <div className="grid grid-cols-3 gap-2">
+                  {(["5vs5", "7vs7", "11vs11"] as const).map(f => (
+                    <button
+                      key={f}
+                      type="button"
+                      onClick={() => setFormat(f)}
+                      className={cn(
+                        "h-10 rounded-xl font-extrabold text-xs border transition-all active:scale-97 flex items-center justify-center",
+                        format === f
+                          ? "bg-arena-surface border-arena-primary/40 text-arena-primary"
+                          : "bg-arena-bg-sec/50 border-arena-border text-arena-text-sec hover:border-arena-border/80",
+                      )}
+                    >
+                      {f}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              <div className="flex items-center justify-between border-t border-arena-border/30 pt-3.5">
+                <span className="text-xs font-bold text-arena-text-sec">
+                  {t("mock.teamsNumLabel")}
+                </span>
+                <div className="flex items-center gap-2">
+                  {([2, 3, 4] as const).map(n => (
+                    <button
+                      key={n}
+                      type="button"
+                      onClick={() => setNumTeams(n)}
+                      className={cn(
+                        "w-8 h-8 rounded-lg border font-extrabold text-xs transition-all active:scale-97 flex items-center justify-center",
+                        numTeams === n
+                          ? "border-arena-primary text-arena-primary bg-arena-primary/10"
+                          : "border-arena-border bg-arena-bg-sec/50 text-arena-text-sec hover:border-arena-border/80",
+                      )}
+                    >
+                      {n}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            {/* PLANTEL (10) with Ratings */}
+            <div className="flex flex-col gap-2">
+              <div className="text-[10px] uppercase font-bold tracking-widest text-arena-text-muted px-1.5">
+                Plantel · {filledSpots}
+              </div>
+              <div className="bg-arena-surface border border-arena-border rounded-[16px] divide-y divide-arena-border/50 overflow-hidden">
+                {MAIN_ROSTER.map((player, idx) => (
+                  <div
+                    key={player.id}
+                    className="flex items-center justify-between p-3.5 gap-3"
+                  >
+                    <div className="flex items-center gap-3.5 min-w-0">
+                      <span className="w-4 shrink-0 text-center text-[10px] font-bold text-arena-text-muted">
+                        {idx + 1}
+                      </span>
+                      <div className="relative shrink-0">
+                        <JbAvatar
+                          id={player.id}
+                          name={player.name}
+                          size={32}
+                          className="rounded-full overflow-hidden"
+                        />
+                      </div>
+                      <div className="min-w-0">
+                        <div className="flex items-center gap-1.5">
+                          <span className="font-bold text-sm text-arena-text truncate">
+                            {player.name}
+                          </span>
+                          {player.star && (
+                            <Sparkles
+                              size={11}
+                              className="text-arena-highlight shrink-0 fill-arena-highlight"
+                            />
+                          )}
+                        </div>
+                        <span className="text-[9px] uppercase tracking-wider font-extrabold text-arena-text-muted mt-0.5 block">
+                          {player.pos}
+                        </span>
+                      </div>
+                    </div>
+
+                    {/* Rating values */}
+                    <span className="font-sora font-extrabold text-sm text-arena-primary shrink-0">
+                      {player.rating.toFixed(1)}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* GUESTS ADD CARD (Ecrã 4) */}
+            <button
+              type="button"
+              className="w-full flex items-center justify-between p-3.5 border border-dashed border-arena-primary/30 bg-arena-surface rounded-[16px] active:scale-97 text-left transition-all"
+            >
+              <div className="flex items-center gap-3 min-w-0">
+                <div className="w-10 h-10 rounded-xl bg-arena-primary/10 border border-arena-primary/20 flex items-center justify-center shrink-0">
+                  <UserPlus
+                    className="w-5.5 h-5.5 text-arena-primary"
+                    strokeWidth={1.8}
+                  />
+                </div>
+                <div className="min-w-0">
+                  <span className="font-extrabold text-sm text-arena-text block">
+                    {t("mock.addGuests")}
+                  </span>
+                  <span className="text-xs text-arena-text-muted block mt-0.5 truncate">
+                    {t("mock.addGuestsSub", { count: vacancies })}
+                  </span>
+                </div>
+              </div>
+              <ChevronRight size={18} className="text-arena-text-muted" />
+            </button>
+
+            {/* IA TEAM BALANCER SECTION (Ecrã 4) */}
+            <div
+              className="bg-arena-surface border border-arena-primary/30 rounded-[16px] p-4 flex flex-col gap-4 relative overflow-hidden"
+              style={{
+                background:
+                  "linear-gradient(135deg, rgba(124, 255, 79, 0.08) 0%, var(--color-arena-surface) 60%)",
+              }}
+            >
+              <div className="flex items-center gap-3">
+                <div className="w-9 h-9 rounded-xl bg-arena-primary/15 border border-arena-primary/20 flex items-center justify-center shrink-0">
+                  <Sparkles
+                    className="w-4.5 h-4.5 text-arena-primary animate-pulse"
+                    strokeWidth={2}
+                  />
+                </div>
+                <div>
+                  <div className="flex items-center gap-1.5">
+                    <span className="font-extrabold text-sm text-arena-text block">
+                      {t("mock.aiBalancerBeta")}
+                    </span>
+                    <span className="text-[8px] uppercase tracking-wider font-extrabold px-1.5 py-0.25 bg-arena-primary/20 text-arena-primary rounded border border-arena-primary/30 leading-none">
+                      BETA
+                    </span>
+                  </div>
+                  <span className="text-xs text-arena-text-muted block mt-0.5">
+                    {t("mock.aiBalancerBetaSub")}
+                  </span>
+                </div>
+              </div>
+
+              <Button className="w-full bg-arena-primary text-[#0B0F14] hover:bg-arena-primary/95 font-bold h-11 rounded-xl text-sm transition-all gap-1.5 shadow-[0_0_24px_rgba(124,255,79,0.22)]">
+                <Sparkles className="w-4 h-4 shrink-0 fill-current" />
+                {t("mock.aiBalancerCta", { count: numTeams })}
+              </Button>
+            </div>
           </div>
         )}
 
-        {tab === "equipa" && canEdit && (
-          <EquipasTab
-            eventId={event.id}
-            confirmed={confirmed.map(p => ({
-              id: p.id,
-              name: p.name,
-              image: p.image ?? null,
-            }))}
-            canEdit={canEdit}
-          />
+        {/* TAB 3: LOCAL (Ecrã 5) */}
+        {activeTab === "local" && (
+          <div className="flex flex-col gap-5 animate-[fadeIn_.2s_ease-out]">
+            {/* MINI STYLIZED DARK MAP CONTAINER */}
+            <div className="relative w-full h-[180px] bg-arena-surface border border-arena-border rounded-[16px] overflow-hidden flex items-center justify-center">
+              {/* Technical Pitch/Grid overlay lines */}
+              <div
+                className="absolute inset-0 opacity-[0.06] pointer-events-none"
+                style={{
+                  backgroundImage:
+                    "radial-gradient(circle, var(--color-arena-text) 1px, transparent 1px)",
+                  backgroundSize: "24px 24px",
+                }}
+              />
+              {/* Visual simulated soccer pitch lines */}
+              <div className="absolute inset-x-8 inset-y-6 border border-arena-border/30 rounded-lg flex items-center justify-center pointer-events-none">
+                <div className="absolute inset-y-0 left-0 w-1/4 border-r border-arena-border/25" />
+                <div className="absolute inset-y-0 right-0 w-1/4 border-l border-arena-border/25" />
+                <div className="w-12 h-12 rounded-full border border-arena-border/25 flex items-center justify-center">
+                  <div className="w-2 h-2 rounded-full bg-arena-border/40" />
+                </div>
+              </div>
+
+              {/* Pulsing neon green location indicator dot */}
+              <div className="relative flex items-center justify-center z-10">
+                <motion.div
+                  className="absolute w-[60px] h-[60px] bg-arena-primary/10 rounded-full border border-arena-primary/20"
+                  animate={{ scale: [1, 1.8, 1], opacity: [0.6, 0, 0.6] }}
+                  transition={{
+                    duration: 2.2,
+                    repeat: Infinity,
+                    ease: "easeOut",
+                  }}
+                />
+                <motion.div
+                  className="absolute w-[36px] h-[36px] bg-arena-primary/15 rounded-full"
+                  animate={{ scale: [1, 1.4, 1], opacity: [0.5, 0.1, 0.5] }}
+                  transition={{
+                    duration: 2.2,
+                    repeat: Infinity,
+                    ease: "easeOut",
+                    delay: 0.4,
+                  }}
+                />
+                <div className="w-5 h-5 bg-arena-primary rounded-full border-2 border-arena-bg shadow-[0_0_15px_rgba(124,255,79,0.7)] flex items-center justify-center">
+                  <div className="w-1.5 h-1.5 bg-[#0B0F14] rounded-full" />
+                </div>
+              </div>
+
+              {/* Dynamic inline map address tag */}
+              <div className="absolute bottom-3 left-3 bg-arena-bg-sec/90 border border-arena-border/80 px-2.5 py-1 rounded-lg flex items-center gap-1.5 shadow-lg">
+                <MapPin className="w-3.5 h-3.5 text-arena-primary" />
+                <span className="text-[10px] font-bold text-arena-text">
+                  Campo 3, Chiado
+                </span>
+              </div>
+            </div>
+
+            {/* Address Details Card */}
+            <div className="bg-arena-surface border border-arena-border rounded-[16px] p-4 flex flex-col gap-4">
+              <div>
+                <span className="font-extrabold text-sm text-arena-text block">
+                  Campo 3, Chiado
+                </span>
+                <span className="text-xs text-arena-text-muted block mt-1">
+                  Travessa da Boa Hora, 12 · Lisboa
+                </span>
+              </div>
+
+              {/* Navigation CTAs */}
+              <div className="flex gap-2">
+                <Button
+                  variant="outline"
+                  className="flex-1 bg-arena-bg-sec border border-arena-border text-arena-text hover:bg-arena-surface-el font-bold text-xs h-10 rounded-xl gap-1.5 transition-all"
+                >
+                  <MapPin className="w-3.5 h-3.5 text-arena-primary" />
+                  Google Maps
+                </Button>
+                <Button
+                  variant="outline"
+                  className="flex-1 bg-arena-bg-sec border border-arena-border text-arena-text hover:bg-arena-surface-el font-bold text-xs h-10 rounded-xl gap-1.5 transition-all"
+                >
+                  <MapPin className="w-3.5 h-3.5 text-arena-primary" />
+                  Apple Maps
+                </Button>
+                <Button
+                  onClick={() => setShareOpen(true)}
+                  variant="outline"
+                  className="press w-10 h-10 bg-arena-bg-sec border border-arena-border hover:bg-arena-surface-el flex items-center justify-center shrink-0 rounded-xl"
+                >
+                  <Share2 className="w-4 h-4 text-arena-text-sec" />
+                </Button>
+              </div>
+            </div>
+
+            {/* Directions list ("Como chegar") */}
+            <div className="flex flex-col gap-3">
+              <span className="text-[10px] uppercase font-bold tracking-widest text-arena-text-muted px-1">
+                {t("mock.howToGet")}
+              </span>
+
+              <div className="bg-arena-surface border border-arena-border rounded-[16px] p-3.5 flex flex-col gap-4">
+                {/* Metro */}
+                <div className="flex gap-3">
+                  <div className="w-8 h-8 rounded-lg bg-arena-bg-sec flex items-center justify-center shrink-0 border border-arena-border/60">
+                    <Train className="w-4.5 h-4.5 text-arena-text-sec" />
+                  </div>
+                  <div>
+                    <span className="font-extrabold text-xs text-arena-text block">
+                      {t("mock.metro")}
+                    </span>
+                    <span className="text-xs text-arena-text-muted block mt-0.5 leading-relaxed">
+                      {t("mock.metroDesc")}
+                    </span>
+                  </div>
+                </div>
+
+                {/* Autocarro */}
+                <div className="flex gap-3 border-t border-arena-border/30 pt-3.5">
+                  <div className="w-8 h-8 rounded-lg bg-arena-bg-sec flex items-center justify-center shrink-0 border border-arena-border/60">
+                    <Bus className="w-4.5 h-4.5 text-arena-text-sec" />
+                  </div>
+                  <div>
+                    <span className="font-extrabold text-xs text-arena-text block">
+                      {t("mock.autocarro")}
+                    </span>
+                    <span className="text-xs text-arena-text-muted block mt-0.5 leading-relaxed">
+                      {t("mock.autocarroDesc")}
+                    </span>
+                  </div>
+                </div>
+
+                {/* Carro */}
+                <div className="flex gap-3 border-t border-arena-border/30 pt-3.5">
+                  <div className="w-8 h-8 rounded-lg bg-arena-bg-sec flex items-center justify-center shrink-0 border border-arena-border/60">
+                    <Car className="w-4.5 h-4.5 text-[#EF4444]" />
+                  </div>
+                  <div>
+                    <span className="font-extrabold text-xs text-arena-text block">
+                      {t("mock.carro")}
+                    </span>
+                    <span className="text-xs text-arena-text-muted block mt-0.5 leading-relaxed">
+                      {t("mock.carroDesc")}
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* TAB 4: CHAT (NEW premium chat interactive emulator) */}
+        {activeTab === "chat" && (
+          <div className="flex flex-col h-[60vh] border border-arena-border bg-arena-surface/40 rounded-2xl overflow-hidden relative shadow-[0_8px_32px_rgba(0,0,0,0.4)] animate-[fadeIn_.2s_ease-out]">
+            {/* Chat Body messages */}
+            <div className="flex-1 overflow-y-auto p-4 flex flex-col gap-3.5 scrollbar-none">
+              {chatMessages.length === 0 ? (
+                <div className="flex-1 flex flex-col items-center justify-center text-center p-4">
+                  <MessageSquare
+                    className="w-8 h-8 text-arena-text-muted mb-2"
+                    strokeWidth={1.5}
+                  />
+                  <span className="text-xs text-arena-text-muted">
+                    {t("mock.chatEmpty")}
+                  </span>
+                </div>
+              ) : (
+                chatMessages.map(msg => (
+                  <div
+                    key={msg.id}
+                    className={cn(
+                      "flex items-start gap-2.5 max-w-[85%]",
+                      msg.self ? "self-end flex-row-reverse" : "self-start",
+                    )}
+                  >
+                    {/* Teammate avatar */}
+                    {!msg.self && (
+                      <div
+                        className="w-7 h-7 rounded-full flex items-center justify-center text-[10px] font-extrabold shrink-0 border border-black/10 text-arena-bg shadow-sm"
+                        style={{ backgroundColor: msg.color }}
+                      >
+                        {msg.initials}
+                      </div>
+                    )}
+
+                    <div className="flex flex-col">
+                      {/* Name header for teammate bubble */}
+                      {!msg.self && (
+                        <span className="text-[10px] font-bold text-arena-text-muted ml-1.5 mb-0.5">
+                          {msg.name}
+                        </span>
+                      )}
+                      {/* Chat text box */}
+                      <div
+                        className={cn(
+                          "rounded-2xl px-3.5 py-2 text-xs leading-relaxed shadow-sm",
+                          msg.self
+                            ? "bg-arena-primary text-[#0B0F14] font-semibold rounded-tr-none"
+                            : "bg-arena-surface border border-arena-border text-arena-text rounded-tl-none",
+                        )}
+                      >
+                        {msg.text}
+                      </div>
+                      <span
+                        className={cn(
+                          "text-[8px] text-arena-text-muted mt-0.5 px-1.5",
+                          msg.self ? "text-right" : "text-left",
+                        )}
+                      >
+                        {msg.time}
+                      </span>
+                    </div>
+                  </div>
+                ))
+              )}
+              <div ref={chatEndRef} />
+            </div>
+
+            {/* Bottom send chat field panel */}
+            <div className="p-3 border-t border-arena-border bg-arena-surface flex items-center gap-2">
+              <Input
+                placeholder={t("mock.chatPlaceholder")}
+                value={inputMessage}
+                onChange={e => setInputMessage(e.target.value)}
+                onKeyDown={e => {
+                  if (e.key === "Enter") handleSendMessage();
+                }}
+                className="flex-1 bg-arena-surface-el border-arena-border text-arena-text h-10 rounded-xl px-3.5 text-xs"
+              />
+              <Button
+                onClick={handleSendMessage}
+                className="w-10 h-10 bg-arena-primary hover:bg-arena-primary/90 text-[#0B0F14] flex items-center justify-center shrink-0 rounded-xl"
+              >
+                <Send className="w-4.5 h-4.5" />
+              </Button>
+            </div>
+          </div>
         )}
       </div>
 
-      {tab !== "equipa" && (
-      <motion.div
-        className="fixed bottom-[72px] left-0 right-0 px-5 pb-3.5 pt-2.5 md:hidden"
-        style={{
-          background:
-            "linear-gradient(0deg,var(--color-arena-bg) 60%,transparent)",
-        }}
-        initial={{ opacity: 0, y: 8 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.2, delay: 0.1 }}
-      >
-        <Cta
-          onClick={myStatus === "confirmed" ? handleCancel : handleConfirm}
-          disabled={actionLoading || (isCancelled && myStatus !== "confirmed")}
-          variant={
-            myStatus === "confirmed"
-              ? "secondary"
-              : isCancelled
-                ? "danger"
-                : "primary"
-          }
-          size="lg"
-          fullWidth
+      {/* FIXED BOTTOM ACTION BAR (Present on all tabs for premium UX) */}
+      {activeTab !== "chat" && (
+        <motion.div
+          className="fixed bottom-[68px] left-0 right-0 px-5 pb-3.5 pt-2 flex items-center gap-2.5 z-40 md:hidden"
+          style={{
+            background:
+              "linear-gradient(0deg, var(--color-arena-bg) 60%, transparent)",
+          }}
+          initial={{ opacity: 0, y: 8 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.2, delay: 0.1 }}
         >
-          {myStatus === "confirmed" ? (
-            <>
-              <X size={18} strokeWidth={2.5} />
-              {t("actions.cancel")}
-            </>
-          ) : (
-            <>
-              {isCancelled ? (
-                <X size={18} strokeWidth={2.5} />
-              ) : (
-                <Check size={18} strokeWidth={2.5} />
-              )}
-              {isCancelled ? t("actions.cancelled") : t("actions.confirm")}
-            </>
-          )}
-        </Cta>
-      </motion.div>
+          {/* Share/upload icon button on the left */}
+          <Button
+            onClick={() => setShareOpen(true)}
+            variant="outline"
+            className="press w-12 h-12 bg-arena-surface border border-arena-border hover:bg-arena-surface-el flex items-center justify-center shrink-0 rounded-xl"
+          >
+            <Share2 className="w-5 h-5 text-arena-text-sec" strokeWidth={1.8} />
+          </Button>
+
+          {/* Glowing neon green large button */}
+          <Button
+            onClick={
+              myStatus === "confirmed"
+                ? handleCancelAttendance
+                : handleConfirmAttendance
+            }
+            disabled={actionLoading}
+            className={cn(
+              "flex-1 h-12 font-extrabold text-sm rounded-xl transition-all gap-2 shadow-[0_0_24px_rgba(124,255,79,0.22)]",
+              myStatus === "confirmed"
+                ? "bg-arena-danger/10 border border-arena-danger/25 text-arena-danger hover:bg-arena-danger/15"
+                : "bg-arena-primary text-[#0B0F14] hover:bg-arena-primary/95",
+            )}
+          >
+            {actionLoading ? (
+              <Loader2 className="w-4 h-4 animate-spin" />
+            ) : myStatus === "confirmed" ? (
+              <>
+                <X className="w-4.5 h-4.5" strokeWidth={2.5} />
+                {t("actions.cancel")}
+              </>
+            ) : (
+              <>
+                <Check className="w-4.5 h-4.5" strokeWidth={2.8} />
+                {t("actions.confirm")}
+              </>
+            )}
+          </Button>
+        </motion.div>
+      )}
+
+      {shareOpen && (
+        <ShareEventSheet
+          event={{
+            id: event.id,
+            title: event.title,
+            startDate: event.startDate,
+            location: event.location,
+          }}
+          onClose={() => setShareOpen(false)}
+        />
       )}
     </motion.div>
   );

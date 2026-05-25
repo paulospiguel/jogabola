@@ -266,6 +266,7 @@
     }
   },
   "arenaCreateEvent": {
+    "createEventTitle": "Create event",
     "actions": {
       "back": "Back",
       "continue": "Continue",
@@ -297,14 +298,20 @@
       "empty": "There are no athletes in the squad yet.",
       "verified": "Verified athlete",
       "manual": "Manually added",
-      "summary": "{count} athlete{count, plural, =1 {} other {s}} pre-invited"
+      "summary": "{count} athlete{count, plural, =1 {} other {s}} pre-invited",
+      "clear": "Clear",
+      "all": "All"
     },
     "labels": {
       "title": "Event Title",
-      "date": "Date & Time",
+      "date": "Date",
+      "time": "Time",
       "location": "Location",
-      "maxPlayers": "Nº Players",
-      "recurrence": "Recurrence"
+      "maxPlayers": "Max. players",
+      "recurrence": "Recurrence",
+      "fee": "Participation fee",
+      "private": "Private event",
+      "privateSub": "Open to all invitees"
     },
     "payment": {
       "section": "Payment",
@@ -327,13 +334,21 @@
     "noTitle": "No title",
     "placeholders": {
       "dateTime": "dd/mm/aaaa, hh:mm",
+      "selectDateTime": "Select date & time",
       "location": "Ex: Pitch 5, Bairro Alto",
       "match": "Ex: FC Bairro Alto vs Benfica B",
-      "time": "Ex: 18:00",
-      "training": "Ex: Technical Training"
+      "time": "Ex: 18h00",
+      "training": "Ex: Technical Training",
+      "date": "Ex: Sat, 26 Apr",
+      "fee": "€ 0 — free"
+    },
+    "confirm": {
+      "noDate": "No date set",
+      "noTime": "No time set",
+      "noPlayers": "No players called up yet."
     },
     "playersCount": "{count} players",
-    "steps": ["Event Type", "Details", "Preview", "Confirm"],
+    "steps": ["Event Type", "Details", "Invite", "Confirm"],
     "success": "Event created!",
     "successSubtitle": "Invitation sent successfully.",
     "types": {
@@ -348,7 +363,18 @@
       "training": {
         "desc": "Training session",
         "label": "Training"
+      },
+      "other": {
+        "desc": "Meeting or event",
+        "label": "Other"
       }
+    },
+    "final": {
+      "stepsInfo": "Players receive a notification and can confirm/decline directly.",
+      "sendCallup": "Send Callup",
+      "successSent": "Callup sent to <strongComponent>{count} players</strongComponent>.",
+      "selectedCount": "{count} selected",
+      "notificationSent": "Notification sent to {count} players"
     }
   },
   "arenaCreateTeam": {
@@ -479,6 +505,17 @@
       "telegram": "Telegram",
       "message": "You've been called up for {title}. Confirm your attendance:"
     },
+    "shareSheet": {
+      "title": "Share Callup",
+      "event": "EVENT",
+      "qrCode": "QR CODE",
+      "copyLink": "Copy link",
+      "copied": "Copied!",
+      "whatsapp": "WhatsApp",
+      "presenceList": "Attendance List",
+      "presenceListSub": "Public link to see confirmations",
+      "open": "Open"
+    },
     "spots": "Spots",
     "tabs": {
       "call": "Squad Call",
@@ -501,6 +538,30 @@
       "teamA": "Team A",
       "teamB": "Team B",
       "avgRating": "Avg Rating:"
+    },
+    "mock": {
+      "reservesMock": "RESERVES ({count})",
+      "missingAlert": "Missing {count} players",
+      "missingAlertSub": "{format} · {teamsCount} teams",
+      "formatLabel": "FORMAT",
+      "teamsNumLabel": "Number of teams",
+      "addGuests": "Add guests",
+      "addGuestsSub": "Fill the {count} spots with guests",
+      "aiBalancerBeta": "AI Balancer",
+      "aiBalancerBetaSub": "Fair teams in seconds",
+      "aiBalancerCta": "Generate {count} teams",
+      "howToGet": "Directions",
+      "metro": "Metro",
+      "metroDesc": "Baixa-Chiado station (Green/Blue line), 8 min walk",
+      "autocarro": "Bus",
+      "autocarroDesc": "Line 758 and 790, Bairro Alto stop",
+      "carro": "Car",
+      "carroDesc": "Parking available on the side street",
+      "chatEmpty": "No messages yet. Start the conversation!",
+      "chatPlaceholder": "Write a message...",
+      "paymentApproved": "✓ PAID",
+      "paymentReview": "REVIEW",
+      "paymentPending": "PENDING"
     },
     "titleJogo": "Match Details",
     "titleTreino": "Training",
@@ -1997,6 +2058,66 @@
       "overview": "Overview",
       "settings": "Settings",
       "teams": "My teams"
+    },
+    "dashboard": {
+      "games": "Games",
+      "goals": "Goals",
+      "assists": "Assists",
+      "rating": "Rating",
+      "associatedTeams": "Associated Teams",
+      "associatedTeamsCount": "{count} teams",
+      "playersCount": "players",
+      "position": "position",
+      "wins": "wins",
+      "season": "season",
+      "viewRound": "View Round",
+      "events": "Events"
+    },
+    "menu": {
+      "notifications": "Notifications",
+      "notificationsSub": "Manage alerts",
+      "security": "Security",
+      "securitySub": "Passkeys and sessions",
+      "editProfile": "Edit profile",
+      "editProfileSub": "Name, photo, and contacts",
+      "proPlan": "Pro Plan",
+      "proPlanSub": "3/3 teams · €5/month",
+      "logout": "Log out"
+    },
+    "notificationsSheet": {
+      "title": "Notifications",
+      "push": "PUSH",
+      "email": "EMAIL",
+      "presence": "Presence confirmations",
+      "presenceSub": "When someone confirms or declines",
+      "chat": "Chat messages",
+      "chatSub": "New messages in events",
+      "results": "Published results",
+      "resultsSub": "When a game ends",
+      "payments": "Payments",
+      "paymentsSub": "Receipts received / overdue",
+      "notices": "Manager notices",
+      "noticesSub": "Event notices wall"
+    },
+    "editProfileSheet": {
+      "title": "Edit profile",
+      "fullName": "FULL NAME",
+      "email": "EMAIL",
+      "phone": "PHONE",
+      "verified": "Verified",
+      "verifiedAthlete": "Verified athlete",
+      "verifiedAthleteDesc": "Email confirmed and approved by manager"
+    },
+    "securitySheet": {
+      "title": "Security",
+      "tabs": {
+        "passkeys": "Passkeys",
+        "sessions": "Sessions",
+        "twoFactor": "2FA"
+      },
+      "deviceActive": "active",
+      "addedOn": "Added on {date}",
+      "remove": "Remove"
     }
   },
   "searchResults": {

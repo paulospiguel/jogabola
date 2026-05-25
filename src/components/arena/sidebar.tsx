@@ -5,10 +5,10 @@ import {
   Calendar,
   ChevronsLeft,
   ChevronsRight,
-  CreditCard,
   Lock,
   Shield,
   Users,
+  Wallet,
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -56,7 +56,7 @@ const ITEMS = [
   },
   {
     href: "/arena/payments",
-    icon: CreditCard,
+    icon: Wallet,
     labelKey: "payments",
     requiresTeam: true,
   },

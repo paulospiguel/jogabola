@@ -266,6 +266,7 @@
     }
   },
   "arenaCreateEvent": {
+    "createEventTitle": "Création d'événement",
     "actions": {
       "back": "Retour",
       "continue": "Continuer",
@@ -297,14 +298,20 @@
       "empty": "Aucun athlète dans l'effectif pour le moment.",
       "verified": "Athlète vérifié",
       "manual": "Ajouté manuellement",
-      "summary": "{count} athlète{count, plural, =1 {} other {s}} pré-invité{count, plural, =1 {} other {s}}"
+      "summary": "{count} athlète{count, plural, =1 {} other {s}} pré-invité{count, plural, =1 {} other {s}}",
+      "clear": "Effacer",
+      "all": "Tous"
     },
     "labels": {
       "title": "Titre de l'événement",
-      "date": "Date et Heure",
+      "date": "Date",
+      "time": "Heure",
       "location": "Lieu",
-      "maxPlayers": "Nº Joueurs",
-      "recurrence": "Périodicité"
+      "maxPlayers": "Max. joueurs",
+      "recurrence": "Périodicité",
+      "fee": "Frais de participation",
+      "private": "Événement privé",
+      "privateSub": "Ouvert à tous les convoqués"
     },
     "payment": {
       "section": "Paiement",
@@ -327,13 +334,21 @@
     "noTitle": "Sans titre",
     "placeholders": {
       "dateTime": "jj/mm/aaaa, hh:mm",
+      "selectDateTime": "Sélectionner la date et l'heure",
       "location": "Ex : Terrain 5, Bairro Alto",
       "match": "Ex : FC Bairro Alto vs Benfica B",
-      "time": "Ex : 18:00",
-      "training": "Ex : Entraînement technique"
+      "time": "Ex : 18h00",
+      "training": "Ex : Entraînement technique",
+      "date": "Ex : Sam, 26 Avr",
+      "fee": "€ 0 — gratuit"
+    },
+    "confirm": {
+      "noDate": "Aucune date définie",
+      "noTime": "Aucune heure définie",
+      "noPlayers": "Aucun athlète convoqué pour le moment."
     },
     "playersCount": "{count} joueurs",
-    "steps": ["Type d'événement", "Détails", "Aperçu", "Confirmer"],
+    "steps": ["Type d'événement", "Détails", "Convoquer", "Confirmer"],
     "success": "Événement créé !",
     "successSubtitle": "Convocation envoyée avec succès.",
     "types": {
@@ -348,7 +363,18 @@
       "training": {
         "desc": "Séance d'entraînement",
         "label": "Entraînement"
+      },
+      "other": {
+        "desc": "Réunion ou événement",
+        "label": "Autre"
       }
+    },
+    "final": {
+      "stepsInfo": "Les joueurs reçoivent une notification et peuvent confirmer/refuser directement.",
+      "sendCallup": "Envoyer la Convocation",
+      "successSent": "Convocation envoyée à <strongComponent>{count} joueurs</strongComponent>.",
+      "selectedCount": "{count} sélectionnés",
+      "notificationSent": "Notification envoyée à {count} joueurs"
     }
   },
   "arenaCreateTeam": {
@@ -479,6 +505,17 @@
       "telegram": "Telegram",
       "message": "Vous avez été convoqué pour {title}. Confirmez votre présence :"
     },
+    "shareSheet": {
+      "title": "Partager la Convocation",
+      "event": "ÉVÉNEMENT",
+      "qrCode": "CODE QR",
+      "copyLink": "Copier le lien",
+      "copied": "Copié !",
+      "whatsapp": "WhatsApp",
+      "presenceList": "Liste de présence",
+      "presenceListSub": "Lien public pour voir les confirmations",
+      "open": "Ouvrir"
+    },
     "spots": "Places",
     "tabs": {
       "call": "Convocation",
@@ -501,6 +538,30 @@
       "teamA": "Équipe A",
       "teamB": "Équipe B",
       "avgRating": "Note Moyenne :"
+    },
+    "mock": {
+      "reservesMock": "RÉSERVES ({count})",
+      "missingAlert": "Il manque {count} joueurs",
+      "missingAlertSub": "{format} · {teamsCount} équipes",
+      "formatLabel": "FORMAT",
+      "teamsNumLabel": "Nombre d'équipes",
+      "addGuests": "Ajouter des invités",
+      "addGuestsSub": "Complétez les {count} places avec des invités",
+      "aiBalancerBeta": "Équilibrage IA",
+      "aiBalancerBetaSub": "Des équipes équitables en quelques secondes",
+      "aiBalancerCta": "Générer {count} équipes",
+      "howToGet": "Comment s'y rendre",
+      "metro": "Métro",
+      "metroDesc": "Station Baixa-Chiado (ligne Verte/Bleue), 8 min à pied",
+      "autocarro": "Bus",
+      "autocarroDesc": "Lignes 758 et 790, arrêt Bairro Alto",
+      "carro": "Voiture",
+      "carroDesc": "Parking disponible dans la rue latérale",
+      "chatEmpty": "Pas encore de messages. Commencez la conversation !",
+      "chatPlaceholder": "Écrire un message...",
+      "paymentApproved": "✓ PAYÉ",
+      "paymentReview": "À VALIDER",
+      "paymentPending": "EN ATTENTE"
     },
     "titleJogo": "Détails du match",
     "titleTreino": "Entraînement",
@@ -1997,6 +2058,66 @@
       "overview": "Vue générale",
       "settings": "Paramètres",
       "teams": "Mes équipes"
+    },
+    "dashboard": {
+      "games": "Matchs",
+      "goals": "Buts",
+      "assists": "Passes",
+      "rating": "Note",
+      "associatedTeams": "Équipes Associées",
+      "associatedTeamsCount": "{count} équipes",
+      "playersCount": "joueurs",
+      "position": "position",
+      "wins": "victoires",
+      "season": "saison",
+      "viewRound": "Voir la Journée",
+      "events": "Événements"
+    },
+    "menu": {
+      "notifications": "Notifications",
+      "notificationsSub": "Gérer les alertes",
+      "security": "Sécurité",
+      "securitySub": "Passkey et sessions",
+      "editProfile": "Modifier le profil",
+      "editProfileSub": "Nom, photo et contacts",
+      "proPlan": "Plan Pro",
+      "proPlanSub": "3/3 équipes · 5 €/mois",
+      "logout": "Se déconnecter"
+    },
+    "notificationsSheet": {
+      "title": "Notifications",
+      "push": "PUSH",
+      "email": "E-MAIL",
+      "presence": "Confirmations de présence",
+      "presenceSub": "Quand quelqu'un confirme ou refuse",
+      "chat": "Messages de chat",
+      "chatSub": "Nouveaux messages dans les événements",
+      "results": "Résultats publiés",
+      "resultsSub": "Quand un match se termine",
+      "payments": "Paiements",
+      "paymentsSub": "Justificatifs reçus / en retard",
+      "notices": "Avis du manager",
+      "noticesSub": "Mur d'avis de l'événement"
+    },
+    "editProfileSheet": {
+      "title": "Modifier le profil",
+      "fullName": "NOM COMPLET",
+      "email": "E-MAIL",
+      "phone": "TÉLÉPHONE",
+      "verified": "Validé",
+      "verifiedAthlete": "Athlète vérifié",
+      "verifiedAthleteDesc": "E-mail confirmé et approuvé par le manager"
+    },
+    "securitySheet": {
+      "title": "Sécurité",
+      "tabs": {
+        "passkeys": "Passkeys",
+        "sessions": "Sessions",
+        "twoFactor": "2FA"
+      },
+      "deviceActive": "active",
+      "addedOn": "Ajoutée le {date}",
+      "remove": "Supprimer"
     }
   },
   "searchResults": {

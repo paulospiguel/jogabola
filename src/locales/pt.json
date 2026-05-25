@@ -266,6 +266,7 @@
     }
   },
   "arenaCreateEvent": {
+    "createEventTitle": "Criação de evento",
     "actions": {
       "back": "Voltar",
       "continue": "Continuar",
@@ -297,14 +298,20 @@
       "empty": "Ainda não há atletas no plantel.",
       "verified": "Atleta verificado",
       "manual": "Adicionado manualmente",
-      "summary": "{count} atleta{count, plural, =1 {} other {s}} pré-convocado{count, plural, =1 {} other {s}}"
+      "summary": "{count} atleta{count, plural, =1 {} other {s}} pré-convocado{count, plural, =1 {} other {s}}",
+      "clear": "Limpar",
+      "all": "Todos"
     },
     "labels": {
       "title": "Título do Evento",
-      "date": "Data e Hora",
+      "date": "Data",
+      "time": "Hora",
       "location": "Local",
-      "maxPlayers": "Nº Jogadores",
-      "recurrence": "Modalidade"
+      "maxPlayers": "Máx. jogadores",
+      "recurrence": "Modalidade",
+      "fee": "Quota de participação",
+      "private": "Evento particular",
+      "privateSub": "Aberto a todos os convocados"
     },
     "payment": {
       "section": "Pagamento",
@@ -327,13 +334,21 @@
     "noTitle": "Sem título",
     "placeholders": {
       "dateTime": "dd/mm/aaaa, hh:mm",
+      "selectDateTime": "Selecionar data & hora",
       "location": "Ex: Campo 5, Bairro Alto",
       "match": "Ex: FC Bairro Alto vs Benfica B",
-      "time": "Ex: 18:00",
-      "training": "Ex: Treino Técnico"
+      "time": "Ex: 18h00",
+      "training": "Ex: Treino Técnico",
+      "date": "Ex: Sáb, 26 Abr",
+      "fee": "€ 0 — grátis"
+    },
+    "confirm": {
+      "noDate": "Sem data definida",
+      "noTime": "Sem hora definida",
+      "noPlayers": "Sem atletas convocados ainda."
     },
     "playersCount": "{count} jogadores",
-    "steps": ["Tipo de evento", "Detalhes", "Pré-visualização", "Confirmar"],
+    "steps": ["Tipo de evento", "Detalhes", "Convocar", "Confirmar"],
     "success": "Evento criado!",
     "successSubtitle": "Convocatória enviada com sucesso.",
     "types": {
@@ -348,7 +363,18 @@
       "training": {
         "desc": "Sessão de treino",
         "label": "Treino"
+      },
+      "other": {
+        "desc": "Reunião ou evento",
+        "label": "Outro"
       }
+    },
+    "final": {
+      "stepsInfo": "Os jogadores recebem notificação e podem confirmar/recusar diretamente.",
+      "sendCallup": "Enviar Convocatória",
+      "successSent": "Convocatória enviada a <strongComponent>{count} jogadores</strongComponent>.",
+      "selectedCount": "{count} selecionados",
+      "notificationSent": "Notificação enviada a {count} jogadores"
     }
   },
   "arenaCreateTeam": {

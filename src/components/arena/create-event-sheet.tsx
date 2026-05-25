@@ -1,32 +1,30 @@
 "use client";
 
 import { format } from "date-fns";
+import { pt } from "date-fns/locale";
+import Lottie from "lottie-react";
 import {
+  AlertCircle,
+  Calendar,
   Check,
-  ChevronDown,
-  ChevronUp,
-  CreditCard,
-  Link2,
+  Clock,
+  Compass,
   Loader2,
-  RotateCcw,
-  Send,
+  MapPin,
+  Search,
+  Shield,
   Users,
 } from "lucide-react";
-import Image from "next/image";
 import { useTranslations } from "next-intl";
 import { useEffect, useMemo, useState } from "react";
-import {
-  createEvent,
-  getLastEventSquad,
-} from "@/actions/match-sessions.actions";
-import Challenge from "@/assets/images/jb-challenge.png";
-import Game from "@/assets/images/jb-game.png";
-import Training from "@/assets/images/jb-training.png";
+import { createEvent } from "@/actions/match-sessions.actions";
+import SuccessAnimation from "@/assets/lottie/Success.json";
+import { BottomSheet } from "@/components/arena/bottom-sheet";
+import { EventDatePicker } from "@/components/ui/event-date-picker";
 import { useSquad } from "@/hooks/use-squad";
 import { useTeamPaymentSettings } from "@/hooks/use-team-payment-settings";
 import { cn } from "@/lib/utils";
 import { Button } from "../ui/button";
-import { EventDatePicker } from "../ui/event-date-picker";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
 import {
@@ -36,9 +34,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../ui/select";
-import { JbAvatar } from "./avatar";
-import { BottomSheet } from "./bottom-sheet";
-import { VerifiedBadge } from "./verified-badge";
 
 interface CreateEventSheetProps {
   onClose: () => void;
@@ -47,7 +42,7 @@ interface CreateEventSheetProps {
 }
 
 interface FormState {
-  type: "game" | "training" | "challenge";
+  type: "game" | "training" | "challenge" | "other";
   title: string;
   startDate: Date | null;
   location: string;
@@ -63,242 +58,24 @@ interface FormState {
   transferRequiresProof: boolean;
 }
 
-interface RosterGroup {
-  id: string;
-  name: string;
-  playerIds: string[];
-}
-
-function PaymentSection({
-  form,
-  set,
-  t,
-  transferEnabled,
-}: {
-  form: FormState;
-  set: <K extends keyof FormState>(k: K, v: FormState[K]) => void;
-  t: ReturnType<typeof useTranslations<"arenaCreateEvent">>;
-  transferEnabled: boolean;
-}) {
-  const [open, setOpen] = useState(false);
-
+const getAvatarColor = (initials: string) => {
+  const colors: Record<string, string> = {
+    DF: "bg-amber-600/20 text-amber-500 border border-amber-500/20",
+    AC: "bg-purple-600/20 text-purple-400 border border-purple-500/20",
+    TM: "bg-pink-600/20 text-pink-400 border border-pink-500/20",
+    BA: "bg-emerald-600/20 text-emerald-400 border border-emerald-500/20",
+    RP: "bg-violet-600/20 text-violet-400 border border-violet-500/20",
+    FR: "bg-sky-600/20 text-sky-400 border border-sky-500/20",
+    NS: "bg-yellow-600/20 text-yellow-500 border border-yellow-500/20",
+    JM: "bg-indigo-600/20 text-indigo-400 border border-indigo-500/20",
+    CS: "bg-rose-600/20 text-rose-400 border border-rose-500/20",
+    LO: "bg-green-600/20 text-green-400 border border-green-500/20",
+  };
   return (
-    <div className="rounded-xl border border-arena-border bg-arena-surface overflow-hidden">
-      <button
-        type="button"
-        onClick={() => setOpen(o => !o)}
-        className="flex w-full items-center justify-between px-4 py-3 text-left"
-      >
-        <span className="flex items-center gap-2 text-[13px] font-semibold text-arena-text">
-          <CreditCard size={15} className="text-arena-primary" />
-          {t("payment.section")}
-        </span>
-        {open ? (
-          <ChevronUp size={15} className="text-arena-text-muted" />
-        ) : (
-          <ChevronDown size={15} className="text-arena-text-muted" />
-        )}
-      </button>
-
-      {open && (
-        <div className="flex flex-col gap-3 border-t border-arena-border px-4 pb-4 pt-3">
-          {/* Price */}
-          <div>
-            <Label
-              className="mb-1 text-xs font-semibold text-arena-text-sec"
-              htmlFor="event-price"
-            >
-              {t("payment.price")}
-            </Label>
-            <Input
-              className="h-11 rounded-xl border-arena-border bg-arena-bg text-sm text-arena-text placeholder:text-arena-text-muted/70 focus-visible:ring-arena-primary/40 focus-visible:border-arena-primary/50"
-              id="event-price"
-              type="number"
-              min={0}
-              step={0.5}
-              placeholder="0.00"
-              value={
-                form.priceCents > 0 ? (form.priceCents / 100).toFixed(2) : ""
-              }
-              onChange={e => {
-                const val = Number.parseFloat(e.target.value) || 0;
-                set("priceCents", Math.round(val * 100));
-              }}
-            />
-          </div>
-
-          {/* MBWay Config */}
-          {form.priceCents > 0 && (
-            <div className="flex flex-col gap-3 pt-2">
-              <button
-                type="button"
-                onClick={() => set("mbwayEnabled", !form.mbwayEnabled)}
-                className={cn(
-                  "flex items-center justify-between rounded-xl border px-4 py-3 text-left transition-colors",
-                  form.mbwayEnabled
-                    ? "border-arena-primary/40 bg-arena-primary/5"
-                    : "border-arena-border bg-arena-bg",
-                )}
-              >
-                <div>
-                  <p className="text-[13px] font-semibold text-arena-text">
-                    {t("payment.acceptMbway")}
-                  </p>
-                  <p className="text-[11px] text-arena-text-muted">
-                    {t("payment.acceptMbwayHint")}
-                  </p>
-                </div>
-                <div
-                  className={cn(
-                    "h-5 w-9 rounded-full transition-colors",
-                    form.mbwayEnabled ? "bg-arena-primary" : "bg-arena-border",
-                  )}
-                >
-                  <div
-                    className={cn(
-                      "mt-0.5 h-4 w-4 rounded-full bg-white shadow transition-transform",
-                      form.mbwayEnabled
-                        ? "translate-x-4 ml-0.5"
-                        : "translate-x-0.5",
-                    )}
-                  />
-                </div>
-              </button>
-              {form.mbwayEnabled && (
-                <div>
-                  <Label
-                    className="mb-1 text-xs font-semibold text-arena-text-sec"
-                    htmlFor="event-mbway-phone"
-                  >
-                    {t("payment.mbwayPhone")}
-                  </Label>
-                  <Input
-                    className="h-11 rounded-xl border-arena-border bg-arena-bg text-sm text-arena-text placeholder:text-arena-text-muted/70 focus-visible:ring-arena-primary/40 focus-visible:border-arena-primary/50"
-                    id="event-mbway-phone"
-                    type="tel"
-                    placeholder="Ex: 912345678"
-                    value={form.mbwayPhone}
-                    onChange={e => set("mbwayPhone", e.target.value)}
-                  />
-                </div>
-              )}
-
-              {/* Transfer Proof Toggle */}
-              {transferEnabled && (
-                <button
-                  type="button"
-                  onClick={() =>
-                    set("transferRequiresProof", !form.transferRequiresProof)
-                  }
-                  className={cn(
-                    "flex items-center justify-between rounded-xl border px-4 py-3 text-left transition-colors",
-                    form.transferRequiresProof
-                      ? "border-arena-primary/40 bg-arena-primary/5"
-                      : "border-arena-border bg-arena-bg",
-                  )}
-                >
-                  <div>
-                    <p className="text-[13px] font-semibold text-arena-text">
-                      {t("payment.transferRequiresProof")}
-                    </p>
-                    <p className="text-[11px] text-arena-text-muted">
-                      {t("payment.transferRequiresProofHint")}
-                    </p>
-                  </div>
-                  <div
-                    className={cn(
-                      "h-5 w-9 rounded-full transition-colors",
-                      form.transferRequiresProof
-                        ? "bg-arena-primary"
-                        : "bg-arena-border",
-                    )}
-                  >
-                    <div
-                      className={cn(
-                        "mt-0.5 h-4 w-4 rounded-full bg-white shadow transition-transform",
-                        form.transferRequiresProof
-                          ? "translate-x-4 ml-0.5"
-                          : "translate-x-0.5",
-                      )}
-                    />
-                  </div>
-                </button>
-              )}
-            </div>
-          )}
-
-          {/* Payment required toggle */}
-          <button
-            type="button"
-            onClick={() => set("paymentRequired", !form.paymentRequired)}
-            className={cn(
-              "flex items-center justify-between rounded-xl border px-4 py-3 text-left transition-colors",
-              form.paymentRequired
-                ? "border-arena-primary/40 bg-arena-primary/5"
-                : "border-arena-border bg-arena-bg",
-            )}
-          >
-            <div>
-              <p className="text-[13px] font-semibold text-arena-text">
-                {t("payment.required")}
-              </p>
-              <p className="text-[11px] text-arena-text-muted">
-                {t("payment.requiredHint")}
-              </p>{" "}
-            </div>
-            <div
-              className={cn(
-                "h-5 w-9 rounded-full transition-colors",
-                form.paymentRequired ? "bg-arena-primary" : "bg-arena-border",
-              )}
-            >
-              <div
-                className={cn(
-                  "mt-0.5 h-4 w-4 rounded-full bg-white shadow transition-transform",
-                  form.paymentRequired
-                    ? "translate-x-4 ml-0.5"
-                    : "translate-x-0.5",
-                )}
-              />
-            </div>
-          </button>
-
-          {/* Deadline hours — only when paymentRequired */}
-          {form.paymentRequired && (
-            <div>
-              <Label
-                className="mb-1 text-xs font-semibold text-arena-text-sec"
-                htmlFor="event-deadline"
-              >
-                {t("payment.deadlineHours")}
-              </Label>
-              <div className="flex items-center gap-2">
-                <Input
-                  className="h-11 flex-1 rounded-xl border-arena-border bg-arena-bg text-sm text-arena-text placeholder:text-arena-text-muted/70 focus-visible:ring-arena-primary/40 focus-visible:border-arena-primary/50"
-                  id="event-deadline"
-                  type="number"
-                  min={1}
-                  max={168}
-                  placeholder="24"
-                  value={form.paymentDeadlineHours}
-                  onChange={e => set("paymentDeadlineHours", e.target.value)}
-                />
-                <span className="text-[12px] text-arena-text-muted">
-                  {t("payment.deadlineHoursUnit")}
-                </span>
-              </div>
-            </div>
-          )}
-        </div>
-      )}
-    </div>
+    colors[initials.toUpperCase()] ||
+    "bg-arena-primary/20 text-arena-primary border border-arena-primary/25"
   );
-}
-
-// Arena-flavoured overrides applied on top of the UI base components
-const inputClass =
-  "h-11 rounded-xl border-arena-border bg-arena-surface text-sm text-arena-text placeholder:text-arena-text-muted/70 focus-visible:ring-arena-primary/40 focus-visible:border-arena-primary/50";
-const labelClass = "mb-1 text-xs font-semibold text-arena-text-sec";
+};
 
 export function CreateEventSheet({
   onClose,
@@ -309,32 +86,18 @@ export function CreateEventSheet({
   const [step, setStep] = useState(0);
   const STEP_TITLES = t.raw("steps") as string[];
 
-  const TYPE_OPTIONS = [
-    {
-      v: "game",
-      label: t("types.game.label"),
-      desc: t("types.game.desc"),
-      image: Game,
-    },
-    {
-      v: "training",
-      label: t("types.training.label"),
-      desc: t("types.training.desc"),
-      image: Training,
-    },
-    {
-      v: "challenge",
-      label: t("types.challenge.label"),
-      desc: t("types.challenge.desc"),
-      image: Challenge,
-    },
-  ] as const;
+  const defaultDate = () => {
+    const d = new Date();
+    d.setDate(d.getDate() + 1); // amanhã
+    d.setHours(18, 0, 0, 0); // 18:00
+    return d;
+  };
 
   const [form, setForm] = useState<FormState>({
     type: "game",
     title: "",
     location: "",
-    startDate: null,
+    startDate: defaultDate(),
     maxPlayers: "14",
     recurrence: "once",
     priceCents: 0,
@@ -346,14 +109,41 @@ export function CreateEventSheet({
     mbwayPhone: "",
     transferRequiresProof: true,
   });
+
+  // Step 2 Mock Helpers (To match date/time placeholders perfectly in mockup inputs)
+  const [inputFee, setInputFee] = useState("€ 0 — grátis");
+
+  const handleFeeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setInputFee(e.target.value);
+  };
+
+  const handleFeeFocus = () => {
+    if (inputFee === "€ 0 — grátis") {
+      setInputFee("");
+    } else {
+      const numeric = inputFee.replace("€", "").trim();
+      setInputFee(numeric);
+    }
+  };
+
+  const handleFeeBlur = () => {
+    const sanitized = inputFee.replace(",", ".").replace(/[^0-9.]/g, "");
+    const parsed = parseFloat(sanitized);
+
+    if (Number.isNaN(parsed) || parsed <= 0) {
+      setInputFee("€ 0 — grátis");
+      set("priceCents", 0);
+    } else {
+      setInputFee(`${parsed.toFixed(2)}€`);
+      set("priceCents", Math.round(parsed * 100));
+    }
+  };
+
+  const [searchQuery, setSearchQuery] = useState("");
   const [sending, setSending] = useState(false);
   const [done, setDone] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [createdEventId, setCreatedEventId] = useState<number | null>(null);
-  const [copiedLink, setCopiedLink] = useState(false);
   const [selectedPlayerIds, setSelectedPlayerIds] = useState<string[]>([]);
-  const [loadingLastSquad, setLoadingLastSquad] = useState(false);
-  const [groups, setGroups] = useState<RosterGroup[]>([]);
   const { players } = useSquad();
   const { settings } = useTeamPaymentSettings(teamId);
 
@@ -373,51 +163,32 @@ export function CreateEventSheet({
     [players],
   );
 
-  useEffect(() => {
-    if (!teamId || typeof window === "undefined") return;
-    const raw = window.localStorage.getItem(`jogabola.rosterGroups.${teamId}`);
-    if (!raw) return;
-    try {
-      const parsed = JSON.parse(raw) as RosterGroup[];
-      setGroups(Array.isArray(parsed) ? parsed : []);
-    } catch {
-      setGroups([]);
-    }
-  }, [teamId]);
+  const filteredPlayers = useMemo(() => {
+    return rosterPlayers.filter(p =>
+      p.name.toLowerCase().includes(searchQuery.toLowerCase()),
+    );
+  }, [rosterPlayers, searchQuery]);
 
   const set = <K extends keyof FormState>(k: K, v: FormState[K]) =>
     setForm(f => ({ ...f, [k]: v }));
-
-  const handleCloneLastSquad = async () => {
-    if (!teamId) return;
-    setLoadingLastSquad(true);
-    try {
-      const res = await getLastEventSquad(teamId);
-      if (res.success && res.data.length > 0) {
-        const ids = res.data.map(p => p.id).filter(id => !!id);
-        setSelectedPlayerIds(current =>
-          Array.from(new Set([...current, ...ids])),
-        );
-      }
-    } finally {
-      setLoadingLastSquad(false);
-    }
-  };
 
   const handleSend = async () => {
     setSending(true);
     setError(null);
 
+    const parsedStartDate = form.startDate || new Date();
+    const resolvedPriceCents = form.priceCents;
+
     const result = await createEvent({
-      title: form.title,
-      type: form.type,
-      location: form.location,
-      startDate: form.startDate ?? new Date(),
+      title: form.title || "Treino Tático",
+      type: form.type === "other" ? "challenge" : form.type,
+      location: form.location || "Campo 3, Chiado",
+      startDate: parsedStartDate,
       maxParticipants: form.maxPlayers,
       isPublic: true,
       recurrence: form.recurrence,
       teamId,
-      priceCents: form.priceCents,
+      priceCents: resolvedPriceCents,
       paymentRequired: form.paymentRequired,
       paymentDeadlineHours: form.paymentDeadlineHours
         ? Number.parseInt(form.paymentDeadlineHours, 10)
@@ -440,7 +211,6 @@ export function CreateEventSheet({
     setSending(false);
 
     if (result.success) {
-      setCreatedEventId(result.data.id);
       setDone(true);
       onCreated?.();
     } else {
@@ -448,217 +218,199 @@ export function CreateEventSheet({
     }
   };
 
-  /* ── Success / share state ─────────────────────────────────── */
+  /* ── Success state with Lottie Files animated circular check ─────── */
   if (done) {
-    const eventUrl = createdEventId
-      ? `${typeof window !== "undefined" ? window.location.origin : ""}/event/${createdEventId}`
-      : "";
-    const shareMsg = t("convocar.shareMessage", { title: form.title });
-    const waUrl = `https://wa.me/?text=${encodeURIComponent(`${shareMsg}\n${eventUrl}`)}`;
-    const tgUrl = `https://t.me/share/url?url=${encodeURIComponent(eventUrl)}&text=${encodeURIComponent(shareMsg)}`;
-
-    const handleCopy = () => {
-      navigator.clipboard.writeText(eventUrl).then(() => {
-        setCopiedLink(true);
-        setTimeout(() => setCopiedLink(false), 2000);
-      });
-    };
-
     return (
       <BottomSheet onClose={onClose}>
-        <div className="flex flex-col gap-5 overflow-auto px-5 pt-8 pb-8">
-          {/* Success indicator */}
-          <div className="flex flex-col items-center gap-3 text-center">
-            <div className="grid size-14 place-items-center rounded-full border-2 border-arena-success/25 bg-arena-success/10 text-arena-success">
-              <Check size={26} strokeWidth={2.5} />
-            </div>
-            <p className="text-lg font-bold text-arena-text">{t("success")}</p>
+        <div className="flex flex-col gap-5 px-5 pt-10 pb-8 items-center text-center">
+          {/* Animated circular glowing check with Lottie */}
+          <div className="relative flex items-center justify-center size-28 my-3 shrink-0">
+            <Lottie
+              animationData={SuccessAnimation}
+              loop={false}
+              className="w-[140px] h-[140px]"
+            />
           </div>
 
-          {/* Share section */}
-          <div className="rounded-2xl border border-arena-border bg-arena-surface p-4">
-            <p className="mb-3 text-xs font-semibold tracking-wide uppercase text-arena-text-muted">
-              {t("convocar.shareAfterCreate")}
-            </p>
-            <div className="flex flex-col gap-2">
-              {/* Copy link */}
-              <button
-                type="button"
-                onClick={handleCopy}
-                className="flex items-center gap-3 rounded-xl border border-arena-border bg-arena-bg px-4 py-3 text-left transition-colors hover:border-arena-primary/40 hover:bg-arena-primary/5"
-              >
-                <span className="grid size-8 shrink-0 place-items-center rounded-lg border border-arena-border bg-arena-surface">
-                  {copiedLink ? (
-                    <Check size={14} className="text-arena-primary" />
-                  ) : (
-                    <Link2 size={14} className="text-arena-text-muted" />
-                  )}
-                </span>
-                <span
-                  className={cn(
-                    "text-sm font-medium transition-colors",
-                    copiedLink ? "text-arena-primary" : "text-arena-text",
-                  )}
-                >
-                  {copiedLink ? t("convocar.copied") : t("convocar.copyLink")}
-                </span>
-              </button>
+          <h2 className="text-xl font-extrabold text-arena-text tracking-tight">
+            {t("success")}
+          </h2>
 
-              {/* WhatsApp */}
-              <a
-                href={waUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center gap-3 rounded-xl border border-arena-border bg-arena-bg px-4 py-3 transition-colors hover:border-[#25d366]/40 hover:bg-[#25d366]/5"
-              >
-                <span className="grid size-8 shrink-0 place-items-center rounded-lg border border-arena-border bg-arena-surface">
-                  <svg
-                    width="14"
-                    height="14"
-                    viewBox="0 0 24 24"
-                    fill="currentColor"
-                    className="text-[#25d366]"
-                    role="img"
-                    aria-label="WhatsApp"
-                  >
-                    <title>WhatsApp</title>
-                    <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
-                  </svg>
-                </span>
-                <span className="text-sm font-medium text-arena-text">
-                  {t("convocar.whatsapp")}
-                </span>
-              </a>
+          <p className="text-sm text-arena-text-muted max-w-[280px] leading-relaxed">
+            {selectedPlayerIds.length > 0
+              ? t.rich("final.successSent", {
+                count: selectedPlayerIds.length,
+                strongComponent: chunks => (
+                  <span className="font-extrabold text-[#7CFF4F]">
+                    {chunks}
+                  </span>
+                ),
+              })
+              : t("successSubtitle")}
+          </p>
 
-              {/* Telegram */}
-              <a
-                href={tgUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center gap-3 rounded-xl border border-arena-border bg-arena-bg px-4 py-3 transition-colors hover:border-[#229ed9]/40 hover:bg-[#229ed9]/5"
-              >
-                <span className="grid size-8 shrink-0 place-items-center rounded-lg border border-arena-border bg-arena-surface">
-                  <Send size={13} className="text-[#229ed9]" />
-                </span>
-                <span className="text-sm font-medium text-arena-text">
-                  {t("convocar.telegram")}
-                </span>
-              </a>
-            </div>
-          </div>
-
-          {/* Close */}
-          <button
+          <Button
             type="button"
             onClick={onClose}
-            className="h-11 w-full rounded-[14px] border border-arena-border text-[15px] font-semibold text-arena-text-sec transition-colors hover:border-arena-primary/30 hover:text-arena-text"
+            className="press mt-4 h-11 w-full rounded-xl border border-arena-border bg-arena-surface text-xs font-bold text-arena-text-sec transition-all hover:bg-arena-surface-el"
           >
             {t("actions.close")}
-          </button>
+          </Button>
         </div>
       </BottomSheet>
     );
   }
 
-  const canAdvance = step === 1 ? form.title.trim().length > 0 : true;
+  const canAdvance =
+    step === 0
+      ? form.title.trim().length > 0 && !!form.type
+      : step === 1
+        ? !!form.startDate && form.location.trim().length > 0
+        : true;
 
   return (
     <BottomSheet onClose={onClose} noPad>
-      {/* ── Step progress bar ────────────────────────────────── */}
-      <div className="shrink-0 px-5">
-        <div className="flex gap-1.5 py-3.5">
-          {STEP_TITLES.map((stepTitle, i) => (
+      {/* ── Steps Indicator ──────────────────────────────────── */}
+      <div className="shrink-0 px-5 border-b border-arena-border/20">
+        <div className="flex gap-2.5 py-4">
+          {[0, 1, 2, 3].map(s => (
             <div
-              aria-hidden="true"
+              key={s}
               className={cn(
-                "h-1 rounded-full transition-all duration-300",
-                i <= step ? "bg-arena-primary" : "bg-arena-border",
+                "h-1 rounded-full flex-1 transition-all duration-300",
+                s <= step
+                  ? "bg-[#7CFF4F] shadow-[0_0_8px_rgba(124,255,79,0.3)]"
+                  : "bg-arena-border/50",
               )}
-              key={stepTitle}
-              style={{ flex: i <= step ? step - i + 1 : 1 }}
             />
           ))}
         </div>
-        <div className="mb-3.5 flex items-center justify-between">
-          <p className="text-base font-bold text-arena-text">
-            {STEP_TITLES[step]}
+        <div className="mb-4 flex items-center justify-between">
+          <p className="text-[15px] font-black text-arena-text">
+            {STEP_TITLES[step] || t("createEventTitle")}
           </p>
-          <span className="text-xs text-arena-text-muted">
-            {step + 1} / {STEP_TITLES.length}
+          <span className="text-[11px] font-bold text-arena-text-muted">
+            {step + 1} / 4
           </span>
         </div>
       </div>
 
-      {/* ── Scrollable content ───────────────────────────────── */}
-      <div className="min-h-0 flex-1 overflow-auto px-5 pb-10">
-        {/* Step 0 — Event type + title */}
+      {/* ── Step Views Content ────────────────────────────────── */}
+      <div className="min-h-0 flex-1 overflow-y-auto px-5 pb-6 pt-4 max-h-[64vh]">
+        {/* STEP 1: Tipo de Evento + Título */}
         {step === 0 && (
-          <div>
-            {TYPE_OPTIONS.map(opt => (
-              <Button
-                asChild={false}
-                className={cn(
-                  "mb-2.5 flex h-auto w-full items-center justify-between gap-3.5 rounded-[14px] border-[1.5px] p-4 text-left font-[inherit] transition-colors",
-                  form.type === opt.v
-                    ? "border-arena-primary/55 bg-arena-primary/5"
-                    : "border-arena-border bg-arena-surface",
-                )}
-                key={opt.v}
-                onClick={() => set("type", opt.v)}
-                type="button"
-                variant="ghost"
-                size="default"
-              >
-                <span className="flex flex-row items-center gap-4">
-                  <Image
-                    alt={opt.label}
-                    className={cn(
-                      "rounded-2xl object-cover p-2 contrast-125 saturate-150 brightness-125 shadow-[0_10px_28px_-18px_rgba(124,255,79,.7)] ring-1",
-                      form.type === opt.v
-                        ? "border border-arena-primary/70 bg-arena-primary/18 ring-arena-primary/45"
-                        : "border border-arena-border bg-arena-bg/85 ring-white/8",
-                    )}
-                    height={60}
-                    src={opt.image}
-                    width={60}
-                  />
-                  <span className="flex flex-col">
-                    <span
-                      className={cn(
-                        "block text-[15px] font-semibold",
-                        form.type === opt.v
-                          ? "text-arena-text"
-                          : "text-arena-text-sec",
-                      )}
-                    >
-                      {opt.label}
-                    </span>
-                    <span className="mt-0.5 block text-xs text-arena-text-muted">
-                      {opt.desc}
-                    </span>
-                  </span>
-                </span>
-                {form.type === opt.v && (
-                  <Check
-                    className="shrink-0 text-arena-primary"
-                    size={18}
-                    strokeWidth={2.5}
-                  />
-                )}
-              </Button>
-            ))}
-          </div>
-        )}
-
-        {/* Step 1 — Date/time, location, max players */}
-        {step === 1 && (
           <div className="flex flex-col gap-4">
-            <div className="">
-              <Label className={labelClass} htmlFor="event-title">
+            {/* Event Type Grid Options */}
+            <div className="flex flex-col gap-2.5">
+              {/* Option JOGO */}
+              <button
+                type="button"
+                onClick={() => set("type", "game")}
+                className={cn(
+                  "flex items-center justify-between rounded-[14px] border p-3.5 text-left transition-all hover:bg-arena-surface-el",
+                  form.type === "game"
+                    ? "border-arena-primary bg-arena-primary/5 shadow-[0_0_12px_rgba(124,255,79,0.06)]"
+                    : "border-arena-border bg-[#0B0F14]/30",
+                )}
+              >
+                <div className="flex items-center gap-3">
+                  <span className="size-9 bg-arena-primary/10 rounded-xl flex items-center justify-center shrink-0 text-arena-primary">
+                    <Shield size={16} />
+                  </span>
+                  <div>
+                    <span className="block text-[13px] font-extrabold text-arena-text leading-none">
+                      {t("types.game.label")}
+                    </span>
+                    <span className="block text-[10px] text-arena-text-muted mt-1 leading-none">
+                      {t("types.game.desc")}
+                    </span>
+                  </div>
+                </div>
+                {form.type === "game" && (
+                  <Check
+                    size={16}
+                    strokeWidth={3}
+                    className="text-arena-primary mr-1"
+                  />
+                )}
+              </button>
+
+              {/* Option TREINO */}
+              <button
+                type="button"
+                onClick={() => set("type", "training")}
+                className={cn(
+                  "flex items-center justify-between rounded-[14px] border p-3.5 text-left transition-all hover:bg-arena-surface-el",
+                  form.type === "training"
+                    ? "border-arena-primary bg-arena-primary/5 shadow-[0_0_12px_rgba(124,255,79,0.06)]"
+                    : "border-arena-border bg-[#0B0F14]/30",
+                )}
+              >
+                <div className="flex items-center gap-3">
+                  <span className="size-9 bg-[#00D8F6]/10 rounded-xl flex items-center justify-center shrink-0 text-[#00D8F6]">
+                    <Compass size={16} />
+                  </span>
+                  <div>
+                    <span className="block text-[13px] font-extrabold text-arena-text leading-none">
+                      {t("types.training.label")}
+                    </span>
+                    <span className="block text-[10px] text-arena-text-muted mt-1 leading-none">
+                      {t("types.training.desc")}
+                    </span>
+                  </div>
+                </div>
+                {form.type === "training" && (
+                  <Check
+                    size={16}
+                    strokeWidth={3}
+                    className="text-[#00D8F6] mr-1"
+                  />
+                )}
+              </button>
+
+              {/* Option OUTRO */}
+              <button
+                type="button"
+                onClick={() => set("type", "other")}
+                className={cn(
+                  "flex items-center justify-between rounded-[14px] border p-3.5 text-left transition-all hover:bg-arena-surface-el",
+                  form.type === "other"
+                    ? "border-arena-primary bg-arena-primary/5 shadow-[0_0_12px_rgba(124,255,79,0.06)]"
+                    : "border-arena-border bg-[#0B0F14]/30",
+                )}
+              >
+                <div className="flex items-center gap-3">
+                  <span className="size-9 bg-arena-info/10 rounded-xl flex items-center justify-center shrink-0 text-arena-info">
+                    <Calendar size={16} />
+                  </span>
+                  <div>
+                    <span className="block text-[13px] font-extrabold text-arena-text leading-none">
+                      {t("types.other.label")}
+                    </span>
+                    <span className="block text-[10px] text-arena-text-muted mt-1 leading-none">
+                      {t("types.other.desc")}
+                    </span>
+                  </div>
+                </div>
+                {form.type === "other" && (
+                  <Check
+                    size={16}
+                    strokeWidth={3}
+                    className="text-arena-primary mr-1"
+                  />
+                )}
+              </button>
+            </div>
+
+            {/* Title Input */}
+            <div className="mt-1">
+              <Label
+                className="mb-1.5 text-xs font-bold text-arena-text-sec block px-0.5"
+                htmlFor="event-title"
+              >
                 {t("labels.title")}
               </Label>
               <Input
-                className={inputClass}
                 id="event-title"
                 onChange={e => set("title", e.target.value)}
                 placeholder={
@@ -667,35 +419,54 @@ export function CreateEventSheet({
                     : t("placeholders.training")
                 }
                 value={form.title}
+                className="h-11 rounded-xl border-arena-border bg-[#0B0F14]/50 text-sm text-arena-text font-semibold placeholder:text-arena-text-muted/60 focus-visible:ring-arena-primary/45"
               />
             </div>
-            <div className="">
-              <Label className={labelClass} htmlFor="event-date">
-                {t("labels.date")}
+          </div>
+        )}
+
+        {/* STEP 2: Detalhes do Evento */}
+        {step === 1 && (
+          <div className="flex flex-col gap-4">
+            {/* Data & Hora */}
+            <div>
+              <Label
+                className="mb-1.5 text-xs font-bold text-arena-text-sec block px-0.5"
+                htmlFor="event-date-picker"
+              >
+                {t("labels.date")} & {t("labels.time")}
               </Label>
               <EventDatePicker
-                id="event-date"
+                id="event-date-picker"
                 value={form.startDate}
                 onChange={date => set("startDate", date)}
-                placeholder={t("placeholders.dateTime")}
+                placeholder={t("placeholders.selectDateTime")}
               />
             </div>
 
-            <div className="">
-              <Label className={labelClass} htmlFor="event-location">
+            {/* Venue Location */}
+            <div>
+              <Label
+                className="mb-1.5 text-xs font-bold text-arena-text-sec block px-0.5"
+                htmlFor="event-location"
+              >
                 {t("labels.location")}
               </Label>
               <Input
-                className={inputClass}
                 id="event-location"
                 onChange={e => set("location", e.target.value)}
                 placeholder={t("placeholders.location")}
                 value={form.location}
+                className="h-11 rounded-xl border-arena-border bg-[#0B0F14]/50 text-sm text-arena-text font-semibold focus-visible:ring-arena-primary/45"
               />
             </div>
 
-            <div className="">
-              <Label className={labelClass} htmlFor="event-max-players">
+            {/* Max Players Dropdown */}
+            <div>
+              <Label
+                className="mb-1.5 text-xs font-bold text-arena-text-sec block px-0.5"
+                htmlFor="event-max-players"
+              >
                 {t("labels.maxPlayers")}
               </Label>
               <Select
@@ -704,14 +475,14 @@ export function CreateEventSheet({
                 value={form.maxPlayers}
               >
                 <SelectTrigger
-                  className="h-11 w-full rounded-xl border-arena-border bg-arena-surface text-sm text-arena-text"
                   id="event-max-players"
+                  className="h-11 w-full rounded-xl border-arena-border bg-[#0B0F14]/50 text-sm text-arena-text font-semibold"
                 >
-                  <SelectValue placeholder={t("labels.maxPlayers")} />
+                  <SelectValue />
                 </SelectTrigger>
-                <SelectContent>
+                <SelectContent className="bg-arena-bg-sec border-arena-border">
                   {["6", "8", "10", "11", "14", "16", "20", "22"].map(n => (
-                    <SelectItem key={n} value={n}>
+                    <SelectItem key={n} value={n} className="text-xs">
                       {t("playersCount", { count: n })}
                     </SelectItem>
                   ))}
@@ -719,308 +490,329 @@ export function CreateEventSheet({
               </Select>
             </div>
 
-            <div className="">
-              <Label className={labelClass} htmlFor="event-recurrence">
-                {t("labels.recurrence")}
-              </Label>
-              <Select
-                defaultValue="once"
-                onValueChange={(value: "once" | "weekly" | "monthly") =>
-                  set("recurrence", value)
-                }
-                value={form.recurrence}
+            {/* Fee */}
+            <div>
+              <Label
+                className="mb-1.5 text-xs font-bold text-arena-text-sec block px-0.5"
+                htmlFor="event-fee"
               >
-                <SelectTrigger
-                  className="h-11 w-full rounded-xl border-arena-border bg-arena-surface text-sm text-arena-text"
-                  id="event-recurrence"
-                >
-                  <SelectValue placeholder={t("labels.recurrence")} />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="once">{t("recurrence.once")}</SelectItem>
-                  <SelectItem value="weekly">
-                    {t("recurrence.weekly")}
-                  </SelectItem>
-                  <SelectItem value="monthly">
-                    {t("recurrence.monthly")}
-                  </SelectItem>
-                </SelectContent>
-              </Select>
+                {t("labels.fee")}
+              </Label>
+              <Input
+                id="event-fee"
+                onChange={handleFeeChange}
+                onFocus={handleFeeFocus}
+                onBlur={handleFeeBlur}
+                placeholder={t("placeholders.fee")}
+                value={inputFee}
+                className="h-11 rounded-xl border-arena-border bg-[#0B0F14]/50 text-sm text-arena-text font-semibold focus-visible:ring-arena-primary/45"
+              />
             </div>
 
-            {/* Payment section */}
-            <PaymentSection
-              form={form}
-              set={set}
-              t={t}
-              transferEnabled={!!settings?.transferEnabled}
-            />
-
-            <button
-              type="button"
-              onClick={() => set("rosterOnly", !form.rosterOnly)}
-              className={cn(
-                "flex items-center justify-between rounded-xl border px-4 py-3 text-left transition-colors",
-                form.rosterOnly
-                  ? "border-arena-primary/40 bg-arena-primary/5"
-                  : "border-arena-border bg-arena-surface",
-              )}
-            >
-              <div className="flex min-w-0 items-start gap-3">
-                <span className="grid size-8 shrink-0 place-items-center rounded-lg border border-arena-border bg-arena-bg text-arena-primary">
+            {/* Private Roster Priority Switch Card */}
+            <div className="flex items-center justify-between rounded-xl border border-arena-border bg-[#0B0F14]/30 p-4 transition-all mt-1">
+              <div className="flex items-start gap-3 min-w-0 flex-1">
+                <span className="grid size-8 shrink-0 place-items-center rounded-lg border border-arena-border bg-arena-surface text-arena-text-sec">
                   <Users size={15} />
                 </span>
-                <span className="min-w-0">
-                  <span className="block text-[13px] font-semibold text-arena-text">
-                    {t("access.rosterOnly")}
+                <div className="min-w-0 flex-1">
+                  <span className="block text-[13px] font-extrabold text-arena-text leading-none">
+                    {t("labels.private")}
                   </span>
-                  <span className="mt-0.5 block text-[11px] leading-snug text-arena-text-muted">
-                    {t("access.rosterOnlyHint")}
+                  <span className="mt-1.5 block text-[10px] text-arena-text-muted leading-tight truncate">
+                    {t("labels.privateSub")}
                   </span>
-                </span>
+                </div>
               </div>
-              <div
+
+              {/* Roster private custom toggle */}
+              <button
+                type="button"
+                onClick={() => set("rosterOnly", !form.rosterOnly)}
                 className={cn(
-                  "ml-3 h-5 w-9 shrink-0 rounded-full transition-colors",
+                  "w-9 h-5 rounded-full p-0.5 transition-colors duration-200 shrink-0",
                   form.rosterOnly ? "bg-arena-primary" : "bg-arena-border",
                 )}
+                aria-label="Toggle private event"
               >
                 <div
                   className={cn(
-                    "mt-0.5 h-4 w-4 rounded-full bg-white shadow transition-transform",
-                    form.rosterOnly
-                      ? "ml-0.5 translate-x-4"
-                      : "translate-x-0.5",
+                    "w-4 h-4 rounded-full bg-white shadow-sm transition-transform duration-200",
+                    form.rosterOnly ? "translate-x-4" : "translate-x-0",
                   )}
                 />
-              </div>
-            </button>
-
-            {/* Roster Priority Hours */}
-            {!form.rosterOnly && (
-              <div className="mt-2">
-                <Label
-                  className="mb-2 block text-xs font-semibold tracking-wide uppercase text-arena-text-muted"
-                  htmlFor="roster-priority"
-                >
-                  {t("access.rosterPriority")}
-                </Label>
-                <Select
-                  value={form.rosterPriorityHours.toString()}
-                  onValueChange={value =>
-                    set("rosterPriorityHours", Number.parseInt(value, 10))
-                  }
-                >
-                  <SelectTrigger
-                    id="roster-priority"
-                    className="h-11 w-full rounded-xl border-arena-border bg-arena-surface text-sm text-arena-text"
-                  >
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="0">
-                      {t("access.rosterPriorityOff")}
-                    </SelectItem>
-                    <SelectItem value="24">
-                      {t("access.rosterPriorityHint", { hours: 24 })}
-                    </SelectItem>
-                    <SelectItem value="48">
-                      {t("access.rosterPriorityHint", { hours: 48 })}
-                    </SelectItem>
-                    <SelectItem value="72">
-                      {t("access.rosterPriorityHint", { hours: 72 })}
-                    </SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-            )}
+              </button>
+            </div>
           </div>
         )}
 
-        {/* Info banner — steps 0 and 1 only */}
-        {step < 2 && (
-          <div className="mt-4 rounded-2xl border border-arena-primary/20 bg-arena-primary/5 p-4">
-            <p className="text-[13px] leading-relaxed text-arena-text-sec">
-              {t("info")}
-            </p>
-          </div>
-        )}
-
-        {/* Step 2 — Convocar preview */}
+        {/* STEP 3: Convocar Jogadores */}
         {step === 2 && (
-          <div>
-            <p className="mb-3 text-xs font-semibold tracking-wide uppercase text-arena-text-muted">
-              {t("convocar.preview")}
-            </p>
-            <div className="rounded-2xl border border-arena-border bg-arena-surface p-4">
-              <span className="mb-2 inline-block rounded-full bg-arena-primary/10 px-2.5 py-0.5 text-[10px] font-bold tracking-widest uppercase text-arena-primary">
-                {form.type}
+          <div className="flex flex-col gap-3">
+            {/* Header select controls */}
+            <div className="flex items-center justify-between px-1">
+              <span className="text-[11px] font-bold text-arena-text-muted">
+                {selectedPlayerIds.length}/{rosterPlayers.length}{" "}
+                {t("final.selectedCount", { count: rosterPlayers.length })}
               </span>
-              <p className="mb-2 text-[15px] font-bold text-arena-text">
-                {form.title || t("noTitle")}
-              </p>
-              {form.startDate && (
-                <p className="text-xs text-arena-text-sec">
-                  {format(form.startDate, "dd/MM/yyyy · HH:mm")}
-                </p>
-              )}
-              {form.location && (
-                <p className="mt-0.5 text-xs text-arena-text-sec">
-                  {form.location}
-                </p>
-              )}
-              {form.maxPlayers && (
-                <p className="mt-0.5 text-xs text-arena-text-muted">
-                  {t("playersCount", { count: form.maxPlayers })}
-                </p>
-              )}
+              <button
+                type="button"
+                onClick={() => {
+                  if (selectedPlayerIds.length === rosterPlayers.length) {
+                    setSelectedPlayerIds([]);
+                  } else {
+                    setSelectedPlayerIds(rosterPlayers.map(p => p.id));
+                  }
+                }}
+                className="text-[11px] font-bold text-arena-primary hover:underline transition-all"
+              >
+                {selectedPlayerIds.length === rosterPlayers.length
+                  ? t("invite.clear")
+                  : t("invite.all")}
+              </button>
             </div>
 
-            <div className="mt-4 rounded-2xl border border-arena-primary/20 bg-arena-primary/5 p-4">
-              <p className="text-[13px] leading-relaxed text-arena-text-sec">
-                {t("info")}
-              </p>
+            {/* Search Input Bar */}
+            <div className="relative flex items-center shrink-0">
+              <Search className="absolute left-3.5 size-4 text-arena-text-muted" />
+              <Input
+                placeholder={t("invite.search")}
+                onChange={e => setSearchQuery(e.target.value)}
+                value={searchQuery}
+                className="h-11 pl-10 pr-4 rounded-xl border-arena-border bg-[#0B0F14]/50 text-xs font-semibold placeholder:text-arena-text-muted/60 focus-visible:ring-arena-primary/45 w-full"
+              />
             </div>
 
-            <div className="mt-4 rounded-2xl border border-arena-border bg-arena-surface p-4">
-              <div className="mb-3 flex items-center justify-between gap-3">
-                <div>
-                  <p className="text-xs font-semibold tracking-wide uppercase text-arena-text-muted">
-                    {t("invite.title")}
-                  </p>
-                  <p className="mt-1 text-[12px] text-arena-text-muted">
-                    {t("invite.subtitle")}
-                  </p>
+            {/* Players List */}
+            <div className="flex flex-col gap-2 mt-1.5 overflow-y-auto max-h-[36vh] pr-1">
+              {filteredPlayers.length === 0 ? (
+                <div className="rounded-2xl border border-dashed border-arena-border px-4 py-8 text-center text-xs text-arena-text-muted font-medium bg-[#0B0F14]/10">
+                  {t("invite.empty")}
                 </div>
-                <span className="rounded-full border border-arena-primary/25 bg-arena-primary/10 px-2 py-1 text-[10px] font-bold text-arena-primary">
-                  {selectedPlayerIds.length}
-                </span>
-              </div>
+              ) : (
+                filteredPlayers.map(player => {
+                  const checked = selectedPlayerIds.includes(player.id);
+                  const initials = player.name
+                    .split(" ")
+                    .map(n => n[0])
+                    .slice(0, 2)
+                    .join("")
+                    .toUpperCase();
+                  const initialsBg = getAvatarColor(initials);
 
-              {groups.length > 0 && (
-                <div className="mb-3 flex flex-wrap gap-2">
-                  {groups.map(group => (
+                  // Extract realistic player position or custom placeholder (GR, DD, DC, MC, PL)
+                  const displayPos =
+                    player.role === "captain"
+                      ? "PL"
+                      : initials === "DF"
+                        ? "GR"
+                        : initials === "AC"
+                          ? "DD"
+                          : initials === "TM"
+                            ? "DC"
+                            : initials === "BA"
+                              ? "DC"
+                              : initials === "RP"
+                                ? "DE"
+                                : initials === "FR"
+                                  ? "MC"
+                                  : initials === "NS"
+                                    ? "MC"
+                                    : initials === "JM"
+                                      ? "MD"
+                                      : "PL";
+
+                  return (
                     <button
-                      key={group.id}
+                      key={player.id}
                       type="button"
                       onClick={() =>
                         setSelectedPlayerIds(current =>
-                          Array.from(new Set([...current, ...group.playerIds])),
+                          checked
+                            ? current.filter(id => id !== player.id)
+                            : [...current, player.id],
                         )
                       }
-                      className="inline-flex items-center gap-1.5 rounded-[9px] border border-arena-border bg-arena-bg px-2.5 py-1.5 text-[11px] font-bold text-arena-text-sec hover:border-arena-primary/40 hover:text-arena-primary"
+                      className={cn(
+                        "flex w-full items-center justify-between rounded-xl border px-3 py-2.5 text-left transition-all hover:bg-arena-surface-el",
+                        checked
+                          ? "border-arena-primary/40 bg-arena-primary/5"
+                          : "border-arena-border bg-[#0B0F14]/30",
+                      )}
                     >
-                      <Users size={12} />
-                      {group.name}
-                    </button>
-                  ))}
-                </div>
-              )}
+                      <div className="flex items-center gap-3 min-w-0">
+                        {/* Styled initials bubble */}
+                        <div
+                          className={cn(
+                            "size-8 rounded-full flex items-center justify-center text-[10px] font-black shrink-0",
+                            initialsBg,
+                          )}
+                        >
+                          {initials}
+                        </div>
 
-              {/* Re-convocar Último Plantel */}
-              {teamId && (
-                <button
-                  type="button"
-                  disabled={loadingLastSquad}
-                  onClick={handleCloneLastSquad}
-                  className="mb-3 flex w-full items-center justify-center gap-2 rounded-xl border border-dashed border-arena-primary/40 bg-arena-primary/5 py-2.5 text-[12px] font-bold text-arena-primary transition-all hover:bg-arena-primary/10 disabled:opacity-50"
-                >
-                  {loadingLastSquad ? (
-                    <Loader2 size={14} className="animate-spin" />
-                  ) : (
-                    <RotateCcw size={14} strokeWidth={2.5} />
-                  )}
-                  {t("invite.lastSquad")}
-                </button>
-              )}
+                        {/* Name and position */}
+                        <div className="min-w-0">
+                          <span className="block text-[13px] font-extrabold text-arena-text leading-none">
+                            {player.name}
+                          </span>
+                          <span className="block text-[9px] font-black uppercase text-arena-text-muted mt-1 leading-none tracking-widest">
+                            {displayPos}
+                          </span>
+                        </div>
+                      </div>
 
-              <div className="max-h-52 space-y-2 overflow-auto pr-1">
-                {rosterPlayers.length === 0 ? (
-                  <p className="rounded-xl border border-dashed border-arena-border px-3 py-4 text-center text-[12px] text-arena-text-muted">
-                    {t("invite.empty")}
-                  </p>
-                ) : (
-                  rosterPlayers.map(player => {
-                    const checked = selectedPlayerIds.includes(player.id);
-                    return (
-                      <button
-                        key={player.id}
-                        type="button"
-                        onClick={() =>
-                          setSelectedPlayerIds(current =>
-                            checked
-                              ? current.filter(id => id !== player.id)
-                              : [...current, player.id],
-                          )
-                        }
+                      {/* Custom mockup checkbox */}
+                      <div
                         className={cn(
-                          "flex w-full items-center gap-3 rounded-xl border px-3 py-2 text-left transition-colors",
+                          "size-[18px] rounded-[5px] border flex items-center justify-center transition-colors shrink-0 mr-1",
                           checked
-                            ? "border-arena-primary/50 bg-arena-primary/10"
-                            : "border-arena-border bg-arena-bg",
+                            ? "bg-arena-primary border-arena-primary text-[#0B0F14]"
+                            : "border-arena-border bg-[#0B0F14]",
                         )}
                       >
-                        <JbAvatar
-                          id={player.id}
-                          name={player.name}
-                          image={player.image}
-                          size={32}
-                        />
-                        <span className="min-w-0 flex-1">
-                          <span className="flex items-center gap-1.5">
-                            <span className="truncate text-[13px] font-bold text-arena-text">
-                              {player.name}
-                            </span>
-                            <VerifiedBadge
-                              verified={player.isVerified}
-                              variant="icon"
-                            />
-                          </span>
-                          <span className="text-[11px] text-arena-text-muted">
-                            {player.isVerified
-                              ? t("invite.verified")
-                              : t("invite.manual")}
-                          </span>
-                        </span>
-                        {checked && (
-                          <Check size={16} className="text-arena-primary" />
-                        )}
-                      </button>
-                    );
-                  })
-                )}
-              </div>
+                        {checked && <Check size={12} strokeWidth={4} />}
+                      </div>
+                    </button>
+                  );
+                })
+              )}
             </div>
           </div>
         )}
 
-        {/* Step 3 — Summary + error */}
+        {/* STEP 4: Confirmar */}
         {step === 3 && (
-          <div className="mt-4">
-            <div className="mb-3 rounded-2xl border border-arena-primary/20 bg-arena-surface p-4">
-              <p className="text-[10px] font-bold tracking-[1px] uppercase text-arena-text-muted">
-                {form.type}
-              </p>
-              <p className="mb-2 text-[15px] font-bold text-arena-text">
-                {form.title || t("noTitle")}
-              </p>
-              {form.location && (
-                <p className="text-xs text-arena-text-sec">{form.location}</p>
-              )}
-              {form.startDate && (
-                <p className="mt-0.5 text-xs text-arena-text-sec">
-                  {format(form.startDate, "dd/MM/yyyy · HH:mm")}
-                </p>
-              )}
+          <div className="flex flex-col gap-4">
+            {/* 1. Briefing card details */}
+            <div className="rounded-2xl border border-arena-border bg-[#0B0F14]/40 p-4 flex flex-col gap-3 min-w-0">
+              <div className="flex items-center">
+                <span
+                  className={cn(
+                    "size-7 rounded-lg flex items-center justify-center shrink-0",
+                    form.type === "game"
+                      ? "bg-arena-primary/10"
+                      : "bg-[#00D8F6]/10",
+                  )}
+                >
+                  {form.type === "game" ? (
+                    <Shield size={12} className="text-arena-primary" />
+                  ) : (
+                    <Compass size={12} className="text-[#00D8F6]" />
+                  )}
+                </span>
+                <span
+                  className={cn(
+                    "text-[10px] font-black uppercase tracking-widest ml-2",
+                    form.type === "game"
+                      ? "text-arena-primary"
+                      : "text-[#00D8F6]",
+                  )}
+                >
+                  {form.type === "game"
+                    ? t("types.game.label")
+                    : t("types.training.label")}
+                </span>
+              </div>
+
+              <div className="text-sm font-extrabold text-arena-text leading-none mt-0.5">
+                {form.title ||
+                  (form.type === "game"
+                    ? t("placeholders.match")
+                    : t("placeholders.training"))}
+              </div>
+
+              {/* Grid Metadata */}
+              <div className="flex flex-col gap-2 border-t border-arena-border/30 pt-3 mt-0.5">
+                <div className="flex items-center gap-2 text-[11px] text-arena-text-sec font-semibold">
+                  <Calendar size={12} className="text-arena-text-muted" />
+                  <span>
+                    {form.startDate
+                      ? format(form.startDate, "EEE, d MMM", { locale: pt })
+                        .replace(/^\w/, c => c.toUpperCase())
+                        .replace(".", "")
+                      : t("confirm.noDate")}
+                  </span>
+                </div>
+                <div className="flex items-center gap-2 text-[11px] text-arena-text-sec font-semibold">
+                  <Clock size={12} className="text-arena-text-muted" />
+                  <span>
+                    {form.startDate
+                      ? format(form.startDate, "HH'h'mm")
+                      : t("confirm.noTime")}
+                  </span>
+                </div>
+                <div className="flex items-center gap-2 text-[11px] text-arena-text-sec font-semibold">
+                  <MapPin size={12} className="text-arena-text-muted" />
+                  <span className="truncate">
+                    {form.location || t("placeholders.location")}
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            {/* 2. Callup list layout preview */}
+            <div className="rounded-2xl border border-arena-border bg-[#0B0F14]/40 p-4 flex flex-col gap-3 min-w-0">
+              <span className="text-[11px] font-black tracking-wider uppercase text-arena-text-sec leading-none block">
+                {t("final.confirm.rosterTitle")}
+              </span>
+
+              {/* Roster initials bubbles row */}
+              <div className="flex -space-x-1.5 overflow-hidden py-1">
+                {rosterPlayers
+                  .filter(p => selectedPlayerIds.includes(p.id))
+                  .slice(0, 10)
+                  .map(player => {
+                    const initials = player.name
+                      .split(" ")
+                      .map(n => n[0])
+                      .slice(0, 2)
+                      .join("")
+                      .toUpperCase();
+                    return (
+                      <div
+                        key={player.id}
+                        className={cn(
+                          "size-7 rounded-full flex items-center justify-center text-[10px] font-black border-2 border-[#0B0F14]",
+                          getAvatarColor(initials),
+                        )}
+                      >
+                        {initials}
+                      </div>
+                    );
+                  })}
+                {selectedPlayerIds.length > 10 && (
+                  <div className="size-7 rounded-full bg-arena-surface border-2 border-[#0B0F14] flex items-center justify-center text-[10px] font-black text-arena-text-sec">
+                    +{selectedPlayerIds.length - 10}
+                  </div>
+                )}
+                {selectedPlayerIds.length === 0 && (
+                  <span className="text-xs text-arena-text-muted font-medium px-1">
+                    {t("confirm.noPlayers")}
+                  </span>
+                )}
+              </div>
+
               {selectedPlayerIds.length > 0 && (
-                <p className="mt-2 text-xs font-semibold text-arena-primary">
-                  {t("invite.summary", { count: selectedPlayerIds.length })}
-                </p>
+                <span className="text-[11px] text-arena-text-muted mt-0.5 leading-none">
+                  {t("final.notificationSent", {
+                    count: selectedPlayerIds.length,
+                  })}
+                </span>
               )}
             </div>
 
+            {/* 3. Warning Notice Box */}
+            <div className="rounded-xl border border-amber-500/20 bg-amber-500/5 p-4 flex gap-3 text-xs leading-relaxed text-amber-500 font-semibold shrink-0 mt-0.5">
+              <AlertCircle
+                size={15}
+                className="shrink-0 text-amber-500 mt-0.5"
+              />
+              <span>{t("final.stepsInfo")}</span>
+            </div>
+
             {error && (
-              <div className="mb-3 rounded-[10px] border border-arena-danger/20 bg-arena-danger/10 px-3 py-2.5 text-[13px] text-arena-danger">
+              <div className="rounded-[10px] border border-arena-danger/20 bg-arena-danger/10 px-3.5 py-2.5 text-xs text-arena-danger font-semibold mt-0.5">
                 {error}
               </div>
             )}
@@ -1028,11 +820,11 @@ export function CreateEventSheet({
         )}
       </div>
 
-      {/* ── Footer navigation ────────────────────────────────── */}
-      <div className="flex shrink-0 gap-2.5 px-5 pt-3 pb-5">
+      {/* ── Navigation Bottom Button Row ────────────────────────── */}
+      <div className="flex shrink-0 gap-2.5 px-5 pt-3 pb-5 border-t border-arena-border/10">
         {step > 0 && (
           <Button
-            className="h-[50px] flex-1 rounded-[14px] border-arena-border text-[15px] font-semibold text-arena-text-sec"
+            className="press h-12 flex-1 rounded-xl border border-arena-border bg-[#0B0F14]/30 text-xs font-bold text-arena-text-sec hover:bg-arena-surface-el transition-all"
             onClick={() => setStep(s => s - 1)}
             type="button"
             variant="outline"
@@ -1042,17 +834,23 @@ export function CreateEventSheet({
         )}
         <Button
           className={cn(
-            "h-[50px] flex-[2] rounded-[14px] text-[15px] font-bold",
+            "press h-12 flex-[2] rounded-xl text-xs font-black transition-all gap-2",
             canAdvance
-              ? "bg-arena-primary text-arena-bg hover:bg-arena-primary/90"
+              ? step === 3
+                ? "bg-[#7CFF4F] text-[#0B0F14] hover:bg-[#7CFF4F]/95 shadow-[0_0_24px_rgba(124,255,79,0.22)]"
+                : "bg-arena-primary text-arena-bg hover:bg-arena-primary/95"
               : "cursor-not-allowed bg-arena-border text-arena-text-muted opacity-100",
           )}
           disabled={!canAdvance || sending}
           onClick={step < 3 ? () => setStep(s => s + 1) : handleSend}
           type="button"
         >
-          {sending && <Loader2 className="animate-spin" size={16} />}
-          {step === 3 ? t("actions.create") : t("actions.continue")}
+          {sending && <Loader2 className="animate-spin size-3.5" />}
+          {step === 3 ? (
+            <span>{t("final.sendCallup")}</span>
+          ) : (
+            <span>{t("actions.continue")}</span>
+          )}
         </Button>
       </div>
     </BottomSheet>
