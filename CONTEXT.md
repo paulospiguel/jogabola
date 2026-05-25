@@ -32,6 +32,38 @@ Este documento define a linguagem ubíqua e as regras de negócio da plataforma 
 - **Utilizador Fantasma** (`Ghost User`): Registo de utilizador criado automaticamente a partir de um email de convidado para preservar histórico (pagamentos, golos) sem exigir password.
 - **Identificação por Email**: Estratégia de reconhecimento global onde o email serve de chave única para unificar o Atleta em diferentes Equipas e Convocatórias.
 
+## Convenções de Código
+
+### Linguagem
+- **Variáveis, tipos, funções, constantes** → sempre em **inglês** (ex: `attendanceStatus`, `MatchSession`, `PAYMENT_STATUS`)
+- **UI strings** → sempre PT-PT via `useTranslations` (never hardcoded)
+- **Comentários de código** → inglês
+
+### Tipos e Constantes
+- **Union types** para status de domínio: `type AttendanceStatus = "PAID" | "PENDING" | "TO_VALIDATE"`
+- **`const` objects** (`as const`) para evitar strings literais repetidas no código:
+  ```ts
+  export const ATTENDANCE_STATUS = { PAID: "PAID", PENDING: "PENDING" } as const;
+  ```
+- Sem `enum` TypeScript nativo (overhead de compilação, mesmo resultado com union + const)
+
+### Estrutura de Feature (padrão)
+```
+feature/
+  page.tsx              ← server component, fetch + pass props
+  _components/          ← UI isolada, responsabilidade única
+  _hooks/               ← estado, efeitos, ações (colocado na feature)
+  _utils/               ← lógica específica da feature
+  _fixtures/            ← mock data tipado (temporário, até dados reais)
+```
+- Hooks verdadeiramente partilhados → `src/hooks/` global
+- Utils genéricos → `src/lib/utils.ts`
+- Constants de domínio → `src/constants/` global
+
+### Server Actions
+- Permanecem em `src/actions/` flat, organizados por domínio (`payments.actions.ts`)
+- Não colocar junto de features — são partilhadas entre páginas
+
 ## Regras de Negócio Fundamentais
 
 1. **Ciclo de Vida da Convocatória**: Agendada -> Aberta (aceita confirmações) -> Confirmada (campo reservado) -> Realizada -> Fechada (estatísticas e pagamentos concluídos).

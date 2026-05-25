@@ -33,3 +33,34 @@
    Do instead: keep links without underline, pills, outlined chips, decorative bullets, or special containers unless the user asks for them explicitly.
 3. **[2026-03-13] Logged-in pages should not repeat public navigation blocks**
    Do instead: keep internal shells focused on context and actions, and remove marketing-style or cross-area navigation strips from protected pages.
+
+## Code Conventions
+
+### Language
+- **Variables, types, functions, constants** → always in **English** (e.g., `attendanceStatus`, `MatchSession`, `PAYMENT_STATUS`)
+- **UI strings** → always PT-PT via `useTranslations` (never hardcoded)
+- **Code comments** → English
+
+### Types and Constants
+- **Union types** for domain status: `type AttendanceStatus = "PAID" | "PENDING" | "TO_VALIDATE"`
+- **`const` objects** (`as const`) to prevent repeated literal strings in code:
+  ```ts
+  export const ATTENDANCE_STATUS = { PAID: "PAID", PENDING: "PENDING" } as const;
+  ```
+- No native TypeScript `enum` (compilation overhead, same result with union + const)
+
+### Feature Structure (Standard)
+```
+feature/
+  page.tsx              ← server component, fetch + pass props
+  _components/          ← isolated UI, single responsibility
+  _hooks/               ← state, effects, actions (placed inside feature)
+  _utils/               ← feature-specific logic
+  _fixtures/            ← typed mock data (temporary, until real data is available)
+```
+- Truly shared hooks → global `src/hooks/`
+- Generic utils → `src/lib/utils.ts`
+- Domain constants → global `src/constants/`
+- Global Server Actions (e.g., in `src/actions/` or `src/app/actions.ts`)
+- Avoid placing shared actions inside features — they are shared across pages
+

@@ -4,6 +4,7 @@ import { Brain, Users, X, Zap } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
+import { Label } from "../ui/label";
 
 interface AiBalancerModalProps {
   isOpen: boolean;
@@ -78,9 +79,9 @@ export function AiBalancerModal({
             </p>
 
             <div className="mb-6 rounded-[16px] border border-arena-border bg-arena-bg p-4">
-              <label className="mb-2 block text-sm font-semibold text-white">
+              <Label className="mb-2 block text-sm font-semibold text-white">
                 {t("guestPrompt")}
-              </label>
+              </Label>
               <p className="mb-3 text-[12px] text-arena-text-muted">
                 {t("guestLabel")}
               </p>
