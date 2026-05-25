@@ -203,6 +203,7 @@
       "add": "Ajouter le joueur"
     },
     "labels": {
+      "admin": "Administrateur",
       "email": "Email *",
       "fullName": "Nom complet *",
       "phone": "Téléphone",
@@ -354,7 +355,7 @@
     "types": {
       "challenge": {
         "desc": "Défiez d'autres équipes",
-        "label": "Autre"
+        "label": "Défi"
       },
       "game": {
         "desc": "Officiel ou privé",
@@ -518,10 +519,59 @@
     },
     "spots": "Places",
     "tabs": {
-      "call": "Convocation",
-      "local": "Lieu",
+      "roster": "Convocation",
+      "location": "Lieu",
       "lineup": "Composition",
-      "equipa": "Équipes"
+      "teams": "Équipes",
+      "chat": "Chat"
+    },
+    "interactive": {
+      "bus": "Bus",
+      "busDesc": "Venir en bus avec l'équipe",
+      "car": "Voiture",
+      "carDesc": "Venir en voiture avec l'équipe",
+      "paymentApproved": "Payé",
+      "paymentReview": "À valider",
+      "paymentPending": "En attente",
+      "reservesMock": "Réserves ({count})",
+      "reservesStatus": "Réserve",
+      "pendingStatus": "En attente",
+      "squadCount": "Effectif · {count}",
+      "missingAlert": "Il manque {count, plural, =1 {# joueur} other {# joueurs}}",
+      "missingAlertSub": "pour compléter le format {format} ({teamsCount} équipes)",
+      "formatLabel": "Format de Jeu",
+      "teamsNumLabel": "Nombre d'Équipes",
+      "addGuests": "Ajouter des Invités",
+      "addGuestsSub": "Inscrire des invités pour combler {count, plural, =1 {la seule place vacante} other {les # places vacantes}}.",
+      "aiBalancerBeta": "Équilibreur d'Équipes IA",
+      "aiBalancerBetaSub": "Générez des équipes équilibrées en fonction du niveau des joueurs.",
+      "aiBalancerCta": "Générer {count} Équipes avec l'IA",
+      "howToGet": "Comment s'y rendre",
+      "metro": "Métro",
+      "metroDesc": "Station Baixa-Chiado (Ligne Bleue/Verte) à 3 min à pied.",
+      "autocarro": "Bus",
+      "autocarroDesc": "Arrêt Praça Luís de Camões (758, 202) à 2 min à pied.",
+      "carro": "Voiture",
+      "carroDesc": "Stationnement difficile. Parking souterrain Camões payant.",
+      "chatEmpty": "Aucun message ici pour l'instant. Envoyez le premier !",
+      "chatPlaceholder": "Écrivez un message pour le groupe...",
+      "squadFull": "Effectif Complet !",
+      "readyToBalance": "Prêt à équilibrer les équipes",
+      "guest": "Invité"
+    },
+    "types": {
+      "training": "Entraînement",
+      "match": "Match",
+      "game": "Match",
+      "partida": "Match",
+      "jogo": "Match",
+      "challenge": "Défi",
+      "other": "Autre"
+    },
+    "recurrence": {
+      "once": "Unique",
+      "weekly": "Hebdomadaire",
+      "monthly": "Mensuel"
     },
     "aiBalancer": {
       "button": "Équilibre IA ⚡",
@@ -538,30 +588,6 @@
       "teamA": "Équipe A",
       "teamB": "Équipe B",
       "avgRating": "Note Moyenne :"
-    },
-    "mock": {
-      "reservesMock": "RÉSERVES ({count})",
-      "missingAlert": "Il manque {count} joueurs",
-      "missingAlertSub": "{format} · {teamsCount} équipes",
-      "formatLabel": "FORMAT",
-      "teamsNumLabel": "Nombre d'équipes",
-      "addGuests": "Ajouter des invités",
-      "addGuestsSub": "Complétez les {count} places avec des invités",
-      "aiBalancerBeta": "Équilibrage IA",
-      "aiBalancerBetaSub": "Des équipes équitables en quelques secondes",
-      "aiBalancerCta": "Générer {count} équipes",
-      "howToGet": "Comment s'y rendre",
-      "metro": "Métro",
-      "metroDesc": "Station Baixa-Chiado (ligne Verte/Bleue), 8 min à pied",
-      "autocarro": "Bus",
-      "autocarroDesc": "Lignes 758 et 790, arrêt Bairro Alto",
-      "carro": "Voiture",
-      "carroDesc": "Parking disponible dans la rue latérale",
-      "chatEmpty": "Pas encore de messages. Commencez la conversation !",
-      "chatPlaceholder": "Écrire un message...",
-      "paymentApproved": "✓ PAYÉ",
-      "paymentReview": "À VALIDER",
-      "paymentPending": "EN ATTENTE"
     },
     "titleJogo": "Détails du match",
     "titleTreino": "Entraînement",
@@ -1834,7 +1860,7 @@
   },
   "notificationsPage": {
     "actions": {
-      "markAllRead": "Tout marquer comme lu"
+      "markAllRead": "Marquer lues"
     },
     "allRead": "Toutes les notifications lues",
     "empty": {
@@ -2906,9 +2932,9 @@
       "addSubMissing": "Remplis {count} place(s) avec des joueurs extérieurs",
       "addMore": "Ajouter d'autres invités",
       "title": "Invités",
-      "infoText": "Personnes sans compte dans l'app qui vont jouer ce match. Définissez un niveau pour que l'IA équilibre mieux.",
+      "infoText": "Personnes <strong>sans compte dans l'app</strong> qui vont jouer ce match. Définissez un niveau pour que l'IA équilibre mieux.",
       "cancel": "Annuler",
-      "save": "Enregistrer {count} invité(s)"
+      "save": "Enregistrer {count} invités"
     },
     "ai": {
       "title": "Équilibrage IA",

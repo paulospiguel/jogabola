@@ -1,24 +1,13 @@
 "use client";
 
-import { ShieldUserIcon } from "@animateicons/react/lucide";
 import { useQueryClient } from "@tanstack/react-query";
-import {
-  ArrowLeft,
-  Calendar,
-  ChevronRight,
-  Clock,
-  Mail,
-  Star,
-  Trophy,
-  UserMinus,
-  Zap,
-} from "lucide-react";
+import { Calendar, Check, Clock, UserMinus, X } from "lucide-react";
 import { useParams, useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { useState } from "react";
 import { removePlayerFromRoster } from "@/actions/teams.actions";
 import { JbAvatar } from "@/components/arena/avatar";
-import { VerifiedBadge } from "@/components/arena/verified-badge";
+import { ScreenHeader } from "@/components/arena/screen-header";
 import Loading from "@/components/loading";
 import {
   AlertDialog,
@@ -32,424 +21,215 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import { useAthleteProfile } from "@/hooks/use-athlete-profile";
-import { useDashboardData } from "@/hooks/use-dashboard";
 import { useTeams } from "@/hooks/use-teams";
-import { cn, formatDate } from "@/lib/utils";
+import { cn } from "@/lib/utils";
+
+function shortDate(raw: string | Date) {
+  return new Date(raw).toLocaleDateString("pt-PT", {
+    day: "numeric",
+    month: "short",
+  });
+}
 
 export default function AthleteProfilePage() {
   const { id } = useParams();
   const router = useRouter();
   const t = useTranslations();
   const { activeTeamId } = useTeams();
-  const {
-    profile: athlete,
-    history,
-    isLoading: profileLoading,
-  } = useAthleteProfile(id as string);
+  const { profile: athlete, history, isLoading } = useAthleteProfile(id as string);
 
-  const arenaAthleteProfileTranslation = (
-    sentence: string,
-    values?: Record<string, string | number>,
-  ) => {
-    return t(`arenaAthleteProfile.${sentence}`, values);
-  };
-
-  const isLoading = profileLoading;
+  const tr = (key: string, values?: Record<string, string | number>) =>
+    t(`arenaAthleteProfile.${key}`, values);
 
   if (isLoading) {
     return (
-      <div className="jb-page flex items-center justify-center">
-        <Loading text={arenaAthleteProfileTranslation("loading")} />
+      <div className="flex h-full items-center justify-center">
+        <Loading text={tr("loading")} />
       </div>
     );
   }
 
   if (!athlete) {
     return (
-      <div className="jb-page">
-        <div className="jb-page-inner text-center">
-          <h1 className="text-xl font-bold">
-            {arenaAthleteProfileTranslation("notFound")}
-          </h1>
-          <Button
-            variant="ghost"
-            onClick={() => router.back()}
-            className="mt-4"
-          >
-            <ArrowLeft className="mr-2" size={16} />
-            {arenaAthleteProfileTranslation("actions.back")}
-          </Button>
-        </div>
+      <div className="flex h-full flex-col items-center justify-center gap-4 px-6">
+        <span className="text-base font-bold text-arena-text">{tr("notFound")}</span>
+        <Button variant="ghost" onClick={() => router.back()} className="text-arena-text-sec">
+          {tr("actions.back")}
+        </Button>
       </div>
     );
   }
 
-  if (!athlete.isVerified) {
-    return (
-      <div className="jb-page">
-        <div className="jb-page-inner">
-          <header className="mb-8 flex items-center gap-4">
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={() => router.back()}
-              className="h-10 w-10 rounded-full bg-arena-surface-el hover:bg-arena-primary/10 hover:text-arena-primary"
-            >
-              <ArrowLeft size={20} />
-            </Button>
-            <div>
-              <div className="jb-kicker uppercase">
-                {arenaAthleteProfileTranslation("pendingValidation")}
-              </div>
-              <div className="flex items-center gap-2">
-                <ShieldUserIcon className="size-6 text-arena-text-muted" />
-                <h1 className="jb-title">
-                  {arenaAthleteProfileTranslation("title")}
-                </h1>
-              </div>
-            </div>
-          </header>
-
-          <div className="grid gap-6 lg:grid-cols-[350px_1fr]">
-            <section className="jb-card p-6 flex flex-col items-center text-center gap-4 h-fit">
-              <div className="flex size-16 items-center justify-center rounded-[18px] border border-arena-border bg-arena-surface">
-                <Clock
-                  size={28}
-                  className="text-arena-text-muted"
-                  strokeWidth={1.5}
-                />
-              </div>
-              <JbAvatar
-                id={athlete.id.toString()}
-                name={athlete.name}
-                image={null}
-                size={80}
-              />
-              <div>
-                <h2 className="text-lg font-bold text-arena-text">
-                  {athlete.name}
-                </h2>
-                {athlete.email && (
-                  <div className="mt-1 flex items-center justify-center gap-1.5 text-sm text-arena-text-muted">
-                    <Mail size={13} />
-                    {athlete.email}
-                  </div>
-                )}
-              </div>
-              <div className="rounded-[10px] border border-arena-warning/30 bg-arena-warning/10 px-4 py-3 text-sm text-arena-warning text-left">
-                <p className="font-semibold">
-                  {arenaAthleteProfileTranslation("notValidated")}
-                </p>
-                <p className="mt-1 text-xs opacity-80">
-                  {arenaAthleteProfileTranslation("notValidatedDesc")}
-                </p>
-              </div>
-              <RemoveFromRosterDialog
-                activeTeamId={activeTeamId}
-                playerId={athlete.id.toString()}
-                playerName={athlete.name}
-                onRemoved={() => router.push("/arena/squads")}
-                t={arenaAthleteProfileTranslation}
-              />
-            </section>
-
-            <section className="jb-card overflow-hidden h-fit">
-              <div className="border-b border-arena-border bg-arena-surface-el/50 px-6 py-4">
-                <h2 className="text-xs font-bold uppercase tracking-widest text-arena-text-muted">
-                  {arenaAthleteProfileTranslation("history.title")}
-                </h2>
-              </div>
-              <div className="divide-y divide-arena-border">
-                {history && history.length > 0 ? (
-                  history.map((item, i) => (
-                    <div
-                      key={`${item.title}-${item.startsAt}-${i}`}
-                      className="flex items-center gap-4 px-6 py-4 hover:bg-arena-surface-el transition-colors"
-                    >
-                      <div className="flex-1 min-w-0">
-                        <div className="font-bold text-arena-text truncate">
-                          {item.title}
-                        </div>
-                        <div className="text-xs text-arena-text-muted flex items-center gap-2">
-                          <span>{formatDate(item.startsAt)}</span>
-                          <span>•</span>
-                          <span className="font-semibold text-arena-primary capitalize">
-                            {item.type}
-                          </span>
-                        </div>
-                      </div>
-                      <div className="flex items-center gap-4">
-                        <div
-                          className={cn(
-                            "px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider",
-                            item.status === "confirmed"
-                              ? "bg-arena-success/20 text-arena-success"
-                              : item.status === "reserve"
-                                ? "bg-arena-warning/20 text-arena-warning"
-                                : "bg-arena-text-muted/20 text-arena-text-muted",
-                          )}
-                        >
-                          {item.status}
-                        </div>
-                        <ChevronRight
-                          size={16}
-                          className="text-arena-text-muted"
-                        />
-                      </div>
-                    </div>
-                  ))
-                ) : (
-                  <div className="p-12 text-center text-arena-text-muted">
-                    <Calendar className="mx-auto mb-3 opacity-20" size={32} />
-                    <p className="text-sm font-medium opacity-60">
-                      Sem atividade registada
-                    </p>
-                  </div>
-                )}
-              </div>
-            </section>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
-  const statCards = [
-    {
-      label: arenaAthleteProfileTranslation("stats.rating"),
-      value: athlete.rating || "-",
-      Icon: Star,
-      color: "text-arena-highlight",
-    },
-    {
-      label: arenaAthleteProfileTranslation("stats.goals"),
-      value: athlete.goals || 0,
-      Icon: Zap,
-      color: "text-arena-primary",
-    },
-    {
-      label: arenaAthleteProfileTranslation("stats.assists"),
-      value: athlete.assists || 0,
-      Icon: Trophy,
-      color: "text-arena-success",
-    },
-    {
-      label: arenaAthleteProfileTranslation("stats.matches"),
-      value: athlete.games || 0,
-      Icon: Calendar,
-      color: "text-arena-info",
-    },
+  const stats = [
+    { value: athlete.games ?? 0, label: tr("stats.matches") },
+    { value: athlete.goals ?? 0, label: tr("stats.goals") },
+    { value: athlete.assists ?? 0, label: tr("stats.assists") },
+    { value: athlete.rating ?? "—", label: tr("stats.rating") },
   ];
 
   return (
-    <div className="jb-page">
-      <div className="jb-page-inner">
-        <header className="mb-8 flex items-center justify-between">
-          <div className="flex items-center gap-4">
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={() => router.back()}
-              className="h-10 w-10 rounded-full bg-arena-surface-el hover:bg-arena-primary/10 hover:text-arena-primary"
-            >
-              <ArrowLeft size={20} />
-            </Button>
-            <div>
-              <div className="jb-kicker uppercase">{athlete.role}</div>
-              <div className="flex items-center gap-2">
-                <ShieldUserIcon className="size-6 text-arena-primary" />
-                <h1 className="jb-title">
-                  {arenaAthleteProfileTranslation("title")}
-                </h1>
-              </div>
+    <div className="flex h-full flex-col bg-arena-bg">
+      <ScreenHeader title="" />
+
+      <div className="flex-1 overflow-y-auto">
+        <div className="mx-auto max-w-lg px-4 pb-10 pt-6">
+
+          {/* ── Hero ─────────────────────────────────── */}
+          <div className="mb-6 flex flex-col items-center gap-2.5">
+            {/* Avatar with subtle ring */}
+            <div className="relative">
+              <JbAvatar
+                id={athlete.id.toString()}
+                name={athlete.name}
+                image={athlete.image}
+                size={80}
+              />
+              {/* verified glow ring */}
+              {athlete.isVerified && (
+                <span className="absolute inset-0 rounded-full ring-2 ring-arena-primary/30 ring-offset-2 ring-offset-arena-bg" />
+              )}
+            </div>
+
+            {/* Name */}
+            <h1 className="text-[22px] font-black tracking-tight text-arena-text leading-tight">
+              {athlete.name}
+            </h1>
+
+            {/* Badges row */}
+            <div className="flex items-center gap-2">
+              {athlete.position && (
+                <span className="inline-flex items-center rounded-[6px] border border-arena-primary/30 bg-arena-primary/10 px-2 py-0.5 text-[11px] font-black uppercase tracking-wider text-arena-primary">
+                  {athlete.position}
+                </span>
+              )}
+              {!athlete.isVerified && (
+                <span className="inline-flex items-center gap-1 rounded-[6px] border border-arena-text-muted/20 bg-arena-text-muted/8 px-2 py-0.5 text-[11px] font-bold text-arena-text-muted">
+                  <Clock size={9} strokeWidth={2.5} />
+                  {tr("pendingValidation")}
+                </span>
+              )}
             </div>
           </div>
-        </header>
 
-        <div className="grid gap-6 lg:grid-cols-[300px_1fr]">
-          <aside className="space-y-6">
-            {/* Athlete Identity Card */}
-            <section className="jb-card p-6 flex flex-col items-center text-center">
-              <div className="relative">
-                {true && (
-                  <span className="absolute z-10 top-0 right-0 flex h-5 items-center gap-1 rounded-full px-2 text-[10px] font-black tracking-widest text-arena-highlight uppercase">
-                    <Star size={10} fill="currentColor" />
-                  </span>
-                )}
-                <JbAvatar
-                  id={athlete.id.toString()}
-                  name={athlete.name}
-                  image={athlete.image}
-                  size={100}
-                />
-              </div>
-              <div className="mt-4 flex items-center gap-2 flex-col">
-                <h2 className="text-xl font-bold text-arena-text">
-                  {athlete.name}
-                </h2>
-              </div>
-              <div className="mt-2 flex items-center gap-2">
-                <VerifiedBadge verified={!!athlete.isVerified} />
-              </div>
-
-              <div className="mt-8 w-full space-y-4 text-left border-t border-arena-border pt-6">
-                <div>
-                  <div className="text-[10px] font-bold uppercase tracking-widest text-arena-text-muted">
-                    {arenaAthleteProfileTranslation("info.role")}
-                  </div>
-                  <div className="mt-1 font-semibold text-arena-text capitalize">
-                    {arenaAthleteProfileTranslation(`roles.${athlete.role}`)}
-                  </div>
-                </div>
-                <div>
-                  <div className="text-[10px] font-bold uppercase tracking-widest text-arena-text-muted">
-                    {arenaAthleteProfileTranslation("info.joined")}
-                  </div>
-                  <div className="mt-1 font-semibold text-arena-text">
-                    {athlete?.createdAt && formatDate(athlete?.createdAt)}
-                  </div>
-                </div>
-                <div>
-                  <div className="text-[10px] font-bold uppercase tracking-widest text-arena-text-muted">
-                    {arenaAthleteProfileTranslation("info.contact")}
-                  </div>
-                  <div className="mt-1 flex items-center gap-2 font-semibold text-arena-text">
-                    <Mail size={14} className="text-arena-text-muted" />
-                    {athlete.email}
-                  </div>
-                </div>
-              </div>
-
-              <RemoveFromRosterDialog
-                activeTeamId={activeTeamId}
-                className="mt-8"
-                playerId={athlete.id.toString()}
-                playerName={athlete.name}
-                onRemoved={() => router.push("/arena/squads")}
-                t={arenaAthleteProfileTranslation}
-              />
-            </section>
-          </aside>
-
-          <main className="space-y-6">
-            {/* Stats Grid */}
-            <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
-              {statCards.map(({ label, value, Icon, color }) => (
-                <div
-                  key={label}
-                  className="jb-card p-4 flex flex-col items-center text-center transition-transform hover:scale-[1.02]"
-                >
-                  <Icon className={cn("mb-3 size-6", color)} />
-                  <div className="text-[24px] font-black text-arena-text">
+          {/* ── Stats strip ──────────────────────────── */}
+          <div className="mb-6 overflow-hidden rounded-[16px] border border-arena-border bg-arena-surface">
+            <div className="flex divide-x divide-arena-border">
+              {stats.map(({ value, label }) => (
+                <div key={label} className="flex flex-1 flex-col items-center py-4 gap-1">
+                  <span className="text-[22px] font-black text-arena-text leading-none tabular-nums">
                     {value}
-                  </div>
-                  <div className="text-[10px] font-bold uppercase tracking-widest text-arena-text-muted">
+                  </span>
+                  <span className="text-[10px] font-bold uppercase tracking-[0.06em] text-arena-text-muted">
                     {label}
-                  </div>
+                  </span>
                 </div>
               ))}
             </div>
+          </div>
 
-            {/* Performance Chart Placeholder */}
-            <section className="jb-card overflow-hidden">
-              <div className="border-b border-arena-border bg-arena-surface-el/50 px-6 py-4 flex items-center justify-between">
-                <h2 className="text-xs font-bold uppercase tracking-widest text-arena-text-muted">
-                  {arenaAthleteProfileTranslation("analysis.title")}
-                </h2>
-                <select className="bg-transparent text-[10px] font-bold uppercase tracking-widest text-arena-text-muted focus:outline-none">
-                  <option>
-                    {arenaAthleteProfileTranslation("analysis.periods.last10")}
-                  </option>
-                  <option>
-                    {arenaAthleteProfileTranslation("analysis.periods.season")}
-                  </option>
-                </select>
-              </div>
-              <div className="p-12 flex flex-col items-center justify-center text-arena-text-muted bg-gradient-to-b from-transparent to-arena-primary/5">
-                <div className="flex h-32 items-end gap-3 mb-6">
-                  {[40, 60, 45, 90, 65, 80, 50, 75, 85, 95].map((h, i) => (
-                    <div
-                      key={`rating-bar-${i}-${h}`}
-                      className="w-4 bg-arena-primary/20 rounded-t-sm transition-all hover:bg-arena-primary hover:h-40"
-                      style={{ height: `${h}%` }}
-                    />
-                  ))}
-                </div>
-                <p className="text-sm font-medium">
-                  {arenaAthleteProfileTranslation("analysis.evolution")}
-                </p>
-              </div>
-            </section>
+          {/* ── Pending notice for unverified ────────── */}
+          {!athlete.isVerified && (
+            <div className="mb-6 rounded-[14px] border border-arena-warning/25 bg-arena-warning/10 px-4 py-3">
+              <p className="text-[13px] font-semibold text-arena-warning">{tr("notValidated")}</p>
+              <p className="mt-0.5 text-[12px] text-arena-warning opacity-75">{tr("notValidatedDesc")}</p>
+            </div>
+          )}
 
-            {/* History Card */}
-            <section
-              id="history"
-              className="jb-card scroll-mt-24 overflow-hidden"
-            >
-              <div className="border-b border-arena-border bg-arena-surface-el/50 px-6 py-4 flex items-center justify-between">
-                <h2 className="text-xs font-bold uppercase tracking-widest text-arena-text-muted">
-                  {arenaAthleteProfileTranslation("history.title")}
-                </h2>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="h-8 text-[10px] font-bold uppercase"
-                >
-                  {arenaAthleteProfileTranslation("actions.viewAll")}
-                </Button>
+          {/* ── History ──────────────────────────────── */}
+          <div>
+            <p className="mb-3 text-[10px] font-black uppercase tracking-[0.1em] text-arena-text-muted">
+              {tr("history.title")}
+            </p>
+
+            {history && history.length > 0 ? (
+              <div className="space-y-2">
+                {history.map((item, i) => (
+                  <HistoryRow
+                    key={`${item.id}-${i}`}
+                    item={item}
+                    index={i}
+                  />
+                ))}
               </div>
-              <div className="divide-y divide-arena-border">
-                {history && history.length > 0 ? (
-                  history.map((item, i) => (
-                    <div
-                      key={`${item.title}-${item.startsAt}-${i}`}
-                      className="flex items-center gap-4 px-6 py-4 hover:bg-arena-surface-el transition-colors"
-                    >
-                      <div className="flex-1 min-w-0">
-                        <div className="font-bold text-arena-text truncate">
-                          {item.title}
-                        </div>
-                        <div className="text-xs text-arena-text-muted flex items-center gap-2">
-                          <span>{formatDate(item.startsAt)}</span>
-                          <span>•</span>
-                          <span className="font-semibold text-arena-primary capitalize">
-                            {item.type}
-                          </span>
-                        </div>
-                      </div>
-                      <div className="flex items-center gap-4">
-                        <div
-                          className={cn(
-                            "px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider",
-                            item.status === "confirmed"
-                              ? "bg-arena-success/20 text-arena-success"
-                              : item.status === "reserve"
-                                ? "bg-arena-warning/20 text-arena-warning"
-                                : "bg-arena-text-muted/20 text-arena-text-muted",
-                          )}
-                        >
-                          {item.status}
-                        </div>
-                        <ChevronRight
-                          size={16}
-                          className="text-arena-text-muted"
-                        />
-                      </div>
-                    </div>
-                  ))
-                ) : (
-                  <div className="p-12 text-center text-arena-text-muted">
-                    <Calendar className="mx-auto mb-3 opacity-20" size={32} />
-                    <p className="text-sm font-medium opacity-60">
-                      Sem atividade registada
-                    </p>
-                  </div>
-                )}
+            ) : (
+              <div className="flex flex-col items-center gap-2 rounded-[16px] border border-arena-border bg-arena-surface py-10 text-center">
+                <Calendar size={28} className="text-arena-text-muted opacity-30" strokeWidth={1.5} />
+                <span className="text-sm font-medium text-arena-text-muted opacity-60">
+                  Sem atividade registada
+                </span>
               </div>
-            </section>
-          </main>
+            )}
+          </div>
+
+          {/* ── Remove action ─────────────────────────── */}
+          <div className="mt-8">
+            <RemoveFromRosterDialog
+              activeTeamId={activeTeamId}
+              playerId={athlete.id.toString()}
+              playerName={athlete.name}
+              onRemoved={() => router.push("/arena/squads")}
+              t={tr}
+            />
+          </div>
         </div>
       </div>
+    </div>
+  );
+}
+
+function HistoryRow({
+  item,
+  index,
+}: {
+  item: { id: number; title: string; startsAt: string | Date; status: string };
+  index: number;
+}) {
+  const statusMap: Record<string, { label: string; icon: React.ReactNode; cls: string }> = {
+    confirmed: {
+      label: "Confirmado",
+      icon: <Check size={10} strokeWidth={2.5} />,
+      cls: "border-arena-success/25 bg-arena-success/10 text-arena-success",
+    },
+    refused: {
+      label: "Recusado",
+      icon: <X size={10} strokeWidth={2.5} />,
+      cls: "border-arena-danger/25 bg-arena-danger/10 text-arena-danger",
+    },
+    reserve: {
+      label: "Reserva",
+      icon: <Clock size={10} strokeWidth={2.5} />,
+      cls: "border-arena-warning/25 bg-arena-warning/10 text-arena-warning",
+    },
+  };
+
+  const badge = statusMap[item.status] ?? {
+    label: item.status,
+    icon: null,
+    cls: "border-arena-border bg-arena-surface-el text-arena-text-muted",
+  };
+
+  return (
+    <div
+      className="flex items-center gap-3 rounded-[14px] border border-arena-border bg-arena-surface px-4 py-3.5 transition-colors hover:border-arena-border/60 hover:bg-arena-surface-el"
+      style={{ animationDelay: `${index * 30}ms` }}
+    >
+      <div className="min-w-0 flex-1">
+        <span className="block truncate text-[13px] font-bold text-arena-text">
+          {item.title}
+        </span>
+        <span className="mt-0.5 block text-[11px] font-medium text-arena-text-muted">
+          {shortDate(item.startsAt)}
+        </span>
+      </div>
+      <span
+        className={cn(
+          "inline-flex shrink-0 items-center gap-1 rounded-[8px] border px-2 py-1 text-[10px] font-bold",
+          badge.cls,
+        )}
+      >
+        {badge.icon}
+        {badge.label}
+      </span>
     </div>
   );
 }
@@ -467,7 +247,7 @@ function RemoveFromRosterDialog({
   playerId: string;
   playerName: string;
   onRemoved: () => void;
-  t: (sentence: string, values?: Record<string, string | number>) => string;
+  t: (key: string, values?: Record<string, string | number>) => string;
 }) {
   const queryClient = useQueryClient();
   const [open, setOpen] = useState(false);
@@ -479,35 +259,23 @@ function RemoveFromRosterDialog({
       setError(t("removeDialog.errors.TEAM_NOT_FOUND"));
       return;
     }
-
     setIsRemoving(true);
     setError(null);
 
-    const result = await removePlayerFromRoster({
-      teamId: activeTeamId,
-      playerId,
-    });
-
+    const result = await removePlayerFromRoster({ teamId: activeTeamId, playerId });
     setIsRemoving(false);
 
     if (!result.success) {
       const code = result.error.code;
-      const errorKey = [
-        "TEAM_NOT_FOUND",
-        "CANNOT_REMOVE_OWNER",
-        "PLAYER_NOT_IN_TEAM",
-      ].includes(code)
+      const key = ["TEAM_NOT_FOUND", "CANNOT_REMOVE_OWNER", "PLAYER_NOT_IN_TEAM"].includes(code)
         ? code
         : "UNKNOWN_ERROR";
-
-      setError(t(`removeDialog.errors.${errorKey}`));
+      setError(t(`removeDialog.errors.${key}`));
       return;
     }
 
     await queryClient.invalidateQueries({ queryKey: ["squad", activeTeamId] });
-    await queryClient.invalidateQueries({
-      queryKey: ["athlete-profile", playerId, activeTeamId],
-    });
+    await queryClient.invalidateQueries({ queryKey: ["athlete-profile", playerId, activeTeamId] });
     setOpen(false);
     onRemoved();
   }
@@ -531,9 +299,7 @@ function RemoveFromRosterDialog({
           <div className="mb-2 flex size-12 items-center justify-center rounded-2xl border border-arena-danger/25 bg-arena-danger/10 text-arena-danger">
             <UserMinus size={24} strokeWidth={2} />
           </div>
-          <AlertDialogTitle className="text-arena-text">
-            {t("removeDialog.title")}
-          </AlertDialogTitle>
+          <AlertDialogTitle className="text-arena-text">{t("removeDialog.title")}</AlertDialogTitle>
           <AlertDialogDescription className="text-arena-text-sec">
             {t("removeDialog.description", { name: playerName })}
           </AlertDialogDescription>
@@ -563,9 +329,7 @@ function RemoveFromRosterDialog({
             type="button"
           >
             <UserMinus className="mr-2" size={16} />
-            {isRemoving
-              ? t("removeDialog.removing")
-              : t("removeDialog.confirm")}
+            {isRemoving ? t("removeDialog.removing") : t("removeDialog.confirm")}
           </Button>
         </AlertDialogFooter>
       </AlertDialogContent>

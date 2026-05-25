@@ -145,10 +145,10 @@
     "loading": "A carregar perfil do atleta...",
     "notFound": "Atleta não encontrado",
     "stats": {
-      "rating": "Rating",
+      "rating": "Nota",
       "goals": "Golos",
-      "assists": "Assistências",
-      "matches": "Partidas"
+      "assists": "Assist.",
+      "matches": "Jogos"
     },
     "actions": {
       "back": "Voltar ao plantel",
@@ -203,6 +203,7 @@
       "add": "Adicionar Jogador"
     },
     "labels": {
+      "admin": "Administrador",
       "email": "Email *",
       "fullName": "Nome completo *",
       "phone": "Telemóvel",
@@ -505,12 +506,72 @@
       "telegram": "Telegram",
       "message": "Foste convocado para {title}. Confirma a tua presença:"
     },
+    "shareSheet": {
+      "title": "Partilhar Convocatória",
+      "event": "EVENTO",
+      "qrCode": "CÓDIGO QR",
+      "copyLink": "Copiar link",
+      "copied": "Copiado!",
+      "whatsapp": "WhatsApp",
+      "presenceList": "Lista de Presenças",
+      "presenceListSub": "Link público para ver confirmações",
+      "open": "Abrir"
+    },
     "spots": "Vagas",
     "tabs": {
-      "call": "Convocatória",
-      "local": "Local",
+      "roster": "Convocatória",
+      "location": "Local",
       "lineup": "Escalação",
-      "equipa": "Equipas"
+      "teams": "Equipas",
+      "chat": "Chat"
+    },
+    "interactive": {
+      "bus": "Autocarro",
+      "busDesc": "Ir de autocarro com o equipamento",
+      "car": "Carro",
+      "carDesc": "Ir de carro com o equipamento",
+      "paymentApproved": "Pago",
+      "paymentReview": "A validar",
+      "paymentPending": "Pendente",
+      "reservesMock": "Reservas ({count})",
+      "reservesStatus": "Reserva",
+      "pendingStatus": "Pendente",
+      "squadCount": "Plantel · {count}",
+      "missingAlert": "Falta {count, plural, =1 {# jogador} other {Faltam # jogadores}}",
+      "missingAlertSub": "para fechar o formato de {format} ({teamsCount} equipas)",
+      "formatLabel": "Formato de Jogo",
+      "teamsNumLabel": "Número de Equipas",
+      "addGuests": "Adicionar Convidados",
+      "addGuestsSub": "Inscrever convidados para preencher {count, plural, =1 {a única vaga} other {as # vagas}}.",
+      "aiBalancerBeta": "Equilibrador de Equipas IA",
+      "aiBalancerBetaSub": "Gera equipas equilibradas com base no nível dos jogadores.",
+      "aiBalancerCta": "Gerar {count} Equipas com IA",
+      "howToGet": "Como chegar",
+      "metro": "Metro",
+      "metroDesc": "Estação Baixa-Chiado (Linha Azul/Verde) a 3 min a pé.",
+      "autocarro": "Autocarro",
+      "autocarroDesc": "Paragem Praça Luís de Camões (758, 202) a 2 min a pé.",
+      "carro": "Carro",
+      "carroDesc": "Estacionamento difícil. Parque subterrâneo Camões pago.",
+      "chatEmpty": "Nenhuma mensagem por aqui. Envia a primeira!",
+      "chatPlaceholder": "Escreve uma mensagem para o grupo...",
+      "squadFull": "Lotação Completa!",
+      "readyToBalance": "Pronto para equilibrar as equipas",
+      "guest": "Convidado"
+    },
+    "types": {
+      "training": "Treino",
+      "match": "Jogo",
+      "game": "Jogo",
+      "partida": "Jogo",
+      "jogo": "Jogo",
+      "challenge": "Desafio",
+      "other": "Outro"
+    },
+    "recurrence": {
+      "once": "Particular",
+      "weekly": "Semanal",
+      "monthly": "Mensal"
     },
     "aiBalancer": {
       "button": "Balanceamento IA ⚡",
@@ -1065,15 +1126,15 @@
     "statistics": "Estatísticas",
     "success": "Sucesso",
     "system": "Sistema",
-    "team": "Equipe",
+    "team": "Equipa",
     "teamDescription": "Descrição da equipa",
-    "teamJouneys": "Dias de equipe",
+    "teamJouneys": "Dias de equipa",
     "teamJouneysStats": "Estatísticas da jornada da equipa",
     "teamMatches": "Saídas da equipa",
-    "teamMatchesStats": "Estatísticas da partida da equipe",
+    "teamMatchesStats": "Estatísticas da partida da equipa",
     "teamName": "Nome da equipa",
-    "teamPlayers": "Jogadores da equipe",
-    "teamPlayersStats": "Estatísticas dos jogadores da equipe",
+    "teamPlayers": "Jogadores da equipa",
+    "teamPlayersStats": "Estatísticas dos jogadores da equipa",
     "verified": "Verificado",
     "teamStats": "Estatísticas da equipa",
     "title": "Título",
@@ -1219,7 +1280,7 @@
     },
     "contact": "Contato",
     "copyright": "Direitos autorais © {year} {company}. Todos os direitos reservados.",
-    "description": "Encontre sua equipe ideal ou crie a sua própria, gerencie seus atletas e participe de ligas lendárias!",
+    "description": "Encontre sua equipa ideal ou crie a sua própria, gerencie seus atletas e participe de ligas lendárias!",
     "faq": "FAQ",
     "links": {
       "about": "Sobre",
@@ -1534,7 +1595,7 @@
       },
       "title": "Jornadas de Sucesso"
     },
-    "title": "Pronto para montar sua equipe dos sonhos?",
+    "title": "Pronto para montar sua equipa dos sonhos?",
     "watchVideo": "Video de apresentação",
     "marquee": {
       "items": [
@@ -1755,7 +1816,7 @@
     "timer": "Timer"
   },
   "meta": {
-    "description": "O melhor lugar para encontrar sua equipe e jogar futebol.",
+    "description": "O melhor lugar para encontrar sua equipa e jogar futebol.",
     "title": "Joga Bola"
   },
   "notFound": {
@@ -1779,7 +1840,7 @@
   },
   "notificationsPage": {
     "actions": {
-      "markAllRead": "Marcar todas como lidas"
+      "markAllRead": "Marcar lidas"
     },
     "allRead": "Todas as notificações lidas",
     "empty": {
@@ -2003,6 +2064,66 @@
       "overview": "Visão geral",
       "settings": "Configurações",
       "teams": "Minhas equipas"
+    },
+    "dashboard": {
+      "games": "Jogos",
+      "goals": "Golos",
+      "assists": "Assist.",
+      "rating": "Nota",
+      "associatedTeams": "Equipas Associadas",
+      "associatedTeamsCount": "{count} equipas",
+      "playersCount": "jogadores",
+      "position": "posição",
+      "wins": "vitórias",
+      "season": "época",
+      "viewRound": "Ver Jornada",
+      "events": "Eventos"
+    },
+    "menu": {
+      "notifications": "Notificações",
+      "notificationsSub": "Gerir alertas",
+      "security": "Segurança",
+      "securitySub": "Passkeys e sessões",
+      "editProfile": "Editar perfil",
+      "editProfileSub": "Nome, foto e contactos",
+      "proPlan": "Plano Pro",
+      "proPlanSub": "3/3 equipas · €5/mês",
+      "logout": "Terminar sessão"
+    },
+    "notificationsSheet": {
+      "title": "Notificações",
+      "push": "PUSH",
+      "email": "EMAIL",
+      "presence": "Confirmações de presença",
+      "presenceSub": "Quando alguém confirma ou rejeita",
+      "chat": "Mensagens de chat",
+      "chatSub": "Novas mensagens nos eventos",
+      "results": "Resultados publicados",
+      "resultsSub": "Quando um jogo termina",
+      "payments": "Pagamentos",
+      "paymentsSub": "Comprovativos recebidos / em atraso",
+      "notices": "Avisos do gestor",
+      "noticesSub": "Mural de avisos dos eventos"
+    },
+    "editProfileSheet": {
+      "title": "Editar perfil",
+      "fullName": "NOME COMPLETO",
+      "email": "EMAIL",
+      "phone": "TELEMÓVEL",
+      "verified": "Verificado",
+      "verifiedAthlete": "Atleta verificado",
+      "verifiedAthleteDesc": "Email confirmado e aprovado pelo gestor"
+    },
+    "securitySheet": {
+      "title": "Segurança",
+      "tabs": {
+        "passkeys": "Passkeys",
+        "sessions": "Sessões",
+        "twoFactor": "2FA"
+      },
+      "deviceActive": "ativo",
+      "addedOn": "Adicionado em {date}",
+      "remove": "Remover"
     }
   },
   "searchResults": {
@@ -2811,9 +2932,9 @@
       "addSubMissing": "Completa as {count} vaga(s) com pessoal de fora",
       "addMore": "Adicionar mais convidados",
       "title": "Convidados",
-      "infoText": "Pessoas sem conta no app que vão jogar este jogo. Define um nível para a IA balancear melhor.",
+      "infoText": "Pessoas <strong>sem conta no app</strong> que vão jogar este jogo. Define um nível para a IA balancear melhor.",
       "cancel": "Cancelar",
-      "save": "Guardar {count} convidado(s)"
+      "save": "Guardar {count} convidados"
     },
     "ai": {
       "title": "Balanceamento IA",

@@ -160,7 +160,7 @@ export const addPlayerToRoster = withAuthAction(
         .values({
           teamId,
           playerId: existingUser.id,
-          role: "player",
+          role: data.admin ? "manager" : "player",
           position: data.position,
           status: "new",
         })

@@ -24,13 +24,14 @@ import {
   Users,
   X,
 } from "lucide-react";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { useEffect, useRef, useState } from "react";
 import { JbAvatar } from "@/components/arena/avatar";
+import { type Guest, GuestsSheet } from "@/components/arena/guests-sheet";
 import { ShareEventSheet } from "@/components/arena/share-event-sheet";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { cn } from "@/lib/utils";
+import { cn, formatTime } from "@/lib/utils";
 import type { EventStatus } from "@/types/events";
 
 // High-fidelity Roster Mock Players (Mockup Screen 1 & 2)
@@ -256,7 +257,7 @@ interface EventDetailProps {
   initialMyStatus?: string | null;
 }
 
-type Tab = "conv" | "equipas" | "local" | "chat";
+type Tab = "roster" | "teams" | "location" | "chat";
 
 export function EventDetail({
   // biome-ignore lint/correctness/noUnusedFunctionParameters: mock implementation
@@ -267,7 +268,26 @@ export function EventDetail({
   initialMyStatus,
 }: EventDetailProps) {
   const t = useTranslations("arenaEventDetail");
-  const [activeTab, setActiveTab] = useState<Tab>("conv");
+  const locale = useLocale();
+
+  const eventDate =
+    typeof event.startDate === "string"
+      ? new Date(event.startDate)
+      : event.startDate;
+  const formattedDate = eventDate.toLocaleDateString(locale, {
+    weekday: "short",
+    day: "numeric",
+    month: "short",
+  });
+  const formattedTime = formatTime(eventDate);
+
+  const eventTypeLabel = t(`types.${event.type}`, {
+    defaultValue: event.type === "training" ? t("training") : t("titleJogo"),
+  });
+  const eventRecurrenceLabel = t(`recurrence.${event.recurrence}`, {
+    defaultValue: event.recurrence,
+  });
+  const [activeTab, setActiveTab] = useState<Tab>("roster");
   const [myStatus, setMyStatus] = useState<string | null>(
     initialMyStatus ?? null,
   );
@@ -279,6 +299,8 @@ export function EventDetail({
   const [format, setFormat] = useState<"5vs5" | "7vs7" | "11vs11">("7vs7");
   const [numTeams, setNumTeams] = useState<2 | 3 | 4>(2);
   const [_guestsCount, _setGuestsCount] = useState(0);
+  const [guests, setGuests] = useState<Guest[]>([]);
+  const [guestsOpen, setGuestsOpen] = useState(false);
 
   // Tab 4: Chat State Controls
   const [chatMessages, setChatMessages] = useState(INITIAL_CHAT_MESSAGES);
@@ -286,8 +308,8 @@ export function EventDetail({
   const chatEndRef = useRef<HTMLDivElement | null>(null);
 
   const totalSpots = 14;
-  const filledSpots = 10;
-  const vacancies = totalSpots - filledSpots; // 4 spots left
+  const filledSpots = 10 + guests.length;
+  const vacancies = Math.max(0, totalSpots - filledSpots); // dynamic spots left
 
   useEffect(() => {
     if (activeTab === "chat") {
@@ -332,9 +354,9 @@ export function EventDetail({
   };
 
   const TABS = [
-    { id: "conv", label: "Conv.", icon: List },
-    { id: "equipas", label: "Equipas", icon: Users },
-    { id: "local", label: "Local", icon: MapPin },
+    { id: "roster", label: "Conv.", icon: List },
+    { id: "teams", label: "Equipas", icon: Users },
+    { id: "location", label: "Local", icon: MapPin },
     { id: "chat", label: "Chat", icon: MessageSquare },
   ] as const;
 
@@ -364,14 +386,14 @@ export function EventDetail({
             <div>
               <div className="flex items-center gap-1.5">
                 <span className="text-[9px] uppercase tracking-wider font-extrabold text-[#00f0ff]">
-                  Treino
+                  {eventTypeLabel}
                 </span>
                 <span className="text-[8px] font-extrabold uppercase px-1.5 py-0.25 bg-[#00f0ff]/15 text-[#00f0ff] rounded border border-[#00f0ff]/20 leading-none">
-                  Particular
+                  {eventRecurrenceLabel}
                 </span>
               </div>
               <h1 className="text-[17px] font-extrabold font-sora text-arena-text leading-snug mt-0.5">
-                Treino Tático
+                {event.title}
               </h1>
             </div>
           </div>
@@ -391,22 +413,24 @@ export function EventDetail({
         <div className="flex flex-wrap gap-x-4 gap-y-1.5 mt-3 px-1 text-arena-text-sec text-[11px] font-medium">
           <div className="flex items-center gap-1.5">
             <Calendar size={13} className="text-arena-text-muted" />
-            <span>Qui, 24 Abr</span>
+            <span>{formattedDate}</span>
           </div>
           <div className="flex items-center gap-1.5">
             <Clock size={13} className="text-arena-text-muted" />
-            <span>20h30</span>
+            <span>{formattedTime}</span>
           </div>
           <div className="flex items-center gap-1.5">
             <MapPin size={13} className="text-arena-text-muted" />
-            <span>Campo 3, Chiado</span>
+            <span>{event.location}</span>
           </div>
         </div>
 
         {/* Elevated Vagas Progress Bar card (Ecrã 1) */}
         <div className="bg-arena-surface border border-arena-border rounded-[14px] p-3 mt-4 relative">
           <div className="flex items-center justify-between mb-1.5">
-            <span className="text-xs font-bold text-arena-text-sec">Vagas</span>
+            <span className="text-xs font-bold text-arena-text-sec">
+              {t("spots")}
+            </span>
             <span className="text-xs font-bold text-arena-text">
               <span className="text-arena-primary font-sora font-extrabold">
                 {filledSpots}
@@ -446,7 +470,13 @@ export function EventDetail({
                   isActive ? "text-arena-primary" : "text-arena-text-muted",
                 )}
               />
-              {tab.label}
+              {tab.id === "roster"
+                ? t("tabs.roster")
+                : tab.id === "teams"
+                  ? t("tabs.teams")
+                  : tab.id === "location"
+                    ? t("tabs.location")
+                    : t("tabs.chat")}
 
               {/* Green active underline */}
               {isActive && (
@@ -463,12 +493,12 @@ export function EventDetail({
       {/* DYNAMIC SCROLLABLE TAB CONTENTS */}
       <div className="flex-1 overflow-y-auto px-5 py-4 pb-24">
         {/* TAB 1: CONVOCATÓRIA (Ecrãs 1 & 2) */}
-        {activeTab === "conv" && (
+        {activeTab === "roster" && (
           <div className="flex flex-col gap-5">
             {/* LISTA PRINCIPAL (10) */}
             <div className="flex flex-col gap-2">
               <div className="text-[10px] uppercase font-bold tracking-widest text-arena-text-muted px-1.5">
-                Lista Principal (10)
+                {t("lists.main", { count: MAIN_ROSTER.length })}
               </div>
               <div className="bg-arena-surface border border-arena-border rounded-[16px] divide-y divide-arena-border/50 overflow-hidden">
                 {MAIN_ROSTER.map((player, idx) => (
@@ -524,7 +554,7 @@ export function EventDetail({
                             )}
                           >
                             {t(
-                              `mock.payment${player.status === "PAGO" ? "Approved" : player.status === "A VALIDAR" ? "Review" : "Pending"}`,
+                              `interactive.payment${player.status === "PAGO" ? "Approved" : player.status === "A VALIDAR" ? "Review" : "Pending"}`,
                             )}
                           </span>
                         </div>
@@ -544,7 +574,7 @@ export function EventDetail({
             {/* RESERVAS (2) */}
             <div className="flex flex-col gap-2">
               <div className="text-[10px] uppercase font-bold tracking-widest text-arena-text-muted px-1.5">
-                {t("mock.reservesMock", { count: 2 })}
+                {t("interactive.reservesMock", { count: RESERVES_ROSTER.length })}
               </div>
               <div className="bg-arena-surface border border-arena-border rounded-[16px] divide-y divide-arena-border/50 overflow-hidden">
                 {RESERVES_ROSTER.map(player => (
@@ -588,7 +618,9 @@ export function EventDetail({
                           : "bg-arena-text-muted/15 border-arena-border text-arena-text-sec",
                       )}
                     >
-                      {player.status}
+                      {player.status === "Reserva"
+                        ? t("interactive.reservesStatus")
+                        : t("interactive.pendingStatus")}
                     </span>
                   </div>
                 ))}
@@ -598,44 +630,73 @@ export function EventDetail({
         )}
 
         {/* TAB 2: EQUIPAS (Ecrãs 3 & 4) */}
-        {activeTab === "equipas" && (
+        {activeTab === "teams" && (
           <div className="flex flex-col gap-5">
             {/* Top Warning Alert Card */}
-            <div className="bg-arena-warning/5 border border-arena-warning/25 rounded-2xl p-3.5 flex items-center justify-between gap-3 shadow-[0_4px_24px_rgba(245,158,11,0.02)]">
-              <div className="flex items-center gap-3 min-w-0">
-                <div className="w-10 h-10 rounded-xl bg-arena-warning/10 border border-arena-warning/20 flex items-center justify-center shrink-0">
-                  <AlertCircle
-                    className="w-5.5 h-5.5 text-arena-warning"
-                    strokeWidth={1.8}
-                  />
+            {vacancies > 0 ? (
+              <div className="bg-arena-warning/5 border border-arena-warning/25 rounded-2xl p-3.5 flex items-center justify-between gap-3 shadow-[0_4px_24px_rgba(245,158,11,0.02)]">
+                <div className="flex items-center gap-3 min-w-0">
+                  <div className="w-10 h-10 rounded-xl bg-arena-warning/10 border border-arena-warning/20 flex items-center justify-center shrink-0">
+                    <AlertCircle
+                      className="w-5.5 h-5.5 text-arena-warning"
+                      strokeWidth={1.8}
+                    />
+                  </div>
+                  <div className="min-w-0">
+                    <span className="font-extrabold text-sm text-arena-text block">
+                      {t("interactive.missingAlert", { count: vacancies })}
+                    </span>
+                    <span className="text-xs text-arena-text-muted block mt-0.5">
+                      {t("interactive.missingAlertSub", {
+                        format,
+                        teamsCount: numTeams,
+                      })}
+                    </span>
+                  </div>
                 </div>
-                <div className="min-w-0">
-                  <span className="font-extrabold text-sm text-arena-text block">
-                    {t("mock.missingAlert", { count: vacancies })}
-                  </span>
-                  <span className="text-xs text-arena-text-muted block mt-0.5">
-                    {t("mock.missingAlertSub", {
-                      format,
-                      teamsCount: numTeams,
-                    })}
+                <div className="text-right shrink-0">
+                  <span className="font-sora font-extrabold text-lg text-arena-text">
+                    {filledSpots}
+                    <span className="text-xs font-semibold text-arena-text-muted">
+                      /{totalSpots}
+                    </span>
                   </span>
                 </div>
               </div>
-              <div className="text-right shrink-0">
-                <span className="font-sora font-extrabold text-lg text-arena-text">
-                  {filledSpots}
-                  <span className="text-xs font-semibold text-arena-text-muted">
-                    /{totalSpots}
+            ) : (
+              <div className="bg-arena-success/5 border border-arena-success/25 rounded-2xl p-3.5 flex items-center justify-between gap-3 shadow-[0_4px_24px_rgba(34,197,94,0.02)]">
+                <div className="flex items-center gap-3 min-w-0">
+                  <div className="w-10 h-10 rounded-xl bg-arena-success/10 border border-arena-success/20 flex items-center justify-center shrink-0">
+                    <Check
+                      className="w-5.5 h-5.5 text-arena-primary"
+                      strokeWidth={2.8}
+                    />
+                  </div>
+                  <div className="min-w-0">
+                    <span className="font-extrabold text-sm text-arena-text block">
+                      {t("interactive.squadFull")}
+                    </span>
+                    <span className="text-xs text-arena-text-muted block mt-0.5">
+                      {t("interactive.readyToBalance")}
+                    </span>
+                  </div>
+                </div>
+                <div className="text-right shrink-0">
+                  <span className="font-sora font-extrabold text-lg text-arena-text">
+                    {filledSpots}
+                    <span className="text-xs font-semibold text-arena-text-muted">
+                      /{totalSpots}
+                    </span>
                   </span>
-                </span>
+                </div>
               </div>
-            </div>
+            )}
 
             {/* FORMAT SELECTOR PANEL */}
             <div className="bg-arena-surface border border-arena-border rounded-[16px] p-3.5 flex flex-col gap-3.5">
               <div className="flex flex-col gap-2">
                 <span className="text-[10px] font-extrabold text-arena-text-muted uppercase tracking-wider">
-                  {t("mock.formatLabel")}
+                  {t("interactive.formatLabel")}
                 </span>
                 <div className="grid grid-cols-3 gap-2">
                   {(["5vs5", "7vs7", "11vs11"] as const).map(f => (
@@ -658,7 +719,7 @@ export function EventDetail({
 
               <div className="flex items-center justify-between border-t border-arena-border/30 pt-3.5">
                 <span className="text-xs font-bold text-arena-text-sec">
-                  {t("mock.teamsNumLabel")}
+                  {t("interactive.teamsNumLabel")}
                 </span>
                 <div className="flex items-center gap-2">
                   {([2, 3, 4] as const).map(n => (
@@ -683,7 +744,7 @@ export function EventDetail({
             {/* PLANTEL (10) with Ratings */}
             <div className="flex flex-col gap-2">
               <div className="text-[10px] uppercase font-bold tracking-widest text-arena-text-muted px-1.5">
-                Plantel · {filledSpots}
+                {t("interactive.squadCount", { count: filledSpots })}
               </div>
               <div className="bg-arena-surface border border-arena-border rounded-[16px] divide-y divide-arena-border/50 overflow-hidden">
                 {MAIN_ROSTER.map((player, idx) => (
@@ -727,12 +788,54 @@ export function EventDetail({
                     </span>
                   </div>
                 ))}
+
+                {guests.map((guest, idx) => (
+                  <div
+                    key={guest.id}
+                    className="flex items-center justify-between p-3.5 gap-3"
+                  >
+                    <div className="flex items-center gap-3.5 min-w-0">
+                      <span className="w-4 shrink-0 text-center text-[10px] font-bold text-arena-text-muted">
+                        {MAIN_ROSTER.length + idx + 1}
+                      </span>
+                      <div className="relative shrink-0">
+                        <JbAvatar
+                          id={guest.id}
+                          name={guest.name}
+                          size={32}
+                          className="rounded-full overflow-hidden"
+                        />
+                      </div>
+                      <div className="min-w-0">
+                        <div className="flex items-center gap-1.5">
+                          <span className="font-bold text-sm text-arena-text truncate">
+                            {guest.name}
+                          </span>
+                          <span className="text-[8px] font-extrabold uppercase px-1.5 py-0.25 bg-arena-primary/15 text-arena-primary rounded border border-arena-primary/20 leading-none">
+                            {t("interactive.guest")}
+                          </span>
+                        </div>
+                        <span
+                          className="text-[9px] uppercase tracking-wider font-extrabold mt-0.5 block font-bold"
+                          style={{ color: guest.levelColor }}
+                        >
+                          {guest.levelLabel}
+                        </span>
+                      </div>
+                    </div>
+
+                    <span className="font-sora font-extrabold text-sm text-arena-primary shrink-0">
+                      {guest.rating.toFixed(1)}
+                    </span>
+                  </div>
+                ))}
               </div>
             </div>
 
             {/* GUESTS ADD CARD (Ecrã 4) */}
             <button
               type="button"
+              onClick={() => setGuestsOpen(true)}
               className="w-full flex items-center justify-between p-3.5 border border-dashed border-arena-primary/30 bg-arena-surface rounded-[16px] active:scale-97 text-left transition-all"
             >
               <div className="flex items-center gap-3 min-w-0">
@@ -744,10 +847,10 @@ export function EventDetail({
                 </div>
                 <div className="min-w-0">
                   <span className="font-extrabold text-sm text-arena-text block">
-                    {t("mock.addGuests")}
+                    {t("interactive.addGuests")}
                   </span>
                   <span className="text-xs text-arena-text-muted block mt-0.5 truncate">
-                    {t("mock.addGuestsSub", { count: vacancies })}
+                    {t("interactive.addGuestsSub", { count: vacancies })}
                   </span>
                 </div>
               </div>
@@ -772,28 +875,28 @@ export function EventDetail({
                 <div>
                   <div className="flex items-center gap-1.5">
                     <span className="font-extrabold text-sm text-arena-text block">
-                      {t("mock.aiBalancerBeta")}
+                      {t("interactive.aiBalancerBeta")}
                     </span>
                     <span className="text-[8px] uppercase tracking-wider font-extrabold px-1.5 py-0.25 bg-arena-primary/20 text-arena-primary rounded border border-arena-primary/30 leading-none">
                       BETA
                     </span>
                   </div>
                   <span className="text-xs text-arena-text-muted block mt-0.5">
-                    {t("mock.aiBalancerBetaSub")}
+                    {t("interactive.aiBalancerBetaSub")}
                   </span>
                 </div>
               </div>
 
               <Button className="w-full bg-arena-primary text-[#0B0F14] hover:bg-arena-primary/95 font-bold h-11 rounded-xl text-sm transition-all gap-1.5 shadow-[0_0_24px_rgba(124,255,79,0.22)]">
                 <Sparkles className="w-4 h-4 shrink-0 fill-current" />
-                {t("mock.aiBalancerCta", { count: numTeams })}
+                {t("interactive.aiBalancerCta", { count: numTeams })}
               </Button>
             </div>
           </div>
         )}
 
         {/* TAB 3: LOCAL (Ecrã 5) */}
-        {activeTab === "local" && (
+        {activeTab === "location" && (
           <div className="flex flex-col gap-5 animate-[fadeIn_.2s_ease-out]">
             {/* MINI STYLIZED DARK MAP CONTAINER */}
             <div className="relative w-full h-[180px] bg-arena-surface border border-arena-border rounded-[16px] overflow-hidden flex items-center justify-center">
@@ -845,7 +948,7 @@ export function EventDetail({
               <div className="absolute bottom-3 left-3 bg-arena-bg-sec/90 border border-arena-border/80 px-2.5 py-1 rounded-lg flex items-center gap-1.5 shadow-lg">
                 <MapPin className="w-3.5 h-3.5 text-arena-primary" />
                 <span className="text-[10px] font-bold text-arena-text">
-                  Campo 3, Chiado
+                  {event.location}
                 </span>
               </div>
             </div>
@@ -854,7 +957,7 @@ export function EventDetail({
             <div className="bg-arena-surface border border-arena-border rounded-[16px] p-4 flex flex-col gap-4">
               <div>
                 <span className="font-extrabold text-sm text-arena-text block">
-                  Campo 3, Chiado
+                  {event.location}
                 </span>
                 <span className="text-xs text-arena-text-muted block mt-1">
                   Travessa da Boa Hora, 12 · Lisboa
@@ -890,7 +993,7 @@ export function EventDetail({
             {/* Directions list ("Como chegar") */}
             <div className="flex flex-col gap-3">
               <span className="text-[10px] uppercase font-bold tracking-widest text-arena-text-muted px-1">
-                {t("mock.howToGet")}
+                {t("interactive.howToGet")}
               </span>
 
               <div className="bg-arena-surface border border-arena-border rounded-[16px] p-3.5 flex flex-col gap-4">
@@ -901,10 +1004,10 @@ export function EventDetail({
                   </div>
                   <div>
                     <span className="font-extrabold text-xs text-arena-text block">
-                      {t("mock.metro")}
+                      {t("interactive.metro")}
                     </span>
                     <span className="text-xs text-arena-text-muted block mt-0.5 leading-relaxed">
-                      {t("mock.metroDesc")}
+                      {t("interactive.metroDesc")}
                     </span>
                   </div>
                 </div>
@@ -916,10 +1019,10 @@ export function EventDetail({
                   </div>
                   <div>
                     <span className="font-extrabold text-xs text-arena-text block">
-                      {t("mock.autocarro")}
+                      {t("interactive.bus")}
                     </span>
                     <span className="text-xs text-arena-text-muted block mt-0.5 leading-relaxed">
-                      {t("mock.autocarroDesc")}
+                      {t("interactive.busDesc")}
                     </span>
                   </div>
                 </div>
@@ -931,10 +1034,10 @@ export function EventDetail({
                   </div>
                   <div>
                     <span className="font-extrabold text-xs text-arena-text block">
-                      {t("mock.carro")}
+                      {t("interactive.car")}
                     </span>
                     <span className="text-xs text-arena-text-muted block mt-0.5 leading-relaxed">
-                      {t("mock.carroDesc")}
+                      {t("interactive.carDesc")}
                     </span>
                   </div>
                 </div>
@@ -955,7 +1058,7 @@ export function EventDetail({
                     strokeWidth={1.5}
                   />
                   <span className="text-xs text-arena-text-muted">
-                    {t("mock.chatEmpty")}
+                    {t("interactive.chatEmpty")}
                   </span>
                 </div>
               ) : (
@@ -1013,7 +1116,7 @@ export function EventDetail({
             {/* Bottom send chat field panel */}
             <div className="p-3 border-t border-arena-border bg-arena-surface flex items-center gap-2">
               <Input
-                placeholder={t("mock.chatPlaceholder")}
+                placeholder={t("interactive.chatPlaceholder")}
                 value={inputMessage}
                 onChange={e => setInputMessage(e.target.value)}
                 onKeyDown={e => {
@@ -1094,6 +1197,15 @@ export function EventDetail({
             location: event.location,
           }}
           onClose={() => setShareOpen(false)}
+        />
+      )}
+
+      {guestsOpen && (
+        <GuestsSheet
+          guests={guests}
+          setGuests={setGuests}
+          suggestedMissing={vacancies}
+          onClose={() => setGuestsOpen(false)}
         />
       )}
     </motion.div>

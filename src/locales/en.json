@@ -203,6 +203,7 @@
       "add": "Add Player"
     },
     "labels": {
+      "admin": "Administrator",
       "email": "Email *",
       "fullName": "Full name *",
       "phone": "Phone",
@@ -518,10 +519,59 @@
     },
     "spots": "Spots",
     "tabs": {
-      "call": "Squad Call",
-      "local": "Venue",
+      "roster": "Roster",
+      "location": "Venue",
       "lineup": "Lineup",
-      "equipa": "Teams"
+      "teams": "Teams",
+      "chat": "Chat"
+    },
+    "interactive": {
+      "bus": "Bus",
+      "busDesc": "Coming by bus with the team",
+      "car": "Car",
+      "carDesc": "Coming by car with the team",
+      "paymentApproved": "Paid",
+      "paymentReview": "Under review",
+      "paymentPending": "Pending",
+      "reservesMock": "Reserves ({count})",
+      "reservesStatus": "Reserve",
+      "pendingStatus": "Pending",
+      "squadCount": "Squad · {count}",
+      "missingAlert": "Missing {count, plural, =1 {# player} other {# players}}",
+      "missingAlertSub": "to complete the {format} format ({teamsCount} teams)",
+      "formatLabel": "Match Format",
+      "teamsNumLabel": "Number of Teams",
+      "addGuests": "Add Guests",
+      "addGuestsSub": "Sign up guests to fill the {count, plural, =1 {# vacant spot} other {# vacant spots}}.",
+      "aiBalancerBeta": "AI Team Balancer",
+      "aiBalancerBetaSub": "Generate balanced teams based on player skill levels.",
+      "aiBalancerCta": "Generate {count} Teams with AI",
+      "howToGet": "How to get there",
+      "metro": "Metro",
+      "metroDesc": "Baixa-Chiado Station (Blue/Green Line), a 3-minute walk.",
+      "autocarro": "Bus",
+      "autocarroDesc": "Praça Luís de Camões stop (758, 202), a 2-minute walk.",
+      "carro": "Car",
+      "carroDesc": "Difficult parking. Paid underground parking at Camões.",
+      "chatEmpty": "No messages here yet. Send the first one!",
+      "chatPlaceholder": "Type a message for the group...",
+      "squadFull": "Squad Full!",
+      "readyToBalance": "Ready to balance teams",
+      "guest": "Guest"
+    },
+    "types": {
+      "training": "Training",
+      "match": "Match",
+      "game": "Match",
+      "partida": "Match",
+      "jogo": "Match",
+      "challenge": "Challenge",
+      "other": "Other"
+    },
+    "recurrence": {
+      "once": "One-off",
+      "weekly": "Weekly",
+      "monthly": "Monthly"
     },
     "aiBalancer": {
       "button": "AI Balancer ⚡",
@@ -538,30 +588,6 @@
       "teamA": "Team A",
       "teamB": "Team B",
       "avgRating": "Avg Rating:"
-    },
-    "mock": {
-      "reservesMock": "RESERVES ({count})",
-      "missingAlert": "Missing {count} players",
-      "missingAlertSub": "{format} · {teamsCount} teams",
-      "formatLabel": "FORMAT",
-      "teamsNumLabel": "Number of teams",
-      "addGuests": "Add guests",
-      "addGuestsSub": "Fill the {count} spots with guests",
-      "aiBalancerBeta": "AI Balancer",
-      "aiBalancerBetaSub": "Fair teams in seconds",
-      "aiBalancerCta": "Generate {count} teams",
-      "howToGet": "Directions",
-      "metro": "Metro",
-      "metroDesc": "Baixa-Chiado station (Green/Blue line), 8 min walk",
-      "autocarro": "Bus",
-      "autocarroDesc": "Line 758 and 790, Bairro Alto stop",
-      "carro": "Car",
-      "carroDesc": "Parking available on the side street",
-      "chatEmpty": "No messages yet. Start the conversation!",
-      "chatPlaceholder": "Write a message...",
-      "paymentApproved": "✓ PAID",
-      "paymentReview": "REVIEW",
-      "paymentPending": "PENDING"
     },
     "titleJogo": "Match Details",
     "titleTreino": "Training",
@@ -1834,7 +1860,7 @@
   },
   "notificationsPage": {
     "actions": {
-      "markAllRead": "Mark all as read"
+      "markAllRead": "Mark read"
     },
     "allRead": "All notifications read",
     "empty": {
@@ -2906,9 +2932,9 @@
       "addSubMissing": "Fill {count} spot(s) with outside players",
       "addMore": "Add more guests",
       "title": "Guests",
-      "infoText": "People without an app account who will play this game. Set a level so AI can balance better.",
+      "infoText": "People <strong>without an app account</strong> who will play this game. Set a level so AI can balance better.",
       "cancel": "Cancel",
-      "save": "Save {count} guest(s)"
+      "save": "Save {count} guests"
     },
     "ai": {
       "title": "AI Balancing",

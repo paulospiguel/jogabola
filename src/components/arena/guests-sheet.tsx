@@ -25,8 +25,8 @@ const LEVELS: {
   rating: number;
   color: string;
 }[] = [
-  { id: "iniciante", short: "Ini", label: "Iniciante", rating: 5.5, color: "#F59E0B" },
-  { id: "medio", short: "Méd", label: "Médio", rating: 7, color: "#38BDF8" },
+  { id: "iniciante", short: "Inic.", label: "Iniciante", rating: 5.5, color: "#F59E0B" },
+  { id: "medio", short: "Méd.", label: "Médio", rating: 7, color: "#38BDF8" },
   { id: "bom", short: "Bom", label: "Bom", rating: 8.5, color: "#7CFF4F" },
 ];
 
@@ -103,7 +103,9 @@ export function GuestsSheet({
         <div className="mx-1 mb-4 flex items-start gap-2.5 rounded-[11px] border border-arena-info/33 bg-arena-info/10 px-3 py-2.5">
           <AlertCircle size={14} className="mt-0.5 shrink-0 text-arena-info" strokeWidth={2} />
           <p className="text-[11px] leading-relaxed text-arena-text-sec">
-            {t("guests.infoText")}
+            {t.rich("guests.infoText", {
+              strong: (chunks) => <strong className="font-bold text-arena-text">{chunks}</strong>,
+            })}
           </p>
         </div>
 
@@ -111,10 +113,10 @@ export function GuestsSheet({
           {local.map((g, i) => (
             <div
               key={g.id}
-              className="flex items-center gap-2.5 rounded-[12px] border border-arena-border bg-arena-surface px-3 py-2.5"
+              className="flex items-center gap-2.5 rounded-[12px] border border-arena-border bg-arena-surface px-3 py-3"
             >
               {/* Number */}
-              <div className="flex size-[30px] shrink-0 items-center justify-center rounded-full border border-dashed border-arena-border bg-arena-surface-el text-[11px] font-bold text-arena-text-muted">
+              <div className="flex size-[30px] shrink-0 items-center justify-center rounded-full border border-dashed border-arena-border bg-arena-surface-el/50 text-[11px] font-bold text-arena-text-muted">
                 {i + 1}
               </div>
 
@@ -123,7 +125,7 @@ export function GuestsSheet({
                 value={g.name}
                 onChange={e => updateName(g.id, e.target.value)}
                 placeholder={`Convidado ${i + 1}`}
-                className="min-w-0 flex-1 bg-transparent text-[13px] font-semibold text-arena-text outline-none placeholder:text-arena-text-muted"
+                className="min-w-0 flex-1 bg-transparent text-sm font-bold text-arena-text outline-none placeholder:text-arena-text-muted"
               />
 
               {/* Level selector */}
@@ -134,10 +136,10 @@ export function GuestsSheet({
                     type="button"
                     onClick={() => setLevel(g.id, lv.id)}
                     className={cn(
-                      "rounded-[7px] px-1.5 py-1 text-[10px] font-bold transition-all duration-100",
+                      "rounded-[7px] px-2.5 py-1 text-[10.5px] font-bold transition-all duration-150 active:scale-[0.95]",
                       g.level === lv.id
-                        ? "text-white"
-                        : "bg-transparent text-arena-text-muted",
+                        ? "font-extrabold text-white"
+                        : "bg-transparent text-arena-text-muted hover:text-arena-text-sec",
                     )}
                     style={
                       g.level === lv.id
@@ -164,7 +166,7 @@ export function GuestsSheet({
           <button
             type="button"
             onClick={add}
-            className="flex items-center justify-center gap-1.5 rounded-[11px] border border-dashed border-arena-border py-2.5 text-[12px] font-semibold text-arena-text-sec transition-colors active:scale-[0.97] hover:border-arena-primary/40 hover:text-arena-text"
+            className="flex items-center justify-center gap-1.5 rounded-[11px] border border-dashed border-arena-border py-2.5 text-[12px] font-semibold text-arena-text-sec transition-all duration-150 active:scale-[0.97] hover:bg-arena-surface-el/40 hover:border-arena-text-muted/30 hover:text-arena-text"
           >
             <Plus size={13} strokeWidth={2.2} />
             {t("guests.addMore")}
@@ -176,7 +178,7 @@ export function GuestsSheet({
         <Cta variant="secondary" size="md" className="flex-1" onClick={onClose}>
           {t("guests.cancel")}
         </Cta>
-        <Cta variant="primary" size="md" className="flex-[2]" onClick={save}>
+        <Cta variant="primary" size="md" className="flex-[2] gap-1.5" onClick={save}>
           <Check size={15} strokeWidth={2.5} />
           {t("guests.save", { count: local.length })}
         </Cta>

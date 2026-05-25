@@ -29,6 +29,8 @@ export const addPlayerToRosterSchema = z.object({
   jerseyNumber: z.number().int().positive().optional(),
   dateOfBirth: z.string().optional(),
   managerId: z.string().optional(),
+  admin: z.boolean().optional().default(false),
+  phone: z.string().optional().default(""),
 });
 
 export const removePlayerFromRosterSchema = z.object({

@@ -16,8 +16,8 @@ import {
   cancelUserAttendance,
   confirmUserAttendance,
 } from "@/actions/attendance.actions";
-import { EventNoticeWall } from "@/components/arena/event-notice-wall";
 import { JbBadge } from "@/components/arena/badge";
+import { EventNoticeWall } from "@/components/arena/event-notice-wall";
 import { LocationMap } from "@/components/arena/location-map";
 import {
   ParticipantRow,
@@ -216,7 +216,10 @@ export function AthleteEventDetail({
   const { confirmed, reserves, pending, isLoading, refetch } =
     useEventAttendance(event.id);
 
-  const isJogo = event.type === "partida" || event.type === "jogo";
+  const isGame =
+    event.type === "match" ||
+    event.type === "game" ||
+    event.type === "challenge";
   const isCancelled =
     event.status === "cancelled" || event.status === "canceled";
   const isRosterOnly = event.rosterOnly ?? false;
@@ -336,14 +339,14 @@ export function AthleteEventDetail({
           <div
             className={cn(
               "flex size-12 shrink-0 items-center justify-center rounded-[14px] border shadow-lg",
-              isJogo
+              isGame
                 ? "border-arena-primary/30 bg-arena-primary/10 shadow-arena-primary/10"
                 : "border-arena-info/30 bg-arena-info/10 shadow-arena-info/10",
             )}
           >
             <Trophy
               size={22}
-              className={isJogo ? "text-arena-primary" : "text-arena-info"}
+              className={isGame ? "text-arena-primary" : "text-arena-info"}
             />
           </div>
           <div className="min-w-0 flex-1">
@@ -351,10 +354,10 @@ export function AthleteEventDetail({
               <span
                 className={cn(
                   "text-[10px] font-bold uppercase tracking-[0.18em]",
-                  isJogo ? "text-arena-primary" : "text-arena-info",
+                  isGame ? "text-arena-primary" : "text-arena-info",
                 )}
               >
-                {isJogo ? t("type.game") : t("type.training")}
+                {isGame ? t("type.game") : t("type.training")}
               </span>
               <StatusBadge status={event.status} t={t} />
             </div>

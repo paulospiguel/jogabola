@@ -429,7 +429,11 @@ function toEventView(event: typeof matchSessions.$inferSelect) {
     teamId: event.teamId,
     title: event.title,
     description: null,
-    type: "partida" as const,
+    type: event.title.toLowerCase().includes("treino")
+      ? ("training" as const)
+      : event.title.toLowerCase().includes("desafio")
+        ? ("challenge" as const)
+        : ("game" as const),
     location: event.location,
     city: null,
     country: null,

@@ -1,17 +1,15 @@
 "use client";
 
 import {
-  BadgeCheck,
   CheckCircle2,
   Hourglass,
   ListPlus,
   Mail,
-  MessageCircle,
   Pencil,
   Plus,
   Search,
   Send,
-  UserPlus,
+  Star,
   Users2,
   X,
 } from "lucide-react";
@@ -21,26 +19,26 @@ import { useEffect, useMemo, useState, useTransition } from "react";
 import { sendRosterPlayerEmail } from "@/actions/teams.actions";
 import { AddPlayerSheet } from "@/components/arena/add-player-sheet";
 import { JbAvatar } from "@/components/arena/avatar";
+import { JbBadge } from "@/components/arena/badge";
 import { BottomSheet } from "@/components/arena/bottom-sheet";
 import { Cta } from "@/components/arena/cta";
-import { UserMenu } from "@/components/arena/user-menu";
 import { VerifiedBadge } from "@/components/arena/verified-badge";
-import { RadialProgressIcon } from "@/components/arena/radial-progress-icon";
 import { motion } from "framer-motion";
 import Loading from "@/components/loading";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import type { SquadPlayer } from "@/hooks/use-squad";
 import { useSquad } from "@/hooks/use-squad";
 import { useTeams } from "@/hooks/use-teams";
 import { cn } from "@/lib/utils";
 
-const FILTERS_DATA = [
-  { id: "all", label: "filters.all", Icon: Users2 },
-  { id: "verified", label: "filters.verified", Icon: BadgeCheck },
-  { id: "manual", label: "filters.manual", Icon: UserPlus },
-  { id: "pending", label: "filters.pending", Icon: Hourglass },
+type FilterKey = "all" | "confirmed" | "reserve" | "pending";
+
+const FILTERS: { key: FilterKey; label: string }[] = [
+  { key: "all", label: "Todos" },
+  { key: "confirmed", label: "Confirm." },
+  { key: "reserve", label: "Reservas" },
+  { key: "pending", label: "Pendentes" },
 ];
 
 interface RosterGroup {
@@ -55,10 +53,18 @@ function emailLimitFor(planTier: string) {
   return 3;
 }
 
+function matchesFilter(p: SquadPlayer, filter: FilterKey): boolean {
+  if (filter === "all") return true;
+  if (filter === "confirmed") return p.status === "confirmed";
+  if (filter === "reserve") return p.status === "reserve";
+  if (filter === "pending") return p.status === "pending" || p.status === "new";
+  return true;
+}
+
 export function SquadClient({ userId }: { userId: string }) {
   const t = useTranslations("arenaSquad");
   const [search, setSearch] = useState("");
-  const [filter, setFilter] = useState("all");
+  const [filter, setFilter] = useState<FilterKey>("all");
   const [showAdd, setShowAdd] = useState(false);
   const [emailPlayer, setEmailPlayer] = useState<SquadPlayer | null>(null);
   const [groupOpen, setGroupOpen] = useState(false);
@@ -97,27 +103,16 @@ export function SquadClient({ userId }: { userId: string }) {
     setEmailUsage(Number(window.localStorage.getItem(emailStorageKey) ?? "0"));
   }, [emailStorageKey]);
 
-  const filtered = players.filter(p => {
-    const ms =
-      p.name.toLowerCase().includes(search.toLowerCase()) ||
-      p.role.toLowerCase().includes(search.toLowerCase()) ||
-      (p.email ?? "").toLowerCase().includes(search.toLowerCase());
-    const mf =
-      filter === "all" ||
-      (filter === "verified" && p.isVerified) ||
-      (filter === "manual" && !p.isVerified && p.status === "new") ||
-      (filter === "pending" && !p.isVerified);
-    return ms && mf;
-  });
-
-  const stats = useMemo(
-    () => ({
-      total: players.length,
-      verified: players.filter(p => p.isVerified).length,
-      manual: players.filter(p => !p.isVerified && p.status === "new").length,
-      pending: players.filter(p => !p.isVerified).length,
-    }),
-    [players],
+  const filtered = useMemo(
+    () =>
+      players.filter(p => {
+        const matchSearch =
+          p.name.toLowerCase().includes(search.toLowerCase()) ||
+          (p.position ?? "").toLowerCase().includes(search.toLowerCase()) ||
+          (p.email ?? "").toLowerCase().includes(search.toLowerCase());
+        return matchSearch && matchesFilter(p, filter);
+      }),
+    [players, search, filter],
   );
 
   function saveGroups(next: RosterGroup[]) {
@@ -147,22 +142,14 @@ export function SquadClient({ userId }: { userId: string }) {
       saveGroups(
         groups.map(group =>
           group.id === editingGroupId
-            ? {
-                ...group,
-                name: groupName.trim(),
-                playerIds: groupSelection,
-              }
+            ? { ...group, name: groupName.trim(), playerIds: groupSelection }
             : group,
         ),
       );
     } else {
       saveGroups([
         ...groups,
-        {
-          id: crypto.randomUUID(),
-          name: groupName.trim(),
-          playerIds: groupSelection,
-        },
+        { id: crypto.randomUUID(), name: groupName.trim(), playerIds: groupSelection },
       ]);
     }
     setGroupName("");
@@ -173,7 +160,7 @@ export function SquadClient({ userId }: { userId: string }) {
 
   function openEmail(player: SquadPlayer) {
     setEmailPlayer(player);
-    setEmailSubject(`Mensagem da equipa`);
+    setEmailSubject("Mensagem da equipa");
     setEmailMessage("");
     setEmailFeedback(null);
   }
@@ -185,7 +172,6 @@ export function SquadClient({ userId }: { userId: string }) {
       return;
     }
     setEmailFeedback(null);
-
     startEmailTransition(async () => {
       const result = await sendRosterPlayerEmail({
         teamId: activeTeamId,
@@ -193,7 +179,6 @@ export function SquadClient({ userId }: { userId: string }) {
         subject: emailSubject,
         message: emailMessage,
       });
-
       if (result.success) {
         const nextUsage = emailUsage + 1;
         setEmailUsage(nextUsage);
@@ -209,7 +194,7 @@ export function SquadClient({ userId }: { userId: string }) {
 
   if (isLoading) {
     return (
-      <div className="jb-page flex items-center justify-center">
+      <div className="flex h-full items-center justify-center">
         <Loading text={t("loading")} />
       </div>
     );
@@ -224,6 +209,7 @@ export function SquadClient({ userId }: { userId: string }) {
           teamId={activeTeamId}
         />
       )}
+
       {emailPlayer && (
         <BottomSheet
           title={t("email.title", { name: emailPlayer.name })}
@@ -273,9 +259,7 @@ export function SquadClient({ userId }: { userId: string }) {
 
       {groupOpen && (
         <BottomSheet
-          title={
-            editingGroupId ? t("groups.editTitle") : t("groups.createTitle")
-          }
+          title={editingGroupId ? t("groups.editTitle") : t("groups.createTitle")}
           onClose={() => {
             setGroupOpen(false);
             setEditingGroupId(null);
@@ -309,18 +293,11 @@ export function SquadClient({ userId }: { userId: string }) {
                         : "border-arena-border bg-arena-surface",
                     )}
                   >
-                    <JbAvatar
-                      image={player.image}
-                      name={player.name}
-                      size={32}
-                      id={player.id}
-                    />
+                    <JbAvatar image={player.image} name={player.name} size={32} id={player.id} />
                     <span className="min-w-0 flex-1 truncate text-sm font-semibold text-arena-text">
                       {player.name}
                     </span>
-                    {checked && (
-                      <CheckCircle2 size={16} className="text-arena-primary" />
-                    )}
+                    {checked && <CheckCircle2 size={16} className="text-arena-primary" />}
                   </button>
                 );
               })}
@@ -340,268 +317,205 @@ export function SquadClient({ userId }: { userId: string }) {
       )}
 
       <motion.div
-        className="jb-page px-3 pt-4 sm:px-5 md:px-7"
-        initial={{ opacity: 0, y: 10 }}
+        className="flex h-full flex-col bg-arena-bg"
+        initial={{ opacity: 0, y: 8 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.22, ease: [0.4, 0, 0.2, 1] }}
       >
-        <div className="jb-page-inner">
-          <div className="w-full">
-            <header className="jb-topbar">
-              <div className="flex w-full items-start justify-between gap-4">
-                <div className="min-w-0">
-                  <div className="jb-kicker">{t("kicker")}</div>
-                  <div className="flex items-center gap-2">
-                    <Users2 className="size-5 shrink-0 text-arena-primary sm:size-6" />
-                    <h1 className="jb-title">{t("title")}</h1>
-                  </div>
-                  <p className="mt-1 max-w-2xl text-[13px] text-arena-text-muted">
-                    {t("subtitle")}
-                  </p>
-                </div>
-                <UserMenu onlyAvatar className="hidden md:block" />
-              </div>
-            </header>
-            <div className="mb-4 grid grid-cols-2 gap-2 md:flex md:justify-end">
-              <Cta variant="secondary" size="sm" onClick={openCreateGroup}>
-                <ListPlus size={15} strokeWidth={2.5} />
-                {t("groups.action")}
-              </Cta>
-              <Cta variant="primary" size="sm" onClick={() => setShowAdd(true)}>
-                <Plus size={15} strokeWidth={2.5} />
-                {t("actions.add")}
-              </Cta>
-            </div>
-          </div>
-
-          <div className="grid grid-cols-2 gap-2 md:grid-cols-4">
-            {[
-              [t("filters.all"), stats.total],
-              [t("filters.verified"), stats.verified],
-              [t("filters.manual"), stats.manual],
-              [t("filters.pending"), stats.pending],
-            ].map(([label, value]) => (
-              <div
-                key={label}
-                className="rounded-[14px] border border-arena-border bg-arena-surface px-3 py-2"
+        {/* Search */}
+        <div className="shrink-0 px-4 pt-4 pb-3">
+          <div className="flex h-11 items-center gap-2.5 rounded-[14px] border border-arena-border bg-arena-surface px-3.5">
+            <Search size={15} className="shrink-0 text-arena-text-muted" strokeWidth={1.7} />
+            <input
+              value={search}
+              onChange={e => setSearch(e.target.value)}
+              placeholder={t("search.placeholder")}
+              className="flex-1 border-none bg-transparent p-0 text-[13px] text-arena-text shadow-none placeholder:text-arena-text-muted/60 focus-visible:ring-0 outline-none"
+            />
+            {search && (
+              <button
+                onClick={() => setSearch("")}
+                type="button"
+                className="flex size-5 items-center justify-center text-arena-text-muted transition-colors hover:text-arena-text active:scale-[0.97]"
+                aria-label="Limpar pesquisa"
               >
-                <div className="font-sora text-lg font-extrabold text-arena-text">
-                  {value}
-                </div>
-                <div className="text-[10px] font-bold uppercase tracking-widest text-arena-text-muted">
-                  {label}
-                </div>
-              </div>
-            ))}
-          </div>
-
-          {groups.length > 0 && (
-            <section className="mt-4 rounded-[16px] border border-arena-border bg-arena-surface p-3 sm:p-4">
-              <div className="mb-3 flex items-center justify-between gap-3">
-                <h2 className="text-xs font-bold uppercase tracking-widest text-arena-text-muted">
-                  {t("groups.title")}
-                </h2>
-                <button
-                  type="button"
-                  className="flex h-8 items-center gap-1 rounded-lg px-2 text-[11px] text-arena-text-sec transition-colors hover:text-arena-primary"
-                  onClick={openCreateGroup}
-                >
-                  <Plus size={13} />
-                  {t("groups.new")}
-                </button>
-              </div>
-              <div className="flex gap-2 overflow-auto pb-1">
-                {groups.map(group => (
-                  <div
-                    key={group.id}
-                    className="w-[min(78vw,220px)] shrink-0 rounded-[12px] border border-arena-border bg-arena-bg px-3 py-2"
-                  >
-                    <div className="flex items-start justify-between gap-3">
-                      <div>
-                        <div className="text-sm font-bold text-arena-text">
-                          {group.name}
-                        </div>
-                        <div className="text-[11px] text-arena-text-muted">
-                          {t("groups.count", {
-                            count: group.playerIds.length,
-                          })}
-                        </div>
-                      </div>
-                      <button
-                        type="button"
-                        aria-label={t("groups.edit")}
-                        className="flex size-7 items-center justify-center rounded-[8px] border border-arena-border bg-arena-surface text-arena-text-muted transition-colors hover:text-arena-primary active:scale-[0.97]"
-                        onClick={() => openEditGroup(group)}
-                      >
-                        <Pencil size={12} />
-                      </button>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </section>
-          )}
-
-          <div className="mt-4">
-            <div className="flex h-11 items-center gap-2.5 rounded-[12px] border border-arena-border bg-arena-surface px-3.5">
-              <Search size={16} className="shrink-0 text-arena-text-muted" />
-              <input
-                value={search}
-                onChange={e => setSearch(e.target.value)}
-                placeholder={t("search.placeholder")}
-                className="flex-1 border-none bg-transparent p-0 text-sm text-arena-text shadow-none placeholder:text-arena-text-muted/70 focus-visible:ring-0"
-              />
-              {search && (
-                <button
-                  onClick={() => setSearch("")}
-                  type="button"
-                  className="flex size-6 items-center justify-center text-arena-text-muted transition-colors hover:text-arena-text active:scale-[0.97]"
-                  aria-label="Limpar pesquisa"
-                >
-                  <X size={14} strokeWidth={2} />
-                </button>
-              )}
-            </div>
-
-            <ToggleGroup
-              type="single"
-              value={filter}
-              onValueChange={v => v && setFilter(v)}
-              className="mt-2.5 grid grid-cols-4 gap-2 pb-1 md:flex md:flex-wrap md:justify-start"
-            >
-              {FILTERS_DATA.map(f => (
-                <ToggleGroupItem
-                  key={f.id}
-                  value={f.id}
-                  className="jb-chip h-11 min-w-0 justify-center px-2 data-[state=on]:border-arena-primary/40 data-[state=on]:bg-arena-primary/8 data-[state=on]:text-arena-primary md:h-auto md:px-3"
-                >
-                  <f.Icon size={24} className="sm:size-5" />
-                  <span className="hidden md:inline">{t(f.label)}</span>
-                </ToggleGroupItem>
-              ))}
-            </ToggleGroup>
-          </div>
-
-          <div>
-            <h1 className="mt-4 inline text-[22px] font-bold tracking-tight text-arena-text md:hidden">
-              {t(`filters.${filter}`)}
-            </h1>
-
-            {filtered.length === 0 ? (
-              <div className="flex flex-col items-center justify-center gap-3 px-6 py-10 text-center">
-                <div className="flex size-14 items-center justify-center rounded-[18px] border border-arena-border bg-arena-surface">
-                  <Search
-                    size={24}
-                    className="text-arena-text-muted"
-                    strokeWidth={1.5}
-                  />
-                </div>
-                <div className="text-[15px] font-semibold text-arena-text">
-                  {t("search.noResults")}
-                </div>
-                <Cta variant="primary" size="sm" onClick={() => setShowAdd(true)}>
-                  {t("actions.addPlayer")}
-                </Cta>
-              </div>
-            ) : (
-              <>
-                <div className="jb-section-label">
-                  {t("stats.playerCount", { count: filtered.length })}
-                </div>
-                <div className="grid gap-2 md:grid-cols-2 xl:grid-cols-3">
-                  {filtered.map((p, i) => (
-                    <motion.div
-                      key={p.id}
-                      initial={{ opacity: 0, y: 6 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ duration: 0.16, delay: i * 0.025, ease: [0.4, 0, 0.2, 1] }}
-                      className="rounded-[14px] border border-arena-border bg-arena-surface px-3 py-3 transition-all hover:border-arena-primary/30 hover:bg-arena-primary/5 sm:px-3.5"
-                    >
-                      <div className="flex items-center gap-3">
-                        <JbAvatar
-                          image={p.image}
-                          name={p.name}
-                          size={40}
-                          id={p.id}
-                        />
-                        <div className="min-w-0 flex-1">
-                          <div className="mb-1 flex min-w-0 items-center gap-1.5">
-                            <Link
-                              href={`/arena/squads/player/${p.id}`}
-                              className="truncate text-sm font-semibold text-arena-text hover:text-arena-primary"
-                            >
-                              {p.name}
-                            </Link>
-                            <VerifiedBadge
-                              variant="icon"
-                              verified={p.isVerified}
-                            />
-                          </div>
-                          <div className="flex min-w-0 items-center gap-2">
-                            <span className="rounded-[5px] border border-arena-border bg-arena-surface-el px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-arena-text-muted">
-                              {t(`roles.${p.role.toLowerCase()}`)}
-                            </span>
-                            <RadialProgressIcon 
-                              progress={p.rating * 10} 
-                              valueText={p.rating % 1 === 0 ? p.rating.toFixed(0) : p.rating.toFixed(1)} 
-                              size={28} 
-                              strokeWidth={2}
-                            />
-                          </div>
-                        </div>
-                        <div className="flex gap-1">
-                          <Link
-                            href={`/arena/squads/player/${p.id}/chat`}
-                            className="flex size-8 items-center justify-center rounded-[10px] border border-arena-border bg-arena-bg text-arena-text-muted transition-colors hover:text-arena-primary active:scale-[0.97]"
-                          >
-                            <MessageCircle size={14} />
-                          </Link>
-                          <button
-                            type="button"
-                            onClick={() => openEmail(p)}
-                            className="flex size-8 items-center justify-center rounded-[10px] border border-arena-border bg-arena-bg text-arena-text-muted transition-colors hover:text-arena-primary active:scale-[0.97]"
-                            aria-label={t("email.open")}
-                          >
-                            <Mail size={14} />
-                          </button>
-                        </div>
-                      </div>
-                      <div className="mt-3 flex min-w-0 items-center justify-between gap-2 border-arena-border border-t pt-2">
-                        <span
-                          className={cn(
-                            "rounded-full px-2 py-1 text-[10px] font-bold uppercase tracking-wider",
-                            p.isVerified
-                              ? "bg-arena-success/10 text-arena-success"
-                              : "bg-arena-warning/10 text-arena-warning",
-                          )}
-                        >
-                          {p.isVerified
-                            ? t("filters.verified")
-                            : t("filters.pending")}
-                        </span>
-                        {p.email && (
-                          <span className="min-w-0 truncate text-[11px] text-arena-text-muted">
-                            {p.email}
-                          </span>
-                        )}
-                      </div>
-                    </motion.div>
-                  ))}
-                </div>
-              </>
+                <X size={13} strokeWidth={2} />
+              </button>
             )}
           </div>
         </div>
 
-        <button
-          onClick={() => setShowAdd(true)}
-          className="fixed bottom-[90px] right-6 z-[100] flex size-[52px] items-center justify-center rounded-full bg-arena-primary text-arena-bg shadow-[0_4px_20px_color-mix(in_srgb,var(--color-arena-primary)_33%,transparent)] transition-all hover:bg-arena-primary/90 active:scale-[0.97] md:hidden"
-          type="button"
-          aria-label={t("actions.add")}
-        >
-          <Plus size={22} strokeWidth={2.5} />
-        </button>
+        {/* Filter pills */}
+        <div className="flex shrink-0 gap-2 overflow-x-auto px-4 pb-3 scrollbar-none">
+          {FILTERS.map(({ key, label }) => (
+            <button
+              key={key}
+              type="button"
+              onClick={() => setFilter(key)}
+              className={cn(
+                "shrink-0 rounded-full px-3.5 py-1.5 text-[12px] font-bold transition-all duration-150 active:scale-[0.96]",
+                filter === key
+                  ? "bg-arena-primary text-arena-bg"
+                  : "border border-arena-border bg-arena-surface text-arena-text-sec hover:border-arena-primary/30 hover:text-arena-text",
+              )}
+            >
+              {label}
+            </button>
+          ))}
+        </div>
+
+        {/* Groups (only if any) */}
+        {groups.length > 0 && (
+          <div className="shrink-0 px-4 pb-3">
+            <div className="rounded-[14px] border border-arena-border bg-arena-surface p-3">
+              <div className="mb-2 flex items-center justify-between">
+                <span className="text-[10px] font-black uppercase tracking-widest text-arena-text-muted">
+                  {t("groups.title")}
+                </span>
+                <button
+                  type="button"
+                  className="flex items-center gap-1 text-[11px] text-arena-text-sec transition-colors hover:text-arena-primary"
+                  onClick={openCreateGroup}
+                >
+                  <Plus size={11} />
+                  {t("groups.new")}
+                </button>
+              </div>
+              <div className="flex gap-2 overflow-auto pb-0.5">
+                {groups.map(group => (
+                  <div
+                    key={group.id}
+                    className="flex shrink-0 items-center gap-2 rounded-[10px] border border-arena-border bg-arena-bg px-2.5 py-2"
+                  >
+                    <div>
+                      <div className="text-[12px] font-bold text-arena-text">{group.name}</div>
+                      <div className="text-[10px] text-arena-text-muted">
+                        {t("groups.count", { count: group.playerIds.length })}
+                      </div>
+                    </div>
+                    <button
+                      type="button"
+                      aria-label={t("groups.edit")}
+                      className="flex size-6 items-center justify-center rounded-[7px] border border-arena-border bg-arena-surface text-arena-text-muted transition-colors hover:text-arena-primary active:scale-[0.97]"
+                      onClick={() => openEditGroup(group)}
+                    >
+                      <Pencil size={11} />
+                    </button>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* List */}
+        <div className="flex-1 overflow-y-auto px-4 pb-24">
+          {filtered.length === 0 ? (
+            <div className="flex flex-col items-center justify-center gap-3 py-12 text-center">
+              <div className="flex size-14 items-center justify-center rounded-[16px] border border-arena-border bg-arena-surface">
+                <Users2 size={24} className="text-arena-text-muted" strokeWidth={1.5} />
+              </div>
+              <div>
+                <p className="text-[15px] font-bold text-arena-text">{t("search.noResults")}</p>
+              </div>
+              <Cta variant="primary" size="sm" onClick={() => setShowAdd(true)}>
+                {t("actions.addPlayer")}
+              </Cta>
+            </div>
+          ) : (
+            <>
+              <p className="mb-2 text-[10px] font-black uppercase tracking-[0.08em] text-arena-text-muted">
+                {t("stats.playerCount", { count: filtered.length })}
+              </p>
+              <div className="space-y-2">
+                {filtered.map((p, i) => (
+                  <PlayerRow
+                    key={p.id}
+                    player={p}
+                    index={i}
+                    onEmail={openEmail}
+                  />
+                ))}
+              </div>
+            </>
+          )}
+        </div>
       </motion.div>
+
+      {/* FAB */}
+      <button
+        onClick={() => setShowAdd(true)}
+        className="fixed bottom-[90px] right-6 z-[100] flex size-[52px] items-center justify-center rounded-full bg-arena-primary text-arena-bg shadow-[0_4px_20px_color-mix(in_srgb,var(--color-arena-primary)_33%,transparent)] transition-all hover:bg-arena-primary/90 active:scale-[0.97] md:hidden"
+        type="button"
+        aria-label={t("actions.add")}
+      >
+        <Plus size={22} strokeWidth={2.5} />
+      </button>
     </>
+  );
+}
+
+function PlayerRow({
+  player: p,
+  index,
+  onEmail,
+}: {
+  player: SquadPlayer;
+  index: number;
+  onEmail: (p: SquadPlayer) => void;
+}) {
+  const statusKey =
+    p.status === "new" ? "pending" : (p.status as "confirmed" | "reserve" | "pending" | "refused");
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 5 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.15, delay: index * 0.025, ease: [0.4, 0, 0.2, 1] }}
+    >
+      <Link
+        href={`/arena/squads/player/${p.id}`}
+        className="flex items-center gap-3 rounded-[14px] border border-arena-border bg-arena-surface px-3 py-3.5 transition-all duration-150 hover:border-arena-primary/30 hover:bg-arena-primary/5 active:scale-[0.99]"
+      >
+        <JbAvatar image={p.image} name={p.name} size={46} id={p.id} />
+
+        <div className="min-w-0 flex-1">
+          {/* Name row */}
+          <div className="flex items-center gap-1">
+            <span className="truncate text-[14px] font-semibold text-arena-text">{p.name}</span>
+            <VerifiedBadge variant="icon" verified={p.isVerified} />
+            {p.highlight && (
+              <Star
+                size={12}
+                className="shrink-0 text-arena-highlight"
+                strokeWidth={1.5}
+              />
+            )}
+          </div>
+
+          {/* Meta row */}
+          <div className="mt-0.5 flex flex-wrap items-center gap-1.5">
+            {p.position && (
+              <span className="rounded-[5px] border border-arena-border bg-arena-surface-el px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-arena-text-muted">
+                {p.position}
+              </span>
+            )}
+            <span className="flex items-center gap-0.5 text-[11px] font-bold text-arena-highlight">
+              <Star size={10} fill="currentColor" strokeWidth={0} />
+              {p.rating % 1 === 0 ? p.rating.toFixed(0) : p.rating.toFixed(1)}
+            </span>
+            {!p.isVerified && (
+              <span className="inline-flex items-center gap-1 rounded-[5px] border border-arena-warning/25 bg-arena-warning/10 px-1.5 py-0.5 text-[9px] font-black uppercase tracking-wider text-arena-warning">
+                <Hourglass size={8} strokeWidth={2} />
+                A VALIDAR
+              </span>
+            )}
+          </div>
+        </div>
+
+        {/* Status badge */}
+        <JbBadge status={statusKey} size="sm" />
+      </Link>
+    </motion.div>
   );
 }

@@ -19,21 +19,21 @@ interface EventsListProps {
 }
 
 const STATUS_CONFIG: Record<EventStatus, { label: string; className: string }> =
-  {
-    scheduled: {
-      label: "status.scheduled",
-      className: "text-arena-info bg-arena-info/10 border-arena-info/25",
-    },
-    confirmed: {
-      label: "status.confirmed",
-      className:
-        "text-arena-success bg-arena-success/10 border-arena-success/25",
-    },
-    cancelled: {
-      label: "status.cancelled",
-      className: "text-arena-danger bg-arena-danger/10 border-arena-danger/25",
-    },
-  };
+{
+  scheduled: {
+    label: "status.scheduled",
+    className: "text-arena-info bg-arena-info/10 border-arena-info/25",
+  },
+  confirmed: {
+    label: "status.confirmed",
+    className:
+      "text-arena-success bg-arena-success/10 border-arena-success/25",
+  },
+  cancelled: {
+    label: "status.cancelled",
+    className: "text-arena-danger bg-arena-danger/10 border-arena-danger/25",
+  },
+};
 
 function _EventStatusBadge({ status }: { status: EventStatus }) {
   const t = useTranslations("arenaEvents");
@@ -79,8 +79,10 @@ const cardVariants = {
 function EventCard({ event, index = 0 }: { event: EventView; index?: number }) {
   const t = useTranslations("arenaEvents");
   const isGame =
-    event.type === "partida" ||
-    event.type === "jogo" ||
+    event.type === "match" ||
+    event.type === "training" ||
+    event.type === "game" ||
+    event.type === "challenge" ||
     event.title.toLowerCase().includes("jogo") ||
     event.title.toLowerCase().includes("vs");
 

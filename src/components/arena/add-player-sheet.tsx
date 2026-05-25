@@ -1,6 +1,5 @@
 "use client";
-
-import { Check, Loader2 } from "lucide-react";
+import { Loader2, X } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useState } from "react";
 import { addPlayerToRoster } from "@/actions/teams.actions";
@@ -36,8 +35,8 @@ interface FormState {
 
 // Arena-flavoured overrides applied on top of the UI base components
 const inputClass =
-  "h-11 rounded-xl border border-arena-border bg-arena-surface text-sm text-arena-text placeholder:text-arena-text-muted/70 focus-visible:ring-arena-primary/40 focus-visible:border-arena-primary/50";
-const labelClass = "mb-1 text-xs font-semibold text-arena-text-sec";
+  "h-11 rounded-xl border border-arena-border bg-[#151C26] text-sm text-arena-text placeholder:text-arena-text-muted/65 focus-visible:ring-arena-primary/30 focus-visible:border-arena-primary/50 focus-visible:ring-1 focus-visible:ring-offset-0";
+const labelClass = "mb-1.5 block text-xs font-semibold text-arena-text-sec";
 
 export function AddPlayerSheet({
   onClose,
@@ -72,6 +71,8 @@ export function AddPlayerSheet({
       experience: "beginner",
       managerId,
       teamId,
+      admin: form.admin,
+      phone: form.phone.trim(),
     });
 
     setSaving(false);
@@ -88,7 +89,7 @@ export function AddPlayerSheet({
   if (done) {
     return (
       <BottomSheet onClose={onClose}>
-        <div className="flex flex-col items-center gap-3.5 overflow-auto px-5 pt-8 pb-12 text-center">
+        <div className="flex flex-col items-center gap-3.5 overflow-auto px-5 pt-8 pb-12 text-center text-arena-text">
           <JbAvatar id={form.name} name={form.name} size={64} />
           <p className="text-lg font-bold text-arena-text">
             {t("success", { name: form.name })}
@@ -102,30 +103,45 @@ export function AddPlayerSheet({
   const canSave = !!form.name.trim() && !!form.email.trim();
 
   return (
-    <BottomSheet onClose={onClose} noPad title={t("title")}>
-      {/* ── Player preview ───────────────────────────────────── */}
-      <div className="min-h-0 flex-1 overflow-auto px-5 pb-8">
-        <div className="mb-4 flex items-center gap-3.5 border-b border-arena-border py-4">
-          <JbAvatar id={form.name || "0"} name={form.name || "?"} size={56} />
-          <div>
-            <p className="text-[15px] font-bold text-arena-text">
-              {form.name || t("placeholderName")}
-            </p>
-            <div className="mt-1 flex items-center gap-1.5">
-              <span className="rounded-[5px] border border-arena-border bg-arena-surface-el px-[7px] py-0.5 text-[10px] font-bold text-arena-text-muted">
-                {commonTranslations(`positions.${form.position}`)}
-              </span>
-              {form.email && (
-                <span className="text-[11px] text-arena-text-muted">
-                  {form.email}
-                </span>
-              )}
-            </div>
+    <BottomSheet onClose={onClose} noPad>
+      {/* ── Custom Header ────────────────────────────────────── */}
+      <div className="flex items-center justify-between px-5 pt-6 pb-4">
+        <span className="font-sora text-lg font-extrabold text-arena-text">
+          {t("title")}
+        </span>
+        <button
+          className="press flex size-[30px] items-center justify-center rounded-full border border-arena-border bg-[#151C26] text-arena-text-sec transition-colors hover:bg-arena-surface-el"
+          onClick={onClose}
+          type="button"
+          aria-label={commonTranslations("close")}
+        >
+          <X size={14} strokeWidth={2.5} />
+        </button>
+      </div>
+
+      {/* ── Player dynamic preview ─────────────────────────────── */}
+      <div className="mb-6 flex items-center gap-4 border-b border-arena-border px-5 pb-6">
+        <div className="relative flex size-14 shrink-0 items-center justify-center rounded-full border border-indigo-500/20 bg-gradient-to-br from-[#1E1B4B]/80 to-[#311E63]/80 shadow-[inset_0_2px_8px_rgba(124,58,237,0.2)]">
+          <span className="font-sora text-[22px] font-extrabold text-[#C084FC] drop-shadow-[0_0_8px_rgba(167,139,250,0.5)]">
+            ?
+          </span>
+        </div>
+        <div className="flex flex-col min-w-0">
+          <p className="font-sora text-[15px] font-bold text-arena-text truncate">
+            {form.name || t("placeholderName")}
+          </p>
+          <div className="mt-1 flex">
+            <span className="rounded-[4px] border border-arena-border bg-arena-surface px-2 py-0.5 text-[9px] font-extrabold tracking-wider text-arena-text-muted uppercase">
+              {commonTranslations(`positions.${form.position}`)}
+            </span>
           </div>
         </div>
+      </div>
 
+      {/* ── Form Inputs ───────────────────────────────────────── */}
+      <div className="min-h-0 flex-1 overflow-auto px-5 pb-8">
         {/* Full name */}
-        <div className="mb-3">
+        <div className="mb-4">
           <Label className={labelClass} htmlFor="player-name">
             {t("labels.fullName")}
           </Label>
@@ -139,7 +155,7 @@ export function AddPlayerSheet({
         </div>
 
         {/* Position — Select component */}
-        <div className="mb-3">
+        <div className="mb-4">
           <Label className={labelClass} htmlFor="player-position">
             {t("labels.position")}
           </Label>
@@ -148,12 +164,12 @@ export function AddPlayerSheet({
             value={form.position}
           >
             <SelectTrigger
-              className="h-11 w-full rounded-xl border border-arena-border bg-arena-surface text-sm text-arena-text"
+              className="h-11 w-full rounded-xl border border-arena-border bg-[#151C26] px-3 text-sm text-arena-text focus-visible:ring-arena-primary/30 focus-visible:border-arena-primary/50 focus-visible:ring-1 focus-visible:ring-offset-0"
               id="player-position"
             >
               <SelectValue />
             </SelectTrigger>
-            <SelectContent className="z-[10000]">
+            <SelectContent className="z-[10000] border-arena-border bg-arena-bg-sec text-arena-text">
               {POSITIONS.map(p => (
                 <SelectItem key={p} value={p}>
                   <div className="flex items-center gap-2">
@@ -171,7 +187,7 @@ export function AddPlayerSheet({
         </div>
 
         {/* Email */}
-        <div className="mb-3">
+        <div className="mb-4">
           <Label className={labelClass} htmlFor="player-email">
             {t("labels.email")}
           </Label>
@@ -200,7 +216,33 @@ export function AddPlayerSheet({
           />
         </div>
 
-        {/* Error */}
+        {/* Administrator Toggle Switch */}
+        <div className="mb-6 flex items-center gap-3.5 rounded-xl border border-arena-border bg-[#151C26]/40 p-3.5">
+          <button
+            type="button"
+            role="switch"
+            aria-checked={form.admin}
+            onClick={() => set("admin", !form.admin)}
+            className={cn(
+              "relative h-[22px] w-10 shrink-0 rounded-full transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-arena-primary/30",
+              form.admin ? "bg-arena-primary" : "bg-[#1E293B] border border-arena-border",
+            )}
+          >
+            <span
+              className={cn(
+                "block size-[14px] rounded-full transition-transform duration-200 shadow-sm",
+                form.admin 
+                  ? "translate-x-[22px] bg-arena-bg" 
+                  : "translate-x-[3px] bg-arena-text-muted",
+              )}
+            />
+          </button>
+          <span className="text-sm font-semibold text-arena-text-sec select-none">
+            {t("labels.admin")}
+          </span>
+        </div>
+
+        {/* Error message */}
         {error && (
           <div className="mb-3 rounded-[10px] border border-arena-danger/20 bg-arena-danger/10 px-3 py-2.5 text-[13px] text-arena-danger">
             {error}
@@ -208,25 +250,24 @@ export function AddPlayerSheet({
         )}
       </div>
 
-      {/* ── Footer action ────────────────────────────────────── */}
-      <div className="px-5 pt-3 pb-5">
+      {/* ── Footer Action ────────────────────────────────────── */}
+      <div className="border-t border-arena-border bg-arena-bg-sec/40 px-5 pt-4 pb-6">
         <Button
           className={cn(
-            "h-[50px] w-full rounded-[14px] text-[15px] font-bold",
+            "h-[50px] w-full rounded-[14px] text-[15px] font-bold transition-all",
             canSave
-              ? "bg-arena-primary text-arena-bg hover:bg-arena-primary/90"
-              : "cursor-not-allowed bg-arena-border text-arena-text-muted opacity-100",
+              ? "bg-arena-primary text-arena-bg hover:bg-arena-primary/95 press"
+              : "cursor-not-allowed border border-[#2F3947]/30 bg-[#232B36] text-[#5A6372] shadow-none opacity-100",
           )}
           disabled={!canSave || saving}
           onClick={handleSave}
           type="button"
         >
           {saving ? (
-            <Loader2 className="animate-spin" size={16} />
+            <Loader2 className="animate-spin size-[18px]" />
           ) : (
-            <Check size={16} strokeWidth={2.5} />
+            <span className="text-[15px]">{t("actions.add")}</span>
           )}
-          {t("actions.add")}
         </Button>
       </div>
     </BottomSheet>
