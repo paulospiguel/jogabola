@@ -7,7 +7,6 @@ import {
   Calendar,
   Car,
   Check,
-  CheckCircle2,
   ChevronRight,
   Clock,
   Compass,
@@ -25,7 +24,7 @@ import {
   X,
 } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
-import { useEffect, useRef, useState } from "react";
+import { useState } from "react";
 import { JbAvatar } from "@/components/arena/avatar";
 import { type Guest, GuestsSheet } from "@/components/arena/guests-sheet";
 import { ShareEventSheet } from "@/components/arena/share-event-sheet";
@@ -33,207 +32,9 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { cn, formatTime } from "@/lib/utils";
 import type { EventStatus } from "@/types/events";
-
-// High-fidelity Roster Mock Players (Mockup Screen 1 & 2)
-const MAIN_ROSTER = [
-  {
-    id: "1",
-    name: "Diogo Ferreira",
-    pos: "GR",
-    rating: 8.2,
-    status: "PAGO",
-    verified: true,
-    star: true,
-    initials: "DF",
-    color: "#FACC15",
-  },
-  {
-    id: "2",
-    name: "André Costa",
-    pos: "DD",
-    rating: 7.5,
-    status: "PAGO",
-    verified: true,
-    star: false,
-    initials: "AC",
-    color: "#38BDF8",
-  },
-  {
-    id: "3",
-    name: "Tiago Mendes",
-    pos: "DC",
-    rating: 7.8,
-    status: "A VALIDAR",
-    verified: true,
-    star: false,
-    initials: "TM",
-    color: "#EF4444",
-  },
-  {
-    id: "4",
-    name: "Bruno Alves",
-    pos: "DC",
-    rating: 8.0,
-    status: "PENDENTE",
-    verified: true,
-    star: false,
-    initials: "BA",
-    color: "#22C55E",
-  },
-  {
-    id: "5",
-    name: "Ricardo Pinto",
-    pos: "DE",
-    rating: 8.5,
-    status: "PAGO",
-    verified: true,
-    star: true,
-    initials: "RP",
-    color: "#B97FFF",
-  },
-  {
-    id: "6",
-    name: "Fábio Rodrigues",
-    pos: "MC",
-    rating: 7.2,
-    status: "PENDENTE",
-    verified: false,
-    star: false,
-    initials: "FR",
-    color: "#3B82F6",
-  },
-  {
-    id: "7",
-    name: "Nuno Santos",
-    pos: "MC",
-    rating: 7.9,
-    status: "PAGO",
-    verified: true,
-    star: false,
-    initials: "NS",
-    color: "#F97316",
-  },
-  {
-    id: "8",
-    name: "Carlos Sousa",
-    pos: "ME",
-    rating: 7.3,
-    status: "PENDENTE",
-    verified: false,
-    star: false,
-    initials: "CS",
-    color: "#EC4899",
-  },
-  {
-    id: "9",
-    name: "Rui Gomes",
-    pos: "CA",
-    rating: 8.3,
-    status: "PAGO",
-    verified: true,
-    star: false,
-    initials: "RG",
-    color: "#7CFF4F",
-  },
-  {
-    id: "10",
-    name: "Marco Carvalho",
-    pos: "GR",
-    rating: 7.4,
-    status: "A VALIDAR",
-    verified: true,
-    star: false,
-    initials: "MC",
-    color: "#14B8A6",
-  },
-];
-
-const RESERVES_ROSTER = [
-  {
-    id: "11",
-    name: "João Martins",
-    pos: "MD",
-    rating: 7.0,
-    status: "Reserva",
-    verified: true,
-    star: false,
-    initials: "JM",
-    color: "#6366F1",
-  },
-  {
-    id: "12",
-    name: "Luís Oliveira",
-    pos: "PD",
-    rating: 7.6,
-    status: "Reserva",
-    verified: true,
-    star: false,
-    initials: "LO",
-    color: "#8B5CF6",
-  },
-  {
-    id: "13",
-    name: "Miguel Pereira",
-    pos: "PE",
-    rating: 6.8,
-    status: "Pendente",
-    verified: true,
-    star: false,
-    initials: "MP",
-    color: "#A855F7",
-  },
-  {
-    id: "14",
-    name: "Sérgio Lima",
-    pos: "DC",
-    rating: 7.1,
-    status: "Pendente",
-    verified: false,
-    star: false,
-    initials: "SL",
-    color: "#6B7280",
-  },
-];
-
-// Mock Chat Initial History (Tab 4 Mockup)
-const INITIAL_CHAT_MESSAGES = [
-  {
-    id: 1,
-    name: "Diogo Ferreira",
-    initials: "DF",
-    color: "#FACC15",
-    text: "Quem leva as bolas para o treino?",
-    time: "20:05",
-    self: false,
-  },
-  {
-    id: 2,
-    name: "André Costa",
-    initials: "AC",
-    color: "#38BDF8",
-    text: "Eu levo uma, mas precisamos de pelo menos mais outra.",
-    time: "20:08",
-    self: false,
-  },
-  {
-    id: 3,
-    name: "Tiago Mendes",
-    initials: "TM",
-    color: "#EF4444",
-    text: "Eu posso levar a bomba de ar por via das dúvidas.",
-    time: "20:12",
-    self: false,
-  },
-  {
-    id: 4,
-    name: "Ricardo Pinto",
-    initials: "RP",
-    color: "#B97FFF",
-    text: "Já me inscrevi! Contem comigo no Campo 3.",
-    time: "20:15",
-    self: false,
-  },
-];
+import { MAIN_ROSTER, RESERVES_ROSTER } from "../_fixtures/event-detail-mock";
+import { useEventDetailChat } from "../_hooks/use-event-detail-chat";
+import { EventRosterTab } from "./event-roster-tab";
 
 interface EventDetailProps {
   event: {
@@ -260,7 +61,6 @@ interface EventDetailProps {
 type Tab = "roster" | "teams" | "location" | "chat";
 
 export function EventDetail({
-  // biome-ignore lint/correctness/noUnusedFunctionParameters: mock implementation
   event,
   // biome-ignore lint/correctness/noUnusedFunctionParameters: mock implementation
   userId,
@@ -302,38 +102,17 @@ export function EventDetail({
   const [guests, setGuests] = useState<Guest[]>([]);
   const [guestsOpen, setGuestsOpen] = useState(false);
 
-  // Tab 4: Chat State Controls
-  const [chatMessages, setChatMessages] = useState(INITIAL_CHAT_MESSAGES);
-  const [inputMessage, setInputMessage] = useState("");
-  const chatEndRef = useRef<HTMLDivElement | null>(null);
+  const {
+    chatEndRef,
+    chatMessages,
+    handleSendMessage,
+    inputMessage,
+    setInputMessage,
+  } = useEventDetailChat({ active: activeTab === "chat", locale });
 
   const totalSpots = 14;
   const filledSpots = 10 + guests.length;
   const vacancies = Math.max(0, totalSpots - filledSpots); // dynamic spots left
-
-  useEffect(() => {
-    if (activeTab === "chat") {
-      chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
-    }
-  }, [activeTab]);
-
-  const handleSendMessage = () => {
-    if (!inputMessage.trim()) return;
-    const newMessage = {
-      id: chatMessages.length + 1,
-      name: "Rui Gomes",
-      initials: "RG",
-      color: "#7CFF4F",
-      text: inputMessage.trim(),
-      time: new Date().toLocaleTimeString("pt-PT", {
-        hour: "2-digit",
-        minute: "2-digit",
-      }),
-      self: true,
-    };
-    setChatMessages(prev => [...prev, newMessage]);
-    setInputMessage("");
-  };
 
   const handleConfirmAttendance = async () => {
     setActionLoading(true);
@@ -494,139 +273,11 @@ export function EventDetail({
       <div className="flex-1 overflow-y-auto px-5 py-4 pb-24">
         {/* TAB 1: CONVOCATÓRIA (Ecrãs 1 & 2) */}
         {activeTab === "roster" && (
-          <div className="flex flex-col gap-5">
-            {/* LISTA PRINCIPAL (10) */}
-            <div className="flex flex-col gap-2">
-              <div className="text-[10px] uppercase font-bold tracking-widest text-arena-text-muted px-1.5">
-                {t("lists.main", { count: MAIN_ROSTER.length })}
-              </div>
-              <div className="bg-arena-surface border border-arena-border rounded-[16px] divide-y divide-arena-border/50 overflow-hidden">
-                {MAIN_ROSTER.map((player, idx) => (
-                  <div
-                    key={player.id}
-                    className="flex items-center justify-between p-3.5 gap-3"
-                  >
-                    <div className="flex items-center gap-3.5 min-w-0">
-                      <span className="w-4 shrink-0 text-center text-[10px] font-bold text-arena-text-muted">
-                        {idx + 1}
-                      </span>
-                      <div className="relative shrink-0">
-                        <JbAvatar
-                          id={player.id}
-                          name={player.name}
-                          size={32}
-                          className="rounded-full overflow-hidden"
-                        />
-                      </div>
-                      <div className="min-w-0">
-                        <div className="flex items-center gap-1.5">
-                          <span className="font-bold text-sm text-arena-text truncate">
-                            {player.name}
-                          </span>
-                          {player.verified && (
-                            <CheckCircle2
-                              size={12}
-                              className="text-arena-primary shrink-0"
-                              strokeWidth={2.5}
-                            />
-                          )}
-                          {player.star && (
-                            <Sparkles
-                              size={11}
-                              className="text-arena-highlight shrink-0 fill-arena-highlight"
-                            />
-                          )}
-                        </div>
-                        <div className="flex items-center gap-2 mt-0.5">
-                          <span className="text-[9px] uppercase tracking-wider font-extrabold text-arena-text-muted">
-                            {player.pos}
-                          </span>
-
-                          {/* Payment status badge capsules */}
-                          <span
-                            className={cn(
-                              "text-[8px] uppercase tracking-wide font-extrabold px-1.5 py-0.25 rounded border leading-none",
-                              player.status === "PAGO"
-                                ? "bg-arena-success/15 border-arena-success/20 text-arena-success"
-                                : player.status === "A VALIDAR"
-                                  ? "bg-arena-warning/15 border-arena-warning/20 text-arena-warning"
-                                  : "bg-arena-text-muted/15 border-arena-border text-arena-text-sec",
-                            )}
-                          >
-                            {t(
-                              `interactive.payment${player.status === "PAGO" ? "Approved" : player.status === "A VALIDAR" ? "Review" : "Pending"}`,
-                            )}
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-
-                    <Check
-                      size={16}
-                      className="text-arena-primary shrink-0"
-                      strokeWidth={2.8}
-                    />
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {/* RESERVAS (2) */}
-            <div className="flex flex-col gap-2">
-              <div className="text-[10px] uppercase font-bold tracking-widest text-arena-text-muted px-1.5">
-                {t("interactive.reservesMock", { count: RESERVES_ROSTER.length })}
-              </div>
-              <div className="bg-arena-surface border border-arena-border rounded-[16px] divide-y divide-arena-border/50 overflow-hidden">
-                {RESERVES_ROSTER.map(player => (
-                  <div
-                    key={player.id}
-                    className="flex items-center justify-between p-3.5 gap-3"
-                  >
-                    <div className="flex items-center gap-3.5 min-w-0">
-                      <div className="relative shrink-0">
-                        <JbAvatar
-                          id={player.id}
-                          name={player.name}
-                          size={32}
-                          className="rounded-full overflow-hidden"
-                        />
-                      </div>
-                      <div className="min-w-0">
-                        <div className="flex items-center gap-1.5">
-                          <span className="font-bold text-sm text-arena-text truncate">
-                            {player.name}
-                          </span>
-                          {player.verified && (
-                            <CheckCircle2
-                              size={12}
-                              className="text-arena-primary shrink-0"
-                              strokeWidth={2.5}
-                            />
-                          )}
-                        </div>
-                        <span className="text-[9px] uppercase tracking-wider font-extrabold text-arena-text-muted mt-0.5 block">
-                          {player.pos}
-                        </span>
-                      </div>
-                    </div>
-
-                    <span
-                      className={cn(
-                        "text-[9px] uppercase tracking-wider font-extrabold px-2.5 py-1 rounded-xl border leading-none shrink-0",
-                        player.status === "Reserva"
-                          ? "bg-arena-warning/15 border-arena-warning/20 text-arena-warning"
-                          : "bg-arena-text-muted/15 border-arena-border text-arena-text-sec",
-                      )}
-                    >
-                      {player.status === "Reserva"
-                        ? t("interactive.reservesStatus")
-                        : t("interactive.pendingStatus")}
-                    </span>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
+          <EventRosterTab
+            mainRoster={MAIN_ROSTER}
+            reservesRoster={RESERVES_ROSTER}
+            t={t}
+          />
         )}
 
         {/* TAB 2: EQUIPAS (Ecrãs 3 & 4) */}
