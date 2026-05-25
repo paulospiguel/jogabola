@@ -672,6 +672,58 @@
     }
   },
   "arenaPayments": {
+    "tabs": {
+      "payments": "Pagos",
+      "methods": "Métodos",
+      "iapro": "IA PRO"
+    },
+    "filters": {
+      "all": "Todos",
+      "validating": "Por validar",
+      "pending": "Pendientes",
+      "confirmed": "Pagados",
+      "overdue": "En mora"
+    },
+    "risk": {
+      "low": "Riesgo Bajo",
+      "medium": "Riesgo Medio",
+      "high": "Riesgo Alto"
+    },
+    "verifyProof": "Ver comprobante",
+    "iapro": {
+      "premium": "PREMIUM",
+      "title": "Validación por IA",
+      "subtitle": "Comprobantes verificados automáticamente",
+      "description": "Nuestra IA analiza cada comprobante de MBWay o transferencia: confirma el valor, el destinatario y el estado de la transacción — y lo marca previamente como pagado para que lo confirmes con un clic.",
+      "feature1": "Lee el valor, IBAN y referencia",
+      "feature2": "Detecta intentos de fraude",
+      "feature3": "Preaprueba en <3s",
+      "cta": "Probar 7 días gratis"
+    },
+    "proofReview": {
+      "title": "Validar Comprobante",
+      "athlete": "Atleta",
+      "event": "Evento",
+      "amount": "Valor",
+      "method": "Método",
+      "risk": "Riesgo",
+      "viewFull": "Ver documento completo",
+      "approve": "Aprobar",
+      "reject": "Rechazar",
+      "requestProof": "Pedir nuevo comprobante",
+      "approveSuccess": "¡Pago aprobado con éxito!",
+      "rejectSuccess": "¡Pago rechazado con éxito!",
+      "requestProofSuccess": "Solicitud de comprobante enviada con éxito por correo electrónico.",
+      "error": "Error al actualizar el pago.",
+      "ia": {
+        "lowTitle": "IA: Prevalidado (riesgo bajo)",
+        "lowDesc": "El valor, el destinatario y la referencia coinciden",
+        "mediumTitle": "IA: Sospechoso (riesgo medio)",
+        "mediumDesc": "Algunos datos pueden no coincidir perfectamente",
+        "highTitle": "IA: Inválido (riesgo elevado)",
+        "highDesc": "Los datos del comprobante no coinciden"
+      }
+    },
     "kicker": "Pagos",
     "title": "Pagos",
     "titleSub": "Controla cobros, comprobantes y métodos aceptados por el equipo.",
@@ -684,7 +736,11 @@
       "proofs": "Comprobantes",
       "proofsValue": "Upload activo",
       "validation": "Pre-validación",
-      "validationValue": "Preparada"
+      "validationValue": "Preparada",
+      "toValidate": "Por validar",
+      "overdue": "En mora",
+      "paid": "Pagados",
+      "received": "recibidos"
     },
     "status": {
       "pending": "Pendiente",
@@ -758,6 +814,16 @@
       "relevant": "Otras Acciones"
     },
     "noPayments": "Ningún pago encontrado",
+    "noPaymentsSub": "No se encontraron registros de pago correspondientes en este filtro.",
+    "ago": "hace {time}",
+    "viewDetail": "Ver detalle",
+    "methodsTitle": "Métodos Aceptados",
+    "statusActive": "CONFIRMADO",
+    "statusInactive": "INACTIVO",
+    "statusDisabled": "Desactivado en la configuración",
+    "statusSoon": "MUY PRONTO",
+    "stripeSoon": "Tarjetas — muy pronto",
+    "usdcSoon": "Cripto — muy pronto",
     "configureBtn": "Configurar métodos",
     "settings": {
       "title": "Configurar Métodos de Pago",

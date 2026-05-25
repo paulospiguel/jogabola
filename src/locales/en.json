@@ -672,6 +672,59 @@
     }
   },
   "arenaPayments": {
+    "tabs": {
+      "payments": "Payments",
+      "methods": "Methods",
+      "iapro": "AI PRO"
+    },
+    "filters": {
+      "all": "All",
+      "validating": "To validate",
+      "pending": "Pending",
+      "confirmed": "Paid",
+      "overdue": "Overdue"
+    },
+
+    "risk": {
+      "low": "Low Risk",
+      "medium": "Medium Risk",
+      "high": "High Risk"
+    },
+    "verifyProof": "View proof",
+    "iapro": {
+      "premium": "PREMIUM",
+      "title": "AI Validation",
+      "subtitle": "Receipts verified automatically",
+      "description": "Our AI analyzes each MBWay or bank transfer receipt: confirms the amount, recipient, and transaction status — and pre-marks it as paid for you to confirm in one click.",
+      "feature1": "Reads amount, IBAN, and reference",
+      "feature2": "Detects fraud attempts",
+      "feature3": "Pre-approves in <3s",
+      "cta": "Try 7 days free"
+    },
+    "proofReview": {
+      "title": "Validate Receipt",
+      "athlete": "Athlete",
+      "event": "Event",
+      "amount": "Amount",
+      "method": "Method",
+      "risk": "Risk",
+      "viewFull": "View full document",
+      "approve": "Approve",
+      "reject": "Reject",
+      "requestProof": "Request new proof",
+      "approveSuccess": "Payment successfully approved!",
+      "rejectSuccess": "Payment successfully rejected!",
+      "requestProofSuccess": "Proof request successfully sent via email.",
+      "error": "Error updating payment.",
+      "ia": {
+        "lowTitle": "AI: Pre-validated (low risk)",
+        "lowDesc": "Amount, recipient, and reference match",
+        "mediumTitle": "AI: Suspicious (medium risk)",
+        "mediumDesc": "Some data might not match perfectly",
+        "highTitle": "AI: Invalid (high risk)",
+        "highDesc": "Receipt data does not match details"
+      }
+    },
     "kicker": "Payments",
     "title": "Payments",
     "titleSub": "Track charges, proofs and payment methods accepted by the team.",
@@ -686,7 +739,11 @@
       "proofs": "Proofs",
       "proofsValue": "Upload active",
       "validation": "Pre-validation",
-      "validationValue": "Ready"
+      "validationValue": "Ready",
+      "toValidate": "To validate",
+      "overdue": "Overdue",
+      "paid": "Paid",
+      "received": "received"
     },
     "status": {
       "pending": "Pending",
@@ -703,6 +760,16 @@
     },
     "notFound": "Payment not found",
     "noPayments": "No payments found.",
+    "noPaymentsSub": "No matching payment records found in this filter.",
+    "ago": "{time} ago",
+    "viewDetail": "View details",
+    "methodsTitle": "Accepted Methods",
+    "statusActive": "CONFIRMED",
+    "statusInactive": "INACTIVE",
+    "statusDisabled": "Disabled in settings",
+    "statusSoon": "COMING SOON",
+    "stripeSoon": "Cards — coming soon",
+    "usdcSoon": "Crypto — coming soon",
     "settings": {
       "title": "Configure Payment Methods",
       "subtitle": "Enable and customize how athletes can pay the team.",

@@ -66,3 +66,8 @@ bun.lockb
 .playwright-cli
 .gemini
 .antigravitycli
+.agents
+.claude
+!.claude/napkin.md
+.codex
+!.codex/napkin.md

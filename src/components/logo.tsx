@@ -19,6 +19,7 @@ const sizes = {
   small: "h-24 w-28",
   medium: "h-28 w-48",
   large: "h-36 w-72",
+  header: "h-8 w-24",
 } as const;
 
 type LogoProps = {
@@ -109,7 +110,14 @@ export const Logo: React.FC<LogoProps> = ({
       {content}
 
       {isBeta && (
-        <span className="absolute -right-4 top-3 rounded-full border border-[#7CFF4F]/25 bg-[#7CFF4F]/10 px-2 py-0.5 text-[10px] font-bold tracking-widest text-[#7CFF4F] uppercase">
+        <span
+          className={cn(
+            "absolute rounded-full border border-[#7CFF4F]/25 bg-[#7CFF4F]/10 font-bold tracking-widest text-[#7CFF4F] uppercase",
+            size === "header"
+              ? "-right-2 -top-0.5 px-1.5 py-0.25 text-[8px]"
+              : "-right-4 top-3 px-2 py-0.5 text-[10px]",
+          )}
+        >
           Beta
         </span>
       )}

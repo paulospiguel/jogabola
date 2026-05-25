@@ -544,7 +544,7 @@
     "events": "Eventos",
     "expand": "Expandir",
     "notifications": "Notificações",
-    "payments": "Pagamentos",
+    "payments": "Cobranças",
     "profile": "Perfil",
     "settings": "Configurações",
     "signOut": "Sair",
@@ -672,8 +672,61 @@
     }
   },
   "arenaPayments": {
+    "tabs": {
+      "payments": "Cobranças",
+      "methods": "Métodos",
+      "iapro": "IA PRO"
+    },
+    "filters": {
+      "all": "Todos",
+      "validating": "A validar",
+      "pending": "Pendentes",
+      "confirmed": "Pagos",
+      "overdue": "Em atraso"
+    },
+
+    "risk": {
+      "low": "Risco Baixo",
+      "medium": "Risco Médio",
+      "high": "Risco Alto"
+    },
+    "verifyProof": "Ver comprovativo",
+    "iapro": {
+      "premium": "PREMIUM",
+      "title": "Validação por IA",
+      "subtitle": "Comprovativos verificados automaticamente",
+      "description": "A nossa IA analisa cada comprovativo de MBWay ou transferência: confirma o valor, o destinatário e o estado da transação — e pré-marca como pago para tu confirmares num clique.",
+      "feature1": "Lê o valor, IBAN e referência",
+      "feature2": "Detecta tentativas de fraude",
+      "feature3": "Pré-aprova em <3s",
+      "cta": "Experimentar 7 dias grátis"
+    },
+    "proofReview": {
+      "title": "Validar Comprovativo",
+      "athlete": "Atleta",
+      "event": "Evento",
+      "amount": "Valor",
+      "method": "Método",
+      "risk": "Risco",
+      "viewFull": "Ver documento completo",
+      "approve": "Aprovar",
+      "reject": "Rejeitar",
+      "requestProof": "Pedir novo comprovativo",
+      "approveSuccess": "Pagamento aprovado com sucesso!",
+      "rejectSuccess": "Pagamento rejeitado com sucesso!",
+      "requestProofSuccess": "Pedido de comprovativo enviado com sucesso por email.",
+      "error": "Erro ao atualizar pagamento.",
+      "ia": {
+        "lowTitle": "IA: Pré-validado (risco baixo)",
+        "lowDesc": "Valor, destinatário e referência conferem",
+        "mediumTitle": "IA: Suspeito (risco médio)",
+        "mediumDesc": "Alguns dados podem não corresponder perfeitamente",
+        "highTitle": "IA: Inválido (risco elevado)",
+        "highDesc": "Os dados do comprovativo não coincidem"
+      }
+    },
     "kicker": "Gestão financeira",
-    "title": "Pagamentos",
+    "title": "Cobranças",
     "titleSub": "Controla cobranças, comprovativos e métodos aceites pela equipa.",
     "configureBtn": "Configurar métodos",
     "stats": {
@@ -682,7 +735,11 @@
       "proofs": "Comprovativos",
       "proofsValue": "Upload ativo",
       "validation": "Pré-validação",
-      "validationValue": "Preparada"
+      "validationValue": "Preparada",
+      "toValidate": "A validar",
+      "overdue": "Em atraso",
+      "paid": "Pagos",
+      "received": "recebidos"
     },
     "mocks": {
       "match": "Jogo semanal"
@@ -690,6 +747,16 @@
     "notFound": "Pagamento não encontrado",
     "loading": "A carregar pagamentos...",
     "noPayments": "Nenhum pagamento encontrado.",
+    "noPaymentsSub": "Nenhum registo de pagamento correspondente encontrado neste filtro.",
+    "ago": "há {time}",
+    "viewDetail": "Ver detalhe",
+    "methodsTitle": "Métodos Aceites",
+    "statusActive": "CONFIRMADO",
+    "statusInactive": "INATIVO",
+    "statusDisabled": "Desativado nas configurações",
+    "statusSoon": "EM BREVE",
+    "stripeSoon": "Cartões — em breve",
+    "usdcSoon": "Cripto — em breve",
     "settings": {
       "title": "Configurar Métodos de Pagamento",
       "subtitle": "Ativa e personaliza como os atletas podem pagar à equipa.",
@@ -797,40 +864,15 @@
       "relevant": "Outras Ações"
     },
     "status": {
-      "0": "E",
-      "1": "s",
-      "2": "t",
-      "3": "a",
-      "4": "d",
-      "5": "o",
       "pending": "Pendente",
       "ready": "Pronto",
       "validating": "A validar",
       "validated": "Validado"
     },
     "method": {
-      "0": "M",
-      "1": "é",
-      "2": "t",
-      "3": "o",
-      "4": "d",
-      "5": "o",
       "manualMbway": "MBWay manual"
     },
     "proofs": {
-      "0": "C",
-      "1": "o",
-      "2": "m",
-      "3": "p",
-      "4": "r",
-      "5": "o",
-      "6": "v",
-      "7": "a",
-      "8": "t",
-      "9": "i",
-      "10": "v",
-      "11": "o",
-      "12": "s",
       "pending": "Comprovativo pendente",
       "validating": "Pago - aguarda validação"
     }

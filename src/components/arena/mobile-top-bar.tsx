@@ -6,6 +6,7 @@ import { useTranslations } from "next-intl";
 import { RELEASE } from "@/constants/app";
 import { useUnreadNotificationsCount } from "@/hooks/use-notifications";
 import { Logo } from "../logo";
+import { TeamSwitcher } from "./team-switcher";
 import { UserMenu } from "./user-menu";
 
 export function MobileTopBar() {
@@ -14,14 +15,22 @@ export function MobileTopBar() {
 
   return (
     <header className="md:hidden fixed top-0 right-0 left-0 z-40 flex h-16 items-center justify-between border-b border-arena-border bg-arena-bg-sec/95 px-4 backdrop-blur-sm">
-      <Logo
-        size="small"
-        variant="white"
-        href="/arena"
-        isBeta={RELEASE.IS_BETA}
-      />
+      <div className="flex items-center gap-3 min-w-0 flex-1">
+        <Logo
+          size="header"
+          variant="white"
+          href="/arena"
+          isBeta={RELEASE.IS_BETA}
+          className="shrink-0"
+        />
 
-      <div className="flex shrink-0 items-center gap-2">
+        {/* Unified Selector de Equipa */}
+        <div className="shrink-0 min-w-0 m-auto">
+          <TeamSwitcher variant="header" />
+        </div>
+      </div>
+
+      <div className="flex shrink-0 ml-3 items-center gap-2">
         <Link
           href="/arena/notifications"
           aria-label={t("notifications")}

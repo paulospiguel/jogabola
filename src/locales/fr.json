@@ -672,6 +672,59 @@
     }
   },
   "arenaPayments": {
+    "tabs": {
+      "payments": "Paiements",
+      "methods": "Méthodes",
+      "iapro": "IA PRO"
+    },
+    "filters": {
+      "all": "Tous",
+      "validating": "À valider",
+      "pending": "En attente",
+      "confirmed": "Payés",
+      "overdue": "En retard"
+    },
+
+    "risk": {
+      "low": "Risque Faible",
+      "medium": "Risque Moyen",
+      "high": "Risque Élevé"
+    },
+    "verifyProof": "Voir justificatif",
+    "iapro": {
+      "premium": "PREMIUM",
+      "title": "Validation par IA",
+      "subtitle": "Justificatifs vérifiés automatiquement",
+      "description": "Notre IA analyse chaque justificatif MBWay ou virement: confirme le montant, le destinataire et le statut de la transaction — et le pré-marque comme payé pour que vous confirmiez en un clic.",
+      "feature1": "Lit le montant, l'IBAN et la référence",
+      "feature2": "Détecte les tentatives de fraude",
+      "feature3": "Pré-approuve en <3s",
+      "cta": "Essayer 7 jours gratuits"
+    },
+    "proofReview": {
+      "title": "Valider le Justificatif",
+      "athlete": "Athlète",
+      "event": "Événement",
+      "amount": "Montant",
+      "method": "Méthode",
+      "risk": "Risque",
+      "viewFull": "Voir le document complet",
+      "approve": "Approuver",
+      "reject": "Rejeter",
+      "requestProof": "Demander un nouveau justificatif",
+      "approveSuccess": "Paiement approuvé avec succès !",
+      "rejectSuccess": "Paiement rejeté avec succès !",
+      "requestProofSuccess": "Demande de justificatif envoyée avec succès par e-mail.",
+      "error": "Erreur lors de la mise à jour du paiement.",
+      "ia": {
+        "lowTitle": "IA : Pré-validé (faible risque)",
+        "lowDesc": "Le montant, le destinataire et la référence correspondent",
+        "mediumTitle": "IA : Suspect (risque moyen)",
+        "mediumDesc": "Certaines données peuvent ne pas correspondre parfaitement",
+        "highTitle": "IA : Invalide (risque élevé)",
+        "highDesc": "Les données du justificatif ne correspondent pas"
+      }
+    },
     "kicker": "Paiements",
     "title": "Paiements",
     "titleSub": "Suivez les charges, les preuves et les méthodes acceptées par l'équipe.",
@@ -684,7 +737,11 @@
       "proofs": "Preuves",
       "proofsValue": "Upload actif",
       "validation": "Pré-validation",
-      "validationValue": "Prête"
+      "validationValue": "Prête",
+      "toValidate": "À valider",
+      "overdue": "En retard",
+      "paid": "Payés",
+      "received": "reçus"
     },
     "status": {
       "pending": "En attente",
@@ -758,6 +815,16 @@
       "relevant": "Autres Actions"
     },
     "noPayments": "Aucun paiement trouvé",
+    "noPaymentsSub": "Aucun enregistrement de paiement correspondant trouvé dans ce filtre.",
+    "ago": "il y a {time}",
+    "viewDetail": "Voir les détails",
+    "methodsTitle": "Méthodes Acceptées",
+    "statusActive": "CONFIRMÉ",
+    "statusInactive": "INACTIF",
+    "statusDisabled": "Désactivé dans les paramètres",
+    "statusSoon": "BIENTÔT",
+    "stripeSoon": "Cartes — bientôt",
+    "usdcSoon": "Crypto — bientôt",
     "configureBtn": "Configurer les méthodes",
     "settings": {
       "title": "Configurer les Méthodes de Paiement",
