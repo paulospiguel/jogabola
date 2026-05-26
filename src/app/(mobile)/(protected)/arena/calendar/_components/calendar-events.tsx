@@ -1,14 +1,6 @@
 "use client";
 
-import {
-  addDays,
-  addMonths,
-  format,
-  isSameMonth,
-  isToday,
-  startOfWeek,
-  startOfYear,
-} from "date-fns";
+import { addMonths, format, isSameMonth, isToday, startOfYear } from "date-fns";
 import {
   Calendar,
   CalendarDays,
@@ -31,13 +23,9 @@ import type {
   SessionRow,
   ViewMode,
 } from "../_types/calendar-events";
-import {
-  getMonthGrid,
-  inferType,
-  TYPE_CONFIG,
-  toDate,
-} from "../_utils/calendar-event-utils";
+import { inferType, TYPE_CONFIG, toDate } from "../_utils/calendar-event-utils";
 import { CalendarEventCard } from "./calendar-event-card";
+import { CalendarMonthView } from "./calendar-month-view";
 import { CalendarWeekView } from "./calendar-week-view";
 
 /* ------------------------------------------------------------------ */
@@ -214,114 +202,16 @@ export function CalendarEvents({
         )}
 
         {viewMode === "month" && (
-          <div
-            className={cn(
-              "transition-opacity duration-200",
-              isPending && "opacity-40",
-            )}
-          >
-            {/* Day-of-week headers */}
-            <div className="grid grid-cols-7 gap-1 mb-1">
-              {Array.from({ length: 7 }, (_, i) => {
-                const day = addDays(
-                  startOfWeek(new Date(), { weekStartsOn: 1 }),
-                  i,
-                );
-
-                return (
-                  <div
-                    key={format(day, "yyyy-MM-dd")}
-                    className="text-center text-[10px] font-bold uppercase tracking-wider text-arena-text-muted py-1.5"
-                  >
-                    {format(day, "EEE", { locale: dfLocale })}
-                  </div>
-                );
-              })}
-            </div>
-
-            {/* Day cells */}
-            <div className="grid grid-cols-7 gap-1">
-              {getMonthGrid(monthStart).map(day => {
-                const key = format(day, "yyyy-MM-dd");
-                const dayEvents = eventsByDate[key] ?? [];
-                const today = isToday(day);
-                const inMonth = isSameMonth(day, monthStart);
-                const dots = dayEvents.slice(0, 3);
-                const overflow = dayEvents.length - 3;
-                return (
-                  <div
-                    key={key}
-                    className="flex flex-col items-center rounded-xl p-1.5 min-h-14 transition-colors"
-                    style={{
-                      backgroundColor: today
-                        ? "color-mix(in srgb, var(--color-arena-primary) 10%, transparent)"
-                        : dayEvents.length > 0 && inMonth
-                          ? "var(--color-arena-surface)"
-                          : "transparent",
-                      border: today
-                        ? "1px solid color-mix(in srgb, var(--color-arena-primary) 30%, transparent)"
-                        : "1px solid transparent",
-                      opacity: inMonth ? 1 : 0.3,
-                    }}
-                  >
-                    <span
-                      className="text-[13px] font-bold mb-1"
-                      style={{
-                        color: today
-                          ? "var(--color-arena-primary)"
-                          : "var(--color-arena-text)",
-                      }}
-                    >
-                      {format(day, "d")}
-                    </span>
-                    {dots.length > 0 && (
-                      <div className="flex gap-0.5 flex-wrap justify-center">
-                        {dots.map(ev => {
-                          const cfg = TYPE_CONFIG[inferType(ev.title)];
-                          return (
-                            <span
-                              key={ev.id}
-                              className="w-1.5 h-1.5 rounded-full"
-                              style={{ backgroundColor: cfg.dot }}
-                            />
-                          );
-                        })}
-                        {overflow > 0 && (
-                          <span className="text-[9px] font-bold text-arena-text-muted">
-                            +{overflow}
-                          </span>
-                        )}
-                      </div>
-                    )}
-                  </div>
-                );
-              })}
-            </div>
-
-            {/* Event list below grid */}
-            {totalEvents > 0 && (
-              <div className="mt-6">
-                <div className="jb-section-label mb-3">
-                  {t("nav.eventCount", { count: totalEvents })}
-                </div>
-                <div className="flex flex-col gap-2">
-                  {events
-                    .sort(
-                      (a, b) =>
-                        toDate(a.startsAt).getTime() -
-                        toDate(b.startsAt).getTime(),
-                    )
-                    .map(ev => (
-                      <CalendarEventCard
-                        key={ev.id}
-                        session={ev}
-                        statusLabel={getStatusLabel(ev.status)}
-                      />
-                    ))}
-                </div>
-              </div>
-            )}
-          </div>
+          <CalendarMonthView
+            dfLocale={dfLocale}
+            eventCountLabel={t("nav.eventCount", { count: totalEvents })}
+            events={events}
+            eventsByDate={eventsByDate}
+            getStatusLabel={getStatusLabel}
+            isPending={isPending}
+            monthStart={monthStart}
+            totalEvents={totalEvents}
+          />
         )}
 
         {/* ============================================================ */}
