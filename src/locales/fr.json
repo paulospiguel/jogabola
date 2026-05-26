@@ -409,7 +409,8 @@
     "errors": {
       "TEAM_NAME_ALREADY_EXISTS": "Une équipe avec ce nom existe déjà.",
       "TEAM_SLUG_ALREADY_EXISTS": "Cet identifiant (slug) est déjà utilisé par une autre équipe.",
-      "TEAM_LIMIT_REACHED": "Vous avez atteint la limite de {limit} équipes sur le plan gratuit. Passez à un plan supérieur pour créer plus d'équipes."
+      "TEAM_LIMIT_REACHED": "Vous avez atteint la limite de {limit} équipes sur le plan gratuit. Passez à un plan supérieur pour créer plus d'équipes.",
+      "generic": "Erreur lors de la création de l'équipe."
     },
     "limitReachedTitle": "Limite du plan gratuit",
     "upgradeCta": "Voir les plans"
@@ -490,7 +491,11 @@
       "errorSaving": "Erreur lors de l'enregistrement. Veuillez réessayer.",
       "shareTitle": "Partager la localisation",
       "copyLink": "Copier le lien",
-      "copied": "Copié !"
+      "copied": "Copié !",
+      "saveAriaLabel": "Enregistrer",
+      "cancelAriaLabel": "Annuler",
+      "editAriaLabel": "Modifier l'adresse",
+      "copyAriaLabel": "Copier l'adresse"
     },
     "officialMatch": "Match Officiel",
     "noticeWall": {
@@ -501,7 +506,9 @@
       "delete": "Supprimer",
       "urgent": "Urgent",
       "fieldChange": "Changement de Terrain",
-      "chatter": "Relancer les Pendus"
+      "chatter": "Relancer les Pendus",
+      "unknownAuthor": "Auteur",
+      "cancel": "Annuler"
     },
     "share": {
       "label": "Convoquer via",
@@ -520,7 +527,8 @@
       "whatsapp": "WhatsApp",
       "presenceList": "Liste de présence",
       "presenceListSub": "Lien public pour voir les confirmations",
-      "open": "Ouvrir"
+      "open": "Ouvrir",
+      "whatsappText": "Tu as été convoqué pour {title}! Confirme ta présence sur JogaBola: {url}"
     },
     "spots": "Places",
     "tabs": {
@@ -814,7 +822,9 @@
         "mediumDesc": "Certaines données peuvent ne pas correspondre parfaitement",
         "highTitle": "IA : Invalide (risque élevé)",
         "highDesc": "Les données du justificatif ne correspondent pas"
-      }
+      },
+      "documentTitle": "Document de preuve",
+      "documentLabel": "justificatif"
     },
     "kicker": "Paiements",
     "title": "Paiements",
@@ -2843,6 +2853,9 @@
       "mbway": "MBWay",
       "transfer": "Virement bancaire",
       "other": "Autre"
+    },
+    "errors": {
+      "registerPayment": "Erreur lors de l'enregistrement du paiement."
     }
   },
   "paymentResult": {
@@ -2870,7 +2883,8 @@
       "from": "De",
       "to": "À",
       "method": "Méthode",
-      "total": "Total"
+      "total": "Total",
+      "date": "Date de Paiement"
     },
     "methods": {
       "mbway": "MB Way",
@@ -2956,7 +2970,22 @@
       "title": "Invités",
       "infoText": "Personnes <strong>sans compte dans l'app</strong> qui vont jouer ce match. Définissez un niveau pour que l'IA équilibre mieux.",
       "cancel": "Annuler",
-      "save": "Enregistrer {count} invités"
+      "save": "Enregistrer {count} invités",
+      "guestNumberPlaceholder": "Invité {n}",
+      "levels": {
+        "beginner": {
+          "short": "Déb.",
+          "label": "Débutant"
+        },
+        "medium": {
+          "short": "Moy.",
+          "label": "Moyen"
+        },
+        "good": {
+          "short": "Bien",
+          "label": "Bien"
+        }
+      }
     },
     "ai": {
       "title": "Équilibrage IA",

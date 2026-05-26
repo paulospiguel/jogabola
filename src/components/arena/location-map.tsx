@@ -181,7 +181,7 @@ export function LocationMap({
                       type="button"
                       onClick={handleSave}
                       className="shrink-0 text-arena-success hover:text-arena-success/80"
-                      aria-label="Guardar"
+                      aria-label={t("locationMap.saveAriaLabel")}
                     >
                       <Check size={15} strokeWidth={2.5} />
                     </button>
@@ -189,7 +189,7 @@ export function LocationMap({
                       type="button"
                       onClick={() => setEditing(false)}
                       className="shrink-0 text-arena-text-muted hover:text-arena-text"
-                      aria-label="Cancelar"
+                      aria-label={t("locationMap.cancelAriaLabel")}
                     >
                       <X size={14} strokeWidth={2} />
                     </button>
@@ -217,7 +217,7 @@ export function LocationMap({
                     type="button"
                     onClick={() => setEditing(true)}
                     className="text-arena-text-muted transition-colors hover:text-arena-primary"
-                    aria-label="Editar morada"
+                    aria-label={t("locationMap.editAriaLabel")}
                   >
                     <Pencil size={13} strokeWidth={2} />
                   </button>
@@ -226,7 +226,7 @@ export function LocationMap({
                   type="button"
                   onClick={copyAddress}
                   className="text-arena-text-muted transition-colors hover:text-arena-text"
-                  aria-label="Copiar morada"
+                  aria-label={t("locationMap.copyAriaLabel")}
                 >
                   {copiedAddr ? (
                     <Check

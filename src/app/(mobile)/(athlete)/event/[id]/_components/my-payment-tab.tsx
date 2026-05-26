@@ -173,7 +173,7 @@ export function MyPaymentTab({ eventId }: MyPaymentTabProps) {
 
           <div className="flex items-center justify-between py-2.5 border-b border-arena-border">
             <span className="text-[13px] text-arena-text-muted">
-              Data do Pagamento
+              {t("details.date")}
             </span>
             <span className="text-[13px] font-semibold text-arena-text">
               {payment.createdAt

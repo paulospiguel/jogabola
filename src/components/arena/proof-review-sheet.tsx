@@ -234,7 +234,7 @@ export function ProofReviewSheet({
                     role="img"
                     aria-label="file-icon"
                   >
-                    <title>Documento de comprovativo</title>
+                    <title>{t("documentTitle")}</title>
                     <path
                       strokeLinecap="round"
                       strokeLinejoin="round"
@@ -242,7 +242,7 @@ export function ProofReviewSheet({
                     />
                   </svg>
                   <span className="mt-2.5 text-[11px] font-bold text-arena-text-sec uppercase tracking-widest leading-none">
-                    comprovativo
+                    {t("documentLabel")}
                   </span>
                   <span className="text-[10px] text-arena-text-muted mt-1.5 leading-none">
                     {payment.method.toUpperCase()} {payment.amount}

@@ -409,7 +409,8 @@
     "errors": {
       "TEAM_NAME_ALREADY_EXISTS": "A team with this name already exists.",
       "TEAM_SLUG_ALREADY_EXISTS": "This identifier (slug) is already in use by another team.",
-      "TEAM_LIMIT_REACHED": "You have reached the {limit}-team limit on the free plan. Upgrade to create more teams."
+      "TEAM_LIMIT_REACHED": "You have reached the {limit}-team limit on the free plan. Upgrade to create more teams.",
+      "generic": "Error creating team."
     },
     "limitReachedTitle": "Free plan limit",
     "upgradeCta": "View plans"
@@ -490,7 +491,11 @@
       "errorSaving": "Error saving. Please try again.",
       "shareTitle": "Share location",
       "copyLink": "Copy link",
-      "copied": "Copied!"
+      "copied": "Copied!",
+      "saveAriaLabel": "Save",
+      "cancelAriaLabel": "Cancel",
+      "editAriaLabel": "Edit address",
+      "copyAriaLabel": "Copy address"
     },
     "officialMatch": "Official Match",
     "noticeWall": {
@@ -501,7 +506,9 @@
       "delete": "Delete",
       "urgent": "Urgent",
       "fieldChange": "Field Change",
-      "chatter": "Poke Pending"
+      "chatter": "Poke Pending",
+      "unknownAuthor": "Author",
+      "cancel": "Cancel"
     },
     "share": {
       "label": "Invite via",
@@ -520,7 +527,8 @@
       "whatsapp": "WhatsApp",
       "presenceList": "Attendance List",
       "presenceListSub": "Public link to see confirmations",
-      "open": "Open"
+      "open": "Open",
+      "whatsappText": "You've been summoned to {title}! Confirm your attendance on JogaBola: {url}"
     },
     "spots": "Spots",
     "tabs": {
@@ -814,7 +822,9 @@
         "mediumDesc": "Some data might not match perfectly",
         "highTitle": "AI: Invalid (high risk)",
         "highDesc": "Receipt data does not match details"
-      }
+      },
+      "documentTitle": "Proof document",
+      "documentLabel": "proof"
     },
     "kicker": "Payments",
     "title": "Payments",
@@ -2843,6 +2853,9 @@
       "mbway": "MBWay",
       "transfer": "Bank transfer",
       "other": "Other"
+    },
+    "errors": {
+      "registerPayment": "Error registering payment."
     }
   },
   "paymentResult": {
@@ -2870,7 +2883,8 @@
       "from": "From",
       "to": "To",
       "method": "Method",
-      "total": "Total"
+      "total": "Total",
+      "date": "Payment Date"
     },
     "methods": {
       "mbway": "MB Way",
@@ -2956,7 +2970,22 @@
       "title": "Guests",
       "infoText": "People <strong>without an app account</strong> who will play this game. Set a level so AI can balance better.",
       "cancel": "Cancel",
-      "save": "Save {count} guests"
+      "save": "Save {count} guests",
+      "guestNumberPlaceholder": "Guest {n}",
+      "levels": {
+        "beginner": {
+          "short": "Beg.",
+          "label": "Beginner"
+        },
+        "medium": {
+          "short": "Mid.",
+          "label": "Medium"
+        },
+        "good": {
+          "short": "Good",
+          "label": "Good"
+        }
+      }
     },
     "ai": {
       "title": "AI Balancing",

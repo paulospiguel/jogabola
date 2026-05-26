@@ -25,7 +25,7 @@ export function VerifiedBadge({
         size={16}
         className={cn("shrink-0", className)}
         style={{ color: "#7cff4f" }}
-        aria-label="Verificado"
+        aria-label={t("common.verified")}
       />
     );
   }

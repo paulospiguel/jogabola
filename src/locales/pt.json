@@ -409,7 +409,8 @@
     "errors": {
       "TEAM_NAME_ALREADY_EXISTS": "Já existe uma equipa com este nome.",
       "TEAM_SLUG_ALREADY_EXISTS": "Este identificador (slug) já está a ser utilizado por outra equipa.",
-      "TEAM_LIMIT_REACHED": "Atingiste o limite de {limit} equipas no plano gratuito. Faz upgrade para criar mais equipas."
+      "TEAM_LIMIT_REACHED": "Atingiste o limite de {limit} equipas no plano gratuito. Faz upgrade para criar mais equipas.",
+      "generic": "Erro ao criar equipa."
     },
     "limitReachedTitle": "Limite do plano gratuito",
     "upgradeCta": "Ver planos"
@@ -490,7 +491,11 @@
       "errorSaving": "Erro ao guardar. Tente novamente.",
       "shareTitle": "Partilhar localização",
       "copyLink": "Copiar link",
-      "copied": "Copiado!"
+      "copied": "Copiado!",
+      "saveAriaLabel": "Guardar",
+      "cancelAriaLabel": "Cancelar",
+      "editAriaLabel": "Editar morada",
+      "copyAriaLabel": "Copiar morada"
     },
     "officialMatch": "Jogo Oficial",
     "noticeWall": {
@@ -501,7 +506,9 @@
       "delete": "Eliminar",
       "urgent": "Urgente",
       "fieldChange": "Alteração de Campo",
-      "chatter": "Chatear Pendentes"
+      "chatter": "Chatear Pendentes",
+      "unknownAuthor": "Autor",
+      "cancel": "Cancelar"
     },
     "share": {
       "label": "Convocar via",
@@ -520,7 +527,8 @@
       "whatsapp": "WhatsApp",
       "presenceList": "Lista de Presenças",
       "presenceListSub": "Link público para ver confirmações",
-      "open": "Abrir"
+      "open": "Abrir",
+      "whatsappText": "Foste convocado para o {title}! Confirma a tua presença no JogaBola: {url}"
     },
     "spots": "Vagas",
     "tabs": {
@@ -814,7 +822,9 @@
         "mediumDesc": "Alguns dados podem não corresponder perfeitamente",
         "highTitle": "IA: Inválido (risco elevado)",
         "highDesc": "Os dados do comprovativo não coincidem"
-      }
+      },
+      "documentTitle": "Documento de comprovativo",
+      "documentLabel": "comprovativo"
     },
     "kicker": "Gestão financeira",
     "title": "Cobranças",
@@ -2843,6 +2853,9 @@
       "mbway": "MBWay",
       "transfer": "Transferência bancária",
       "other": "Outro"
+    },
+    "errors": {
+      "registerPayment": "Erro ao registar pagamento."
     }
   },
   "paymentResult": {
@@ -2870,7 +2883,8 @@
       "from": "De",
       "to": "Para",
       "method": "Método",
-      "total": "Total"
+      "total": "Total",
+      "date": "Data do Pagamento"
     },
     "methods": {
       "mbway": "MB Way",
@@ -2956,7 +2970,22 @@
       "title": "Convidados",
       "infoText": "Pessoas <strong>sem conta no app</strong> que vão jogar este jogo. Define um nível para a IA balancear melhor.",
       "cancel": "Cancelar",
-      "save": "Guardar {count} convidados"
+      "save": "Guardar {count} convidados",
+      "guestNumberPlaceholder": "Convidado {n}",
+      "levels": {
+        "beginner": {
+          "short": "Inic.",
+          "label": "Iniciante"
+        },
+        "medium": {
+          "short": "Méd.",
+          "label": "Médio"
+        },
+        "good": {
+          "short": "Bom",
+          "label": "Bom"
+        }
+      }
     },
     "ai": {
       "title": "Balanceamento IA",

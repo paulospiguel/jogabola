@@ -44,6 +44,7 @@ const LOCALE_MAP = {
 
 export function EventNoticeWall({ eventId, isManager }: EventNoticeWallProps) {
   const t = useTranslations("arenaEventDetail.noticeWall");
+  const tCommon = useTranslations("common");
   const locale = useLocale() as keyof typeof LOCALE_MAP;
   const [notices, setNotices] = useState<Notice[]>([]);
   const [loading, setLoading] = useState(true);
@@ -126,7 +127,7 @@ export function EventNoticeWall({ eventId, isManager }: EventNoticeWallProps) {
               onClick={() => setShowInput(false)}
               className="text-xs"
             >
-              Cancelar
+              {tCommon("cancel")}
             </Button>
             <Button
               size="sm"
@@ -180,7 +181,7 @@ export function EventNoticeWall({ eventId, isManager }: EventNoticeWallProps) {
               <div className="flex items-center gap-2">
                 <JbAvatar
                   id={notice.author?.name || "A"}
-                  name={notice.author?.name || "Autor"}
+                  name={notice.author?.name || t("unknownAuthor")}
                   image={notice.author?.image}
                   className="size-5"
                 />

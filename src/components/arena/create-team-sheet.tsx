@@ -94,7 +94,7 @@ export function CreateTeamSheet({ onClose }: CreateTeamSheetProps) {
       } else if (t.has(`errors.${code}`)) {
         message = t(`errors.${code}`);
       } else {
-        message = result.error.message ?? code ?? "Error creating team";
+        message = result.error.message ?? code ?? t("errors.generic");
       }
 
       setError(message);

@@ -93,7 +93,7 @@ export function ShareEventSheet({ event, onClose }: ShareEventSheetProps) {
 
   const handleWhatsAppShare = () => {
     const text = encodeURIComponent(
-      `Foste convocado para o ${event.title}! Confirma a tua presença no JogaBola: ${publicUrl}`,
+      t("whatsappText", { title: event.title, url: publicUrl }),
     );
     window.open(`https://api.whatsapp.com/send?text=${text}`, "_blank");
   };

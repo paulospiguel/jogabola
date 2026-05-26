@@ -103,6 +103,7 @@ export function ParticipantRow({
 }: ParticipantRowProps) {
   const t = useTranslations("arenaEventDetail");
   const tSquad = useTranslations("arenaSquad");
+  const tCommon = useTranslations("common");
   const queryClient = useQueryClient();
   const [loading, setLoading] = useState(false);
   const [isRemoveDialogOpen, setIsRemoveDialogOpen] = useState(false);
@@ -262,7 +263,7 @@ export function ParticipantRow({
                 size={13}
                 className="shrink-0 text-arena-info"
                 strokeWidth={2.4}
-                aria-label="Verificado"
+                aria-label={tCommon("verified")}
               />
             )}
           </div>

@@ -1,19 +1,14 @@
 "use client";
 
 import { Loader2 } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { useState } from "react";
 import { markPaymentManually } from "@/actions/payments.actions";
 import { BottomSheet } from "@/components/arena/bottom-sheet";
 import { cn } from "@/lib/utils";
 
-const METHODS = [
-  { value: "cash", label: "Dinheiro (presencial)" },
-  { value: "mbway", label: "MBWay" },
-  { value: "transfer", label: "Transferência bancária" },
-  { value: "other", label: "Outro" },
-] as const;
-
-type ManualMethod = (typeof METHODS)[number]["value"];
+const METHOD_VALUES = ["cash", "mbway", "transfer", "other"] as const;
+type ManualMethod = (typeof METHOD_VALUES)[number];
 
 interface ManualMarkPaidSheetProps {
   eventId: number;
@@ -30,6 +25,7 @@ export function ManualMarkPaidSheet({
   onClose,
   onSuccess,
 }: ManualMarkPaidSheetProps) {
+  const t = useTranslations("manualMarkPaid");
   const [method, setMethod] = useState<ManualMethod>("cash");
   const [note, setNote] = useState("");
   const [saving, setSaving] = useState(false);
@@ -49,17 +45,17 @@ export function ManualMarkPaidSheet({
       onSuccess();
       onClose();
     } else {
-      setError(res.error ?? "Erro ao registar pagamento.");
+      setError(res.error ?? t("errors.registerPayment"));
     }
   }
 
   return (
-    <BottomSheet title="Marcar como pago" onClose={onClose}>
+    <BottomSheet title={t("title")} onClose={onClose}>
       <div className="flex flex-col gap-5 p-5 pb-8">
         {/* Athlete name */}
         <div className="rounded-[10px] border border-arena-border bg-arena-surface px-4 py-3">
           <p className="text-[11px] font-bold uppercase tracking-wider text-arena-text-muted">
-            Atleta
+            {t("athlete")}
           </p>
           <p className="mt-0.5 text-[14px] font-bold text-arena-text">
             {athleteName}
@@ -75,22 +71,22 @@ export function ManualMarkPaidSheet({
         {/* Method selector */}
         <div className="flex flex-col gap-2">
           <p className="text-[11px] font-bold uppercase tracking-wider text-arena-text-muted">
-            Método de pagamento
+            {t("method")}
           </p>
           <div className="grid grid-cols-2 gap-2">
-            {METHODS.map(m => (
+            {METHOD_VALUES.map(value => (
               <button
-                key={m.value}
+                key={value}
                 type="button"
-                onClick={() => setMethod(m.value)}
+                onClick={() => setMethod(value)}
                 className={cn(
                   "rounded-[10px] border px-3 py-2.5 text-left text-[13px] font-semibold transition-all",
-                  method === m.value
+                  method === value
                     ? "border-arena-primary bg-arena-primary/10 text-arena-primary"
                     : "border-arena-border bg-arena-surface text-arena-text-sec hover:border-arena-primary/30",
                 )}
               >
-                {m.label}
+                {t(`methods.${value}`)}
               </button>
             ))}
           </div>
@@ -99,12 +95,12 @@ export function ManualMarkPaidSheet({
         {/* Optional note */}
         <div className="flex flex-col gap-1.5">
           <p className="text-[11px] font-bold uppercase tracking-wider text-arena-text-muted">
-            Nota (opcional)
+            {t("note")}
           </p>
           <textarea
             value={note}
             onChange={e => setNote(e.target.value)}
-            placeholder="Ex: pagou antes do jogo via Revolut"
+            placeholder={t("notePlaceholder")}
             rows={2}
             maxLength={200}
             className="w-full resize-none rounded-[10px] border border-arena-border bg-arena-bg-sec/50 px-3.5 py-3 text-[13px] text-arena-text placeholder:text-arena-text-muted outline-none transition-all focus:border-arena-primary focus:ring-2 focus:ring-arena-primary/10"
@@ -120,7 +116,7 @@ export function ManualMarkPaidSheet({
           {saving ? (
             <Loader2 size={18} className="animate-spin" />
           ) : (
-            "Confirmar pagamento"
+            t("confirm")
           )}
         </button>
       </div>

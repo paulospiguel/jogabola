@@ -1,6 +1,7 @@
 "use client";
 
 import { ArrowLeft } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 
@@ -12,6 +13,7 @@ interface ScreenHeaderProps {
 
 export function ScreenHeader({ title, right }: ScreenHeaderProps) {
   const router = useRouter();
+  const t = useTranslations("common");
 
   return (
     <div className="sticky top-0 z-40 flex shrink-0 items-center gap-2.5 border-arena-border border-b bg-arena-bg px-5 pt-3 pb-2.5">
@@ -21,7 +23,7 @@ export function ScreenHeader({ title, right }: ScreenHeaderProps) {
         type="button"
         variant="ghost"
         size="icon-sm"
-        aria-label="Voltar"
+        aria-label={t("back")}
       >
         <ArrowLeft size={20} />
       </Button>

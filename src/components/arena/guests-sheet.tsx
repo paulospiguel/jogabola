@@ -7,7 +7,7 @@ import { BottomSheet } from "@/components/arena/bottom-sheet";
 import { Cta } from "@/components/arena/cta";
 import { cn } from "@/lib/utils";
 
-export type GuestLevel = "iniciante" | "medio" | "bom";
+export type GuestLevel = "beginner" | "medium" | "good";
 
 export interface Guest {
   id: string;
@@ -20,26 +20,13 @@ export interface Guest {
 
 const LEVELS: {
   id: GuestLevel;
-  short: string;
-  label: string;
   rating: number;
   color: string;
 }[] = [
-  { id: "iniciante", short: "Inic.", label: "Iniciante", rating: 5.5, color: "#F59E0B" },
-  { id: "medio", short: "Méd.", label: "Médio", rating: 7, color: "#38BDF8" },
-  { id: "bom", short: "Bom", label: "Bom", rating: 8.5, color: "#7CFF4F" },
-];
-
-function makeGuest(index: number, suggestedMissing: number): Guest {
-  return {
-    id: `g-${Date.now()}-${index}`,
-    name: `Convidado ${index + 1}`,
-    level: "medio",
-    rating: 7,
-    levelLabel: "Médio",
-    levelColor: "#38BDF8",
-  };
-}
+    { id: "beginner", rating: 5.5, color: "#F59E0B" },
+    { id: "medium", rating: 7, color: "#38BDF8" },
+    { id: "good", rating: 8.5, color: "#7CFF4F" },
+  ];
 
 interface GuestsSheetProps {
   guests: Guest[];
@@ -56,19 +43,30 @@ export function GuestsSheet({
 }: GuestsSheetProps) {
   const t = useTranslations("arenaEquipas");
 
+  function makeGuest(index: number): Guest {
+    return {
+      id: `g-${Date.now()}-${index}`,
+      name: t("guests.guestNumberPlaceholder", { n: index + 1 }),
+      level: "medium",
+      rating: 7,
+      levelLabel: t("guests.levels.medium.label"),
+      levelColor: "#38BDF8",
+    };
+  }
+
   const initialList = guests.length
     ? guests
     : Array.from(
-        { length: Math.min(Math.max(suggestedMissing, 1), 11) },
-        (_, i) => makeGuest(i, suggestedMissing),
-      );
+      { length: Math.min(Math.max(suggestedMissing, 1), 11) },
+      (_, i) => makeGuest(i),
+    );
 
   const [local, setLocal] = useState<Guest[]>(initialList);
 
   function add() {
     setLocal(l => [
       ...l,
-      makeGuest(l.length, suggestedMissing),
+      makeGuest(l.length),
     ]);
   }
 
@@ -85,7 +83,7 @@ export function GuestsSheet({
     setLocal(l =>
       l.map(g =>
         g.id === id
-          ? { ...g, level: levelId, rating: lv.rating, levelLabel: lv.label, levelColor: lv.color }
+          ? { ...g, level: levelId, rating: lv.rating, levelLabel: t(`guests.levels.${levelId}.label`), levelColor: lv.color }
           : g,
       ),
     );
@@ -124,7 +122,7 @@ export function GuestsSheet({
               <input
                 value={g.name}
                 onChange={e => updateName(g.id, e.target.value)}
-                placeholder={`Convidado ${i + 1}`}
+                placeholder={t("guests.guestNumberPlaceholder", { n: i + 1 })}
                 className="min-w-0 flex-1 bg-transparent text-sm font-bold text-arena-text outline-none placeholder:text-arena-text-muted"
               />
 
@@ -147,7 +145,7 @@ export function GuestsSheet({
                         : undefined
                     }
                   >
-                    {lv.short}
+                    {t(`guests.levels.${lv.id}.short`)}
                   </button>
                 ))}
               </div>
