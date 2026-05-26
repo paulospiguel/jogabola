@@ -22,11 +22,12 @@ import { useGuestSession } from "@/hooks/use-guest-session";
 import { usePublicTeamPaymentSettings } from "@/hooks/use-team-payment-settings";
 import { signIn } from "@/lib/auth-client";
 import { cn } from "@/lib/utils";
-import type { PaymentMethod, TeamPaymentConfig } from "@/types/payments";
+import type { PaymentMethod } from "@/types/payments";
 import {
   getAttendanceErrorMessage,
   getGuestOtpErrorMessage,
 } from "../_utils/athlete-rsvp-errors";
+import { buildRsvpPaymentConfig } from "../_utils/athlete-rsvp-payment";
 import {
   BackButton,
   EmailInput,
@@ -304,41 +305,11 @@ export function AthleteRsvpSheet({
     "welcome-back": t("titles.welcomeBack"),
   };
 
-  const defaultPaymentConfig: TeamPaymentConfig = {
-    stripe: { enabled: false },
-    mbway: { enabled: false },
-    cash: { enabled: true, instructions: t("cashInstructions") },
-    transfer: { enabled: false },
-  };
-
-  // When payment is required upfront, cash is not a valid option (manager can override manually)
-  const cashAllowed = !event?.paymentRequired;
-
-  const paymentConfig: TeamPaymentConfig = settings
-    ? {
-        stripe: {
-          enabled: settings.stripeEnabled,
-          accountId: settings.stripeAccountId ?? undefined,
-        },
-        mbway: {
-          enabled: settings.mbwayEnabled,
-          phone: settings.mbwayPhone ?? undefined,
-          name: settings.mbwayName ?? undefined,
-        },
-        cash: {
-          enabled: settings.cashEnabled && cashAllowed,
-          instructions: settings.cashInstructions ?? undefined,
-        },
-        transfer: {
-          enabled: settings.transferEnabled,
-          iban: settings.transferIban ?? undefined,
-          name: settings.transferName ?? undefined,
-        },
-      }
-    : {
-        ...defaultPaymentConfig,
-        cash: { ...defaultPaymentConfig.cash, enabled: cashAllowed },
-      };
+  const paymentConfig = buildRsvpPaymentConfig({
+    cashAllowed: !event?.paymentRequired,
+    cashInstructions: t("cashInstructions"),
+    settings,
+  });
 
   return (
     <BottomSheet title={TITLES[step]} onClose={onClose}>
