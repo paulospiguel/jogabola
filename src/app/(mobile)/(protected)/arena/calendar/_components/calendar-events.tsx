@@ -1,6 +1,6 @@
 "use client";
 
-import { addMonths, format, isSameMonth, isToday, startOfYear } from "date-fns";
+import { format, isToday } from "date-fns";
 import {
   Calendar,
   CalendarDays,
@@ -23,10 +23,11 @@ import type {
   SessionRow,
   ViewMode,
 } from "../_types/calendar-events";
-import { inferType, TYPE_CONFIG, toDate } from "../_utils/calendar-event-utils";
+import { TYPE_CONFIG, toDate } from "../_utils/calendar-event-utils";
 import { CalendarEventCard } from "./calendar-event-card";
 import { CalendarMonthView } from "./calendar-month-view";
 import { CalendarWeekView } from "./calendar-week-view";
+import { CalendarYearView } from "./calendar-year-view";
 
 /* ------------------------------------------------------------------ */
 /*  Main component                                                      */
@@ -214,85 +215,19 @@ export function CalendarEvents({
           />
         )}
 
-        {/* ============================================================ */}
-        {/*  YEAR VIEW                                                    */}
-        {/* ============================================================ */}
         {viewMode === "year" && (
-          <div
-            className={cn(
-              "transition-opacity duration-200",
-              isPending && "opacity-40",
-            )}
-          >
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
-              {Array.from({ length: 12 }, (_, i) => {
-                const mStart = addMonths(startOfYear(yearStart), i);
-                const mLabel = format(mStart, "MMMM", { locale: dfLocale });
-                const mEvents = events.filter(ev =>
-                  isSameMonth(toDate(ev.startsAt), mStart),
-                );
-                const isCurrent = isSameMonth(mStart, new Date());
-                return (
-                  <button
-                    key={format(mStart, "yyyy-MM")}
-                    type="button"
-                    onClick={() => {
-                      setMonthStart(mStart);
-                      setViewMode("month");
-                    }}
-                    className="flex flex-col gap-2 rounded-xl p-4 text-left transition-all hover:brightness-110 active:scale-[0.98]"
-                    style={{
-                      backgroundColor: isCurrent
-                        ? "color-mix(in srgb, var(--color-arena-primary) 8%, transparent)"
-                        : "var(--color-arena-surface)",
-                      border: isCurrent
-                        ? "1px solid color-mix(in srgb, var(--color-arena-primary) 25%, transparent)"
-                        : "1px solid var(--color-arena-border)",
-                    }}
-                  >
-                    <span
-                      className="text-[13px] font-extrabold capitalize"
-                      style={{
-                        color: isCurrent
-                          ? "var(--color-arena-primary)"
-                          : "var(--color-arena-text)",
-                      }}
-                    >
-                      {mLabel}
-                    </span>
-                    {mEvents.length > 0 ? (
-                      <>
-                        <div className="flex flex-wrap gap-0.5">
-                          {mEvents.slice(0, 8).map(ev => {
-                            const cfg = TYPE_CONFIG[inferType(ev.title)];
-                            return (
-                              <span
-                                key={ev.id}
-                                className="w-1.5 h-1.5 rounded-full"
-                                style={{ backgroundColor: cfg.dot }}
-                              />
-                            );
-                          })}
-                          {mEvents.length > 8 && (
-                            <span className="text-[10px] font-bold text-arena-text-muted">
-                              +{mEvents.length - 8}
-                            </span>
-                          )}
-                        </div>
-                        <span className="text-[11px] text-arena-text-muted">
-                          {t("nav.eventCount", { count: mEvents.length })}
-                        </span>
-                      </>
-                    ) : (
-                      <span className="text-[11px] text-arena-text-muted/50">
-                        {t("nav.noEvents")}
-                      </span>
-                    )}
-                  </button>
-                );
-              })}
-            </div>
-          </div>
+          <CalendarYearView
+            dfLocale={dfLocale}
+            events={events}
+            getEventCountLabel={count => t("nav.eventCount", { count })}
+            isPending={isPending}
+            noEventsLabel={t("nav.noEvents")}
+            onSelectMonth={selectedMonthStart => {
+              setMonthStart(selectedMonthStart);
+              setViewMode("month");
+            }}
+            yearStart={yearStart}
+          />
         )}
 
         {/* ============================================================ */}
