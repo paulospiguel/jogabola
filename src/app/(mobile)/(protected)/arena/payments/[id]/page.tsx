@@ -4,35 +4,24 @@ import {
   ArrowLeft,
   Calendar,
   Check,
-  Download,
-  ExternalLink,
   FileWarning,
-  History,
   Loader2,
-  Mail,
   Pencil,
-  ShieldCheck,
   Undo2,
-  User,
   Wallet,
   X,
 } from "lucide-react";
-import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
-import { useEffect, useMemo, useState, useTransition } from "react";
+import { useMemo, useState, useTransition } from "react";
 import {
   requestPaymentProof,
   updatePaymentStatus,
 } from "@/actions/payments.actions";
-import { JbAvatar } from "@/components/arena/avatar";
 import { type BadgeStatus, JbBadge } from "@/components/arena/badge";
-import { ScoreBar, type ScoreLevel } from "@/components/arena/score-bar";
-import { VerifiedBadge } from "@/components/arena/verified-badge";
 import { Button } from "@/components/ui/button";
 import {
   PAYMENT_OVERVIEW_STATUS,
-  PAYMENT_OVERVIEW_STATUSES,
   PAYMENT_REVIEW_STATUS,
   PAYMENT_STATUS,
   type PaymentOverviewStatus,
@@ -41,15 +30,10 @@ import {
 } from "@/constants/payments";
 import { usePayments } from "@/hooks/use-payments";
 import { cn } from "@/lib/utils";
+import { PaymentDetailSidebar } from "../_components/payment-detail-sidebar";
+import { PaymentProofViewer } from "../_components/payment-proof-viewer";
 
 type Feedback = { type: "success" | "error"; message: string } | null;
-
-const STATUS_DOT_CLASS: Record<PaymentOverviewStatus, string> = {
-  [PAYMENT_OVERVIEW_STATUS.PENDING]: "bg-arena-text-muted",
-  [PAYMENT_OVERVIEW_STATUS.VALIDATING]: "bg-arena-warning",
-  [PAYMENT_OVERVIEW_STATUS.CONFIRMED]: "bg-arena-success",
-  [PAYMENT_OVERVIEW_STATUS.REFUSED]: "bg-arena-danger",
-};
 
 function parsePaymentId(id: string | string[] | undefined) {
   const raw = Array.isArray(id) ? id[0] : id;
@@ -69,157 +53,6 @@ function statusToDb(status: PaymentOverviewStatus): PaymentStatus {
     return PAYMENT_STATUS.PAID_UNVERIFIED;
   }
   return status;
-}
-
-interface ProofViewerProps {
-  proofUrl?: string;
-  alt: string;
-  onRequest: () => void;
-  requesting: boolean;
-  requestLabel: string;
-  requestAgainLabel: string;
-  missingTitle: string;
-  missingDescription: string;
-  brokenTitle: string;
-  brokenDescription: string;
-  openLabel: string;
-  downloadLabel: string;
-  loadingLabel: string;
-  receivedKicker: string;
-  receivedTitle: string;
-  receivedDescription: string;
-}
-
-function ProofViewer({
-  proofUrl,
-  alt,
-  onRequest,
-  requesting,
-  requestLabel,
-  requestAgainLabel,
-  missingTitle,
-  missingDescription,
-  brokenTitle,
-  brokenDescription,
-  openLabel,
-  downloadLabel,
-  loadingLabel,
-  receivedKicker,
-  receivedTitle,
-  receivedDescription,
-}: ProofViewerProps) {
-  const [imageFailed, setImageFailed] = useState(false);
-  const [imageReady, setImageReady] = useState(false);
-
-  useEffect(() => {
-    setImageFailed(false);
-    setImageReady(false);
-    if (!proofUrl) return;
-
-    const image = new window.Image();
-    image.onload = () => setImageReady(true);
-    image.onerror = () => setImageFailed(true);
-    image.src = proofUrl;
-  }, [proofUrl]);
-
-  const hasUsableProof = Boolean(proofUrl) && imageReady && !imageFailed;
-
-  if (proofUrl && !imageReady && !imageFailed) {
-    return (
-      <div className="flex min-h-[360px] items-center justify-center rounded-[16px] border border-arena-border bg-arena-bg/45 text-arena-text-sec">
-        <Loader2 className="mr-2 animate-spin text-arena-primary" size={18} />
-        {loadingLabel}
-      </div>
-    );
-  }
-
-  if (!hasUsableProof) {
-    const hasBrokenProof = Boolean(proofUrl) && imageFailed;
-
-    return (
-      <div className="flex min-h-[360px] flex-col items-center justify-center rounded-[16px] border border-dashed border-arena-border bg-arena-bg/45 px-6 py-12 text-center">
-        <div
-          className={cn(
-            "mb-4 flex size-14 items-center justify-center rounded-[16px] border",
-            hasBrokenProof
-              ? "border-arena-warning/30 bg-arena-warning/10 text-arena-warning"
-              : "border-arena-primary/25 bg-arena-primary/10 text-arena-primary",
-          )}
-        >
-          {hasBrokenProof ? (
-            <FileWarning size={26} />
-          ) : (
-            <ShieldCheck size={26} />
-          )}
-        </div>
-        <h3 className="font-sora text-[17px] font-bold text-arena-text">
-          {hasBrokenProof ? brokenTitle : missingTitle}
-        </h3>
-        <p className="mt-2 max-w-md text-[13px] leading-relaxed text-arena-text-sec">
-          {hasBrokenProof ? brokenDescription : missingDescription}
-        </p>
-        <Button
-          type="button"
-          onClick={onRequest}
-          disabled={requesting}
-          className="mt-6 rounded-[14px] bg-arena-primary px-5 text-[13px] font-bold text-arena-bg hover:bg-arena-primary/90"
-        >
-          {requesting ? (
-            <Loader2 className="mr-2 animate-spin" size={16} />
-          ) : (
-            <Mail className="mr-2" size={16} />
-          )}
-          {hasBrokenProof ? requestAgainLabel : requestLabel}
-        </Button>
-      </div>
-    );
-  }
-
-  return (
-    <div className="grid gap-4 xl:grid-cols-[minmax(320px,520px)_1fr]">
-      <div
-        role="img"
-        aria-label={alt}
-        className="relative aspect-[4/5] overflow-hidden rounded-[18px] border border-arena-border bg-arena-bg bg-contain bg-center bg-no-repeat shadow-[0_32px_80px_-56px_rgba(0,0,0,.95)]"
-        style={{ backgroundImage: `url(${proofUrl})` }}
-      />
-      <div className="flex flex-col justify-between rounded-[16px] border border-arena-border bg-arena-bg/45 p-5">
-        <div>
-          <p className="text-[10px] font-bold uppercase tracking-[0.14em] text-arena-text-muted">
-            {receivedKicker}
-          </p>
-          <h3 className="mt-2 font-sora text-[18px] font-bold text-arena-text">
-            {receivedTitle}
-          </h3>
-          <p className="mt-2 text-[13px] leading-relaxed text-arena-text-sec">
-            {receivedDescription}
-          </p>
-        </div>
-        <div className="mt-6 flex flex-col gap-2">
-          <Button
-            asChild
-            variant="outline"
-            className="rounded-[12px] border-arena-border bg-arena-surface text-arena-text hover:border-arena-primary/40 hover:bg-arena-primary/10 hover:text-arena-primary"
-          >
-            <a href={proofUrl} target="_blank" rel="noreferrer">
-              <ExternalLink className="mr-2" size={16} />
-              {openLabel}
-            </a>
-          </Button>
-          <Button
-            asChild
-            variant="ghost"
-            className="rounded-[12px] text-arena-text-sec hover:bg-arena-surface-el hover:text-arena-text"
-          >
-            <a href={proofUrl} download>
-              <Download className="mr-2" size={16} />
-              {downloadLabel}
-            </a>
-          </Button>
-        </div>
-      </div>
-    </div>
-  );
 }
 
 export default function PaymentDetailPage() {
@@ -476,7 +309,7 @@ export default function PaymentDetailPage() {
                 </h2>
               </div>
               <div className="p-6">
-                <ProofViewer
+                <PaymentProofViewer
                   proofUrl={payment.proofUrl}
                   alt={t("detail.proofAlt")}
                   onRequest={runProofRequest}
@@ -498,102 +331,7 @@ export default function PaymentDetailPage() {
             </section>
           </div>
 
-          <aside className="space-y-6">
-            <section className="jb-card p-6">
-              <h2 className="mb-6 text-xs font-bold uppercase tracking-widest text-arena-text-muted">
-                {t("detail.athlete")}
-              </h2>
-              <div className="flex flex-col items-center text-center">
-                <JbAvatar
-                  id={payment.player.id}
-                  name={payment.player.name}
-                  image={payment.player.image}
-                  size={80}
-                />
-                <div className="mt-4 flex flex-wrap items-center justify-center gap-2">
-                  <h3 className="font-sora text-lg font-bold text-arena-text">
-                    {payment.player.name}
-                  </h3>
-                  <VerifiedBadge verified={payment.player.isVerified} />
-                </div>
-                <p className="mt-1 text-sm text-arena-text-muted">
-                  {t("detail.memberSince", {
-                    year: new Date(payment.player.createdAt).getFullYear(),
-                  })}
-                </p>
-
-                <div className="mt-8 grid w-full gap-2">
-                  <Button
-                    asChild
-                    variant="outline"
-                    className="rounded-[12px] border-arena-border bg-arena-surface text-arena-text hover:border-arena-primary/40 hover:bg-arena-primary/10 hover:text-arena-primary"
-                  >
-                    <Link href={`/arena/squads/player/${payment.player.id}`}>
-                      <User className="mr-2" size={16} />
-                      {t("table.viewProfile")}
-                    </Link>
-                  </Button>
-                  <Button
-                    asChild
-                    variant="ghost"
-                    className="rounded-[12px] text-arena-text-muted hover:bg-arena-surface-el hover:text-arena-text"
-                  >
-                    <Link
-                      href={`/arena/squads/player/${payment.player.id}#history`}
-                    >
-                      <History className="mr-2" size={16} />
-                      {t("detail.history")}
-                    </Link>
-                  </Button>
-                </div>
-              </div>
-            </section>
-
-            <section className="jb-card p-4">
-              <div className="mb-3 flex items-center justify-between gap-3">
-                <h2 className="text-xs font-bold uppercase tracking-widest text-arena-text-muted">
-                  {t("detail.status")}
-                </h2>
-              </div>
-              <div className="rounded-[14px] border border-arena-primary/35 bg-arena-primary/8 px-4 py-3">
-                <div className="mb-2 text-[10px] font-bold uppercase tracking-[0.14em] text-arena-text-muted">
-                  {t("detail.currentStatus")}
-                </div>
-                <JbBadge status={payment.status as BadgeStatus} animate />
-              </div>
-              <div className="mt-3">
-                <div className="mb-2 text-[10px] font-bold uppercase tracking-[0.14em] text-arena-text-muted">
-                  {t("detail.possibleStatuses")}
-                </div>
-                <div className="flex flex-wrap gap-x-3 gap-y-2">
-                  {PAYMENT_OVERVIEW_STATUSES.map(status => (
-                    <span
-                      key={status}
-                      className={cn(
-                        "inline-flex items-center gap-1.5 text-[10px] font-semibold text-arena-text-muted",
-                        payment.status === status && "text-arena-text",
-                      )}
-                    >
-                      <span
-                        className={cn(
-                          "size-1.5 rounded-full",
-                          STATUS_DOT_CLASS[status],
-                        )}
-                      />
-                      {badgeT(status as BadgeStatus)}
-                    </span>
-                  ))}
-                </div>
-              </div>
-            </section>
-
-            <section className="jb-card px-5 pb-5 pt-4">
-              <h2 className="mb-4 text-xs font-bold uppercase tracking-widest text-arena-text-muted">
-                {t("table.risk")}
-              </h2>
-              <ScoreBar score={payment.score as ScoreLevel} />
-            </section>
-          </aside>
+          <PaymentDetailSidebar badgeT={badgeT} payment={payment} t={t} />
         </div>
       </div>
     </div>
