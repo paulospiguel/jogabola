@@ -15,7 +15,6 @@ import {
   ChevronLeft,
   ChevronRight,
 } from "lucide-react";
-import Link from "next/link";
 import { useTranslations } from "next-intl";
 import { ArenaEmptyState } from "@/components/arena/empty-state";
 import { SegmentedControl } from "@/components/arena/segmented-control";
@@ -39,6 +38,7 @@ import {
   toDate,
 } from "../_utils/calendar-event-utils";
 import { CalendarEventCard } from "./calendar-event-card";
+import { CalendarWeekView } from "./calendar-week-view";
 
 /* ------------------------------------------------------------------ */
 /*  Main component                                                      */
@@ -201,187 +201,18 @@ export function CalendarEvents({
           </div>
         )}
 
-        {/* ============================================================ */}
-        {/*  WEEK VIEW                                                    */}
-        {/* ============================================================ */}
         {viewMode === "week" && (
-          <>
-            {/* Desktop 7-col grid */}
-            <div
-              className={cn(
-                "hidden md:grid grid-cols-7 gap-2 transition-opacity duration-200",
-                isPending && "opacity-40",
-              )}
-            >
-              {weekDays.map(day => {
-                const key = format(day, "yyyy-MM-dd");
-                const dayEvents = eventsByDate[key] ?? [];
-                const today = isToday(day);
-                return (
-                  <div key={key} className="flex flex-col gap-1.5">
-                    <div
-                      className="rounded-xl px-2 py-2 text-center"
-                      style={
-                        today
-                          ? {
-                              backgroundColor:
-                                "color-mix(in srgb, var(--color-arena-primary) 12%, transparent)",
-                              border:
-                                "1px solid color-mix(in srgb, var(--color-arena-primary) 30%, transparent)",
-                            }
-                          : {
-                              backgroundColor: "var(--color-arena-surface)",
-                              border: "1px solid var(--color-arena-border)",
-                            }
-                      }
-                    >
-                      <p
-                        className="text-[10px] font-bold uppercase tracking-wider"
-                        style={{
-                          color: today
-                            ? "var(--color-arena-primary)"
-                            : "var(--color-arena-text-muted)",
-                        }}
-                      >
-                        {format(day, "EEE", { locale: dfLocale })}
-                      </p>
-                      <p
-                        className="text-[17px] font-extrabold"
-                        style={{
-                          color: today
-                            ? "var(--color-arena-primary)"
-                            : "var(--color-arena-text)",
-                        }}
-                      >
-                        {format(day, "d")}
-                      </p>
-                    </div>
-                    {dayEvents.length === 0 ? (
-                      <div className="flex items-center justify-center h-full min-h-15 rounded-xl border border-dashed border-arena-border/50">
-                        <span className="text-[11px] text-arena-text-muted/50">
-                          —
-                        </span>
-                      </div>
-                    ) : (
-                      dayEvents.map(ev => {
-                        const cfg = TYPE_CONFIG[inferType(ev.title)];
-                        return (
-                          <Link
-                            key={ev.id}
-                            href={`/arena/events/${ev.id}`}
-                            className="block rounded-xl px-3 py-2.5 transition-all hover:brightness-110"
-                            style={{
-                              backgroundColor: cfg.bg,
-                              border: `1px solid ${cfg.border}`,
-                            }}
-                          >
-                            <div className="flex items-center gap-1.5 mb-1">
-                              <span
-                                className="w-1.5 h-1.5 rounded-full shrink-0"
-                                style={{ backgroundColor: cfg.dot }}
-                              />
-                              <span
-                                className="text-[11px] font-bold"
-                                style={{ color: cfg.text }}
-                              >
-                                {format(toDate(ev.startsAt), "HH:mm")}
-                              </span>
-                            </div>
-                            <p className="font-bold text-[13px] leading-tight text-arena-text truncate">
-                              {ev.title}
-                            </p>
-                            <p className="text-[11px] text-arena-text-muted truncate mt-0.5">
-                              {ev.location}
-                            </p>
-                          </Link>
-                        );
-                      })
-                    )}
-                  </div>
-                );
-              })}
-            </div>
-
-            {/* Mobile stacked list */}
-            <div
-              className={cn(
-                "md:hidden flex flex-col gap-4 transition-opacity duration-200",
-                isPending && "opacity-40",
-              )}
-            >
-              {weekDays.map(day => {
-                const key = format(day, "yyyy-MM-dd");
-                const dayEvents = eventsByDate[key] ?? [];
-                const today = isToday(day);
-                return (
-                  <div key={key}>
-                    <div
-                      className="flex items-center gap-2 px-4 py-2 rounded-xl mb-2"
-                      style={
-                        today
-                          ? {
-                              backgroundColor:
-                                "color-mix(in srgb, var(--color-arena-primary) 12%, transparent)",
-                              border:
-                                "1px solid color-mix(in srgb, var(--color-arena-primary) 30%, transparent)",
-                            }
-                          : {
-                              backgroundColor: "var(--color-arena-surface)",
-                              border: "1px solid var(--color-arena-border)",
-                            }
-                      }
-                    >
-                      <span
-                        className="text-[15px] font-extrabold"
-                        style={{
-                          color: today
-                            ? "var(--color-arena-primary)"
-                            : "var(--color-arena-text)",
-                        }}
-                      >
-                        {format(day, "d")}
-                      </span>
-                      <span
-                        className="text-[12px] font-bold uppercase tracking-wider"
-                        style={{
-                          color: today
-                            ? "var(--color-arena-primary)"
-                            : "var(--color-arena-text-muted)",
-                        }}
-                      >
-                        {format(day, "EEEE", { locale: dfLocale })}
-                      </span>
-                      {today && (
-                        <span className="ml-auto text-[10px] font-bold text-arena-primary bg-arena-primary/10 rounded-md px-1.5 py-0.5">
-                          {t("today")}
-                        </span>
-                      )}
-                    </div>
-                    {dayEvents.length === 0 ? (
-                      <p className="px-4 text-[12px] text-arena-text-muted/60">
-                        {t("empty")}
-                      </p>
-                    ) : (
-                      <div className="flex flex-col gap-2">
-                        {dayEvents.map(ev => (
-                          <CalendarEventCard
-                            key={ev.id}
-                            session={ev}
-                            statusLabel={getStatusLabel(ev.status)}
-                          />
-                        ))}
-                      </div>
-                    )}
-                  </div>
-                );
-              })}
-            </div>
-          </>
+          <CalendarWeekView
+            dfLocale={dfLocale}
+            emptyLabel={t("empty")}
+            eventsByDate={eventsByDate}
+            getStatusLabel={getStatusLabel}
+            isPending={isPending}
+            todayLabel={t("today")}
+            weekDays={weekDays}
+          />
         )}
 
-        {/* ============================================================ */}
-        {/*  MONTH VIEW                                                   */}
-        {/* ============================================================ */}
         {viewMode === "month" && (
           <div
             className={cn(
