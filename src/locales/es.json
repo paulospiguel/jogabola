@@ -1021,6 +1021,7 @@
     "email": {
       "open": "Enviar email",
       "title": "Email para {name}",
+      "defaultSubject": "Mensaje del equipo",
       "subject": "Asunto",
       "message": "Mensaje",
       "send": "Enviar email",
