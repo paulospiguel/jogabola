@@ -5,24 +5,20 @@ import {
   addMonths,
   addWeeks,
   addYears,
-  eachDayOfInterval,
   endOfDay,
   endOfMonth,
   endOfWeek,
   endOfYear,
   format,
-  getDay,
   isSameMonth,
   isToday,
   startOfMonth,
   startOfWeek,
   startOfYear,
-  subDays,
   subMonths,
   subWeeks,
   subYears,
 } from "date-fns";
-import { enUS, es, fr, type Locale, pt } from "date-fns/locale";
 import {
   Calendar,
   CalendarDays,
@@ -42,7 +38,6 @@ import {
 import type { DateRange } from "react-day-picker";
 import { getCalendarEvents } from "@/actions/match-sessions.actions";
 import { ArenaEmptyState } from "@/components/arena/empty-state";
-import { EventRow } from "@/components/arena/event-row";
 import { SegmentedControl } from "@/components/arena/segmented-control";
 import { Calendar as CalendarPicker } from "@/components/ui/calendar";
 import {
@@ -52,136 +47,20 @@ import {
 } from "@/components/ui/popover";
 import { useTeams } from "@/hooks/use-teams";
 import { cn } from "@/lib/utils";
-
-/* ------------------------------------------------------------------ */
-/*  Types                                                               */
-/* ------------------------------------------------------------------ */
-
-type SessionRow = {
-  id: number;
-  title: string;
-  location: string;
-  startsAt: Date | string;
-  endsAt: Date | string | null;
-  capacity: number | null;
-  priceCents: number | null;
-  currency: string;
-  status?: "scheduled" | "confirmed" | "cancelled";
-};
-
-type EventType = "game" | "training" | "event";
-type ViewMode = "week" | "month" | "year" | "range";
-
-function inferType(title: string): EventType {
-  const lower = title.toLowerCase();
-  if (
-    /treino|training|treinar|pré-época|pre-season|tático|preparação/.test(lower)
-  )
-    return "training";
-  if (
-    /jogo|game|partida|match|vs\.?|contra|cup|liga|torneio|amigável/.test(lower)
-  )
-    return "game";
-  return "event";
-}
-
-const TYPE_CONFIG: Record<
+import type {
   EventType,
-  { bg: string; border: string; text: string; dot: string }
-> = {
-  game: {
-    bg: "color-mix(in srgb, var(--color-arena-primary) 7%, transparent)",
-    border: "color-mix(in srgb, var(--color-arena-primary) 28%, transparent)",
-    text: "var(--color-arena-primary)",
-    dot: "var(--color-arena-primary)",
-  },
-  training: {
-    bg: "color-mix(in srgb, var(--color-arena-info) 7%, transparent)",
-    border: "color-mix(in srgb, var(--color-arena-info) 28%, transparent)",
-    text: "var(--color-arena-info)",
-    dot: "var(--color-arena-info)",
-  },
-  event: {
-    bg: "color-mix(in srgb, var(--color-arena-warning) 7%, transparent)",
-    border: "color-mix(in srgb, var(--color-arena-warning) 28%, transparent)",
-    text: "var(--color-arena-warning)",
-    dot: "var(--color-arena-warning)",
-  },
-};
-
-const DATE_LOCALES: Record<string, Locale> = { pt, en: enUS, es, fr };
-
-/* ------------------------------------------------------------------ */
-/*  Helpers                                                             */
-/* ------------------------------------------------------------------ */
-
-function toDate(d: Date | string): Date {
-  return typeof d === "string" ? new Date(d) : d;
-}
-
-function formatDuration(
-  start: Date | string,
-  end: Date | string | null,
-): string {
-  if (!end) return format(toDate(start), "HH:mm");
-  return `${format(toDate(start), "HH:mm")} – ${format(toDate(end), "HH:mm")}`;
-}
-
-function getWeekDays(weekStart: Date): Date[] {
-  return Array.from({ length: 7 }, (_, i) => {
-    const d = new Date(weekStart);
-    d.setDate(d.getDate() + i);
-    return d;
-  });
-}
-
-function getMondayOffset(date: Date): number {
-  const day = getDay(date);
-  return day === 0 ? 6 : day - 1;
-}
-
-function getMonthGrid(monthStart: Date): Date[] {
-  const start = startOfMonth(monthStart);
-  const end = endOfMonth(monthStart);
-  const days = eachDayOfInterval({ start, end });
-  const offset = getMondayOffset(days[0]);
-  const prefix = Array.from({ length: offset }, (_, i) =>
-    subDays(days[0], offset - i),
-  );
-  const total = prefix.length + days.length;
-  const remainder = total % 7;
-  const suffix =
-    remainder > 0
-      ? Array.from({ length: 7 - remainder }, (_, i) =>
-          addDays(days[days.length - 1], i + 1),
-        )
-      : [];
-  return [...prefix, ...days, ...suffix];
-}
-
-/* ------------------------------------------------------------------ */
-/*  Sub-components                                                      */
-/* ------------------------------------------------------------------ */
-
-function EventCard({
-  session,
-  statusLabel,
-}: {
-  session: SessionRow;
-  statusLabel?: string;
-}) {
-  const type = inferType(session.title);
-  return (
-    <EventRow
-      href={`/arena/events/${session.id}`}
-      title={session.title}
-      type={type}
-      timeLabel={formatDuration(session.startsAt, session.endsAt)}
-      location={session.location}
-      statusLabel={statusLabel}
-    />
-  );
-}
+  SessionRow,
+  ViewMode,
+} from "../_types/calendar-events";
+import {
+  DATE_LOCALES,
+  getMonthGrid,
+  getWeekDays,
+  inferType,
+  TYPE_CONFIG,
+  toDate,
+} from "../_utils/calendar-event-utils";
+import { CalendarEventCard } from "./calendar-event-card";
 
 /* ------------------------------------------------------------------ */
 /*  Main component                                                      */
@@ -199,7 +78,7 @@ export function CalendarEvents({
   const t = useTranslations("arenaCalendar");
   const locale = useLocale();
   const { activeTeamId } = useTeams();
-  const dfLocale = DATE_LOCALES[locale] ?? pt;
+  const dfLocale = DATE_LOCALES[locale] ?? DATE_LOCALES.pt;
   const [isPending, startTransition] = useTransition();
   const fetchRequestId = useRef(0);
 
@@ -619,7 +498,7 @@ export function CalendarEvents({
                     ) : (
                       <div className="flex flex-col gap-2">
                         {dayEvents.map(ev => (
-                          <EventCard
+                          <CalendarEventCard
                             key={ev.id}
                             session={ev}
                             statusLabel={getStatusLabel(ev.status)}
@@ -736,7 +615,7 @@ export function CalendarEvents({
                         toDate(b.startsAt).getTime(),
                     )
                     .map(ev => (
-                      <EventCard
+                      <CalendarEventCard
                         key={ev.id}
                         session={ev}
                         statusLabel={getStatusLabel(ev.status)}
@@ -890,7 +769,7 @@ export function CalendarEvents({
                       </div>
                       <div className="flex flex-col gap-2">
                         {dayEvents.map(ev => (
-                          <EventCard
+                          <CalendarEventCard
                             key={ev.id}
                             session={ev}
                             statusLabel={getStatusLabel(ev.status)}
