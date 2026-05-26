@@ -1,15 +1,8 @@
 "use client";
 
-import { Calendar, ChevronLeft, ChevronRight } from "lucide-react";
+import { Calendar } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { ArenaEmptyState } from "@/components/arena/empty-state";
-import { SegmentedControl } from "@/components/arena/segmented-control";
-import { Calendar as CalendarPicker } from "@/components/ui/calendar";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
 import { useCalendarEventsState } from "../_hooks/use-calendar-events-state";
 import type {
   EventType,
@@ -17,6 +10,7 @@ import type {
   ViewMode,
 } from "../_types/calendar-events";
 import { TYPE_CONFIG } from "../_utils/calendar-event-utils";
+import { CalendarControls } from "./calendar-controls";
 import { CalendarMonthView } from "./calendar-month-view";
 import { CalendarRangeView } from "./calendar-range-view";
 import { CalendarWeekView } from "./calendar-week-view";
@@ -78,110 +72,25 @@ export function CalendarEvents({
           </div>
         </header>
 
-        {/* View mode tabs */}
-        <div className="mb-4 flex">
-          <SegmentedControl
-            ariaLabel={t("views.ariaLabel")}
-            onChange={switchMode}
-            options={viewOptions}
-            value={viewMode}
-          />
-        </div>
-
-        {/* Nav bar — week / month / year */}
-        {viewMode !== "range" && (
-          <div
-            className="flex items-center justify-between gap-3 rounded-xl px-4 py-3 mb-5"
-            style={{
-              backgroundColor: "var(--color-arena-surface)",
-              border: "1px solid var(--color-arena-border)",
-            }}
-          >
-            <button
-              type="button"
-              onClick={() => navigate("prev")}
-              disabled={isPending}
-              className="flex h-8 w-8 items-center justify-center rounded-lg text-arena-text-sec hover:bg-arena-surface-el hover:text-arena-text transition-colors disabled:opacity-40"
-              aria-label={t("nav.prev")}
-            >
-              <ChevronLeft size={18} />
-            </button>
-            <div className="flex flex-col items-center gap-0.5">
-              <span className="text-[13px] font-bold text-arena-text">
-                {navLabel}
-              </span>
-              <span className="text-[11px] text-arena-text-muted">
-                {totalEvents === 0
-                  ? t("nav.noEvents")
-                  : t("nav.eventCount", { count: totalEvents })}
-              </span>
-            </div>
-            <button
-              type="button"
-              onClick={() => navigate("next")}
-              disabled={isPending}
-              className="flex h-8 w-8 items-center justify-center rounded-lg text-arena-text-sec hover:bg-arena-surface-el hover:text-arena-text transition-colors disabled:opacity-40"
-              aria-label={t("nav.next")}
-            >
-              <ChevronRight size={18} />
-            </button>
-          </div>
-        )}
-
-        {/* Range picker trigger */}
-        {viewMode === "range" && (
-          <div className="mb-5 flex flex-col gap-2">
-            <Popover open={rangeOpen} onOpenChange={setRangeOpen}>
-              <PopoverTrigger asChild>
-                <button
-                  type="button"
-                  className="flex items-center gap-2.5 rounded-xl px-4 py-3 text-sm font-semibold transition-colors hover:bg-arena-surface-el w-full"
-                  style={{
-                    backgroundColor: "var(--color-arena-surface)",
-                    border: "1px solid var(--color-arena-border)",
-                  }}
-                >
-                  <Calendar size={16} className="text-arena-primary shrink-0" />
-                  <span className="text-arena-text flex-1 text-left">
-                    {customRange?.from && customRange?.to
-                      ? navLabel
-                      : t("nav.rangePlaceholder")}
-                  </span>
-                  <ChevronRight size={14} className="text-arena-text-muted" />
-                </button>
-              </PopoverTrigger>
-              <PopoverContent
-                className="w-auto p-0"
-                align="start"
-                style={{
-                  backgroundColor: "var(--color-arena-surface)",
-                  border: "1px solid var(--color-arena-border)",
-                }}
-              >
-                <CalendarPicker
-                  mode="range"
-                  selected={customRange}
-                  onSelect={range => {
-                    setCustomRange(range);
-                    if (range?.from && range?.to) {
-                      setRangeOpen(false);
-                    }
-                  }}
-                  numberOfMonths={2}
-                  weekStartsOn={1}
-                  className="p-3"
-                />
-              </PopoverContent>
-            </Popover>
-            {customRange?.from && customRange?.to && (
-              <p className="text-[11px] text-arena-text-muted px-1">
-                {totalEvents === 0
-                  ? t("nav.noEvents")
-                  : t("nav.eventCount", { count: totalEvents })}
-              </p>
-            )}
-          </div>
-        )}
+        <CalendarControls
+          ariaLabel={t("views.ariaLabel")}
+          customRange={customRange}
+          eventCountLabel={t("nav.eventCount", { count: totalEvents })}
+          isPending={isPending}
+          navLabel={navLabel}
+          navigate={navigate}
+          nextLabel={t("nav.next")}
+          noEventsLabel={t("nav.noEvents")}
+          onRangeChange={setCustomRange}
+          onViewModeChange={switchMode}
+          prevLabel={t("nav.prev")}
+          rangeOpen={rangeOpen}
+          rangePlaceholder={t("nav.rangePlaceholder")}
+          setRangeOpen={setRangeOpen}
+          totalEvents={totalEvents}
+          viewMode={viewMode}
+          viewOptions={viewOptions}
+        />
 
         {viewMode === "week" && (
           <CalendarWeekView
