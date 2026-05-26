@@ -1,22 +1,19 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { CheckCircle2, ListPlus, Plus, Send, Users2 } from "lucide-react";
+import { Plus, Users2 } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useEffect, useMemo, useState, useTransition } from "react";
 import { sendRosterPlayerEmail } from "@/actions/teams.actions";
 import { AddPlayerSheet } from "@/components/arena/add-player-sheet";
-import { JbAvatar } from "@/components/arena/avatar";
-import { BottomSheet } from "@/components/arena/bottom-sheet";
 import { Cta } from "@/components/arena/cta";
 import Loading from "@/components/loading";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
 import type { SquadPlayer } from "@/hooks/use-squad";
 import { useSquad } from "@/hooks/use-squad";
 import { useTeams } from "@/hooks/use-teams";
-import { cn } from "@/lib/utils";
+import { SquadEmailSheet } from "./squad-email-sheet";
 import { type SquadFilterKey, SquadFilterPills } from "./squad-filter-pills";
+import { SquadGroupSheet } from "./squad-group-sheet";
 import { SquadGroupsStrip } from "./squad-groups-strip";
 import { SquadPlayerRow } from "./squad-player-row";
 import { SquadSearchBar } from "./squad-search-bar";
@@ -153,6 +150,19 @@ export function SquadClient({ userId }: { userId: string }) {
     setGroupOpen(false);
   }
 
+  function closeGroupSheet() {
+    setGroupOpen(false);
+    setEditingGroupId(null);
+  }
+
+  function toggleGroupPlayer(playerId: string) {
+    setGroupSelection(current =>
+      current.includes(playerId)
+        ? current.filter(id => id !== playerId)
+        : [...current, playerId],
+    );
+  }
+
   function openEmail(player: SquadPlayer) {
     setEmailPlayer(player);
     setEmailSubject("Mensagem da equipa");
@@ -206,118 +216,34 @@ export function SquadClient({ userId }: { userId: string }) {
       )}
 
       {emailPlayer && (
-        <BottomSheet
-          title={t("email.title", { name: emailPlayer.name })}
+        <SquadEmailSheet
+          emailFeedback={emailFeedback}
+          emailLimit={emailLimit}
+          emailMessage={emailMessage}
+          emailPlayer={emailPlayer}
+          emailSubject={emailSubject}
+          emailUsage={emailUsage}
+          isSendingEmail={isSendingEmail}
           onClose={() => setEmailPlayer(null)}
-        >
-          <div className="space-y-3 overflow-auto">
-            <div className="rounded-[14px] border border-arena-border bg-arena-surface px-3 py-2 text-[12px] text-arena-text-sec">
-              {Number.isFinite(emailLimit)
-                ? t("email.usage", { used: emailUsage, limit: emailLimit })
-                : t("email.unlimited")}
-            </div>
-            <Input
-              value={emailSubject}
-              onChange={e => setEmailSubject(e.target.value)}
-              placeholder={t("email.subject")}
-              className="border-arena-border bg-arena-surface text-arena-text"
-            />
-            <Textarea
-              value={emailMessage}
-              onChange={e => setEmailMessage(e.target.value)}
-              placeholder={t("email.message")}
-              className="min-h-32 border-arena-border bg-arena-surface text-arena-text"
-            />
-            {emailFeedback && (
-              <div className="rounded-[12px] border border-arena-border bg-arena-bg px-3 py-2 text-[12px] text-arena-text-sec">
-                {emailFeedback}
-              </div>
-            )}
-            <Cta
-              variant="primary"
-              size="md"
-              fullWidth
-              onClick={sendEmailToPlayer}
-              disabled={
-                isSendingEmail ||
-                !emailSubject.trim() ||
-                !emailMessage.trim() ||
-                emailUsage >= emailLimit
-              }
-            >
-              <Send size={15} />
-              {t("email.send")}
-            </Cta>
-          </div>
-        </BottomSheet>
+          onEmailMessageChange={setEmailMessage}
+          onEmailSubjectChange={setEmailSubject}
+          onSend={sendEmailToPlayer}
+          t={t}
+        />
       )}
 
       {groupOpen && (
-        <BottomSheet
-          title={
-            editingGroupId ? t("groups.editTitle") : t("groups.createTitle")
-          }
-          onClose={() => {
-            setGroupOpen(false);
-            setEditingGroupId(null);
-          }}
-        >
-          <div className="space-y-3 overflow-auto">
-            <Input
-              value={groupName}
-              onChange={e => setGroupName(e.target.value)}
-              placeholder={t("groups.namePlaceholder")}
-              className="border-arena-border bg-arena-surface text-arena-text"
-            />
-            <div className="max-h-72 space-y-2 overflow-auto">
-              {players.map(player => {
-                const checked = groupSelection.includes(player.id);
-                return (
-                  <button
-                    key={player.id}
-                    type="button"
-                    onClick={() =>
-                      setGroupSelection(current =>
-                        checked
-                          ? current.filter(id => id !== player.id)
-                          : [...current, player.id],
-                      )
-                    }
-                    className={cn(
-                      "flex w-full items-center gap-3 rounded-[12px] border px-3 py-2 text-left",
-                      checked
-                        ? "border-arena-primary/50 bg-arena-primary/10"
-                        : "border-arena-border bg-arena-surface",
-                    )}
-                  >
-                    <JbAvatar
-                      image={player.image}
-                      name={player.name}
-                      size={32}
-                      id={player.id}
-                    />
-                    <span className="min-w-0 flex-1 truncate text-sm font-semibold text-arena-text">
-                      {player.name}
-                    </span>
-                    {checked && (
-                      <CheckCircle2 size={16} className="text-arena-primary" />
-                    )}
-                  </button>
-                );
-              })}
-            </div>
-            <Cta
-              variant="primary"
-              size="md"
-              fullWidth
-              onClick={saveGroup}
-              disabled={!groupName.trim() || groupSelection.length === 0}
-            >
-              <ListPlus size={15} />
-              {editingGroupId ? t("groups.update") : t("groups.create")}
-            </Cta>
-          </div>
-        </BottomSheet>
+        <SquadGroupSheet
+          editing={Boolean(editingGroupId)}
+          groupName={groupName}
+          groupSelection={groupSelection}
+          onClose={closeGroupSheet}
+          onGroupNameChange={setGroupName}
+          onSave={saveGroup}
+          onTogglePlayer={toggleGroupPlayer}
+          players={players}
+          t={t}
+        />
       )}
 
       <motion.div
