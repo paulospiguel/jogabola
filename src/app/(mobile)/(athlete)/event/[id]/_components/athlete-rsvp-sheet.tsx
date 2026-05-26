@@ -36,6 +36,7 @@ import {
   ResendTimer,
   SubmitBtn,
 } from "./athlete-rsvp-fields";
+import { LoginEmailStep, LoginOtpStep } from "./athlete-rsvp-login-steps";
 
 type Step =
   | "choose"
@@ -351,60 +352,40 @@ export function AthleteRsvpSheet({
 
         {/* STEP: login-email */}
         {step === "login-email" && (
-          <form onSubmit={handleLoginSendOTP} className="flex flex-col gap-4">
-            <BackButton
-              label={t("back")}
-              onClick={() => {
-                clearError();
-                setStep("choose");
-              }}
-            />
-            <p className="text-[13px] text-arena-text-muted">
-              {t("loginEmailHint")}
-            </p>
-            <EmailInput value={loginEmail} onChange={setLoginEmail} />
-            <SubmitBtn loading={loading}>
-              {t("receiveCode")} <ArrowRight size={16} />
-            </SubmitBtn>
-          </form>
+          <LoginEmailStep
+            loading={loading}
+            loginEmail={loginEmail}
+            onBack={() => {
+              clearError();
+              setStep("choose");
+            }}
+            onLoginEmailChange={setLoginEmail}
+            onSubmit={handleLoginSendOTP}
+          />
         )}
 
         {/* STEP: login-otp */}
         {step === "login-otp" && (
-          <form onSubmit={handleLoginVerifyOTP} className="flex flex-col gap-4">
-            <BackButton
-              label={t("back")}
-              onClick={() => {
-                clearError();
-                setStep("login-email");
-              }}
-            />
-            <p className="text-[13px] text-arena-text-muted">
-              {t("codeSentTo")}{" "}
-              <span className="font-semibold text-arena-text-sec">
-                {loginEmail}
-              </span>
-            </p>
-            <OtpField value={loginOtp} onChange={setLoginOtp} />
-            <SubmitBtn loading={loading}>
-              <CheckIcon size={18} color="currentColor" />
-              {t("loginAndConfirm")}
-            </SubmitBtn>
-            <ResendTimer
-              loading={loading}
-              resendCodeLabel={t("resendCode")}
-              resendInLabel={seconds => t("resendIn", { seconds })}
-              onResend={async () => {
-                clearError();
-                const result = await requestAuthSignInOTP(loginEmail);
-                if (!result.success) {
-                  setError(
-                    getGuestOtpErrorMessage(t, result, t("errors.resend")),
-                  );
-                }
-              }}
-            />
-          </form>
+          <LoginOtpStep
+            loading={loading}
+            loginEmail={loginEmail}
+            loginOtp={loginOtp}
+            onBack={() => {
+              clearError();
+              setStep("login-email");
+            }}
+            onLoginOtpChange={setLoginOtp}
+            onResend={async () => {
+              clearError();
+              const result = await requestAuthSignInOTP(loginEmail);
+              if (!result.success) {
+                setError(
+                  getGuestOtpErrorMessage(t, result, t("errors.resend")),
+                );
+              }
+            }}
+            onSubmit={handleLoginVerifyOTP}
+          />
         )}
 
         {/* STEP: guest-info */}
