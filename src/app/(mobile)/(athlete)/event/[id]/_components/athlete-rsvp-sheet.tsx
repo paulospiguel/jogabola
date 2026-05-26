@@ -24,6 +24,10 @@ import { signIn } from "@/lib/auth-client";
 import { cn } from "@/lib/utils";
 import type { PaymentMethod, TeamPaymentConfig } from "@/types/payments";
 import {
+  getAttendanceErrorMessage,
+  getGuestOtpErrorMessage,
+} from "../_utils/athlete-rsvp-errors";
+import {
   BackButton,
   EmailInput,
   OtpField,
@@ -49,51 +53,6 @@ interface AthleteRsvpSheetProps {
   /** When true the user is already confirmed — skip confirmUserAttendance and just fetch reservationId */
   resumePayment?: boolean;
   guestReservationId?: number | null;
-}
-
-const EMAIL_ERROR_CODES = new Set([
-  "RESEND_API_KEY_MISSING",
-  "RESEND_API_KEY_INVALID",
-  "RESEND_FROM_INVALID",
-  "RESEND_DOMAIN_NOT_VERIFIED",
-  "RESEND_DEV_DOMAIN_RESTRICTED",
-  "EMAIL_SEND_FAILED",
-]);
-
-function getGuestOtpErrorMessage(
-  t: ReturnType<typeof useTranslations>,
-  res: { error?: string; errorCode?: string },
-  fallback: string,
-  rosterPriorityHours?: number,
-) {
-  if (res.errorCode && EMAIL_ERROR_CODES.has(res.errorCode)) {
-    return t(`errors.email.${res.errorCode}`);
-  }
-
-  if (res.errorCode === "ROSTER_PRIORITY_ACTIVE") {
-    return t("errors.rosterPriority", { hours: rosterPriorityHours || 0 });
-  }
-
-  if (res.error === "EVENT_HAS_FINES") {
-    return t("errors.hasFines");
-  }
-
-  return res.error || fallback;
-}
-
-function getAttendanceErrorMessage(
-  t: ReturnType<typeof useTranslations>,
-  error: string | undefined,
-  fallback: string,
-  rosterPriorityHours?: number,
-) {
-  if (error === "EVENT_ROSTER_ONLY") return t("errors.rosterOnly");
-  if (error === "EVENT_CANCELLED") return t("errors.eventCancelled");
-  if (error === "EVENT_ROSTER_PRIORITY") {
-    return t("errors.rosterPriority", { hours: rosterPriorityHours || 0 });
-  }
-  if (error === "EVENT_HAS_FINES") return t("errors.hasFines");
-  return error || fallback;
 }
 
 export function AthleteRsvpSheet({
