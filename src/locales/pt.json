@@ -196,6 +196,11 @@
         "PLAYER_NOT_IN_TEAM": "Este atleta já não pertence a este plantel.",
         "UNKNOWN_ERROR": "Não foi possível remover o atleta. Tenta novamente."
       }
+    },
+    "attendanceStatus": {
+      "confirmed": "Confirmado",
+      "refused": "Recusado",
+      "reserve": "Reserva"
     }
   },
   "arenaAddPlayer": {
@@ -2113,7 +2118,8 @@
       "editProfileSub": "Nome, foto e contactos",
       "proPlan": "Plano Pro",
       "proPlanSub": "3/3 equipas · €5/mês",
-      "logout": "Terminar sessão"
+      "logout": "Terminar sessão",
+      "logoutConfirm": "Deseja realmente terminar a sessão?"
     },
     "notificationsSheet": {
       "title": "Notificações",

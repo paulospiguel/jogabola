@@ -9,7 +9,7 @@ export const INITIAL_TEAMS = [
   {
     id: 1,
     name: "FC Bairro Alto",
-    role: "Gestor",
+    role: "manager",
     league: "Liga Regional de Lisboa",
     color: "#7CFF4F",
     stats: [
@@ -23,7 +23,7 @@ export const INITIAL_TEAMS = [
   {
     id: 2,
     name: "Sporting Bairro B",
-    role: "Staff",
+    role: "coach",
     league: "Distrital de Lisboa",
     color: "#38BDF8",
     stats: [
@@ -37,7 +37,7 @@ export const INITIAL_TEAMS = [
   {
     id: 3,
     name: "Os Amigos SC",
-    role: "Gestor",
+    role: "manager",
     league: "Liga Amigos",
     color: "#FACC15",
     stats: [

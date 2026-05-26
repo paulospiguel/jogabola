@@ -3,7 +3,7 @@
 import { motion } from "framer-motion";
 import { Calendar, Clock, Compass, MapPin, Plus, Shield } from "lucide-react";
 import Link from "next/link";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { useMemo, useState } from "react";
 import { CreateEventSheet } from "@/components/arena/create-event-sheet";
 import { Cta } from "@/components/arena/cta";
@@ -78,6 +78,7 @@ const cardVariants = {
 
 function EventCard({ event, index = 0 }: { event: EventView; index?: number }) {
   const t = useTranslations("arenaEvents");
+  const locale = useLocale();
   const isGame =
     event.type === "match" ||
     event.type === "training" ||
@@ -103,24 +104,8 @@ function EventCard({ event, index = 0 }: { event: EventView; index?: number }) {
   const isEmpate = event.title.toLowerCase().includes("sporting");
   const scoreText = isGame ? (isEmpate ? "E 1-1" : "V 2-1") : "✓ CONCLUÍDO";
 
-  // Strict Portuguese PT-PT localized date/time formatting
-  const days = ["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sáb"];
-  const months = [
-    "Jan",
-    "Fev",
-    "Mar",
-    "Abr",
-    "Mai",
-    "Jun",
-    "Jul",
-    "Ago",
-    "Set",
-    "Out",
-    "Nov",
-    "Dez",
-  ];
   const dateObj = new Date(event.startDate);
-  const displayDate = `${days[dateObj.getDay()]}, ${dateObj.getDate()} ${months[dateObj.getMonth()]}`;
+  const displayDate = dateObj.toLocaleDateString(locale, { weekday: "short", day: "numeric", month: "short" });
   const displayTime = `${String(dateObj.getHours()).padStart(2, "0")}h${String(dateObj.getMinutes()).padStart(2, "0")}`;
 
   return (

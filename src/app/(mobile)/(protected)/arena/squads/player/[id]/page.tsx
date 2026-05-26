@@ -184,19 +184,20 @@ function HistoryRow({
   item: { id: number; title: string; startsAt: string | Date; status: string };
   index: number;
 }) {
+  const t = useTranslations("arenaAthleteProfile");
   const statusMap: Record<string, { label: string; icon: React.ReactNode; cls: string }> = {
     confirmed: {
-      label: "Confirmado",
+      label: t("attendanceStatus.confirmed"),
       icon: <Check size={10} strokeWidth={2.5} />,
       cls: "border-arena-success/25 bg-arena-success/10 text-arena-success",
     },
     refused: {
-      label: "Recusado",
+      label: t("attendanceStatus.refused"),
       icon: <X size={10} strokeWidth={2.5} />,
       cls: "border-arena-danger/25 bg-arena-danger/10 text-arena-danger",
     },
     reserve: {
-      label: "Reserva",
+      label: t("attendanceStatus.reserve"),
       icon: <Clock size={10} strokeWidth={2.5} />,
       cls: "border-arena-warning/25 bg-arena-warning/10 text-arena-warning",
     },

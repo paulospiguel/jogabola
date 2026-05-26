@@ -20,7 +20,7 @@ export function ProfileMenu({ onOpenSheet }: ProfileMenuProps) {
   const t = useTranslations("profilePage");
 
   const handleLogout = () => {
-    if (confirm("Deseja realmente terminar a sessão?")) {
+    if (confirm(t("menu.logoutConfirm"))) {
       window.location.href = "/auth/sign-out";
     }
   };

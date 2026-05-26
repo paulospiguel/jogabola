@@ -196,7 +196,12 @@
     },
     "notValidated": "Athlète non validé",
     "notValidatedDesc": "Cet athlète n'a pas encore créé de compte Jogabola. Les statistiques et le profil complet seront disponibles après validation.",
-    "pendingValidation": "Validation en attente"
+    "pendingValidation": "Validation en attente",
+    "attendanceStatus": {
+      "confirmed": "Confirmé",
+      "refused": "Refusé",
+      "reserve": "Réserviste"
+    }
   },
   "arenaAddPlayer": {
     "actions": {
@@ -2133,7 +2138,8 @@
       "editProfileSub": "Nom, photo et contacts",
       "proPlan": "Plan Pro",
       "proPlanSub": "3/3 équipes · 5 €/mois",
-      "logout": "Se déconnecter"
+      "logout": "Se déconnecter",
+      "logoutConfirm": "Voulez-vous vraiment vous déconnecter?"
     },
     "notificationsSheet": {
       "title": "Notifications",

@@ -196,7 +196,12 @@
     },
     "notValidated": "Athlete not validated",
     "notValidatedDesc": "This athlete has not yet created a Jogabola account. Full stats and profile will be available after validation.",
-    "pendingValidation": "Validation pending"
+    "pendingValidation": "Validation pending",
+    "attendanceStatus": {
+      "confirmed": "Confirmed",
+      "refused": "Declined",
+      "reserve": "Reserve"
+    }
   },
   "arenaAddPlayer": {
     "actions": {
@@ -2133,7 +2138,8 @@
       "editProfileSub": "Name, photo, and contacts",
       "proPlan": "Pro Plan",
       "proPlanSub": "3/3 teams · €5/month",
-      "logout": "Log out"
+      "logout": "Log out",
+      "logoutConfirm": "Do you really want to sign out?"
     },
     "notificationsSheet": {
       "title": "Notifications",

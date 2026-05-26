@@ -26,6 +26,7 @@ interface TeamEntry {
 
 export function ProfileTeams() {
   const t = useTranslations("profilePage");
+  const tSquad = useTranslations("arenaSquad");
   const [teamsList, setTeamsList] = useState<TeamEntry[]>(
     INITIAL_TEAMS.map(t => ({ ...t })),
   );
@@ -82,12 +83,12 @@ export function ProfileTeams() {
                     <span
                       className={cn(
                         "text-[9px] uppercase font-bold px-1.5 py-0.25 rounded",
-                        team.role === "Gestor"
+                        team.role === "manager"
                           ? "bg-arena-primary/15 text-arena-primary border border-arena-primary/20"
                           : "bg-arena-info/15 text-arena-info border border-arena-info/20",
                       )}
                     >
-                      {team.role}
+                      {tSquad.has(`roles.${team.role}`) ? tSquad(`roles.${team.role}`) : team.role}
                     </span>
                   </div>
                   <span className="text-xs text-arena-text-muted block mt-0.5 truncate">
