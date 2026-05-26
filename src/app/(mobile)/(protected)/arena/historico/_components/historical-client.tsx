@@ -4,9 +4,9 @@ import { motion } from "framer-motion";
 import { useTranslations } from "next-intl";
 import { ScreenHeader } from "@/components/arena/screen-header";
 import { cn } from "@/lib/utils";
-import { RECENT_RESULTS, RESULT_STYLE, SEASONS } from "../_fixtures/historico-mock";
+import { RECENT_RESULTS, RESULT_STYLE, SEASONS } from "../_fixtures/historical-mock";
 
-export function HistoricoClient() {
+export function HistoricalClient() {
   const t = useTranslations("arenaHistorico");
 
   return (

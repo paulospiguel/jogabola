@@ -1,5 +1,5 @@
-import { HistoricoClient } from "./_components/historico-client";
+import { HistoricalClient } from "./_components/historical-client";
 
-export default function HistoricoPage() {
-  return <HistoricoClient />;
+export default function HistoricalPage() {
+  return <HistoricalClient />;
 }
