@@ -111,12 +111,13 @@ export function EventDetail({
     }, 600);
   };
 
-  const TABS = [
-    { id: "roster", label: "Conv.", icon: List },
-    { id: "teams", label: "Equipas", icon: Users },
-    { id: "location", label: "Local", icon: MapPin },
-    { id: "chat", label: "Chat", icon: MessageSquare },
-  ] as const;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const TABS: { id: Tab; label: string; icon: any }[] = [
+    { id: "roster", label: t("tabs.roster"), icon: List },
+    { id: "teams", label: t("tabs.teams"), icon: Users },
+    { id: "location", label: t("tabs.location"), icon: MapPin },
+    { id: "chat", label: t("tabs.chat"), icon: MessageSquare },
+  ];
 
   return (
     <motion.div
