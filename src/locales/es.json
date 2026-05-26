@@ -349,7 +349,12 @@
       "noPlayers": "Sin atletas convocados aún."
     },
     "playersCount": "{count} jugadores",
-    "steps": ["Tipo de evento", "Detalles", "Convocar", "Confirmar"],
+    "steps": [
+      "Tipo de evento",
+      "Detalles",
+      "Convocar",
+      "Confirmar"
+    ],
     "success": "¡Evento creado!",
     "successSubtitle": "Convocatoria enviada con éxito.",
     "types": {
@@ -1872,7 +1877,17 @@
       "eyebrow": "Avisos",
       "title": "Notificaciones"
     },
-    "unreadCount": "{count, plural, =1 {Una notificación sin leer} other {# notificaciones sin leer}}"
+    "unreadCount": "{count, plural, =1 {Una notificación sin leer} other {# notificaciones sin leer}}",
+    "filters": {
+      "all": "Todas",
+      "confirmed": "Confirm.",
+      "declined": "Rechazos",
+      "system": "Sistema"
+    },
+    "emptyFilter": {
+      "title": "Sin notificaciones en esta categoría",
+      "description": "Prueba otra categoría o espera nuevas notificaciones."
+    }
   },
   "payment": {
     "required": "Pago requerido",
@@ -2143,7 +2158,12 @@
       },
       "deviceActive": "activa",
       "addedOn": "Añadida el {date}",
-      "remove": "Eliminar"
+      "remove": "Eliminar",
+      "currentSession": "Actual",
+      "twoFactor": {
+        "title": "Autenticación de Dos Factores",
+        "description": "Configura un código PIN adicional para aumentar la protección de tu cuenta."
+      }
     }
   },
   "searchResults": {
@@ -2659,8 +2679,10 @@
         "RESEND_DOMAIN_NOT_VERIFIED": "El dominio remitente aún no está verificado en Resend.",
         "RESEND_DEV_DOMAIN_RESTRICTED": "El dominio resend.dev solo envía al email propietario de la cuenta Resend. Verifica tu propio dominio para enviar a invitados.",
         "EMAIL_SEND_FAILED": "No se pudo enviar el PIN por email. Revisa el email o inténtalo de nuevo."
-      }
-    }
+      },
+      "loadPayment": "Error al cargar el pago"
+    },
+    "namePlaceholder": "Nombre completo"
   },
   "pricingPage": {
     "eyebrow": "Planes",
@@ -2963,6 +2985,21 @@
       "liga": "Liga",
       "marcadores": "Goleadores",
       "assist": "Asistencias"
+    },
+    "table": {
+      "team": "Equipo",
+      "headers": {
+        "j": "J",
+        "v": "V",
+        "e": "E",
+        "d": "D",
+        "pts": "Pts"
+      },
+      "myTeamBadge": "TÚ"
+    },
+    "stats": {
+      "goals": "goles",
+      "assists": "asist."
     }
   },
   "arenaHistorico": {
@@ -2978,6 +3015,10 @@
       "v": "V",
       "e": "E",
       "d": "D"
+    },
+    "seasonStatus": {
+      "active": "En curso",
+      "finished": "Finalizada"
     }
   }
 }

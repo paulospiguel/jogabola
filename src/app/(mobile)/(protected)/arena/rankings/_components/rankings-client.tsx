@@ -54,9 +54,9 @@ export function RankingsClient() {
         <div className="px-4 py-3.5">
           <div className="mb-1.5 flex px-3.5 text-[10px] font-bold uppercase tracking-[0.6px] text-arena-text-muted">
             <span className="w-6">#</span>
-            <span className="flex-1">Equipa</span>
-            {["J", "V", "E", "D", "Pts"].map(h => (
-              <span key={h} className="w-7 text-center">{h}</span>
+            <span className="flex-1">{t("table.team")}</span>
+            {(["j", "v", "e", "d", "pts"] as const).map(h => (
+              <span key={h} className="w-7 text-center">{t(`table.headers.${h}`)}</span>
             ))}
           </div>
 
@@ -89,7 +89,7 @@ export function RankingsClient() {
                   </span>
                   {row.own && (
                     <span className="shrink-0 rounded-[3px] bg-arena-primary/20 px-1 py-px text-[9px] font-extrabold text-arena-primary">
-                      TU
+                      {t("table.myTeamBadge")}
                     </span>
                   )}
                 </div>
@@ -125,7 +125,7 @@ export function RankingsClient() {
               </div>
               <div className="text-right">
                 <div className="font-sora text-[18px] font-extrabold text-arena-text">{p.goals}</div>
-                <div className="text-[9px] text-arena-text-muted">golos</div>
+                <div className="text-[9px] text-arena-text-muted">{t("stats.goals")}</div>
               </div>
             </motion.div>
           ))}
@@ -152,7 +152,7 @@ export function RankingsClient() {
               </div>
               <div className="text-right">
                 <div className="font-sora text-[18px] font-extrabold text-arena-text">{p.assists}</div>
-                <div className="text-[9px] text-arena-text-muted">assist.</div>
+                <div className="text-[9px] text-arena-text-muted">{t("stats.assists")}</div>
               </div>
             </motion.div>
           ))}

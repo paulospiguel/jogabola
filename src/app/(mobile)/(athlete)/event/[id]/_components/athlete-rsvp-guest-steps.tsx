@@ -48,7 +48,7 @@ export function GuestInfoStep({
           type="text"
           value={guestName}
           onChange={e => onNameChange(e.target.value)}
-          placeholder="Nome completo"
+          placeholder={t("namePlaceholder")}
           required
           autoComplete="name"
         />

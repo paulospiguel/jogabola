@@ -131,7 +131,7 @@ export function ProfileSecuritySheet({ passkeysCount, onClose }: ProfileSecurity
                 </div>
               </div>
               <span className="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded bg-arena-primary/15 text-arena-primary border border-arena-primary/20">
-                Atual
+                {t("securitySheet.currentSession")}
               </span>
             </div>
           </TabsContent>
@@ -142,10 +142,10 @@ export function ProfileSecuritySheet({ passkeysCount, onClose }: ProfileSecurity
           >
             <Lock className="w-8 h-8 text-arena-text-muted mx-auto mb-2" strokeWidth={1.5} />
             <span className="text-sm font-bold text-arena-text block">
-              Autenticação de Dois Fatores
+              {t("securitySheet.twoFactor.title")}
             </span>
             <span className="text-xs text-arena-text-muted mt-1 block max-w-[280px] mx-auto">
-              Configure um código PIN adicional de verificação para aumentar a proteção da sua conta.
+              {t("securitySheet.twoFactor.description")}
             </span>
           </TabsContent>
         </Tabs>

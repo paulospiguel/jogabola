@@ -104,7 +104,7 @@ export function MyPaymentTab({ eventId }: MyPaymentTabProps) {
       <div className="flex h-32 items-center justify-center text-arena-danger text-sm px-4 py-4">
         {error instanceof Error
           ? error.message
-          : "Erro ao carregar o pagamento"}
+          : t("loadError")}
       </div>
     );
   }

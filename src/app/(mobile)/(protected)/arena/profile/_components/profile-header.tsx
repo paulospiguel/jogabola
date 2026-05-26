@@ -41,7 +41,7 @@ export function ProfileHeader({ userId, name, email, image }: ProfileHeaderProps
 
         <div className="flex items-center gap-2 mt-1">
           <span className="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded bg-arena-primary/10 border border-arena-primary/30 text-arena-primary">
-            Gestor
+            {t("roles.manager")}
           </span>
           <span className="text-xs text-arena-text-muted select-all">{email}</span>
         </div>

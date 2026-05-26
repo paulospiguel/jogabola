@@ -349,7 +349,12 @@
       "noPlayers": "Sem atletas convocados ainda."
     },
     "playersCount": "{count} jogadores",
-    "steps": ["Tipo de evento", "Detalhes", "Convocar", "Confirmar"],
+    "steps": [
+      "Tipo de evento",
+      "Detalhes",
+      "Convocar",
+      "Confirmar"
+    ],
     "success": "Evento criado!",
     "successSubtitle": "Convocatória enviada com sucesso.",
     "types": {
@@ -771,7 +776,6 @@
       "confirmed": "Pagos",
       "overdue": "Em atraso"
     },
-
     "risk": {
       "low": "Risco Baixo",
       "medium": "Risco Médio",
@@ -1853,7 +1857,17 @@
       "eyebrow": "Avisos",
       "title": "Notificações"
     },
-    "unreadCount": "{count, plural, =1 {Uma notificação por ler} other {# notificações por ler}}"
+    "unreadCount": "{count, plural, =1 {Uma notificação por ler} other {# notificações por ler}}",
+    "filters": {
+      "all": "Todas",
+      "confirmed": "Confirm.",
+      "declined": "Recusas",
+      "system": "Sistema"
+    },
+    "emptyFilter": {
+      "title": "Sem notificações nesta categoria",
+      "description": "Tenta outra categoria ou aguarda novas notificações."
+    }
   },
   "payment": {
     "required": "Pagamento obrigatório",
@@ -2124,7 +2138,12 @@
       },
       "deviceActive": "ativo",
       "addedOn": "Adicionado em {date}",
-      "remove": "Remover"
+      "remove": "Remover",
+      "currentSession": "Atual",
+      "twoFactor": {
+        "title": "Autenticação de Dois Fatores",
+        "description": "Configure um código PIN adicional de verificação para aumentar a proteção da sua conta."
+      }
     }
   },
   "searchResults": {
@@ -2640,8 +2659,10 @@
         "RESEND_DOMAIN_NOT_VERIFIED": "O domínio do remetente ainda não está verificado no Resend.",
         "RESEND_DEV_DOMAIN_RESTRICTED": "O domínio resend.dev só envia para o email dono da conta Resend. Verifica um domínio próprio para enviar a convidados.",
         "EMAIL_SEND_FAILED": "Não foi possível enviar o PIN por email. Confirma o email ou tenta novamente."
-      }
-    }
+      },
+      "loadPayment": "Erro ao carregar o pagamento"
+    },
+    "namePlaceholder": "Nome completo"
   },
   "pricingPage": {
     "eyebrow": "Planos",
@@ -2964,6 +2985,21 @@
       "liga": "Liga",
       "marcadores": "Marcadores",
       "assist": "Assistências"
+    },
+    "table": {
+      "team": "Equipa",
+      "headers": {
+        "j": "J",
+        "v": "V",
+        "e": "E",
+        "d": "D",
+        "pts": "Pts"
+      },
+      "myTeamBadge": "TU"
+    },
+    "stats": {
+      "goals": "golos",
+      "assists": "assist."
     }
   },
   "arenaHistorico": {
@@ -2979,6 +3015,10 @@
       "v": "V",
       "e": "E",
       "d": "D"
+    },
+    "seasonStatus": {
+      "active": "Em curso",
+      "finished": "Concluída"
     }
   }
 }

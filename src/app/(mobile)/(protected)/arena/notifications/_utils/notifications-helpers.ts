@@ -10,12 +10,7 @@ import {
 
 export type FilterKey = "todas" | "confirmadas" | "recusas" | "sistema";
 
-export const FILTERS: { key: FilterKey; label: string }[] = [
-  { key: "todas", label: "Todas" },
-  { key: "confirmadas", label: "Confirm." },
-  { key: "recusas", label: "Recusas" },
-  { key: "sistema", label: "Sistema" },
-];
+export const FILTER_KEYS: FilterKey[] = ["todas", "confirmadas", "recusas", "sistema"];
 
 const RELATIVE_TIME_LABELS: Record<string, { now: string; min: string; hour: string; day: string; days: string }> = {
   pt: { now: "agora mesmo", min: "min atrás", hour: "h atrás", day: "1 dia atrás", days: "dias atrás" },

@@ -349,7 +349,12 @@
       "noPlayers": "Aucun athlète convoqué pour le moment."
     },
     "playersCount": "{count} joueurs",
-    "steps": ["Type d'événement", "Détails", "Convoquer", "Confirmer"],
+    "steps": [
+      "Type d'événement",
+      "Détails",
+      "Convoquer",
+      "Confirmer"
+    ],
     "success": "Événement créé !",
     "successSubtitle": "Convocation envoyée avec succès.",
     "types": {
@@ -771,7 +776,6 @@
       "confirmed": "Payés",
       "overdue": "En retard"
     },
-
     "risk": {
       "low": "Risque Faible",
       "medium": "Risque Moyen",
@@ -1873,7 +1877,17 @@
       "eyebrow": "Alertes",
       "title": "Notifications"
     },
-    "unreadCount": "{count, plural, =1 {Une notification non lue} other {# notifications non lues}}"
+    "unreadCount": "{count, plural, =1 {Une notification non lue} other {# notifications non lues}}",
+    "filters": {
+      "all": "Toutes",
+      "confirmed": "Confirm.",
+      "declined": "Refus",
+      "system": "Système"
+    },
+    "emptyFilter": {
+      "title": "Aucune notification dans cette catégorie",
+      "description": "Essaie une autre catégorie ou attends de nouvelles notifications."
+    }
   },
   "payment": {
     "required": "Paiement requis",
@@ -2144,7 +2158,12 @@
       },
       "deviceActive": "active",
       "addedOn": "Ajoutée le {date}",
-      "remove": "Supprimer"
+      "remove": "Supprimer",
+      "currentSession": "Actuelle",
+      "twoFactor": {
+        "title": "Authentification à Deux Facteurs",
+        "description": "Configurez un code PIN supplémentaire pour renforcer la protection de votre compte."
+      }
     }
   },
   "searchResults": {
@@ -2660,8 +2679,10 @@
         "RESEND_DOMAIN_NOT_VERIFIED": "Le domaine expéditeur n'est pas encore vérifié dans Resend.",
         "RESEND_DEV_DOMAIN_RESTRICTED": "Le domaine resend.dev envoie uniquement à l'email propriétaire du compte Resend. Vérifiez votre propre domaine pour envoyer aux invités.",
         "EMAIL_SEND_FAILED": "Impossible d'envoyer le PIN par email. Vérifiez l'email ou réessayez."
-      }
-    }
+      },
+      "loadPayment": "Erreur lors du chargement du paiement"
+    },
+    "namePlaceholder": "Nom complet"
   },
   "pricingPage": {
     "eyebrow": "Plans",
@@ -2964,6 +2985,21 @@
       "liga": "Ligue",
       "marcadores": "Buteurs",
       "assist": "Passeurs"
+    },
+    "table": {
+      "team": "Équipe",
+      "headers": {
+        "j": "J",
+        "v": "V",
+        "e": "N",
+        "d": "D",
+        "pts": "Pts"
+      },
+      "myTeamBadge": "TOI"
+    },
+    "stats": {
+      "goals": "buts",
+      "assists": "passes"
     }
   },
   "arenaHistorico": {
@@ -2979,6 +3015,10 @@
       "v": "V",
       "e": "N",
       "d": "D"
+    },
+    "seasonStatus": {
+      "active": "En cours",
+      "finished": "Terminée"
     }
   }
 }

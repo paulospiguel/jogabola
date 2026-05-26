@@ -27,7 +27,7 @@ export function HistoricoClient() {
               transition={{ duration: 0.2, delay: i * 0.05, ease: [0.4, 0, 0.2, 1] }}
               className={cn(
                 "rounded-[14px] border p-3.5",
-                s.status === "Em curso"
+                s.status === "active"
                   ? "border-arena-primary/33 bg-arena-surface"
                   : "border-arena-border bg-arena-surface",
               )}
@@ -44,12 +44,12 @@ export function HistoricoClient() {
                 <span
                   className={cn(
                     "rounded-[6px] border px-2 py-px text-[10px] font-bold",
-                    s.status === "Em curso"
+                    s.status === "active"
                       ? "border-arena-primary/44 bg-arena-primary/15 text-arena-primary"
                       : "border-arena-border bg-arena-surface-el text-arena-text-muted",
                   )}
                 >
-                  {s.status}
+                  {t(`seasonStatus.${s.status}`)}
                 </span>
               </div>
 

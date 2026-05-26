@@ -349,7 +349,12 @@
       "noPlayers": "No players called up yet."
     },
     "playersCount": "{count} players",
-    "steps": ["Event Type", "Details", "Invite", "Confirm"],
+    "steps": [
+      "Event Type",
+      "Details",
+      "Invite",
+      "Confirm"
+    ],
     "success": "Event created!",
     "successSubtitle": "Invitation sent successfully.",
     "types": {
@@ -771,7 +776,6 @@
       "confirmed": "Paid",
       "overdue": "Overdue"
     },
-
     "risk": {
       "low": "Low Risk",
       "medium": "Medium Risk",
@@ -1873,7 +1877,17 @@
       "eyebrow": "Alerts",
       "title": "Notifications"
     },
-    "unreadCount": "{count, plural, =1 {One unread notification} other {# unread notifications}}"
+    "unreadCount": "{count, plural, =1 {One unread notification} other {# unread notifications}}",
+    "filters": {
+      "all": "All",
+      "confirmed": "Confirm.",
+      "declined": "Declined",
+      "system": "System"
+    },
+    "emptyFilter": {
+      "title": "No notifications in this category",
+      "description": "Try another category or check back later."
+    }
   },
   "payment": {
     "required": "Payment required",
@@ -2144,7 +2158,12 @@
       },
       "deviceActive": "active",
       "addedOn": "Added on {date}",
-      "remove": "Remove"
+      "remove": "Remove",
+      "currentSession": "Current",
+      "twoFactor": {
+        "title": "Two-Factor Authentication",
+        "description": "Set up an additional PIN code for extra account protection."
+      }
     }
   },
   "searchResults": {
@@ -2660,8 +2679,10 @@
         "RESEND_DOMAIN_NOT_VERIFIED": "The sender domain is not verified in Resend yet.",
         "RESEND_DEV_DOMAIN_RESTRICTED": "The resend.dev domain only sends to the email that owns the Resend account. Verify your own domain to email guests.",
         "EMAIL_SEND_FAILED": "Could not send the PIN by email. Check the email or try again."
-      }
-    }
+      },
+      "loadPayment": "Error loading payment"
+    },
+    "namePlaceholder": "Full name"
   },
   "pricingPage": {
     "eyebrow": "Plans",
@@ -2964,6 +2985,21 @@
       "liga": "League",
       "marcadores": "Top Scorers",
       "assist": "Assists"
+    },
+    "table": {
+      "team": "Team",
+      "headers": {
+        "j": "G",
+        "v": "W",
+        "e": "D",
+        "d": "L",
+        "pts": "Pts"
+      },
+      "myTeamBadge": "YOU"
+    },
+    "stats": {
+      "goals": "goals",
+      "assists": "assists"
     }
   },
   "arenaHistorico": {
@@ -2979,6 +3015,10 @@
       "v": "W",
       "e": "D",
       "d": "L"
+    },
+    "seasonStatus": {
+      "active": "In progress",
+      "finished": "Finished"
     }
   }
 }

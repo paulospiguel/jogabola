@@ -11,7 +11,7 @@ import {
 import { cn } from "@/lib/utils";
 import { buildMockNotifications } from "../_fixtures/notifications-mock";
 import {
-  FILTERS,
+  FILTER_KEYS,
   type FilterKey,
   formatRelativeTime,
   matchesFilter,
@@ -126,7 +126,7 @@ export function NotificationsList({ initialNotifications }: NotificationsListPro
       </div>
 
       <div className="flex shrink-0 gap-2 overflow-x-auto border-b border-arena-border/20 px-5 py-3.5 scrollbar-none">
-        {FILTERS.map(({ key, label }) => (
+        {FILTER_KEYS.map(key => (
           <button
             key={key}
             type="button"
@@ -138,7 +138,7 @@ export function NotificationsList({ initialNotifications }: NotificationsListPro
                 : "border-arena-border bg-[#151C26] text-arena-text-sec hover:border-arena-primary/30",
             )}
           >
-            {label}
+            {t(`filters.${key}`)}
           </button>
         ))}
       </div>
@@ -226,12 +226,10 @@ function EmptyState({
       </div>
       <div>
         <p className="text-[15px] font-bold text-arena-text">
-          {hasFilter ? "Sem notificações nesta categoria" : t("empty.title")}
+          {hasFilter ? t("emptyFilter.title") : t("empty.title")}
         </p>
         <p className="mt-1 text-[13px] text-arena-text-muted">
-          {hasFilter
-            ? "Tenta outra categoria ou aguarda novas notificações."
-            : t("empty.description")}
+          {hasFilter ? t("emptyFilter.description") : t("empty.description")}
         </p>
       </div>
     </div>
