@@ -3,21 +3,11 @@
 import {
   addDays,
   addMonths,
-  addWeeks,
-  addYears,
-  endOfDay,
-  endOfMonth,
-  endOfWeek,
-  endOfYear,
   format,
   isSameMonth,
   isToday,
-  startOfMonth,
   startOfWeek,
   startOfYear,
-  subMonths,
-  subWeeks,
-  subYears,
 } from "date-fns";
 import {
   Calendar,
@@ -26,17 +16,7 @@ import {
   ChevronRight,
 } from "lucide-react";
 import Link from "next/link";
-import { useLocale, useTranslations } from "next-intl";
-import {
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-  useTransition,
-} from "react";
-import type { DateRange } from "react-day-picker";
-import { getCalendarEvents } from "@/actions/match-sessions.actions";
+import { useTranslations } from "next-intl";
 import { ArenaEmptyState } from "@/components/arena/empty-state";
 import { SegmentedControl } from "@/components/arena/segmented-control";
 import { Calendar as CalendarPicker } from "@/components/ui/calendar";
@@ -45,17 +25,15 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { useTeams } from "@/hooks/use-teams";
 import { cn } from "@/lib/utils";
+import { useCalendarEventsState } from "../_hooks/use-calendar-events-state";
 import type {
   EventType,
   SessionRow,
   ViewMode,
 } from "../_types/calendar-events";
 import {
-  DATE_LOCALES,
   getMonthGrid,
-  getWeekDays,
   inferType,
   TYPE_CONFIG,
   toDate,
@@ -76,138 +54,26 @@ export function CalendarEvents({
   initialWeekStart,
 }: CalendarEventsProps) {
   const t = useTranslations("arenaCalendar");
-  const locale = useLocale();
-  const { activeTeamId } = useTeams();
-  const dfLocale = DATE_LOCALES[locale] ?? DATE_LOCALES.pt;
-  const [isPending, startTransition] = useTransition();
-  const fetchRequestId = useRef(0);
-
-  const [viewMode, setViewMode] = useState<ViewMode>("month");
-  const [weekStart, setWeekStart] = useState<Date>(
-    () => new Date(initialWeekStart),
-  );
-  const [monthStart, setMonthStart] = useState<Date>(() =>
-    startOfMonth(new Date()),
-  );
-  const [yearStart, setYearStart] = useState<Date>(() =>
-    startOfYear(new Date()),
-  );
-  const [customRange, setCustomRange] = useState<DateRange | undefined>(
-    undefined,
-  );
-  const [rangeOpen, setRangeOpen] = useState(false);
-  const [events, setEvents] = useState<SessionRow[]>(initialEvents);
-
-  /* -- derived period ----------------------------------------------- */
-  const { from, to, navLabel } = useMemo(() => {
-    switch (viewMode) {
-      case "week": {
-        const f = weekStart;
-        const t_ = endOfWeek(weekStart, { weekStartsOn: 1 });
-        return {
-          from: f,
-          to: t_,
-          navLabel: `${format(f, "d MMM", { locale: dfLocale })} – ${format(t_, "d MMM yyyy", { locale: dfLocale })}`,
-        };
-      }
-      case "month": {
-        const f = startOfMonth(monthStart);
-        const t_ = endOfMonth(monthStart);
-        return {
-          from: f,
-          to: t_,
-          navLabel: format(monthStart, "MMMM yyyy", { locale: dfLocale }),
-        };
-      }
-      case "year": {
-        const f = startOfYear(yearStart);
-        const t_ = endOfYear(yearStart);
-        return { from: f, to: t_, navLabel: format(yearStart, "yyyy") };
-      }
-      case "range": {
-        if (customRange?.from && customRange?.to) {
-          return {
-            from: customRange.from,
-            to: endOfDay(customRange.to),
-            navLabel: `${format(customRange.from, "d MMM", { locale: dfLocale })} – ${format(customRange.to, "d MMM yyyy", { locale: dfLocale })}`,
-          };
-        }
-        return { from: new Date(), to: new Date(), navLabel: "" };
-      }
-    }
-  }, [viewMode, weekStart, monthStart, yearStart, customRange, dfLocale]);
-
-  const fetchPeriod = useCallback(
-    (f: Date, t_: Date) => {
-      fetchRequestId.current += 1;
-      const requestId = fetchRequestId.current;
-
-      startTransition(async () => {
-        const result = await getCalendarEvents(
-          f,
-          t_,
-          activeTeamId ?? undefined,
-        );
-        if (requestId === fetchRequestId.current && result.success) {
-          setEvents(result.data as SessionRow[]);
-        }
-      });
-    },
-    [activeTeamId],
-  );
-
-  useEffect(() => {
-    if (!activeTeamId) {
-      fetchRequestId.current += 1;
-      setEvents([]);
-      return;
-    }
-
-    fetchPeriod(from, to);
-  }, [activeTeamId, fetchPeriod, from, to]);
-
-  function navigate(dir: "prev" | "next") {
-    switch (viewMode) {
-      case "week": {
-        const next =
-          dir === "prev" ? subWeeks(weekStart, 1) : addWeeks(weekStart, 1);
-        const f = startOfWeek(next, { weekStartsOn: 1 });
-        setWeekStart(f);
-        break;
-      }
-      case "month": {
-        const next =
-          dir === "prev" ? subMonths(monthStart, 1) : addMonths(monthStart, 1);
-        const f = startOfMonth(next);
-        setMonthStart(f);
-        break;
-      }
-      case "year": {
-        const next =
-          dir === "prev" ? subYears(yearStart, 1) : addYears(yearStart, 1);
-        const f = startOfYear(next);
-        setYearStart(f);
-        break;
-      }
-    }
-  }
-
-  function switchMode(mode: ViewMode) {
-    setViewMode(mode);
-  }
-
-  const eventsByDate = useMemo(() => {
-    const map: Record<string, SessionRow[]> = {};
-    for (const ev of events) {
-      const key = format(toDate(ev.startsAt), "yyyy-MM-dd");
-      if (!map[key]) map[key] = [];
-      map[key].push(ev);
-    }
-    return map;
-  }, [events]);
-
-  const totalEvents = events.length;
-  const weekDays = useMemo(() => getWeekDays(weekStart), [weekStart]);
+  const {
+    customRange,
+    dfLocale,
+    events,
+    eventsByDate,
+    isPending,
+    monthStart,
+    navigate,
+    navLabel,
+    rangeOpen,
+    setCustomRange,
+    setMonthStart,
+    setRangeOpen,
+    setViewMode,
+    switchMode,
+    totalEvents,
+    viewMode,
+    weekDays,
+    yearStart,
+  } = useCalendarEventsState({ initialEvents, initialWeekStart });
   const viewOptions = [
     { id: "week", label: t("views.week") },
     { id: "month", label: t("views.month") },
