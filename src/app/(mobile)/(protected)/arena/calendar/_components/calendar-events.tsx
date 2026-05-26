@@ -1,12 +1,6 @@
 "use client";
 
-import { format, isToday } from "date-fns";
-import {
-  Calendar,
-  CalendarDays,
-  ChevronLeft,
-  ChevronRight,
-} from "lucide-react";
+import { Calendar, ChevronLeft, ChevronRight } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { ArenaEmptyState } from "@/components/arena/empty-state";
 import { SegmentedControl } from "@/components/arena/segmented-control";
@@ -16,16 +10,15 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { cn } from "@/lib/utils";
 import { useCalendarEventsState } from "../_hooks/use-calendar-events-state";
 import type {
   EventType,
   SessionRow,
   ViewMode,
 } from "../_types/calendar-events";
-import { TYPE_CONFIG, toDate } from "../_utils/calendar-event-utils";
-import { CalendarEventCard } from "./calendar-event-card";
+import { TYPE_CONFIG } from "../_utils/calendar-event-utils";
 import { CalendarMonthView } from "./calendar-month-view";
+import { CalendarRangeView } from "./calendar-range-view";
 import { CalendarWeekView } from "./calendar-week-view";
 import { CalendarYearView } from "./calendar-year-view";
 
@@ -230,80 +223,20 @@ export function CalendarEvents({
           />
         )}
 
-        {/* ============================================================ */}
-        {/*  RANGE VIEW                                                   */}
-        {/* ============================================================ */}
-        {viewMode === "range" && !customRange?.from && (
-          <ArenaEmptyState
-            className="py-12"
-            description={t("nav.rangeHint")}
-            icon={CalendarDays}
-            title={t("nav.rangePlaceholder")}
+        {viewMode === "range" && (
+          <CalendarRangeView
+            customRange={customRange}
+            dfLocale={dfLocale}
+            emptyDescription={t("emptyState.description")}
+            emptyTitle={t("emptyState.title")}
+            events={events}
+            getStatusLabel={getStatusLabel}
+            isPending={isPending}
+            rangeHint={t("nav.rangeHint")}
+            rangePlaceholder={t("nav.rangePlaceholder")}
+            todayLabel={t("today")}
+            totalEvents={totalEvents}
           />
-        )}
-
-        {viewMode === "range" && customRange?.from && customRange?.to && (
-          <div
-            className={cn(
-              "flex flex-col gap-2 transition-opacity duration-200",
-              isPending && "opacity-40",
-            )}
-          >
-            {totalEvents === 0 ? (
-              <ArenaEmptyState
-                className="py-10"
-                description={t("emptyState.description")}
-                icon={CalendarDays}
-                title={t("emptyState.title")}
-              />
-            ) : (
-              (() => {
-                const grouped: Record<string, SessionRow[]> = {};
-                for (const ev of events.sort(
-                  (a, b) =>
-                    toDate(a.startsAt).getTime() - toDate(b.startsAt).getTime(),
-                )) {
-                  const key = format(toDate(ev.startsAt), "yyyy-MM-dd");
-                  if (!grouped[key]) grouped[key] = [];
-                  grouped[key].push(ev);
-                }
-                return Object.entries(grouped).map(([dateKey, dayEvents]) => {
-                  const day = new Date(dateKey);
-                  const today = isToday(day);
-                  return (
-                    <div key={dateKey} className="mb-3">
-                      <div className="flex items-center gap-2 mb-2">
-                        <span
-                          className="text-[12px] font-bold uppercase tracking-wider"
-                          style={{
-                            color: today
-                              ? "var(--color-arena-primary)"
-                              : "var(--color-arena-text-muted)",
-                          }}
-                        >
-                          {format(day, "EEE, d MMM", { locale: dfLocale })}
-                        </span>
-                        {today && (
-                          <span className="text-[10px] font-bold text-arena-primary bg-arena-primary/10 rounded-md px-1.5 py-0.5">
-                            {t("today")}
-                          </span>
-                        )}
-                      </div>
-                      <div className="flex flex-col gap-2">
-                        {dayEvents.map(ev => (
-                          <CalendarEventCard
-                            key={ev.id}
-                            session={ev}
-                            statusLabel={getStatusLabel(ev.status)}
-                          />
-                        ))}
-                      </div>
-                    </div>
-                  );
-                });
-              })()
-            )}
-          </div>
         )}
 
         {/* Empty state for week/month/year */}
