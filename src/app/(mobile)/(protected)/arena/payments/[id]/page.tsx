@@ -2,126 +2,43 @@
 
 import {
   ArrowLeft,
-  Calendar,
   Check,
   FileWarning,
   Loader2,
   Pencil,
   Undo2,
-  Wallet,
   X,
 } from "lucide-react";
-import { useParams, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
-import { useMemo, useState, useTransition } from "react";
-import {
-  requestPaymentProof,
-  updatePaymentStatus,
-} from "@/actions/payments.actions";
-import { type BadgeStatus, JbBadge } from "@/components/arena/badge";
 import { Button } from "@/components/ui/button";
-import {
-  PAYMENT_OVERVIEW_STATUS,
-  PAYMENT_REVIEW_STATUS,
-  PAYMENT_STATUS,
-  type PaymentOverviewStatus,
-  type PaymentReviewStatus,
-  type PaymentStatus,
-} from "@/constants/payments";
-import { usePayments } from "@/hooks/use-payments";
 import { cn } from "@/lib/utils";
 import { PaymentDetailSidebar } from "../_components/payment-detail-sidebar";
 import { PaymentProofViewer } from "../_components/payment-proof-viewer";
-
-type Feedback = { type: "success" | "error"; message: string } | null;
-
-function parsePaymentId(id: string | string[] | undefined) {
-  const raw = Array.isArray(id) ? id[0] : id;
-  if (!raw) return null;
-  const numeric = Number(raw.replace(/^PAY-/i, ""));
-  return Number.isFinite(numeric) && numeric > 0 ? numeric : null;
-}
-
-function statusToDb(status: PaymentOverviewStatus): PaymentStatus {
-  if (status === PAYMENT_OVERVIEW_STATUS.CONFIRMED) {
-    return PAYMENT_STATUS.APPROVED;
-  }
-  if (status === PAYMENT_OVERVIEW_STATUS.REFUSED) {
-    return PAYMENT_STATUS.REJECTED;
-  }
-  if (status === PAYMENT_OVERVIEW_STATUS.VALIDATING) {
-    return PAYMENT_STATUS.PAID_UNVERIFIED;
-  }
-  return status;
-}
+import { PaymentSummaryCard } from "../_components/payment-summary-card";
+import { usePaymentDetailState } from "../_hooks/use-payment-detail-state";
 
 export default function PaymentDetailPage() {
-  const { id } = useParams();
   const router = useRouter();
   const t = useTranslations("arenaPayments");
   const badgeT = useTranslations("arenaBadges");
-  const { payments, isLoading, refetch } = usePayments();
-  const [feedback, setFeedback] = useState<Feedback>(null);
-  const [pendingAction, setPendingAction] = useState<
-    "approve" | "reject" | "proof" | null
-  >(null);
-  const [isEditingDecision, setIsEditingDecision] = useState(false);
-  const [isPending, startTransition] = useTransition();
-
-  const paymentId = parsePaymentId(id);
-  const payment = payments.find(p => p.id === (Array.isArray(id) ? id[0] : id));
-  const dbStatus = useMemo(
-    () => (payment ? statusToDb(payment.status) : ""),
-    [payment],
-  );
-  const isApproved = dbStatus === PAYMENT_STATUS.APPROVED;
-  const isRejected = dbStatus === PAYMENT_STATUS.REJECTED;
-  const hasFinalDecision = isApproved || isRejected;
-  const showDecisionActions = !hasFinalDecision || isEditingDecision;
-  const actionDisabled = isPending || !paymentId;
-
-  function runStatusAction(status: PaymentReviewStatus) {
-    if (!paymentId) return;
-    setPendingAction(
-      status === PAYMENT_REVIEW_STATUS.APPROVED ? "approve" : "reject",
-    );
-    setFeedback(null);
-
-    startTransition(async () => {
-      const result = await updatePaymentStatus({ paymentId, status });
-      if (result.success) {
-        setIsEditingDecision(false);
-        setFeedback({
-          type: "success",
-          message:
-            status === PAYMENT_REVIEW_STATUS.APPROVED
-              ? t("detail.approveSuccess")
-              : t("detail.rejectSuccess"),
-        });
-        await refetch();
-      } else {
-        setFeedback({ type: "error", message: t("detail.actionError") });
-      }
-      setPendingAction(null);
-    });
-  }
-
-  function runProofRequest() {
-    if (!paymentId) return;
-    setPendingAction("proof");
-    setFeedback(null);
-
-    startTransition(async () => {
-      const result = await requestPaymentProof({ paymentId });
-      setFeedback({
-        type: result.success ? "success" : "error",
-        message: result.success
-          ? t("detail.requestProofSuccess")
-          : t("detail.requestProofError"),
-      });
-      setPendingAction(null);
-    });
-  }
+  const {
+    actionDisabled,
+    approvePayment,
+    feedback,
+    hasFinalDecision,
+    isApproved,
+    isEditingDecision,
+    isLoading,
+    isRejected,
+    payment,
+    paymentId,
+    pendingAction,
+    rejectPayment,
+    requestProof,
+    setIsEditingDecision,
+    showDecisionActions,
+  } = usePaymentDetailState();
 
   if (isLoading) {
     return (
@@ -196,7 +113,7 @@ export default function PaymentDetailPage() {
               )}
               <Button
                 type="button"
-                onClick={() => runStatusAction("rejected")}
+                onClick={rejectPayment}
                 disabled={actionDisabled || isRejected}
                 variant="outline"
                 className="rounded-[14px] border-arena-danger/35 bg-arena-danger/8 px-5 text-[13px] font-bold text-arena-danger hover:bg-arena-danger/14"
@@ -210,7 +127,7 @@ export default function PaymentDetailPage() {
               </Button>
               <Button
                 type="button"
-                onClick={() => runStatusAction("approved")}
+                onClick={approvePayment}
                 disabled={actionDisabled || isApproved}
                 className="rounded-[14px] bg-arena-primary px-5 text-[13px] font-bold text-arena-bg hover:bg-arena-primary/90"
               >
@@ -252,55 +169,7 @@ export default function PaymentDetailPage() {
 
         <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_360px]">
           <div className="space-y-6">
-            <section className="jb-card overflow-hidden">
-              <div className="border-b border-arena-border bg-arena-surface-el/45 px-6 py-4">
-                <h2 className="text-xs font-bold uppercase tracking-widest text-arena-text-muted">
-                  {t("detail.summary")}
-                </h2>
-              </div>
-              <div className="grid gap-x-10 gap-y-5 p-6 md:grid-cols-2">
-                {[
-                  [t("table.amount"), payment.amount],
-                  [t("table.event"), payment.event.title],
-                  [t("table.status"), payment.status],
-                  [t("table.date"), payment.date],
-                  [t("table.method"), payment.method],
-                  [t("table.risk"), payment.score],
-                ].map(([label, value]) => (
-                  <div
-                    key={label}
-                    className="flex items-center justify-between gap-4 border-b border-arena-border/55 pb-3"
-                  >
-                    <span className="text-[13px] text-arena-text-muted">
-                      {label}
-                    </span>
-                    {label === t("table.amount") ? (
-                      <span className="font-sora text-2xl font-extrabold text-arena-primary">
-                        {value}
-                      </span>
-                    ) : label === t("table.status") ? (
-                      <JbBadge status={payment.status as BadgeStatus} animate />
-                    ) : label === t("table.method") ? (
-                      <span className="flex items-center gap-2 font-bold text-arena-text">
-                        <Wallet size={16} className="text-arena-primary" />
-                        {value}
-                      </span>
-                    ) : label === t("table.date") ? (
-                      <span className="flex items-center gap-2 font-bold text-arena-text">
-                        <Calendar size={16} className="text-arena-text-muted" />
-                        {value}
-                      </span>
-                    ) : label === t("table.risk") ? (
-                      <JbBadge status={payment.score as BadgeStatus} />
-                    ) : (
-                      <span className="text-right font-bold text-arena-text">
-                        {value}
-                      </span>
-                    )}
-                  </div>
-                ))}
-              </div>
-            </section>
+            <PaymentSummaryCard payment={payment} t={t} />
 
             <section className="jb-card overflow-hidden">
               <div className="border-b border-arena-border bg-arena-surface-el/45 px-6 py-4">
@@ -312,7 +181,7 @@ export default function PaymentDetailPage() {
                 <PaymentProofViewer
                   proofUrl={payment.proofUrl}
                   alt={t("detail.proofAlt")}
-                  onRequest={runProofRequest}
+                  onRequest={requestProof}
                   requesting={pendingAction === "proof"}
                   requestLabel={t("detail.requestProof")}
                   requestAgainLabel={t("detail.requestProofAgain")}
