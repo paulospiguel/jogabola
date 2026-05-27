@@ -138,7 +138,8 @@
       "invalidEmail": "Email invalide",
       "incompleteCode": "Saisis le code complet",
       "numbersOnly": "Chiffres uniquement"
-    }
+    },
+    "defaultName": "Joueur"
   },
   "arenaAthleteProfile": {
     "title": "Profil de l'Athlète",
@@ -2460,7 +2461,8 @@
     "sessionActive": "Session active en tant que <email>{email}</email>.",
     "logout": "Se déconnecter",
     "alreadyHaveAccess": "Vous avez déjà un accès ?",
-    "signIn": "Se connecter"
+    "signIn": "Se connecter",
+    "error": "Erreur lors de l'enregistrement."
   },
   "legal": {
     "terms": {

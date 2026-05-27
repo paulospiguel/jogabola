@@ -138,7 +138,8 @@
       "invalidEmail": "Invalid email",
       "incompleteCode": "Incomplete code",
       "numbersOnly": "Use numbers only"
-    }
+    },
+    "defaultName": "Player"
   },
   "arenaAthleteProfile": {
     "title": "Athlete Profile",
@@ -2460,7 +2461,8 @@
     "sessionActive": "Session active as <email>{email}</email>.",
     "logout": "Log out",
     "alreadyHaveAccess": "Already have access?",
-    "signIn": "Sign in"
+    "signIn": "Sign in",
+    "error": "Error registering."
   },
   "legal": {
     "terms": {

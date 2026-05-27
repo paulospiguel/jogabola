@@ -44,7 +44,7 @@ function WaitlistContent() {
         setError(err);
       } else {
         const msgs = Object.values(err ?? {}).flat();
-        setError(msgs[0] ?? "Erro ao registar.");
+        setError(msgs[0] ?? tWaitlist("error"));
       }
     }
 

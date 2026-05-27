@@ -28,12 +28,12 @@ const EMAIL_ERROR_CODES = new Set([
   "EMAIL_SEND_FAILED",
 ]);
 
-function defaultNameFromEmail(email: string) {
+function defaultNameFromEmail(email: string, fallback: string) {
   const name = email
     .split("@")[0]
     ?.replace(/[._-]+/g, " ")
     .trim();
-  return name || "Jogador";
+  return name || fallback;
 }
 
 function getSafeCallbackURL(value: string | null) {
@@ -147,7 +147,7 @@ export default function LoginPage() {
       const result = await signIn.emailOtp({
         email: collectedEmail,
         otp: values.code,
-        name: defaultNameFromEmail(collectedEmail),
+        name: defaultNameFromEmail(collectedEmail, t("defaultName")),
         callbackURL,
       });
 
