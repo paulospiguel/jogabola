@@ -2383,7 +2383,8 @@
       "language": "Changer de langue",
       "logout": "Se déconnecter",
       "loggingOut": "Déconnexion..."
-    }
+    },
+    "defaultName": "Joueur"
   },
   "profileDangerZone": {
     "title": "Zone de Danger",
@@ -2952,7 +2953,8 @@
     },
     "outro": {
       "tagline": "Le terrain vous appelle. La victoire vous attend."
-    }
+    },
+    "openLabel": "Voir la démo · 0:42"
   },
   "loadingPage": {
     "loading": "Chargement..."

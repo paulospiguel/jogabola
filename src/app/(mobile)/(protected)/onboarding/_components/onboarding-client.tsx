@@ -131,11 +131,12 @@ function RoleCardSmall({ icon, title }: RoleCardSmallProps) {
 }
 
 interface OnboardingClientProps {
-  userName: string;
+  userName: string | null;
 }
 
 export function OnboardingClient({ userName }: OnboardingClientProps) {
   const t = useTranslations("onboarding");
+  const resolvedName = userName ?? t("defaultName");
   const [step, setStep] = useState<Step>("role");
   const [selected, setSelected] = useState<UserRole | null>(null);
   const [loading, setLoading] = useState(false);
@@ -255,7 +256,7 @@ export function OnboardingClient({ userName }: OnboardingClientProps) {
                   {APP_NAME.toLowerCase()}
                 </h1>
                 <p className="mb-1 text-[13px] font-semibold text-arena-text">
-                  {t("header.greeting", { name: userName })}
+                  {t("header.greeting", { name: resolvedName })}
                 </p>
                 <p className="text-[13px] text-arena-text-sec">
                   {t("header.description")}

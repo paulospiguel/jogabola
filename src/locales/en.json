@@ -2383,7 +2383,8 @@
         "migrated": "I used another app and migrated",
         "manual": "I manage manually (Excel/WhatsApp)"
       }
-    }
+    },
+    "defaultName": "Player"
   },
   "profileDangerZone": {
     "title": "Danger Zone",
@@ -2952,7 +2953,8 @@
     },
     "outro": {
       "tagline": "The field calls you. Victory awaits."
-    }
+    },
+    "openLabel": "Watch demo · 0:42"
   },
   "loadingPage": {
     "loading": "Loading..."

@@ -16,10 +16,11 @@ interface DemoModalProps {
 }
 
 export function DemoModal({
-  label = "Ver demo · 0:42",
+  label,
   className,
 }: DemoModalProps) {
   const t = useTranslations("videoDemo");
+  const resolvedLabel = label ?? t("openLabel");
   const [open, setOpen] = useState(false);
   // Increment key each time modal opens → forces Player remount
   const [sessionKey, setSessionKey] = useState(0);
@@ -62,7 +63,7 @@ export function DemoModal({
       {/* Trigger button */}
       <button type="button" onClick={handleOpen} className={className}>
         <Play className="mr-2 size-4" />
-        {label}
+        {resolvedLabel}
       </button>
 
       {open && (

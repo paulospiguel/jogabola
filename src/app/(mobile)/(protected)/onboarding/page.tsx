@@ -4,7 +4,7 @@ import { OnboardingClient } from "./_components/onboarding-client";
 
 export default async function OnboardingPage() {
   const session = await auth.api.getSession({ headers: await headers() });
-  const userName = session?.user?.name ?? "Jogador";
+  const userName = session?.user?.name ?? null;
 
   return <OnboardingClient userName={userName} />;
 }
