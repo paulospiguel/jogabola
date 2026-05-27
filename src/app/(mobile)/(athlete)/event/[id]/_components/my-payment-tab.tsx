@@ -3,6 +3,7 @@
 import { Check, Clock, Info, X } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useMyPaymentForEvent } from "@/hooks/use-my-payment-for-event";
+import { PAYMENT_STATUS } from "@/constants/payments";
 import { cn } from "@/lib/utils";
 
 interface MyPaymentTabProps {
@@ -189,7 +190,7 @@ export function MyPaymentTab({ eventId }: MyPaymentTabProps) {
             <span
               className={cn(
                 "text-[16px] font-bold",
-                status === "paid" || status === "approved"
+                status === "paid" || status === PAYMENT_STATUS.APPROVED
                   ? "text-arena-primary"
                   : "text-arena-warning",
               )}

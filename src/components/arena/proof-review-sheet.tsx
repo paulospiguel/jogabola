@@ -17,6 +17,7 @@ import {
 import { JbAvatar } from "@/components/arena/avatar";
 import { BottomSheet } from "@/components/arena/bottom-sheet";
 import type { Payment } from "@/hooks/use-payments";
+import { PAYMENT_REVIEW_STATUS } from "@/constants/payments";
 import { cn } from "@/lib/utils";
 
 interface ProofReviewSheetProps {
@@ -57,8 +58,12 @@ export function ProofReviewSheet({
   const paymentId = Number(payment.id.replace(/^PAY-/i, ""));
   const actionDisabled = isPending || !paymentId;
 
-  function runStatusAction(status: "approved" | "rejected") {
-    setPendingAction(status === "approved" ? "approve" : "reject");
+  function runStatusAction(
+    status: typeof PAYMENT_REVIEW_STATUS.APPROVED | typeof PAYMENT_REVIEW_STATUS.REJECTED,
+  ) {
+    setPendingAction(
+      status === PAYMENT_REVIEW_STATUS.APPROVED ? "approve" : "reject",
+    );
     setFeedback(null);
 
     startTransition(async () => {
@@ -67,7 +72,9 @@ export function ProofReviewSheet({
         setFeedback({
           type: "success",
           message:
-            status === "approved" ? t("approveSuccess") : t("rejectSuccess"),
+            status === PAYMENT_REVIEW_STATUS.APPROVED
+              ? t("approveSuccess")
+              : t("rejectSuccess"),
         });
         setTimeout(() => {
           onSuccess?.();
@@ -264,7 +271,7 @@ export function ProofReviewSheet({
             <button
               type="button"
               disabled={actionDisabled}
-              onClick={() => runStatusAction("rejected")}
+              onClick={() => runStatusAction(PAYMENT_REVIEW_STATUS.REJECTED)}
               className="press flex h-11 items-center justify-center gap-1.5 rounded-[12px] border border-arena-danger/30 bg-arena-danger/10 text-xs font-bold text-arena-danger transition-colors hover:bg-arena-danger/15 disabled:opacity-50"
             >
               {pendingAction === "reject" ? (
@@ -278,7 +285,7 @@ export function ProofReviewSheet({
             <button
               type="button"
               disabled={actionDisabled}
-              onClick={() => runStatusAction("approved")}
+              onClick={() => runStatusAction(PAYMENT_REVIEW_STATUS.APPROVED)}
               className="press flex h-11 items-center justify-center gap-1.5 rounded-[12px] bg-arena-primary text-xs font-bold text-arena-bg transition-colors hover:bg-arena-primary/95 disabled:opacity-50"
             >
               {pendingAction === "approve" ? (
