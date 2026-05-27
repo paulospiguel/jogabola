@@ -65,12 +65,12 @@ feature/
 
 | Componente | Ficheiro | Problema |
 |---|---|---|
-| Equipas tab | `equipas-tab.tsx` (690) | Múltiplas responsabilidades |
+| Teams tab | `teams-tab.tsx` (690) | Múltiplas responsabilidades |
 | Create event | `create-event-sheet.tsx` (858) | Form + lógica inline |
 | Payment method | `payment-method-card.tsx` (581) | UI + lógica misturada |
 
 ### Tier 3 — Restante
-- `notifications`, `profile`, `rankings`, `historico`, `settings`
+- `notifications`, `profile`, `rankings`, `historical`, `settings`
 - `src/constants/` — completar com todos os status strings do domínio
 - `src/types/` — garantir inglês em todos os tipos
 

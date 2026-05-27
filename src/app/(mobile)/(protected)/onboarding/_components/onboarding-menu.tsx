@@ -9,40 +9,8 @@ import { setLocale } from "@/actions/locale.actions";
 import { type Locale, locales } from "@/i18n/configs";
 import { signOut } from "@/lib/auth-client";
 import { cn } from "@/lib/utils";
-
-type Language = {
-  nativeName: string;
-  code: string;
-  flag: string;
-  flagLabel: string;
-};
-
-const LANGUAGES: Record<Locale, Language> = {
-  en: {
-    nativeName: "English",
-    code: "EN",
-    flag: "england",
-    flagLabel: "England flag",
-  },
-  pt: {
-    nativeName: "Português",
-    code: "PT",
-    flag: "🇵🇹",
-    flagLabel: "Bandeira de Portugal",
-  },
-  es: {
-    nativeName: "Español",
-    code: "ES",
-    flag: "🇪🇸",
-    flagLabel: "Bandera de España",
-  },
-  fr: {
-    nativeName: "Français",
-    code: "FR",
-    flag: "🇫🇷",
-    flagLabel: "Drapeau de France",
-  },
-};
+import { type Language } from "@/types/languages";
+import { LANGUAGES } from "@/constants/languages";
 
 function LanguageFlag({
   language,

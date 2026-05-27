@@ -458,8 +458,8 @@
       "discover": "Découvrir",
       "rankings": "Classements",
       "rankingsSub": "Ligue · Buteurs",
-      "historico": "Historique",
-      "historicoSub": "Saisons · Résultats"
+      "historical": "Historique",
+      "historicalSub": "Saisons · Résultats"
     },
     "stats": {
       "confirmed": "Confirmés",
@@ -3055,7 +3055,7 @@
       "assists": "passes"
     }
   },
-  "arenaHistorico": {
+  "arenaHistorical": {
     "title": "Historique",
     "champion": "CHAMPION",
     "sections": {

@@ -25,7 +25,7 @@ The standalone prototype contains these screens and flows:
 - `player`: player profile hero, history, stats.
 - `equipa`: user/profile hub with active team picker, team management, notification/security/profile/billing sheets.
 - `rankings`: league/top scorers/assists tabs.
-- `historico`: seasons and recent matches.
+- `historical`: seasons and recent matches.
 - Shared shell: `TopBar`, `BottomNav`, `CreateEventSheet`, `AddPlayerSheet`, `ShareSheet`, `TeamManagementSheet`, `NotifSettingsSheet`, `SecuritySheet`, `EditProfileSheet`, `PlanSheet`.
 
 Existing repo already has partial coverage for dashboard/events/event detail/squad/notifications/onboarding. This plan focuses on missing or incomplete v3 improvements: calendar polish, public invitation flow parity, payments advanced UI, profile/equipa hub, rankings/history routes, shell navigation, and shared primitives.
@@ -969,7 +969,7 @@ Under `arenaPayments.v3`:
 ```json
 {
   "tabs": {
-    "history": "Historico",
+    "history": "historical",
     "config": "Configurar"
   },
   "stats": {
@@ -1245,12 +1245,12 @@ Minimum keys:
     }
   },
   "arenaHistory": {
-    "title": "Historico",
+    "title": "historical",
     "seasons": "Epocas",
     "recent": "Recentes",
     "empty": {
-      "title": "Sem historico",
-      "description": "O historico aparece quando houver eventos terminados."
+      "title": "Sem historical",
+      "description": "O historical aparece quando houver eventos terminados."
     }
   }
 }

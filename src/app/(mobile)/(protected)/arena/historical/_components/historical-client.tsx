@@ -7,7 +7,7 @@ import { cn } from "@/lib/utils";
 import { RECENT_RESULTS, RESULT_STYLE, SEASONS } from "../_fixtures/historical-mock";
 
 export function HistoricalClient() {
-  const t = useTranslations("arenaHistorico");
+  const t = useTranslations("arenaHistorical");
 
   return (
     <div className="min-h-screen bg-arena-bg pb-24">
