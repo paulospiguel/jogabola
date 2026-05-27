@@ -179,7 +179,8 @@
     },
     "history": {
       "title": "Historique d'Activité",
-      "players": "Joueurs"
+      "players": "Joueurs",
+      "empty": "Aucune activité enregistrée"
     },
     "removeDialog": {
       "title": "Retirer de l'effectif ?",

@@ -179,7 +179,8 @@
     },
     "history": {
       "title": "Histórico de Atividade",
-      "players": "Jogadores"
+      "players": "Jogadores",
+      "empty": "Sem atividade registada"
     },
     "notValidated": "Atleta não validado",
     "notValidatedDesc": "Este atleta ainda não criou uma conta no Jogabola. As estatísticas e o perfil completo estarão disponíveis após a validação.",

@@ -5,6 +5,7 @@ import { useTranslations } from "next-intl";
 import { ScreenHeader } from "@/components/arena/screen-header";
 import { cn } from "@/lib/utils";
 import { RECENT_RESULTS, RESULT_STYLE, SEASONS } from "../_fixtures/historical-mock";
+import { SEASON_STATUS } from "@/constants/season-status";
 
 export function HistoricalClient() {
   const t = useTranslations("arenaHistorical");
@@ -27,7 +28,7 @@ export function HistoricalClient() {
               transition={{ duration: 0.2, delay: i * 0.05, ease: [0.4, 0, 0.2, 1] }}
               className={cn(
                 "rounded-[14px] border p-3.5",
-                s.status === "active"
+                s.status === SEASON_STATUS.ACTIVE
                   ? "border-arena-primary/33 bg-arena-surface"
                   : "border-arena-border bg-arena-surface",
               )}
@@ -44,7 +45,7 @@ export function HistoricalClient() {
                 <span
                   className={cn(
                     "rounded-[6px] border px-2 py-px text-[10px] font-bold",
-                    s.status === "active"
+                    s.status === SEASON_STATUS.ACTIVE
                       ? "border-arena-primary/44 bg-arena-primary/15 text-arena-primary"
                       : "border-arena-border bg-arena-surface-el text-arena-text-muted",
                   )}

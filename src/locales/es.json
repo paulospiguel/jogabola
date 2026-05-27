@@ -179,7 +179,8 @@
     },
     "history": {
       "title": "Historial de Actividad",
-      "players": "Jugadores"
+      "players": "Jugadores",
+      "empty": "Sin actividad registrada"
     },
     "removeDialog": {
       "title": "¿Eliminar de la plantilla?",

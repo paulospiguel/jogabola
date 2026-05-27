@@ -179,7 +179,8 @@
     },
     "history": {
       "title": "Activity History",
-      "players": "Players"
+      "players": "Players",
+      "empty": "No activity recorded"
     },
     "removeDialog": {
       "title": "Remove from squad?",
