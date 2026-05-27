@@ -14,6 +14,7 @@ import { useTranslations } from "next-intl";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
 import type { PaymentMethod } from "@/types/payments";
+import { PAYMENT_STATUS } from "@/constants/payments";
 
 export type PaymentMethodStatus = "idle" | "pending" | "paid" | "rejected";
 
@@ -82,9 +83,9 @@ export function StatusPill({ status }: { status: PaymentMethodStatus }) {
         s.cls,
       )}
     >
-      {status === "paid" && <Check size={9} strokeWidth={3} />}
-      {status === "pending" && <Loader2 size={9} className="animate-spin" />}
-      {status === "rejected" && <AlertCircle size={9} />}
+      {status === PAYMENT_STATUS.PAID && <Check size={9} strokeWidth={3} />}
+      {status === PAYMENT_STATUS.PENDING && <Loader2 size={9} className="animate-spin" />}
+      {status === PAYMENT_STATUS.REJECTED && <AlertCircle size={9} />}
       {s.label}
     </span>
   );
