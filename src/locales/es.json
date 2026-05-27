@@ -296,7 +296,8 @@
       "rosterOnlyHint": "Solo emails que pertenecen a la plantilla actual pueden confirmar asistencia.",
       "rosterPriority": "Prioridad para la plantilla",
       "rosterPriorityHint": "Solo la plantilla puede confirmar hasta {hours}h antes.",
-      "rosterPriorityOff": "Sin prioridad"
+      "rosterPriorityOff": "Sin prioridad",
+      "togglePrivate": "Alternar evento privado"
     },
     "invite": {
       "title": "Invitar desde la plantilla",

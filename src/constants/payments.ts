@@ -1,8 +1,10 @@
 export const PAYMENT_STATUS = {
   PENDING: "pending",
+  PAID: "paid",
   PAID_UNVERIFIED: "paid_unverified",
   REVIEW_REQUIRED: "review_required",
   APPROVED: "approved",
+  FAILED: "failed",
   REJECTED: "rejected",
   REFUNDED: "refunded",
 } as const;

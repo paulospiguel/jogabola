@@ -13,6 +13,7 @@ import { useGuestSession } from "@/hooks/use-guest-session";
 import { usePublicTeamPaymentSettings } from "@/hooks/use-team-payment-settings";
 import { signIn } from "@/lib/auth-client";
 import type { PaymentMethod } from "@/types/payments";
+import { ATTENDANCE_STATUS } from "@/constants/attendance";
 import {
   getAttendanceErrorMessage,
   getGuestOtpErrorMessage,
@@ -99,7 +100,7 @@ export function AthleteRsvpSheet({
         setLoading(false);
         if (res.success) {
           setReservationId(res.reservationId);
-          if (!resumePayment) onSuccess("confirmed");
+          if (!resumePayment) onSuccess(ATTENDANCE_STATUS.CONFIRMED);
         } else {
           setError(
             getAttendanceErrorMessage(

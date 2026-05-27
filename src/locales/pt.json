@@ -296,7 +296,8 @@
       "rosterOnlyHint": "Só emails que pertencem ao plantel atual podem confirmar presença.",
       "rosterPriority": "Prioridade ao plantel",
       "rosterPriorityHint": "Só o plantel pode confirmar até {hours}h antes.",
-      "rosterPriorityOff": "Sem prioridade"
+      "rosterPriorityOff": "Sem prioridade",
+      "togglePrivate": "Alternar evento privado"
     },
     "invite": {
       "title": "Convidar do plantel",

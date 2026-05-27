@@ -296,7 +296,8 @@
       "rosterOnlyHint": "Only emails that belong to the current roster can confirm attendance.",
       "rosterPriority": "Roster priority",
       "rosterPriorityHint": "Only the roster can confirm until {hours}h before.",
-      "rosterPriorityOff": "No priority"
+      "rosterPriorityOff": "No priority",
+      "togglePrivate": "Toggle private event"
     },
     "invite": {
       "title": "Invite from squad",

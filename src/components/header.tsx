@@ -136,7 +136,7 @@ export default function Header() {
                   "rounded-2xl border border-white/8 bg-white/4 p-2 transition-colors duration-300 hover:bg-white/10 md:hidden",
                   "text-text-primary",
                 )}
-                aria-label="Abrir menu"
+                aria-label={t("arena.header.openMenu")}
               >
                 <Menu size={24} />
               </Button>

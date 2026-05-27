@@ -4,6 +4,7 @@ import { Check, Clock, Info, X } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useMyPaymentForEvent } from "@/hooks/use-my-payment-for-event";
 import { PAYMENT_STATUS } from "@/constants/payments";
+import { ATTENDANCE_STATUS } from "@/constants/attendance";
 import { cn } from "@/lib/utils";
 
 interface MyPaymentTabProps {
@@ -29,8 +30,8 @@ type StatusConfig = {
 
 function getStatusConfig(status: string): StatusConfig {
   switch (status) {
-    case "paid":
-    case "approved":
+    case PAYMENT_STATUS.PAID:
+    case PAYMENT_STATUS.APPROVED:
       return {
         Icon: Check,
         iconBg: "bg-arena-success/15",
@@ -39,7 +40,7 @@ function getStatusConfig(status: string): StatusConfig {
         titleKey: "paid.title",
         captionKey: "paid.caption",
       };
-    case "paid_unverified":
+    case PAYMENT_STATUS.PAID_UNVERIFIED:
       return {
         Icon: Clock,
         iconBg: "bg-arena-warning/15",
@@ -48,9 +49,9 @@ function getStatusConfig(status: string): StatusConfig {
         titleKey: "paid_unverified.title",
         captionKey: "paid_unverified.caption",
       };
-    case "failed":
-    case "rejected":
-    case "refunded":
+    case PAYMENT_STATUS.FAILED:
+    case PAYMENT_STATUS.REJECTED:
+    case PAYMENT_STATUS.REFUNDED:
       return {
         Icon: X,
         iconBg: "bg-arena-danger/15",
@@ -127,7 +128,7 @@ export function MyPaymentTab({ eventId }: MyPaymentTabProps) {
     );
   }
 
-  const status = payment.status ?? "pending";
+  const status = payment.status ?? PAYMENT_STATUS.PENDING;
   const { Icon, iconBg, iconColor, iconBorder, titleKey, captionKey } =
     getStatusConfig(status);
   const formattedCurrency = formatCurrency(
@@ -190,7 +191,7 @@ export function MyPaymentTab({ eventId }: MyPaymentTabProps) {
             <span
               className={cn(
                 "text-[16px] font-bold",
-                status === "paid" || status === PAYMENT_STATUS.APPROVED
+                status === PAYMENT_STATUS.PAID || status === PAYMENT_STATUS.APPROVED
                   ? "text-arena-primary"
                   : "text-arena-warning",
               )}

@@ -296,7 +296,8 @@
       "rosterOnlyHint": "Seuls les emails appartenant à l'effectif actuel peuvent confirmer leur présence.",
       "rosterPriority": "Priorité à l'effectif",
       "rosterPriorityHint": "Seul l'effectif peut confirmer jusqu'à {hours}h avant.",
-      "rosterPriorityOff": "Pas de priorité"
+      "rosterPriorityOff": "Pas de priorité",
+      "togglePrivate": "Basculer événement privé"
     },
     "invite": {
       "title": "Inviter depuis l'effectif",

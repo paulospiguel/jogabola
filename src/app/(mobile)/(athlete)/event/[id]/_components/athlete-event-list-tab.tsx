@@ -3,6 +3,7 @@
 import { CheckIcon } from "@animateicons/react/lucide";
 import { useTranslations } from "next-intl";
 import { JbBadge } from "@/components/arena/badge";
+import { ATTENDANCE_STATUS } from "@/constants/attendance";
 import { EventNoticeWall } from "@/components/arena/event-notice-wall";
 import {
   ParticipantRow,
@@ -84,8 +85,8 @@ export function AthleteEventListTab({
               </div>
               <div className="flex flex-col">
                 {[
-                  ...reserves.map(p => ({ ...p, status: "reserve" as const })),
-                  ...pending.map(p => ({ ...p, status: "pending" as const })),
+                  ...reserves.map(p => ({ ...p, status: ATTENDANCE_STATUS.RESERVE })),
+                  ...pending.map(p => ({ ...p, status: ATTENDANCE_STATUS.PENDING })),
                 ].map((p, i, arr) => (
                   <ParticipantRow
                     key={p.id}

@@ -7,6 +7,7 @@ import {
   confirmUserAttendance,
 } from "@/actions/attendance.actions";
 import type { Participant } from "@/hooks/use-event-attendance";
+import { ATTENDANCE_STATUS } from "@/constants/attendance";
 
 interface UseAthleteEventDetailOptions {
   eventId: number;
@@ -96,7 +97,7 @@ export function useAthleteEventDetail({
     setActionLoading(true);
     const res = await confirmUserAttendance(eventId);
     if (res.success) {
-      handleAttendanceSuccess("confirmed");
+      handleAttendanceSuccess(ATTENDANCE_STATUS.CONFIRMED);
     } else if (res.error === "EVENT_ROSTER_ONLY") {
       setActionError(t("rosterOnlyError"));
     } else {

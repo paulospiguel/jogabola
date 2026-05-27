@@ -138,7 +138,7 @@ export function CreateEventStepDetails({
             "w-9 h-5 rounded-full p-0.5 transition-colors duration-200 shrink-0",
             form.rosterOnly ? "bg-arena-primary" : "bg-arena-border",
           )}
-          aria-label="Toggle private event"
+          aria-label={t("access.togglePrivate")}
         >
           <div
             className={cn(

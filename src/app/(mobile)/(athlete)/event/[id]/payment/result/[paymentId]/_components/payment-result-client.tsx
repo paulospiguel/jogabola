@@ -61,7 +61,8 @@ type StatusConfig = {
 
 function getStatusConfig(status: string): StatusConfig {
   switch (status) {
-    case "paid":
+    case PAYMENT_STATUS.PAID:
+    case PAYMENT_STATUS.APPROVED:
       return {
         Icon: Check,
         iconBg: "bg-arena-success/15",
@@ -70,7 +71,7 @@ function getStatusConfig(status: string): StatusConfig {
         titleKey: "paid.title",
         captionKey: "paid.caption",
       };
-    case "paid_unverified":
+    case PAYMENT_STATUS.PAID_UNVERIFIED:
       return {
         Icon: Clock,
         iconBg: "bg-arena-warning/15",
@@ -79,7 +80,9 @@ function getStatusConfig(status: string): StatusConfig {
         titleKey: "paid_unverified.title",
         captionKey: "paid_unverified.caption",
       };
-    case "failed":
+    case PAYMENT_STATUS.FAILED:
+    case PAYMENT_STATUS.REJECTED:
+    case PAYMENT_STATUS.REFUNDED:
       return {
         Icon: X,
         iconBg: "bg-arena-danger/15",
@@ -422,7 +425,7 @@ export function PaymentResultClient({
             <span
               className={cn(
                 "text-[16px] font-bold",
-                status === "paid" ? "text-arena-primary" : "text-arena-warning",
+                (status === PAYMENT_STATUS.PAID || status === PAYMENT_STATUS.APPROVED) ? "text-arena-primary" : "text-arena-warning",
               )}
             >
               {formattedCurrency}
