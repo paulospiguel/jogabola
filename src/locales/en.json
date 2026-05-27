@@ -330,7 +330,8 @@
       "acceptMbwayHint": "Allow payment via MBWay",
       "mbwayPhone": "MBWay Phone Number",
       "transferRequiresProof": "Require proof",
-      "transferRequiresProofHint": "Require upload of transfer receipt"
+      "transferRequiresProofHint": "Require upload of transfer receipt",
+      "mbwayPhonePlaceholder": "Ex: 912345678"
     },
     "recurrence": {
       "once": "Once",

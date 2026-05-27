@@ -1,7 +1,7 @@
 "use client";
 
 import { Check, Copy, ExternalLink, Link2 } from "lucide-react";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { useState } from "react";
 import { BottomSheet } from "@/components/arena/bottom-sheet";
 import { Button } from "@/components/ui/button";
@@ -44,6 +44,7 @@ const STYLIZED_QR_GRID = [
 
 export function ShareEventSheet({ event, onClose }: ShareEventSheetProps) {
   const t = useTranslations("arenaEventDetail.shareSheet");
+  const locale = useLocale();
   const [copied, setCopied] = useState(false);
 
   // Generate clean public path matching the design: e.g. https://jogabola.pt/c/3-treino-tatico
@@ -58,30 +59,12 @@ export function ShareEventSheet({ event, onClose }: ShareEventSheetProps) {
   const formattedDate = () => {
     try {
       const date = new Date(event.startDate);
-      // Format to Portuguese style: e.g., Qui, 24 Abr · 20h30
-      const days = ["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sáb"];
-      const months = [
-        "Jan",
-        "Fev",
-        "Mar",
-        "Abr",
-        "Mai",
-        "Jun",
-        "Jul",
-        "Ago",
-        "Set",
-        "Out",
-        "Nov",
-        "Dez",
-      ];
-      const dayName = days[date.getDay()];
-      const dayNum = date.getDate();
-      const monthName = months[date.getMonth()];
+      const datePart = date.toLocaleDateString(locale, { weekday: "short", day: "numeric", month: "short" });
       const hours = String(date.getHours()).padStart(2, "0");
       const minutes = String(date.getMinutes()).padStart(2, "0");
-      return `${dayName}, ${dayNum} ${monthName} · ${hours}h${minutes}`;
+      return `${datePart} · ${hours}h${minutes}`;
     } catch {
-      return "Qui, 24 Abr · 20h30";
+      return "";
     }
   };
 

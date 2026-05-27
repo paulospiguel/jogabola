@@ -121,9 +121,9 @@ export function CreateEventSheet({
     setSending(true);
     setError(null);
     const result = await createEvent({
-      title: form.title || "Treino Tático",
+      title: form.title || t("noTitle"),
       type: form.type === "other" ? "challenge" : form.type,
-      location: form.location || "Campo 3, Chiado",
+      location: form.location || "",
       startDate: form.startDate || new Date(),
       maxParticipants: form.maxPlayers,
       isPublic: true,

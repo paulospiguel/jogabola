@@ -266,7 +266,7 @@ export function EditEventSheet({ event, onClose }: EditEventSheetProps) {
                         className={inputClass}
                         id="edit-mbway-phone"
                         type="tel"
-                        placeholder="Ex: 912345678"
+                        placeholder={t("payment.mbwayPhonePlaceholder")}
                         value={form.mbwayPhone}
                         onChange={e => set("mbwayPhone", e.target.value)}
                       />
