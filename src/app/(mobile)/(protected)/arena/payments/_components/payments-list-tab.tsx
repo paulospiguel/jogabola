@@ -1,5 +1,6 @@
 import { ChevronRight, FileText, Wallet } from "lucide-react";
 import Link from "next/link";
+import { useLocale } from "next-intl";
 import { JbAvatar } from "@/components/arena/avatar";
 import { ArenaEmptyState } from "@/components/arena/empty-state";
 import { VerifiedBadge } from "@/components/arena/verified-badge";
@@ -9,7 +10,7 @@ import {
   type PaymentOverviewStatus,
 } from "@/constants/payments";
 import type { Payment } from "@/hooks/use-payments";
-import { cn } from "@/lib/utils";
+import { cn, formatRelativeTime } from "@/lib/utils";
 import type { PaymentsFilter } from "../_hooks/use-payments-page-state";
 
 type TranslationFn = (
@@ -85,14 +86,6 @@ function PaymentStatusBadge({
   );
 }
 
-function paymentAgeLabel(paymentId: string) {
-  if (paymentId === "PAY-1") return "1h";
-  if (paymentId === "PAY-2") return "30 min";
-  if (paymentId === "PAY-3") return "3h";
-
-  return "2h";
-}
-
 export function PaymentsListTab({
   activeFilter,
   badgeT,
@@ -102,6 +95,7 @@ export function PaymentsListTab({
   setActiveFilter,
   t,
 }: PaymentsListTabProps) {
+  const locale = useLocale();
   return (
     <>
       <div className="overflow-x-auto pb-3 scrollbar-none w-full">
@@ -178,7 +172,7 @@ export function PaymentsListTab({
                         {payment.amount}
                       </strong>
                       <p className="text-[9px] text-arena-text-muted mt-0.5">
-                        {t("ago", { time: paymentAgeLabel(payment.id) })}
+                        {t("ago", { time: formatRelativeTime(payment.date, locale) })}
                       </p>
                     </div>
                   </div>

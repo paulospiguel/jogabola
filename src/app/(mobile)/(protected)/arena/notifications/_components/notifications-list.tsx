@@ -8,12 +8,11 @@ import {
   markAllAsRead,
   markNotificationAsRead,
 } from "@/actions/notifications.actions";
-import { cn } from "@/lib/utils";
+import { cn, formatRelativeTime } from "@/lib/utils";
 import { buildMockNotifications } from "../_fixtures/notifications-mock";
 import {
-  FILTER_KEYS,
-  type FilterKey,
-  formatRelativeTime,
+  NOTIFICATION_FILTER_KEYS,
+  type NotificationFilterKey,
   matchesFilter,
   resolveNotificationIcon,
 } from "../_utils/notifications-helpers";
@@ -68,7 +67,7 @@ export function NotificationsList({ initialNotifications }: NotificationsListPro
   const locale = useLocale();
   const [isPending, startTransition] = useTransition();
   const queryClient = useQueryClient();
-  const [filter, setFilter] = useState<FilterKey>("todas");
+  const [filter, setFilter] = useState<NotificationFilterKey>("all");
   const [notifications, setNotifications] = useState<Notification[]>(() =>
     mergeWithMocks(initialNotifications, locale),
   );
@@ -126,7 +125,7 @@ export function NotificationsList({ initialNotifications }: NotificationsListPro
       </div>
 
       <div className="flex shrink-0 gap-2 overflow-x-auto border-b border-arena-border/20 px-5 py-3.5 scrollbar-none">
-        {FILTER_KEYS.map(key => (
+        {NOTIFICATION_FILTER_KEYS.map(key => (
           <button
             key={key}
             type="button"
@@ -145,7 +144,7 @@ export function NotificationsList({ initialNotifications }: NotificationsListPro
 
       <div className="flex-1 overflow-y-auto">
         {filtered.length === 0 ? (
-          <EmptyState t={t} hasFilter={filter !== "todas"} />
+          <EmptyState t={t} hasFilter={filter !== "all"} />
         ) : (
           <ul className="divide-y divide-arena-border/20">
             {filtered.map(notification => (

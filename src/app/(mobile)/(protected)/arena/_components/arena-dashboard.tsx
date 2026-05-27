@@ -238,7 +238,7 @@ export function ArenaDashboard({ userId }: ArenaDashboardProps) {
                   <div className="flex items-center gap-2">
                     {hasMultipleEvents && (
                       <button
-                        aria-label="Evento anterior"
+                        aria-label={t("hero.prevEvent")}
                         className="grid size-9 shrink-0 place-items-center rounded-xl border border-arena-border bg-arena-bg/45 text-arena-text-sec transition-colors hover:border-arena-primary/35 hover:text-arena-primary"
                         onClick={() => goToEvent(-1)}
                         type="button"

@@ -439,6 +439,7 @@
     "hero": {
       "nextMatch": "Next Match",
       "nextEvent": "Next event",
+      "prevEvent": "Previous event",
       "noEvents": "No upcoming events. Create one!",
       "view": "View"
     },
@@ -1057,7 +1058,8 @@
     "kicker": "Team",
     "search": {
       "noResults": "No players found",
-      "placeholder": "Search player..."
+      "placeholder": "Search player...",
+      "clearSearch": "Clear search"
     },
     "stats": {
       "playerCount": "{count} Player{count, plural, =1 {} other {s}}"
@@ -3035,9 +3037,9 @@
   "arenaRankings": {
     "title": "Rankings",
     "tabs": {
-      "liga": "League",
-      "marcadores": "Top Scorers",
-      "assist": "Assists"
+      "league": "League",
+      "scorers": "Top Scorers",
+      "assists": "Assists"
     },
     "table": {
       "team": "Team",

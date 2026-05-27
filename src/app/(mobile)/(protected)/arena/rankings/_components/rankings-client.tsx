@@ -8,7 +8,7 @@ import { ScreenHeader } from "@/components/arena/screen-header";
 import { cn } from "@/lib/utils";
 import { LIGA_STANDINGS, TOP_ASSISTS, TOP_SCORERS } from "../_fixtures/rankings-mock";
 
-type Tab = "liga" | "marcadores" | "assist";
+type Tab = "league" | "scorers" | "assists";
 
 const stagger = {
   container: { animate: { transition: { staggerChildren: 0.03 } } },
@@ -20,12 +20,12 @@ const stagger = {
 
 export function RankingsClient() {
   const t = useTranslations("arenaRankings");
-  const [tab, setTab] = useState<Tab>("liga");
+  const [tab, setTab] = useState<Tab>("league");
 
   const tabs: { id: Tab; label: string }[] = [
-    { id: "liga", label: t("tabs.liga") },
-    { id: "marcadores", label: t("tabs.marcadores") },
-    { id: "assist", label: t("tabs.assist") },
+    { id: "league", label: t("tabs.league") },
+    { id: "scorers", label: t("tabs.scorers") },
+    { id: "assists", label: t("tabs.assists") },
   ];
 
   return (
@@ -50,7 +50,7 @@ export function RankingsClient() {
         ))}
       </div>
 
-      {tab === "liga" && (
+      {tab === "league" && (
         <div className="px-4 py-3.5">
           <div className="mb-1.5 flex px-3.5 text-[10px] font-bold uppercase tracking-[0.6px] text-arena-text-muted">
             <span className="w-6">#</span>
@@ -105,7 +105,7 @@ export function RankingsClient() {
         </div>
       )}
 
-      {tab === "marcadores" && (
+      {tab === "scorers" && (
         <div className="flex flex-col gap-2 px-4 py-3.5">
           {TOP_SCORERS.map((p, i) => (
             <motion.div
@@ -132,7 +132,7 @@ export function RankingsClient() {
         </div>
       )}
 
-      {tab === "assist" && (
+      {tab === "assists" && (
         <div className="flex flex-col gap-2 px-4 py-3.5">
           {TOP_ASSISTS.map((p, i) => (
             <motion.div
