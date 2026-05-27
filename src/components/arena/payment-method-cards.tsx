@@ -11,6 +11,7 @@ import {
 } from "lucide-react";
 import { useTranslations } from "next-intl";
 import type { TeamPaymentConfig } from "@/types/payments";
+import { PAYMENT_STATUS } from "@/constants/payments";
 import { CopyButton } from "./payment-method-shared";
 import type { PaymentMethodStatus } from "./payment-method-shared";
 
@@ -36,7 +37,7 @@ export function StripeMethodCard({
 }) {
   const t = useTranslations("athleteRsvp.paymentMethodCard");
   const amount = `${(amountCents / 100).toFixed(2).replace(".", ",")} ${currency}`;
-  const isPaid = status === "paid";
+  const isPaid = status === PAYMENT_STATUS.PAID;
 
   return (
     <div className="flex flex-col gap-3">
@@ -54,10 +55,10 @@ export function StripeMethodCard({
         <button
           type="button"
           onClick={onPay}
-          disabled={status === "pending"}
+          disabled={status === PAYMENT_STATUS.PENDING}
           className="flex h-[46px] w-full items-center justify-center gap-2 rounded-[12px] bg-[#6366f1] text-[13px] font-bold text-white shadow-[0_0_20px_rgba(99,102,241,0.25)] transition-all hover:bg-[#5457e8] disabled:opacity-60"
         >
-          {status === "pending" ? (
+          {status === PAYMENT_STATUS.PENDING ? (
             <Loader2 size={16} className="animate-spin" />
           ) : (
             <>
@@ -117,7 +118,7 @@ export function MbwayMethodCard({
         </div>
       )}
 
-      {status === "paid" ? (
+      {status === PAYMENT_STATUS.PAID ? (
         <div className="flex items-center gap-2 rounded-[10px] border border-arena-success/30 bg-arena-success/10 px-3 py-2.5">
           <Check size={14} className="text-arena-success" strokeWidth={2.5} />
           <span className="text-[12px] font-semibold text-arena-success">
@@ -128,10 +129,10 @@ export function MbwayMethodCard({
         <button
           type="button"
           onClick={onProofSubmit}
-          disabled={status === "pending"}
+          disabled={status === PAYMENT_STATUS.PENDING}
           className="flex h-[46px] w-full items-center justify-center gap-2 rounded-[12px] border border-[#ef4444]/40 bg-[#ef4444]/10 text-[13px] font-bold text-[#ef4444] transition-all hover:bg-[#ef4444]/15 disabled:opacity-60"
         >
-          {status === "pending" ? (
+          {status === PAYMENT_STATUS.PENDING ? (
             <Loader2 size={16} className="animate-spin" />
           ) : (
             <>
@@ -142,7 +143,7 @@ export function MbwayMethodCard({
         </button>
       )}
 
-      {status === "pending" && (
+      {status === PAYMENT_STATUS.PENDING && (
         <p className="text-center text-[11px] text-arena-text-muted">
           {t("methods.mbway.waitingMsg")}
         </p>
@@ -179,14 +180,14 @@ export function CashMethodCard({
         </p>
       </div>
 
-      {status === "paid" ? (
+      {status === PAYMENT_STATUS.PAID ? (
         <div className="flex items-center gap-2 rounded-[10px] border border-arena-success/30 bg-arena-success/10 px-3 py-2.5">
           <Check size={14} className="text-arena-success" strokeWidth={2.5} />
           <span className="text-[12px] font-semibold text-arena-success">
             {t("methods.cash.paidMsg")}
           </span>
         </div>
-      ) : status === "pending" ? (
+      ) : status === PAYMENT_STATUS.PENDING ? (
         <div className="flex items-center gap-2 rounded-[10px] border border-arena-info/30 bg-arena-info/10 px-3 py-2.5">
           <Loader2 size={14} className="animate-spin text-arena-info" />
           <span className="text-[12px] font-semibold text-arena-info">
@@ -263,7 +264,7 @@ export function TransferMethodCard({
         </div>
       </div>
 
-      {status === "paid" ? (
+      {status === PAYMENT_STATUS.PAID ? (
         <div className="flex items-center gap-2 rounded-[10px] border border-arena-success/30 bg-arena-success/10 px-3 py-2.5">
           <Check size={14} className="text-arena-success" strokeWidth={2.5} />
           <span className="text-[12px] font-semibold text-arena-success">
@@ -274,10 +275,10 @@ export function TransferMethodCard({
         <button
           type="button"
           onClick={onProofSubmit}
-          disabled={status === "pending"}
+          disabled={status === PAYMENT_STATUS.PENDING}
           className="flex h-[46px] w-full items-center justify-center gap-2 rounded-[12px] border border-arena-primary/40 bg-arena-primary/10 text-[13px] font-bold text-arena-primary transition-all hover:bg-arena-primary/15 disabled:opacity-60 press"
         >
-          {status === "pending" ? (
+          {status === PAYMENT_STATUS.PENDING ? (
             <Loader2 size={16} className="animate-spin" />
           ) : (
             <>
@@ -288,7 +289,7 @@ export function TransferMethodCard({
         </button>
       )}
 
-      {status === "pending" && (
+      {status === PAYMENT_STATUS.PENDING && (
         <p className="text-center text-[11px] text-arena-text-muted">
           {t("methods.transfer.waitingMsg")}
         </p>
