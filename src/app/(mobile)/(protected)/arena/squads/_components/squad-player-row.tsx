@@ -6,6 +6,7 @@ import { JbAvatar } from "@/components/arena/avatar";
 import { type BadgeStatus, JbBadge } from "@/components/arena/badge";
 import { VerifiedBadge } from "@/components/arena/verified-badge";
 import type { SquadPlayer } from "@/hooks/use-squad";
+import { ATTENDANCE_STATUS } from "@/constants/attendance";
 
 interface SquadPlayerRowProps {
   player: SquadPlayer;
@@ -14,7 +15,7 @@ interface SquadPlayerRowProps {
 }
 
 function getBadgeStatus(playerStatus: SquadPlayer["status"]): BadgeStatus {
-  return playerStatus === "new" ? "pending" : playerStatus;
+  return playerStatus === "new" ? ATTENDANCE_STATUS.PENDING : playerStatus;
 }
 
 export function SquadPlayerRow({ player, index }: SquadPlayerRowProps) {
