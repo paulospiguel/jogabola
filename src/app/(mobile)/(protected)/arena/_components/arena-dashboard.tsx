@@ -294,7 +294,7 @@ export function ArenaDashboard({ userId }: ArenaDashboardProps) {
 
                     {hasMultipleEvents && (
                       <button
-                        aria-label="Próximo evento"
+                        aria-label={t("hero.nextEvent")}
                         className="grid size-9 shrink-0 place-items-center rounded-xl border border-arena-border bg-arena-bg/45 text-arena-text-sec transition-colors hover:border-arena-primary/35 hover:text-arena-primary"
                         onClick={() => goToEvent(1)}
                         type="button"

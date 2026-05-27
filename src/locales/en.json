@@ -438,6 +438,7 @@
     "defaultUser": "User",
     "hero": {
       "nextMatch": "Next Match",
+      "nextEvent": "Next event",
       "noEvents": "No upcoming events. Create one!",
       "view": "View"
     },

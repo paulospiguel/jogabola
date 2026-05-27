@@ -190,6 +190,8 @@ function CheckCircleIcon({
   className?: string;
   size?: number;
 }) {
+  const t = useTranslations("arenaPayments");
+  const label = t("stats.confirmed");
   return (
     <svg
       className={className}
@@ -202,9 +204,9 @@ function CheckCircleIcon({
       strokeLinecap="round"
       strokeLinejoin="round"
       role="img"
-      aria-label="Confirmado"
+      aria-label={label}
     >
-      <title>Confirmado</title>
+      <title>{label}</title>
       <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
       <polyline points="22 4 12 14.01 9 11.01" />
     </svg>
