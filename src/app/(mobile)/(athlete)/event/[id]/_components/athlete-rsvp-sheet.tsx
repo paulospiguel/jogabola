@@ -182,7 +182,7 @@ export function AthleteRsvpSheet({
     if (loginOtp.length < 6) { setError(t("enterCode")); return; }
     setLoading(true);
     clearError();
-    const name = loginEmail.split("@")[0]?.replace(/[._-]+/g, " ").trim() || "Atleta";
+    const name = loginEmail.split("@")[0]?.replace(/[._-]+/g, " ").trim() || t("defaultName");
     const result = await signIn.emailOtp({ email: loginEmail, otp: loginOtp, name });
     if (result.error) {
       setError(result.error.message || t("invalidCode"));

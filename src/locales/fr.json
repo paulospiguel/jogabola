@@ -2698,7 +2698,8 @@
       },
       "loadPayment": "Erreur lors du chargement du paiement"
     },
-    "namePlaceholder": "Nom complet"
+    "namePlaceholder": "Nom complet",
+    "defaultName": "Athlète"
   },
   "pricingPage": {
     "eyebrow": "Plans",
@@ -2901,7 +2902,18 @@
     },
     "backToEvent": "Retour à l'événement",
     "tryAgain": "Réessayer",
-    "loadError": "Impossible de charger le paiement."
+    "loadError": "Impossible de charger le paiement.",
+    "proof": {
+      "submitError": "Erreur lors de l'enregistrement du justificatif. Réessayez.",
+      "successMessage": "Justificatif envoyé avec succès!",
+      "title": "Envoyer le justificatif",
+      "imageAlt": "Aperçu du justificatif",
+      "uploading": "Envoi en cours...",
+      "registering": "Enregistrement...",
+      "changeFile": "Cliquez pour changer le fichier",
+      "dropzone": "Cliquez ou glissez l'image",
+      "formats": "JPEG, PNG, WebP · max. 8 Mo"
+    }
   },
   "videoDemo": {
     "closeModal": "Fermer la démo",

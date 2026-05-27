@@ -2698,7 +2698,8 @@
       },
       "loadPayment": "Error al cargar el pago"
     },
-    "namePlaceholder": "Nombre completo"
+    "namePlaceholder": "Nombre completo",
+    "defaultName": "Atleta"
   },
   "pricingPage": {
     "eyebrow": "Planes",
@@ -2901,7 +2902,18 @@
     },
     "backToEvent": "Volver al evento",
     "tryAgain": "Intentar de nuevo",
-    "loadError": "No se pudo cargar el pago."
+    "loadError": "No se pudo cargar el pago.",
+    "proof": {
+      "submitError": "Error al registrar el comprobante. Inténtalo de nuevo.",
+      "successMessage": "¡Comprobante enviado con éxito!",
+      "title": "Enviar comprobante",
+      "imageAlt": "Vista previa del comprobante",
+      "uploading": "Subiendo...",
+      "registering": "Registrando...",
+      "changeFile": "Haz clic para cambiar el archivo",
+      "dropzone": "Haz clic o arrastra la imagen",
+      "formats": "JPEG, PNG, WebP · máx. 8 MB"
+    }
   },
   "videoDemo": {
     "closeModal": "Cerrar demo",

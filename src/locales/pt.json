@@ -2678,7 +2678,8 @@
       },
       "loadPayment": "Erro ao carregar o pagamento"
     },
-    "namePlaceholder": "Nome completo"
+    "namePlaceholder": "Nome completo",
+    "defaultName": "Atleta"
   },
   "pricingPage": {
     "eyebrow": "Planos",
@@ -2901,7 +2902,18 @@
     },
     "backToEvent": "Voltar ao evento",
     "tryAgain": "Tentar novamente",
-    "loadError": "Não foi possível carregar o pagamento."
+    "loadError": "Não foi possível carregar o pagamento.",
+    "proof": {
+      "submitError": "Erro ao registar comprovativo. Tenta novamente.",
+      "successMessage": "Comprovativo enviado com sucesso!",
+      "title": "Enviar comprovativo",
+      "imageAlt": "Preview do comprovativo",
+      "uploading": "A enviar...",
+      "registering": "A registar...",
+      "changeFile": "Clica para trocar o ficheiro",
+      "dropzone": "Clica ou arrasta a imagem",
+      "formats": "JPEG, PNG, WebP · máx. 8 MB"
+    }
   },
   "videoDemo": {
     "closeModal": "Fechar demo",

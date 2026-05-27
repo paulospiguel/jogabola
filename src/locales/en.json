@@ -2698,7 +2698,8 @@
       },
       "loadPayment": "Error loading payment"
     },
-    "namePlaceholder": "Full name"
+    "namePlaceholder": "Full name",
+    "defaultName": "Athlete"
   },
   "pricingPage": {
     "eyebrow": "Plans",
@@ -2901,7 +2902,18 @@
     },
     "backToEvent": "Back to event",
     "tryAgain": "Try again",
-    "loadError": "Could not load payment."
+    "loadError": "Could not load payment.",
+    "proof": {
+      "submitError": "Error registering proof. Please try again.",
+      "successMessage": "Proof submitted successfully!",
+      "title": "Submit proof",
+      "imageAlt": "Proof preview",
+      "uploading": "Uploading...",
+      "registering": "Registering...",
+      "changeFile": "Click to change file",
+      "dropzone": "Click or drag the image",
+      "formats": "JPEG, PNG, WebP · max. 8 MB"
+    }
   },
   "videoDemo": {
     "closeModal": "Close demo",

@@ -107,6 +107,7 @@ interface ProofUploadProps {
 }
 
 function ProofUpload({ paymentId, onUploaded }: ProofUploadProps) {
+  const t = useTranslations("paymentResult");
   const inputRef = useRef<HTMLInputElement>(null);
   const [preview, setPreview] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
@@ -125,7 +126,7 @@ function ProofUpload({ paymentId, onUploaded }: ProofUploadProps) {
         setDone(true);
         setTimeout(() => onUploaded(), 1200);
       } else {
-        setSubmitError("Erro ao registar comprovativo. Tenta novamente.");
+        setSubmitError(t("proof.submitError"));
       }
     },
   });
@@ -165,7 +166,7 @@ function ProofUpload({ paymentId, onUploaded }: ProofUploadProps) {
           <Check size={20} strokeWidth={2.5} />
         </div>
         <p className="text-[13px] font-semibold text-arena-success">
-          Comprovativo enviado com sucesso!
+          {t("proof.successMessage")}
         </p>
       </div>
     );
@@ -174,7 +175,7 @@ function ProofUpload({ paymentId, onUploaded }: ProofUploadProps) {
   return (
     <div className="flex flex-col gap-3">
       <p className="text-[12px] font-bold uppercase tracking-wider text-arena-text-muted">
-        Enviar comprovativo
+        {t("proof.title")}
       </p>
 
       {/* Drop zone */}
@@ -206,7 +207,7 @@ function ProofUpload({ paymentId, onUploaded }: ProofUploadProps) {
           <div className="relative h-full w-full">
             <Image
               src={preview}
-              alt="Preview do comprovativo"
+              alt={t("proof.imageAlt")}
               fill
               className="object-cover opacity-30"
             />
@@ -219,15 +220,15 @@ function ProofUpload({ paymentId, onUploaded }: ProofUploadProps) {
                   />
                   <p className="text-[12px] font-semibold text-arena-primary">
                     {state.status === "uploading"
-                      ? "A enviar..."
-                      : "A registar..."}
+                      ? t("proof.uploading")
+                      : t("proof.registering")}
                   </p>
                 </>
               ) : (
                 <>
                   <Upload size={22} className="text-arena-primary" />
                   <p className="text-[12px] font-semibold text-arena-text">
-                    Clica para trocar o ficheiro
+                    {t("proof.changeFile")}
                   </p>
                 </>
               )}
@@ -240,10 +241,10 @@ function ProofUpload({ paymentId, onUploaded }: ProofUploadProps) {
             </div>
             <div className="text-center">
               <p className="text-[13px] font-semibold text-arena-text">
-                Clica ou arrasta a imagem
+                {t("proof.dropzone")}
               </p>
               <p className="text-[11px] text-arena-text-muted">
-                JPEG, PNG, WebP · máx. 8 MB
+                {t("proof.formats")}
               </p>
             </div>
           </>
