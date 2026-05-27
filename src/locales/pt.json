@@ -644,7 +644,8 @@
     "status": {
       "scheduled": "Agendado",
       "confirmed": "Confirmado",
-      "cancelled": "Cancelado"
+      "cancelled": "Cancelado",
+      "completed": "✓ Concluído"
     }
   },
   "arenaNav": {

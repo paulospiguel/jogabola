@@ -101,8 +101,8 @@ function EventCard({ event, index = 0 }: { event: EventView; index?: number }) {
           : 7;
   const capacity = event.maxParticipants ? Number(event.maxParticipants) : 14;
 
-  const isEmpate = event.title.toLowerCase().includes("sporting");
-  const scoreText = isGame ? (isEmpate ? "E 1-1" : "V 2-1") : "✓ CONCLUÍDO";
+  const isDraw = event.title.toLowerCase().includes("sporting");
+  const scoreText = isGame ? (isDraw ? "E 1-1" : "V 2-1") : t("status.completed");
 
   const dateObj = new Date(event.startDate);
   const displayDate = dateObj.toLocaleDateString(locale, { weekday: "short", day: "numeric", month: "short" });
@@ -158,7 +158,7 @@ function EventCard({ event, index = 0 }: { event: EventView; index?: number }) {
             <span
               className={cn(
                 "text-[10px] font-black tracking-wider uppercase px-2 py-0.5 border rounded-[6px]",
-                isEmpate
+                isDraw
                   ? "bg-arena-warning/10 border-arena-warning/30 text-arena-warning"
                   : "bg-arena-success/10 border-arena-success/30 text-arena-success",
               )}

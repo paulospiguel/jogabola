@@ -56,7 +56,7 @@ export function CreateEventSheet({
     transferRequiresProof: true,
   });
 
-  const [inputFee, setInputFee] = useState("€ 0 — grátis");
+  const [inputFee, setInputFee] = useState(t("placeholders.fee"));
   const [searchQuery, setSearchQuery] = useState("");
   const [sending, setSending] = useState(false);
   const [done, setDone] = useState(false);
