@@ -4,6 +4,7 @@ import { CheckIcon, XIcon } from "@animateicons/react/lucide";
 import { Banknote } from "lucide-react";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
+import { ATTENDANCE_STATUS } from "@/constants/attendance";
 import { cn } from "@/lib/utils";
 
 interface AthleteEventRsvpBarProps {
@@ -49,7 +50,7 @@ export function AthleteEventRsvpBar({
         </div>
       )}
 
-      {myStatus === "confirmed" ? (
+      {myStatus === ATTENDANCE_STATUS.CONFIRMED ? (
         <div className="flex flex-col gap-2">
           {canResumePayment && (
             <button

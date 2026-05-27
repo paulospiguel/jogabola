@@ -4,6 +4,8 @@ import { CheckIcon, MapPinIcon } from "@animateicons/react/lucide";
 import { Share2 as ShareIcon, Trophy, Calendar, Clock, Banknote } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useState } from "react";
+import { EVENT_STATUS } from "@/constants/event-status";
+import { ATTENDANCE_STATUS } from "@/constants/attendance";
 import { cn, formatDate, formatTime } from "@/lib/utils";
 import { CountdownTimer } from "./countdown-timer";
 
@@ -163,7 +165,7 @@ export function AthleteEventHeader({
     event.type === "game" ||
     event.type === "challenge";
   const isCancelled =
-    event.status === "cancelled" || event.status === "canceled";
+    event.status === EVENT_STATUS.CANCELLED || event.status === "canceled";
   const isRosterOnly = event.rosterOnly ?? false;
   const total = Number(event.maxParticipants) || 14;
 
@@ -207,7 +209,7 @@ export function AthleteEventHero({
     event.type === "game" ||
     event.type === "challenge";
   const isCancelled =
-    event.status === "cancelled" || event.status === "canceled";
+    event.status === EVENT_STATUS.CANCELLED || event.status === "canceled";
   const isRosterOnly = event.rosterOnly ?? false;
   const total = Number(event.maxParticipants) || 14;
 
@@ -351,7 +353,7 @@ export function AthleteEventHero({
         </div>
       )}
 
-      {myStatus === "confirmed" && (
+      {myStatus === ATTENDANCE_STATUS.CONFIRMED && (
         <div className="mt-3 flex items-center gap-2.5 rounded-[12px] border border-arena-success/30 bg-arena-success/10 px-3.5 py-2.5">
           <div className="flex size-7 items-center justify-center rounded-full bg-arena-success/20 text-arena-success">
             <CheckIcon size={14} color="currentColor" />

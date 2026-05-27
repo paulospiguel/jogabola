@@ -4,6 +4,7 @@ import { Check, Loader2, Share2, X } from "lucide-react";
 import { motion } from "framer-motion";
 import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
+import { ATTENDANCE_STATUS } from "@/constants/attendance";
 import { cn } from "@/lib/utils";
 
 interface EventActionBarProps {
@@ -43,18 +44,18 @@ export function EventActionBar({
       </Button>
 
       <Button
-        onClick={myStatus === "confirmed" ? onCancel : onConfirm}
+        onClick={myStatus === ATTENDANCE_STATUS.CONFIRMED ? onCancel : onConfirm}
         disabled={actionLoading}
         className={cn(
           "flex-1 h-12 font-extrabold text-sm rounded-xl transition-all gap-2 shadow-[0_0_24px_rgba(124,255,79,0.22)]",
-          myStatus === "confirmed"
+          myStatus === ATTENDANCE_STATUS.CONFIRMED
             ? "bg-arena-danger/10 border border-arena-danger/25 text-arena-danger hover:bg-arena-danger/15"
             : "bg-arena-primary text-[#0B0F14] hover:bg-arena-primary/95",
         )}
       >
         {actionLoading ? (
           <Loader2 className="w-4 h-4 animate-spin" />
-        ) : myStatus === "confirmed" ? (
+        ) : myStatus === ATTENDANCE_STATUS.CONFIRMED ? (
           <>
             <X className="w-4.5 h-4.5" strokeWidth={2.5} />
             {t("actions.cancel")}

@@ -3,6 +3,7 @@
 import { useTranslations } from "next-intl";
 import { useEffect, useMemo, useState, useTransition } from "react";
 import { sendRosterPlayerEmail } from "@/actions/teams.actions";
+import { ATTENDANCE_STATUS } from "@/constants/attendance";
 import type { SquadPlayer } from "@/hooks/use-squad";
 import { useSquad } from "@/hooks/use-squad";
 import { useTeams } from "@/hooks/use-teams";
@@ -29,10 +30,10 @@ function emailLimitFor(planTier: string) {
 
 function matchesFilter(player: SquadPlayer, filter: SquadFilterKey): boolean {
   if (filter === "all") return true;
-  if (filter === "confirmed") return player.status === "confirmed";
-  if (filter === "reserve") return player.status === "reserve";
+  if (filter === "confirmed") return player.status === ATTENDANCE_STATUS.CONFIRMED;
+  if (filter === "reserve") return player.status === ATTENDANCE_STATUS.RESERVE;
   if (filter === "pending") {
-    return player.status === "pending" || player.status === "new";
+    return player.status === ATTENDANCE_STATUS.PENDING || player.status === "new";
   }
   return true;
 }

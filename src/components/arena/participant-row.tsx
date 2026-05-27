@@ -37,6 +37,8 @@ import {
 import type { Participant } from "@/hooks/use-event-attendance";
 import { cn } from "@/lib/utils";
 import type { PaymentStatus } from "@/types/payments";
+import { PAYMENT_STATUS } from "@/constants/payments";
+import { ATTENDANCE_STATUS } from "@/constants/attendance";
 import { JbAvatar } from "./avatar";
 import { PaymentStatusBadge } from "./payment-status-badge";
 
@@ -65,12 +67,12 @@ function isPaymentStatus(
   status: Participant["paymentStatus"],
 ): status is PaymentStatus {
   return (
-    status === "pending" ||
-    status === "paid_unverified" ||
-    status === "review_required" ||
-    status === "approved" ||
-    status === "rejected" ||
-    status === "refunded"
+    status === PAYMENT_STATUS.PENDING ||
+    status === PAYMENT_STATUS.PAID_UNVERIFIED ||
+    status === PAYMENT_STATUS.REVIEW_REQUIRED ||
+    status === PAYMENT_STATUS.APPROVED ||
+    status === PAYMENT_STATUS.REJECTED ||
+    status === PAYMENT_STATUS.REFUNDED
   );
 }
 
@@ -111,13 +113,15 @@ export function ParticipantRow({
 
   const paymentStatus = isPaymentStatus(participant.paymentStatus)
     ? participant.paymentStatus
-    : (showPayment ? ("pending" as const) : null);
+    : (showPayment ? PAYMENT_STATUS.PENDING : null);
   const shouldShowPayment = showPayment && paymentStatus;
   const profileHref = String(participant.id).startsWith("guest-")
     ? null
     : `/arena/squads/player/${participant.id}`;
 
-  async function handleStatusChange(newStatus: "confirmed" | "reserve") {
+  async function handleStatusChange(
+    newStatus: typeof ATTENDANCE_STATUS.CONFIRMED | typeof ATTENDANCE_STATUS.RESERVE,
+  ) {
     if (!eventId) return;
     setLoading(true);
     try {
@@ -185,9 +189,9 @@ export function ParticipantRow({
         align="end"
         className="w-52 rounded-[12px] border-arena-border bg-arena-surface shadow-xl shadow-black/40"
       >
-        {participant.status === "reserve" ? (
+        {participant.status === ATTENDANCE_STATUS.RESERVE ? (
           <DropdownMenuItem
-            onClick={() => handleStatusChange("confirmed")}
+            onClick={() => handleStatusChange(ATTENDANCE_STATUS.CONFIRMED)}
             className="gap-2.5 px-3 py-2.5 text-[13px] font-medium text-arena-text focus:bg-arena-surface-el focus:text-arena-primary"
           >
             <ArrowUpCircle className="h-4 w-4 text-arena-success" />
@@ -195,7 +199,7 @@ export function ParticipantRow({
           </DropdownMenuItem>
         ) : (
           <DropdownMenuItem
-            onClick={() => handleStatusChange("reserve")}
+            onClick={() => handleStatusChange(ATTENDANCE_STATUS.RESERVE)}
             className="gap-2.5 px-3 py-2.5 text-[13px] font-medium text-arena-text focus:bg-arena-surface-el focus:text-arena-info"
           >
             <ArrowDownCircle className="h-4 w-4 text-arena-info" />

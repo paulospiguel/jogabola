@@ -16,6 +16,7 @@ import { useCallback, useRef, useState } from "react";
 import { submitPaymentProof } from "@/actions/payments.actions";
 import { usePayment } from "@/hooks/use-payments";
 import { useProofUpload } from "@/hooks/use-proof-upload";
+import { PAYMENT_STATUS } from "@/constants/payments";
 import { cn } from "@/lib/utils";
 
 interface PaymentResultClientProps {
@@ -307,9 +308,9 @@ export function PaymentResultClient({
     );
   }
 
-  const status = payment.status ?? "pending";
+  const status = payment.status ?? PAYMENT_STATUS.PENDING;
   const { Icon, iconBg, iconColor, iconBorder, titleKey, captionKey } =
-    getStatusConfig(proofUploaded ? "paid_unverified" : status);
+    getStatusConfig(proofUploaded ? PAYMENT_STATUS.PAID_UNVERIFIED : status);
   const formattedCurrency = formatCurrency(
     payment.amountCents,
     payment.currency,
@@ -318,13 +319,13 @@ export function PaymentResultClient({
   // Show upload section when payment is pending (mbway/transfer) and proof not yet uploaded
   const showUpload =
     !proofUploaded &&
-    (status === "pending" || status === "paid_unverified") &&
+    (status === PAYMENT_STATUS.PENDING || status === PAYMENT_STATUS.PAID_UNVERIFIED) &&
     (payment.method === "mbway" ||
       (payment.method === "transfer" && payment.transferRequiresProof));
 
   let caption = t(captionKey);
   if (payment.method === "transfer") {
-    if (status === "paid_unverified" || proofUploaded) {
+    if (status === PAYMENT_STATUS.PAID_UNVERIFIED || proofUploaded) {
       caption = payment.transferRequiresProof
         ? tRsvp("payment.methods.transfer.waitingMsg")
         : tRsvp("payment.methods.transfer.waitingMsgNoProof");

@@ -14,6 +14,7 @@ import {
 import { useLocale, useTranslations } from "next-intl";
 import { useState } from "react";
 import { ShareEventSheet } from "@/components/arena/share-event-sheet";
+import { ATTENDANCE_STATUS } from "@/constants/attendance";
 import { cn, formatTime } from "@/lib/utils";
 import type { EventStatus } from "@/types/events";
 import { useEventDetailChat } from "../_hooks/use-event-detail-chat";
@@ -98,7 +99,7 @@ export function EventDetail({
   const handleConfirmAttendance = async () => {
     setActionLoading(true);
     setTimeout(() => {
-      setMyStatus("confirmed");
+      setMyStatus(ATTENDANCE_STATUS.CONFIRMED);
       setActionLoading(false);
     }, 600);
   };

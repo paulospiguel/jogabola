@@ -4,6 +4,9 @@ import { useTranslations } from "next-intl";
 import { useState } from "react";
 import { LocationMap } from "@/components/arena/location-map";
 import { useEventAttendance } from "@/hooks/use-event-attendance";
+import { ATTENDANCE_STATUS } from "@/constants/attendance";
+import { EVENT_STATUS } from "@/constants/event-status";
+import { PAYMENT_STATUS } from "@/constants/payments";
 import { cn } from "@/lib/utils";
 import { useAthleteEventDetail } from "../_hooks/use-athlete-event-detail";
 import { AthleteEventHero } from "./athlete-event-header";
@@ -74,20 +77,20 @@ export function AthleteEventDetail({
   });
 
   const isCancelled =
-    event.status === "cancelled" || event.status === "canceled";
+    event.status === EVENT_STATUS.CANCELLED || event.status === "canceled";
   const total = Number(event.maxParticipants) || 14;
   const isFull = confirmed.length >= total;
   const myPaymentStatus =
     confirmed.find(p => p.id === userId)?.paymentStatus ?? null;
   const canResumePayment =
-    myStatus === "confirmed" &&
+    myStatus === ATTENDANCE_STATUS.CONFIRMED &&
     !isCancelled &&
     !isLoading &&
     event.priceCents > 0 &&
     (!myPaymentStatus ||
-      myPaymentStatus === "pending" ||
-      myPaymentStatus === "rejected" ||
-      myPaymentStatus === "refunded");
+      myPaymentStatus === PAYMENT_STATUS.PENDING ||
+      myPaymentStatus === PAYMENT_STATUS.REJECTED ||
+      myPaymentStatus === PAYMENT_STATUS.REFUNDED);
 
   const TABS: { id: Tab; label: string }[] = [
     { id: "list", label: t("tabs.squad") },

@@ -2,6 +2,7 @@
 
 import { Calendar } from "lucide-react";
 import { useTranslations } from "next-intl";
+import { EVENT_STATUS } from "@/constants/event-status";
 import { ArenaEmptyState } from "@/components/arena/empty-state";
 import { useCalendarEventsState } from "../_hooks/use-calendar-events-state";
 import type {
@@ -57,7 +58,7 @@ export function CalendarEvents({
     { id: "range", label: t("views.range") },
   ] satisfies Array<{ id: ViewMode; label: string }>;
   const getStatusLabel = (status: SessionRow["status"]) => {
-    if (!status || status === "scheduled") return undefined;
+    if (!status || status === EVENT_STATUS.SCHEDULED) return undefined;
     return t(`status.${status}`);
   };
 
