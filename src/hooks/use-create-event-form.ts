@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { useTranslations } from "next-intl";
-import { createEvent } from "@/actions/match-sessions.actions";
+import { createEvent, updateEvent } from "@/actions/match-sessions.actions";
 import { useSquad } from "@/hooks/use-squad";
 import { useTeamPaymentSettings } from "@/hooks/use-team-payment-settings";
 import type { CreateEventFormState } from "@/components/arena/create-event-form-types";
@@ -10,9 +10,27 @@ import type { CreateEventFormState } from "@/components/arena/create-event-form-
 interface UseCreateEventFormOptions {
   teamId?: number;
   onCreated?: () => void;
+  eventToEdit?: {
+    id: number;
+    title: string;
+    type: string;
+    location: string;
+    startDate: Date | string;
+    status: string;
+    recurrence: string;
+    teamId: number;
+    maxParticipants?: string | null;
+    priceCents?: number;
+    paymentRequired?: boolean;
+    paymentDeadlineHours?: number | null;
+    rosterOnly?: boolean;
+    mbwayEnabled?: boolean;
+    mbwayPhone?: string;
+    transferRequiresProof?: boolean;
+  };
 }
 
-export function useCreateEventForm({ teamId, onCreated }: UseCreateEventFormOptions) {
+export function useCreateEventForm({ teamId, onCreated, eventToEdit }: UseCreateEventFormOptions) {
   const t = useTranslations("arenaCreateEvent");
   const { players } = useSquad();
   const { settings } = useTeamPaymentSettings(teamId);
@@ -26,24 +44,49 @@ export function useCreateEventForm({ teamId, onCreated }: UseCreateEventFormOpti
     return d;
   }
 
-  const [form, setForm] = useState<CreateEventFormState>({
-    type: "game",
-    title: "",
-    location: "",
-    startDate: defaultDate(),
-    maxPlayers: "14",
-    recurrence: "once",
-    priceCents: 0,
-    paymentRequired: false,
-    paymentDeadlineHours: "",
-    rosterOnly: false,
-    rosterPriorityHours: 0,
-    mbwayEnabled: false,
-    mbwayPhone: "",
-    transferRequiresProof: true,
+  const [form, setForm] = useState<CreateEventFormState>(() => {
+    if (eventToEdit) {
+      return {
+        type: (eventToEdit.type === "training" || eventToEdit.type === "game" || eventToEdit.type === "challenge") ? eventToEdit.type : "game",
+        title: eventToEdit.title,
+        location: eventToEdit.location,
+        startDate: typeof eventToEdit.startDate === "string" ? new Date(eventToEdit.startDate) : eventToEdit.startDate,
+        maxPlayers: eventToEdit.maxParticipants || "14",
+        recurrence: (eventToEdit.recurrence === "weekly" || eventToEdit.recurrence === "monthly") ? eventToEdit.recurrence : "once",
+        priceCents: eventToEdit.priceCents || 0,
+        paymentRequired: eventToEdit.paymentRequired || false,
+        paymentDeadlineHours: eventToEdit.paymentDeadlineHours?.toString() || "",
+        rosterOnly: eventToEdit.rosterOnly || false,
+        rosterPriorityHours: 0,
+        mbwayEnabled: eventToEdit.mbwayEnabled || false,
+        mbwayPhone: eventToEdit.mbwayPhone || "",
+        transferRequiresProof: eventToEdit.transferRequiresProof !== false,
+      };
+    }
+    return {
+      type: "game",
+      title: "",
+      location: "",
+      startDate: defaultDate(),
+      maxPlayers: "14",
+      recurrence: "once",
+      priceCents: 0,
+      paymentRequired: false,
+      paymentDeadlineHours: "",
+      rosterOnly: false,
+      rosterPriorityHours: 0,
+      mbwayEnabled: false,
+      mbwayPhone: "",
+      transferRequiresProof: true,
+    };
   });
 
-  const [inputFee, setInputFee] = useState(t("placeholders.fee"));
+  const [inputFee, setInputFee] = useState(() => {
+    if (eventToEdit && eventToEdit.priceCents && eventToEdit.priceCents > 0) {
+      return `${(eventToEdit.priceCents / 100).toFixed(2)}€`;
+    }
+    return t("placeholders.fee");
+  });
   const [searchQuery, setSearchQuery] = useState("");
   const [sending, setSending] = useState(false);
   const [done, setDone] = useState(false);
@@ -113,34 +156,51 @@ export function useCreateEventForm({ teamId, onCreated }: UseCreateEventFormOpti
   async function handleSend() {
     setSending(true);
     setError(null);
-    const result = await createEvent({
-      title: form.title || t("noTitle"),
-      type: form.type === "other" ? "challenge" : form.type,
-      location: form.location || "",
-      startDate: form.startDate || new Date(),
-      maxParticipants: form.maxPlayers,
-      isPublic: true,
-      recurrence: form.recurrence,
-      teamId,
-      priceCents: form.priceCents,
-      paymentRequired: form.paymentRequired,
-      paymentDeadlineHours: form.paymentDeadlineHours
-        ? Number.parseInt(form.paymentDeadlineHours, 10)
-        : null,
-      rosterOnly: form.rosterOnly,
-      rosterPriorityHours: form.rosterPriorityHours,
-      mbwayEnabled: form.mbwayEnabled,
-      mbwayPhone: form.mbwayPhone,
-      transferRequiresProof: form.transferRequiresProof,
-      invitedPlayers: rosterPlayers
-        .filter(player => selectedPlayerIds.includes(player.id))
-        .map(player => ({
-          id: player.id,
-          name: player.name,
-          email: player.email,
-          isVerified: player.isVerified,
-        })),
-    });
+    const result = eventToEdit
+      ? await updateEvent(eventToEdit.id, {
+          title: form.title || t("noTitle"),
+          startDate: form.startDate || new Date(),
+          recurrence: form.recurrence,
+          location: form.location || "",
+          maxParticipants: form.maxPlayers,
+          priceCents: form.priceCents,
+          paymentRequired: form.paymentRequired,
+          paymentDeadlineHours: form.paymentDeadlineHours
+            ? Number.parseInt(form.paymentDeadlineHours, 10)
+            : null,
+          rosterOnly: form.rosterOnly,
+          transferRequiresProof: form.transferRequiresProof,
+          mbwayEnabled: form.mbwayEnabled,
+          mbwayPhone: form.mbwayPhone,
+        })
+      : await createEvent({
+          title: form.title || t("noTitle"),
+          type: form.type === "other" ? "challenge" : form.type,
+          location: form.location || "",
+          startDate: form.startDate || new Date(),
+          maxParticipants: form.maxPlayers,
+          isPublic: true,
+          recurrence: form.recurrence,
+          teamId,
+          priceCents: form.priceCents,
+          paymentRequired: form.paymentRequired,
+          paymentDeadlineHours: form.paymentDeadlineHours
+            ? Number.parseInt(form.paymentDeadlineHours, 10)
+            : null,
+          rosterOnly: form.rosterOnly,
+          rosterPriorityHours: form.rosterPriorityHours,
+          mbwayEnabled: form.mbwayEnabled,
+          mbwayPhone: form.mbwayPhone,
+          transferRequiresProof: form.transferRequiresProof,
+          invitedPlayers: rosterPlayers
+            .filter(player => selectedPlayerIds.includes(player.id))
+            .map(player => ({
+              id: player.id,
+              name: player.name,
+              email: player.email,
+              isVerified: player.isVerified,
+            })),
+        });
     setSending(false);
     if (result.success) {
       setDone(true);

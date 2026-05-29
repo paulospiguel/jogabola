@@ -4,6 +4,17 @@ import { CheckIcon, XIcon } from "@animateicons/react/lucide";
 import { Banknote } from "lucide-react";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 import { ATTENDANCE_STATUS } from "@/constants/attendance";
 import { cn } from "@/lib/utils";
 

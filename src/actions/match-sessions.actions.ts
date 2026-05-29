@@ -190,11 +190,13 @@ export async function createEvent(input: {
 export async function updateEvent(
   eventId: number,
   input: {
+    title?: string;
     status?: EventStatus;
     startDate?: Date;
     endDate?: Date;
     recurrence?: string;
     location?: string;
+    maxParticipants?: string;
     priceCents?: number;
     paymentRequired?: boolean;
     paymentDeadlineHours?: number | null;
@@ -229,11 +231,15 @@ export async function updateEvent(
   const [event] = await db
     .update(matchSessions)
     .set({
+      ...(input.title !== undefined && { title: input.title }),
       ...(input.status && { status: input.status }),
       ...(input.startDate && { startsAt: input.startDate }),
       ...(input.endDate && { endsAt: input.endDate }),
       ...(input.recurrence && { recurrence: input.recurrence }),
       ...(input.location && { location: input.location }),
+      ...(input.maxParticipants !== undefined && {
+        capacity: input.maxParticipants ? Number.parseInt(input.maxParticipants, 10) : null,
+      }),
       ...(input.priceCents !== undefined && { priceCents: input.priceCents }),
       ...(input.paymentRequired !== undefined && {
         paymentRequired: input.paymentRequired,

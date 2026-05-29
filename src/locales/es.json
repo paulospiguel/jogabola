@@ -477,7 +477,13 @@
     "actions": {
       "cancel": "Cancelar Asistencia",
       "confirm": "Confirmar Asistencia",
-      "cancelled": "Evento cancelado"
+      "cancelled": "Evento cancelado",
+      "cancelConfirm": {
+        "title": "¿Cancelar asistencia?",
+        "description": "Liberarás tu plaza en este partido. Si ya pagaste, contacta con el organizador sobre el reembolso.",
+        "action": "Cancelar asistencia",
+        "keep": "Mantener asistencia"
+      }
     },
     "management": {
       "revokeTitle": "¿Revocar Asistencia?",
@@ -570,6 +576,7 @@
       "aiBalancerBeta": "Equilibrador de Equipos por IA",
       "aiBalancerBetaSub": "Genera equipos equilibrados basados en el nivel de los jugadores.",
       "aiBalancerCta": "Generar {count} Equipos con IA",
+      "teamLabel": "Equipo {label}",
       "howToGet": "Cómo llegar",
       "metro": "Metro",
       "metroDesc": "Estación Baixa-Chiado (Línea Azul/Verde) a 3 min a pie.",
@@ -579,6 +586,13 @@
       "carroDesc": "Aparcamiento difícil. Aparcamiento subterráneo Camões de pago.",
       "chatEmpty": "No hay mensajes aquí todavía. ¡Envía el primero!",
       "chatPlaceholder": "Escribe un mensaje para el grupo...",
+      "chatLockedTitle": "Chat para confirmados",
+      "chatLockedSub": "Confirma tu asistencia para unirte a la conversación.",
+      "deleteMessage": "Eliminar mensaje",
+      "censorMessage": "Censurar mensaje",
+      "uncensorMessage": "Eliminar censura",
+      "messageCensored": "Mensaje censurado",
+      "cancel": "Cancelar",
       "squadFull": "¡Plantilla Completa!",
       "readyToBalance": "Listo para equilibrar los equipos",
       "guest": "Invitado"
@@ -637,6 +651,7 @@
     "title": "Eventos",
     "editInfo": "Editar Información",
     "statusLabel": "Estado del Evento",
+    "eventNotFound": "Evento no encontrado",
     "errorUpdating": "Error al actualizar el evento. Inténtalo de nuevo.",
     "types": {
       "match": "Partido",
@@ -1091,6 +1106,7 @@
     "comingSoon": "Próximamente",
     "comingSoonDescription": "Esta área está en desarrollo. Pronto tendrás acceso completo.",
     "confirm": "Confirmar",
+    "confirmAction": "Confirmar",
     "confirmPassword": "Confirma tu contraseña",
     "copyright": "Derechos de autor ©{year}. Todos los derechos reservados.",
     "create": "Crear",
@@ -2129,7 +2145,9 @@
       "assists": "Asist.",
       "rating": "Nota",
       "associatedTeams": "Equipos Asociados",
-      "associatedTeamsCount": "{count} equipos",
+      "associatedTeamsCount": "{count, plural, one {# equipo} other {# equipos}}",
+      "playersCountLabel": "{count, plural, one {# jugador} other {# jugadores}}",
+      "noTeams": "Aún no perteneces a ningún equipo.",
       "playersCount": "jugadores",
       "position": "posición",
       "wins": "victorias",
@@ -2147,7 +2165,10 @@
       "proPlan": "Plan Pro",
       "proPlanSub": "3/3 equipos · €5/mes",
       "logout": "Cerrar sesión",
-      "logoutConfirm": "¿Realmente deseas cerrar sesión?"
+      "logoutTitle": "¿Cerrar sesión?",
+      "logoutDescription": "Saldrás de JogaBola. Puedes volver a entrar cuando quieras.",
+      "logoutAction": "Salir",
+      "logoutCancel": "Cancelar"
     },
     "notificationsSheet": {
       "title": "Notificaciones",
@@ -2921,8 +2942,10 @@
       "uploading": "Subiendo...",
       "registering": "Registrando...",
       "changeFile": "Haz clic para cambiar el archivo",
-      "dropzone": "Haz clic o arrastra la imagen",
-      "formats": "JPEG, PNG, WebP · máx. 8 MB"
+      "dropzone": "Haz clic o arrastra el archivo",
+      "formats": "JPEG, PNG, WebP, PDF · máx. 2 MB",
+      "invalidType": "Formato no admitido. Usa una imagen o PDF.",
+      "tooLarge": "Archivo demasiado grande. Máximo 2 MB."
     }
   },
   "videoDemo": {
@@ -2966,10 +2989,14 @@
     "loading": "Cargando..."
   },
   "passkeyPrompt": {
-    "title": "Activar Passkey ⚡",
-    "description": "¿Quieres vincular tu dispositivo (FaceID, TouchID o PIN) para iniciar sesión al instante la próxima vez, sin esperar códigos por correo electrónico?",
-    "yes": "Sí, vincular ahora",
-    "no": "No volver a preguntar",
+    "title": "Activar Passkey",
+    "description": "Inicia sesión al instante la próxima vez — sin esperar códigos por correo electrónico.",
+    "feature1Title": "Inicio de sesión con un toque",
+    "feature1Sub": "FaceID, TouchID o PIN",
+    "feature2Title": "Más seguro",
+    "feature2Sub": "Sin contraseñas ni códigos",
+    "yes": "Activar ahora",
+    "no": "No preguntar de nuevo",
     "skip": "Ahora no",
     "success": "¡Passkey vinculada con éxito!",
     "error": "No se pudo vincular la passkey."

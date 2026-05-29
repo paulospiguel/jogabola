@@ -477,7 +477,13 @@
     "actions": {
       "cancel": "Cancelar Presença",
       "confirm": "Confirmar Presença",
-      "cancelled": "Evento cancelado"
+      "cancelled": "Evento cancelado",
+      "cancelConfirm": {
+        "title": "Cancelar presença?",
+        "description": "Vais libertar a tua vaga neste jogo. Se já pagaste, fala com o organizador sobre o reembolso.",
+        "action": "Cancelar presença",
+        "keep": "Manter presença"
+      }
     },
     "management": {
       "revokeTitle": "Revogar Presença?",
@@ -570,6 +576,7 @@
       "aiBalancerBeta": "Equilibrador de Equipas IA",
       "aiBalancerBetaSub": "Gera equipas equilibradas com base no nível dos jogadores.",
       "aiBalancerCta": "Gerar {count} Equipas com IA",
+      "teamLabel": "Equipa {label}",
       "howToGet": "Como chegar",
       "metro": "Metro",
       "metroDesc": "Estação Baixa-Chiado (Linha Azul/Verde) a 3 min a pé.",
@@ -579,6 +586,13 @@
       "carroDesc": "Estacionamento difícil. Parque subterrâneo Camões pago.",
       "chatEmpty": "Nenhuma mensagem por aqui. Envia a primeira!",
       "chatPlaceholder": "Escreve uma mensagem para o grupo...",
+      "chatLockedTitle": "Chat reservado aos confirmados",
+      "chatLockedSub": "Confirma presença no evento para participar na conversa.",
+      "deleteMessage": "Apagar mensagem",
+      "censorMessage": "Censurar mensagem",
+      "uncensorMessage": "Remover censura",
+      "messageCensored": "Mensagem censurada",
+      "cancel": "Cancelar",
       "squadFull": "Lotação Completa!",
       "readyToBalance": "Pronto para equilibrar as equipas",
       "guest": "Convidado"
@@ -637,6 +651,7 @@
     "title": "Eventos",
     "editInfo": "Editar Informações",
     "statusLabel": "Status do Evento",
+    "eventNotFound": "Evento não encontrado",
     "errorUpdating": "Erro ao atualizar evento. Tente novamente.",
     "types": {
       "match": "Jogo",
@@ -1091,6 +1106,7 @@
     "comingSoon": "Em breve",
     "comingSoonDescription": "Esta área está em desenvolvimento. Em breve você terá acesso completo.",
     "confirm": "Confirme",
+    "confirmAction": "Confirmar",
     "confirmPassword": "Confirme a password",
     "copyright": "Direitos autorais ©{year}. Todos os direitos reservados.",
     "create": "Criar",
@@ -2109,7 +2125,9 @@
       "assists": "Assist.",
       "rating": "Nota",
       "associatedTeams": "Equipas Associadas",
-      "associatedTeamsCount": "{count} equipas",
+      "associatedTeamsCount": "{count, plural, one {# equipa} other {# equipas}}",
+      "playersCountLabel": "{count, plural, one {# jogador} other {# jogadores}}",
+      "noTeams": "Ainda não pertences a nenhuma equipa.",
       "playersCount": "jogadores",
       "position": "posição",
       "wins": "vitórias",
@@ -2127,7 +2145,10 @@
       "proPlan": "Plano Pro",
       "proPlanSub": "3/3 equipas · €5/mês",
       "logout": "Terminar sessão",
-      "logoutConfirm": "Deseja realmente terminar a sessão?"
+      "logoutTitle": "Terminar sessão?",
+      "logoutDescription": "Vais sair do JogaBola. Podes voltar a entrar quando quiseres.",
+      "logoutAction": "Sair",
+      "logoutCancel": "Cancelar"
     },
     "notificationsSheet": {
       "title": "Notificações",
@@ -2921,8 +2942,10 @@
       "uploading": "A enviar...",
       "registering": "A registar...",
       "changeFile": "Clica para trocar o ficheiro",
-      "dropzone": "Clica ou arrasta a imagem",
-      "formats": "JPEG, PNG, WebP · máx. 8 MB"
+      "dropzone": "Clica ou arrasta o ficheiro",
+      "formats": "JPEG, PNG, WebP, PDF · máx. 2 MB",
+      "invalidType": "Formato não suportado. Usa imagem ou PDF.",
+      "tooLarge": "Ficheiro demasiado grande. Máximo 2 MB."
     }
   },
   "videoDemo": {
@@ -2966,12 +2989,16 @@
     "loading": "A carregar..."
   },
   "passkeyPrompt": {
-    "title": "Ativar Passkey ⚡",
-    "description": "Queres associar o teu dispositivo (FaceID, TouchID ou PIN) para entrares de forma instantânea na próxima vez, sem precisar de esperar por códigos por e-mail?",
-    "yes": "Associar agora",
+    "title": "Ativar Passkey",
+    "description": "Entra de forma instantânea da próxima vez — sem esperar por códigos no e-mail.",
+    "feature1Title": "Login num toque",
+    "feature1Sub": "FaceID, TouchID ou PIN",
+    "feature2Title": "Mais seguro",
+    "feature2Sub": "Sem palavras-passe nem códigos",
+    "yes": "Ativar agora",
     "no": "Não associar",
-    "skip": "Pular",
-    "success": "Passkey associada com sucesso!",
+    "skip": "Agora não",
+    "success": "Passkey ativada com sucesso!",
     "error": "Não foi possível associar a passkey."
   },
   "arenaEquipas": {

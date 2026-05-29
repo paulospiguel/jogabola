@@ -9,11 +9,10 @@ import {
   markNotificationAsRead,
 } from "@/actions/notifications.actions";
 import { cn, formatRelativeTime } from "@/lib/utils";
-import { buildMockNotifications } from "../_fixtures/notifications-mock";
 import {
+  matchesFilter,
   NOTIFICATION_FILTER_KEYS,
   type NotificationFilterKey,
-  matchesFilter,
   resolveNotificationIcon,
 } from "../_utils/notifications-helpers";
 
@@ -38,7 +37,10 @@ function renderFormattedText(text: string, isRead: boolean) {
       return (
         <span
           key={`${index}-${clean}`}
-          className={cn("font-extrabold", isRead ? "text-arena-text-sec" : "text-arena-text")}
+          className={cn(
+            "font-extrabold",
+            isRead ? "text-arena-text-sec" : "text-arena-text",
+          )}
         >
           {clean}
         </span>
@@ -55,35 +57,34 @@ function renderFormattedText(text: string, isRead: boolean) {
   });
 }
 
-function mergeWithMocks(initial: Notification[], locale: string): Notification[] {
-  const mocks = buildMockNotifications(locale);
-  const combined = initial.length === 0 ? mocks : [...initial, ...mocks];
-  const unique = combined.filter((n, i, arr) => arr.findIndex(x => x.id === n.id) === i);
-  return unique.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+function sortByNewest(items: Notification[]): Notification[] {
+  return [...items].sort(
+    (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
+  );
 }
 
-export function NotificationsList({ initialNotifications }: NotificationsListProps) {
+export function NotificationsList({
+  initialNotifications,
+}: NotificationsListProps) {
   const t = useTranslations("notificationsPage");
   const locale = useLocale();
   const [isPending, startTransition] = useTransition();
   const queryClient = useQueryClient();
   const [filter, setFilter] = useState<NotificationFilterKey>("all");
   const [notifications, setNotifications] = useState<Notification[]>(() =>
-    mergeWithMocks(initialNotifications, locale),
+    sortByNewest(initialNotifications),
   );
 
   useEffect(() => {
-    setNotifications(mergeWithMocks(initialNotifications, locale));
-  }, [initialNotifications, locale]);
+    setNotifications(sortByNewest(initialNotifications));
+  }, [initialNotifications]);
 
   const handleMarkAsRead = (id: string) => {
-    if (id.startsWith("mock-")) {
-      setNotifications(prev => prev.map(n => (n.id === id ? { ...n, read: true } : n)));
-      return;
-    }
     startTransition(async () => {
       await markNotificationAsRead(id);
-      setNotifications(prev => prev.map(n => (n.id === id ? { ...n, read: true } : n)));
+      setNotifications(prev =>
+        prev.map(n => (n.id === id ? { ...n, read: true } : n)),
+      );
       queryClient.invalidateQueries({ queryKey: ["notifications"] });
     });
   };
@@ -97,7 +98,9 @@ export function NotificationsList({ initialNotifications }: NotificationsListPro
   };
 
   const unreadCount = notifications.filter(n => !n.read).length;
-  const filtered = notifications.filter(n => matchesFilter(n.type, n.read, filter));
+  const filtered = notifications.filter(n =>
+    matchesFilter(n.type, n.read, filter),
+  );
 
   return (
     <div className="flex h-full flex-col bg-arena-bg">
@@ -189,12 +192,22 @@ function NotificationRow({
           : "cursor-pointer hover:bg-arena-surface/20 bg-[#0B0F14]",
       )}
     >
-      <div className={cn("mt-0.5 flex size-10 shrink-0 items-center justify-center rounded-[10px]", cls)}>
+      <div
+        className={cn(
+          "mt-0.5 flex size-10 shrink-0 items-center justify-center rounded-[10px]",
+          cls,
+        )}
+      >
         <Icon size={18} strokeWidth={2.2} />
       </div>
 
       <div className="min-w-0 flex-1">
-        <p className={cn("text-[13px] leading-snug", notification.read ? "text-arena-text-muted" : "text-arena-text")}>
+        <p
+          className={cn(
+            "text-[13px] leading-snug",
+            notification.read ? "text-arena-text-muted" : "text-arena-text",
+          )}
+        >
           {renderFormattedText(notification.title, notification.read)}
         </p>
         <span className="mt-1.5 block text-[11px] text-arena-text-muted/70 font-medium">

@@ -53,8 +53,26 @@ function getAuthEnv() {
 }
 
 function getTrustedOrigins(): string[] {
-  const origins: string[] = ["http://localhost:3000"];
+  const origins: string[] = ["http://localhost:3000", "http://127.0.0.1:3000"];
   const baseURL = getBaseURL();
+  const port = baseURL ? new URL(baseURL).port : "3000";
+  const portSuffix = port ? `:${port}` : "";
+
+  // Add parsed baseURL base variants
+  if (baseURL) {
+    try {
+      const url = new URL(baseURL);
+      const baseOrigin = `${url.protocol}//${url.hostname}${url.port ? `:${url.port}` : ""}`;
+      if (!origins.includes(baseOrigin)) {
+        origins.push(baseOrigin);
+      }
+      
+      const localIpVariant = `${url.protocol}//127.0.0.1${url.port ? `:${url.port}` : ""}`;
+      if (!origins.includes(localIpVariant)) {
+        origins.push(localIpVariant);
+      }
+    } catch {}
+  }
 
   if (baseURL && baseURL !== "http://localhost:3000") {
     if (!origins.includes(baseURL)) {
@@ -74,6 +92,29 @@ function getTrustedOrigins(): string[] {
   if (process.env.NEXTAUTH_URL && process.env.NEXTAUTH_URL !== baseURL) {
     if (!origins.includes(process.env.NEXTAUTH_URL)) {
       origins.push(process.env.NEXTAUTH_URL);
+    }
+  }
+
+  // Programmatically trust local network IPs (e.g. 192.168.x.x) during development
+  if (process.env.NODE_ENV !== "production") {
+    try {
+      const os = require("os");
+      const interfaces = os.networkInterfaces();
+      for (const name of Object.keys(interfaces)) {
+        const ifaceList = interfaces[name];
+        if (ifaceList) {
+          for (const iface of ifaceList) {
+            if (iface.family === "IPv4" && !iface.internal) {
+              const localIpOrigin = `http://${iface.address}${portSuffix}`;
+              if (!origins.includes(localIpOrigin)) {
+                origins.push(localIpOrigin);
+              }
+            }
+          }
+        }
+      }
+    } catch (e) {
+      console.error("Failed to dynamically add local IPs to trusted origins", e);
     }
   }
 

@@ -1,4 +1,4 @@
-import { eq } from "drizzle-orm";
+import { eq, inArray, sql } from "drizzle-orm";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { db } from "@/db/client";
@@ -14,17 +14,42 @@ export default async function ArenaProfilePage() {
   }
 
   // Fetch real team memberships for the authenticated user from the database
-  const realTeams = await db
+  const memberships = await db
     .select({
       id: schema.teams.id,
       name: schema.teams.name,
       slug: schema.teams.slug,
       location: schema.teams.location,
+      role: schema.teamMembers.role,
     })
     .from(schema.teamMembers)
     .innerJoin(schema.teams, eq(schema.teamMembers.teamId, schema.teams.id))
     .where(eq(schema.teamMembers.playerId, session.user.id))
     .catch(() => []);
+
+  // Member count per team (single grouped query)
+  const teamIds = memberships.map(m => m.id);
+  const counts = teamIds.length
+    ? await db
+        .select({
+          teamId: schema.teamMembers.teamId,
+          count: sql<number>`count(*)::int`,
+        })
+        .from(schema.teamMembers)
+        .where(inArray(schema.teamMembers.teamId, teamIds))
+        .groupBy(schema.teamMembers.teamId)
+        .catch(() => [])
+    : [];
+  const countByTeam = new Map(counts.map(c => [c.teamId, c.count]));
+
+  const realTeams = memberships.map(m => ({
+    id: m.id,
+    name: m.name,
+    slug: m.slug,
+    location: m.location,
+    role: m.role,
+    memberCount: countByTeam.get(m.id) ?? 0,
+  }));
 
   // Fetch registered passkey count from the database
   const passkeysCount = await db

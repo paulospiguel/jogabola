@@ -4,6 +4,7 @@ import {
   ArrowLeft,
   Check,
   Clock,
+  FileText,
   ImagePlus,
   Loader2,
   Upload,
@@ -14,9 +15,9 @@ import Link from "next/link";
 import { useTranslations } from "next-intl";
 import { useCallback, useRef, useState } from "react";
 import { submitPaymentProof } from "@/actions/payments.actions";
+import { PAYMENT_STATUS } from "@/constants/payments";
 import { usePayment } from "@/hooks/use-payments";
 import { useProofUpload } from "@/hooks/use-proof-upload";
-import { PAYMENT_STATUS } from "@/constants/payments";
 import { cn } from "@/lib/utils";
 
 interface PaymentResultClientProps {
@@ -114,6 +115,7 @@ function ProofUpload({ paymentId, onUploaded }: ProofUploadProps) {
   const t = useTranslations("paymentResult");
   const inputRef = useRef<HTMLInputElement>(null);
   const [preview, setPreview] = useState<string | null>(null);
+  const [isPdf, setIsPdf] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState("");
   const [done, setDone] = useState(false);
@@ -137,13 +139,23 @@ function ProofUpload({ paymentId, onUploaded }: ProofUploadProps) {
 
   const handleFile = useCallback(
     (file: File) => {
-      if (!file.type.startsWith("image/")) return;
+      const fileIsPdf = file.type === "application/pdf";
+      const fileIsImage = file.type.startsWith("image/");
+      if (!fileIsImage && !fileIsPdf) {
+        setSubmitError(t("proof.invalidType"));
+        return;
+      }
+      if (file.size > 2 * 1024 * 1024) {
+        setSubmitError(t("proof.tooLarge"));
+        return;
+      }
+      setIsPdf(fileIsPdf);
       setPreview(URL.createObjectURL(file));
       setSubmitError("");
       reset();
       void upload(file);
     },
-    [upload, reset],
+    [upload, reset, t],
   );
 
   function handleInputChange(e: React.ChangeEvent<HTMLInputElement>) {
@@ -200,7 +212,7 @@ function ProofUpload({ paymentId, onUploaded }: ProofUploadProps) {
         <input
           ref={inputRef}
           type="file"
-          accept="image/*"
+          accept="image/*,application/pdf"
           className="sr-only"
           onChange={handleInputChange}
           disabled={isUploading}
@@ -209,12 +221,18 @@ function ProofUpload({ paymentId, onUploaded }: ProofUploadProps) {
         {preview ? (
           /* Preview thumbnail */
           <div className="relative h-full w-full">
-            <Image
-              src={preview}
-              alt={t("proof.imageAlt")}
-              fill
-              className="object-cover opacity-30"
-            />
+            {isPdf ? (
+              <div className="absolute inset-0 flex items-center justify-center bg-arena-surface-el/40">
+                <FileText size={48} className="text-arena-primary/30" />
+              </div>
+            ) : (
+              <Image
+                src={preview}
+                alt={t("proof.imageAlt")}
+                fill
+                className="object-cover opacity-30"
+              />
+            )}
             <div className="absolute inset-0 flex flex-col items-center justify-center gap-2">
               {isUploading ? (
                 <>
@@ -322,7 +340,8 @@ export function PaymentResultClient({
   // Show upload section when payment is pending (mbway/transfer) and proof not yet uploaded
   const showUpload =
     !proofUploaded &&
-    (status === PAYMENT_STATUS.PENDING || status === PAYMENT_STATUS.PAID_UNVERIFIED) &&
+    (status === PAYMENT_STATUS.PENDING ||
+      status === PAYMENT_STATUS.PAID_UNVERIFIED) &&
     (payment.method === "mbway" ||
       (payment.method === "transfer" && payment.transferRequiresProof));
 
@@ -425,7 +444,10 @@ export function PaymentResultClient({
             <span
               className={cn(
                 "text-[16px] font-bold",
-                (status === PAYMENT_STATUS.PAID || status === PAYMENT_STATUS.APPROVED) ? "text-arena-primary" : "text-arena-warning",
+                status === PAYMENT_STATUS.PAID ||
+                  status === PAYMENT_STATUS.APPROVED
+                  ? "text-arena-primary"
+                  : "text-arena-warning",
               )}
             >
               {formattedCurrency}

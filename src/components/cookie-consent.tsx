@@ -2,11 +2,14 @@
 
 import { AnimatePresence, motion } from "framer-motion";
 import { ChevronLeft, Cookie } from "lucide-react";
-import { useTranslations } from "next-intl";
 import { usePathname } from "next/navigation";
+import { useTranslations } from "next-intl";
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
+
+// Bump when cookie categories/policy change — forces re-consent (RGPD).
+const CONSENT_VERSION = 1;
 
 export default function CookieConsent() {
   const t = useTranslations("cookieConsent");
@@ -23,19 +26,25 @@ export default function CookieConsent() {
   useEffect(() => {
     setMounted(true);
     const consent = localStorage.getItem("cookie-consent");
-    if (!consent) {
+    const storedVersion = Number(
+      localStorage.getItem("cookie-consent-version") ?? "0",
+    );
+
+    // No prior consent, or policy/categories changed → ask again (RGPD).
+    if (!consent || storedVersion !== CONSENT_VERSION) {
       setIsVisible(true);
-    } else if (consent === "custom") {
-      const settingsStr = localStorage.getItem("cookie-consent-settings");
-      if (settingsStr) {
-        try {
-          const settings = JSON.parse(settingsStr);
-          setFunctionalAllowed(!!settings.functional);
-          setAnalyticsAllowed(!!settings.analytics);
-          setMarketingAllowed(!!settings.marketing);
-        } catch {
-          // ignore
-        }
+      return;
+    }
+
+    const settingsStr = localStorage.getItem("cookie-consent-settings");
+    if (settingsStr) {
+      try {
+        const settings = JSON.parse(settingsStr);
+        setFunctionalAllowed(!!settings.functional);
+        setAnalyticsAllowed(!!settings.analytics);
+        setMarketingAllowed(!!settings.marketing);
+      } catch {
+        // ignore
       }
     }
   }, []);
@@ -47,12 +56,22 @@ export default function CookieConsent() {
     status: "accepted" | "declined" | "custom",
     settings: { functional: boolean; analytics: boolean; marketing: boolean },
   ) => {
+    // Proof-of-consent record (RGPD accountability): what, when, which version.
+    const record = {
+      status,
+      settings,
+      version: CONSENT_VERSION,
+      timestamp: new Date().toISOString(),
+    };
+
     // 1. Save to Local Storage
     localStorage.setItem("cookie-consent", status);
     localStorage.setItem("cookie-consent-settings", JSON.stringify(settings));
+    localStorage.setItem("cookie-consent-version", String(CONSENT_VERSION));
+    localStorage.setItem("cookie-consent-record", JSON.stringify(record));
 
-    // 2. Save to document.cookie (1 year expiration)
-    const maxAge = 365 * 24 * 60 * 60; // 1 year in seconds
+    // 2. Save to document.cookie (6 months — ePrivacy/CNPD: consent ≤ 6 months)
+    const maxAge = 180 * 24 * 60 * 60; // 6 months in seconds
     // biome-ignore lint/suspicious/noDocumentCookie: Necessário para o Next.js Middleware ler o consentimento no servidor
     document.cookie = `cookie-consent=${status}; path=/; max-age=${maxAge}; SameSite=Lax; Secure`;
     // biome-ignore lint/suspicious/noDocumentCookie: Necessário para o Next.js Middleware ler o consentimento no servidor
@@ -101,7 +120,7 @@ export default function CookieConsent() {
           layout
           className="fixed bottom-6 left-1/2 z-50 w-full max-w-2xl -translate-x-1/2 px-4"
         >
-          <div className="overflow-hidden rounded-2xl border border-white/10 bg-[#111827]/95 p-6 shadow-[0_32px_80px_rgba(0,0,0,0.6)] backdrop-blur-xl md:p-8">
+          <div className="overflow-hidden rounded-2xl border border-arena-border bg-arena-bg-sec/95 p-6 shadow-[0_32px_80px_rgba(0,0,0,0.6)] backdrop-blur-xl md:p-8">
             <motion.div
               layout
               transition={{ type: "spring", damping: 30, stiffness: 300 }}
@@ -110,18 +129,18 @@ export default function CookieConsent() {
                 // Vista 1: Banner de Consentimento Geral (Simplificado)
                 <div className="space-y-5">
                   <div className="flex items-start gap-4">
-                    <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-neon-primary/10 text-neon-primary">
+                    <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-arena-primary/10 text-arena-primary">
                       <Cookie className="h-6 w-6" />
                     </div>
                     <div className="space-y-1.5">
-                      <h3 className="font-sora text-base font-bold text-white tracking-wide">
+                      <h3 className="font-sora text-base font-bold text-arena-text tracking-wide">
                         {t("title")}
                       </h3>
-                      <p className="text-sm text-text-secondary leading-relaxed">
+                      <p className="text-sm text-arena-text-sec leading-relaxed">
                         {t("description")}{" "}
                         <a
                           href="/privacy"
-                          className="text-neon-primary hover:text-neon-secondary font-semibold underline underline-offset-4 transition-colors"
+                          className="text-arena-primary hover:text-arena-primary/80 font-semibold underline underline-offset-4 transition-colors"
                         >
                           {t("privacyPolicy")}
                         </a>
@@ -130,24 +149,24 @@ export default function CookieConsent() {
                     </div>
                   </div>
 
-                  <div className="flex flex-col gap-2.5 pt-3 border-t border-white/5 sm:flex-row sm:items-center sm:justify-end">
+                  <div className="flex flex-col gap-2.5 pt-3 border-t border-arena-border/50 sm:flex-row sm:items-center sm:justify-end">
                     <Button
                       variant="outline"
                       onClick={handleDecline}
-                      className="w-full sm:w-auto rounded-xl border-white/10 bg-white/5 px-6 font-bold text-white transition-all hover:bg-white/10 active:scale-[0.97]"
+                      className="w-full sm:w-auto rounded-xl border border-arena-border bg-arena-surface-el px-6 font-bold text-arena-text transition-all hover:bg-arena-surface active:scale-[0.97]"
                     >
                       {t("rejectAll")}
                     </Button>
                     <Button
                       variant="outline"
                       onClick={() => setIsCustomizing(true)}
-                      className="w-full sm:w-auto rounded-xl border-white/10 bg-white/5 px-6 font-bold text-white transition-all hover:bg-white/10 active:scale-[0.97]"
+                      className="w-full sm:w-auto rounded-xl border border-arena-border/60 bg-transparent px-6 font-bold text-arena-text-sec transition-all hover:bg-arena-surface hover:text-arena-text active:scale-[0.97]"
                     >
                       {t("customize")}
                     </Button>
                     <Button
                       onClick={handleAcceptAll}
-                      className="w-full sm:w-auto rounded-xl bg-neon-primary hover:bg-neon-primary-hover px-8 font-black text-[#050312] shadow-lg shadow-neon-primary/10 transition-all hover:shadow-neon-primary/20 active:scale-[0.97]"
+                      className="w-full sm:w-auto rounded-xl bg-arena-primary hover:bg-arena-primary/90 px-8 font-black text-arena-bg shadow-lg shadow-arena-primary/20 transition-all hover:shadow-arena-primary/30 active:scale-[0.97]"
                     >
                       {t("acceptAll")}
                     </Button>
@@ -159,29 +178,29 @@ export default function CookieConsent() {
                   <div className="flex items-center gap-3">
                     <button
                       onClick={() => setIsCustomizing(false)}
-                      className="flex h-9 w-9 items-center justify-center rounded-xl border border-white/10 bg-white/5 text-white/70 hover:text-white hover:bg-white/10 transition-all active:scale-95"
+                      className="flex h-9 w-9 items-center justify-center rounded-xl border border-arena-border bg-arena-surface text-arena-text-sec hover:text-arena-text hover:bg-arena-surface-el transition-all active:scale-95"
                     >
                       <ChevronLeft className="h-5 w-5" />
                     </button>
-                    <h3 className="font-sora text-lg font-bold text-white tracking-wide">
+                    <h3 className="font-sora text-lg font-bold text-arena-text tracking-wide">
                       {t("title")}
                     </h3>
                   </div>
 
                   {/* Lista de Categorias de Cookies */}
-                  <div className="space-y-3.5 max-h-[300px] overflow-y-auto pr-1 scrollbar-thin scrollbar-thumb-white/10">
+                  <div className="space-y-3.5 max-h-[300px] overflow-y-auto pr-1 scrollbar-thin scrollbar-thumb-arena-border">
                     {/* Estritamente Necessários */}
-                    <div className="flex items-start justify-between gap-4 rounded-xl border border-white/5 bg-white/5 p-4 transition-colors hover:bg-white/[0.07]">
+                    <div className="flex items-start justify-between gap-4 rounded-xl border border-arena-border/50 bg-arena-surface p-4 transition-colors hover:bg-arena-surface-el">
                       <div className="space-y-1">
                         <div className="flex items-center gap-2">
-                          <span className="font-sora text-sm font-bold text-white">
+                          <span className="font-sora text-sm font-bold text-arena-text">
                             {t("categories.necessary.title")}
                           </span>
-                          <span className="rounded-md bg-neon-primary/15 px-2 py-0.5 text-[9px] font-bold text-neon-primary uppercase tracking-wider">
+                          <span className="rounded-md bg-arena-primary/15 px-2 py-0.5 text-[9px] font-bold text-arena-primary uppercase tracking-wider">
                             {t("alwaysActive")}
                           </span>
                         </div>
-                        <p className="text-xs text-text-secondary leading-relaxed">
+                        <p className="text-xs text-arena-text-sec leading-relaxed">
                           {t("categories.necessary.description")}
                         </p>
                       </div>
@@ -189,12 +208,12 @@ export default function CookieConsent() {
                     </div>
 
                     {/* Funcionais e Preferências */}
-                    <div className="flex items-start justify-between gap-4 rounded-xl border border-white/5 bg-white/5 p-4 transition-colors hover:bg-white/[0.07]">
+                    <div className="flex items-start justify-between gap-4 rounded-xl border border-arena-border/50 bg-arena-surface p-4 transition-colors hover:bg-arena-surface-el">
                       <div className="space-y-1">
-                        <span className="font-sora text-sm font-bold text-white">
+                        <span className="font-sora text-sm font-bold text-arena-text">
                           {t("categories.functional.title")}
                         </span>
-                        <p className="text-xs text-text-secondary leading-relaxed">
+                        <p className="text-xs text-arena-text-sec leading-relaxed">
                           {t("categories.functional.description")}
                         </p>
                       </div>
@@ -206,12 +225,12 @@ export default function CookieConsent() {
                     </div>
 
                     {/* Estatísticas de Desempenho */}
-                    <div className="flex items-start justify-between gap-4 rounded-xl border border-white/5 bg-white/5 p-4 transition-colors hover:bg-white/[0.07]">
+                    <div className="flex items-start justify-between gap-4 rounded-xl border border-arena-border/50 bg-arena-surface p-4 transition-colors hover:bg-arena-surface-el">
                       <div className="space-y-1">
-                        <span className="font-sora text-sm font-bold text-white">
+                        <span className="font-sora text-sm font-bold text-arena-text">
                           {t("categories.analytics.title")}
                         </span>
-                        <p className="text-xs text-text-secondary leading-relaxed">
+                        <p className="text-xs text-arena-text-sec leading-relaxed">
                           {t("categories.analytics.description")}
                         </p>
                       </div>
@@ -223,12 +242,12 @@ export default function CookieConsent() {
                     </div>
 
                     {/* Marketing e Publicidade */}
-                    <div className="flex items-start justify-between gap-4 rounded-xl border border-white/5 bg-white/5 p-4 transition-colors hover:bg-white/[0.07]">
+                    <div className="flex items-start justify-between gap-4 rounded-xl border border-arena-border/50 bg-arena-surface p-4 transition-colors hover:bg-arena-surface-el">
                       <div className="space-y-1">
-                        <span className="font-sora text-sm font-bold text-white">
+                        <span className="font-sora text-sm font-bold text-arena-text">
                           {t("categories.marketing.title")}
                         </span>
-                        <p className="text-xs text-text-secondary leading-relaxed">
+                        <p className="text-xs text-arena-text-sec leading-relaxed">
                           {t("categories.marketing.description")}
                         </p>
                       </div>
@@ -241,24 +260,24 @@ export default function CookieConsent() {
                   </div>
 
                   {/* Rodapé da Configuração */}
-                  <div className="flex flex-col gap-2.5 pt-3 border-t border-white/5 sm:flex-row sm:items-center sm:justify-end">
+                  <div className="flex flex-col gap-2.5 pt-3 border-t border-arena-border/50 sm:flex-row sm:items-center sm:justify-end">
                     <Button
                       variant="outline"
                       onClick={handleDecline}
-                      className="w-full sm:w-auto rounded-xl border-white/10 bg-white/5 px-6 font-bold text-white transition-all hover:bg-white/10 active:scale-[0.97]"
+                      className="w-full sm:w-auto rounded-xl border border-arena-border bg-arena-surface-el px-6 font-bold text-arena-text transition-all hover:bg-arena-surface active:scale-[0.97]"
                     >
                       {t("rejectAll")}
                     </Button>
                     <Button
                       variant="outline"
                       onClick={handleSavePreferences}
-                      className="w-full sm:w-auto rounded-xl border-white/10 bg-white/5 px-6 font-bold text-white transition-all hover:bg-white/10 active:scale-[0.97]"
+                      className="w-full sm:w-auto rounded-xl border border-arena-border/60 bg-transparent px-6 font-bold text-arena-text-sec transition-all hover:bg-arena-surface hover:text-arena-text active:scale-[0.97]"
                     >
                       {t("savePreferences")}
                     </Button>
                     <Button
                       onClick={handleAcceptAll}
-                      className="w-full sm:w-auto rounded-xl bg-neon-primary hover:bg-neon-primary-hover px-8 font-black text-[#050312] shadow-lg shadow-neon-primary/10 transition-all hover:shadow-neon-primary/20 active:scale-[0.97]"
+                      className="w-full sm:w-auto rounded-xl bg-arena-primary hover:bg-arena-primary/90 px-8 font-black text-arena-bg shadow-lg shadow-arena-primary/20 transition-all hover:shadow-arena-primary/30 active:scale-[0.97]"
                     >
                       {t("acceptAll")}
                     </Button>

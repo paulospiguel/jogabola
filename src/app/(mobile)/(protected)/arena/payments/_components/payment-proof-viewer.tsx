@@ -52,10 +52,18 @@ export function PaymentProofViewer({
   const [imageFailed, setImageFailed] = useState(false);
   const [imageReady, setImageReady] = useState(false);
 
+  const isPdf = Boolean(proofUrl?.split("?")[0].toLowerCase().endsWith(".pdf"));
+
   useEffect(() => {
     setImageFailed(false);
     setImageReady(false);
     if (!proofUrl) return;
+
+    // PDFs can't be probed via Image(); treat as ready and embed below.
+    if (proofUrl.split("?")[0].toLowerCase().endsWith(".pdf")) {
+      setImageReady(true);
+      return;
+    }
 
     const image = new window.Image();
     image.onload = () => setImageReady(true);
@@ -118,12 +126,20 @@ export function PaymentProofViewer({
 
   return (
     <div className="grid gap-4 xl:grid-cols-[minmax(320px,520px)_1fr]">
-      <div
-        role="img"
-        aria-label={alt}
-        className="relative aspect-[4/5] overflow-hidden rounded-[18px] border border-arena-border bg-arena-bg bg-contain bg-center bg-no-repeat shadow-[0_32px_80px_-56px_rgba(0,0,0,.95)]"
-        style={{ backgroundImage: `url(${proofUrl})` }}
-      />
+      {isPdf ? (
+        <iframe
+          title={alt}
+          src={proofUrl}
+          className="aspect-[4/5] w-full overflow-hidden rounded-[18px] border border-arena-border bg-arena-bg shadow-[0_32px_80px_-56px_rgba(0,0,0,.95)]"
+        />
+      ) : (
+        <div
+          role="img"
+          aria-label={alt}
+          className="relative aspect-[4/5] overflow-hidden rounded-[18px] border border-arena-border bg-arena-bg bg-contain bg-center bg-no-repeat shadow-[0_32px_80px_-56px_rgba(0,0,0,.95)]"
+          style={{ backgroundImage: `url(${proofUrl})` }}
+        />
+      )}
       <div className="flex flex-col justify-between rounded-[16px] border border-arena-border bg-arena-bg/45 p-5">
         <div>
           <p className="text-[10px] font-bold uppercase tracking-[0.14em] text-arena-text-muted">

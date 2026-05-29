@@ -24,7 +24,8 @@ Este documento define a linguagem ubíqua e as regras de negócio da plataforma 
 - **Badge**: Medalha virtual atribuída por conquistas específicas (ex: "Artilheiro do Mês").
 
 ### Comunicação
-- **Mural de Avisos**: Feed de mensagens curtas dentro de uma Convocatória para atualizações rápidas.
+- **Mural de Avisos** (`EventNotice`): Feed de avisos do Capitão dentro de uma Convocatória (info/urgente/mudança de campo). Unidirecional: autor é o Organizador.
+- **Chat de Evento** (`EventMessage`): Conversa livre entre participantes de uma Convocatória — distinto do Mural. Apenas Atletas com presença confirmada (e o Capitão) podem escrever e ler. Entrega em tempo real via serviço gerido (Ably). Ver [ADR 0002](docs/adr/0002-ably-realtime-event-chat.md).
 - **Notificação de Sistema**: Alertas automáticos disparados pela plataforma (Abertura, Lembrete, Confirmação).
 - **Alerta do Capitão**: Notificação manual disparada pelo Organizador para apelar à ação (ex: "Chatear Pendentes").
 

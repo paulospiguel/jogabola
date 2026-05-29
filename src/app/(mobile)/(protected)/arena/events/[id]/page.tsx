@@ -1,6 +1,11 @@
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
-import { getUserEventAttendanceStatus } from "@/actions/attendance.actions";
+import { getTranslations } from "next-intl/server";
+import {
+  getEventRoster,
+  getUserEventAttendanceStatus,
+} from "@/actions/attendance.actions";
+import { getEventMessages } from "@/actions/event-chat.actions";
 import { getEvent } from "@/actions/match-sessions.actions";
 import { auth } from "@/lib/auth";
 import { userCanAccessTeam } from "@/lib/team-access";
@@ -13,6 +18,7 @@ interface Params {
 export default async function ArenaEventDetailPage({ params }: Params) {
   const { id } = await params;
   const eventId = Number.parseInt(id, 10);
+  const t = await getTranslations("arenaEvents");
 
   const session = await auth.api.getSession({ headers: await headers() });
   const user = session?.user;
@@ -27,16 +33,25 @@ export default async function ArenaEventDetailPage({ params }: Params) {
   if (!event) {
     return (
       <div className="flex min-h-[60vh] items-center justify-center text-arena-text-muted">
-        Evento não encontrado.
+        {t("eventNotFound")}
       </div>
     );
   }
+
+  const rosterResult = await getEventRoster(eventId);
+  const roster = rosterResult.success
+    ? rosterResult.data
+    : { main: [], reserves: [] };
+
+  const chatResult = await getEventMessages(eventId);
+  const canChat = chatResult.success;
+  const initialChatMessages = chatResult.success ? chatResult.data : [];
 
   const canAccessTeam = await userCanAccessTeam(user.id, event.teamId);
   if (!canAccessTeam) {
     return (
       <div className="flex min-h-[60vh] items-center justify-center text-arena-text-muted">
-        Evento não encontrado.
+        {t("eventNotFound")}
       </div>
     );
   }
@@ -48,6 +63,10 @@ export default async function ArenaEventDetailPage({ params }: Params) {
           event={event}
           userId={user.id}
           canEdit={true}
+          mainRoster={roster.main}
+          reservesRoster={roster.reserves}
+          canChat={canChat}
+          initialChatMessages={initialChatMessages}
           initialMyStatus={await getUserEventAttendanceStatus(eventId, user.id)}
         />
       </div>

@@ -104,6 +104,77 @@ export async function getEventAttendanceWithUsers(eventId: number) {
   return { success: true as const, data: { confirmed, reserves, pending } };
 }
 
+export interface EventRosterEntry {
+  id: string;
+  name: string;
+  pos: string;
+  status: "PAID" | "REVIEW" | "PENDING" | "RESERVE";
+  verified: boolean;
+  star: boolean;
+}
+
+function mapPaymentToEventStatus(
+  paymentStatus: string | null,
+): "PAID" | "REVIEW" | "PENDING" {
+  if (paymentStatus === "paid") return "PAID";
+  if (paymentStatus === "in_review" || paymentStatus === "review")
+    return "REVIEW";
+  return "PENDING";
+}
+
+/** Roster for the event-detail roster tab: main (confirmed) + reserves, with
+ * position (from team membership) and payment-derived status. Real data. */
+export async function getEventRoster(eventId: number) {
+  const records = await db
+    .select({
+      attendanceId: attendance.id,
+      attendanceStatus: attendance.status,
+      guestName: attendance.guestName,
+      userId: user.id,
+      userName: user.name,
+      verified: user.emailVerified,
+      position: players.position,
+      paymentStatus: payments.status,
+    })
+    .from(attendance)
+    .leftJoin(user, eq(attendance.playerId, user.id))
+    .leftJoin(players, eq(players.userId, attendance.playerId))
+    .leftJoin(
+      matchReservations,
+      and(
+        eq(matchReservations.matchSessionId, eventId),
+        eq(matchReservations.playerId, attendance.playerId),
+      ),
+    )
+    .leftJoin(payments, eq(payments.matchReservationId, matchReservations.id))
+    .where(eq(attendance.matchSessionId, eventId));
+
+  const main: EventRosterEntry[] = [];
+  const reserves: EventRosterEntry[] = [];
+
+  for (const r of records) {
+    const entry: EventRosterEntry = {
+      id: r.userId || `guest-${r.attendanceId}`,
+      name: r.guestName || r.userName || "Desconhecido",
+      pos: r.position || "—",
+      status:
+        r.attendanceStatus === "reserve"
+          ? "RESERVE"
+          : mapPaymentToEventStatus(r.paymentStatus),
+      verified: r.verified ?? false,
+      star: false,
+    };
+
+    if (r.attendanceStatus === "reserve") {
+      reserves.push(entry);
+    } else if (r.attendanceStatus === "confirmed") {
+      main.push(entry);
+    }
+  }
+
+  return { success: true as const, data: { main, reserves } };
+}
+
 export async function confirmUserAttendance(eventId: number) {
   const session = await auth.api.getSession({ headers: await headers() });
   if (!session?.user?.id) {

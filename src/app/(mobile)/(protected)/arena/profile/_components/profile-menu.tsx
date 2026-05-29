@@ -1,14 +1,18 @@
 "use client";
 
-import {
-  Bell,
-  Bolt,
-  ChevronRight,
-  Edit3,
-  Lock,
-  LogOut,
-} from "lucide-react";
+import { Bell, Bolt, ChevronRight, Edit3, Lock, LogOut } from "lucide-react";
 import { useTranslations } from "next-intl";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 
 type ActiveSheet = "notifications" | "security" | "edit-profile";
 
@@ -20,9 +24,7 @@ export function ProfileMenu({ onOpenSheet }: ProfileMenuProps) {
   const t = useTranslations("profilePage");
 
   const handleLogout = () => {
-    if (confirm(t("menu.logoutConfirm"))) {
-      window.location.href = "/auth/sign-out";
-    }
+    window.location.href = "/auth/sign-out";
   };
 
   return (
@@ -35,7 +37,10 @@ export function ProfileMenu({ onOpenSheet }: ProfileMenuProps) {
         >
           <div className="flex items-center gap-3">
             <div className="w-9 h-9 rounded-xl bg-arena-bg-sec/80 flex items-center justify-center text-arena-text-sec border border-arena-border/60">
-              <Bell className="w-4.5 h-4.5 text-arena-text-sec" strokeWidth={1.8} />
+              <Bell
+                className="w-4.5 h-4.5 text-arena-text-sec"
+                strokeWidth={1.8}
+              />
             </div>
             <div>
               <span className="font-bold text-sm text-arena-text block">
@@ -56,7 +61,10 @@ export function ProfileMenu({ onOpenSheet }: ProfileMenuProps) {
         >
           <div className="flex items-center gap-3">
             <div className="w-9 h-9 rounded-xl bg-arena-bg-sec/80 flex items-center justify-center text-arena-text-sec border border-arena-border/60">
-              <Lock className="w-4.5 h-4.5 text-arena-text-sec" strokeWidth={1.8} />
+              <Lock
+                className="w-4.5 h-4.5 text-arena-text-sec"
+                strokeWidth={1.8}
+              />
             </div>
             <div>
               <span className="font-bold text-sm text-arena-text block">
@@ -77,7 +85,10 @@ export function ProfileMenu({ onOpenSheet }: ProfileMenuProps) {
         >
           <div className="flex items-center gap-3">
             <div className="w-9 h-9 rounded-xl bg-arena-bg-sec/80 flex items-center justify-center text-arena-text-sec border border-arena-border/60">
-              <Edit3 className="w-4.5 h-4.5 text-arena-text-sec" strokeWidth={1.8} />
+              <Edit3
+                className="w-4.5 h-4.5 text-arena-text-sec"
+                strokeWidth={1.8}
+              />
             </div>
             <div>
               <span className="font-bold text-sm text-arena-text block">
@@ -117,14 +128,41 @@ export function ProfileMenu({ onOpenSheet }: ProfileMenuProps) {
         </button>
       </div>
 
-      <button
-        type="button"
-        onClick={handleLogout}
-        className="w-full h-12 bg-arena-danger/10 border border-arena-danger/25 text-arena-danger font-bold hover:bg-arena-danger/15 rounded-xl transition-all flex items-center justify-center gap-2 text-sm mt-2"
-      >
-        <LogOut className="w-4 h-4" strokeWidth={2.2} />
-        {t("menu.logout")}
-      </button>
+      <AlertDialog>
+        <AlertDialogTrigger asChild>
+          <button
+            type="button"
+            className="w-full h-12 bg-arena-danger/10 border border-arena-danger/25 text-arena-danger font-bold hover:bg-arena-danger/15 rounded-xl transition-all flex items-center justify-center gap-2 text-sm mt-2"
+          >
+            <LogOut className="w-4 h-4" strokeWidth={2.2} />
+            {t("menu.logout")}
+          </button>
+        </AlertDialogTrigger>
+        <AlertDialogContent className="border-arena-border bg-arena-surface shadow-2xl">
+          <AlertDialogHeader className="items-center text-center sm:text-center">
+            <div className="mb-1 flex size-12 items-center justify-center rounded-2xl bg-arena-danger/10 border border-arena-danger/20">
+              <LogOut className="size-5 text-arena-danger" strokeWidth={2.2} />
+            </div>
+            <AlertDialogTitle className="text-arena-text">
+              {t("menu.logoutTitle")}
+            </AlertDialogTitle>
+            <AlertDialogDescription className="text-arena-text-sec">
+              {t("menu.logoutDescription")}
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter className="flex-row gap-3 sm:justify-center">
+            <AlertDialogCancel className="mt-0 flex-1 border-arena-border bg-transparent text-arena-text hover:bg-arena-surface-el">
+              {t("menu.logoutCancel")}
+            </AlertDialogCancel>
+            <AlertDialogAction
+              className="flex-1 bg-arena-danger text-white hover:bg-arena-danger/90"
+              onClick={handleLogout}
+            >
+              {t("menu.logoutAction")}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </>
   );
 }

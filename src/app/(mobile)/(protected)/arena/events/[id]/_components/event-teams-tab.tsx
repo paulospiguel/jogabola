@@ -7,24 +7,39 @@ import {
   Sparkles,
   UserPlus,
 } from "lucide-react";
-import { type TranslationValues, useTranslations } from "next-intl";
+import type { TranslationValues, useTranslations } from "next-intl";
 import { useState } from "react";
+import type { EventRosterEntry } from "@/actions/attendance.actions";
+import {
+  type BalancedPlayer,
+  balanceTeamsWithAI,
+} from "@/actions/team-balancer.actions";
 import { JbAvatar } from "@/components/arena/avatar";
 import { type Guest, GuestsSheet } from "@/components/arena/guests-sheet";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { MAIN_ROSTER } from "../_fixtures/event-detail-mock";
 
 type Format = "5vs5" | "7vs7" | "11vs11";
 type NumTeams = 2 | 3 | 4;
 
+interface BalanceResult {
+  teamA: BalancedPlayer[];
+  teamB: BalancedPlayer[];
+  avgA: string;
+  avgB: string;
+}
+
 interface EventTeamsTabProps {
+  eventId: number;
+  roster: EventRosterEntry[];
   filledSpots: number;
   totalSpots: number;
   t: ReturnType<typeof useTranslations<"arenaEventDetail">>;
 }
 
 export function EventTeamsTab({
+  eventId,
+  roster,
   filledSpots,
   totalSpots,
   t,
@@ -33,9 +48,25 @@ export function EventTeamsTab({
   const [numTeams, setNumTeams] = useState<NumTeams>(2);
   const [guests, setGuests] = useState<Guest[]>([]);
   const [guestsOpen, setGuestsOpen] = useState(false);
+  const [balancing, setBalancing] = useState(false);
+  const [balanceResult, setBalanceResult] = useState<BalanceResult | null>(
+    null,
+  );
 
   const totalFilled = filledSpots + guests.length;
   const vacancies = Math.max(0, totalSpots - totalFilled);
+
+  const handleBalance = async () => {
+    setBalancing(true);
+    try {
+      const result = await balanceTeamsWithAI(eventId, guests.length);
+      if (result.success) {
+        setBalanceResult(result.data);
+      }
+    } finally {
+      setBalancing(false);
+    }
+  };
 
   return (
     <div className="flex flex-col gap-5">
@@ -157,7 +188,7 @@ export function EventTeamsTab({
           } as TranslationValues)}
         </div>
         <div className="bg-arena-surface border border-arena-border rounded-[16px] divide-y divide-arena-border/50 overflow-hidden">
-          {MAIN_ROSTER.map((player, idx) => (
+          {roster.map((player, idx) => (
             <div
               key={player.id}
               className="flex items-center justify-between p-3.5 gap-3"
@@ -175,25 +206,14 @@ export function EventTeamsTab({
                   />
                 </div>
                 <div className="min-w-0">
-                  <div className="flex items-center gap-1.5">
-                    <span className="font-bold text-sm text-arena-text truncate">
-                      {player.name}
-                    </span>
-                    {player.star && (
-                      <Sparkles
-                        size={11}
-                        className="text-arena-highlight shrink-0 fill-arena-highlight"
-                      />
-                    )}
-                  </div>
+                  <span className="font-bold text-sm text-arena-text truncate block">
+                    {player.name}
+                  </span>
                   <span className="text-[9px] uppercase tracking-wider font-extrabold text-arena-text-muted mt-0.5 block">
                     {player.pos}
                   </span>
                 </div>
               </div>
-              <span className="font-sora font-extrabold text-sm text-arena-primary shrink-0">
-                {player.rating.toFixed(1)}
-              </span>
             </div>
           ))}
 
@@ -204,7 +224,7 @@ export function EventTeamsTab({
             >
               <div className="flex items-center gap-3.5 min-w-0">
                 <span className="w-4 shrink-0 text-center text-[10px] font-bold text-arena-text-muted">
-                  {MAIN_ROSTER.length + idx + 1}
+                  {roster.length + idx + 1}
                 </span>
                 <div className="relative shrink-0">
                   <JbAvatar
@@ -296,12 +316,71 @@ export function EventTeamsTab({
           </div>
         </div>
 
-        <Button className="w-full bg-arena-primary text-[#0B0F14] hover:bg-arena-primary/95 font-bold h-11 rounded-xl text-sm transition-all gap-1.5 shadow-[0_0_24px_rgba(124,255,79,0.22)]">
-          <Sparkles className="w-4 h-4 shrink-0 fill-current" />
+        <Button
+          onClick={handleBalance}
+          disabled={balancing || roster.length === 0}
+          className="w-full bg-arena-primary text-[#0B0F14] hover:bg-arena-primary/95 font-bold h-11 rounded-xl text-sm transition-all gap-1.5 shadow-[0_0_24px_rgba(124,255,79,0.22)] disabled:opacity-60"
+        >
+          <Sparkles
+            className={cn(
+              "w-4 h-4 shrink-0 fill-current",
+              balancing && "animate-spin",
+            )}
+          />
           {t("interactive.aiBalancerCta", {
             count: numTeams,
           } as TranslationValues)}
         </Button>
+
+        {balanceResult && (
+          <div className="grid grid-cols-2 gap-2.5">
+            {(
+              [
+                {
+                  label: "A",
+                  team: balanceResult.teamA,
+                  avg: balanceResult.avgA,
+                },
+                {
+                  label: "B",
+                  team: balanceResult.teamB,
+                  avg: balanceResult.avgB,
+                },
+              ] as const
+            ).map(side => (
+              <div
+                key={side.label}
+                className="bg-arena-bg-sec/50 border border-arena-border rounded-xl p-3 flex flex-col gap-2"
+              >
+                <div className="flex items-center justify-between">
+                  <span className="text-[10px] uppercase font-extrabold tracking-wider text-arena-primary">
+                    {t("interactive.teamLabel", {
+                      label: side.label,
+                    } as TranslationValues)}
+                  </span>
+                  <span className="text-[10px] font-bold text-arena-text-muted">
+                    {side.avg}
+                  </span>
+                </div>
+                <div className="flex flex-col gap-1.5">
+                  {side.team.map(p => (
+                    <div key={p.id} className="flex items-center gap-2 min-w-0">
+                      <JbAvatar
+                        id={p.id}
+                        name={p.name}
+                        size={22}
+                        className="rounded-full overflow-hidden shrink-0"
+                      />
+                      <span className="text-xs font-medium text-arena-text truncate">
+                        {p.name}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
       </div>
 
       {guestsOpen && (

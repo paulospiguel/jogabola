@@ -54,6 +54,10 @@ export default async function ArenaLayout({
   const passkeyTranslations = {
     title: t("title"),
     description: t("description"),
+    feature1Title: t("feature1Title"),
+    feature1Sub: t("feature1Sub"),
+    feature2Title: t("feature2Title"),
+    feature2Sub: t("feature2Sub"),
     yes: t("yes"),
     no: t("no"),
     skip: t("skip"),

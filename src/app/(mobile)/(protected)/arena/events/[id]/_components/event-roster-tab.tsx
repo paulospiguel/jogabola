@@ -1,15 +1,15 @@
 import { Check, CheckCircle2, Sparkles } from "lucide-react";
+import type { EventRosterEntry } from "@/actions/attendance.actions";
 import { JbAvatar } from "@/components/arena/avatar";
 import {
   EVENT_PAYMENT_STATUS,
   type EventPaymentStatus,
 } from "@/constants/event-payment-status";
 import { cn } from "@/lib/utils";
-import type { EventRosterPlayer } from "../_fixtures/event-detail-mock";
 
 interface EventRosterTabProps {
-  mainRoster: EventRosterPlayer[];
-  reservesRoster: EventRosterPlayer[];
+  mainRoster: EventRosterEntry[];
+  reservesRoster: EventRosterEntry[];
   t: (key: string, values?: Record<string, string | number | Date>) => string;
 }
 

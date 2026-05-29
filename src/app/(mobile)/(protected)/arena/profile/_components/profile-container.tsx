@@ -25,13 +25,15 @@ interface ProfileContainerProps {
     name: string;
     slug: string;
     location: string | null;
+    role: string;
+    memberCount: number;
   }>;
   passkeysCount: number;
 }
 
 export function ProfileContainer({
   user,
-  realTeams: _realTeams,
+  realTeams,
   passkeysCount,
 }: ProfileContainerProps) {
   const [activeSheet, setActiveSheet] = useState<ActiveSheet>(null);
@@ -44,7 +46,7 @@ export function ProfileContainer({
         email={user.email}
         image={user.image}
       />
-      <ProfileTeams />
+      <ProfileTeams teams={realTeams} />
       <ProfileMenu onOpenSheet={sheet => setActiveSheet(sheet)} />
 
       <AnimatePresence>

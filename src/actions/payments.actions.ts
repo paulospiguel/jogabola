@@ -142,6 +142,7 @@ const ALLOWED_TYPES = new Set([
   "image/webp",
   "image/heic",
   "image/heif",
+  "application/pdf",
 ]);
 
 const MAX_SIZE_BYTES = 2 * 1024 * 1024;
@@ -152,6 +153,7 @@ const EXTENSION_BY_CONTENT_TYPE: Record<string, string> = {
   "image/webp": "webp",
   "image/heic": "heic",
   "image/heif": "heif",
+  "application/pdf": "pdf",
 };
 
 function normalizeContentType(contentType: string) {

@@ -3,7 +3,6 @@
 import { ShieldCheck } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { JbAvatar } from "@/components/arena/avatar";
-import { USER_STATS } from "../_fixtures/profile-mock";
 
 interface ProfileHeaderProps {
   userId: string;
@@ -12,7 +11,12 @@ interface ProfileHeaderProps {
   image: string | null;
 }
 
-export function ProfileHeader({ userId, name, email, image }: ProfileHeaderProps) {
+export function ProfileHeader({
+  userId,
+  name,
+  email,
+  image,
+}: ProfileHeaderProps) {
   const t = useTranslations("profilePage");
 
   return (
@@ -30,7 +34,10 @@ export function ProfileHeader({ userId, name, email, image }: ProfileHeaderProps
           </div>
           <div className="absolute -bottom-1 -right-1 bg-arena-bg p-[3px] rounded-full">
             <div className="w-[20px] h-[20px] bg-arena-primary rounded-full flex items-center justify-center shadow-lg">
-              <ShieldCheck className="w-3.5 h-3.5 text-[#0B0F14]" strokeWidth={2.5} />
+              <ShieldCheck
+                className="w-3.5 h-3.5 text-[#0B0F14]"
+                strokeWidth={2.5}
+              />
             </div>
           </div>
         </div>
@@ -43,21 +50,10 @@ export function ProfileHeader({ userId, name, email, image }: ProfileHeaderProps
           <span className="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded bg-arena-primary/10 border border-arena-primary/30 text-arena-primary">
             {t("roles.manager")}
           </span>
-          <span className="text-xs text-arena-text-muted select-all">{email}</span>
+          <span className="text-xs text-arena-text-muted select-all">
+            {email}
+          </span>
         </div>
-      </div>
-
-      <div className="grid grid-cols-4 bg-arena-surface border border-arena-border rounded-[14px] p-3 text-center divide-x divide-arena-border/50">
-        {USER_STATS.map(stat => (
-          <div key={stat.labelKey} className="flex flex-col">
-            <span className="text-lg font-bold font-sora text-arena-text leading-tight">
-              {stat.value}
-            </span>
-            <span className="text-[9px] uppercase font-bold tracking-wider text-arena-text-muted mt-0.5">
-              {t(stat.labelKey)}
-            </span>
-          </div>
-        ))}
       </div>
     </>
   );

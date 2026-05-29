@@ -3,8 +3,10 @@
 import { Check, Copy, ExternalLink, Link2 } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 import { useState } from "react";
+import QRCode from "react-qr-code";
 import { BottomSheet } from "@/components/arena/bottom-sheet";
 import { Button } from "@/components/ui/button";
+import { getBaseURL } from "@/lib/utils";
 
 interface ShareEventSheetProps {
   event: {
@@ -29,37 +31,22 @@ const WhatsAppIcon = ({ className = "size-4" }: { className?: string }) => (
   </svg>
 );
 
-const STYLIZED_QR_GRID = [
-  [1, 1, 1, 0, 0, 1, 0, 1, 1, 1],
-  [1, 0, 1, 0, 1, 0, 0, 1, 0, 1],
-  [1, 1, 1, 0, 1, 1, 0, 1, 1, 1],
-  [0, 0, 0, 1, 0, 0, 1, 0, 0, 0],
-  [0, 1, 1, 0, 1, 0, 0, 1, 1, 0],
-  [1, 0, 0, 1, 0, 1, 1, 0, 0, 1],
-  [0, 0, 0, 0, 1, 0, 0, 1, 0, 0],
-  [1, 1, 1, 0, 0, 1, 0, 0, 1, 1],
-  [1, 0, 1, 0, 1, 0, 1, 0, 0, 1],
-  [1, 1, 1, 0, 1, 1, 0, 1, 1, 0],
-];
-
 export function ShareEventSheet({ event, onClose }: ShareEventSheetProps) {
   const t = useTranslations("arenaEventDetail.shareSheet");
   const locale = useLocale();
   const [copied, setCopied] = useState(false);
 
-  // Generate clean public path matching the design: e.g. https://jogabola.pt/c/3-treino-tatico
-  const eventSlug = event.title
-    .toLowerCase()
-    .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "")
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/(^-|-$)+/g, "");
-  const publicUrl = `https://jogabola.pt/c/${event.id}-${eventSlug}`;
+  // Public event page \u2014 valid route the QR and link both point to.
+  const publicUrl = `${getBaseURL()}/event/${event.id}`;
 
   const formattedDate = () => {
     try {
       const date = new Date(event.startDate);
-      const datePart = date.toLocaleDateString(locale, { weekday: "short", day: "numeric", month: "short" });
+      const datePart = date.toLocaleDateString(locale, {
+        weekday: "short",
+        day: "numeric",
+        month: "short",
+      });
       const hours = String(date.getHours()).padStart(2, "0");
       const minutes = String(date.getMinutes()).padStart(2, "0");
       return `${datePart} · ${hours}h${minutes}`;
@@ -97,26 +84,17 @@ export function ShareEventSheet({ event, onClose }: ShareEventSheetProps) {
           </span>
         </div>
 
-        {/* 2. Custom Neon QR Code Card */}
+        {/* 2. Real QR Code Card — encodes the public event URL */}
         <div className="rounded-[24px] border border-arena-border bg-[#0B0F14]/50 p-6 max-w-[170px] w-full aspect-square flex flex-col items-center justify-center gap-3.5 mx-auto">
-          <div className="w-24 h-24 grid grid-cols-10 gap-[2.5px] p-1.5 bg-[#0B0F14] rounded-lg">
-            {STYLIZED_QR_GRID.map((row, rIdx) =>
-              row.map((val, cIdx) => (
-                <div
-                  // biome-ignore lint/suspicious/noArrayIndexKey: static 10x10 grid is stable
-                  key={`${rIdx}-${cIdx}`}
-                  className={`aspect-square rounded-[1.5px] transition-all duration-300 ${
-                    val === 1
-                      ? "bg-arena-primary shadow-[0_0_4px_rgba(124,255,79,0.4)] animate-pulse"
-                      : "bg-arena-surface-el/20"
-                  }`}
-                  style={{
-                    animationDelay: `${(rIdx + cIdx) * 50}ms`,
-                    animationDuration: "3s",
-                  }}
-                />
-              )),
-            )}
+          <div className="rounded-lg bg-[#0B0F14] p-2.5">
+            <QRCode
+              value={publicUrl}
+              size={96}
+              bgColor="#0B0F14"
+              fgColor="#7CFF4F"
+              level="M"
+              style={{ height: 96, width: 96 }}
+            />
           </div>
           <span className="text-[9px] font-black text-arena-text-muted uppercase tracking-widest leading-none">
             {t("qrCode")}

@@ -21,7 +21,7 @@ interface ProfileSecuritySheetProps {
 export function ProfileSecuritySheet({ passkeysCount, onClose }: ProfileSecuritySheetProps) {
   const t = useTranslations("profilePage");
   const [passkeyStatus, setPasskeyStatus] = useState<"idle" | "adding" | "added" | "error">("idle");
-  const [hasPasskey, setHasPasskey] = useState<boolean>(passkeysCount > 0 || true);
+  const [hasPasskey, setHasPasskey] = useState<boolean>(passkeysCount > 0);
 
   const handleRegisterPasskey = async () => {
     setPasskeyStatus("adding");

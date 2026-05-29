@@ -11,9 +11,18 @@ import {
   Settings2,
   Users,
 } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { useLocale, useTranslations } from "next-intl";
 import { useState } from "react";
+import {
+  cancelUserAttendance,
+  confirmUserAttendance,
+  type EventRosterEntry,
+} from "@/actions/attendance.actions";
+import type { ChatMessage } from "@/actions/event-chat.actions";
+import { EditEventSheet } from "@/components/arena/edit-event-sheet";
 import { ShareEventSheet } from "@/components/arena/share-event-sheet";
+import { Button } from "@/components/ui/button";
 import { ATTENDANCE_STATUS } from "@/constants/attendance";
 import { cn, formatTime } from "@/lib/utils";
 import type { EventStatus } from "@/types/events";
@@ -23,7 +32,6 @@ import { EventChatTab } from "./event-chat-tab";
 import { EventLocationTab } from "./event-location-tab";
 import { EventRosterTab } from "./event-roster-tab";
 import { EventTeamsTab } from "./event-teams-tab";
-import { MAIN_ROSTER, RESERVES_ROSTER } from "../_fixtures/event-detail-mock";
 
 interface EventDetailProps {
   event: {
@@ -41,9 +49,14 @@ interface EventDetailProps {
     paymentDeadlineHours?: number | null;
     rosterOnly?: boolean;
     description?: string | null;
+    transferRequiresProof?: boolean;
   };
   userId: string;
   canEdit?: boolean;
+  mainRoster: EventRosterEntry[];
+  reservesRoster: EventRosterEntry[];
+  canChat: boolean;
+  initialChatMessages: ChatMessage[];
   initialMyStatus?: string | null;
 }
 
@@ -51,13 +64,17 @@ type Tab = "roster" | "teams" | "location" | "chat";
 
 export function EventDetail({
   event,
-  // biome-ignore lint/correctness/noUnusedFunctionParameters: mock implementation
   userId,
   canEdit = false,
+  mainRoster,
+  reservesRoster,
+  canChat,
+  initialChatMessages,
   initialMyStatus,
 }: EventDetailProps) {
   const t = useTranslations("arenaEventDetail");
   const locale = useLocale();
+  const router = useRouter();
 
   const eventDate =
     typeof event.startDate === "string"
@@ -89,27 +106,53 @@ export function EventDetail({
     chatEndRef,
     chatMessages,
     handleSendMessage,
+    handleDeleteMessage,
+    handleCensorMessage,
     inputMessage,
     setInputMessage,
-  } = useEventDetailChat({ active: activeTab === "chat", locale });
+    sending,
+  } = useEventDetailChat({
+    eventId: event.id,
+    currentUserId: userId,
+    canChat,
+    isCaptain: canEdit,
+    initialMessages: initialChatMessages,
+    active: activeTab === "chat",
+    locale,
+  });
 
-  const totalSpots = 14;
-  const filledSpots = 10;
+  const parsedCapacity = event.maxParticipants
+    ? Number.parseInt(event.maxParticipants, 10)
+    : Number.NaN;
+  const filledSpots = mainRoster.length;
+  const totalSpots = Number.isFinite(parsedCapacity)
+    ? parsedCapacity
+    : filledSpots;
 
   const handleConfirmAttendance = async () => {
     setActionLoading(true);
-    setTimeout(() => {
-      setMyStatus(ATTENDANCE_STATUS.CONFIRMED);
+    try {
+      const result = await confirmUserAttendance(event.id);
+      if (result.success) {
+        setMyStatus(ATTENDANCE_STATUS.CONFIRMED);
+        router.refresh();
+      }
+    } finally {
       setActionLoading(false);
-    }, 600);
+    }
   };
 
   const handleCancelAttendance = async () => {
     setActionLoading(true);
-    setTimeout(() => {
-      setMyStatus(null);
+    try {
+      const result = await cancelUserAttendance(event.id);
+      if (result.success) {
+        setMyStatus(null);
+        router.refresh();
+      }
+    } finally {
       setActionLoading(false);
-    }, 600);
+    }
   };
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -117,12 +160,15 @@ export function EventDetail({
     { id: "roster", label: t("tabs.roster"), icon: List },
     { id: "teams", label: t("tabs.teams"), icon: Users },
     { id: "location", label: t("tabs.location"), icon: MapPin },
-    { id: "chat", label: t("tabs.chat"), icon: MessageSquare },
+    // { id: "chat", label: t("tabs.chat"), icon: MessageSquare },
   ];
 
   return (
     <motion.div
-      className="flex min-h-screen flex-col bg-arena-bg pb-20 relative"
+      className={cn(
+        "flex flex-col bg-arena-bg relative",
+        activeTab === "chat" ? "h-screen" : "min-h-screen pb-20",
+      )}
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.22 }}
@@ -158,15 +204,23 @@ export function EventDetail({
             </div>
           </div>
 
-          {canEdit && (
-            <button
-              type="button"
-              onClick={() => setIsEditing(true)}
+          <div className="flex gap-2">
+            <Button
+              onClick={() => setActiveTab("chat")}
               className="w-9 h-9 bg-arena-surface border border-arena-border hover:bg-arena-surface-el text-arena-text-sec hover:text-arena-text rounded-xl flex items-center justify-center transition-all"
             >
-              <Settings2 size={16} />
-            </button>
-          )}
+              <MessageSquare size={16} />
+            </Button>
+
+            {canEdit && (
+              <Button
+                onClick={() => setIsEditing(true)}
+                className="w-9 h-9 bg-arena-surface border border-arena-border hover:bg-arena-surface-el text-arena-text-sec hover:text-arena-text rounded-xl flex items-center justify-center transition-all"
+              >
+                <Settings2 size={16} />
+              </Button>
+            )}
+          </div>
         </div>
 
         <div className="flex flex-wrap gap-x-4 gap-y-1.5 mt-3 px-1 text-arena-text-sec text-[11px] font-medium">
@@ -249,17 +303,25 @@ export function EventDetail({
       </div>
 
       {/* Tab content */}
-      <div className="flex-1 overflow-y-auto px-5 py-4 pb-24">
+      <div
+        className={cn(
+          activeTab === "chat"
+            ? "flex flex-col flex-1 min-h-0 overflow-hidden"
+            : "flex-1 overflow-y-auto px-5 py-4 pb-24",
+        )}
+      >
         {activeTab === "roster" && (
           <EventRosterTab
-            mainRoster={MAIN_ROSTER}
-            reservesRoster={RESERVES_ROSTER}
+            mainRoster={mainRoster}
+            reservesRoster={reservesRoster}
             t={t}
           />
         )}
 
         {activeTab === "teams" && (
           <EventTeamsTab
+            eventId={event.id}
+            roster={mainRoster}
             filledSpots={filledSpots}
             totalSpots={totalSpots}
             t={t}
@@ -269,7 +331,8 @@ export function EventDetail({
         {activeTab === "location" && (
           <EventLocationTab
             location={event.location}
-            onShare={() => setShareOpen(true)}
+            eventId={event.id}
+            canEdit={canEdit}
             t={t}
           />
         )}
@@ -281,6 +344,11 @@ export function EventDetail({
             inputMessage={inputMessage}
             onInputChange={setInputMessage}
             onSend={handleSendMessage}
+            onDeleteMessage={handleDeleteMessage}
+            onCensorMessage={handleCensorMessage}
+            canChat={canChat}
+            isCaptain={canEdit}
+            sending={sending}
             t={t}
           />
         )}
@@ -307,6 +375,10 @@ export function EventDetail({
           }}
           onClose={() => setShareOpen(false)}
         />
+      )}
+
+      {_isEditing && (
+        <EditEventSheet event={event} onClose={() => setIsEditing(false)} />
       )}
     </motion.div>
   );

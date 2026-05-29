@@ -477,7 +477,13 @@
     "actions": {
       "cancel": "Cancel Attendance",
       "confirm": "Confirm Attendance",
-      "cancelled": "Event cancelled"
+      "cancelled": "Event cancelled",
+      "cancelConfirm": {
+        "title": "Cancel attendance?",
+        "description": "You'll free up your spot in this match. If you already paid, contact the organiser about a refund.",
+        "action": "Cancel attendance",
+        "keep": "Keep attendance"
+      }
     },
     "management": {
       "revokeTitle": "Revoke Attendance?",
@@ -570,6 +576,7 @@
       "aiBalancerBeta": "AI Team Balancer",
       "aiBalancerBetaSub": "Generate balanced teams based on player skill levels.",
       "aiBalancerCta": "Generate {count} Teams with AI",
+      "teamLabel": "Team {label}",
       "howToGet": "How to get there",
       "metro": "Metro",
       "metroDesc": "Baixa-Chiado Station (Blue/Green Line), a 3-minute walk.",
@@ -579,6 +586,13 @@
       "carroDesc": "Difficult parking. Paid underground parking at Camões.",
       "chatEmpty": "No messages here yet. Send the first one!",
       "chatPlaceholder": "Type a message for the group...",
+      "chatLockedTitle": "Chat for confirmed players",
+      "chatLockedSub": "Confirm your attendance to join the conversation.",
+      "deleteMessage": "Delete message",
+      "censorMessage": "Censor message",
+      "uncensorMessage": "Remove censorship",
+      "messageCensored": "Message censored",
+      "cancel": "Cancel",
       "squadFull": "Squad Full!",
       "readyToBalance": "Ready to balance teams",
       "guest": "Guest"
@@ -637,6 +651,7 @@
     "title": "Events",
     "editInfo": "Edit Information",
     "statusLabel": "Event Status",
+    "eventNotFound": "Event not found",
     "errorUpdating": "Error updating event. Please try again.",
     "types": {
       "match": "Match",
@@ -1091,6 +1106,7 @@
     "comingSoon": "Coming soon",
     "comingSoonDescription": "This area is under development. Soon you will have full access.",
     "confirm": "Confirm",
+    "confirmAction": "Confirm",
     "confirmPassword": "Confirm your password",
     "copyright": "Copyright © {year}. All rights reserved.",
     "create": "Create",
@@ -2129,7 +2145,9 @@
       "assists": "Assists",
       "rating": "Rating",
       "associatedTeams": "Associated Teams",
-      "associatedTeamsCount": "{count} teams",
+      "associatedTeamsCount": "{count, plural, one {# team} other {# teams}}",
+      "playersCountLabel": "{count, plural, one {# player} other {# players}}",
+      "noTeams": "You don't belong to any team yet.",
       "playersCount": "players",
       "position": "position",
       "wins": "wins",
@@ -2147,7 +2165,10 @@
       "proPlan": "Pro Plan",
       "proPlanSub": "3/3 teams · €5/month",
       "logout": "Log out",
-      "logoutConfirm": "Do you really want to sign out?"
+      "logoutTitle": "Log out?",
+      "logoutDescription": "You'll be signed out of JogaBola. You can sign back in whenever you like.",
+      "logoutAction": "Log out",
+      "logoutCancel": "Cancel"
     },
     "notificationsSheet": {
       "title": "Notifications",
@@ -2921,8 +2942,10 @@
       "uploading": "Uploading...",
       "registering": "Registering...",
       "changeFile": "Click to change file",
-      "dropzone": "Click or drag the image",
-      "formats": "JPEG, PNG, WebP · max. 8 MB"
+      "dropzone": "Click or drag the file",
+      "formats": "JPEG, PNG, WebP, PDF · max. 2 MB",
+      "invalidType": "Unsupported format. Use an image or PDF.",
+      "tooLarge": "File too large. Maximum 2 MB."
     }
   },
   "videoDemo": {
@@ -2966,10 +2989,14 @@
     "loading": "Loading..."
   },
   "passkeyPrompt": {
-    "title": "Enable Passkey ⚡",
-    "description": "Do you want to link your device (FaceID, TouchID, or PIN) to sign in instantly next time, without waiting for email codes?",
-    "yes": "Yes, link now",
-    "no": "Don't ask again",
+    "title": "Enable Passkey",
+    "description": "Log in instantly next time — without waiting for email codes.",
+    "feature1Title": "One-tap login",
+    "feature1Sub": "FaceID, TouchID or PIN",
+    "feature2Title": "More secure",
+    "feature2Sub": "No passwords or codes",
+    "yes": "Enable now",
+    "no": "Don't link",
     "skip": "Not now",
     "success": "Passkey linked successfully!",
     "error": "Could not link passkey."

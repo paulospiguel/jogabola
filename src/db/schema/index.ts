@@ -1,4 +1,5 @@
 export * from "./attendance";
+export * from "./event-messages";
 export * from "./fines";
 export * from "./guest-otp";
 export * from "./match-sessions";
