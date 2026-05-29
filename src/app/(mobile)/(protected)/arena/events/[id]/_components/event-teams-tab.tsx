@@ -156,11 +156,11 @@ export function EventTeamsTab({
           </div>
         </div>
 
-        <div className="flex items-center justify-between border-t border-arena-border/30 pt-3.5">
-          <span className="text-xs font-bold text-arena-text-sec">
+        <div className="flex items-center justify-between border-t border-arena-border/30 pt-3.5 gap-2">
+          <span className="text-xs font-bold text-arena-text-sec min-w-0">
             {t("interactive.teamsNumLabel")}
           </span>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 shrink-0">
             {([2, 3, 4] as const).map(n => (
               <button
                 key={n}
@@ -209,7 +209,7 @@ export function EventTeamsTab({
                   <span className="font-bold text-sm text-arena-text truncate block">
                     {player.name}
                   </span>
-                  <span className="text-[9px] uppercase tracking-wider font-extrabold text-arena-text-muted mt-0.5 block">
+                  <span className="text-[9px] uppercase tracking-wider font-extrabold text-arena-text-muted mt-0.5 block truncate">
                     {player.pos}
                   </span>
                 </div>
@@ -239,7 +239,7 @@ export function EventTeamsTab({
                     <span className="font-bold text-sm text-arena-text truncate">
                       {guest.name}
                     </span>
-                    <span className="text-[8px] font-extrabold uppercase px-1.5 py-0.25 bg-arena-primary/15 text-arena-primary rounded border border-arena-primary/20 leading-none">
+                    <span className="text-[8px] font-extrabold uppercase px-1.5 py-0.25 bg-arena-primary/15 text-arena-primary rounded border border-arena-primary/20 leading-none shrink-0">
                       {t("interactive.guest")}
                     </span>
                   </div>
@@ -276,14 +276,14 @@ export function EventTeamsTab({
             <span className="font-extrabold text-sm text-arena-text block">
               {t("interactive.addGuests")}
             </span>
-            <span className="text-xs text-arena-text-muted block mt-0.5 truncate">
+            <span className="text-xs text-arena-text-muted block mt-0.5">
               {t("interactive.addGuestsSub", {
                 count: vacancies,
               } as TranslationValues)}
             </span>
           </div>
         </div>
-        <ChevronRight size={18} className="text-arena-text-muted" />
+        <ChevronRight size={18} className="text-arena-text-muted shrink-0" />
       </button>
 
       {/* AI team balancer */}
@@ -301,12 +301,12 @@ export function EventTeamsTab({
               strokeWidth={2}
             />
           </div>
-          <div>
+          <div className="min-w-0">
             <div className="flex items-center gap-1.5">
-              <span className="font-extrabold text-sm text-arena-text block">
+              <span className="font-extrabold text-sm text-arena-text truncate block">
                 {t("interactive.aiBalancerBeta")}
               </span>
-              <span className="text-[8px] uppercase tracking-wider font-extrabold px-1.5 py-0.25 bg-arena-primary/20 text-arena-primary rounded border border-arena-primary/30 leading-none">
+              <span className="text-[8px] uppercase tracking-wider font-extrabold px-1.5 py-0.25 bg-arena-primary/20 text-arena-primary rounded border border-arena-primary/30 leading-none shrink-0">
                 BETA
               </span>
             </div>
@@ -319,7 +319,7 @@ export function EventTeamsTab({
         <Button
           onClick={handleBalance}
           disabled={balancing || roster.length === 0}
-          className="w-full bg-arena-primary text-[#0B0F14] hover:bg-arena-primary/95 font-bold h-11 rounded-xl text-sm transition-all gap-1.5 shadow-[0_0_24px_rgba(124,255,79,0.22)] disabled:opacity-60"
+          className="w-full bg-arena-primary text-[#0B0F14] hover:bg-arena-primary/95 font-bold h-auto py-3 rounded-xl text-sm transition-all gap-1.5 shadow-[0_0_24px_rgba(124,255,79,0.22)] disabled:opacity-60 whitespace-normal text-center"
         >
           <Sparkles
             className={cn(

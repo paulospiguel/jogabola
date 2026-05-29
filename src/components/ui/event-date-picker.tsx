@@ -35,14 +35,40 @@ function DrumPicker({
   label: string;
 }) {
   const containerRef = React.useRef<HTMLDivElement>(null);
-  const selectedIdx = items.indexOf(value);
+  const isProgrammaticScroll = React.useRef(false);
+  const scrollTimeout = React.useRef<ReturnType<typeof setTimeout> | null>(null);
 
   React.useEffect(() => {
     const el = containerRef.current;
     if (!el) return;
-    const top = selectedIdx * ITEM_H - ITEM_H;
-    el.scrollTo({ top: Math.max(0, top), behavior: "smooth" });
-  }, [selectedIdx]);
+    const selectedIdx = items.indexOf(value);
+    const targetTop = selectedIdx * ITEM_H;
+
+    // Only programmatic scroll if we are not already at the target
+    if (Math.abs(el.scrollTop - targetTop) > 2) {
+      isProgrammaticScroll.current = true;
+      el.scrollTo({ top: targetTop, behavior: "smooth" });
+
+      if (scrollTimeout.current) clearTimeout(scrollTimeout.current);
+      scrollTimeout.current = setTimeout(() => {
+        isProgrammaticScroll.current = false;
+      }, 350); // wait for smooth scroll to finish
+    }
+  }, [value, items]);
+
+  const handleScroll = (e: React.UIEvent<HTMLDivElement>) => {
+    if (isProgrammaticScroll.current) return;
+
+    const el = e.currentTarget;
+    const idx = Math.round(el.scrollTop / ITEM_H);
+
+    if (idx >= 0 && idx < items.length) {
+      const newValue = items[idx];
+      if (newValue !== value) {
+        onChange(newValue);
+      }
+    }
+  };
 
   return (
     <div className="flex flex-col items-center gap-1 flex-1">
@@ -65,6 +91,7 @@ function DrumPicker({
 
         <div
           ref={containerRef}
+          onScroll={handleScroll}
           className="absolute inset-0 overflow-y-auto scrollbar-none snap-y snap-mandatory"
         >
           <div style={{ height: ITEM_H }} />

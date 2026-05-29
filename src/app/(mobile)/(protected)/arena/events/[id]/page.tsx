@@ -57,7 +57,7 @@ export default async function ArenaEventDetailPage({ params }: Params) {
   }
 
   return (
-    <div className="jb-page">
+    <div className="jb-page" style={{ paddingLeft: 0, paddingRight: 0 }}>
       <div className="jb-page-inner max-w-5xl">
         <EventDetail
           event={event}

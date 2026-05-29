@@ -23,6 +23,7 @@ import type { ChatMessage } from "@/actions/event-chat.actions";
 import { EditEventSheet } from "@/components/arena/edit-event-sheet";
 import { ShareEventSheet } from "@/components/arena/share-event-sheet";
 import { Button } from "@/components/ui/button";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ATTENDANCE_STATUS } from "@/constants/attendance";
 import { cn, formatTime } from "@/lib/utils";
 import type { EventStatus } from "@/types/events";
@@ -31,6 +32,7 @@ import { EventActionBar } from "./event-action-bar";
 import { EventChatTab } from "./event-chat-tab";
 import { EventLocationTab } from "./event-location-tab";
 import { EventRosterTab } from "./event-roster-tab";
+import { EventSpotsProgress } from "./event-spots-progress";
 import { EventTeamsTab } from "./event-teams-tab";
 
 interface EventDetailProps {
@@ -163,10 +165,17 @@ export function EventDetail({
     // { id: "chat", label: t("tabs.chat"), icon: MessageSquare },
   ];
 
+  const TAB_NAME = {
+    roster: t("tabs.roster"),
+    teams: t("tabs.teams"),
+    location: t("tabs.location"),
+    chat: t("tabs.chat"),
+  } as const;
+
   return (
     <motion.div
       className={cn(
-        "flex flex-col bg-arena-bg relative",
+        "flex flex-col relative",
         activeTab === "chat" ? "h-screen" : "min-h-screen pb-20",
       )}
       initial={{ opacity: 0 }}
@@ -176,10 +185,6 @@ export function EventDetail({
       {/* Header */}
       <div
         className="px-5 pt-4 pb-3 border-b border-arena-border relative"
-        style={{
-          background:
-            "linear-gradient(180deg, rgba(15, 30, 46, 0.45) 0%, var(--color-arena-bg) 100%)",
-        }}
       >
         <div className="flex items-start justify-between">
           <div className="flex items-center gap-3">
@@ -239,86 +244,59 @@ export function EventDetail({
         </div>
 
         {/* Spots progress bar */}
-        <div className="bg-arena-surface border border-arena-border rounded-[14px] p-3 mt-4 relative">
-          <div className="flex items-center justify-between mb-1.5">
-            <span className="text-xs font-bold text-arena-text-sec">
-              {t("spots")}
-            </span>
-            <span className="text-xs font-bold text-arena-text">
-              <span className="text-arena-primary font-sora font-extrabold">
-                {filledSpots}
-              </span>{" "}
-              / {totalSpots}
-            </span>
-          </div>
-          <div className="h-1.5 overflow-hidden rounded-full bg-arena-border">
-            <div
-              className="h-full rounded-full bg-arena-primary shadow-[0_0_12px_rgba(124,255,79,0.3)] transition-all duration-300"
-              style={{ width: `${(filledSpots / totalSpots) * 100}%` }}
-            />
-          </div>
+        <div className="bg-arena-surface border border-arena-border rounded-[14px] p-3.5 mt-4 relative">
+          <EventSpotsProgress
+            filledSpots={filledSpots}
+            totalSpots={totalSpots}
+            label={t("spots")}
+          />
         </div>
       </div>
 
-      {/* Tab selector */}
-      <div className="flex border-b border-arena-border bg-arena-surface/40 overflow-hidden relative">
-        {TABS.map(tab => {
-          const Icon = tab.icon;
-          const isActive = activeTab === tab.id;
-          return (
-            <button
-              key={tab.id}
-              onClick={() => setActiveTab(tab.id)}
-              className={cn(
-                "flex-1 py-3 text-xs font-bold transition-all relative flex items-center justify-center gap-1.5",
-                isActive
-                  ? "text-arena-primary"
-                  : "text-arena-text-muted hover:text-arena-text-sec",
-              )}
-            >
-              <Icon
-                size={14}
-                className={cn(
-                  "transition-colors",
-                  isActive ? "text-arena-primary" : "text-arena-text-muted",
-                )}
-              />
-              {tab.id === "roster"
-                ? t("tabs.roster")
-                : tab.id === "teams"
-                  ? t("tabs.teams")
-                  : tab.id === "location"
-                    ? t("tabs.location")
-                    : t("tabs.chat")}
-
-              {isActive && (
-                <motion.div
-                  className="absolute bottom-0 left-0 right-0 h-[2.5px] bg-arena-primary rounded-t-full shadow-[0_-2px_10px_rgba(124,255,79,0.4)]"
-                  layoutId="activeTabUnderline"
-                />
-              )}
-            </button>
-          );
-        })}
-      </div>
-
-      {/* Tab content */}
-      <div
-        className={cn(
-          activeTab === "chat"
-            ? "flex flex-col flex-1 min-h-0 overflow-hidden"
-            : "flex-1 overflow-y-auto px-5 py-4 pb-24",
-        )}
+      <Tabs
+        value={activeTab}
+        onValueChange={(val) => setActiveTab(val as Tab)}
+        className="flex flex-col flex-1 min-h-0"
       >
-        {activeTab === "roster" && (
+        {/* Tab selector */}
+        <TabsList
+          variant="line"
+          className="flex w-full border-b border-arena-border bg-arena-surface/40 h-auto px-5 py-0 rounded-none shrink-0"
+        >
+          {TABS.map((tab) => {
+            const Icon = tab.icon;
+            return (
+              <TabsTrigger
+                key={tab.id}
+                value={tab.id}
+                className="group flex-1 py-3 text-xs font-bold transition-all relative flex items-center justify-center gap-1.5 data-[state=active]:!text-arena-primary text-arena-text-muted hover:text-arena-text-sec data-[state=active]:bg-transparent border-none dark:data-[state=active]:bg-transparent after:bg-arena-primary after:bottom-0 after:h-[2.5px] rounded-none after:shadow-[0_-2px_10px_rgba(124,255,79,0.4)]"
+              >
+                <Icon
+                  size={14}
+                  className="transition-colors text-arena-text-muted group-data-[state=active]:!text-arena-primary"
+                />
+                {TAB_NAME[tab.id]}
+              </TabsTrigger>
+            );
+          })}
+        </TabsList>
+
+        {/* Tab content */}
+        <TabsContent
+          value="roster"
+          className="flex-1 overflow-y-auto px-5 py-4 pb-24 outline-none focus-visible:ring-0 focus-visible:outline-none"
+        >
           <EventRosterTab
             mainRoster={mainRoster}
             reservesRoster={reservesRoster}
             t={t}
           />
-        )}
+        </TabsContent>
 
-        {activeTab === "teams" && (
+        <TabsContent
+          value="teams"
+          className="flex-1 overflow-y-auto px-5 py-4 pb-24 outline-none focus-visible:ring-0 focus-visible:outline-none"
+        >
           <EventTeamsTab
             eventId={event.id}
             roster={mainRoster}
@@ -326,18 +304,24 @@ export function EventDetail({
             totalSpots={totalSpots}
             t={t}
           />
-        )}
+        </TabsContent>
 
-        {activeTab === "location" && (
+        <TabsContent
+          value="location"
+          className="flex-1 overflow-y-auto px-5 py-4 pb-24 outline-none focus-visible:ring-0 focus-visible:outline-none"
+        >
           <EventLocationTab
             location={event.location}
             eventId={event.id}
             canEdit={canEdit}
             t={t}
           />
-        )}
+        </TabsContent>
 
-        {activeTab === "chat" && (
+        <TabsContent
+          value="chat"
+          className="flex flex-col flex-1 min-h-0 overflow-hidden outline-none focus-visible:ring-0 focus-visible:outline-none"
+        >
           <EventChatTab
             chatMessages={chatMessages}
             chatEndRef={chatEndRef}
@@ -351,8 +335,8 @@ export function EventDetail({
             sending={sending}
             t={t}
           />
-        )}
-      </div>
+        </TabsContent>
+      </Tabs>
 
       {activeTab !== "chat" && (
         <EventActionBar
