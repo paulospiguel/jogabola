@@ -73,7 +73,6 @@ export default async function ArenaEventDetailPage({ params }: Params) {
             userId={user.id}
             canEdit={canEdit}
             mainRoster={roster.main}
-            reservesRoster={roster.reserves}
             canChat={canChat}
             initialChatMessages={initialChatMessages}
             initialMyStatus={

@@ -105,9 +105,7 @@ export function MyPaymentTab({ eventId }: MyPaymentTabProps) {
   if (error) {
     return (
       <div className="flex h-32 items-center justify-center text-arena-danger text-sm px-4 py-4">
-        {error instanceof Error
-          ? error.message
-          : t("loadError")}
+        {error instanceof Error ? error.message : t("loadError")}
       </div>
     );
   }
@@ -193,7 +191,8 @@ export function MyPaymentTab({ eventId }: MyPaymentTabProps) {
             <span
               className={cn(
                 "text-[16px] font-bold",
-                status === PAYMENT_STATUS.PAID || status === PAYMENT_STATUS.APPROVED
+                status === PAYMENT_STATUS.PAID ||
+                  status === PAYMENT_STATUS.APPROVED
                   ? "text-arena-primary"
                   : "text-arena-warning",
               )}

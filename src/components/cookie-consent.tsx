@@ -23,6 +23,24 @@ export default function CookieConsent() {
   const [analyticsAllowed, setAnalyticsAllowed] = useState(false);
   const [marketingAllowed, setMarketingAllowed] = useState(false);
 
+  const isPrivacyPage =
+    pathname === "/privacy" || pathname.endsWith("/privacy");
+
+  // Load saved per-category preferences into the switches.
+  const loadSavedSettings = () => {
+    const settingsStr = localStorage.getItem("cookie-consent-settings");
+    if (!settingsStr) return;
+    try {
+      const settings = JSON.parse(settingsStr);
+      setFunctionalAllowed(!!settings.functional);
+      setAnalyticsAllowed(!!settings.analytics);
+      setMarketingAllowed(!!settings.marketing);
+    } catch {
+      // ignore
+    }
+  };
+
+  // biome-ignore lint/correctness/useExhaustiveDependencies: run once on mount
   useEffect(() => {
     setMounted(true);
     const consent = localStorage.getItem("cookie-consent");
@@ -30,27 +48,28 @@ export default function CookieConsent() {
       localStorage.getItem("cookie-consent-version") ?? "0",
     );
 
-    // No prior consent, or policy/categories changed → ask again (RGPD).
-    if (!consent || storedVersion !== CONSENT_VERSION) {
-      setIsVisible(true);
-      return;
-    }
+    loadSavedSettings();
 
-    const settingsStr = localStorage.getItem("cookie-consent-settings");
-    if (settingsStr) {
-      try {
-        const settings = JSON.parse(settingsStr);
-        setFunctionalAllowed(!!settings.functional);
-        setAnalyticsAllowed(!!settings.analytics);
-        setMarketingAllowed(!!settings.marketing);
-      } catch {
-        // ignore
-      }
+    // No prior consent, or policy/categories changed → ask again (RGPD).
+    // Never auto-open on the privacy page (avoid nagging there).
+    if (!isPrivacyPage && (!consent || storedVersion !== CONSENT_VERSION)) {
+      setIsVisible(true);
     }
   }, []);
 
+  // Manual re-open (e.g. "Cookie settings" link). Opens the granular panel.
+  // biome-ignore lint/correctness/useExhaustiveDependencies: stable handler
+  useEffect(() => {
+    const handler = () => {
+      loadSavedSettings();
+      setIsCustomizing(true);
+      setIsVisible(true);
+    };
+    window.addEventListener("jb:open-cookie-settings", handler);
+    return () => window.removeEventListener("jb:open-cookie-settings", handler);
+  }, []);
+
   if (!mounted) return null;
-  if (pathname === "/privacy" || pathname.endsWith("/privacy")) return null;
 
   const saveConsent = (
     status: "accepted" | "declined" | "custom",

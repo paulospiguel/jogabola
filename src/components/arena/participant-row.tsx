@@ -34,11 +34,11 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { ATTENDANCE_STATUS } from "@/constants/attendance";
+import { PAYMENT_STATUS } from "@/constants/payments";
 import type { Participant } from "@/hooks/use-event-attendance";
 import { cn } from "@/lib/utils";
 import type { PaymentStatus } from "@/types/payments";
-import { PAYMENT_STATUS } from "@/constants/payments";
-import { ATTENDANCE_STATUS } from "@/constants/attendance";
 import { JbAvatar } from "./avatar";
 import { PaymentStatusBadge } from "./payment-status-badge";
 
@@ -50,6 +50,8 @@ interface ParticipantRowProps {
   position: RowPosition;
   trailing?: ReactNode;
   showPayment?: boolean;
+  /** Free event: show a neutral "Grátis" chip instead of a payment status. */
+  isFreeEvent?: boolean;
   dimmed?: boolean;
   currentUserId?: string;
   isManager?: boolean;
@@ -98,6 +100,7 @@ export function ParticipantRow({
   position,
   trailing,
   showPayment = false,
+  isFreeEvent = false,
   dimmed = false,
   currentUserId,
   isManager = false,
@@ -113,14 +116,19 @@ export function ParticipantRow({
 
   const paymentStatus = isPaymentStatus(participant.paymentStatus)
     ? participant.paymentStatus
-    : (showPayment ? PAYMENT_STATUS.PENDING : null);
-  const shouldShowPayment = showPayment && paymentStatus;
+    : showPayment && !isFreeEvent
+      ? PAYMENT_STATUS.PENDING
+      : null;
+  const shouldShowPayment = showPayment && !isFreeEvent && paymentStatus;
+  const shouldShowFree = showPayment && isFreeEvent;
   const profileHref = String(participant.id).startsWith("guest-")
     ? null
     : `/arena/squads/player/${participant.id}`;
 
   async function handleStatusChange(
-    newStatus: typeof ATTENDANCE_STATUS.CONFIRMED | typeof ATTENDANCE_STATUS.RESERVE,
+    newStatus:
+      | typeof ATTENDANCE_STATUS.CONFIRMED
+      | typeof ATTENDANCE_STATUS.RESERVE,
   ) {
     if (!eventId) return;
     setLoading(true);
@@ -273,9 +281,9 @@ export function ParticipantRow({
           </div>
           <div className="truncate text-[10px] text-arena-text-muted">
             {participant.role
-              ? (tSquad.has(`roles.${participant.role.toLowerCase()}`)
+              ? tSquad.has(`roles.${participant.role.toLowerCase()}`)
                 ? tSquad(`roles.${participant.role.toLowerCase()}`)
-                : participant.role)
+                : participant.role
               : ""}
           </div>
         </div>
@@ -287,6 +295,10 @@ export function ParticipantRow({
               method={participant.paymentMethod ?? undefined}
               canViewRejected={participant.id === currentUserId}
             />
+          ) : shouldShowFree ? (
+            <span className="shrink-0 rounded-full border border-arena-border bg-arena-surface-el px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wide text-arena-text-muted">
+              {t("interactive.free")}
+            </span>
           ) : (
             (trailing ?? (
               <Check

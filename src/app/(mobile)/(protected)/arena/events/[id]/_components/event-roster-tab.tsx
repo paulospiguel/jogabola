@@ -1,166 +1,115 @@
-import { Check, CheckCircle2, Sparkles } from "lucide-react";
-import type { EventRosterEntry } from "@/actions/attendance.actions";
-import { JbAvatar } from "@/components/arena/avatar";
+"use client";
+
+import { Check } from "lucide-react";
+import type { useTranslations } from "next-intl";
+import { JbBadge } from "@/components/arena/badge";
 import {
-  EVENT_PAYMENT_STATUS,
-  type EventPaymentStatus,
-} from "@/constants/event-payment-status";
-import { cn } from "@/lib/utils";
+  ParticipantRow,
+  participantRowPosition,
+} from "@/components/arena/participant-row";
+import { ATTENDANCE_STATUS } from "@/constants/attendance";
+import { useEventAttendance } from "@/hooks/use-event-attendance";
 
 interface EventRosterTabProps {
-  mainRoster: EventRosterEntry[];
-  reservesRoster: EventRosterEntry[];
-  t: (key: string, values?: Record<string, string | number | Date>) => string;
-}
-
-function getPaymentBadgeClass(status: EventPaymentStatus) {
-  if (status === EVENT_PAYMENT_STATUS.PAID) {
-    return "bg-arena-success/15 border-arena-success/20 text-arena-success";
-  }
-
-  if (status === EVENT_PAYMENT_STATUS.REVIEW) {
-    return "bg-arena-warning/15 border-arena-warning/20 text-arena-warning";
-  }
-
-  return "bg-arena-text-muted/15 border-arena-border text-arena-text-sec";
-}
-
-function getPaymentLabelKey(status: EventPaymentStatus) {
-  if (status === EVENT_PAYMENT_STATUS.PAID)
-    return "interactive.paymentApproved";
-  if (status === EVENT_PAYMENT_STATUS.REVIEW)
-    return "interactive.paymentReview";
-  return "interactive.paymentPending";
+  eventId: number;
+  userId: string;
+  isManager: boolean;
+  priceCents: number;
+  t: ReturnType<typeof useTranslations<"arenaEventDetail">>;
 }
 
 export function EventRosterTab({
-  mainRoster,
-  reservesRoster,
+  eventId,
+  userId,
+  isManager,
+  priceCents,
   t,
 }: EventRosterTabProps) {
+  const { confirmed, reserves, pending, isLoading } =
+    useEventAttendance(eventId);
+
+  const waiting = [
+    ...reserves.map(p => ({ ...p, status: ATTENDANCE_STATUS.RESERVE })),
+    ...pending.map(p => ({ ...p, status: ATTENDANCE_STATUS.PENDING })),
+  ];
+
+  if (isLoading) {
+    return (
+      <div className="flex h-32 items-center justify-center text-sm text-arena-text-muted">
+        {t("lists.loading")}
+      </div>
+    );
+  }
+
   return (
     <div className="flex flex-col gap-5">
-      <div className="flex flex-col gap-2">
-        <div className="text-[10px] uppercase font-bold tracking-widest text-arena-text-muted px-1.5">
-          {t("lists.main", { count: mainRoster.length })}
+      <div className="flex flex-col">
+        <div className="mb-1 flex items-center justify-between px-1.5">
+          <span className="text-[10px] font-bold uppercase tracking-widest text-arena-text-muted">
+            {t("lists.main", { count: confirmed.length })}
+          </span>
+          <span className="text-[11px] font-bold text-arena-success">
+            {confirmed.length}
+          </span>
         </div>
-        <div className="bg-arena-surface border border-arena-border rounded-[16px] divide-y divide-arena-border/50 overflow-hidden">
-          {mainRoster.map((player, idx) => (
-            <div
-              key={player.id}
-              className="flex items-center justify-between p-3.5 gap-3"
-            >
-              <div className="flex items-center gap-3.5 min-w-0">
-                <span className="w-4 shrink-0 text-center text-[10px] font-bold text-arena-text-muted">
-                  {idx + 1}
-                </span>
-                <div className="relative shrink-0">
-                  <JbAvatar
-                    id={player.id}
-                    name={player.name}
-                    size={32}
-                    className="rounded-full overflow-hidden"
+        {confirmed.length === 0 ? (
+          <div className="rounded-[14px] border border-arena-border bg-arena-surface px-4 py-5 text-center text-[13px] text-arena-text-muted">
+            {t("lists.emptyConfirmed")}
+          </div>
+        ) : (
+          <div className="flex flex-col">
+            {confirmed.map((p, i) => (
+              <ParticipantRow
+                key={p.id}
+                participant={p}
+                index={i}
+                position={participantRowPosition(i, confirmed.length)}
+                currentUserId={userId}
+                isManager={isManager}
+                eventId={eventId}
+                showPayment={isManager || priceCents > 0}
+                isFreeEvent={priceCents === 0}
+                trailing={
+                  <Check
+                    size={15}
+                    className="shrink-0 text-arena-success"
+                    strokeWidth={2.5}
                   />
-                </div>
-                <div className="min-w-0">
-                  <div className="flex items-center gap-1.5">
-                    <span className="font-bold text-sm text-arena-text truncate">
-                      {player.name}
-                    </span>
-                    {player.verified && (
-                      <CheckCircle2
-                        size={12}
-                        className="text-arena-primary shrink-0"
-                        strokeWidth={2.5}
-                      />
-                    )}
-                    {player.star && (
-                      <Sparkles
-                        size={11}
-                        className="text-arena-highlight shrink-0 fill-arena-highlight"
-                      />
-                    )}
-                  </div>
-                  <div className="flex items-center gap-2 mt-0.5">
-                    <span className="text-[9px] uppercase tracking-wider font-extrabold text-arena-text-muted">
-                      {player.pos}
-                    </span>
-                    <span
-                      className={cn(
-                        "text-[8px] uppercase tracking-wide font-extrabold px-1.5 py-0.25 rounded border leading-none",
-                        getPaymentBadgeClass(player.status),
-                      )}
-                    >
-                      {t(getPaymentLabelKey(player.status))}
-                    </span>
-                  </div>
-                </div>
-              </div>
-
-              <Check
-                size={16}
-                className="text-arena-primary shrink-0"
-                strokeWidth={2.8}
+                }
               />
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
+        )}
       </div>
 
-      <div className="flex flex-col gap-2">
-        <div className="text-[10px] uppercase font-bold tracking-widest text-arena-text-muted px-1.5">
-          {t("interactive.reservesMock", { count: reservesRoster.length })}
+      {waiting.length > 0 && (
+        <div className="flex flex-col">
+          <div className="mb-1 flex items-center justify-between px-1.5">
+            <span className="text-[10px] font-bold uppercase tracking-widest text-arena-text-muted">
+              {t("interactive.reservesMock", { count: waiting.length })}
+            </span>
+            <span className="text-[11px] font-bold text-arena-text-muted">
+              {waiting.length}
+            </span>
+          </div>
+          <div className="flex flex-col">
+            {waiting.map((p, i) => (
+              <ParticipantRow
+                key={p.id}
+                participant={p}
+                position={participantRowPosition(i, waiting.length)}
+                currentUserId={userId}
+                isManager={isManager}
+                eventId={eventId}
+                showPayment={isManager || priceCents > 0}
+                isFreeEvent={priceCents === 0}
+                dimmed
+                trailing={<JbBadge status={p.status} />}
+              />
+            ))}
+          </div>
         </div>
-        <div className="bg-arena-surface border border-arena-border rounded-[16px] divide-y divide-arena-border/50 overflow-hidden">
-          {reservesRoster.map(player => (
-            <div
-              key={player.id}
-              className="flex items-center justify-between p-3.5 gap-3"
-            >
-              <div className="flex items-center gap-3.5 min-w-0">
-                <div className="relative shrink-0">
-                  <JbAvatar
-                    id={player.id}
-                    name={player.name}
-                    size={32}
-                    className="rounded-full overflow-hidden"
-                  />
-                </div>
-                <div className="min-w-0">
-                  <div className="flex items-center gap-1.5">
-                    <span className="font-bold text-sm text-arena-text truncate">
-                      {player.name}
-                    </span>
-                    {player.verified && (
-                      <CheckCircle2
-                        size={12}
-                        className="text-arena-primary shrink-0"
-                        strokeWidth={2.5}
-                      />
-                    )}
-                  </div>
-                  <span className="text-[9px] uppercase tracking-wider font-extrabold text-arena-text-muted mt-0.5 block">
-                    {player.pos}
-                  </span>
-                </div>
-              </div>
-
-              <span
-                className={cn(
-                  "text-[9px] uppercase tracking-wider font-extrabold px-2.5 py-1 rounded-xl border leading-none shrink-0",
-                  player.status === EVENT_PAYMENT_STATUS.RESERVE
-                    ? "bg-arena-warning/15 border-arena-warning/20 text-arena-warning"
-                    : "bg-arena-text-muted/15 border-arena-border text-arena-text-sec",
-                )}
-              >
-                {player.status === EVENT_PAYMENT_STATUS.RESERVE
-                  ? t("interactive.reservesStatus")
-                  : t("interactive.pendingStatus")}
-              </span>
-            </div>
-          ))}
-        </div>
-      </div>
+      )}
     </div>
   );
 }

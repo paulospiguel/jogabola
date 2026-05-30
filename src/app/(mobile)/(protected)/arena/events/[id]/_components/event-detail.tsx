@@ -21,15 +21,15 @@ import {
 } from "@/actions/attendance.actions";
 import type { ChatMessage } from "@/actions/event-chat.actions";
 import { EditEventSheet } from "@/components/arena/edit-event-sheet";
+import { EventChatTab } from "@/components/arena/event-chat-tab";
 import { ShareEventSheet } from "@/components/arena/share-event-sheet";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ATTENDANCE_STATUS } from "@/constants/attendance";
+import { useEventDetailChat } from "@/hooks/use-event-chat";
 import { cn, formatTime } from "@/lib/utils";
 import type { EventStatus } from "@/types/events";
-import { useEventDetailChat } from "@/hooks/use-event-chat";
 import { EventActionBar } from "./event-action-bar";
-import { EventChatTab } from "@/components/arena/event-chat-tab";
 import { EventLocationTab } from "./event-location-tab";
 import { EventRosterTab } from "./event-roster-tab";
 import { EventSpotsProgress } from "./event-spots-progress";
@@ -56,7 +56,6 @@ interface EventDetailProps {
   userId: string;
   canEdit?: boolean;
   mainRoster: EventRosterEntry[];
-  reservesRoster: EventRosterEntry[];
   canChat: boolean;
   initialChatMessages: ChatMessage[];
   initialMyStatus?: string | null;
@@ -69,7 +68,6 @@ export function EventDetail({
   userId,
   canEdit = false,
   mainRoster,
-  reservesRoster,
   canChat,
   initialChatMessages,
   initialMyStatus,
@@ -183,9 +181,7 @@ export function EventDetail({
       transition={{ duration: 0.22 }}
     >
       {/* Header */}
-      <div
-        className="px-5 pt-4 pb-3 border-b border-arena-border relative"
-      >
+      <div className="px-5 pt-4 pb-3 border-b border-arena-border relative">
         <div className="flex items-start justify-between">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-xl bg-[#00f0ff]/10 flex items-center justify-center border border-[#00f0ff]/20 shrink-0">
@@ -255,7 +251,7 @@ export function EventDetail({
 
       <Tabs
         value={activeTab}
-        onValueChange={(val) => setActiveTab(val as Tab)}
+        onValueChange={val => setActiveTab(val as Tab)}
         className="flex flex-col flex-1 min-h-0"
       >
         {/* Tab selector */}
@@ -263,7 +259,7 @@ export function EventDetail({
           variant="line"
           className="flex w-full border-b border-arena-border bg-arena-surface/40 h-auto px-5 py-0 rounded-none shrink-0"
         >
-          {TABS.map((tab) => {
+          {TABS.map(tab => {
             const Icon = tab.icon;
             return (
               <TabsTrigger
@@ -287,8 +283,10 @@ export function EventDetail({
           className="flex-1 overflow-y-auto px-5 py-4 pb-24 outline-none focus-visible:ring-0 focus-visible:outline-none"
         >
           <EventRosterTab
-            mainRoster={mainRoster}
-            reservesRoster={reservesRoster}
+            eventId={event.id}
+            userId={userId}
+            isManager={canEdit}
+            priceCents={event.priceCents ?? 0}
             t={t}
           />
         </TabsContent>

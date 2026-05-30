@@ -55,7 +55,9 @@ export function PaymentStatusChangeAnimation({
           onClick={() => setAnim(null)}
         >
           <Lottie
-            animationData={anim === "success" ? SuccessAnimation : RejectedAnimation}
+            animationData={
+              anim === "success" ? SuccessAnimation : RejectedAnimation
+            }
             loop={false}
             onComplete={() => setTimeout(() => setAnim(null), 900)}
             style={{ width: 200, height: 200 }}

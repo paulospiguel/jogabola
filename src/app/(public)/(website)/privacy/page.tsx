@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { ArrowLeft, Shield } from "lucide-react";
+import { ArrowLeft, Cookie, Shield } from "lucide-react";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
@@ -41,9 +41,7 @@ export default function PrivacyPage() {
           <h1 className="text-4xl font-extrabold text-[#F5F7FA] font-sora md:text-5xl lg:text-6xl mb-6 tracking-tight">
             {t("title")}
           </h1>
-          <p className="text-lg text-[#A7B0BE]">
-            {t("subtitle")}
-          </p>
+          <p className="text-lg text-[#A7B0BE]">{t("subtitle")}</p>
         </motion.div>
 
         <motion.div
@@ -58,7 +56,9 @@ export default function PrivacyPage() {
               className="rounded-2xl border border-[#263244] bg-[#151C26] p-8 transition-all duration-200 hover:border-[#7CFF4F]/40 hover:bg-[#1B2430]"
             >
               <h2 className="text-xl md:text-2xl font-bold text-[#F5F7FA] font-sora mb-4 flex items-center gap-3">
-                <span className="text-[#7CFF4F] text-lg font-mono">0{index + 1}.</span>
+                <span className="text-[#7CFF4F] text-lg font-mono">
+                  0{index + 1}.
+                </span>
                 {section.title}
               </h2>
               <p className="text-[#A7B0BE] leading-relaxed font-normal">
@@ -66,6 +66,33 @@ export default function PrivacyPage() {
               </p>
             </section>
           ))}
+
+          {/* Cookie settings — RGPD: withdraw/change consent anytime */}
+          <section className="rounded-2xl border border-[#263244] bg-[#151C26] p-8 not-prose">
+            <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+              <div className="flex items-start gap-3">
+                <span className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#7CFF4F]/15 text-[#7CFF4F] border border-[#7CFF4F]/30">
+                  <Cookie className="h-5 w-5 stroke-[1.8]" />
+                </span>
+                <div>
+                  <h2 className="text-lg font-bold text-[#F5F7FA] font-sora">
+                    {t("cookieSettings.title")}
+                  </h2>
+                  <p className="mt-1 text-sm text-[#A7B0BE] leading-relaxed">
+                    {t("cookieSettings.description")}
+                  </p>
+                </div>
+              </div>
+              <Button
+                onClick={() =>
+                  window.dispatchEvent(new Event("jb:open-cookie-settings"))
+                }
+                className="shrink-0 rounded-xl bg-[#7CFF4F] px-5 font-bold text-[#0B0F14] hover:bg-[#7CFF4F]/90 press"
+              >
+                {t("cookieSettings.button")}
+              </Button>
+            </div>
+          </section>
         </motion.div>
       </div>
     </main>

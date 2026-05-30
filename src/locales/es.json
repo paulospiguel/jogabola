@@ -500,7 +500,9 @@
     },
     "lists": {
       "main": "Lista Principal ({count})",
-      "reserves": "Reservas / Pendientes ({count})"
+      "reserves": "Reservas / Pendientes ({count})",
+      "loading": "Cargando plantel...",
+      "emptyConfirmed": "Nadie ha confirmado todavía."
     },
     "locationMap": {
       "notFound": "Ubicación no encontrada",
@@ -561,6 +563,7 @@
       "car": "Coche",
       "carDesc": "Ir en coche con el equipo",
       "paymentApproved": "Pagado",
+      "free": "Gratis",
       "paymentReview": "A validar",
       "paymentPending": "Pendiente",
       "reservesMock": "Reservas ({count})",
@@ -2547,6 +2550,11 @@
       "title": "Política de Privacidad",
       "subtitle": "Tu privacidad es nuestra prioridad.",
       "backHome": "Volver al Inicio",
+      "cookieSettings": {
+        "title": "Configuración de cookies",
+        "description": "Revisa o retira tu consentimiento de cookies en cualquier momento.",
+        "button": "Gestionar cookies"
+      },
       "sections": [
         {
           "title": "Información que Recopilamos",

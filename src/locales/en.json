@@ -500,7 +500,9 @@
     },
     "lists": {
       "main": "Main List ({count})",
-      "reserves": "Reserves / Pending ({count})"
+      "reserves": "Reserves / Pending ({count})",
+      "loading": "Loading squad...",
+      "emptyConfirmed": "No one has confirmed yet."
     },
     "locationMap": {
       "notFound": "Location not found",
@@ -561,6 +563,7 @@
       "car": "Car",
       "carDesc": "Coming by car with the team",
       "paymentApproved": "Paid",
+      "free": "Free",
       "paymentReview": "Under review",
       "paymentPending": "Pending",
       "reservesMock": "Reserves ({count})",
@@ -2547,6 +2550,11 @@
       "title": "Privacy Policy",
       "subtitle": "Your privacy is our priority.",
       "backHome": "Back to Home",
+      "cookieSettings": {
+        "title": "Cookie settings",
+        "description": "Review or withdraw your cookie consent at any time.",
+        "button": "Manage cookies"
+      },
       "sections": [
         {
           "title": "Information We Collect",
