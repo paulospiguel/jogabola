@@ -356,6 +356,7 @@ export function PaymentResultClient({
 
   return (
     <div className="mx-auto flex min-h-screen w-full max-w-[480px] flex-col bg-arena-bg">
+      <PaymentStatusChangeAnimation paymentId={payment.id} status={status} />
       {/* Back header */}
       <div className="px-5 pb-2 pt-6">
         <Link

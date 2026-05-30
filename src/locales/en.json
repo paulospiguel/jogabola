@@ -586,8 +586,9 @@
       "carroDesc": "Difficult parking. Paid underground parking at Camões.",
       "chatEmpty": "No messages here yet. Send the first one!",
       "chatPlaceholder": "Type a message for the group...",
-      "chatLockedTitle": "Chat for confirmed players",
-      "chatLockedSub": "Confirm your attendance to join the conversation.",
+      "chatLockedTitle": "Chat for confirmed & paid players",
+      "chatLockedSub": "Confirm your attendance and complete payment to join the conversation.",
+      "chatLockedCta": "Confirm & pay",
       "deleteMessage": "Delete message",
       "censorMessage": "Censor message",
       "uncensorMessage": "Remove censorship",
@@ -683,7 +684,8 @@
       "select": "Select team",
       "teamsLabel": "My Teams",
       "createNewTeam": "Create new team",
-      "upgradePlan": "Upgrade plan"
+      "upgradePlan": "Upgrade plan",
+      "lockedToTeam": "Event team"
     },
     "teams": "Teams"
   },
@@ -2571,6 +2573,13 @@
       "price": "Price"
     },
     "countdown": "COUNTDOWN",
+    "countdownEnded": "Already happened",
+    "countdownUnits": {
+      "days": "DAYS",
+      "hours": "HOURS",
+      "minutes": "MINS",
+      "seconds": "SECS"
+    },
     "eventNotFound": "Event not found",
     "backToHome": "Back to Home",
     "filledSlots": "Slots filled",
@@ -2589,6 +2598,12 @@
     "rosterOnlyNotice": "Roster-only event. Confirmation is validated by email.",
     "rosterOnlyError": "This event is reserved for the roster.",
     "cancelPresence": "Cancel attendance",
+    "cancelConfirm": {
+      "title": "Cancel attendance?",
+      "description": "You'll free up your spot in this match. If you already paid, contact the organiser about a refund.",
+      "action": "Cancel attendance",
+      "keep": "Keep attendance"
+    },
     "hasAccount": "Have a Jogabola account? Sign in to manage your attendance.",
     "login": "Sign in",
     "register": "Create account",

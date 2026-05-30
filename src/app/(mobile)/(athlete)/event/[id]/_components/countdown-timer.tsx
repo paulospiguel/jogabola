@@ -1,14 +1,32 @@
 "use client";
 
 import { AnimatePresence, motion } from "framer-motion";
+import { CheckCircle2 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
+
+interface CountdownLabels {
+  days: string;
+  hours: string;
+  minutes: string;
+  seconds: string;
+}
 
 interface CountdownTimerProps {
   targetDate: Date | string;
   className?: string;
   forceZero?: boolean;
+  /** Shown when the target date has passed (event already happened). */
+  concludedLabel?: string;
+  labels?: CountdownLabels;
 }
+
+const DEFAULT_LABELS: CountdownLabels = {
+  days: "DIAS",
+  hours: "HORAS",
+  minutes: "MINS",
+  seconds: "SEGS",
+};
 
 interface TimeLeft {
   days: number;
@@ -30,6 +48,8 @@ export function CountdownTimer({
   targetDate,
   className,
   forceZero = false,
+  concludedLabel,
+  labels = DEFAULT_LABELS,
 }: CountdownTimerProps) {
   const [timeLeft, setTimeLeft] = useState<TimeLeft>({
     days: 0,
@@ -83,17 +103,35 @@ export function CountdownTimer({
     return () => clearInterval(interval);
   }, [targetDate, forceZero]);
 
-  if (timeLeft.isExpired) return null;
+  if (timeLeft.isExpired) {
+    return (
+      <div
+        className={cn(
+          "flex items-center gap-2 rounded-full border border-arena-border bg-arena-surface-el/50 px-4 py-2",
+          className,
+        )}
+      >
+        <CheckCircle2
+          size={16}
+          className="text-arena-text-muted"
+          strokeWidth={2.2}
+        />
+        <span className="text-[12px] font-bold uppercase tracking-wider text-arena-text-muted">
+          {concludedLabel ?? "Já decorreu"}
+        </span>
+      </div>
+    );
+  }
 
   return (
     <div className={cn("flex items-center gap-3", className)}>
-      <TimeUnit value={timeLeft.days} label="DIAS" />
+      <TimeUnit value={timeLeft.days} label={labels.days} />
       <TimeSeparator />
-      <TimeUnit value={timeLeft.hours} label="HORAS" />
+      <TimeUnit value={timeLeft.hours} label={labels.hours} />
       <TimeSeparator />
-      <TimeUnit value={timeLeft.minutes} label="MINS" />
+      <TimeUnit value={timeLeft.minutes} label={labels.minutes} />
       <TimeSeparator />
-      <TimeUnit value={timeLeft.seconds} label="SEGS" />
+      <TimeUnit value={timeLeft.seconds} label={labels.seconds} />
     </div>
   );
 }

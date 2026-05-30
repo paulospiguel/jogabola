@@ -586,8 +586,9 @@
       "carroDesc": "Aparcamiento difícil. Aparcamiento subterráneo Camões de pago.",
       "chatEmpty": "No hay mensajes aquí todavía. ¡Envía el primero!",
       "chatPlaceholder": "Escribe un mensaje para el grupo...",
-      "chatLockedTitle": "Chat para confirmados",
-      "chatLockedSub": "Confirma tu asistencia para unirte a la conversación.",
+      "chatLockedTitle": "Chat para confirmados y pagados",
+      "chatLockedSub": "Confirma tu asistencia y completa el pago para unirte a la conversación.",
+      "chatLockedCta": "Confirmar y pagar",
       "deleteMessage": "Eliminar mensaje",
       "censorMessage": "Censurar mensaje",
       "uncensorMessage": "Eliminar censura",
@@ -683,7 +684,8 @@
       "select": "Seleccionar equipo",
       "teamsLabel": "Mis equipos",
       "createNewTeam": "Crear nuevo equipo",
-      "upgradePlan": "Mejorar plan"
+      "upgradePlan": "Mejorar plan",
+      "lockedToTeam": "Equipo del evento"
     },
     "teams": "Equipos"
   },
@@ -2571,6 +2573,13 @@
       "price": "Precio"
     },
     "countdown": "CUENTA REGRESIVA",
+    "countdownEnded": "Ya ocurrió",
+    "countdownUnits": {
+      "days": "DÍAS",
+      "hours": "HORAS",
+      "minutes": "MINS",
+      "seconds": "SEGS"
+    },
     "eventNotFound": "Evento no encontrado",
     "backToHome": "Volver al Inicio",
     "filledSlots": "Plazas ocupadas",
@@ -2589,6 +2598,12 @@
     "rosterOnlyNotice": "Evento reservado a la plantilla. La confirmación se valida por email.",
     "rosterOnlyError": "Este evento está reservado a la plantilla.",
     "cancelPresence": "Cancelar asistencia",
+    "cancelConfirm": {
+      "title": "¿Cancelar asistencia?",
+      "description": "Liberarás tu plaza en este partido. Si ya pagaste, contacta con el organizador sobre el reembolso.",
+      "action": "Cancelar asistencia",
+      "keep": "Mantener asistencia"
+    },
     "hasAccount": "¿Tienes cuenta en Jogabola? Inicia sesión para gestionar tu asistencia.",
     "login": "Iniciar sesión",
     "register": "Crear cuenta",

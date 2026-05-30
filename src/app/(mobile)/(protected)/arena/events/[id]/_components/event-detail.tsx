@@ -330,6 +330,7 @@ export function EventDetail({
             onSend={handleSendMessage}
             onDeleteMessage={handleDeleteMessage}
             onCensorMessage={handleCensorMessage}
+            onRequestValidate={() => setActiveTab("roster")}
             canChat={canChat}
             isCaptain={canEdit}
             sending={sending}

@@ -586,8 +586,9 @@
       "carroDesc": "Estacionamento difícil. Parque subterrâneo Camões pago.",
       "chatEmpty": "Nenhuma mensagem por aqui. Envia a primeira!",
       "chatPlaceholder": "Escreve uma mensagem para o grupo...",
-      "chatLockedTitle": "Chat reservado aos confirmados",
-      "chatLockedSub": "Confirma presença no evento para participar na conversa.",
+      "chatLockedTitle": "Chat reservado a confirmados e pagos",
+      "chatLockedSub": "Confirma presença e conclui o pagamento para entrar na conversa.",
+      "chatLockedCta": "Confirmar e pagar",
       "deleteMessage": "Apagar mensagem",
       "censorMessage": "Censurar mensagem",
       "uncensorMessage": "Remover censura",
@@ -683,7 +684,8 @@
       "select": "Selecionar equipa",
       "teamsLabel": "Minhas Equipas",
       "createNewTeam": "Criar nova equipa",
-      "upgradePlan": "Atualizar plano"
+      "upgradePlan": "Atualizar plano",
+      "lockedToTeam": "Equipa do evento"
     },
     "teams": "Equipas"
   },
@@ -2551,6 +2553,13 @@
       "price": "Valor"
     },
     "countdown": "CONTAGEM DECRESCENTE",
+    "countdownEnded": "Já decorreu",
+    "countdownUnits": {
+      "days": "DIAS",
+      "hours": "HORAS",
+      "minutes": "MINS",
+      "seconds": "SEGS"
+    },
     "filledSlots": "Vagas preenchidas",
     "slotsFull": "Vagas esgotadas - podes entrar na lista de espera",
     "confirmed": "Confirmados",
@@ -2567,6 +2576,12 @@
     "rosterOnlyNotice": "Evento reservado ao plantel. A confirmação é validada pelo email.",
     "rosterOnlyError": "Este evento é reservado ao plantel.",
     "cancelPresence": "Cancelar presença",
+    "cancelConfirm": {
+      "title": "Cancelar presença?",
+      "description": "Vais libertar a tua vaga neste jogo. Se já pagaste, fala com o organizador sobre o reembolso.",
+      "action": "Cancelar presença",
+      "keep": "Manter presença"
+    },
     "hasAccount": "Tens conta Jogabola? Entra para gerir a tua presença.",
     "login": "Entrar",
     "register": "Criar conta",

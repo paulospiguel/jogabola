@@ -1,9 +1,10 @@
 "use client";
 
-import { ChevronsUpDown, ListTree, Plus, Shield, Zap } from "lucide-react";
+import { ChevronsUpDown, ListTree, Lock, Plus, Shield, Zap } from "lucide-react";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
 import { useState } from "react";
+import { useLockedTeam } from "./locked-team-context";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -49,6 +50,7 @@ function HeaderTeamSwitcher() {
     canCreateTeam,
     isPlanLoading,
   } = useTeams();
+  const { lockedTeamId } = useLockedTeam();
   const t = useTranslations("arenaNav.teamSwitcher");
   const [sheetOpen, setSheetOpen] = useState(false);
 
@@ -58,6 +60,27 @@ function HeaderTeamSwitcher() {
   if (isLoading) {
     return (
       <div className="flex h-8 items-center gap-1.5 rounded-lg border border-arena-border/30 bg-arena-surface-el/20 px-2.5 py-1.5 w-[110px] animate-pulse" />
+    );
+  }
+
+  // Locked state — page belongs to a specific team, switching makes no sense
+  if (lockedTeamId !== null) {
+    const lockedTeam = myTeams?.find((tm: Team) => tm.id === lockedTeamId);
+    return (
+      <div
+        className="flex w-full items-center gap-1.5 rounded-lg border border-arena-border/50 bg-arena-surface-el/20 px-2.5 py-1.5 text-[11px] font-bold text-arena-text-muted cursor-default opacity-70 select-none"
+        title={t("lockedToTeam")}
+        aria-disabled="true"
+      >
+        <Shield
+          className="size-3.5 text-arena-text-muted fill-arena-text-muted/10"
+          strokeWidth={2}
+        />
+        <span className="max-w-[80px] xs:max-w-[110px] truncate">
+          {lockedTeam?.name ?? activeTeam?.name ?? t("select")}
+        </span>
+        <Lock className="size-3 text-arena-text-muted/60" strokeWidth={2} />
+      </div>
     );
   }
 
@@ -176,6 +199,7 @@ function SidebarTeamSwitcher() {
     canCreateTeam,
     isPlanLoading,
   } = useTeams();
+  const { lockedTeamId } = useLockedTeam();
   const { state } = useSidebar();
   const t = useTranslations("arenaNav.teamSwitcher");
   const collapsed = state === "collapsed";
@@ -197,6 +221,48 @@ function SidebarTeamSwitcher() {
             <div className="size-8 shrink-0 animate-pulse rounded-lg bg-arena-surface-el" />
             {!collapsed && (
               <div className="h-3 flex-1 animate-pulse rounded bg-arena-surface-el" />
+            )}
+          </div>
+        </SidebarMenuItem>
+      </SidebarMenu>
+    );
+  }
+
+  // Locked state — page belongs to a specific team, switching makes no sense
+  if (lockedTeamId !== null) {
+    const lockedTeam = myTeams?.find((tm: Team) => tm.id === lockedTeamId);
+    const displayName = lockedTeam?.name ?? activeTeam?.name ?? t("select");
+    return (
+      <SidebarMenu>
+        <SidebarMenuItem className="group-data-[collapsible=icon]:flex group-data-[collapsible=icon]:justify-center">
+          <div
+            className={cn(
+              "flex h-12 w-full cursor-default items-center gap-3 rounded-xl border border-arena-border/30 bg-arena-surface-el/30 px-3 opacity-60 select-none",
+              collapsed && "h-10 w-10 justify-center border-none bg-transparent p-0",
+            )}
+            title={t("lockedToTeam")}
+            aria-disabled="true"
+          >
+            <div
+              className={cn(
+                "flex shrink-0 items-center justify-center rounded-lg bg-arena-text-muted/10 text-arena-text-muted",
+                collapsed ? "size-7" : "size-8",
+              )}
+            >
+              <ListTree className={cn(collapsed ? "size-3.5" : "size-4")} />
+            </div>
+            {!collapsed && (
+              <>
+                <div className="min-w-0 flex-1">
+                  <span className="block truncate text-xs font-bold text-arena-text-muted">
+                    {displayName}
+                  </span>
+                  <span className="block truncate text-[10px] text-arena-text-muted/60">
+                    {t("lockedToTeam")}
+                  </span>
+                </div>
+                <Lock className="ml-auto size-3.5 shrink-0 text-arena-text-muted/50" strokeWidth={2} />
+              </>
             )}
           </div>
         </SidebarMenuItem>

@@ -266,6 +266,13 @@ export function AthleteEventHero({
         <CountdownTimer
           targetDate={event.startDate}
           forceZero={isCancelled}
+          concludedLabel={t("countdownEnded")}
+          labels={{
+            days: t("countdownUnits.days"),
+            hours: t("countdownUnits.hours"),
+            minutes: t("countdownUnits.minutes"),
+            seconds: t("countdownUnits.seconds"),
+          }}
         />
       </div>
 

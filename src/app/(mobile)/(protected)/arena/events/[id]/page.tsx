@@ -9,6 +9,7 @@ import { getEventMessages } from "@/actions/event-chat.actions";
 import { getEvent } from "@/actions/match-sessions.actions";
 import { auth } from "@/lib/auth";
 import { userCanAccessTeam } from "@/lib/team-access";
+import { LockedTeamProvider } from "@/components/arena/locked-team-context";
 import { EventDetail } from "./_components/event-detail";
 
 interface Params {
@@ -59,16 +60,18 @@ export default async function ArenaEventDetailPage({ params }: Params) {
   return (
     <div className="jb-page" style={{ paddingLeft: 0, paddingRight: 0 }}>
       <div className="jb-page-inner max-w-5xl">
-        <EventDetail
-          event={event}
-          userId={user.id}
-          canEdit={true}
-          mainRoster={roster.main}
-          reservesRoster={roster.reserves}
-          canChat={canChat}
-          initialChatMessages={initialChatMessages}
-          initialMyStatus={await getUserEventAttendanceStatus(eventId, user.id)}
-        />
+        <LockedTeamProvider teamId={event.teamId}>
+          <EventDetail
+            event={event}
+            userId={user.id}
+            canEdit={true}
+            mainRoster={roster.main}
+            reservesRoster={roster.reserves}
+            canChat={canChat}
+            initialChatMessages={initialChatMessages}
+            initialMyStatus={await getUserEventAttendanceStatus(eventId, user.id)}
+          />
+        </LockedTeamProvider>
       </div>
     </div>
   );

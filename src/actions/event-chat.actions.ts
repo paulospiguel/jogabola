@@ -5,7 +5,9 @@ import { db } from "@/db/client";
 import {
   attendance,
   eventMessages,
+  matchReservations,
   matchSessions,
+  payments,
   teams,
   user,
 } from "@/db/schema";
@@ -26,14 +28,15 @@ export interface ChatMessage {
   censoredAt?: string | null;
 }
 
-/** Access rule: only confirmed participants and the team captain (owner) may
- * read or post in an event's chat. */
+/** Access rule: the team captain (owner) always; otherwise the user must have
+ * confirmed attendance AND (when the event requires payment) an approved
+ * payment. Pending/unpaid/reserve see only the blurred teaser. */
 async function canParticipateInChat(
   eventId: number,
   userId: string,
 ): Promise<boolean> {
   const event = await db.query.matchSessions.findFirst({
-    columns: { teamId: true },
+    columns: { teamId: true, paymentRequired: true },
     where: eq(matchSessions.id, eventId),
   });
   if (!event) return false;
@@ -56,7 +59,29 @@ async function canParticipateInChat(
     )
     .limit(1);
 
-  return confirmed.length > 0;
+  if (confirmed.length === 0) return false;
+
+  // Free events: confirmed attendance is enough.
+  if (!event.paymentRequired) return true;
+
+  // Paid events: require an approved payment for this user's reservation.
+  const paid = await db
+    .select({ id: payments.id })
+    .from(payments)
+    .innerJoin(
+      matchReservations,
+      eq(payments.matchReservationId, matchReservations.id),
+    )
+    .where(
+      and(
+        eq(matchReservations.matchSessionId, eventId),
+        eq(matchReservations.playerId, userId),
+        eq(payments.status, "paid"),
+      ),
+    )
+    .limit(1);
+
+  return paid.length > 0;
 }
 
 /** Returns the teamId owner (captain) for a given event. */

@@ -586,8 +586,9 @@
       "carroDesc": "Stationnement difficile. Parking souterrain Camões payant.",
       "chatEmpty": "Aucun message ici pour l'instant. Envoyez le premier !",
       "chatPlaceholder": "Écrivez un message pour le groupe...",
-      "chatLockedTitle": "Chat réservé aux confirmés",
-      "chatLockedSub": "Confirmez votre présence pour rejoindre la conversation.",
+      "chatLockedTitle": "Chat réservé aux confirmés et payés",
+      "chatLockedSub": "Confirmez votre présence et finalisez le paiement pour rejoindre la conversation.",
+      "chatLockedCta": "Confirmer et payer",
       "deleteMessage": "Supprimer le message",
       "censorMessage": "Censurer le message",
       "uncensorMessage": "Supprimer la censure",
@@ -683,7 +684,8 @@
       "select": "Sélectionner une équipe",
       "teamsLabel": "Mes équipes",
       "createNewTeam": "Créer une nouvelle équipe",
-      "upgradePlan": "Mettre à niveau"
+      "upgradePlan": "Mettre à niveau",
+      "lockedToTeam": "Équipe de l'événement"
     },
     "teams": "Équipes"
   },
@@ -2571,6 +2573,13 @@
       "price": "Prix"
     },
     "countdown": "COMPTE À REBOURS",
+    "countdownEnded": "Déjà passé",
+    "countdownUnits": {
+      "days": "JOURS",
+      "hours": "HEURES",
+      "minutes": "MIN",
+      "seconds": "SEC"
+    },
     "eventNotFound": "Événement non trouvé",
     "backToHome": "Retour à l'Accueil",
     "filledSlots": "Places remplies",
@@ -2589,6 +2598,12 @@
     "rosterOnlyNotice": "Événement réservé à l'effectif. La confirmation est validée par email.",
     "rosterOnlyError": "Cet événement est réservé à l'effectif.",
     "cancelPresence": "Annuler la présence",
+    "cancelConfirm": {
+      "title": "Annuler la présence ?",
+      "description": "Vous libérez votre place dans ce match. Si vous avez déjà payé, contactez l'organisateur pour le remboursement.",
+      "action": "Annuler la présence",
+      "keep": "Maintenir la présence"
+    },
     "hasAccount": "Vous avez un compte Jogabola ? Connectez-vous pour gérer votre présence.",
     "login": "Se connecter",
     "register": "Créer un compte",

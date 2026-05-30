@@ -25,6 +25,7 @@ interface EventChatTabProps {
   onSend: () => void;
   onDeleteMessage: (id: number) => void;
   onCensorMessage: (id: number) => void;
+  onRequestValidate?: () => void;
   canChat: boolean;
   isCaptain: boolean;
   sending: boolean;
@@ -36,6 +37,16 @@ interface MessageMenuState {
   isSelf: boolean;
 }
 
+// Decorative placeholder bubbles for the blurred locked-chat teaser.
+const TEASER_BUBBLES: { self: boolean; w: number }[] = [
+  { self: false, w: 180 },
+  { self: true, w: 120 },
+  { self: false, w: 150 },
+  { self: false, w: 200 },
+  { self: true, w: 90 },
+  { self: false, w: 160 },
+];
+
 export function EventChatTab({
   chatMessages,
   chatEndRef,
@@ -44,6 +55,7 @@ export function EventChatTab({
   onSend,
   onDeleteMessage,
   onCensorMessage,
+  onRequestValidate,
   canChat,
   isCaptain,
   sending,
@@ -79,14 +91,56 @@ export function EventChatTab({
 
   if (!canChat) {
     return (
-      <div className="flex flex-1 flex-col items-center justify-center text-center p-6 gap-2">
-        <Lock className="w-8 h-8 text-arena-text-muted" strokeWidth={1.5} />
-        <span className="text-sm font-bold text-arena-text">
-          {t("interactive.chatLockedTitle")}
-        </span>
-        <span className="text-xs text-arena-text-muted max-w-[260px]">
-          {t("interactive.chatLockedSub")}
-        </span>
+      <div className="relative flex flex-1 flex-col overflow-hidden">
+        {/* Blurred teaser bubbles — sense of activity, content unreadable */}
+        <div
+          aria-hidden="true"
+          className="flex flex-1 flex-col gap-3.5 p-4 blur-[7px] select-none pointer-events-none opacity-60"
+        >
+          {TEASER_BUBBLES.map((b, i) => (
+            <div
+              key={`teaser-${i}`}
+              className={cn(
+                "flex items-start gap-2.5 max-w-[80%]",
+                b.self ? "self-end flex-row-reverse" : "self-start",
+              )}
+            >
+              {!b.self && (
+                <div className="w-7 h-7 rounded-full shrink-0 bg-arena-surface-el" />
+              )}
+              <div
+                className={cn(
+                  "rounded-2xl px-3.5 py-2.5",
+                  b.self ? "bg-arena-primary/40" : "bg-arena-surface",
+                )}
+                style={{ width: b.w }}
+              >
+                <div className="h-2.5 rounded bg-arena-text/20" />
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* CTA overlay in front of blur */}
+        <div className="absolute inset-0 z-10 flex flex-col items-center justify-center gap-3 bg-arena-bg/55 px-6 text-center">
+          <div className="flex size-12 items-center justify-center rounded-2xl border border-arena-primary/25 bg-arena-primary/10">
+            <Lock className="w-5 h-5 text-arena-primary" strokeWidth={2} />
+          </div>
+          <span className="text-sm font-bold text-arena-text">
+            {t("interactive.chatLockedTitle")}
+          </span>
+          <span className="text-xs text-arena-text-muted max-w-[260px]">
+            {t("interactive.chatLockedSub")}
+          </span>
+          {onRequestValidate && (
+            <Button
+              onClick={onRequestValidate}
+              className="mt-1 h-10 rounded-xl bg-arena-primary px-5 text-[13px] font-bold text-arena-bg hover:bg-arena-primary/90"
+            >
+              {t("interactive.chatLockedCta")}
+            </Button>
+          )}
+        </div>
       </div>
     );
   }

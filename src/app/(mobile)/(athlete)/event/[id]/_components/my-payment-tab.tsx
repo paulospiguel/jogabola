@@ -2,10 +2,11 @@
 
 import { Check, Clock, Info, X } from "lucide-react";
 import { useTranslations } from "next-intl";
-import { useMyPaymentForEvent } from "@/hooks/use-my-payment-for-event";
-import { PAYMENT_STATUS } from "@/constants/payments";
 import { ATTENDANCE_STATUS } from "@/constants/attendance";
+import { PAYMENT_STATUS } from "@/constants/payments";
+import { useMyPaymentForEvent } from "@/hooks/use-my-payment-for-event";
 import { cn } from "@/lib/utils";
+import { PaymentStatusChangeAnimation } from "./payment-status-change-animation";
 
 interface MyPaymentTabProps {
   eventId: number;
@@ -138,6 +139,7 @@ export function MyPaymentTab({ eventId }: MyPaymentTabProps) {
 
   return (
     <div className="px-4 py-6">
+      <PaymentStatusChangeAnimation paymentId={payment.id} status={status} />
       <div className="flex flex-col items-center gap-5">
         {/* Status icon */}
         <div

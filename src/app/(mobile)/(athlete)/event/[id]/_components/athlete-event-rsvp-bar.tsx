@@ -74,15 +74,39 @@ export function AthleteEventRsvpBar({
               {t("payNow")}
             </button>
           )}
-          <button
-            type="button"
-            disabled={actionLoading}
-            onClick={onCancel}
-            className="flex h-[52px] w-full items-center justify-center gap-2 rounded-[16px] border border-arena-border bg-arena-surface-el text-[14px] font-bold text-arena-text-sec transition-colors hover:bg-arena-surface disabled:opacity-60"
-          >
-            <XIcon size={18} color="currentColor" />
-            {t("cancelPresence")}
-          </button>
+          <AlertDialog>
+            <AlertDialogTrigger asChild>
+              <button
+                type="button"
+                disabled={actionLoading}
+                className="flex h-[52px] w-full items-center justify-center gap-2 rounded-[16px] border border-arena-border bg-arena-surface-el text-[14px] font-bold text-arena-text-sec transition-colors hover:bg-arena-surface disabled:opacity-60"
+              >
+                <XIcon size={18} color="currentColor" />
+                {t("cancelPresence")}
+              </button>
+            </AlertDialogTrigger>
+            <AlertDialogContent className="border-arena-border bg-arena-surface shadow-2xl">
+              <AlertDialogHeader>
+                <AlertDialogTitle className="text-arena-text">
+                  {t("cancelConfirm.title")}
+                </AlertDialogTitle>
+                <AlertDialogDescription className="text-arena-text-sec">
+                  {t("cancelConfirm.description")}
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter className="flex-row gap-3">
+                <AlertDialogCancel className="mt-0 flex-1 border-arena-border bg-transparent text-arena-text hover:bg-arena-surface-el">
+                  {t("cancelConfirm.keep")}
+                </AlertDialogCancel>
+                <AlertDialogAction
+                  className="flex-1 bg-arena-danger text-white hover:bg-arena-danger/90"
+                  onClick={onCancel}
+                >
+                  {t("cancelConfirm.action")}
+                </AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
         </div>
       ) : (
         <div className="flex flex-col gap-2">
