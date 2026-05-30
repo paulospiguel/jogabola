@@ -10,6 +10,13 @@ import {
 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import { cn } from "@/lib/utils";
 
 interface PaymentProofViewerProps {
@@ -125,56 +132,71 @@ export function PaymentProofViewer({
   }
 
   return (
-    <div className="grid gap-4 xl:grid-cols-[minmax(320px,520px)_1fr]">
-      {isPdf ? (
-        <iframe
-          title={alt}
-          src={proofUrl}
-          className="aspect-[4/5] w-full overflow-hidden rounded-[18px] border border-arena-border bg-arena-bg shadow-[0_32px_80px_-56px_rgba(0,0,0,.95)]"
-        />
-      ) : (
-        <div
-          role="img"
-          aria-label={alt}
-          className="relative aspect-[4/5] overflow-hidden rounded-[18px] border border-arena-border bg-arena-bg bg-contain bg-center bg-no-repeat shadow-[0_32px_80px_-56px_rgba(0,0,0,.95)]"
-          style={{ backgroundImage: `url(${proofUrl})` }}
-        />
-      )}
-      <div className="flex flex-col justify-between rounded-[16px] border border-arena-border bg-arena-bg/45 p-5">
-        <div>
-          <p className="text-[10px] font-bold uppercase tracking-[0.14em] text-arena-text-muted">
-            {receivedKicker}
-          </p>
-          <h3 className="mt-2 font-sora text-[18px] font-bold text-arena-text">
-            {receivedTitle}
-          </h3>
-          <p className="mt-2 text-[13px] leading-relaxed text-arena-text-sec">
-            {receivedDescription}
-          </p>
-        </div>
-        <div className="mt-6 flex flex-col gap-2">
-          <Button
-            asChild
-            variant="outline"
-            className="rounded-[12px] border-arena-border bg-arena-surface text-arena-text hover:border-arena-primary/40 hover:bg-arena-primary/10 hover:text-arena-primary"
-          >
-            <a href={proofUrl} target="_blank" rel="noreferrer">
-              <ExternalLink className="mr-2" size={16} />
-              {openLabel}
-            </a>
-          </Button>
-          <Button
-            asChild
-            variant="ghost"
-            className="rounded-[12px] text-arena-text-sec hover:bg-arena-surface-el hover:text-arena-text"
-          >
-            <a href={proofUrl} download>
-              <Download className="mr-2" size={16} />
-              {downloadLabel}
-            </a>
-          </Button>
-        </div>
+    <div className="flex flex-col md:flex-row md:items-center justify-between rounded-[16px] border border-arena-border bg-arena-bg/45 p-5 gap-6">
+      <div className="flex-1">
+        <p className="text-[10px] font-bold uppercase tracking-[0.14em] text-arena-text-muted">
+          {receivedKicker}
+        </p>
+        <h3 className="mt-2 font-sora text-[18px] font-bold text-arena-text">
+          {receivedTitle}
+        </h3>
+        <p className="mt-2 max-w-sm text-[13px] leading-relaxed text-arena-text-sec">
+          {receivedDescription}
+        </p>
       </div>
+
+      <Dialog>
+        <DialogTrigger asChild>
+          <Button
+            type="button"
+            className="rounded-[14px] bg-arena-primary px-6 h-12 text-[14px] font-bold text-arena-bg hover:bg-arena-primary/90 shadow-[0_0_20px_-5px_rgba(124,255,79,0.4)] transition-all shrink-0"
+          >
+            <ExternalLink className="mr-2" size={18} />
+            {openLabel}
+          </Button>
+        </DialogTrigger>
+        <DialogContent className="max-w-[90vw] md:max-w-2xl bg-arena-surface border-arena-border p-0 overflow-hidden flex flex-col h-[85vh] md:h-auto md:max-h-[85vh]">
+          <DialogHeader className="p-4 border-b border-arena-border/50 shrink-0">
+            <DialogTitle className="text-arena-text font-sora">{openLabel}</DialogTitle>
+          </DialogHeader>
+          <div className="flex-1 p-0 bg-black flex justify-center items-center min-h-[300px] overflow-hidden">
+            {isPdf ? (
+              <iframe
+                title={alt}
+                src={proofUrl}
+                className="w-full h-full bg-white border-0"
+              />
+            ) : (
+              <img
+                src={proofUrl}
+                alt={alt}
+                className="w-full h-full object-contain"
+              />
+            )}
+          </div>
+          <div className="p-4 bg-arena-surface flex gap-3 justify-end border-t border-arena-border/50 shrink-0">
+            <Button
+              asChild
+              variant="outline"
+              className="rounded-[12px] border-arena-border bg-arena-bg text-arena-text hover:border-arena-primary/40 hover:bg-arena-primary/10 hover:text-arena-primary flex-1 sm:flex-none"
+            >
+              <a href={proofUrl} download>
+                <Download className="mr-2" size={16} />
+                {downloadLabel}
+              </a>
+            </Button>
+            <Button
+              asChild
+              className="rounded-[12px] bg-arena-primary text-arena-bg hover:bg-arena-primary/90 flex-1 sm:flex-none"
+            >
+              <a href={proofUrl} target="_blank" rel="noreferrer">
+                <ExternalLink className="mr-2" size={16} />
+                Abrir Externamente
+              </a>
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

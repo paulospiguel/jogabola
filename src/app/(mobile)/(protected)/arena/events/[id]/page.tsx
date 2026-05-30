@@ -7,9 +7,9 @@ import {
 } from "@/actions/attendance.actions";
 import { getEventMessages } from "@/actions/event-chat.actions";
 import { getEvent } from "@/actions/match-sessions.actions";
-import { auth } from "@/lib/auth";
-import { userCanAccessTeam } from "@/lib/team-access";
 import { LockedTeamProvider } from "@/components/arena/locked-team-context";
+import { auth } from "@/lib/auth";
+import { userCanAccessTeam, userIsTeamOwner } from "@/lib/team-access";
 import { EventDetail } from "./_components/event-detail";
 
 interface Params {
@@ -18,17 +18,15 @@ interface Params {
 
 export default async function ArenaEventDetailPage({ params }: Params) {
   const { id } = await params;
-  const eventId = Number.parseInt(id, 10);
+  // id can be slug or numeric id
+  const eventIdOrSlug = id;
   const t = await getTranslations("arenaEvents");
 
   const session = await auth.api.getSession({ headers: await headers() });
   const user = session?.user;
 
-  if (!user) {
-    redirect(`/event/${eventId}`);
-  }
-
-  const result = await getEvent(eventId);
+  // Fetch event first so we have the slug and id
+  const result = await getEvent(eventIdOrSlug);
   const event = result.success ? result.data : null;
 
   if (!event) {
@@ -37,6 +35,12 @@ export default async function ArenaEventDetailPage({ params }: Params) {
         {t("eventNotFound")}
       </div>
     );
+  }
+
+  const eventId = event.id;
+
+  if (!user) {
+    redirect(`/event/${event.slug || event.id}`);
   }
 
   const rosterResult = await getEventRoster(eventId);
@@ -57,6 +61,9 @@ export default async function ArenaEventDetailPage({ params }: Params) {
     );
   }
 
+  // Only the team owner (captain) can edit/manage the event
+  const canEdit = await userIsTeamOwner(user.id, event.teamId);
+
   return (
     <div className="jb-page" style={{ paddingLeft: 0, paddingRight: 0 }}>
       <div className="jb-page-inner max-w-5xl">
@@ -64,12 +71,14 @@ export default async function ArenaEventDetailPage({ params }: Params) {
           <EventDetail
             event={event}
             userId={user.id}
-            canEdit={true}
+            canEdit={canEdit}
             mainRoster={roster.main}
             reservesRoster={roster.reserves}
             canChat={canChat}
             initialChatMessages={initialChatMessages}
-            initialMyStatus={await getUserEventAttendanceStatus(eventId, user.id)}
+            initialMyStatus={
+              await getUserEventAttendanceStatus(eventId, user.id)
+            }
           />
         </LockedTeamProvider>
       </div>

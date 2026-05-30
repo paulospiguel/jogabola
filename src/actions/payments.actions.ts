@@ -104,6 +104,7 @@ export const submitPaymentProof = withAction(
           athleteName: user.name,
           eventTitle: matchSessions.title,
           eventId: matchSessions.id,
+          eventSlug: matchSessions.slug,
         })
         .from(payments)
         .innerJoin(
@@ -261,6 +262,7 @@ export const getTeamPayments = withAuthAction(
         playerCreatedAt: user.createdAt,
         matchId: matchSessions.id,
         matchTitle: matchSessions.title,
+        matchStatus: matchSessions.status,
       })
       .from(payments)
       .innerJoin(
@@ -299,6 +301,7 @@ export const getTeamPayments = withAuthAction(
       event: {
         id: p.matchId,
         title: p.matchTitle,
+        status: p.matchStatus,
       },
     }));
 
@@ -519,6 +522,7 @@ export async function getPaymentById(paymentId: number): Promise<
         teamName: string;
         eventTitle: string;
         eventId: number;
+        eventSlug: string | null;
         transferRequiresProof: boolean;
       };
     }
@@ -540,6 +544,7 @@ export async function getPaymentById(paymentId: number): Promise<
         teamName: teams.name,
         eventTitle: matchSessions.title,
         eventId: matchSessions.id,
+        eventSlug: matchSessions.slug,
         transferRequiresProof: matchSessions.transferRequiresProof,
       })
       .from(payments)
@@ -583,6 +588,7 @@ export async function getPaymentById(paymentId: number): Promise<
         teamName: row.teamName,
         eventTitle: row.eventTitle,
         eventId: row.eventId,
+        eventSlug: row.eventSlug,
         transferRequiresProof: row.transferRequiresProof,
       },
     };
@@ -646,4 +652,41 @@ export async function getMyPaymentForEvent(eventId: number): Promise<
     console.error("[getMyPaymentForEvent]", error);
     return { success: false, error: "Erro ao carregar pagamento" };
   }
+}
+
+export async function markPaymentAsRefunded(paymentId: number) {
+  return await updatePaymentStatusByOwner(paymentId, PAYMENT_STATUS.REFUNDED);
+}
+
+export async function markPaymentAsCredited(paymentId: number) {
+  return await updatePaymentStatusByOwner(paymentId, PAYMENT_STATUS.CREDITED);
+}
+
+async function updatePaymentStatusByOwner(paymentId: number, status: string) {
+  const session = await auth.api.getSession({ headers: await headers() });
+  if (!session?.user?.id) return { success: false as const, error: "Não autenticado" };
+  
+  const userId = session.user.id;
+
+  const [row] = await db.select({
+    teamId: matchSessions.teamId,
+    eventId: matchSessions.id,
+  })
+  .from(payments)
+  .innerJoin(matchReservations, eq(matchReservations.id, payments.matchReservationId))
+  .innerJoin(matchSessions, eq(matchSessions.id, matchReservations.matchSessionId))
+  .where(eq(payments.id, paymentId))
+  .limit(1);
+
+  if (!row) return { success: false as const, error: "Pagamento não encontrado" };
+
+  const canAccess = await userCanAccessTeam(userId, row.teamId);
+  if (!canAccess) return { success: false as const, error: "Sem permissão" };
+
+  await db.update(payments).set({ status, updatedAt: new Date(), markedByUserId: userId }).where(eq(payments.id, paymentId));
+  
+  revalidatePath(`/arena/events/${row.eventId}`);
+  revalidatePath(`/arena/payments`);
+  
+  return { success: true as const };
 }

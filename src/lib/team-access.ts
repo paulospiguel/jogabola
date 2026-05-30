@@ -49,3 +49,19 @@ export async function getAccessibleTeamIds(userId: string): Promise<number[]> {
     ]),
   );
 }
+
+/**
+ * Returns true if the given user is the owner (captain) of the team.
+ * Use this to gate edit/manage capabilities — team members can view
+ * but only the owner can mutate event settings.
+ */
+export async function userIsTeamOwner(
+  userId: string,
+  teamId: number,
+): Promise<boolean> {
+  const owned = await db.query.teams.findFirst({
+    columns: { id: true },
+    where: and(eq(teams.id, teamId), eq(teams.ownerId, userId)),
+  });
+  return Boolean(owned);
+}

@@ -10,7 +10,7 @@ import {
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { useEffect, useState } from "react";
-import { updateEvent } from "@/actions/match-sessions.actions";
+import { updateEvent, checkEventDeletable, deleteEvent } from "@/actions/match-sessions.actions";
 import { Button } from "@/components/ui/button";
 import { EventDatePicker } from "@/components/ui/event-date-picker";
 import { Label } from "@/components/ui/label";
@@ -24,6 +24,16 @@ import {
 import { cn } from "@/lib/utils";
 import type { EventStatus } from "@/types/events";
 import { BottomSheet } from "./bottom-sheet";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 
 interface EditEventSheetProps {
   event: {
@@ -67,6 +77,7 @@ export function EditEventSheet({ event, onClose }: EditEventSheetProps) {
   const [paymentOpen, setPaymentOpen] = useState(false);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [deleteState, setDeleteState] = useState<"idle" | "checking" | "confirm" | "cannot_delete" | "deleting">("idle");
 
   useEffect(() => {
     import("@/actions/team-payment-settings.actions").then(
@@ -88,6 +99,40 @@ export function EditEventSheet({ event, onClose }: EditEventSheetProps) {
 
   const set = <K extends keyof typeof form>(k: K, v: (typeof form)[K]) =>
     setForm(f => ({ ...f, [k]: v }));
+
+  
+  const handleDeleteCheck = async () => {
+    setDeleteState("checking");
+    const res = await checkEventDeletable(event.id);
+    if (res.success && res.data?.hasPayments) {
+      setDeleteState("cannot_delete");
+    } else {
+      setDeleteState("confirm");
+    }
+  };
+
+  const handleConfirmDelete = async () => {
+    setDeleteState("deleting");
+    const res = await deleteEvent(event.id);
+    if (res.success) {
+      router.push("/arena/events"); // redirect to events list
+    } else {
+      setError(tEvents("deleteError"));
+      setDeleteState("idle");
+    }
+  };
+
+  const handleCancelEventInstead = async () => {
+    setDeleteState("deleting");
+    const res = await updateEvent(event.id, { status: "cancelled" });
+    if (res.success) {
+      router.refresh();
+      onClose();
+    } else {
+      setError(tEvents("errorUpdating"));
+      setDeleteState("idle");
+    }
+  };
 
   const handleSave = async () => {
     setSaving(true);
@@ -429,6 +474,24 @@ export function EditEventSheet({ event, onClose }: EditEventSheetProps) {
           </div>
         )}
 
+        
+        {/* Danger Zone */}
+        <div className="mt-6 pt-6 border-t border-arena-border">
+          <h3 className="mb-3 text-xs font-bold uppercase tracking-widest text-arena-danger/80">
+            {tEvents("dangerZone")}
+          </h3>
+          <Button
+            type="button"
+            variant="outline"
+            className="w-full h-12 rounded-xl border-arena-danger/30 text-arena-danger hover:bg-arena-danger/10 hover:border-arena-danger/50 font-semibold"
+            onClick={handleDeleteCheck}
+            disabled={saving || deleteState !== "idle"}
+          >
+            {deleteState === "checking" ? <Loader2 className="animate-spin mr-2" size={16} /> : null}
+            {tEvents("deleteEvent")}
+          </Button>
+        </div>
+
         <div className="mt-4 flex gap-2.5">
           <Button
             className="h-[50px] flex-1 rounded-[14px] border-arena-border text-[15px] font-semibold text-arena-text-sec"
@@ -453,6 +516,53 @@ export function EditEventSheet({ event, onClose }: EditEventSheetProps) {
           </Button>
         </div>
       </div>
+    
+      {/* Modals for Deletion */}
+      <AlertDialog open={deleteState === "confirm"} onOpenChange={(open) => !open && setDeleteState("idle")}>
+        <AlertDialogContent className="bg-arena-surface border-arena-border rounded-2xl w-[90vw] max-w-sm">
+          <AlertDialogHeader>
+            <AlertDialogTitle className="text-arena-text text-lg">{tEvents("deleteWarningTitle")}</AlertDialogTitle>
+            <AlertDialogDescription className="text-arena-text-muted">
+              {tEvents("deleteWarningDesc")}
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter className="mt-4 flex-row gap-2 sm:space-x-0">
+            <AlertDialogCancel className="flex-1 mt-0 bg-arena-bg border-arena-border text-arena-text hover:bg-arena-surface-el hover:text-arena-text" disabled={deleteState === "deleting"}>
+              {tCommon("cancel")}
+            </AlertDialogCancel>
+            <AlertDialogAction 
+              className="flex-1 bg-arena-danger hover:bg-arena-danger/90 text-white"
+              onClick={(e) => { e.preventDefault(); handleConfirmDelete(); }}
+              disabled={deleteState === "deleting"}
+            >
+              {deleteState === "deleting" ? <Loader2 className="animate-spin" size={16} /> : tEvents("deleteEvent")}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
+      <AlertDialog open={deleteState === "cannot_delete"} onOpenChange={(open) => !open && setDeleteState("idle")}>
+        <AlertDialogContent className="bg-arena-surface border-arena-border rounded-2xl w-[90vw] max-w-sm">
+          <AlertDialogHeader>
+            <AlertDialogTitle className="text-arena-text text-lg">{tEvents("cancelWarningTitle")}</AlertDialogTitle>
+            <AlertDialogDescription className="text-arena-text-muted">
+              {tEvents("cannotDeletePaidEvent")}
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter className="mt-4 flex-col gap-2 sm:space-x-0 sm:flex-col">
+            <AlertDialogAction 
+              className="w-full bg-arena-warning hover:bg-arena-warning/90 text-white"
+              onClick={(e) => { e.preventDefault(); handleCancelEventInstead(); }}
+              disabled={deleteState === "deleting"}
+            >
+              {deleteState === "deleting" ? <Loader2 className="animate-spin" size={16} /> : tEvents("cancelEventInstead")}
+            </AlertDialogAction>
+            <AlertDialogCancel className="w-full mt-0 bg-transparent border-0 text-arena-text-muted hover:bg-arena-surface-el hover:text-arena-text" disabled={deleteState === "deleting"}>
+              {tCommon("cancel")}
+            </AlertDialogCancel>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </BottomSheet>
   );
 }

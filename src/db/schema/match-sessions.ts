@@ -16,6 +16,7 @@ export const matchSessions = pgTable("match_sessions", {
     .notNull()
     .references(() => teams.id, { onDelete: "cascade" }),
   title: text("title").notNull(),
+  slug: text("slug").unique(),
   location: text("location").notNull(),
   startsAt: timestamp("starts_at").notNull(),
   endsAt: timestamp("ends_at"),

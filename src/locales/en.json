@@ -663,7 +663,17 @@
       "confirmed": "Confirmed",
       "cancelled": "Cancelled",
       "completed": "✓ Completed"
-    }
+    },
+    "dangerZone": "Danger Zone",
+    "deleteEvent": "Delete Event",
+    "deleteWarningTitle": "Are you sure?",
+    "deleteWarningDesc": "This action cannot be undone. All confirmed players will be notified.",
+    "cannotDeletePaidEvent": "This event has associated payments. To ensure financial integrity, it cannot be deleted. Would you like to cancel it instead?",
+    "cancelEventInstead": "Cancel Event",
+    "eventDeleted": "Event successfully deleted",
+    "deleteError": "Error deleting event",
+    "cancelWarningTitle": "Cancel Event",
+    "cancelWarningDesc": "The event will be marked as cancelled. Spots will be unavailable and payments can be managed."
   },
   "arenaNav": {
     "collapse": "Collapse Menu",
@@ -879,7 +889,9 @@
       "pending": "Pending",
       "ready": "Ready",
       "validating": "Validating",
-      "validated": "Validated"
+      "validated": "Validated",
+      "refunded": "Refunded",
+      "credited": "Credited"
     },
     "method": {
       "manualMbway": "Manual MBWay"
@@ -1005,7 +1017,9 @@
       "setMethods": "Payment Methods",
       "autoValidate": "Auto-validation",
       "relevant": "Other Actions"
-    }
+    },
+    "markRefund": "Refund",
+    "markCredit": "Convert to Credit"
   },
   "arenaBadges": {
     "new": "New",
@@ -1019,7 +1033,9 @@
     "low": "Low Risk",
     "medium": "Medium Risk",
     "high": "High Risk",
-    "scoreIs": "Risk score"
+    "scoreIs": "Risk score",
+    "refunded": "Refunded",
+    "credited": "Credited"
   },
   "arenaShared": {
     "calendar": "Calendar",
@@ -2565,7 +2581,8 @@
       "scheduled": "Scheduled",
       "ongoing": "Ongoing",
       "completed": "Completed",
-      "cancelled": "Cancelled"
+      "cancelled": "Cancelled",
+      "confirmed": "Confirmed"
     },
     "labels": {
       "date": "Date",
@@ -2582,6 +2599,7 @@
     },
     "eventNotFound": "Event not found",
     "backToHome": "Back to Home",
+    "slots": "Slots",
     "filledSlots": "Slots filled",
     "slotsFull": "Slots full - you can join the waiting list",
     "confirmed": "Confirmed",
@@ -2610,16 +2628,20 @@
     "tabs": {
       "squad": "Squad",
       "location": "Location",
-      "payment": "Payment"
+      "payment": "Payment",
+      "chat": "Chat"
     },
     "type": {
-      "game": "Official Match",
+      "game": "Game",
       "training": "Training"
     },
     "price": {
       "free": "Free"
     },
-    "payNow": "Pay now"
+    "payNow": "Pay now",
+    "paymentStatus": "Payment",
+    "paymentConfirmed": "Confirmed",
+    "paymentPending": "Pending"
   },
   "athleteRsvp": {
     "back": "Back",

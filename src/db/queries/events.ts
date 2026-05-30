@@ -28,3 +28,25 @@ export async function queryEventById(id: number) {
     .limit(1);
   return event ?? null;
 }
+
+export async function queryEventByIdOrSlug(idOrSlug: number | string) {
+  const [event] = await db
+    .select()
+    .from(matchSessions)
+    .where(
+      typeof idOrSlug === "number" || !isNaN(Number(idOrSlug))
+        ? eq(matchSessions.id, Number(idOrSlug))
+        : eq(matchSessions.slug, String(idOrSlug))
+    )
+    .limit(1);
+  return event ?? null;
+}
+
+export async function old_queryEventById(id: number) {
+  const [event] = await db
+    .select()
+    .from(matchSessions)
+    .where(eq(matchSessions.id, id))
+    .limit(1);
+  return event ?? null;
+}

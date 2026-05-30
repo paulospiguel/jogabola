@@ -16,7 +16,7 @@ export function getAblyRest(): Ably.Rest {
 
 /** Channel name for an event's chat. */
 export function eventChannelName(eventId: number): string {
-  return `event-chat-${eventId}`;
+  return `event-chat:${eventId}`;
 }
 
 export const EVENT_CHAT_MESSAGE_EVENT = "message";

@@ -76,7 +76,22 @@ export async function getEventAttendanceWithUsers(eventId: number) {
   const reserves = [];
   const pending = [];
 
+  const uniqueRecords = new Map<number, typeof records[0]>();
   for (const r of records) {
+    const existing = uniqueRecords.get(r.id);
+    if (!existing) {
+      uniqueRecords.set(r.id, r);
+    } else {
+      const priority = { paid: 3, in_review: 2, review: 2, pending: 1, rejected: 0, refunded: -1 };
+      const pNew = priority[(r.paymentStatus as keyof typeof priority)] ?? -2;
+      const pOld = priority[(existing.paymentStatus as keyof typeof priority)] ?? -2;
+      if (pNew > pOld) {
+        uniqueRecords.set(r.id, r);
+      }
+    }
+  }
+
+  for (const r of uniqueRecords.values()) {
     const name = r.guestName || r.user?.name || "Desconhecido";
     const role = "Jogador";
     const id = r.user?.id || `guest-${r.id}`;
@@ -152,7 +167,22 @@ export async function getEventRoster(eventId: number) {
   const main: EventRosterEntry[] = [];
   const reserves: EventRosterEntry[] = [];
 
+  const uniqueRecords = new Map<number, typeof records[0]>();
   for (const r of records) {
+    const existing = uniqueRecords.get(r.attendanceId);
+    if (!existing) {
+      uniqueRecords.set(r.attendanceId, r);
+    } else {
+      const priority = { paid: 3, in_review: 2, review: 2, pending: 1, rejected: 0, refunded: -1 };
+      const pNew = priority[(r.paymentStatus as keyof typeof priority)] ?? -2;
+      const pOld = priority[(existing.paymentStatus as keyof typeof priority)] ?? -2;
+      if (pNew > pOld) {
+        uniqueRecords.set(r.attendanceId, r);
+      }
+    }
+  }
+
+  for (const r of uniqueRecords.values()) {
     const entry: EventRosterEntry = {
       id: r.userId || `guest-${r.attendanceId}`,
       name: r.guestName || r.userName || "Desconhecido",

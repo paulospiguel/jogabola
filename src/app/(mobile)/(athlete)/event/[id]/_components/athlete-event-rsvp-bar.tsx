@@ -3,23 +3,14 @@
 import { CheckIcon, XIcon } from "@animateicons/react/lucide";
 import { Banknote } from "lucide-react";
 import Link from "next/link";
-import { useTranslations } from "next-intl";
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from "@/components/ui/alert-dialog";
+import type { useTranslations } from "next-intl";
+
 import { ATTENDANCE_STATUS } from "@/constants/attendance";
 import { cn } from "@/lib/utils";
 
 interface AthleteEventRsvpBarProps {
   eventId: number;
+  eventSlug?: string | null;
   userId: string;
   myStatus: string | null;
   isCancelled: boolean;
@@ -35,6 +26,7 @@ interface AthleteEventRsvpBarProps {
 
 export function AthleteEventRsvpBar({
   eventId,
+  eventSlug,
   userId,
   myStatus,
   isCancelled,
@@ -74,39 +66,6 @@ export function AthleteEventRsvpBar({
               {t("payNow")}
             </button>
           )}
-          <AlertDialog>
-            <AlertDialogTrigger asChild>
-              <button
-                type="button"
-                disabled={actionLoading}
-                className="flex h-[52px] w-full items-center justify-center gap-2 rounded-[16px] border border-arena-border bg-arena-surface-el text-[14px] font-bold text-arena-text-sec transition-colors hover:bg-arena-surface disabled:opacity-60"
-              >
-                <XIcon size={18} color="currentColor" />
-                {t("cancelPresence")}
-              </button>
-            </AlertDialogTrigger>
-            <AlertDialogContent className="border-arena-border bg-arena-surface shadow-2xl">
-              <AlertDialogHeader>
-                <AlertDialogTitle className="text-arena-text">
-                  {t("cancelConfirm.title")}
-                </AlertDialogTitle>
-                <AlertDialogDescription className="text-arena-text-sec">
-                  {t("cancelConfirm.description")}
-                </AlertDialogDescription>
-              </AlertDialogHeader>
-              <AlertDialogFooter className="flex-row gap-3">
-                <AlertDialogCancel className="mt-0 flex-1 border-arena-border bg-transparent text-arena-text hover:bg-arena-surface-el">
-                  {t("cancelConfirm.keep")}
-                </AlertDialogCancel>
-                <AlertDialogAction
-                  className="flex-1 bg-arena-danger text-white hover:bg-arena-danger/90"
-                  onClick={onCancel}
-                >
-                  {t("cancelConfirm.action")}
-                </AlertDialogAction>
-              </AlertDialogFooter>
-            </AlertDialogContent>
-          </AlertDialog>
         </div>
       ) : (
         <div className="flex flex-col gap-2">
@@ -119,7 +78,7 @@ export function AthleteEventRsvpBar({
               isCancelled
                 ? "border border-arena-danger/30 bg-arena-danger/10 text-arena-danger"
                 : isFull
-                  ? "border border-arena-border bg-arena-surface-el text-arena-text-sec hover:bg-arena-surface"
+                  ? "border border-blue-500 bg-blue-500 text-white hover:bg-blue-600"
                   : "bg-arena-primary text-arena-bg shadow-[0_0_24px_rgba(124,255,79,0.25)] hover:bg-arena-primary/90",
             )}
           >
@@ -142,13 +101,13 @@ export function AthleteEventRsvpBar({
               </p>
               <div className="flex gap-2">
                 <Link
-                  href={`/auth?callbackURL=/event/${eventId}`}
+                  href={`/auth?callbackURL=/event/${eventSlug || eventId}`}
                   className="flex h-10 flex-1 items-center justify-center rounded-[10px] border border-arena-border bg-arena-surface-el text-[13px] font-bold text-arena-text-sec no-underline transition-colors hover:bg-arena-surface hover:text-arena-text"
                 >
                   {t("login")}
                 </Link>
                 <Link
-                  href={`/auth?mode=register&callbackURL=/event/${eventId}`}
+                  href={`/auth?mode=register&callbackURL=/event/${eventSlug || eventId}`}
                   className="flex h-10 flex-1 items-center justify-center rounded-[10px] bg-arena-primary text-[13px] font-bold text-arena-bg no-underline transition-colors hover:bg-arena-primary/90"
                 >
                   {t("register")}

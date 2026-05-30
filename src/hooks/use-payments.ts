@@ -23,6 +23,7 @@ export interface Payment {
   event: {
     id: number;
     title: string;
+    status: string;
   };
 }
 

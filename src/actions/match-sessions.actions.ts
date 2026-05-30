@@ -1,18 +1,23 @@
 "use server";
 
-import { and, desc, eq, gte, lt } from "drizzle-orm";
+import { format } from "date-fns";
+import { and, desc, eq, gte, lt, inArray } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { db } from "@/db/client";
-import { queryEventById, queryEvents } from "@/db/queries/events";
+import { queryEventById, queryEventByIdOrSlug, queryEvents } from "@/db/queries/events";
 import {
   attendance,
   matchReservations,
   matchSessions,
   teams,
   user,
+  payments,
+  notifications,
 } from "@/db/schema";
+import { PAYMENT_STATUS } from "@/constants/payments";
 import { getAuthUser, withAction } from "@/lib/action-helpers";
 import { getAccessibleTeamIds, userCanAccessTeam } from "@/lib/team-access";
+import { slugify } from "@/lib/utils";
 import {
   createMatchReservationSchema,
   createMatchSessionSchema,
@@ -109,11 +114,16 @@ export async function createEvent(input: {
     teamId = created.id;
   }
 
+  const eventIdRandom = crypto.randomUUID().split("-")[0];
+  const dateStr = format(input.startDate, "yyyy-MM-dd");
+  const baseSlug = slugify(`${input.title}-${dateStr}-${eventIdRandom}`);
+
   const [event] = await db
     .insert(matchSessions)
     .values({
       teamId,
       title: input.title,
+      slug: baseSlug,
       location: input.location,
       startsAt: input.startDate,
       endsAt: input.endDate,
@@ -187,6 +197,14 @@ export async function createEvent(input: {
   return { success: true as const, data: toEventView(event) };
 }
 
+/**
+ * Updates an existing event.
+ *
+ * NOTE: `teamId` is intentionally excluded from the input type and from the
+ * database `.set()` call. An event's team is permanently bound at creation
+ * time and MUST NOT be changed after the fact — participants, payments, and
+ * chat messages are all scoped to that team relationship.
+ */
 export async function updateEvent(
   eventId: number,
   input: {
@@ -204,6 +222,8 @@ export async function updateEvent(
     transferRequiresProof?: boolean;
     mbwayEnabled?: boolean;
     mbwayPhone?: string;
+    /** @deprecated teamId is immutable — passing this field has no effect and will be ignored */
+    teamId?: never;
   },
 ) {
   const authUser = await getAuthUser();
@@ -238,7 +258,9 @@ export async function updateEvent(
       ...(input.recurrence && { recurrence: input.recurrence }),
       ...(input.location && { location: input.location }),
       ...(input.maxParticipants !== undefined && {
-        capacity: input.maxParticipants ? Number.parseInt(input.maxParticipants, 10) : null,
+        capacity: input.maxParticipants
+          ? Number.parseInt(input.maxParticipants, 10)
+          : null,
       }),
       ...(input.priceCents !== undefined && { priceCents: input.priceCents }),
       ...(input.paymentRequired !== undefined && {
@@ -290,8 +312,8 @@ export async function updateEvent(
   return { success: true as const, data: toEventView(event) };
 }
 
-export async function getEvent(eventId: number) {
-  const eventData = await queryEventById(eventId);
+export async function getEvent(eventId: number | string) {
+  const eventData = await queryEventByIdOrSlug(eventId);
   if (!eventData) {
     return { success: false as const, error: { code: "EVENT_NOT_FOUND" } };
   }
@@ -432,6 +454,7 @@ export async function getLastEventSquad(teamId: number) {
 function toEventView(event: typeof matchSessions.$inferSelect) {
   return {
     id: event.id,
+    slug: event.slug,
     teamId: event.teamId,
     title: event.title,
     description: null,
@@ -471,3 +494,93 @@ function toEventView(event: typeof matchSessions.$inferSelect) {
     updatedAt: event.updatedAt ?? new Date(),
   };
 }
+
+export async function checkEventDeletable(eventId: number) {
+  const authUser = await getAuthUser();
+  if (!authUser) {
+    return { success: false as const, error: { code: "UNAUTHORIZED" } };
+  }
+
+  // Find any payments associated with match reservations for this event
+  const eventPayments = await db
+    .select({ status: payments.status, amountCents: payments.amountCents })
+    .from(payments)
+    .innerJoin(matchReservations, eq(payments.matchReservationId, matchReservations.id))
+    .where(eq(matchReservations.matchSessionId, eventId));
+
+  // If there's any payment that isn't failed/rejected and has an amount > 0, it has payments.
+  const paidStatuses = [
+    PAYMENT_STATUS.PAID,
+    PAYMENT_STATUS.PAID_UNVERIFIED,
+    PAYMENT_STATUS.APPROVED,
+    PAYMENT_STATUS.REVIEW_REQUIRED,
+    PAYMENT_STATUS.PENDING // Even pending means someone initiated payment
+  ];
+
+  const hasPayments = eventPayments.some(
+    p => p.amountCents > 0 && paidStatuses.includes(p.status as any)
+  );
+
+  return { success: true as const, data: { hasPayments } };
+}
+
+export async function deleteEvent(eventId: number) {
+  const authUser = await getAuthUser();
+  if (!authUser) {
+    return { success: false as const, error: { code: "UNAUTHORIZED" } };
+  }
+
+  const existingEvent = await db.query.matchSessions.findFirst({
+    where: eq(matchSessions.id, eventId),
+  });
+
+  if (!existingEvent) {
+    return { success: false as const, error: { code: "EVENT_NOT_FOUND" } };
+  }
+
+  const canAccessTeam = await userCanAccessTeam(
+    authUser.id,
+    existingEvent.teamId,
+  );
+  if (!canAccessTeam) {
+    return { success: false as const, error: { code: "TEAM_NOT_FOUND" } };
+  }
+
+  const deletableCheck = await checkEventDeletable(eventId);
+  if (!deletableCheck.success || deletableCheck.data.hasPayments) {
+    return { success: false as const, error: { code: "EVENT_HAS_PAYMENTS" } };
+  }
+
+  // Find confirmed players to notify
+  const confirmedReservations = await db
+    .select({ playerId: matchReservations.playerId })
+    .from(matchReservations)
+    .where(
+      and(
+        eq(matchReservations.matchSessionId, eventId),
+        inArray(matchReservations.status, ["reserved_unpaid", "confirmed"])
+      )
+    );
+
+  // Notify players
+  if (confirmedReservations.length > 0) {
+    const notificationsData = confirmedReservations.map(r => ({
+      userId: r.playerId,
+      type: "event_cancelled",
+      title: "Evento Cancelado/Excluído",
+      message: `O evento "${existingEvent.title}" foi excluído pelo organizador.`,
+      metadata: { eventId, teamId: existingEvent.teamId }
+    }));
+    
+    if (notificationsData.length > 0) {
+      await db.insert(notifications).values(notificationsData);
+    }
+  }
+
+  // Delete event
+  await db.delete(matchSessions).where(eq(matchSessions.id, eventId));
+
+  revalidatePath("/arena/events");
+  return { success: true as const };
+}
+

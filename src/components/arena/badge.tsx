@@ -6,6 +6,8 @@ import {
   Sparkles,
   Star,
   X,
+  RefreshCcw,
+  Wallet,
 } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { cn } from "@/lib/utils";
@@ -21,7 +23,9 @@ export type BadgeStatus =
   | "validating"
   | "low"
   | "medium"
-  | "high";
+  | "high"
+  | "refunded"
+  | "credited";
 
 interface JbBadgeProps {
   status: BadgeStatus;
@@ -89,6 +93,16 @@ const STATUS_MAP: Record<
     label: "high",
     Icon: X,
     className: "border-arena-danger/20 bg-arena-danger/10 text-arena-danger",
+  },
+  refunded: {
+    label: "refunded",
+    Icon: RefreshCcw,
+    className: "border-arena-border bg-arena-surface-el text-arena-text-sec",
+  },
+  credited: {
+    label: "credited",
+    Icon: Wallet,
+    className: "border-arena-info/30 bg-arena-info/20 text-arena-info",
   },
 };
 

@@ -80,7 +80,10 @@ export const auth = betterAuth({
   },
   ...(socialProviders && { socialProviders }),
   plugins: [
-    passkey(),
+    passkey({
+      rpID: env.baseURL ? new URL(env.baseURL).hostname : "localhost",
+      rpName: "JogaBola",
+    }),
     emailOTP({
       otpLength: 6,
       expiresIn: 300,
@@ -106,6 +109,7 @@ export const auth = betterAuth({
   session: {
     expiresIn: authConfig.session.expiresIn,
     updateAge: authConfig.session.updateAge,
+    freshAge: 0,
     additionalFields: {
       teamId: {
         type: "number",

@@ -191,7 +191,7 @@ function CheckCircleIcon({
   size?: number;
 }) {
   const t = useTranslations("arenaPayments");
-  const label = t("stats.confirmed");
+  const label = t("stats.paid");
   return (
     <svg
       className={className}

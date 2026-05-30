@@ -11,6 +11,7 @@ import { getBaseURL } from "@/lib/utils";
 interface ShareEventSheetProps {
   event: {
     id: number;
+    slug?: string | null;
     title: string;
     startDate: Date | string;
     location?: string | null;
@@ -37,7 +38,7 @@ export function ShareEventSheet({ event, onClose }: ShareEventSheetProps) {
   const [copied, setCopied] = useState(false);
 
   // Public event page \u2014 valid route the QR and link both point to.
-  const publicUrl = `${getBaseURL()}/event/${event.id}`;
+  const publicUrl = `${getBaseURL()}/event/${event.slug || event.id}`;
 
   const formattedDate = () => {
     try {

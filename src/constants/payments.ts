@@ -7,6 +7,7 @@ export const PAYMENT_STATUS = {
   FAILED: "failed",
   REJECTED: "rejected",
   REFUNDED: "refunded",
+  CREDITED: "credited",
 } as const;
 
 export type PaymentStatus =
@@ -25,6 +26,8 @@ export const PAYMENT_OVERVIEW_STATUS = {
   VALIDATING: "validating",
   CONFIRMED: "confirmed",
   REFUSED: "refused",
+  REFUNDED: "refunded",
+  CREDITED: "credited",
 } as const;
 
 export type PaymentOverviewStatus =
@@ -35,4 +38,6 @@ export const PAYMENT_OVERVIEW_STATUSES = [
   PAYMENT_OVERVIEW_STATUS.VALIDATING,
   PAYMENT_OVERVIEW_STATUS.CONFIRMED,
   PAYMENT_OVERVIEW_STATUS.REFUSED,
+  PAYMENT_OVERVIEW_STATUS.REFUNDED,
+  PAYMENT_OVERVIEW_STATUS.CREDITED,
 ] as const;

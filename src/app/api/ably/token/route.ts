@@ -15,7 +15,7 @@ export async function GET() {
     const tokenRequest = await rest.auth.createTokenRequest({
       clientId: user.id,
       capability: JSON.stringify({
-        "event-chat-*": ["subscribe", "history"],
+        "event-chat:*": ["subscribe", "history"],
       }),
     });
     return NextResponse.json(tokenRequest);

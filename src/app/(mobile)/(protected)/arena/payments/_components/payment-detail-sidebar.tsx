@@ -12,6 +12,10 @@ import {
 } from "@/constants/payments";
 import type { Payment } from "@/hooks/use-payments";
 import { cn } from "@/lib/utils";
+import { markPaymentAsRefunded, markPaymentAsCredited } from "@/actions/payments.actions";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { Loader2 } from "lucide-react";
 
 type TranslationFn = (
   key: string,
@@ -29,6 +33,8 @@ const STATUS_DOT_CLASS: Record<PaymentOverviewStatus, string> = {
   [PAYMENT_OVERVIEW_STATUS.VALIDATING]: "bg-arena-warning",
   [PAYMENT_OVERVIEW_STATUS.CONFIRMED]: "bg-arena-success",
   [PAYMENT_OVERVIEW_STATUS.REFUSED]: "bg-arena-danger",
+  [PAYMENT_OVERVIEW_STATUS.REFUNDED]: "bg-arena-text-sec",
+  [PAYMENT_OVERVIEW_STATUS.CREDITED]: "bg-arena-info",
 };
 
 export function PaymentDetailSidebar({
@@ -36,6 +42,26 @@ export function PaymentDetailSidebar({
   payment,
   t,
 }: PaymentDetailSidebarProps) {
+  const [loadingAction, setLoadingAction] = useState<string | null>(null);
+  const router = useRouter();
+
+  const handleRefund = async () => {
+    const pId = parseInt(payment.id.replace("PAY-", ""), 10);
+    if (isNaN(pId)) return;
+    setLoadingAction("refund");
+    await markPaymentAsRefunded(pId);
+    setLoadingAction(null);
+    router.refresh();
+  };
+
+  const handleCredit = async () => {
+    const pId = parseInt(payment.id.replace("PAY-", ""), 10);
+    if (isNaN(pId)) return;
+    setLoadingAction("credit");
+    await markPaymentAsCredited(pId);
+    setLoadingAction(null);
+    router.refresh();
+  };
   return (
     <aside className="space-y-6">
       <section className="jb-card p-6">
@@ -123,6 +149,35 @@ export function PaymentDetailSidebar({
           </div>
         </div>
       </section>
+
+
+      {payment.event.status.includes("cancel") && (
+        <section className="jb-card px-5 py-5">
+          <h2 className="mb-4 text-xs font-bold uppercase tracking-widest text-arena-text-muted">
+            Acções de Cancelamento
+          </h2>
+          <div className="grid gap-3">
+            <Button
+              variant="outline"
+              onClick={handleRefund}
+              disabled={loadingAction !== null || payment.status === "refunded"}
+              className="h-12 rounded-[14px] border-arena-border text-arena-text hover:bg-arena-surface-el"
+            >
+              {loadingAction === "refund" ? <Loader2 className="animate-spin mr-2" size={16} /> : null}
+              {t("detail.markRefund", { defaultValue: "Devolver (Estorno)" })}
+            </Button>
+            <Button
+              variant="outline"
+              onClick={handleCredit}
+              disabled={loadingAction !== null || payment.status === "credited"}
+              className="h-12 rounded-[14px] border-arena-info/30 text-arena-info hover:bg-arena-info/10"
+            >
+              {loadingAction === "credit" ? <Loader2 className="animate-spin mr-2" size={16} /> : null}
+              {t("detail.markCredit", { defaultValue: "Deixar em Crédito" })}
+            </Button>
+          </div>
+        </section>
+      )}
 
       <section className="jb-card px-5 pb-5 pt-4">
         <h2 className="mb-4 text-xs font-bold uppercase tracking-widest text-arena-text-muted">

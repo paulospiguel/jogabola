@@ -1,13 +1,16 @@
 "use client";
 
-import { useTranslations } from "next-intl";
+import { MessageSquare } from "lucide-react";
+import { useLocale, useTranslations } from "next-intl";
 import { useState } from "react";
+import { EventChatTab } from "@/components/arena/event-chat-tab";
 import { LocationMap } from "@/components/arena/location-map";
-import { useEventAttendance } from "@/hooks/use-event-attendance";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ATTENDANCE_STATUS } from "@/constants/attendance";
 import { EVENT_STATUS } from "@/constants/event-status";
 import { PAYMENT_STATUS } from "@/constants/payments";
-import { cn } from "@/lib/utils";
+import { useEventAttendance } from "@/hooks/use-event-attendance";
+import { useEventDetailChat } from "@/hooks/use-event-chat";
 import { useAthleteEventDetail } from "../_hooks/use-athlete-event-detail";
 import { AthleteEventHero } from "./athlete-event-header";
 import { AthleteEventListTab } from "./athlete-event-list-tab";
@@ -32,14 +35,18 @@ interface Event {
   images?: string[];
 }
 
+import type { getEvent } from "@/actions/match-sessions.actions";
+
+type EventData = NonNullable<
+  Extract<Awaited<ReturnType<typeof getEvent>>, { success: true }>["data"]
+>;
+
 interface AthleteEventDetailProps {
-  event: Event;
+  event: EventData;
   userId: string;
   userName: string;
   initialMyStatus: string | null;
 }
-
-type Tab = "list" | "location" | "payment";
 
 export function AthleteEventDetail({
   event,
@@ -48,7 +55,8 @@ export function AthleteEventDetail({
   initialMyStatus,
 }: AthleteEventDetailProps) {
   const t = useTranslations("athleteEventPublic");
-  const [activeTab, setActiveTab] = useState<Tab>("list");
+  const locale = useLocale();
+  const [activeTab, setActiveTab] = useState<string>("list");
 
   const { confirmed, reserves, pending, isLoading, refetch } =
     useEventAttendance(event.id);
@@ -77,7 +85,7 @@ export function AthleteEventDetail({
   });
 
   const isCancelled =
-    event.status === EVENT_STATUS.CANCELLED || event.status === "canceled";
+    event.status === EVENT_STATUS.CANCELLED || String(event.status) === "canceled";
   const total = Number(event.maxParticipants) || 14;
   const isFull = confirmed.length >= total;
   const myPaymentStatus =
@@ -92,14 +100,24 @@ export function AthleteEventDetail({
       myPaymentStatus === PAYMENT_STATUS.REJECTED ||
       myPaymentStatus === PAYMENT_STATUS.REFUNDED);
 
-  const TABS: { id: Tab; label: string }[] = [
-    { id: "list", label: t("tabs.squad") },
-    { id: "location", label: t("tabs.location") },
-  ];
-
-  if (userId && event.priceCents > 0) {
-    TABS.push({ id: "payment", label: t("tabs.payment") });
-  }
+  const {
+    chatEndRef,
+    chatMessages,
+    handleSendMessage,
+    handleDeleteMessage,
+    handleCensorMessage,
+    inputMessage,
+    setInputMessage,
+    sending,
+  } = useEventDetailChat({
+    eventId: event.id,
+    currentUserId: userId,
+    canChat: myStatus === ATTENDANCE_STATUS.CONFIRMED,
+    isCaptain: false,
+    initialMessages: [],
+    active: activeTab === "chat",
+    locale,
+  });
 
   return (
     <div className="flex min-h-screen flex-col bg-arena-bg">
@@ -107,32 +125,53 @@ export function AthleteEventDetail({
         event={event}
         confirmedCount={confirmed.length}
         myStatus={myStatus}
+        myPaymentStatus={myPaymentStatus}
         userName={userName}
         isLoading={isLoading}
+        onCancel={handleCancel}
         t={t}
       />
 
-      <div className="flex shrink-0 border-b border-arena-border bg-arena-bg">
-        {TABS.map(tabItem => (
-          <button
-            key={tabItem.id}
-            type="button"
-            onClick={() => setActiveTab(tabItem.id)}
-            className={cn(
-              "flex flex-1 items-center justify-center border-b-2 py-3 text-[13px] font-semibold transition-colors",
-              activeTab === tabItem.id
-                ? "border-arena-primary text-arena-primary"
-                : "border-transparent text-arena-text-muted hover:text-arena-text-sec",
-            )}
-            style={{ marginBottom: -1 }}
+      <Tabs
+        value={activeTab}
+        onValueChange={setActiveTab}
+        className="flex flex-1 flex-col gap-0 overflow-hidden"
+      >
+        <TabsList
+          variant="line"
+          className="h-auto w-full shrink-0 justify-start rounded-none border-b border-arena-border bg-arena-bg px-0"
+        >
+          <TabsTrigger
+            value="list"
+            className="flex-1 rounded-none border-b-2 border-transparent py-3 text-[13px] font-semibold text-arena-text-muted transition-colors after:hidden data-[state=active]:border-arena-primary data-[state=active]:bg-transparent data-[state=active]:text-arena-primary dark:data-[state=active]:border-arena-primary dark:data-[state=active]:bg-transparent"
           >
-            {tabItem.label}
-          </button>
-        ))}
-      </div>
+            {t("tabs.squad")}
+          </TabsTrigger>
+          <TabsTrigger
+            value="location"
+            className="flex-1 rounded-none border-b-2 border-transparent py-3 text-[13px] font-semibold text-arena-text-muted transition-colors after:hidden data-[state=active]:border-arena-primary data-[state=active]:bg-transparent data-[state=active]:text-arena-primary dark:data-[state=active]:border-arena-primary dark:data-[state=active]:bg-transparent"
+          >
+            {t("tabs.location")}
+          </TabsTrigger>
+          {userId && event.priceCents > 0 && (
+            <TabsTrigger
+              value="payment"
+              className="flex-1 rounded-none border-b-2 border-transparent py-3 text-[13px] font-semibold text-arena-text-muted transition-colors after:hidden data-[state=active]:border-arena-primary data-[state=active]:bg-transparent data-[state=active]:text-arena-primary dark:data-[state=active]:border-arena-primary dark:data-[state=active]:bg-transparent"
+            >
+              {t("tabs.payment")}
+            </TabsTrigger>
+          )}
+          {myStatus === ATTENDANCE_STATUS.CONFIRMED && (
+            <TabsTrigger
+              value="chat"
+              className="flex-1 rounded-none border-b-2 border-transparent py-3 text-[13px] font-semibold text-arena-text-muted transition-colors after:hidden data-[state=active]:border-arena-primary data-[state=active]:bg-transparent data-[state=active]:text-arena-primary dark:data-[state=active]:border-arena-primary dark:data-[state=active]:bg-transparent"
+            >
+              {t("tabs.chat") ?? "Chat"}
+            </TabsTrigger>
+          )}
+        </TabsList>
 
-      <div className="flex-1 overflow-auto pb-5">
-        {activeTab === "list" && (
+        <TabsContent value="list" className="flex-1 overflow-auto pb-5">
           <AthleteEventListTab
             eventId={event.id}
             userId={userId}
@@ -143,9 +182,9 @@ export function AthleteEventDetail({
             isLoading={isLoading}
             t={t}
           />
-        )}
+        </TabsContent>
 
-        {activeTab === "location" && (
+        <TabsContent value="location" className="flex-1 overflow-auto pb-5">
           <div className="px-4 py-4">
             <LocationMap location={event.location} />
             {event.description && (
@@ -159,33 +198,60 @@ export function AthleteEventDetail({
               </div>
             )}
           </div>
+        </TabsContent>
+
+        {userId && event.priceCents > 0 && (
+          <TabsContent value="payment" className="flex-1 overflow-auto pb-5">
+            <MyPaymentTab eventId={event.id} />
+          </TabsContent>
         )}
 
-        {activeTab === "payment" && userId && event.priceCents > 0 && (
-          <MyPaymentTab eventId={event.id} />
+        {myStatus === ATTENDANCE_STATUS.CONFIRMED && (
+          <TabsContent
+            value="chat"
+            className="flex flex-col flex-1 min-h-0 overflow-hidden pb-1"
+          >
+            <EventChatTab
+              chatMessages={chatMessages}
+              chatEndRef={chatEndRef}
+              inputMessage={inputMessage}
+              onInputChange={setInputMessage}
+              onSend={handleSendMessage}
+              onDeleteMessage={handleDeleteMessage}
+              onCensorMessage={handleCensorMessage}
+              canChat={true}
+              isCaptain={false}
+              sending={sending}
+              t={t as any}
+            />
+          </TabsContent>
         )}
-      </div>
+      </Tabs>
 
-      <AthleteEventRsvpBar
-        eventId={event.id}
-        userId={userId}
-        myStatus={myStatus}
-        isCancelled={isCancelled}
-        isFull={isFull}
-        canResumePayment={canResumePayment}
-        actionLoading={actionLoading}
-        actionError={actionError}
-        onConfirm={() => handleConfirm(isCancelled, isFull)}
-        onCancel={handleCancel}
-        onResumePayment={() => {
-          setResumePayment(true);
-          setShowRsvpSheet(true);
-        }}
-        t={t}
-      />
+      {!(myStatus === ATTENDANCE_STATUS.CONFIRMED && !canResumePayment) && (
+        <AthleteEventRsvpBar
+          eventSlug={event.slug}
+          eventId={event.id}
+          userId={userId}
+          myStatus={myStatus}
+          isCancelled={isCancelled}
+          isFull={isFull}
+          canResumePayment={canResumePayment}
+          actionLoading={actionLoading}
+          actionError={actionError}
+          onConfirm={() => handleConfirm(isCancelled, isFull)}
+          onCancel={handleCancel}
+          onResumePayment={() => {
+            setResumePayment(true);
+            setShowRsvpSheet(true);
+          }}
+          t={t}
+        />
+      )}
 
       {showRsvpSheet && (
         <AthleteRsvpSheet
+          eventSlug={event.slug}
           eventId={event.id}
           userId={userId}
           resumePayment={resumePayment}

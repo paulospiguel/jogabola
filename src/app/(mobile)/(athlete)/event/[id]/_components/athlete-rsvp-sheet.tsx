@@ -37,6 +37,7 @@ type Step =
 
 interface AthleteRsvpSheetProps {
   eventId: number;
+  eventSlug?: string | null;
   userId?: string | null;
   onClose: () => void;
   onSuccess: (status: string, reservationId?: number) => void;
@@ -46,6 +47,7 @@ interface AthleteRsvpSheetProps {
 
 export function AthleteRsvpSheet({
   eventId,
+  eventSlug,
   userId,
   onClose,
   onSuccess,
@@ -216,7 +218,7 @@ export function AthleteRsvpSheet({
       method,
     });
     if (res.success && res.data) {
-      router.push(`/event/${eventId}/payment/result/${res.data.id}`);
+      router.push(`/event/${eventSlug || eventId}/payment/result/${res.data.id}`);
       return res.data;
     } else {
       setError(t("errors.processPayment"));
@@ -327,11 +329,11 @@ export function AthleteRsvpSheet({
             onCashIntent={async () => { await handlePaymentIntent("cash"); }}
             onMbwayProof={async () => {
               const p = await handlePaymentIntent("mbway");
-              if (p) router.push(`/event/${eventId}/payment/result/${p.id}`);
+              if (p) router.push(`/event/${eventSlug || eventId}/payment/result/${p.id}`);
             }}
             onTransferProof={async () => {
               const p = await handlePaymentIntent("transfer");
-              if (p) router.push(`/event/${eventId}/payment/result/${p.id}`);
+              if (p) router.push(`/event/${eventSlug || eventId}/payment/result/${p.id}`);
             }}
             onPayLater={() => setStep("success")}
           />

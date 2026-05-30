@@ -1,11 +1,31 @@
 "use client";
 
 import { CheckIcon, MapPinIcon } from "@animateicons/react/lucide";
-import { Share2 as ShareIcon, Trophy, Calendar, Clock, Banknote } from "lucide-react";
-import { useTranslations } from "next-intl";
+import {
+  Banknote,
+  Calendar,
+  Clock,
+  Share as ShareIcon,
+  Trophy,
+} from "lucide-react";
+import type { useTranslations } from "next-intl";
 import { useState } from "react";
-import { EVENT_STATUS } from "@/constants/event-status";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
+import { Field, FieldDescription, FieldLabel } from "@/components/ui/field";
+import { Progress } from "@/components/ui/progress";
 import { ATTENDANCE_STATUS } from "@/constants/attendance";
+import { EVENT_STATUS } from "@/constants/event-status";
+import { PAYMENT_STATUS } from "@/constants/payments";
 import { cn, formatDate, formatTime } from "@/lib/utils";
 import { CountdownTimer } from "./countdown-timer";
 
@@ -18,47 +38,47 @@ interface AttendanceBarProps {
 }
 
 function AttendanceBar({ confirmed, total, t }: AttendanceBarProps) {
-  const pct = Math.min((confirmed / total) * 100, 100);
+  const pct = Math.min(Math.round((confirmed / total) * 100), 100);
   const isFull = confirmed >= total;
-  const almost = !isFull && pct >= 80;
+  const isAlmostFull = !isFull && pct >= 80;
 
   return (
     <div className="rounded-[14px] border border-arena-border bg-arena-surface p-4">
-      <div className="mb-3 flex items-center justify-between">
-        <span className="text-[12px] font-semibold uppercase tracking-wider text-arena-text-muted">
-          {t("filledSlots")}
-        </span>
-        <span
+      <Field className="gap-1.5">
+        <div className="flex items-center justify-between">
+          <FieldLabel className="text-[11px] font-semibold uppercase tracking-wider text-arena-text-muted">
+            {t("slots")}
+          </FieldLabel>
+          <FieldDescription
+            className={cn(
+              "text-[12px] font-bold",
+              isFull
+                ? "text-arena-danger"
+                : isAlmostFull
+                  ? "text-arena-warning"
+                  : "text-arena-success",
+            )}
+          >
+            {confirmed} / {total}
+          </FieldDescription>
+        </div>
+        <Progress
+          value={pct}
           className={cn(
-            "rounded-full px-2.5 py-0.5 text-[12px] font-black tabular-nums",
+            "h-1.5",
             isFull
-              ? "bg-arena-danger/15 text-arena-danger"
-              : almost
-                ? "bg-arena-warning/15 text-arena-warning"
-                : "bg-arena-success/15 text-arena-success",
+              ? "[&>[data-slot=progress-indicator]]:bg-arena-danger"
+              : isAlmostFull
+                ? "[&>[data-slot=progress-indicator]]:bg-arena-warning"
+                : "[&>[data-slot=progress-indicator]]:bg-arena-success",
           )}
-        >
-          {confirmed} / {total}
-        </span>
-      </div>
-      <div className="h-1.5 overflow-hidden rounded-full bg-arena-border">
-        <div
-          className={cn(
-            "h-full rounded-full transition-all duration-700",
-            isFull
-              ? "bg-arena-danger"
-              : almost
-                ? "bg-arena-warning"
-                : "bg-arena-success",
-          )}
-          style={{ width: `${pct}%` }}
         />
-      </div>
-      {isFull && (
-        <p className="mt-2 text-center text-[11px] font-semibold text-arena-danger">
-          {t("slotsFull")}
-        </p>
-      )}
+        {isFull && (
+          <p className="mt-0.5 text-center text-[11px] font-semibold text-arena-danger">
+            {t("slotsFull")}
+          </p>
+        )}
+      </Field>
     </div>
   );
 }
@@ -95,13 +115,7 @@ function StatusBadge({ status, t }: { status: string; t: T }) {
   );
 }
 
-function EventShareButton({
-  eventTitle,
-  t,
-}: {
-  eventTitle: string;
-  t: T;
-}) {
+function EventShareButton({ eventTitle, t }: { eventTitle: string; t: T }) {
   const [copied, setCopied] = useState(false);
 
   function handleShare() {
@@ -191,8 +205,10 @@ interface AthleteEventHeroProps {
   };
   confirmedCount: number;
   myStatus: string | null;
+  myPaymentStatus?: string | null;
   userName: string;
   isLoading: boolean;
+  onCancel?: () => void;
   t: T;
 }
 
@@ -200,8 +216,10 @@ export function AthleteEventHero({
   event,
   confirmedCount,
   myStatus,
+  myPaymentStatus,
   userName,
   isLoading,
+  onCancel,
   t,
 }: AthleteEventHeroProps) {
   const isGame =
@@ -291,7 +309,11 @@ export function AthleteEventHero({
             </p>
           </div>
           <div className="flex items-center gap-2 rounded-[8px] border border-arena-border/60 bg-arena-bg/60 px-3 py-1.5">
-            <Clock size={12} className="text-arena-text-muted" strokeWidth={2.2} />
+            <Clock
+              size={12}
+              className="text-arena-text-muted"
+              strokeWidth={2.2}
+            />
             <span className="text-[13px] font-bold tabular-nums text-arena-text">
               {formatTime(event.startDate)}
             </span>
@@ -338,7 +360,9 @@ export function AthleteEventHero({
               <p
                 className={cn(
                   "text-[14px] font-extrabold",
-                  event.priceCents > 0 ? "text-arena-warning" : "text-arena-success",
+                  event.priceCents > 0
+                    ? "text-arena-warning"
+                    : "text-arena-success",
                 )}
               >
                 {event.priceCents > 0
@@ -361,20 +385,83 @@ export function AthleteEventHero({
       )}
 
       {myStatus === ATTENDANCE_STATUS.CONFIRMED && (
-        <div className="mt-3 flex items-center gap-2.5 rounded-[12px] border border-arena-success/30 bg-arena-success/10 px-3.5 py-2.5">
-          <div className="flex size-7 items-center justify-center rounded-full bg-arena-success/20 text-arena-success">
-            <CheckIcon size={14} color="currentColor" />
+        <div className="mt-4 flex flex-col rounded-[16px] border border-arena-border bg-arena-surface p-4 shadow-sm">
+          <div className="flex items-center gap-3">
+            <div className="flex size-10 shrink-0 items-center justify-center rounded-full bg-arena-success/20 text-arena-success">
+              <CheckIcon size={20} color="currentColor" />
+            </div>
+            <div className="flex-1">
+              <p className="text-[14px] font-bold text-arena-success">
+                {t("presenceConfirmed")}
+              </p>
+              <p className="text-[12px] text-arena-text-muted">
+                {userName
+                  ? t("greetingWithName", { name: userName })
+                  : t("onConfirmedList")}
+              </p>
+            </div>
           </div>
-          <div className="flex-1">
-            <p className="text-[12px] font-bold text-arena-success">
-              {t("presenceConfirmed")}
-            </p>
-            <p className="text-[11px] text-arena-text-muted">
-              {userName
-                ? t("greetingWithName", { name: userName })
-                : t("onConfirmedList")}
-            </p>
+
+          <div className="mt-3 mb-3 h-[1px] w-full bg-arena-border/50" />
+
+          <div className="flex items-center justify-between mb-1">
+            <div className="flex items-center gap-2">
+              <Banknote size={14} className="text-arena-text-muted" />
+              <span className="text-[12px] font-semibold text-arena-text-sec">
+                {t("paymentStatus") ?? "Pagamento"}
+              </span>
+            </div>
+            {event.priceCents === 0 ? (
+              <span className="text-[12px] font-bold text-arena-text-muted">
+                {t("price.free")}
+              </span>
+            ) : myPaymentStatus === PAYMENT_STATUS.PAID ? (
+              <span className="flex items-center gap-1 rounded-md bg-arena-success/15 px-2 py-0.5 text-[11px] font-bold text-arena-success">
+                <CheckIcon size={12} color="currentColor" />
+                {t("paymentConfirmed") ?? "Confirmado"}
+              </span>
+            ) : (
+              <span className="flex items-center gap-1 rounded-md bg-arena-warning/15 px-2 py-0.5 text-[11px] font-bold text-arena-warning">
+                {t("paymentPending") ?? "Pendente"}
+              </span>
+            )}
           </div>
+
+          {onCancel && (
+            <div className="mt-4">
+              <AlertDialog>
+                <AlertDialogTrigger asChild>
+                  <button
+                    type="button"
+                    className="w-full rounded-[10px] bg-transparent py-2 text-[12px] font-semibold text-arena-text-muted transition-colors hover:bg-arena-surface-el hover:text-arena-danger"
+                  >
+                    {t("cancelPresence")}
+                  </button>
+                </AlertDialogTrigger>
+                <AlertDialogContent className="border-arena-border bg-arena-surface shadow-2xl">
+                  <AlertDialogHeader>
+                    <AlertDialogTitle className="text-arena-text">
+                      {t("cancelConfirm.title")}
+                    </AlertDialogTitle>
+                    <AlertDialogDescription className="text-arena-text-sec">
+                      {t("cancelConfirm.description")}
+                    </AlertDialogDescription>
+                  </AlertDialogHeader>
+                  <AlertDialogFooter className="flex-row gap-3">
+                    <AlertDialogCancel className="mt-0 flex-1 border-arena-border bg-transparent text-arena-text hover:bg-arena-surface-el">
+                      {t("cancelConfirm.keep")}
+                    </AlertDialogCancel>
+                    <AlertDialogAction
+                      className="flex-1 bg-arena-danger text-white hover:bg-arena-danger/90"
+                      onClick={onCancel}
+                    >
+                      {t("cancelConfirm.action")}
+                    </AlertDialogAction>
+                  </AlertDialogFooter>
+                </AlertDialogContent>
+              </AlertDialog>
+            </div>
+          )}
         </div>
       )}
     </div>

@@ -77,7 +77,9 @@ export function useEventDetailChat({
 
     return () => {
       channel.unsubscribe(EVENT_CHAT_MESSAGE_EVENT, handler);
-      client.close();
+      try {
+        Promise.resolve(client.close()).catch(() => {});
+      } catch (e) {}
     };
   }, [canChat, eventId, appendMessage]);
 

@@ -663,7 +663,17 @@
       "confirmed": "Confirmado",
       "cancelled": "Cancelado",
       "completed": "✓ Concluído"
-    }
+    },
+    "dangerZone": "Zona de Perigo",
+    "deleteEvent": "Excluir Evento",
+    "deleteWarningTitle": "Tem a certeza?",
+    "deleteWarningDesc": "Esta ação não pode ser desfeita. Todos os jogadores confirmados serão notificados do cancelamento.",
+    "cannotDeletePaidEvent": "Este evento tem pagamentos associados. Por questões de integridade financeira, não é possível excluí-lo. Deseja cancelar o evento em vez disso?",
+    "cancelEventInstead": "Cancelar Evento",
+    "eventDeleted": "Evento excluído com sucesso",
+    "deleteError": "Erro ao excluir o evento",
+    "cancelWarningTitle": "Cancelar Evento",
+    "cancelWarningDesc": "O evento passará ao estado cancelado. As vagas ficarão indisponíveis e os pagamentos poderão ser geridos."
   },
   "arenaNav": {
     "collapse": "Recolher Menu",
@@ -997,7 +1007,9 @@
       "pending": "Pendente",
       "ready": "Pronto",
       "validating": "A validar",
-      "validated": "Validado"
+      "validated": "Validado",
+      "refunded": "Estornado",
+      "credited": "Em Crédito"
     },
     "method": {
       "manualMbway": "MBWay manual"
@@ -1005,7 +1017,9 @@
     "proofs": {
       "pending": "Comprovativo pendente",
       "validating": "Pago - aguarda validação"
-    }
+    },
+    "markRefund": "Devolver (Estorno)",
+    "markCredit": "Deixar em Crédito"
   },
   "arenaBadges": {
     "new": "Novo",
@@ -1019,7 +1033,9 @@
     "low": "Risco Baixo",
     "medium": "Risco Médio",
     "high": "Risco Alto",
-    "scoreIs": "Score de risco"
+    "scoreIs": "Score de risco",
+    "refunded": "Estornado",
+    "credited": "Em Crédito"
   },
   "arenaShared": {
     "calendar": "Calendário",
@@ -2545,7 +2561,8 @@
       "scheduled": "Agendado",
       "ongoing": "A Decorrer",
       "completed": "Concluído",
-      "cancelled": "Cancelado"
+      "cancelled": "Cancelado",
+      "confirmed": "Confirmado"
     },
     "labels": {
       "date": "Data",
@@ -2560,6 +2577,7 @@
       "minutes": "MINS",
       "seconds": "SEGS"
     },
+    "slots": "Vagas",
     "filledSlots": "Vagas preenchidas",
     "slotsFull": "Vagas esgotadas - podes entrar na lista de espera",
     "confirmed": "Confirmados",
@@ -2588,10 +2606,11 @@
     "tabs": {
       "squad": "Convocados",
       "location": "Local",
-      "payment": "Pagamento"
+      "payment": "Pagamento",
+      "chat": "Chat"
     },
     "type": {
-      "game": "Jogo Oficial",
+      "game": "Jogo",
       "training": "Treino"
     },
     "price": {
@@ -2599,7 +2618,10 @@
     },
     "eventNotFound": "Evento não encontrado",
     "backToHome": "Voltar ao Início",
-    "payNow": "Pagar agora"
+    "payNow": "Pagar agora",
+    "paymentStatus": "Pagamento",
+    "paymentConfirmed": "Confirmado",
+    "paymentPending": "Pendente"
   },
   "athleteRsvp": {
     "back": "Voltar",

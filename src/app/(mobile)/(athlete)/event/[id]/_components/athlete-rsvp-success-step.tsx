@@ -8,6 +8,7 @@ import { cn } from "@/lib/utils";
 
 interface RsvpSuccessStepProps {
   eventId: number;
+  eventSlug?: string | null;
   guestName: string;
   guestEmail: string;
   loginEmail: string;
@@ -16,6 +17,7 @@ interface RsvpSuccessStepProps {
 
 export function RsvpSuccessStep({
   eventId,
+  eventSlug,
   guestName,
   guestEmail,
   loginEmail,
@@ -52,7 +54,7 @@ export function RsvpSuccessStep({
           {t("createAccountFree")}
         </p>
         <Link
-          href={`/auth?mode=register&email=${encodeURIComponent(registerEmail)}&callbackURL=/event/${eventId}`}
+          href={`/auth?mode=register&email=${encodeURIComponent(registerEmail)}&callbackURL=/event/${eventSlug || eventId}`}
           className={cn(
             "flex h-[44px] w-full items-center justify-center gap-2 rounded-[12px] bg-arena-primary text-[13px] font-bold text-arena-bg no-underline transition-all hover:bg-arena-primary/90",
           )}

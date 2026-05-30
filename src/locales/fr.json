@@ -663,7 +663,17 @@
       "confirmed": "Confirmé",
       "cancelled": "Annulé",
       "completed": "✓ Terminé"
-    }
+    },
+    "dangerZone": "Zone de Danger",
+    "deleteEvent": "Supprimer l'Événement",
+    "deleteWarningTitle": "Êtes-vous sûr ?",
+    "deleteWarningDesc": "Cette action est irréversible. Tous les joueurs confirmés seront informés.",
+    "cannotDeletePaidEvent": "Cet événement a des paiements associés. Par mesure de sécurité financière, il ne peut pas être supprimé. Voulez-vous l'annuler à la place ?",
+    "cancelEventInstead": "Annuler l'Événement",
+    "eventDeleted": "Événement supprimé avec succès",
+    "deleteError": "Erreur lors de la suppression de l'événement",
+    "cancelWarningTitle": "Annuler l'Événement",
+    "cancelWarningDesc": "L'événement sera marqué comme annulé. Les places ne seront plus disponibles."
   },
   "arenaNav": {
     "collapse": "Réduire le menu",
@@ -877,7 +887,9 @@
       "pending": "En attente",
       "ready": "Prêt",
       "validating": "Validation",
-      "validated": "Validé"
+      "validated": "Validé",
+      "refunded": "Remboursé",
+      "credited": "En Crédit"
     },
     "method": {
       "manualMbway": "MBWay manuel"
@@ -1005,7 +1017,9 @@
       "transfer": "Virement",
       "cashSub": "En personne au match",
       "creditCard": "Carte de crédit"
-    }
+    },
+    "markRefund": "Rembourser",
+    "markCredit": "Convertir en Crédit"
   },
   "arenaBadges": {
     "new": "Nouveau",
@@ -1019,7 +1033,9 @@
     "low": "Risque Faible",
     "medium": "Risque Moyen",
     "high": "Risque Élevé",
-    "scoreIs": "Score de risque"
+    "scoreIs": "Score de risque",
+    "refunded": "Remboursé",
+    "credited": "En Crédit"
   },
   "arenaShared": {
     "calendar": "Calendrier",
@@ -2565,7 +2581,8 @@
       "scheduled": "Prévu",
       "ongoing": "En cours",
       "completed": "Terminé",
-      "cancelled": "Annulé"
+      "cancelled": "Annulé",
+      "confirmed": "Confirmé"
     },
     "labels": {
       "date": "Date",
@@ -2582,6 +2599,7 @@
     },
     "eventNotFound": "Événement non trouvé",
     "backToHome": "Retour à l'Accueil",
+    "slots": "Places",
     "filledSlots": "Places remplies",
     "slotsFull": "Places épuisées - vous pouvez rejoindre la liste d'attente",
     "confirmed": "Confirmés",
@@ -2610,16 +2628,20 @@
     "tabs": {
       "squad": "Convoqués",
       "location": "Lieu",
-      "payment": "Paiement"
+      "payment": "Paiement",
+      "chat": "Chat"
     },
     "type": {
-      "game": "Match Officiel",
+      "game": "Match",
       "training": "Entraînement"
     },
     "price": {
       "free": "Gratuit"
     },
-    "payNow": "Payer maintenant"
+    "payNow": "Payer maintenant",
+    "paymentStatus": "Paiement",
+    "paymentConfirmed": "Confirmé",
+    "paymentPending": "En attente"
   },
   "athleteRsvp": {
     "back": "Retour",

@@ -19,6 +19,7 @@ import { PAYMENT_STATUS } from "@/constants/payments";
 import { usePayment } from "@/hooks/use-payments";
 import { useProofUpload } from "@/hooks/use-proof-upload";
 import { cn } from "@/lib/utils";
+import { PaymentStatusChangeAnimation } from "../../../../_components/payment-status-change-animation";
 
 interface PaymentResultClientProps {
   paymentId: number;
@@ -302,6 +303,7 @@ export function PaymentResultClient({
   const t = useTranslations("paymentResult");
   const tRsvp = useTranslations("athleteRsvpSheet");
   const { payment, isLoading, error, refetch } = usePayment(paymentId);
+  const eventSlug = payment?.eventSlug;
   const [proofUploaded, setProofUploaded] = useState(false);
 
   if (isLoading) {
@@ -319,7 +321,7 @@ export function PaymentResultClient({
           {error instanceof Error ? error.message : t("loadError")}
         </p>
         <Link
-          href={`/event/${eventId}`}
+          href={`/event/${eventSlug || eventId}`}
           className="flex items-center gap-1.5 text-sm font-medium text-arena-primary"
         >
           <ArrowLeft size={16} />
@@ -360,7 +362,7 @@ export function PaymentResultClient({
       {/* Back header */}
       <div className="px-5 pb-2 pt-6">
         <Link
-          href={`/event/${eventId}`}
+          href={`/event/${eventSlug || eventId}`}
           className="flex items-center gap-1.5 text-sm text-arena-text-muted transition-colors hover:text-arena-text"
         >
           <ArrowLeft size={16} />
@@ -458,7 +460,7 @@ export function PaymentResultClient({
 
         {/* Back CTA */}
         <Link
-          href={`/event/${eventId}`}
+          href={`/event/${eventSlug || eventId}`}
           className="w-full rounded-[12px] bg-arena-primary py-3.5 text-center font-sora text-[15px] font-semibold text-[#0B0F14] transition-opacity active:opacity-80"
         >
           {t("backToEvent")}

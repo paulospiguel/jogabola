@@ -15,14 +15,15 @@ interface Params {
 export default async function AthleteEventPage({ params }: Params) {
   const { id } = await params;
   const t = await getTranslations("athleteEventPublic");
-  const eventId = Number.parseInt(id, 10);
+  // id can be slug or numeric id
+  const eventIdOrSlug = id;
 
   try {
     const h = await headers();
 
     const [session, eventResult] = await Promise.all([
       auth.api.getSession({ headers: h }),
-      getEvent(eventId),
+      getEvent(eventIdOrSlug),
     ]);
 
     const userId = session?.user?.id ?? "";
@@ -46,7 +47,7 @@ export default async function AthleteEventPage({ params }: Params) {
     }
 
     const myStatus = userId
-      ? await getUserEventAttendanceStatus(eventId, userId)
+      ? await getUserEventAttendanceStatus(event.id, userId)
       : null;
 
     return (
