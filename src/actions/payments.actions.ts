@@ -451,7 +451,7 @@ export async function markPaymentManually(
       return { success: false as const, error: "Evento não encontrado" };
     }
 
-    const canAccess = await userCanAccessTeam(managerId, matchSession.teamId);
+    const canAccess = await canManageTeam(managerId, matchSession.teamId);
     if (!canAccess) {
       return { success: false as const, error: "Sem permissão" };
     }
@@ -689,7 +689,7 @@ async function updatePaymentStatusByOwner(paymentId: number, status: string) {
   if (!row)
     return { success: false as const, error: "Pagamento não encontrado" };
 
-  const canAccess = await userCanAccessTeam(userId, row.teamId);
+  const canAccess = await canManageTeam(userId, row.teamId);
   if (!canAccess) return { success: false as const, error: "Sem permissão" };
 
   await db

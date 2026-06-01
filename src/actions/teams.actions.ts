@@ -32,10 +32,11 @@ export interface SquadMember {
   status: "confirmed" | "reserve" | "pending" | "refused" | "new";
   isVerified: boolean | null;
   createdAt: Date | null;
-  goals: number;
-  assists: number;
-  rating: number;
-  games: number;
+  /** Stats reais ainda não disponíveis — null até Fase 2 */
+  goals: number | null;
+  assists: number | null;
+  rating: number | null;
+  games: number | null;
 }
 
 function escapeHtml(value: string) {
@@ -367,13 +368,14 @@ export const getTeamSquad = withAuthAction(
 
     const squad = [...registeredMembers, ...invitedPlayers];
 
+    // Stats reais (goals/assists/rating/games) serão calculados na Fase 2.
+    // Por agora retornamos null para não mostrar valores falsos na UI.
     const formattedSquad = squad.map(member => ({
       ...member,
-      // Mocked stats for now to match UI expectations
-      goals: 0,
-      assists: 0,
-      rating: 7.0,
-      games: 0,
+      goals: null,
+      assists: null,
+      rating: null,
+      games: null,
     }));
 
     return { success: true, data: formattedSquad as SquadMember[] };
@@ -413,10 +415,11 @@ export const getAthleteProfile = withAuthAction(
         data: {
           ...athlete,
           isVerified: true,
-          rating: 8.5,
-          goals: 12,
-          assists: 8,
-          games: 15,
+          // Stats reais serão calculados na Fase 2 — não mostrar valores falsos
+          rating: null,
+          goals: null,
+          assists: null,
+          games: null,
         } as SquadMember,
       };
     }
@@ -452,10 +455,10 @@ export const getAthleteProfile = withAuthAction(
       data: {
         ...guest,
         isVerified: false,
-        rating: 0,
-        goals: 0,
-        assists: 0,
-        games: 0,
+        rating: null,
+        goals: null,
+        assists: null,
+        games: null,
       } as SquadMember,
     };
   },
