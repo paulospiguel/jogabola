@@ -24,7 +24,7 @@ import { withAction, withAuthAction } from "@/lib/action-helpers";
 import { auth } from "@/lib/auth";
 import { sendPaymentProofRequest } from "@/lib/email";
 import { getPresignedUploadUrl, getR2PublicUrl } from "@/lib/s3";
-import { userCanAccessTeam } from "@/lib/team-access";
+import { canManageTeam, userCanAccessTeam } from "@/lib/team-access";
 import {
   createPaymentSchema,
   requestPresignedUrlSchema,
@@ -334,12 +334,12 @@ export const updatePaymentStatus = withAuthAction(
       return { success: false, error: { code: "PAYMENT_NOT_FOUND" } };
     }
 
-    const canAccessTeam = await userCanAccessTeam(
+    const canAccessTeam = await canManageTeam(
       currentUser.id,
       paymentRow.teamId,
     );
     if (!canAccessTeam) {
-      return { success: false, error: { code: "TEAM_NOT_FOUND" } };
+      return { success: false, error: { code: "FORBIDDEN" } };
     }
 
     await db
@@ -388,12 +388,12 @@ export const requestPaymentProof = withAuthAction(
       return { success: false, error: { code: "PAYMENT_NOT_FOUND" } };
     }
 
-    const canAccessTeam = await userCanAccessTeam(
+    const canAccessTeam = await canManageTeam(
       currentUser.id,
       paymentRow.teamId,
     );
     if (!canAccessTeam) {
-      return { success: false, error: { code: "TEAM_NOT_FOUND" } };
+      return { success: false, error: { code: "FORBIDDEN" } };
     }
 
     const emailResult = await sendPaymentProofRequest(paymentRow.playerEmail, {
@@ -664,29 +664,41 @@ export async function markPaymentAsCredited(paymentId: number) {
 
 async function updatePaymentStatusByOwner(paymentId: number, status: string) {
   const session = await auth.api.getSession({ headers: await headers() });
-  if (!session?.user?.id) return { success: false as const, error: "Não autenticado" };
-  
+  if (!session?.user?.id)
+    return { success: false as const, error: "Não autenticado" };
+
   const userId = session.user.id;
 
-  const [row] = await db.select({
-    teamId: matchSessions.teamId,
-    eventId: matchSessions.id,
-  })
-  .from(payments)
-  .innerJoin(matchReservations, eq(matchReservations.id, payments.matchReservationId))
-  .innerJoin(matchSessions, eq(matchSessions.id, matchReservations.matchSessionId))
-  .where(eq(payments.id, paymentId))
-  .limit(1);
+  const [row] = await db
+    .select({
+      teamId: matchSessions.teamId,
+      eventId: matchSessions.id,
+    })
+    .from(payments)
+    .innerJoin(
+      matchReservations,
+      eq(matchReservations.id, payments.matchReservationId),
+    )
+    .innerJoin(
+      matchSessions,
+      eq(matchSessions.id, matchReservations.matchSessionId),
+    )
+    .where(eq(payments.id, paymentId))
+    .limit(1);
 
-  if (!row) return { success: false as const, error: "Pagamento não encontrado" };
+  if (!row)
+    return { success: false as const, error: "Pagamento não encontrado" };
 
   const canAccess = await userCanAccessTeam(userId, row.teamId);
   if (!canAccess) return { success: false as const, error: "Sem permissão" };
 
-  await db.update(payments).set({ status, updatedAt: new Date(), markedByUserId: userId }).where(eq(payments.id, paymentId));
-  
+  await db
+    .update(payments)
+    .set({ status, updatedAt: new Date(), markedByUserId: userId })
+    .where(eq(payments.id, paymentId));
+
   revalidatePath(`/arena/events/${row.eventId}`);
   revalidatePath(`/arena/payments`);
-  
+
   return { success: true as const };
 }

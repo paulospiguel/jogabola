@@ -358,12 +358,7 @@
       "noPlayers": "No players called up yet."
     },
     "playersCount": "{count} players",
-    "steps": [
-      "Event Type",
-      "Details",
-      "Invite",
-      "Confirm"
-    ],
+    "steps": ["Event Type", "Details", "Invite", "Confirm"],
     "success": "Event created!",
     "successSubtitle": "Invitation sent successfully.",
     "types": {
@@ -1053,7 +1048,8 @@
       "manager": "Manager",
       "coach": "Coach",
       "player": "Player",
-      "guest": "Guest"
+      "guest": "Guest",
+      "co-captain": "Co-captain"
     },
     "actions": {
       "add": "Add",
@@ -1115,7 +1111,15 @@
     },
     "notValidated": "Unvalidated Player",
     "notValidatedDesc": "This player has not yet created their Jogabola account. The complete profile and statistics will be available after validation.",
-    "pendingValidation": "Pending Validation"
+    "pendingValidation": "Pending Validation",
+    "coCaptain": {
+      "promote": "Make co-captain",
+      "promoteDesc": "Grant management permissions (create events, validate payments).",
+      "promoteLabel": "Promote",
+      "remove": "Remove co-captain",
+      "removeDesc": "Revoke management permissions. Reverts to player.",
+      "removeLabel": "Remove"
+    }
   },
   "common": {
     "accept": "Accept",

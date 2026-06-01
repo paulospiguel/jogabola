@@ -13,12 +13,13 @@ import {
 import { withAction, withAuthAction } from "@/lib/action-helpers";
 import { sendEmail } from "@/lib/email";
 import { canCreateTeam, normalizePlanTier } from "@/lib/plan-limits";
-import { userCanAccessTeam } from "@/lib/team-access";
+import { userCanAccessTeam, userIsTeamOwner } from "@/lib/team-access";
 import {
   addPlayerToRosterSchema,
   addTeamMemberSchema,
   createTeamSchema,
   removePlayerFromRosterSchema,
+  setCoCaptainSchema,
 } from "@/schemas/teams.schema";
 
 export interface SquadMember {
@@ -543,5 +544,52 @@ export const sendRosterPlayerEmail = withAuthAction(
     }
 
     return { success: true, data: { sent: true } };
+  },
+);
+
+export const setCoCaptain = withAuthAction(
+  setCoCaptainSchema,
+  async (user, { teamId, playerId, makeCoCaptain }) => {
+    // Only the owner can promote/demote co-captains.
+    const isOwner = await userIsTeamOwner(user.id, teamId);
+    if (!isOwner) {
+      return { success: false, error: { code: "FORBIDDEN" } };
+    }
+
+    const team = await db.query.teams.findFirst({
+      columns: { ownerId: true },
+      where: eq(teams.id, teamId),
+    });
+    if (!team) {
+      return { success: false, error: { code: "TEAM_NOT_FOUND" } };
+    }
+
+    // Never modify the owner's own role.
+    if (team.ownerId === playerId) {
+      return { success: false, error: { code: "CANNOT_MODIFY_OWNER" } };
+    }
+
+    const member = await db.query.teamMembers.findFirst({
+      where: and(
+        eq(teamMembers.teamId, teamId),
+        eq(teamMembers.playerId, playerId),
+      ),
+    });
+    if (!member) {
+      return { success: false, error: { code: "PLAYER_NOT_IN_TEAM" } };
+    }
+
+    const [updated] = await db
+      .update(teamMembers)
+      .set({
+        role: makeCoCaptain ? "manager" : "player",
+        updatedAt: new Date(),
+      })
+      .where(
+        and(eq(teamMembers.teamId, teamId), eq(teamMembers.playerId, playerId)),
+      )
+      .returning();
+
+    return { success: true, data: updated };
   },
 );

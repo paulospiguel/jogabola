@@ -358,12 +358,7 @@
       "noPlayers": "Aucun athlète convoqué pour le moment."
     },
     "playersCount": "{count} joueurs",
-    "steps": [
-      "Type d'événement",
-      "Détails",
-      "Convoquer",
-      "Confirmer"
-    ],
+    "steps": ["Type d'événement", "Détails", "Convoquer", "Confirmer"],
     "success": "Événement créé !",
     "successSubtitle": "Convocation envoyée avec succès.",
     "types": {
@@ -1053,7 +1048,8 @@
       "manager": "Gestionnaire",
       "coach": "Entraîneur",
       "player": "Joueur",
-      "guest": "Invité"
+      "guest": "Invité",
+      "co-captain": "Co-capitaine"
     },
     "actions": {
       "add": "Ajouter",
@@ -1115,7 +1111,15 @@
     },
     "notValidated": "Joueur non validé",
     "notValidatedDesc": "Ce joueur n'a pas encore créé son compte Jogabola. Le profil complet et les statistiques seront disponibles après validation.",
-    "pendingValidation": "Validation en attente"
+    "pendingValidation": "Validation en attente",
+    "coCaptain": {
+      "promote": "Nommer co-capitaine",
+      "promoteDesc": "Accorder des permissions de gestion (créer des événements, valider les paiements).",
+      "promoteLabel": "Promouvoir",
+      "remove": "Retirer co-capitaine",
+      "removeDesc": "Révoquer les permissions de gestion. Redevient joueur.",
+      "removeLabel": "Retirer"
+    }
   },
   "common": {
     "accept": "Accepter",

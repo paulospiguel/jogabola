@@ -6,7 +6,7 @@ import { db } from "@/db/client";
 import { matchSessions, user as userTable } from "@/db/schema";
 import { eventNotices } from "@/db/schema/notices";
 import { getAuthUser } from "@/lib/action-helpers";
-import { userCanAccessTeam } from "@/lib/team-access";
+import { canManageTeam } from "@/lib/team-access";
 
 export async function getEventNotices(matchSessionId: number) {
   try {
@@ -50,7 +50,7 @@ export async function createEventNotice(input: {
     if (!event)
       return { success: false as const, error: "Evento não encontrado" };
 
-    const canManage = await userCanAccessTeam(user.id, event.teamId);
+    const canManage = await canManageTeam(user.id, event.teamId);
     if (!canManage) return { success: false as const, error: "Sem permissão" };
 
     const [notice] = await db
@@ -92,7 +92,7 @@ export async function deleteEventNotice(noticeId: number) {
         columns: { teamId: true },
       });
       const canManage = event
-        ? await userCanAccessTeam(user.id, event.teamId)
+        ? await canManageTeam(user.id, event.teamId)
         : false;
       if (!canManage)
         return { success: false as const, error: "Sem permissão" };

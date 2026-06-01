@@ -38,9 +38,16 @@ export const removePlayerFromRosterSchema = z.object({
   playerId: z.string().min(1, { message: "VALIDATION_PLAYER_REQUIRED" }),
 });
 
+export const setCoCaptainSchema = z.object({
+  teamId: z.number().int().positive({ message: "VALIDATION_TEAM_REQUIRED" }),
+  playerId: z.string().min(1, { message: "VALIDATION_PLAYER_REQUIRED" }),
+  makeCoCaptain: z.boolean(),
+});
+
 export type CreateTeamInput = z.infer<typeof createTeamSchema>;
 export type AddTeamMemberInput = z.infer<typeof addTeamMemberSchema>;
 export type AddPlayerToRosterInput = z.infer<typeof addPlayerToRosterSchema>;
 export type RemovePlayerFromRosterInput = z.infer<
   typeof removePlayerFromRosterSchema
 >;
+export type SetCoCaptainInput = z.infer<typeof setCoCaptainSchema>;

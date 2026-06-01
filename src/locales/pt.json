@@ -19,12 +19,12 @@
             "addParticipant": "Adicionar Participante",
             "createChat": "Criar Chat do Evento",
             "editEvent": "Editar Evento",
-            "manageParticipants": "Gerenciar Participantes"
+            "manageParticipants": "Gerir Participantes"
           },
           "participant": {
             "createChat": "Criar Chat do Evento",
             "invitePeople": "Convidar Pessoas",
-            "manageParticipants": "Gerenciar Participantes"
+            "manageParticipants": "Gerir Participantes"
           }
         },
         "back": "Voltar",
@@ -37,19 +37,19 @@
         "loading": "Carregando evento...",
         "messageModal": {
           "cancel": "Cancelar",
-          "description": "Envie uma mensagem para o organizador do evento",
+          "description": "Envia uma mensagem ao organizador do evento",
           "label": "Mensagem",
-          "placeholder": "Escreva sua mensagem aqui...",
+          "placeholder": "Escreve a tua mensagem aqui...",
           "send": "Enviar",
-          "sending": "Enviando...",
+          "sending": "A enviar...",
           "title": "Enviar mensagem ao organizador"
         },
         "notFound": "Evento não encontrado",
         "organizer": "Organizador",
         "participants": "participantes",
-        "participating": "Você está participando",
+        "participating": "Estás a participar",
         "sendMessage": "Enviar mensagem",
-        "share": "Compartilhar"
+        "share": "Partilhar"
       },
       "title": "Próximos Eventos",
       "viewAll": "Ver todos os eventos"
@@ -75,12 +75,12 @@
       "ago2hours": "Há 2 horas",
       "ago5min": "Há 5 minutos",
       "newMatch": "Nova partida disponível",
-      "teamInvite": "Convite de time",
+      "teamInvite": "Convite de equipa",
       "title": "Notificações",
-      "tournamentStarting": "Torneio começando"
+      "tournamentStarting": "Torneio a começar"
     },
     "stats": {
-      "activeTeams": "Times Ativos",
+      "activeTeams": "Equipas Ativas",
       "matchesPlayed": "Partidas Jogadas",
       "thisWeek": "Esta semana",
       "upcomingMatches": "Próximas Partidas",
@@ -358,12 +358,7 @@
       "noPlayers": "Sem atletas convocados ainda."
     },
     "playersCount": "{count} jogadores",
-    "steps": [
-      "Tipo de evento",
-      "Detalhes",
-      "Convocar",
-      "Confirmar"
-    ],
+    "steps": ["Tipo de evento", "Detalhes", "Convocar", "Confirmar"],
     "success": "Evento criado!",
     "successSubtitle": "Convocatória enviada com sucesso.",
     "types": {
@@ -1053,7 +1048,8 @@
       "manager": "Gestor",
       "coach": "Treinador",
       "player": "Jogador",
-      "guest": "Convidado"
+      "guest": "Convidado",
+      "co-captain": "Co-capitão"
     },
     "actions": {
       "add": "Adicionar",
@@ -1115,7 +1111,15 @@
     },
     "notValidated": "Jogador não validado",
     "notValidatedDesc": "Este jogador ainda não criou a sua conta Jogabola. O perfil completo e as estatísticas estarão disponíveis após a validação.",
-    "pendingValidation": "Validação em espera"
+    "pendingValidation": "Validação em espera",
+    "coCaptain": {
+      "promote": "Tornar co-capitão",
+      "promoteDesc": "Dar permissões de gestão (criar eventos, validar pagamentos).",
+      "promoteLabel": "Promover",
+      "remove": "Remover co-capitão",
+      "removeDesc": "Revogar permissões de gestão. Fica como jogador.",
+      "removeLabel": "Remover"
+    }
   },
   "common": {
     "accept": "Aceitar",
@@ -1125,7 +1129,7 @@
     "city": "Cidade",
     "close": "Fechar",
     "comingSoon": "Em breve",
-    "comingSoonDescription": "Esta área está em desenvolvimento. Em breve você terá acesso completo.",
+    "comingSoonDescription": "Esta área está em desenvolvimento. Em breve terás acesso completo.",
     "confirm": "Confirme",
     "confirmAction": "Confirmar",
     "confirmPassword": "Confirme a password",
@@ -1343,9 +1347,9 @@
       "legal": "Legal",
       "product": "Produto"
     },
-    "contact": "Contato",
+    "contact": "Contacto",
     "copyright": "Direitos autorais © {year} {company}. Todos os direitos reservados.",
-    "description": "Encontre sua equipa ideal ou crie a sua própria, gerencie seus atletas e participe de ligas lendárias!",
+    "description": "Encontra a tua equipa ideal ou cria a tua própria, gere os teus atletas e participa em ligas lendárias!",
     "faq": "FAQ",
     "links": {
       "about": "Sobre",
@@ -1406,12 +1410,12 @@
     "universo": "Universo"
   },
   "homePage": {
-    "appMockupAlt": "Mockup do aplicativo Jogabola",
+    "appMockupAlt": "Mockup da app Jogabola",
     "createMyTeams": "Criar equipa",
     "cta": {
-      "becomePartner": "Seja um Parceiro",
+      "becomePartner": "Torna-te Parceiro",
       "createAccount": "Criar Conta Grátis",
-      "subtitle": "Junte-se a milhares de times que já estão revolucionando sua gestão",
+      "subtitle": "Junta-te a milhares de equipas que já estão a revolucionar a sua gestão",
       "title": "Pronto para começar?"
     },
     "dashboard": {
@@ -1426,36 +1430,36 @@
         "averageRating": "Avaliação média",
         "championships": "Campeonatos"
       },
-      "subtitle": "Veja como é fácil gerenciar seu time e alcançar a vitória",
-      "title": "Demonstração do App"
+      "subtitle": "Vê como é fácil gerir a tua equipa e alcançar a vitória",
+      "title": "Demonstração da App"
     },
     "description": "Monte a tua equipa, desafia os teus amigos e conquista a glória nos relvados. O campo chama-te. A vitória espera por ti!",
-    "downloadAppDescription": "Tenha a experiência completa do Jogabola no seu celular. Disponível para iOS e Android.",
-    "downloadAppTitle": "Baixa o app e assuma o controlo de sua Jornada!",
+    "downloadAppDescription": "Tem a experiência completa do Jogabola no teu telemóvel. Disponível para iOS e Android.",
+    "downloadAppTitle": "Descarrega a app e assume o controlo da tua Jornada!",
     "downloadOnAppStore": "Baixar na App Store",
     "downloadOnGooglePlay": "Baixar no Google Play",
     "ecosystem_full_section": {
       "modules": {
         "engagement": {
-          "description": "Portal do torcedor, venda de ingressos online e programas de fidelidade para fortalecer o vínculo com sua comunidade.",
-          "title": "Engajamento de Fãs"
+          "description": "Portal do adepto, venda de bilhetes online e programas de fidelidade para fortalecer a ligação com a tua comunidade.",
+          "title": "Envolvimento de Adeptos"
         },
         "explore": "Explorar módulo",
         "finance": {
-          "description": "Controle total de mensalidades, patrocínios e despesas. Relatórios automáticos para uma saúde financeira impecável.",
+          "description": "Controlo total de mensalidades, patrocínios e despesas. Relatórios automáticos para uma saúde financeira impecável.",
           "title": "Gestão Financeira"
         },
         "health": {
-          "description": "Monitoramento de carga, histórico de lesões e acompanhamento fisiológico para maximizar a performance e reduzir riscos.",
+          "description": "Monitorização de carga, histórico de lesões e acompanhamento fisiológico para maximizar a performance e reduzir riscos.",
           "title": "Saúde do Atleta"
         },
         "tactical": {
-          "description": "Desenhe jogadas, organize escalações e compartilhe vídeos de análise técnica com sua comissão e atletas em tempo real.",
-          "title": "Planejamento Tático"
+          "description": "Desenha jogadas, organiza táticas e partilha vídeos de análise técnica com a tua comissão e atletas em tempo real.",
+          "title": "Planeamento Tático"
         }
       },
-      "subtitle": "Desenvolvemos as ferramentas necessárias para profissionalizar cada departamento da sua organização esportiva.",
-      "title": "O ecossistema completo para a gestão do seu clube"
+      "subtitle": "Desenvolvemos as ferramentas necessárias para profissionalizar cada departamento da tua organização desportiva.",
+      "title": "O ecossistema completo para a gestão do teu clube"
     },
     "ecosystem_section": {
       "kicker": "MVP · O ESSENCIAL",
@@ -1493,18 +1497,18 @@
       "items": {
         "accessControl": {
           "description": "Diferentes níveis de permissão",
-          "title": "Controle de Acesso"
+          "title": "Controlo de Acesso"
         },
         "centralizedSchedule": {
           "description": "Treinos e jogos organizados",
           "title": "Agenda Centralizada"
         },
         "championshipOrganization": {
-          "description": "Crie e gerencie torneios",
+          "description": "Cria e gere torneios",
           "title": "Organização de Campeonatos"
         },
         "communication": {
-          "description": "Chat integrado com o time",
+          "description": "Chat integrado com a equipa",
           "title": "Comunicação"
         },
         "performanceAnalysis": {
@@ -1645,12 +1649,12 @@
         "captain": {
           "name": "Maria Costa",
           "role": "Capitã",
-          "text": "Agilidade e organização em um só lugar!"
+          "text": "Agilidade e organização num só lugar!"
         },
         "coach": {
           "name": "João Silva",
           "role": "Treinador",
-          "text": "Melhor plataforma para gerenciar meu time!"
+          "text": "Melhor plataforma para gerir a minha equipa!"
         },
         "player": {
           "name": "Pedro Santos",
@@ -1660,8 +1664,8 @@
       },
       "title": "Jornadas de Sucesso"
     },
-    "title": "Pronto para montar sua equipa dos sonhos?",
-    "watchVideo": "Video de apresentação",
+    "title": "Pronto para montares a tua equipa dos sonhos?",
+    "watchVideo": "Vídeo de apresentação",
     "marquee": {
       "items": [
         "Sem WhatsApp",
@@ -1881,23 +1885,23 @@
     "timer": "Timer"
   },
   "meta": {
-    "description": "O melhor lugar para encontrar sua equipa e jogar futebol.",
+    "description": "O melhor lugar para encontrares a tua equipa e jogar futebol.",
     "title": "Joga Bola"
   },
   "notFound": {
     "callVARButton": "VAR (IR PARA A PÁGINA INICIAL)",
-    "description": "O esquema tático falhou. A jogada foi interrompida pelo bandeirinha porque o destino que você procura não foi encontrado no campo.",
+    "description": "O esquema tático falhou. A jogada foi interrompida pelo fiscal de linha porque o destino que procuras não foi encontrado no campo.",
     "footer": "JOGABOLA @ 2024 • TATICAMENTE PERDIDO",
     "labelRefresh": "REFRESH",
     "labelVAR": "VAR",
     "mapButton": "MAP (VER MAPA DE)",
-    "offside404": "404_IMPEDIMENTO",
+    "offside404": "404_FORA_DE_JOGO",
     "refreshButton": "REFRESH (REINICIAR PARTIDA)",
     "startRoute": "INÍCIO_ROTA",
     "status": {
-      "impediment": "STATUS: IMPEDIMENTO",
+      "impediment": "ESTADO: FORA DE JOGO",
       "positioning": "POSICIONAMENTO: ERRADO",
-      "var": "VAR: CHECANDO..."
+      "var": "VAR: A VERIFICAR..."
     },
     "subtitle": "Formação Incorreta: Página Desalinhada",
     "title": "404 - FORA DE JOGO!",
@@ -1990,12 +1994,12 @@
       "amount": "Valor",
       "when": "Quando pagar",
       "expiration": "Se prazo expirar",
-      "activeMethodsHint": "Métodos ativos (configurados nas definições do time)"
+      "activeMethodsHint": "Métodos ativos (configurados nas definições da equipa)"
     }
   },
   "organizerPage": {
     "comingSoon": {
-      "description": "Esta área está em desenvolvimento. Em breve você terá acesso completo ao painel de organização de eventos.",
+      "description": "Esta área está em desenvolvimento. Em breve terás acesso completo ao painel de organização de eventos.",
       "title": "Em Desenvolvimento"
     },
     "eyebrow": "Organizer",
@@ -2296,22 +2300,22 @@
       "loop": "Loop",
       "matchFormat": "Formato da Partida",
       "modeDescriptions": {
-        "countDown": "Cronômetro conta regressivamente e toca um som.",
-        "countUp": "Cronômetro conta de 00:00.",
-        "loop": "Cronômetro regride, toca um som e reinicia. Usuário deve iniciar a próxima rodada manualmente."
+        "countDown": "Cronómetro conta regressivamente e toca um som.",
+        "countUp": "Cronómetro conta de 00:00.",
+        "loop": "Cronómetro regride, toca um som e reinicia. O utilizador deve iniciar a próxima parte manualmente."
       },
       "partDurations": "Duração das Partes (Minutos)",
       "progressive": "Progressivo",
       "regressive": "Regressivo",
-      "saveChanges": "Salvar Alterações",
-      "teamA": "Time A (Casa)",
-      "teamB": "Time B (Fora)",
+      "saveChanges": "Guardar Alterações",
+      "teamA": "Equipa A (Casa)",
+      "teamB": "Equipa B (Fora)",
       "teamColorPicker": "Escolher cor da equipa {team}",
-      "teamCustomization": "Personalização dos Times",
-      "teamName": "Nome do Time",
+      "teamCustomization": "Personalização das Equipas",
+      "teamName": "Nome da Equipa",
       "testSound": "Testar Som",
       "timerEndSound": "Som de Fim",
-      "timerMode": "Modo do Cronômetro",
+      "timerMode": "Modo do Cronómetro",
       "title": "Configurações da Partida"
     }
   },

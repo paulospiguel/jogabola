@@ -1,22 +1,26 @@
 "use server";
 
 import { format } from "date-fns";
-import { and, desc, eq, gte, lt, inArray } from "drizzle-orm";
+import { and, desc, eq, gte, inArray, lt } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
+import { PAYMENT_STATUS } from "@/constants/payments";
 import { db } from "@/db/client";
-import { queryEventById, queryEventByIdOrSlug, queryEvents } from "@/db/queries/events";
+import { queryEventByIdOrSlug, queryEvents } from "@/db/queries/events";
 import {
   attendance,
   matchReservations,
   matchSessions,
+  notifications,
+  payments,
   teams,
   user,
-  payments,
-  notifications,
 } from "@/db/schema";
-import { PAYMENT_STATUS } from "@/constants/payments";
 import { getAuthUser, withAction } from "@/lib/action-helpers";
-import { getAccessibleTeamIds, userCanAccessTeam } from "@/lib/team-access";
+import {
+  canManageTeam,
+  getAccessibleTeamIds,
+  userCanAccessTeam,
+} from "@/lib/team-access";
 import { slugify } from "@/lib/utils";
 import {
   createMatchReservationSchema,
@@ -84,19 +88,11 @@ export async function createEvent(input: {
     return { success: false as const, error: { code: "UNAUTHORIZED" } };
   }
 
-  const manager = await db.query.user.findFirst({
-    where: eq(user.id, authUser.id),
-  });
-
-  if (manager?.role !== "captain") {
-    return { success: false as const, error: { code: "MANAGER_REQUIRED" } };
-  }
-
   let teamId = input.teamId ?? authUser.teamId ?? null;
   if (teamId) {
-    const canAccessTeam = await userCanAccessTeam(authUser.id, teamId);
+    const canAccessTeam = await canManageTeam(authUser.id, teamId);
     if (!canAccessTeam) {
-      return { success: false as const, error: { code: "TEAM_NOT_FOUND" } };
+      return { success: false as const, error: { code: "FORBIDDEN" } };
     }
   }
 
@@ -240,12 +236,9 @@ export async function updateEvent(
     return { success: false as const, error: { code: "EVENT_NOT_FOUND" } };
   }
 
-  const canAccessTeam = await userCanAccessTeam(
-    authUser.id,
-    existingEvent.teamId,
-  );
+  const canAccessTeam = await canManageTeam(authUser.id, existingEvent.teamId);
   if (!canAccessTeam) {
-    return { success: false as const, error: { code: "TEAM_NOT_FOUND" } };
+    return { success: false as const, error: { code: "FORBIDDEN" } };
   }
 
   const [event] = await db
@@ -505,7 +498,10 @@ export async function checkEventDeletable(eventId: number) {
   const eventPayments = await db
     .select({ status: payments.status, amountCents: payments.amountCents })
     .from(payments)
-    .innerJoin(matchReservations, eq(payments.matchReservationId, matchReservations.id))
+    .innerJoin(
+      matchReservations,
+      eq(payments.matchReservationId, matchReservations.id),
+    )
     .where(eq(matchReservations.matchSessionId, eventId));
 
   // If there's any payment that isn't failed/rejected and has an amount > 0, it has payments.
@@ -514,11 +510,11 @@ export async function checkEventDeletable(eventId: number) {
     PAYMENT_STATUS.PAID_UNVERIFIED,
     PAYMENT_STATUS.APPROVED,
     PAYMENT_STATUS.REVIEW_REQUIRED,
-    PAYMENT_STATUS.PENDING // Even pending means someone initiated payment
+    PAYMENT_STATUS.PENDING, // Even pending means someone initiated payment
   ];
 
   const hasPayments = eventPayments.some(
-    p => p.amountCents > 0 && paidStatuses.includes(p.status as any)
+    p => p.amountCents > 0 && paidStatuses.includes(p.status as any),
   );
 
   return { success: true as const, data: { hasPayments } };
@@ -538,12 +534,9 @@ export async function deleteEvent(eventId: number) {
     return { success: false as const, error: { code: "EVENT_NOT_FOUND" } };
   }
 
-  const canAccessTeam = await userCanAccessTeam(
-    authUser.id,
-    existingEvent.teamId,
-  );
+  const canAccessTeam = await canManageTeam(authUser.id, existingEvent.teamId);
   if (!canAccessTeam) {
-    return { success: false as const, error: { code: "TEAM_NOT_FOUND" } };
+    return { success: false as const, error: { code: "FORBIDDEN" } };
   }
 
   const deletableCheck = await checkEventDeletable(eventId);
@@ -558,8 +551,8 @@ export async function deleteEvent(eventId: number) {
     .where(
       and(
         eq(matchReservations.matchSessionId, eventId),
-        inArray(matchReservations.status, ["reserved_unpaid", "confirmed"])
-      )
+        inArray(matchReservations.status, ["reserved_unpaid", "confirmed"]),
+      ),
     );
 
   // Notify players
@@ -569,9 +562,9 @@ export async function deleteEvent(eventId: number) {
       type: "event_cancelled",
       title: "Evento Cancelado/Excluído",
       message: `O evento "${existingEvent.title}" foi excluído pelo organizador.`,
-      metadata: { eventId, teamId: existingEvent.teamId }
+      metadata: { eventId, teamId: existingEvent.teamId },
     }));
-    
+
     if (notificationsData.length > 0) {
       await db.insert(notifications).values(notificationsData);
     }
@@ -583,4 +576,3 @@ export async function deleteEvent(eventId: number) {
   revalidatePath("/arena/events");
   return { success: true as const };
 }
-
