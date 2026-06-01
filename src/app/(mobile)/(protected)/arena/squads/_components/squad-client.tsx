@@ -116,20 +116,6 @@ export function SquadClient({ userId }: { userId: string }) {
             </h1>
 
             <div className="flex items-center gap-2">
-              {/* <Link
-                        href="/arena/calendar"
-                        className="press size-11 bg-arena-bg-sec border border-arena-border hover:bg-arena-surface-el flex items-center justify-center rounded-xl text-arena-text-sec transition-all"
-                        aria-label={t("actions.viewCalendar")}
-                      >
-                        <Calendar size={18} strokeWidth={2} />
-                      </Link> */}
-              <Button
-                //onClick={() => setSheet(true)}
-                className="press bg-arena-primary text-[#0B0F14] hover:bg-arena-primary/95 font-black text-xs h-11 px-4 rounded-xl flex items-center gap-1.5 shadow-[0_0_24px_rgba(124,255,79,0.18)] transition-all"
-              >
-                <Plus size={13} strokeWidth={3} />
-                <span>{t("actions.create")}</span>
-              </Button>
             </div>
           </header>
 
