@@ -34,13 +34,13 @@ export function BottomSheet({
         if (e.key === "Escape") onClose();
       }}
       role="dialog"
-      className="fixed inset-0 z-[9999] flex flex-col justify-end bg-[#04070A]/75 backdrop-blur-sm animate-[fadeIn_.15s_ease]"
+      className="fixed inset-0 z-[9999] flex flex-col justify-end bg-[#04070A]/75 backdrop-blur-sm animate-[fadeIn_.15s_ease] sm:justify-center sm:items-center sm:p-6"
       onClick={e => {
         if (e.target === e.currentTarget) onClose();
       }}
       tabIndex={-1}
     >
-      <div className="flex max-h-[88%] flex-col rounded-t-[20px] bg-arena-bg-sec shadow-[0_-8px_40px_rgba(0,0,0,.5)] animate-[slideUp_.22s_cubic-bezier(.16,1,.3,1)_forwards]">
+      <div className="mx-auto flex max-h-[88%] w-full max-w-[480px] flex-col rounded-t-[20px] bg-arena-bg-sec shadow-[0_-8px_40px_rgba(0,0,0,.5)] animate-[slideUp_.22s_cubic-bezier(.16,1,.3,1)_forwards] sm:mb-6 sm:rounded-[20px]">
         <div className="flex justify-center pt-2.5">
           <div className="h-1 w-9 rounded-full bg-arena-border" />
         </div>
