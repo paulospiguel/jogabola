@@ -3,8 +3,16 @@
 import { usePathname, useSearchParams } from "next/navigation";
 import posthog from "posthog-js";
 import { PostHogProvider as PHProvider } from "posthog-js/react";
-import { type ReactNode, useEffect } from "react";
+import { type ReactNode, useEffect, Suspense } from "react";
 import { useSession } from "@/lib/auth-client";
+
+if (typeof window !== "undefined") {
+  posthog.init(process.env.NEXT_PUBLIC_POSTHOG_KEY!, {
+    api_host: process.env.NEXT_PUBLIC_POSTHOG_HOST || "https://eu.i.posthog.com",
+    person_profiles: "identified_only",
+    capture_pageview: false, // Handle pageviews manually
+  });
+}
 
 export function PostHogProvider({ children }: { children: ReactNode }) {
   const { data: session } = useSession();
@@ -20,7 +28,9 @@ export function PostHogProvider({ children }: { children: ReactNode }) {
 
   return (
     <PHProvider client={posthog}>
-      <PostHogPageView />
+      <Suspense fallback={null}>
+        <PostHogPageView />
+      </Suspense>
       {children}
     </PHProvider>
   );
