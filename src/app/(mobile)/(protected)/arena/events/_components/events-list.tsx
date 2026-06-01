@@ -257,7 +257,7 @@ export function EventsList({ upcoming, past }: EventsListProps) {
           </header>
 
           {!hasEvents ? (
-            <div className="jb-card mx-auto grid max-w-md place-items-center px-6 py-14 text-center">
+            <div className="jb-card mx-auto grid  place-items-center px-6 py-14 text-center">
               <div className="mb-4 grid size-14 place-items-center rounded-[18px] border border-arena-border bg-arena-surface">
                 <Calendar
                   size={24}

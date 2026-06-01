@@ -6,6 +6,7 @@ import { useTranslations } from "next-intl";
 import { AddPlayerSheet } from "@/components/arena/add-player-sheet";
 import { Cta } from "@/components/arena/cta";
 import Loading from "@/components/loading";
+import { Button } from "@/components/ui/button";
 import { useSquadClientState } from "../_hooks/use-squad-client-state";
 import { SquadEmailSheet } from "./squad-email-sheet";
 import { SquadFilterPills } from "./squad-filter-pills";
@@ -103,67 +104,93 @@ export function SquadClient({ userId }: { userId: string }) {
       )}
 
       <motion.div
-        className="flex h-full flex-col bg-arena-bg"
+        className="mx-auto h-full max-w-screen-lg "
         initial={{ opacity: 0, y: 8 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.22, ease: [0.4, 0, 0.2, 1] }}
       >
-        <SquadSearchBar
-          onSearchChange={setSearch}
-          placeholder={t("search.placeholder")}
-          search={search}
-        />
+        <div className="jb-page-inner flex flex-col">
+          <header className="flex w-full items-center justify-between py-4 mb-5 border-b border-arena-border/20 shrink-0">
+            <h1 className="text-xl font-extrabold text-arena-text tracking-tight">
+              {t("title")}
+            </h1>
 
-        <SquadFilterPills
-          activeFilter={filter}
-          filters={filters}
-          onFilterChange={setFilter}
-        />
-
-        <SquadGroupsStrip
-          groups={groups}
-          onCreateGroup={openCreateGroup}
-          onEditGroup={openEditGroup}
-          t={t}
-        />
-
-        {/* List */}
-        <div className="flex-1 overflow-y-auto px-4 pb-24">
-          {filteredPlayers.length === 0 ? (
-            <div className="flex flex-col items-center justify-center gap-3 py-12 text-center">
-              <div className="flex size-14 items-center justify-center rounded-[16px] border border-arena-border bg-arena-surface">
-                <Users2
-                  size={24}
-                  className="text-arena-text-muted"
-                  strokeWidth={1.5}
-                />
-              </div>
-              <div>
-                <p className="text-[15px] font-bold text-arena-text">
-                  {t("search.noResults")}
-                </p>
-              </div>
-              <Cta variant="primary" size="sm" onClick={() => setShowAdd(true)}>
-                {t("actions.addPlayer")}
-              </Cta>
+            <div className="flex items-center gap-2">
+              {/* <Link
+                        href="/arena/calendar"
+                        className="press size-11 bg-arena-bg-sec border border-arena-border hover:bg-arena-surface-el flex items-center justify-center rounded-xl text-arena-text-sec transition-all"
+                        aria-label={t("actions.viewCalendar")}
+                      >
+                        <Calendar size={18} strokeWidth={2} />
+                      </Link> */}
+              <Button
+                //onClick={() => setSheet(true)}
+                className="press bg-arena-primary text-[#0B0F14] hover:bg-arena-primary/95 font-black text-xs h-11 px-4 rounded-xl flex items-center gap-1.5 shadow-[0_0_24px_rgba(124,255,79,0.18)] transition-all"
+              >
+                <Plus size={13} strokeWidth={3} />
+                <span>{t("actions.create")}</span>
+              </Button>
             </div>
-          ) : (
-            <>
-              <p className="mb-2 text-[10px] font-black uppercase tracking-[0.08em] text-arena-text-muted">
-                {t("stats.playerCount", { count: filteredPlayers.length })}
-              </p>
-              <div className="space-y-2">
-                {filteredPlayers.map((p, i) => (
-                  <SquadPlayerRow
-                    key={p.id}
-                    player={p}
-                    index={i}
-                    onEmail={openEmail}
+          </header>
+
+          {/* Search Bar */}
+          <SquadSearchBar
+            onSearchChange={setSearch}
+            placeholder={t("search.placeholder")}
+            search={search}
+          />
+
+          <SquadFilterPills
+            activeFilter={filter}
+            filters={filters}
+            onFilterChange={setFilter}
+          />
+
+          <SquadGroupsStrip
+            groups={groups}
+            onCreateGroup={openCreateGroup}
+            onEditGroup={openEditGroup}
+            t={t}
+          />
+
+          {/* List */}
+          <div className="flex-1 overflow-y-auto px-4 pb-24">
+            {filteredPlayers.length === 0 ? (
+              <div className="flex flex-col items-center justify-center gap-3 py-12 text-center">
+                <div className="flex size-14 items-center justify-center rounded-[16px] border border-arena-border bg-arena-surface">
+                  <Users2
+                    size={24}
+                    className="text-arena-text-muted"
+                    strokeWidth={1.5}
                   />
-                ))}
+                </div>
+                <div>
+                  <p className="text-[15px] font-bold text-arena-text">
+                    {t("search.noResults")}
+                  </p>
+                </div>
+                <Cta variant="primary" size="sm" onClick={() => setShowAdd(true)}>
+                  {t("actions.addPlayer")}
+                </Cta>
               </div>
-            </>
-          )}
+            ) : (
+              <>
+                <p className="mb-2 text-[10px] font-black uppercase tracking-[0.08em] text-arena-text-muted">
+                  {t("stats.playerCount", { count: filteredPlayers.length })}
+                </p>
+                <div className="space-y-2">
+                  {filteredPlayers.map((p, i) => (
+                    <SquadPlayerRow
+                      key={p.id}
+                      player={p}
+                      index={i}
+                      onEmail={openEmail}
+                    />
+                  ))}
+                </div>
+              </>
+            )}
+          </div>
         </div>
       </motion.div>
 
