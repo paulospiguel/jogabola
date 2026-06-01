@@ -20,6 +20,7 @@ import {
   normalizeRosterEmail,
 } from "@/lib/event-roster-access";
 import { hasPendingFines } from "@/lib/fines";
+import { trackServerEvent } from "@/lib/posthog-server";
 
 function generateOTP() {
   return Math.floor(100000 + Math.random() * 900000).toString();
@@ -283,6 +284,10 @@ export async function verifyGuestOTP(
       .returning();
 
     await db.delete(guestEventOtp).where(eq(guestEventOtp.id, record.id));
+
+    trackServerEvent(targetUser.id, "guest_rsvp_completed", {
+      event_id: eventId,
+    });
 
     revalidatePath(`/event/${eventId}`);
     revalidatePath(`/arena/events/${eventId}`);

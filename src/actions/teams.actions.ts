@@ -13,6 +13,7 @@ import {
 import { withAction, withAuthAction } from "@/lib/action-helpers";
 import { sendEmail } from "@/lib/email";
 import { canCreateTeam, normalizePlanTier } from "@/lib/plan-limits";
+import { trackServerEvent } from "@/lib/posthog-server";
 import { userCanAccessTeam, userIsTeamOwner } from "@/lib/team-access";
 import {
   addPlayerToRosterSchema,
@@ -100,6 +101,11 @@ export const createTeam = withAuthAction(
       .set({ teamId: team.id, updatedAt: new Date() })
       .where(eq(session.userId, user.id));
 
+    trackServerEvent(user.id, "team_created", {
+      team_id: team.id,
+      plan_tier: planTier,
+    });
+
     return { success: true, data: team };
   },
 );
@@ -168,6 +174,12 @@ export const addPlayerToRoster = withAuthAction(
         })
         .returning();
 
+      trackServerEvent(user.id, "player_invited", {
+        team_id: teamId,
+        is_existing_user: true,
+        player_position: data.position ?? null,
+      });
+
       return {
         success: true,
         data: { id: existingUser.id, name: existingUser.name },
@@ -210,6 +222,12 @@ export const addPlayerToRoster = withAuthAction(
         teamId: teamId,
       })
       .returning({ id: players.id, name: players.displayName });
+
+    trackServerEvent(user.id, "player_invited", {
+      team_id: teamId,
+      is_existing_user: false,
+      player_position: data.position ?? null,
+    });
 
     return { success: true, data: created };
   },
@@ -261,6 +279,8 @@ export const switchActiveTeam = withAuthAction(
       .update(session)
       .set({ teamId, updatedAt: new Date() })
       .where(eq(session.userId, user.id));
+
+    trackServerEvent(user.id, "team_switched", { team_id: teamId });
 
     return { success: true, data: { teamId } };
   },

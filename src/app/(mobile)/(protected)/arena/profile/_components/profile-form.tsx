@@ -1,6 +1,6 @@
 "use client";
 
-import { CheckCircle2, Fingerprint, Loader2, Save } from "lucide-react";
+import { AlertCircle, CheckCircle2, Fingerprint, Loader2, Save } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useState, useTransition } from "react";
 import { updateUserProfile } from "@/actions/profile.actions";
@@ -32,14 +32,18 @@ export function ProfileForm({ profile }: ProfileFormProps) {
   const [passkeyStatus, setPasskeyStatus] = useState<
     "idle" | "adding" | "added" | "error"
   >("idle");
+  const [passkeyErrorMsg, setPasskeyErrorMsg] = useState<string | null>(null);
 
   async function handleAddPasskey() {
     setPasskeyStatus("adding");
+    setPasskeyErrorMsg(null);
     try {
       const result = await passkey.addPasskey();
       if (result?.error) throw new Error(result.error.message);
       setPasskeyStatus("added");
-    } catch (_err) {
+    } catch (err: any) {
+      console.error("Passkey error:", err);
+      setPasskeyErrorMsg(err?.message || err?.toString() || "Erro desconhecido");
       setPasskeyStatus("error");
     }
   }
@@ -127,20 +131,21 @@ export function ProfileForm({ profile }: ProfileFormProps) {
           </div>
 
           {status === "saved" && (
-            <div className="flex items-center gap-2 rounded-lg border border-green-500/20 bg-green-500/10 px-3 py-2 text-sm text-green-300">
+            <div className="flex items-center gap-2 rounded-lg border border-arena-success/40 bg-arena-success/20 px-3 py-2 text-sm text-arena-success">
               <CheckCircle2 size={16} />
               {t("feedback.updatedDescription")}
             </div>
           )}
 
           {status === "error" && (
-            <div className="rounded-lg border border-red-500/20 bg-red-500/10 px-3 py-2 text-sm text-red-300">
+            <div className="flex items-center gap-2 rounded-lg border border-arena-danger/40 bg-arena-danger/20 px-3 py-2 text-sm text-arena-danger">
+              <AlertCircle className="shrink-0" size={16} />
               {errorCode ? t(`errors.${errorCode}`) : t("feedback.saveError")}
             </div>
           )}
 
           <Button
-            className="w-full bg-arena-primary font-bold text-[#0B0F14] hover:bg-arena-primary/90"
+            className="press w-full rounded-xl bg-arena-primary font-bold text-[#0B0F14] hover:bg-arena-primary/90"
             disabled={isPending}
             onClick={submit}
             type="button"
@@ -174,20 +179,28 @@ export function ProfileForm({ profile }: ProfileFormProps) {
 
         <div className="space-y-5 p-4">
           {passkeyStatus === "added" && (
-            <div className="flex items-center gap-2 rounded-lg border border-green-500/20 bg-green-500/10 px-3 py-2 text-sm text-green-300">
+            <div className="flex items-center gap-2 rounded-lg border border-arena-success/40 bg-arena-success/20 px-3 py-2 text-sm text-arena-success">
               <CheckCircle2 size={16} />
               {t("actions.passkeyAdded")}
             </div>
           )}
 
           {passkeyStatus === "error" && (
-            <div className="rounded-lg border border-red-500/20 bg-red-500/10 px-3 py-2 text-sm text-red-300">
-              {t("actions.passkeyError")}
+            <div className="flex flex-col gap-1 rounded-lg border border-arena-danger/40 bg-arena-danger/20 px-3 py-2 text-sm text-arena-danger">
+              <div className="flex items-center gap-2">
+                <AlertCircle className="shrink-0" size={16} />
+                <span>{t("actions.passkeyError")}</span>
+              </div>
+              {passkeyErrorMsg && (
+                <div className="ml-6 text-xs text-arena-danger/80 break-words font-mono">
+                  {passkeyErrorMsg}
+                </div>
+              )}
             </div>
           )}
 
           <Button
-            className="w-full bg-arena-bg-sec font-bold text-arena-text hover:bg-arena-surface"
+            className="press w-full rounded-xl border-arena-border bg-arena-surface font-bold text-arena-text-sec hover:bg-arena-surface-el hover:text-arena-text"
             disabled={passkeyStatus === "adding"}
             onClick={handleAddPasskey}
             type="button"

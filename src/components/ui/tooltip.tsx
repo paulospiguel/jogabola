@@ -48,7 +48,7 @@ function TooltipContent({
         {...props}
       >
         {children}
-        <TooltipPrimitive.Arrow className="z-50 size-2.5 translate-y-[calc(-50%_-_2px)] rotate-45 rounded-[2px] bg-arena-bg-sec fill-arena-bg-sec border-l border-b border-arena-border/30" />
+        <TooltipPrimitive.Arrow className="z-50 fill-arena-bg-sec" />
       </TooltipPrimitive.Content>
     </TooltipPrimitive.Portal>
   );

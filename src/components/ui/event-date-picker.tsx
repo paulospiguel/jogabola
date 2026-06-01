@@ -36,7 +36,15 @@ function DrumPicker({
 }) {
   const containerRef = React.useRef<HTMLDivElement>(null);
   const isProgrammaticScroll = React.useRef(false);
+  const isMounted = React.useRef(false);
   const scrollTimeout = React.useRef<ReturnType<typeof setTimeout> | null>(null);
+  const debounceTimeout = React.useRef<ReturnType<typeof setTimeout> | null>(null);
+  const [localValue, setLocalValue] = React.useState(value);
+
+  // Sincroniza localValue quando a prop value mudar externamente
+  React.useEffect(() => {
+    setLocalValue(value);
+  }, [value]);
 
   React.useEffect(() => {
     const el = containerRef.current;
@@ -44,15 +52,22 @@ function DrumPicker({
     const selectedIdx = items.indexOf(value);
     const targetTop = selectedIdx * ITEM_H;
 
-    // Only programmatic scroll if we are not already at the target
-    if (Math.abs(el.scrollTop - targetTop) > 2) {
+    // No primeiro render, posiciona instantaneamente sem animação
+    if (!isMounted.current) {
+      el.scrollTop = targetTop;
+      isMounted.current = true;
+      return;
+    }
+
+    // Apenas faz scroll suave se a diferença for relevante
+    if (Math.abs(el.scrollTop - targetTop) > 4) {
       isProgrammaticScroll.current = true;
       el.scrollTo({ top: targetTop, behavior: "smooth" });
 
       if (scrollTimeout.current) clearTimeout(scrollTimeout.current);
       scrollTimeout.current = setTimeout(() => {
         isProgrammaticScroll.current = false;
-      }, 350); // wait for smooth scroll to finish
+      }, 350);
     }
   }, [value, items]);
 
@@ -64,11 +79,29 @@ function DrumPicker({
 
     if (idx >= 0 && idx < items.length) {
       const newValue = items[idx];
-      if (newValue !== value) {
-        onChange(newValue);
+      
+      // Atualiza o destaque visual de imediato para uma resposta tátil excelente
+      if (newValue !== localValue) {
+        setLocalValue(newValue);
       }
+
+      // Debounce do onChange externo para não bloquear a inércia e o scroll livre
+      if (debounceTimeout.current) clearTimeout(debounceTimeout.current);
+      debounceTimeout.current = setTimeout(() => {
+        if (newValue !== value) {
+          onChange(newValue);
+        }
+      }, 120);
     }
   };
+
+  // Limpeza ao desmontar
+  React.useEffect(() => {
+    return () => {
+      if (scrollTimeout.current) clearTimeout(scrollTimeout.current);
+      if (debounceTimeout.current) clearTimeout(debounceTimeout.current);
+    };
+  }, []);
 
   return (
     <div className="flex flex-col items-center gap-1 flex-1">
@@ -103,7 +136,7 @@ function DrumPicker({
               style={{ height: ITEM_H }}
               className={cn(
                 "snap-center w-full flex items-center justify-center text-[15px] font-bold tabular-nums transition-all",
-                item === value
+                item === localValue
                   ? "text-arena-primary scale-110"
                   : "text-arena-text-muted hover:text-arena-text",
               )}
@@ -212,7 +245,7 @@ export function EventDatePicker({
           <DialogPrimitive.Content
             aria-describedby={undefined}
             className={cn(
-              "fixed left-1/2 top-1/2 z-[9999] w-[340px] -translate-x-1/2 -translate-y-1/2",
+              "fixed left-1/2 top-1/2 z-[9999] w-[340px] md:w-[380px] -translate-x-1/2 -translate-y-1/2",
               "overflow-hidden rounded-2xl border border-arena-border bg-arena-bg-sec shadow-[0_24px_64px_rgba(0,0,0,.9)]",
               "data-[state=open]:animate-in data-[state=closed]:animate-out",
               "data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0",

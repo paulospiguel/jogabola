@@ -2,6 +2,7 @@
 
 import { z } from "zod";
 import { addToWaitlist } from "@/lib/notion";
+import { trackServerEvent } from "@/lib/posthog-server";
 
 const schema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters long."),
@@ -18,6 +19,7 @@ export async function joinWaitlist(input: unknown) {
 
   try {
     await addToWaitlist(name, email);
+    trackServerEvent(email, "waitlist_joined", { name });
     return { success: true };
   } catch (err) {
     console.error("[waitlist] error:", err);

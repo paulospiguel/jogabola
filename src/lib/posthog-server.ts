@@ -19,8 +19,8 @@ export function getPostHogServer() {
 
   posthogClient = new PostHog(apiKey, {
     host: host,
-    // Optional: add personal api key if you need to fetch feature flags or other data from PostHog API on the server
-    // personalApiKey: process.env.POSTHOG_PERSONAL_API_KEY
+    flushAt: 1,
+    flushInterval: 0,
   });
 
   return posthogClient;

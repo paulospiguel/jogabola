@@ -4,6 +4,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { Check, Users } from "lucide-react";
 import Image from "next/image";
 import { useTranslations } from "next-intl";
+import posthog from "posthog-js";
 import { useState } from "react";
 import {
   completeOnboarding,
@@ -187,6 +188,7 @@ export function OnboardingClient({ userName }: OnboardingClientProps) {
         setError(t("errors.save"));
         return;
       }
+      posthog.capture("onboarding_role_selected", { role: selected });
       setStep("survey");
     } catch {
       setError(t("errors.unexpected"));

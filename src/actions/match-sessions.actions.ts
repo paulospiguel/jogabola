@@ -16,6 +16,7 @@ import {
   user,
 } from "@/db/schema";
 import { getAuthUser, withAction } from "@/lib/action-helpers";
+import { trackServerEvent } from "@/lib/posthog-server";
 import {
   canManageTeam,
   getAccessibleTeamIds,
@@ -187,6 +188,14 @@ export async function createEvent(input: {
       });
     }
   }
+
+  trackServerEvent(authUser.id, "event_created", {
+    event_id: event.id,
+    event_type: input.type,
+    payment_required: input.paymentRequired ?? false,
+    roster_only: input.rosterOnly ?? false,
+    price_cents: input.priceCents ?? 0,
+  });
 
   revalidatePath("/arena/events");
   revalidatePath(`/event/${event.id}`);

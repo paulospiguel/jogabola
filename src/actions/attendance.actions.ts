@@ -16,6 +16,7 @@ import { withAction } from "@/lib/action-helpers";
 import { auth } from "@/lib/auth";
 import { userBelongsToTeamRoster } from "@/lib/event-roster-access";
 import { hasPendingFines } from "@/lib/fines";
+import { trackServerEvent } from "@/lib/posthog-server";
 import { upsertAttendanceSchema } from "@/schemas/attendance.schema";
 
 function isCancelledEventStatus(status: string | null | undefined) {
@@ -76,15 +77,23 @@ export async function getEventAttendanceWithUsers(eventId: number) {
   const reserves = [];
   const pending = [];
 
-  const uniqueRecords = new Map<number, typeof records[0]>();
+  const uniqueRecords = new Map<number, (typeof records)[0]>();
   for (const r of records) {
     const existing = uniqueRecords.get(r.id);
     if (!existing) {
       uniqueRecords.set(r.id, r);
     } else {
-      const priority = { paid: 3, in_review: 2, review: 2, pending: 1, rejected: 0, refunded: -1 };
-      const pNew = priority[(r.paymentStatus as keyof typeof priority)] ?? -2;
-      const pOld = priority[(existing.paymentStatus as keyof typeof priority)] ?? -2;
+      const priority = {
+        paid: 3,
+        in_review: 2,
+        review: 2,
+        pending: 1,
+        rejected: 0,
+        refunded: -1,
+      };
+      const pNew = priority[r.paymentStatus as keyof typeof priority] ?? -2;
+      const pOld =
+        priority[existing.paymentStatus as keyof typeof priority] ?? -2;
       if (pNew > pOld) {
         uniqueRecords.set(r.id, r);
       }
@@ -167,15 +176,23 @@ export async function getEventRoster(eventId: number) {
   const main: EventRosterEntry[] = [];
   const reserves: EventRosterEntry[] = [];
 
-  const uniqueRecords = new Map<number, typeof records[0]>();
+  const uniqueRecords = new Map<number, (typeof records)[0]>();
   for (const r of records) {
     const existing = uniqueRecords.get(r.attendanceId);
     if (!existing) {
       uniqueRecords.set(r.attendanceId, r);
     } else {
-      const priority = { paid: 3, in_review: 2, review: 2, pending: 1, rejected: 0, refunded: -1 };
-      const pNew = priority[(r.paymentStatus as keyof typeof priority)] ?? -2;
-      const pOld = priority[(existing.paymentStatus as keyof typeof priority)] ?? -2;
+      const priority = {
+        paid: 3,
+        in_review: 2,
+        review: 2,
+        pending: 1,
+        rejected: 0,
+        refunded: -1,
+      };
+      const pNew = priority[r.paymentStatus as keyof typeof priority] ?? -2;
+      const pOld =
+        priority[existing.paymentStatus as keyof typeof priority] ?? -2;
       if (pNew > pOld) {
         uniqueRecords.set(r.attendanceId, r);
       }
@@ -284,6 +301,8 @@ export async function confirmUserAttendance(eventId: number) {
       })
       .returning();
 
+    trackServerEvent(userId, "attendance_confirmed", { event_id: eventId });
+
     revalidatePath(`/event/${eventId}`);
     revalidatePath(`/arena/events/${eventId}`);
     return { success: true as const, reservationId: reservation.id };
@@ -323,6 +342,13 @@ export async function cancelUserAttendance(eventId: number) {
       }
     }
 
+    let isLateCancellation = false;
+    if (event) {
+      const hoursUntil =
+        (new Date(event.startsAt).getTime() - Date.now()) / (1000 * 60 * 60);
+      isLateCancellation = hoursUntil > 0 && hoursUntil < 24;
+    }
+
     await db
       .delete(attendance)
       .where(
@@ -331,6 +357,11 @@ export async function cancelUserAttendance(eventId: number) {
           eq(attendance.playerId, session.user.id),
         ),
       );
+
+    trackServerEvent(session.user.id, "attendance_cancelled", {
+      event_id: eventId,
+      is_late_cancellation: isLateCancellation,
+    });
 
     revalidatePath(`/event/${eventId}`);
     revalidatePath(`/arena/events/${eventId}`);

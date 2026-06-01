@@ -6,6 +6,7 @@ import { ArrowLeft, ArrowRight, Fingerprint, Loader2, X } from "lucide-react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useTranslations } from "next-intl";
+import posthog from "posthog-js";
 import { useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -157,6 +158,11 @@ export default function LoginPage() {
         );
       }
 
+      posthog.capture("login_completed", {
+        method: "email_otp",
+        email: collectedEmail,
+      });
+
       toast.success(
         t("messages.loginSuccessTitle"),
         t("messages.loginSuccessDescription", {
@@ -179,6 +185,7 @@ export default function LoginPage() {
       const result = await signIn.social({ provider: "google", callbackURL });
       if (result.error)
         throw new Error(result.error.message || t("messages.socialError"));
+      posthog.capture("login_completed", { method: "google" });
       if (result.data?.url) window.location.href = result.data.url;
     } catch (err: unknown) {
       const message =
@@ -194,6 +201,7 @@ export default function LoginPage() {
       const result = await signIn.passkey();
       if (result?.error)
         throw new Error(result.error.message || t("messages.socialError"));
+      posthog.capture("login_completed", { method: "passkey" });
       if (result?.data) window.location.href = callbackURL;
     } catch (err: unknown) {
       const message =

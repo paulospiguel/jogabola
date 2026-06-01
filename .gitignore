@@ -71,3 +71,4 @@ bun.lockb
 !.claude/napkin.md
 .codex
 !.codex/napkin.md
+.env.local

@@ -23,6 +23,7 @@ import {
 import { withAction, withAuthAction } from "@/lib/action-helpers";
 import { auth } from "@/lib/auth";
 import { sendPaymentProofRequest } from "@/lib/email";
+import { trackServerEvent } from "@/lib/posthog-server";
 import { getPresignedUploadUrl, getR2PublicUrl } from "@/lib/s3";
 import { canManageTeam, userCanAccessTeam } from "@/lib/team-access";
 import {
@@ -101,6 +102,7 @@ export const submitPaymentProof = withAction(
       const [paymentRow] = await db
         .select({
           managerId: teams.ownerId,
+          athleteId: matchReservations.playerId,
           athleteName: user.name,
           eventTitle: matchSessions.title,
           eventId: matchSessions.id,
@@ -127,6 +129,10 @@ export const submitPaymentProof = withAction(
           eventTitle: paymentRow.eventTitle,
           paymentId: data.paymentId,
           eventId: paymentRow.eventId,
+        });
+        trackServerEvent(paymentRow.athleteId, "payment_submitted", {
+          payment_id: data.paymentId,
+          event_id: paymentRow.eventId,
         });
       }
     } catch {
@@ -346,6 +352,13 @@ export const updatePaymentStatus = withAuthAction(
       .update(payments)
       .set({ status, updatedAt: new Date() })
       .where(eq(payments.id, paymentId));
+
+    if (status === PAYMENT_REVIEW_STATUS.APPROVED) {
+      trackServerEvent(currentUser.id, "payment_approved", {
+        payment_id: paymentId,
+        event_id: paymentRow.eventId,
+      });
+    }
 
     revalidatePath("/arena/payments");
     revalidatePath(`/arena/payments/PAY-${paymentId}`);
