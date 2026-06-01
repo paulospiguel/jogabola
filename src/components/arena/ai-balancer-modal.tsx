@@ -41,7 +41,7 @@ export function AiBalancerModal({
       />
 
       {/* Modal Content */}
-      <div className="fixed left-1/2 top-1/2 z-50 w-full max-w-[400px] -translate-x-1/2 -translate-y-1/2 p-5">
+      <div className="fixed left-1/2 top-1/2 z-50 w-[calc(100%-2rem)] max-w-[400px] -translate-x-1/2 -translate-y-1/2 p-5">
         <div className="relative flex flex-col overflow-hidden rounded-[24px] border border-arena-border bg-arena-surface shadow-2xl">
           {/* Top Decorative Header */}
           <div className="relative h-[120px] w-full overflow-hidden bg-gradient-to-br from-[#1c1c1e] to-arena-bg">
