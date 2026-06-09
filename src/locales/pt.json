@@ -3175,6 +3175,14 @@
     "success": "Passkey ativada com sucesso!",
     "error": "Não foi possível associar a passkey."
   },
+  "passkeyErrors": {
+    "unsupported": "Este dispositivo ou navegador não suporta passkeys.",
+    "insecureContext": "As passkeys exigem uma ligação segura (HTTPS). No telemóvel, abre a app por um domínio HTTPS ou um túnel seguro — não funciona via IP local em HTTP.",
+    "rpIdMismatch": "A passkey não corresponde a este domínio. Verifica a configuração (PASSKEY_RP_ID / NEXT_PUBLIC_APP_URL).",
+    "cancelled": "Operação cancelada. Tenta novamente.",
+    "alreadyRegistered": "Já existe uma passkey deste dispositivo associada a esta conta.",
+    "failed": "Não foi possível associar a passkey."
+  },
   "arenaEquipas": {
     "status": {
       "complete": "Equipa completa",

@@ -1,12 +1,18 @@
 "use client";
 
-import { CheckCircle2, Loader2, Lock, Smartphone } from "lucide-react";
+import {
+  AlertTriangle,
+  CheckCircle2,
+  Loader2,
+  Lock,
+  Smartphone,
+} from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useState } from "react";
 import { BottomSheet } from "@/components/arena/bottom-sheet";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { passkey } from "@/lib/auth-client";
+import { registerPasskey } from "@/lib/auth-client";
 
 interface ProfileSecuritySheetProps {
   passkeysCount: number;
@@ -18,23 +24,25 @@ export function ProfileSecuritySheet({
   onClose,
 }: ProfileSecuritySheetProps) {
   const t = useTranslations("profilePage");
+  const tErr = useTranslations("passkeyErrors");
   const [passkeyStatus, setPasskeyStatus] = useState<
     "idle" | "adding" | "added" | "error"
   >("idle");
+  const [passkeyErrorMsg, setPasskeyErrorMsg] = useState<string>("");
   const [hasPasskey, setHasPasskey] = useState<boolean>(passkeysCount > 0);
 
   const handleRegisterPasskey = async () => {
     setPasskeyStatus("adding");
-    try {
-      const result = await passkey.addPasskey();
-      if (result?.error) throw new Error(result.error.message);
-      setPasskeyStatus("added");
-      setHasPasskey(true);
-      setTimeout(() => setPasskeyStatus("idle"), 2500);
-    } catch {
+    setPasskeyErrorMsg("");
+    const result = await registerPasskey();
+    if (!result.ok) {
+      setPasskeyErrorMsg(tErr(result.code));
       setPasskeyStatus("error");
-      setTimeout(() => setPasskeyStatus("idle"), 2500);
+      return;
     }
+    setPasskeyStatus("added");
+    setHasPasskey(true);
+    setTimeout(() => setPasskeyStatus("idle"), 2500);
   };
 
   return (
@@ -130,6 +138,13 @@ export function ProfileSecuritySheet({
                 ? t("actions.saving")
                 : t("actions.addPasskey")}
             </Button>
+
+            {passkeyStatus === "error" && passkeyErrorMsg && (
+              <div className="flex items-start gap-2 rounded-xl border border-red-500/20 bg-red-500/10 px-3.5 py-2.5 text-xs text-red-300">
+                <AlertTriangle className="w-4 h-4 shrink-0 mt-0.5" />
+                <span>{passkeyErrorMsg}</span>
+              </div>
+            )}
           </TabsContent>
 
           <TabsContent value="sessions" className="mt-4">

@@ -81,8 +81,16 @@ export const auth = betterAuth({
   ...(socialProviders && { socialProviders }),
   plugins: [
     passkey({
-      rpID: env.baseURL ? new URL(env.baseURL).hostname : "localhost",
+      // O rpID tem de ser o host registável onde a app é servida.
+      // Deriva do baseURL, mas permite override explícito via PASSKEY_RP_ID
+      // (essencial para domínio em produção ou túnel HTTPS em testes mobile).
+      rpID:
+        process.env.PASSKEY_RP_ID ||
+        (env.baseURL ? new URL(env.baseURL).hostname : "localhost"),
       rpName: "JogaBola",
+      // Aceitar qualquer origem confiável na verificação (localhost, 127.0.0.1,
+      // IPs da rede local e domínios configurados) em vez de uma única origem.
+      origin: trustedOrigins,
     }),
     emailOTP({
       otpLength: 6,

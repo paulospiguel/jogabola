@@ -8,6 +8,7 @@ import {
   Zap,
   Lock,
 } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
@@ -18,7 +19,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { passkey } from "@/lib/auth-client";
+import { registerPasskey } from "@/lib/auth-client";
 
 interface PasskeyPromptGateProps {
   hasPasskey: boolean;
@@ -43,11 +44,13 @@ export function PasskeyPromptGate({
   userId,
   translations,
 }: PasskeyPromptGateProps) {
+  const tErr = useTranslations("passkeyErrors");
   const [mounted, setMounted] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [status, setStatus] = useState<"idle" | "adding" | "success" | "error">(
     "idle",
   );
+  const [errorMsg, setErrorMsg] = useState<string>("");
 
   useEffect(() => {
     setMounted(true);
@@ -76,16 +79,17 @@ export function PasskeyPromptGate({
 
   async function handleRegister() {
     setStatus("adding");
-    try {
-      const result = await passkey.addPasskey();
-      if (result?.error) throw new Error(result.error.message);
-      setStatus("success");
-      setTimeout(() => {
-        setIsOpen(false);
-      }, 1500);
-    } catch {
+    setErrorMsg("");
+    const result = await registerPasskey();
+    if (!result.ok) {
+      setErrorMsg(tErr(result.code));
       setStatus("error");
+      return;
     }
+    setStatus("success");
+    setTimeout(() => {
+      setIsOpen(false);
+    }, 1500);
   }
 
   function handleRefuse() {
@@ -159,9 +163,9 @@ export function PasskeyPromptGate({
         )}
 
         {status === "error" && (
-          <div className="flex items-center gap-2 justify-center rounded-xl border border-red-500/20 bg-red-500/10 px-3.5 py-2.5 text-sm text-red-300 my-2">
-            <AlertTriangle size={16} />
-            {translations.error}
+          <div className="flex items-center gap-2 justify-center rounded-xl border border-red-500/20 bg-red-500/10 px-3.5 py-2.5 text-sm text-red-300 my-2 text-center">
+            <AlertTriangle size={16} className="shrink-0" />
+            <span>{errorMsg || translations.error}</span>
           </div>
         )}
 

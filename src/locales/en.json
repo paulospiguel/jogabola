@@ -3175,6 +3175,14 @@
     "success": "Passkey linked successfully!",
     "error": "Could not link passkey."
   },
+  "passkeyErrors": {
+    "unsupported": "This device or browser doesn't support passkeys.",
+    "insecureContext": "Passkeys require a secure connection (HTTPS). On mobile, open the app via an HTTPS domain or a secure tunnel — it won't work over a local IP on HTTP.",
+    "rpIdMismatch": "The passkey doesn't match this domain. Check the configuration (PASSKEY_RP_ID / NEXT_PUBLIC_APP_URL).",
+    "cancelled": "Operation cancelled. Please try again.",
+    "alreadyRegistered": "A passkey from this device is already linked to this account.",
+    "failed": "Could not link passkey."
+  },
   "arenaEquipas": {
     "status": {
       "complete": "Squad complete",
