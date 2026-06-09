@@ -643,9 +643,24 @@
       "title": "Sin eventos"
     },
     "kicker": "Agenda",
+    "hero": {
+      "nextMatch": "Próximo Partido",
+      "view": "Ver",
+      "nextEvent": "Evento siguiente",
+      "prevEvent": "Evento anterior",
+      "noEvents": "No hay eventos próximos. ¡Crea uno!"
+    },
+    "stats": {
+      "confirmed": "Confirmados",
+      "reserves": "Reservas",
+      "pending": "Pendientes"
+    },
     "sections": {
       "past": "Anteriores",
-      "upcoming": "Próximos"
+      "upcoming": "Próximos",
+      "upcomingEvents": "Próximos Eventos",
+      "thisWeek": "Esta semana",
+      "noWeekEvents": "No hay más eventos programados."
     },
     "title": "Eventos",
     "editInfo": "Editar Información",

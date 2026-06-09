@@ -643,9 +643,24 @@
       "title": "No events"
     },
     "kicker": "Schedule",
+    "hero": {
+      "nextMatch": "Next Match",
+      "view": "View",
+      "nextEvent": "Next event",
+      "prevEvent": "Previous event",
+      "noEvents": "No upcoming events. Create one!"
+    },
+    "stats": {
+      "confirmed": "Confirmed",
+      "reserves": "Reserves",
+      "pending": "Pending"
+    },
     "sections": {
       "past": "Past",
-      "upcoming": "Upcoming"
+      "upcoming": "Upcoming",
+      "upcomingEvents": "Upcoming Events",
+      "thisWeek": "This week",
+      "noWeekEvents": "No more scheduled events."
     },
     "title": "Events",
     "editInfo": "Edit Information",
