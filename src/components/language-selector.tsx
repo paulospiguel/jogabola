@@ -2,7 +2,7 @@
 
 import { Check, Globe } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useLocale, useTranslations } from "next-intl";
+import { useLocale, useTranslations, useFormatter } from "next-intl";
 import { useState, useTransition } from "react";
 import { setLocale } from "@/actions/locale.actions";
 import {
@@ -94,6 +94,8 @@ export default function LanguageSelector({
   const [isPending, startTransition] = useTransition();
   const [isOpen, setIsOpen] = useState(false);
   const router = useRouter();
+
+  const languageFormatter = useFormatter();
 
   async function onLanguageChange(lang: Locale) {
     if (lang === locale || isPending) {
@@ -191,10 +193,10 @@ export default function LanguageSelector({
                   </span>
                   <span className="min-w-0">
                     <span className="block truncate text-base font-extrabold leading-snug tracking-normal text-arena-text">
-                      {language.nativeName}
+                      {languageFormatter.displayName(lang, { type: "language" })}
                     </span>
                     <span className="block truncate text-xs font-semibold leading-snug tracking-normal text-arena-text-muted">
-                      {t(language.name)}
+                      {languageFormatter.displayName(lang, { type: "language" })}
                     </span>
                   </span>
                 </span>

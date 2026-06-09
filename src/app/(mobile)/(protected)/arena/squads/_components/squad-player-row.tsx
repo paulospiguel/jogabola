@@ -64,6 +64,11 @@ export function SquadPlayerRow({ player, index }: SquadPlayerRowProps) {
                 {player.position}
               </span>
             )}
+            {player.selfRating != null && (
+              <span className="rounded-[5px] border border-arena-primary/30 bg-arena-primary/10 px-1.5 py-0.5 text-[10px] font-black uppercase tracking-wider text-arena-primary">
+                OVR {player.selfRating.toFixed(1)}
+              </span>
+            )}
             {player.rating != null && (
               <span className="flex items-center gap-0.5 text-[11px] font-bold text-arena-highlight">
                 <Star size={10} fill="currentColor" strokeWidth={0} />

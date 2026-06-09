@@ -1,10 +1,11 @@
 "use server";
 
-import { and, eq, isNull, sql } from "drizzle-orm";
+import { and, eq, inArray, isNull, sql } from "drizzle-orm";
 import { z } from "zod";
 import { db } from "@/db/client";
 import {
   players,
+  playerRatings,
   session,
   teamMembers,
   teams,
@@ -38,6 +39,8 @@ export interface SquadMember {
   assists: number | null;
   rating: number | null;
   games: number | null;
+  /** Overall da auto-avaliação (1–10), null se o atleta ainda não se avaliou. */
+  selfRating: number | null;
 }
 
 function escapeHtml(value: string) {
@@ -388,15 +391,34 @@ export const getTeamSquad = withAuthAction(
 
     const squad = [...registeredMembers, ...invitedPlayers];
 
-    // Stats reais (goals/assists/rating/games) serão calculados na Fase 2.
-    // Por agora retornamos null para não mostrar valores falsos na UI.
-    const formattedSquad = squad.map(member => ({
-      ...member,
-      goals: null,
-      assists: null,
-      rating: null,
-      games: null,
-    }));
+    // Auto-avaliação (overall + posição principal) dos membros registados.
+    const memberIds = registeredMembers.map(m => m.id);
+    const ratingRows = memberIds.length
+      ? await db
+          .select({
+            userId: playerRatings.userId,
+            overall: playerRatings.overall,
+            primaryPosition: playerRatings.primaryPosition,
+          })
+          .from(playerRatings)
+          .where(inArray(playerRatings.userId, memberIds))
+      : [];
+    const ratingMap = new Map(ratingRows.map(r => [r.userId, r]));
+
+    // Stats reais de jogo (goals/assists/rating/games) serão calculados na
+    // Fase 2. Por agora retornamos null para não mostrar valores falsos na UI.
+    const formattedSquad = squad.map(member => {
+      const selfAssessment = ratingMap.get(member.id);
+      return {
+        ...member,
+        position: member.position ?? selfAssessment?.primaryPosition ?? null,
+        selfRating: selfAssessment?.overall ?? null,
+        goals: null,
+        assists: null,
+        rating: null,
+        games: null,
+      };
+    });
 
     return { success: true, data: formattedSquad as SquadMember[] };
   },
@@ -430,11 +452,22 @@ export const getAthleteProfile = withAuthAction(
       .limit(1);
 
     if (athlete) {
+      const [selfAssessment] = await db
+        .select({
+          overall: playerRatings.overall,
+          primaryPosition: playerRatings.primaryPosition,
+        })
+        .from(playerRatings)
+        .where(eq(playerRatings.userId, playerId))
+        .limit(1);
+
       return {
         success: true,
         data: {
           ...athlete,
           isVerified: true,
+          position: athlete.position ?? selfAssessment?.primaryPosition ?? null,
+          selfRating: selfAssessment?.overall ?? null,
           // Stats reais serão calculados na Fase 2 — não mostrar valores falsos
           rating: null,
           goals: null,
@@ -475,6 +508,7 @@ export const getAthleteProfile = withAuthAction(
       data: {
         ...guest,
         isVerified: false,
+        selfRating: null,
         rating: null,
         goals: null,
         assists: null,

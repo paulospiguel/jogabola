@@ -208,7 +208,7 @@ export function ArenaDashboard({ userId }: ArenaDashboardProps) {
           <div className="jb-dashboard-grid">
             <section className="jb-stack">
               {activeEvent ? (
-                <div className="jb-hero-card relative overflow-hidden">
+                <div className="jb-hero-card jb-hero-card--live relative overflow-hidden">
                   <div className="mb-3 flex items-start justify-between gap-3">
                     <div className="flex items-center gap-2">
                       <span className="grid size-[26px] place-items-center rounded-[7px] bg-arena-primary/[0.13]">

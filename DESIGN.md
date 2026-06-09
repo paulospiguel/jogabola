@@ -97,6 +97,10 @@
 - `bg=surface`, `border=1px border`, `radius=14–16`
 - Hover: `border → primary @ 44%` + `bg → surfaceEl`
 
+**Hero card "próximo evento" (`.jb-hero-card`)**
+- `radius=18`, fundo `linear(135°, surfaceEl → #1E2B3C)` + glow `info@16%` no canto sup. dir.
+- Variante destaque `.jb-hero-card--live`: borda em **conic-gradient animado** (`primary → info → primary`) a rodar 360° em 4s linear infinite. Fundo em `padding-box`, gradiente da borda em `border-box`. Respeita `prefers-reduced-motion` (borda fica estática). Usar só no evento ativo/destacado, nunca em empty states.
+
 ### Badges (estado)
 - `confirmed` → success | `pending` → warning | `out` → danger
 - Pattern: `bg = color@1A`, `border = color@33`, `color = color`, `radius=4`, micro+uppercase
@@ -135,6 +139,7 @@ Inspirado em Lucide. Sempre `strokeLinecap=round` + `strokeLinejoin=round`.
 | `modalIn` | 200ms | ease | Modais desktop |
 | `overlayIn` | 150ms | ease | Backdrop fade |
 | `.press` / `.btn-press` | 120ms | ease | `scale(0.97)` em todos os clicáveis |
+| `jb-border-spin` | 4s | linear infinite | Borda em gradiente do hero "próximo evento" (`.jb-hero-card--live`) |
 
 **Princípio:** rápido (<300ms), natural, nunca decorativo.
 

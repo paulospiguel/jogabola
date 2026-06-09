@@ -15,7 +15,7 @@ import { VerifiedBadge } from "@/components/arena/verified-badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { registerPasskey } from "@/lib/auth-client";
+import { passkey } from "@/lib/auth-client";
 import type { UserProfile } from "@/types/profile";
 
 type ProfileFormProps = {
@@ -28,7 +28,6 @@ type FormState = {
 
 export function ProfileForm({ profile }: ProfileFormProps) {
   const t = useTranslations("profilePage");
-  const tErr = useTranslations("passkeyErrors");
   const [form, setForm] = useState<FormState>({
     name: profile.name,
   });
@@ -44,13 +43,17 @@ export function ProfileForm({ profile }: ProfileFormProps) {
   async function handleAddPasskey() {
     setPasskeyStatus("adding");
     setPasskeyErrorMsg(null);
-    const result = await registerPasskey();
-    if (!result.ok) {
-      setPasskeyErrorMsg(tErr(result.code));
+    try {
+      const result = await passkey.addPasskey();
+      if (result?.error) throw new Error(result.error.message);
+      setPasskeyStatus("added");
+    } catch (err: any) {
+      console.error("Passkey error:", err);
+      setPasskeyErrorMsg(
+        err?.message || err?.toString() || "Erro desconhecido",
+      );
       setPasskeyStatus("error");
-      return;
     }
-    setPasskeyStatus("added");
   }
 
   function updateField(field: keyof FormState, value: string) {

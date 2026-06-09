@@ -14,6 +14,7 @@ export interface SquadPlayer {
   assists: number | null;
   rating: number | null;
   games: number | null;
+  selfRating: number | null;
   highlight?: boolean;
   isVerified?: boolean;
   image?: string | null;

@@ -127,6 +127,11 @@ export default function AthleteProfilePage() {
                   {athlete.position}
                 </span>
               )}
+              {athlete.selfRating != null && (
+                <span className="inline-flex items-center rounded-[6px] border border-arena-primary/30 bg-arena-primary/10 px-2 py-0.5 text-[11px] font-black uppercase tracking-wider text-arena-primary">
+                  OVR {athlete.selfRating.toFixed(1)}
+                </span>
+              )}
               {isCoCaptain && (
                 <span className="inline-flex items-center gap-1 rounded-[6px] border border-arena-info/30 bg-arena-info/10 px-2 py-0.5 text-[11px] font-black uppercase tracking-wider text-arena-info">
                   <ShieldCheck size={10} strokeWidth={2.5} />
