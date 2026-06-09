@@ -1,6 +1,12 @@
 "use client";
 
-import { AlertCircle, CheckCircle2, Fingerprint, Loader2, Save } from "lucide-react";
+import {
+  AlertCircle,
+  CheckCircle2,
+  Fingerprint,
+  Loader2,
+  Save,
+} from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useState, useTransition } from "react";
 import { updateUserProfile } from "@/actions/profile.actions";
@@ -43,7 +49,9 @@ export function ProfileForm({ profile }: ProfileFormProps) {
       setPasskeyStatus("added");
     } catch (err: any) {
       console.error("Passkey error:", err);
-      setPasskeyErrorMsg(err?.message || err?.toString() || "Erro desconhecido");
+      setPasskeyErrorMsg(
+        err?.message || err?.toString() || "Erro desconhecido",
+      );
       setPasskeyStatus("error");
     }
   }

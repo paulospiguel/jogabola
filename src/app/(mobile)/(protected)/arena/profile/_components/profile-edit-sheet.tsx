@@ -29,7 +29,9 @@ export function ProfileEditSheet({ user, onClose }: ProfileEditSheetProps) {
     phone: user.phone || "+351 910 297 571",
   });
   const [isPending, startTransition] = useTransition();
-  const [saveStatus, setSaveStatus] = useState<"idle" | "saved" | "error">("idle");
+  const [saveStatus, setSaveStatus] = useState<"idle" | "saved" | "error">(
+    "idle",
+  );
 
   const handleSave = () => {
     startTransition(async () => {
@@ -49,11 +51,19 @@ export function ProfileEditSheet({ user, onClose }: ProfileEditSheetProps) {
         <div className="flex flex-col items-center justify-center py-2 relative">
           <div className="relative group cursor-pointer">
             <div className="w-[88px] h-[88px] rounded-full border-2 border-arena-border p-1 bg-arena-bg-sec/50">
-              <JbAvatar id={user.id} name={form.name} image={user.image} size={76} />
+              <JbAvatar
+                id={user.id}
+                name={form.name}
+                image={user.image}
+                size={76}
+              />
             </div>
             <div className="absolute -bottom-1 -right-1 bg-arena-bg p-[3px] rounded-full">
               <div className="w-[20px] h-[20px] bg-arena-primary rounded-full flex items-center justify-center shadow-lg">
-                <Edit3 className="w-3.5 h-3.5 text-[#0B0F14]" strokeWidth={2.5} />
+                <Edit3
+                  className="w-3.5 h-3.5 text-[#0B0F14]"
+                  strokeWidth={2.5}
+                />
               </div>
             </div>
           </div>
@@ -102,7 +112,10 @@ export function ProfileEditSheet({ user, onClose }: ProfileEditSheetProps) {
 
         <div className="bg-arena-surface border border-arena-border rounded-xl p-3 flex items-center gap-3">
           <div className="w-8 h-8 rounded-full bg-arena-primary/10 flex items-center justify-center shrink-0 border border-arena-primary/20">
-            <ShieldCheck className="w-4 h-4 text-arena-primary" strokeWidth={2.2} />
+            <ShieldCheck
+              className="w-4 h-4 text-arena-primary"
+              strokeWidth={2.2}
+            />
           </div>
           <div>
             <span className="font-extrabold text-sm text-arena-text block">
@@ -131,7 +144,11 @@ export function ProfileEditSheet({ user, onClose }: ProfileEditSheetProps) {
           disabled={isPending}
           className="w-full bg-arena-primary text-[#0B0F14] hover:bg-arena-primary/90 font-bold h-11 rounded-xl text-sm transition-all gap-1.5"
         >
-          {isPending ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
+          {isPending ? (
+            <Loader2 className="w-4 h-4 animate-spin" />
+          ) : (
+            <Save className="w-4 h-4" />
+          )}
           {isPending ? t("actions.saving") : t("actions.save")}
         </Button>
       </div>

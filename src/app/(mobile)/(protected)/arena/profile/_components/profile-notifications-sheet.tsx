@@ -18,7 +18,9 @@ const INITIAL_SETTINGS = {
   notices: { push: true, email: false },
 };
 
-export function ProfileNotificationsSheet({ onClose }: ProfileNotificationsSheetProps) {
+export function ProfileNotificationsSheet({
+  onClose,
+}: ProfileNotificationsSheetProps) {
   const t = useTranslations("profilePage");
   const [settings, setSettings] = useState(INITIAL_SETTINGS);
 
@@ -63,7 +65,10 @@ export function ProfileNotificationsSheet({ onClose }: ProfileNotificationsSheet
                 onCheckedChange={checked =>
                   setSettings(prev => ({
                     ...prev,
-                    [key]: { ...prev[key as keyof typeof prev], email: checked },
+                    [key]: {
+                      ...prev[key as keyof typeof prev],
+                      email: checked,
+                    },
                   }))
                 }
                 className={cn(
