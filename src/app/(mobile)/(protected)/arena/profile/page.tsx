@@ -1,6 +1,7 @@
 import { eq, inArray, sql } from "drizzle-orm";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
+import { getMyRating } from "@/actions/player-ratings.actions";
 import { db } from "@/db/client";
 import * as schema from "@/db/schema";
 import { auth } from "@/lib/auth";
@@ -59,6 +60,15 @@ export default async function ArenaProfilePage() {
     .then(res => res.length)
     .catch(() => 0);
 
+  // Athlete self-assessment (drives AI team balancing)
+  const myRating = await getMyRating().catch(() => null);
+  const rating = myRating
+    ? {
+        overall: myRating.overall,
+        primaryPosition: myRating.primaryPosition,
+      }
+    : null;
+
   return (
     <div className="jb-page">
       <div className="jb-page-inner">
@@ -72,6 +82,7 @@ export default async function ArenaProfilePage() {
           }}
           realTeams={realTeams}
           passkeysCount={passkeysCount}
+          rating={rating}
         />
       </div>
     </div>

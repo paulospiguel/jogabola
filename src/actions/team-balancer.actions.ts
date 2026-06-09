@@ -1,6 +1,8 @@
 "use server";
 
+import { DEFAULT_RATING } from "@/lib/self-assessment";
 import { getEventAttendanceWithUsers } from "./attendance.actions";
+import { getRatingsForUsers } from "./player-ratings.actions";
 
 export interface BalancedPlayer {
   id: string;
@@ -8,9 +10,21 @@ export interface BalancedPlayer {
   image: string | null;
   rating: number;
   isGuest: boolean;
+  /** True when the rating is the neutral default (no self-assessment yet). */
+  isDefaultRating?: boolean;
 }
 
-export async function balanceTeamsWithAI(eventId: number, guestsCount: number) {
+/** Convidado avulso, com a avaliação atribuída manualmente no setup. */
+export interface BalancerGuest {
+  id: string;
+  name: string;
+  rating: number;
+}
+
+export async function balanceTeamsWithAI(
+  eventId: number,
+  guests: BalancerGuest[],
+) {
   try {
     // 1. Get current attendance
     const attendanceResult = await getEventAttendanceWithUsers(eventId);
@@ -23,23 +37,31 @@ export async function balanceTeamsWithAI(eventId: number, guestsCount: number) {
 
     const confirmedPlayers = attendanceResult.data.confirmed;
 
-    // 2. Prepare the pool of players with mock ratings
-    const pool: BalancedPlayer[] = confirmedPlayers.map(p => ({
-      id: p.id,
-      name: p.name,
-      image: p.image,
-      rating: Math.floor(Math.random() * 5) + 5, // Mock rating between 5 and 9
-      isGuest: false,
-    }));
+    // 2. Load real self-assessment ratings; fall back to a neutral default
+    //    for athletes who haven't completed their self-assessment yet.
+    const ratings = await getRatingsForUsers(confirmedPlayers.map(p => p.id));
 
-    // 3. Add fake guests
-    for (let i = 1; i <= guestsCount; i++) {
+    const pool: BalancedPlayer[] = confirmedPlayers.map(p => {
+      const real = ratings.get(p.id);
+      return {
+        id: p.id,
+        name: p.name,
+        image: p.image,
+        rating: real ?? DEFAULT_RATING,
+        isGuest: false,
+        isDefaultRating: real == null,
+      };
+    });
+
+    // 3. Add guests with their assigned ratings
+    for (const guest of guests) {
       pool.push({
-        id: `temp-guest-${Date.now()}-${i}`,
-        name: `Convidado ${i}`,
+        id: guest.id,
+        name: guest.name,
         image: null,
-        rating: Math.floor(Math.random() * 5) + 5,
+        rating: guest.rating,
         isGuest: true,
+        isDefaultRating: false,
       });
     }
 
@@ -52,7 +74,6 @@ export async function balanceTeamsWithAI(eventId: number, guestsCount: number) {
 
     // Snake draft pattern: A, B, B, A, A, B, B, A...
     pool.forEach((player, index) => {
-      // Modulo 4 logic for snake draft
       const mod = index % 4;
       if (mod === 0 || mod === 3) {
         teamA.push(player);
@@ -69,9 +90,6 @@ export async function balanceTeamsWithAI(eventId: number, guestsCount: number) {
 
     const avgA = calcAvg(teamA);
     const avgB = calcAvg(teamB);
-
-    // Wait 1.5s to simulate "AI processing"
-    await new Promise(resolve => setTimeout(resolve, 1500));
 
     return {
       success: true as const,

@@ -5,8 +5,8 @@ import { useTranslations } from "next-intl";
 import { JbAvatar } from "@/components/arena/avatar";
 import { type BadgeStatus, JbBadge } from "@/components/arena/badge";
 import { VerifiedBadge } from "@/components/arena/verified-badge";
-import type { SquadPlayer } from "@/hooks/use-squad";
 import { ATTENDANCE_STATUS } from "@/constants/attendance";
+import type { SquadPlayer } from "@/hooks/use-squad";
 
 interface SquadPlayerRowProps {
   player: SquadPlayer;
@@ -64,12 +64,14 @@ export function SquadPlayerRow({ player, index }: SquadPlayerRowProps) {
                 {player.position}
               </span>
             )}
-            <span className="flex items-center gap-0.5 text-[11px] font-bold text-arena-highlight">
-              <Star size={10} fill="currentColor" strokeWidth={0} />
-              {player.rating % 1 === 0
-                ? player.rating.toFixed(0)
-                : player.rating.toFixed(1)}
-            </span>
+            {player.rating != null && (
+              <span className="flex items-center gap-0.5 text-[11px] font-bold text-arena-highlight">
+                <Star size={10} fill="currentColor" strokeWidth={0} />
+                {player.rating % 1 === 0
+                  ? player.rating.toFixed(0)
+                  : player.rating.toFixed(1)}
+              </span>
+            )}
             {!player.isVerified && (
               <span className="inline-flex items-center gap-1 rounded-[5px] border border-arena-warning/25 bg-arena-warning/10 px-1.5 py-0.5 text-[9px] font-black uppercase tracking-wider text-arena-warning">
                 <Hourglass size={8} strokeWidth={2} />

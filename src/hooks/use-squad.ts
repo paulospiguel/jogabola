@@ -10,10 +10,10 @@ export interface SquadPlayer {
   role: string;
   position?: string | null;
   status: "confirmed" | "reserve" | "pending" | "refused" | "new";
-  goals: number;
-  assists: number;
-  rating: number;
-  games: number;
+  goals: number | null;
+  assists: number | null;
+  rating: number | null;
+  games: number | null;
   highlight?: boolean;
   isVerified?: boolean;
   image?: string | null;

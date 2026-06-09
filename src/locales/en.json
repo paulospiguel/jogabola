@@ -175,12 +175,33 @@
       "captain": "Captain",
       "coach": "Coach",
       "owner": "Captain",
+      "manager": "Co-captain",
       "player": "Player"
     },
     "history": {
       "title": "Activity History",
       "players": "Players",
       "empty": "No activity recorded"
+    },
+    "chat": {
+      "badge": "Coming soon",
+      "title": "Chat with athlete",
+      "description": "This conversation will be available in a future version. For now, use the email on the athlete card to reach out directly."
+    },
+    "coCaptain": {
+      "promote": "Make co-captain",
+      "promoteDesc": "Grant management permissions (create events, validate payments).",
+      "promoteLabel": "Promote",
+      "remove": "Remove co-captain",
+      "removeDesc": "Revoke management permissions. Reverts to player.",
+      "removeLabel": "Remove",
+      "errors": {
+        "FORBIDDEN": "You don't have permission for this action.",
+        "TEAM_NOT_FOUND": "Could not confirm the active team.",
+        "CANNOT_MODIFY_OWNER": "The team owner's role cannot be changed.",
+        "PLAYER_NOT_IN_TEAM": "This athlete is no longer part of this squad.",
+        "UNKNOWN_ERROR": "Could not update the role. Please try again."
+      }
     },
     "removeDialog": {
       "title": "Remove from squad?",
@@ -992,6 +1013,7 @@
     },
     "detail": {
       "title": "Payment Details",
+      "cancelActionsTitle": "Cancellation Actions",
       "accept": "Accept Payment",
       "reject": "Reject Payment",
       "proof": "Proof of Payment",
@@ -2092,6 +2114,94 @@
       "name": "Full Name"
     },
     "title": "Let's Get to Know You"
+  },
+  "arenaSelfAssessment": {
+    "card": {
+      "title": "Self-assessment",
+      "ratedSub": "{position} · used for balancing",
+      "emptyTitle": "Let's do your self-assessment",
+      "emptySub": "Set your position and skills for more balanced teams."
+    },
+    "intro": {
+      "eyebrow": "Self-assessment",
+      "title": "Let's do your self-assessment",
+      "description": "Answer a few quick questions about your position and skills. We use this to balance teams with AI — be honest.",
+      "estimate": "Under 1 minute"
+    },
+    "position": {
+      "eyebrow": "Step 1",
+      "title": "Where do you play?",
+      "description": "Pick your main position and, if you want, a secondary one.",
+      "primaryLabel": "Main position",
+      "secondaryLabel": "Secondary position",
+      "optional": "Optional"
+    },
+    "positions": {
+      "GK": { "label": "Goalkeeper", "hint": "You guard the goal" },
+      "DEF": { "label": "Defender", "hint": "You stop attacks" },
+      "MID": { "label": "Midfielder", "hint": "You link the play" },
+      "FWD": { "label": "Forward", "hint": "You score goals" }
+    },
+    "skill": {
+      "eyebrow": "Skill"
+    },
+    "skills": {
+      "finishing": {
+        "label": "Finishing",
+        "description": "How effective you are at converting chances into goals."
+      },
+      "defense": {
+        "label": "Defending",
+        "description": "Ability to mark, tackle and protect the goal."
+      },
+      "passing": {
+        "label": "Passing",
+        "description": "Accuracy and vision when distributing the ball."
+      },
+      "pace": {
+        "label": "Pace",
+        "description": "Speed and acceleration on the pitch."
+      },
+      "physical": {
+        "label": "Physical",
+        "description": "Strength, stamina and presence in duels."
+      },
+      "technique": {
+        "label": "Technique",
+        "description": "Ball control, dribbling and individual quality."
+      },
+      "goalkeeping": {
+        "label": "Goalkeeping",
+        "description": "Reflexes, positioning and handling."
+      }
+    },
+    "scale": {
+      "prompt": "Tap to rate from 1 to 10",
+      "weak": "Weak",
+      "medium": "Average",
+      "good": "Good",
+      "excellent": "Excellent",
+      "minHint": "1 · Beginner",
+      "maxHint": "Elite · 10"
+    },
+    "review": {
+      "eyebrow": "Review",
+      "title": "Confirm your assessment",
+      "description": "Make sure everything looks right before saving.",
+      "overallLabel": "Overall rating",
+      "edit": "Edit answers"
+    },
+    "actions": {
+      "back": "Back",
+      "start": "Start",
+      "continue": "Continue",
+      "finish": "Finish",
+      "saving": "Saving...",
+      "saved": "Assessment saved"
+    },
+    "errors": {
+      "save": "Could not save the assessment. Please try again."
+    }
   },
   "profilePage": {
     "actions": {

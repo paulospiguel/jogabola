@@ -175,12 +175,33 @@
       "captain": "Capitão",
       "coach": "Treinador",
       "owner": "Capitão",
+      "manager": "Co-capitão",
       "player": "Jogador"
     },
     "history": {
       "title": "Histórico de Atividade",
       "players": "Jogadores",
       "empty": "Sem atividade registada"
+    },
+    "chat": {
+      "badge": "Em breve",
+      "title": "Chat com atleta",
+      "description": "Esta conversa vai ficar disponível numa próxima versão. Por agora, usa o email no card do atleta para comunicar diretamente."
+    },
+    "coCaptain": {
+      "promote": "Tornar co-capitão",
+      "promoteDesc": "Dar permissões de gestão (criar eventos, validar pagamentos).",
+      "promoteLabel": "Promover",
+      "remove": "Remover co-capitão",
+      "removeDesc": "Revogar permissões de gestão. Fica como jogador.",
+      "removeLabel": "Remover",
+      "errors": {
+        "FORBIDDEN": "Não tens permissão para esta ação.",
+        "TEAM_NOT_FOUND": "Não foi possível confirmar a equipa ativa.",
+        "CANNOT_MODIFY_OWNER": "Não é possível alterar o papel do dono da equipa.",
+        "PLAYER_NOT_IN_TEAM": "Este atleta já não pertence a este plantel.",
+        "UNKNOWN_ERROR": "Não foi possível atualizar o papel. Tenta novamente."
+      }
     },
     "notValidated": "Atleta não validado",
     "notValidatedDesc": "Este atleta ainda não criou uma conta no Jogabola. As estatísticas e o perfil completo estarão disponíveis após a validação.",
@@ -977,6 +998,7 @@
     },
     "detail": {
       "title": "Detalhes do Pagamento",
+      "cancelActionsTitle": "Ações de Cancelamento",
       "accept": "Aceitar Pagamento",
       "reject": "Rejeitar Pagamento",
       "proof": "Comprovativo de Pagamento",
@@ -2072,6 +2094,94 @@
       "name": "Nome Completo"
     },
     "title": "Vamos Conhecer-te Melhor"
+  },
+  "arenaSelfAssessment": {
+    "card": {
+      "title": "Auto-avaliação",
+      "ratedSub": "{position} · usado no balanceamento",
+      "emptyTitle": "Vamos fazer a tua auto-avaliação",
+      "emptySub": "Define a tua posição e habilidades para equipas mais equilibradas."
+    },
+    "intro": {
+      "eyebrow": "Auto-avaliação",
+      "title": "Vamos fazer a tua auto-avaliação",
+      "description": "Responde a algumas perguntas rápidas sobre a tua posição e habilidades. Usamos isto para equilibrar as equipas com IA — sê honesto.",
+      "estimate": "Menos de 1 minuto"
+    },
+    "position": {
+      "eyebrow": "Passo 1",
+      "title": "Onde jogas?",
+      "description": "Escolhe a tua posição principal e, se quiseres, uma secundária.",
+      "primaryLabel": "Posição principal",
+      "secondaryLabel": "Posição secundária",
+      "optional": "Opcional"
+    },
+    "positions": {
+      "GK": { "label": "Guarda-redes", "hint": "Defendes a baliza" },
+      "DEF": { "label": "Defesa", "hint": "Travas o ataque" },
+      "MID": { "label": "Médio", "hint": "Ligas o jogo" },
+      "FWD": { "label": "Avançado", "hint": "Marcas golos" }
+    },
+    "skill": {
+      "eyebrow": "Habilidade"
+    },
+    "skills": {
+      "finishing": {
+        "label": "Finalização",
+        "description": "Quão eficaz és a converter oportunidades em golo."
+      },
+      "defense": {
+        "label": "Defesa",
+        "description": "Capacidade de marcar, desarmar e proteger a baliza."
+      },
+      "passing": {
+        "label": "Passe",
+        "description": "Precisão e visão a distribuir a bola."
+      },
+      "pace": {
+        "label": "Velocidade",
+        "description": "Rapidez e aceleração em campo."
+      },
+      "physical": {
+        "label": "Físico",
+        "description": "Força, resistência e presença nos duelos."
+      },
+      "technique": {
+        "label": "Técnica",
+        "description": "Controlo de bola, drible e qualidade individual."
+      },
+      "goalkeeping": {
+        "label": "Guarda-redes",
+        "description": "Reflexos, posicionamento e jogo de mãos."
+      }
+    },
+    "scale": {
+      "prompt": "Toca para avaliar de 1 a 10",
+      "weak": "Fraco",
+      "medium": "Médio",
+      "good": "Bom",
+      "excellent": "Excelente",
+      "minHint": "1 · Iniciante",
+      "maxHint": "Elite · 10"
+    },
+    "review": {
+      "eyebrow": "Revisão",
+      "title": "Confirma a tua avaliação",
+      "description": "Verifica se está tudo certo antes de guardar.",
+      "overallLabel": "Avaliação geral",
+      "edit": "Editar respostas"
+    },
+    "actions": {
+      "back": "Voltar",
+      "start": "Começar",
+      "continue": "Continuar",
+      "finish": "Concluir",
+      "saving": "A guardar...",
+      "saved": "Avaliação guardada"
+    },
+    "errors": {
+      "save": "Não foi possível guardar a avaliação. Tenta novamente."
+    }
   },
   "profilePage": {
     "actions": {

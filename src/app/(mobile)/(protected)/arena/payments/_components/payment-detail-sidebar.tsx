@@ -1,5 +1,11 @@
-import { History, User } from "lucide-react";
+import { History, Loader2, User } from "lucide-react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+import {
+  markPaymentAsCredited,
+  markPaymentAsRefunded,
+} from "@/actions/payments.actions";
 import { JbAvatar } from "@/components/arena/avatar";
 import { type BadgeStatus, JbBadge } from "@/components/arena/badge";
 import { ScoreBar, type ScoreLevel } from "@/components/arena/score-bar";
@@ -12,10 +18,6 @@ import {
 } from "@/constants/payments";
 import type { Payment } from "@/hooks/use-payments";
 import { cn } from "@/lib/utils";
-import { markPaymentAsRefunded, markPaymentAsCredited } from "@/actions/payments.actions";
-import { useState } from "react";
-import { useRouter } from "next/navigation";
-import { Loader2 } from "lucide-react";
 
 type TranslationFn = (
   key: string,
@@ -150,11 +152,10 @@ export function PaymentDetailSidebar({
         </div>
       </section>
 
-
       {payment.event.status.includes("cancel") && (
         <section className="jb-card px-5 py-5">
           <h2 className="mb-4 text-xs font-bold uppercase tracking-widest text-arena-text-muted">
-            Acções de Cancelamento
+            {t("detail.cancelActionsTitle")}
           </h2>
           <div className="grid gap-3">
             <Button
@@ -163,8 +164,10 @@ export function PaymentDetailSidebar({
               disabled={loadingAction !== null || payment.status === "refunded"}
               className="h-12 rounded-[14px] border-arena-border text-arena-text hover:bg-arena-surface-el"
             >
-              {loadingAction === "refund" ? <Loader2 className="animate-spin mr-2" size={16} /> : null}
-              {t("detail.markRefund", { defaultValue: "Devolver (Estorno)" })}
+              {loadingAction === "refund" ? (
+                <Loader2 className="animate-spin mr-2" size={16} />
+              ) : null}
+              {t("markRefund")}
             </Button>
             <Button
               variant="outline"
@@ -172,8 +175,10 @@ export function PaymentDetailSidebar({
               disabled={loadingAction !== null || payment.status === "credited"}
               className="h-12 rounded-[14px] border-arena-info/30 text-arena-info hover:bg-arena-info/10"
             >
-              {loadingAction === "credit" ? <Loader2 className="animate-spin mr-2" size={16} /> : null}
-              {t("detail.markCredit", { defaultValue: "Deixar em Crédito" })}
+              {loadingAction === "credit" ? (
+                <Loader2 className="animate-spin mr-2" size={16} />
+              ) : null}
+              {t("markCredit")}
             </Button>
           </div>
         </section>

@@ -16,6 +16,13 @@ import { useSession } from "@/lib/auth-client";
 import { AthleteHistoryRow } from "./_components/athlete-history-row";
 import { RemoveFromRosterDialog } from "./_components/remove-from-roster-dialog";
 
+const CO_CAPTAIN_ERROR_CODES = [
+  "FORBIDDEN",
+  "TEAM_NOT_FOUND",
+  "CANNOT_MODIFY_OWNER",
+  "PLAYER_NOT_IN_TEAM",
+];
+
 export default function AthleteProfilePage() {
   const { id } = useParams();
   const router = useRouter();
@@ -84,9 +91,9 @@ export default function AthleteProfilePage() {
   }
 
   const stats = [
-    { value: athlete.games ?? 0, label: tr("stats.matches") },
-    { value: athlete.goals ?? 0, label: tr("stats.goals") },
-    { value: athlete.assists ?? 0, label: tr("stats.assists") },
+    { value: athlete.games ?? "—", label: tr("stats.matches") },
+    { value: athlete.goals ?? "—", label: tr("stats.goals") },
+    { value: athlete.assists ?? "—", label: tr("stats.assists") },
     { value: athlete.rating ?? "—", label: tr("stats.rating") },
   ];
 
@@ -236,7 +243,13 @@ export default function AthleteProfilePage() {
               </button>
               {roleError && (
                 <p className="mt-2 text-[12px] text-arena-danger">
-                  {roleError}
+                  {tr(
+                    `coCaptain.errors.${
+                      CO_CAPTAIN_ERROR_CODES.includes(roleError)
+                        ? roleError
+                        : "UNKNOWN_ERROR"
+                    }`,
+                  )}
                 </p>
               )}
             </div>
