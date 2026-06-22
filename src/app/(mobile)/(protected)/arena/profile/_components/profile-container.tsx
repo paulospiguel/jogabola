@@ -7,6 +7,7 @@ import { ProfileHeader } from "./profile-header";
 import { ProfileMenu } from "./profile-menu";
 import { ProfileNotificationsSheet } from "./profile-notifications-sheet";
 import { ProfileSecuritySheet } from "./profile-security-sheet";
+import { ProfileSelfAssessmentCard } from "./profile-self-assessment-card";
 import { ProfileTeams } from "./profile-teams";
 
 type ActiveSheet = "notifications" | "security" | "edit-profile" | null;
@@ -29,12 +30,14 @@ interface ProfileContainerProps {
     memberCount: number;
   }>;
   passkeysCount: number;
+  rating: { overall: number; primaryPosition: string } | null;
 }
 
 export function ProfileContainer({
   user,
   realTeams,
   passkeysCount,
+  rating,
 }: ProfileContainerProps) {
   const [activeSheet, setActiveSheet] = useState<ActiveSheet>(null);
 
@@ -46,6 +49,7 @@ export function ProfileContainer({
         email={user.email}
         image={user.image}
       />
+      <ProfileSelfAssessmentCard rating={rating} />
       <ProfileTeams teams={realTeams} />
       <ProfileMenu onOpenSheet={sheet => setActiveSheet(sheet)} />
 

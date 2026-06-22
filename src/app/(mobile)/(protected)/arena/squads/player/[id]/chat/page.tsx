@@ -1,13 +1,15 @@
 import { ArrowLeft, MessageCircle } from "lucide-react";
 import Link from "next/link";
+import { getTranslations } from "next-intl/server";
 import { Button } from "@/components/ui/button";
 
-export default function AthleteChatComingSoonPage({
+export default async function AthleteChatComingSoonPage({
   params,
 }: {
   params: Promise<{ id: string }>;
 }) {
   void params;
+  const t = await getTranslations("arenaAthleteProfile");
 
   return (
     <div className="jb-page">
@@ -17,14 +19,13 @@ export default function AthleteChatComingSoonPage({
             <MessageCircle size={26} />
           </div>
           <p className="text-xs font-bold uppercase tracking-widest text-arena-text-muted">
-            Em breve
+            {t("chat.badge")}
           </p>
           <h1 className="mt-2 font-sora text-2xl font-bold text-arena-text">
-            Chat com atleta
+            {t("chat.title")}
           </h1>
           <p className="mt-3 text-sm leading-relaxed text-arena-text-sec">
-            Esta conversa vai ficar disponível numa próxima versão. Por agora,
-            usa o email no card do atleta para comunicar diretamente.
+            {t("chat.description")}
           </p>
           <Button
             asChild
@@ -33,7 +34,7 @@ export default function AthleteChatComingSoonPage({
           >
             <Link href="/arena/squads">
               <ArrowLeft size={16} />
-              Voltar ao plantel
+              {t("actions.back")}
             </Link>
           </Button>
         </section>

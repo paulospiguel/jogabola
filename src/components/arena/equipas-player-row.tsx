@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import type { BalancedPlayer } from "@/actions/team-balancer.actions";
 import { JbAvatar } from "@/components/arena/avatar";
 import type { Guest } from "@/components/arena/guests-sheet";
@@ -26,7 +27,9 @@ export function PlayerRow({
   muted,
   onPress,
 }: PlayerRowProps) {
-  const isGuest = "level" in player || (player as { isGuest?: boolean }).isGuest;
+  const t = useTranslations("arenaSquad");
+  const isGuest =
+    "level" in player || (player as { isGuest?: boolean }).isGuest;
   return (
     <button
       type="button"
@@ -61,7 +64,7 @@ export function PlayerRow({
           </span>
           {isGuest && (
             <span className="shrink-0 rounded px-1 py-px text-[9px] font-bold tracking-wide text-arena-text-muted uppercase">
-              convidado
+              {t("roles.guest")}
             </span>
           )}
         </div>

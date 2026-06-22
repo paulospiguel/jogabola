@@ -59,7 +59,10 @@ export function EventTeamsTab({
   const handleBalance = async () => {
     setBalancing(true);
     try {
-      const result = await balanceTeamsWithAI(eventId, guests.length);
+      const result = await balanceTeamsWithAI(
+        eventId,
+        guests.map(g => ({ id: g.id, name: g.name, rating: g.rating })),
+      );
       if (result.success) {
         setBalanceResult(result.data);
       }

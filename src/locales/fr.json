@@ -175,12 +175,33 @@
       "captain": "Capitaine",
       "coach": "Entraîneur",
       "owner": "Capitaine",
+      "manager": "Co-capitaine",
       "player": "Joueur"
     },
     "history": {
       "title": "Historique d'Activité",
       "players": "Joueurs",
       "empty": "Aucune activité enregistrée"
+    },
+    "chat": {
+      "badge": "Bientôt disponible",
+      "title": "Chat avec l'athlète",
+      "description": "Cette conversation sera disponible dans une prochaine version. Pour l'instant, utilise l'e-mail sur la carte de l'athlète pour communiquer directement."
+    },
+    "coCaptain": {
+      "promote": "Nommer co-capitaine",
+      "promoteDesc": "Accorder les permissions de gestion (créer des événements, valider les paiements).",
+      "promoteLabel": "Promouvoir",
+      "remove": "Retirer co-capitaine",
+      "removeDesc": "Révoquer les permissions de gestion. Redevient joueur.",
+      "removeLabel": "Retirer",
+      "errors": {
+        "FORBIDDEN": "Tu n'as pas la permission pour cette action.",
+        "TEAM_NOT_FOUND": "Impossible de confirmer l'équipe active.",
+        "CANNOT_MODIFY_OWNER": "Le rôle du propriétaire de l'équipe ne peut pas être modifié.",
+        "PLAYER_NOT_IN_TEAM": "Cet athlète ne fait plus partie de cet effectif.",
+        "UNKNOWN_ERROR": "Impossible de mettre à jour le rôle. Réessaie."
+      }
     },
     "removeDialog": {
       "title": "Retirer de l'effectif ?",
@@ -643,9 +664,24 @@
       "title": "Aucun événement"
     },
     "kicker": "Agenda",
+    "hero": {
+      "nextMatch": "Prochain Match",
+      "view": "Voir",
+      "nextEvent": "Événement suivant",
+      "prevEvent": "Événement précédent",
+      "noEvents": "Aucun événement à venir. Créez-en un !"
+    },
+    "stats": {
+      "confirmed": "Confirmés",
+      "reserves": "Réserves",
+      "pending": "En attente"
+    },
     "sections": {
       "past": "Passés",
-      "upcoming": "À venir"
+      "upcoming": "À venir",
+      "upcomingEvents": "Événements à venir",
+      "thisWeek": "Cette semaine",
+      "noWeekEvents": "Aucun autre événement programmé."
     },
     "title": "Événements",
     "editInfo": "Modifier les informations",
@@ -915,6 +951,7 @@
     },
     "detail": {
       "title": "Détails du Paiement",
+      "cancelActionsTitle": "Actions d'Annulation",
       "accept": "Accepter le Paiement",
       "reject": "Rejeter le Paiement",
       "proof": "Preuve de Paiement",
@@ -2078,6 +2115,94 @@
     },
     "title": "Faisons Connaissance"
   },
+  "arenaSelfAssessment": {
+    "card": {
+      "title": "Auto-évaluation",
+      "ratedSub": "{position} · utilisé pour l'équilibrage",
+      "emptyTitle": "Faisons ton auto-évaluation",
+      "emptySub": "Définis ta position et tes compétences pour des équipes plus équilibrées."
+    },
+    "intro": {
+      "eyebrow": "Auto-évaluation",
+      "title": "Faisons ton auto-évaluation",
+      "description": "Réponds à quelques questions rapides sur ta position et tes compétences. Nous l'utilisons pour équilibrer les équipes avec l'IA — sois honnête.",
+      "estimate": "Moins d'une minute"
+    },
+    "position": {
+      "eyebrow": "Étape 1",
+      "title": "Où joues-tu ?",
+      "description": "Choisis ta position principale et, si tu veux, une secondaire.",
+      "primaryLabel": "Position principale",
+      "secondaryLabel": "Position secondaire",
+      "optional": "Optionnel"
+    },
+    "positions": {
+      "GK": { "label": "Gardien", "hint": "Tu protèges le but" },
+      "DEF": { "label": "Défenseur", "hint": "Tu stoppes l'attaque" },
+      "MID": { "label": "Milieu", "hint": "Tu relies le jeu" },
+      "FWD": { "label": "Attaquant", "hint": "Tu marques des buts" }
+    },
+    "skill": {
+      "eyebrow": "Compétence"
+    },
+    "skills": {
+      "finishing": {
+        "label": "Finition",
+        "description": "Ton efficacité à transformer les occasions en buts."
+      },
+      "defense": {
+        "label": "Défense",
+        "description": "Capacité à marquer, tacler et protéger le but."
+      },
+      "passing": {
+        "label": "Passe",
+        "description": "Précision et vision dans la distribution du ballon."
+      },
+      "pace": {
+        "label": "Vitesse",
+        "description": "Rapidité et accélération sur le terrain."
+      },
+      "physical": {
+        "label": "Physique",
+        "description": "Force, endurance et présence dans les duels."
+      },
+      "technique": {
+        "label": "Technique",
+        "description": "Contrôle de balle, dribble et qualité individuelle."
+      },
+      "goalkeeping": {
+        "label": "Gardien",
+        "description": "Réflexes, placement et jeu à la main."
+      }
+    },
+    "scale": {
+      "prompt": "Touche pour noter de 1 à 10",
+      "weak": "Faible",
+      "medium": "Moyen",
+      "good": "Bon",
+      "excellent": "Excellent",
+      "minHint": "1 · Débutant",
+      "maxHint": "Élite · 10"
+    },
+    "review": {
+      "eyebrow": "Vérification",
+      "title": "Confirme ton évaluation",
+      "description": "Vérifie que tout est correct avant d'enregistrer.",
+      "overallLabel": "Note globale",
+      "edit": "Modifier les réponses"
+    },
+    "actions": {
+      "back": "Retour",
+      "start": "Commencer",
+      "continue": "Continuer",
+      "finish": "Terminer",
+      "saving": "Enregistrement...",
+      "saved": "Évaluation enregistrée"
+    },
+    "errors": {
+      "save": "Impossible d'enregistrer l'évaluation. Réessaie."
+    }
+  },
   "profilePage": {
     "actions": {
       "save": "Enregistrer le profil",
@@ -3049,6 +3174,14 @@
     "skip": "Pas maintenant",
     "success": "Passkey associée avec succès !",
     "error": "Impossible d'associer la passkey."
+  },
+  "passkeyErrors": {
+    "unsupported": "Cet appareil ou navigateur ne prend pas en charge les passkeys.",
+    "insecureContext": "Les passkeys nécessitent une connexion sécurisée (HTTPS). Sur mobile, ouvrez l'app via un domaine HTTPS ou un tunnel sécurisé — cela ne fonctionne pas via une IP locale en HTTP.",
+    "rpIdMismatch": "La passkey ne correspond pas à ce domaine. Vérifiez la configuration (PASSKEY_RP_ID / NEXT_PUBLIC_APP_URL).",
+    "cancelled": "Opération annulée. Veuillez réessayer.",
+    "alreadyRegistered": "Une passkey de cet appareil est déjà associée à ce compte.",
+    "failed": "Impossible d'associer la passkey."
   },
   "arenaEquipas": {
     "status": {

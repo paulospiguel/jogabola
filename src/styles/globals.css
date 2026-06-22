@@ -427,6 +427,41 @@
     text-decoration: none;
   }
 
+  /* Borda em gradiente animado (próximo evento em destaque).
+     Mantém o fundo existente em padding-box e desenha um conic-gradient
+     rotativo em border-box. Usa os tokens do design system. */
+  .jb-hero-card--live {
+    --jb-border-angle: 0deg;
+    border: 1px solid transparent;
+    background:
+      radial-gradient(
+          circle at 88% 12%,
+          rgba(56, 189, 248, 0.16),
+          transparent 32%
+        )
+        padding-box,
+      linear-gradient(135deg, var(--color-arena-surface-el), #1e2b3c)
+        padding-box,
+      conic-gradient(
+          from var(--jb-border-angle),
+          rgba(38, 50, 68, 0.55) 78%,
+          var(--color-arena-primary) 86%,
+          #d6ffc4 90%,
+          var(--color-arena-info) 92%,
+          var(--color-arena-primary) 94%,
+          rgba(38, 50, 68, 0.55)
+        )
+        border-box;
+    box-shadow: 0 4px 28px rgba(124, 255, 79, 0.1);
+    animation: jb-border-spin 4s linear infinite;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .jb-hero-card--live {
+      animation: none;
+    }
+  }
+
   .jb-icon-tile {
     width: 42px;
     height: 42px;
@@ -545,6 +580,20 @@
     .jb-title {
       font-size: 28px;
     }
+  }
+}
+
+/* Ângulo animável da borda em gradiente (jb-hero-card--live).
+   Registado via @property para permitir transição/animação do ângulo. */
+@property --jb-border-angle {
+  syntax: "<angle>";
+  inherits: false;
+  initial-value: 0deg;
+}
+
+@keyframes jb-border-spin {
+  to {
+    --jb-border-angle: 360deg;
   }
 }
 

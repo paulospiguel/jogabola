@@ -6,6 +6,7 @@ export * from "./match-sessions";
 export * from "./notices";
 export * from "./notifications";
 export * from "./payments";
+export * from "./player-ratings";
 export * from "./team-payment-settings";
 export * from "./teams";
 export * from "./users";

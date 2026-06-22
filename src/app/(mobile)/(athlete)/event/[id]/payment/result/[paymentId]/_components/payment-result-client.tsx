@@ -301,7 +301,7 @@ export function PaymentResultClient({
   eventId,
 }: PaymentResultClientProps) {
   const t = useTranslations("paymentResult");
-  const tRsvp = useTranslations("athleteRsvpSheet");
+  const tRsvp = useTranslations("athleteRsvp.paymentMethodCard");
   const { payment, isLoading, error, refetch } = usePayment(paymentId);
   const eventSlug = payment?.eventSlug;
   const [proofUploaded, setProofUploaded] = useState(false);
@@ -351,8 +351,8 @@ export function PaymentResultClient({
   if (payment.method === "transfer") {
     if (status === PAYMENT_STATUS.PAID_UNVERIFIED || proofUploaded) {
       caption = payment.transferRequiresProof
-        ? tRsvp("payment.methods.transfer.waitingMsg")
-        : tRsvp("payment.methods.transfer.waitingMsgNoProof");
+        ? tRsvp("methods.transfer.waitingMsg")
+        : tRsvp("methods.transfer.waitingMsgNoProof");
     }
   }
 

@@ -52,7 +52,10 @@ export function EquipasTab({ eventId, confirmed, canEdit }: EquipasTabProps) {
   function handleGenerate() {
     setPhase("generating");
     startTransition(async () => {
-      const res = await balanceTeamsWithAI(eventId, guests.length);
+      const res = await balanceTeamsWithAI(
+        eventId,
+        guests.map(g => ({ id: g.id, name: g.name, rating: g.rating })),
+      );
       if (res.success && res.data) {
         const allPlayers = [...res.data.teamA, ...res.data.teamB];
         const sorted = [...allPlayers].sort((a, b) => b.rating - a.rating);
@@ -104,9 +107,15 @@ export function EquipasTab({ eventId, confirmed, canEdit }: EquipasTabProps) {
     const bIdx = bT.players.findIndex(p => p.id === player.id);
 
     if (swapPick.teamIdx === teamIdx) {
-      [aT.players[aIdx], aT.players[bIdx]] = [aT.players[bIdx], aT.players[aIdx]];
+      [aT.players[aIdx], aT.players[bIdx]] = [
+        aT.players[bIdx],
+        aT.players[aIdx],
+      ];
     } else {
-      [aT.players[aIdx], bT.players[bIdx]] = [bT.players[bIdx], aT.players[aIdx]];
+      [aT.players[aIdx], bT.players[bIdx]] = [
+        bT.players[bIdx],
+        aT.players[aIdx],
+      ];
     }
 
     setTeams(

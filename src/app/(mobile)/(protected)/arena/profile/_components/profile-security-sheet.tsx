@@ -1,6 +1,7 @@
 "use client";
 
 import {
+  AlertTriangle,
   CheckCircle2,
   Loader2,
   Lock,
@@ -11,30 +12,37 @@ import { useState } from "react";
 import { BottomSheet } from "@/components/arena/bottom-sheet";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { passkey } from "@/lib/auth-client";
+import { registerPasskey } from "@/lib/auth-client";
 
 interface ProfileSecuritySheetProps {
   passkeysCount: number;
   onClose: () => void;
 }
 
-export function ProfileSecuritySheet({ passkeysCount, onClose }: ProfileSecuritySheetProps) {
+export function ProfileSecuritySheet({
+  passkeysCount,
+  onClose,
+}: ProfileSecuritySheetProps) {
   const t = useTranslations("profilePage");
-  const [passkeyStatus, setPasskeyStatus] = useState<"idle" | "adding" | "added" | "error">("idle");
+  const tErr = useTranslations("passkeyErrors");
+  const [passkeyStatus, setPasskeyStatus] = useState<
+    "idle" | "adding" | "added" | "error"
+  >("idle");
+  const [passkeyErrorMsg, setPasskeyErrorMsg] = useState<string>("");
   const [hasPasskey, setHasPasskey] = useState<boolean>(passkeysCount > 0);
 
   const handleRegisterPasskey = async () => {
     setPasskeyStatus("adding");
-    try {
-      const result = await passkey.addPasskey();
-      if (result?.error) throw new Error(result.error.message);
-      setPasskeyStatus("added");
-      setHasPasskey(true);
-      setTimeout(() => setPasskeyStatus("idle"), 2500);
-    } catch {
+    setPasskeyErrorMsg("");
+    const result = await registerPasskey();
+    if (!result.ok) {
+      setPasskeyErrorMsg(tErr(result.code));
       setPasskeyStatus("error");
-      setTimeout(() => setPasskeyStatus("idle"), 2500);
+      return;
     }
+    setPasskeyStatus("added");
+    setHasPasskey(true);
+    setTimeout(() => setPasskeyStatus("idle"), 2500);
   };
 
   return (
@@ -67,13 +75,21 @@ export function ProfileSecuritySheet({ passkeysCount, onClose }: ProfileSecurity
               <div className="bg-arena-surface border border-arena-border rounded-[14px] p-3.5 flex items-center justify-between gap-3">
                 <div className="flex items-center gap-3">
                   <div className="w-10 h-10 rounded-xl bg-arena-primary/10 flex items-center justify-center text-arena-primary border border-arena-primary/20">
-                    <Smartphone className="w-5 h-5 text-arena-primary" strokeWidth={1.8} />
+                    <Smartphone
+                      className="w-5 h-5 text-arena-primary"
+                      strokeWidth={1.8}
+                    />
                   </div>
                   <div>
                     <div className="flex items-center gap-1.5">
-                      <span className="font-extrabold text-sm text-arena-text">iPhone — Face ID</span>
+                      <span className="font-extrabold text-sm text-arena-text">
+                        iPhone — Face ID
+                      </span>
                       <div className="w-3.5 h-3.5 rounded-full bg-arena-primary/20 flex items-center justify-center">
-                        <CheckCircle2 className="w-2.5 h-2.5 text-arena-primary" strokeWidth={2.5} />
+                        <CheckCircle2
+                          className="w-2.5 h-2.5 text-arena-primary"
+                          strokeWidth={2.5}
+                        />
                       </div>
                     </div>
                     <span className="text-xs text-arena-text-muted block mt-0.5">
@@ -95,8 +111,13 @@ export function ProfileSecuritySheet({ passkeysCount, onClose }: ProfileSecurity
               </div>
             ) : (
               <div className="text-center py-6 border-2 border-dashed border-arena-border rounded-xl flex flex-col items-center justify-center p-4">
-                <Smartphone className="w-8 h-8 text-arena-text-muted mb-2" strokeWidth={1.5} />
-                <span className="text-sm font-bold text-arena-text">{t("security.noPasskeys")}</span>
+                <Smartphone
+                  className="w-8 h-8 text-arena-text-muted mb-2"
+                  strokeWidth={1.5}
+                />
+                <span className="text-sm font-bold text-arena-text">
+                  {t("security.noPasskeys")}
+                </span>
                 <span className="text-xs text-arena-text-muted mt-1 max-w-[280px]">
                   {t("security.passkeysDesc")}
                 </span>
@@ -113,18 +134,32 @@ export function ProfileSecuritySheet({ passkeysCount, onClose }: ProfileSecurity
               ) : (
                 <Smartphone className="w-4 h-4" />
               )}
-              {passkeyStatus === "adding" ? t("actions.saving") : t("actions.addPasskey")}
+              {passkeyStatus === "adding"
+                ? t("actions.saving")
+                : t("actions.addPasskey")}
             </Button>
+
+            {passkeyStatus === "error" && passkeyErrorMsg && (
+              <div className="flex items-start gap-2 rounded-xl border border-red-500/20 bg-red-500/10 px-3.5 py-2.5 text-xs text-red-300">
+                <AlertTriangle className="w-4 h-4 shrink-0 mt-0.5" />
+                <span>{passkeyErrorMsg}</span>
+              </div>
+            )}
           </TabsContent>
 
           <TabsContent value="sessions" className="mt-4">
             <div className="bg-arena-surface border border-arena-border rounded-[14px] p-3.5 flex items-center justify-between gap-3">
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 rounded-xl bg-arena-primary/10 flex items-center justify-center text-arena-primary border border-arena-primary/20">
-                  <Smartphone className="w-5 h-5 text-arena-primary" strokeWidth={1.8} />
+                  <Smartphone
+                    className="w-5 h-5 text-arena-primary"
+                    strokeWidth={1.8}
+                  />
                 </div>
                 <div>
-                  <span className="font-extrabold text-sm text-arena-text block">iPhone (Safari)</span>
+                  <span className="font-extrabold text-sm text-arena-text block">
+                    iPhone (Safari)
+                  </span>
                   <span className="text-xs text-arena-text-muted block mt-0.5">
                     Lisboa, Portugal · 192.168.1.10
                   </span>
@@ -140,7 +175,10 @@ export function ProfileSecuritySheet({ passkeysCount, onClose }: ProfileSecurity
             value="2fa"
             className="mt-4 text-center py-6 border border-arena-border rounded-xl bg-arena-surface p-4"
           >
-            <Lock className="w-8 h-8 text-arena-text-muted mx-auto mb-2" strokeWidth={1.5} />
+            <Lock
+              className="w-8 h-8 text-arena-text-muted mx-auto mb-2"
+              strokeWidth={1.5}
+            />
             <span className="text-sm font-bold text-arena-text block">
               {t("securitySheet.twoFactor.title")}
             </span>
