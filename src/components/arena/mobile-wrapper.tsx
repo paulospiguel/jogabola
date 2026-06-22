@@ -1,20 +1,14 @@
-"use client";
-
-import { IPhoneMockup } from "@/components/arena/iphone-mockup";
-import { CONFIG } from "@/constants/app";
-import { useDevice } from "@/hooks/use-device";
-
 interface MobileWrapperProps {
   children: React.ReactNode;
 }
 
+/**
+ * Passthrough do shell da app (arena).
+ *
+ * A moldura de iPhone (IPhoneMockup) foi removida por não ser eficiente:
+ * o layout da arena já é responsivo (sidebar em desktop, top-bar + bottom-nav
+ * em mobile). A moldura estava a forçar esse layout para dentro de um telemóvel.
+ */
 export function MobileWrapper({ children }: MobileWrapperProps) {
-  const { isDesktop } = useDevice();
-  const shouldShowMobileOnly = CONFIG.SHOW_MOBILE_ONLY === "true";
-
-  if (isDesktop && shouldShowMobileOnly) {
-    return <IPhoneMockup>{children}</IPhoneMockup>;
-  }
-
   return <>{children}</>;
 }
