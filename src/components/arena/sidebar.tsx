@@ -7,6 +7,7 @@ import {
   ChevronsRight,
   Lock,
   Shield,
+  Timer,
   Users,
   Wallet,
 } from "lucide-react";
@@ -59,6 +60,12 @@ const ITEMS = [
     icon: Wallet,
     labelKey: "payments",
     requiresTeam: true,
+  },
+  {
+    href: "/timer",
+    icon: Timer,
+    labelKey: "timer",
+    requiresTeam: false,
   },
 ];
 

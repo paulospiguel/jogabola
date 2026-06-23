@@ -1,6 +1,14 @@
 "use client";
 
-import { Calendar, Lock, Shield, User, Users, Wallet } from "lucide-react";
+import {
+  Calendar,
+  Lock,
+  Shield,
+  Timer,
+  User,
+  Users,
+  Wallet,
+} from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useTranslations } from "next-intl";
@@ -27,6 +35,12 @@ const ITEMS = [
     icon: Wallet,
     labelKey: "payments",
     requiresTeam: true,
+  },
+  {
+    href: "/timer",
+    icon: Timer,
+    labelKey: "timer",
+    requiresTeam: false,
   },
   {
     href: "/arena/profile",
