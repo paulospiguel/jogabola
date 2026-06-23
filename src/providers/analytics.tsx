@@ -11,7 +11,7 @@ export default function AnalyticsProvider({
   children: React.ReactNode;
 }) {
   const { client } = useClientAsyncInit(
-    "client-HJ4SSDBLbrGjcxYmcMoivZg1yVxutOkjQWuwi0pSK23",
+    process.env.NEXT_PUBLIC_STATSIG_CLIENT_KEY || "",
     { userID: "a-user" },
     {
       plugins: [
