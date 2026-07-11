@@ -1,7 +1,7 @@
 "use server";
 
-import { randomUUID } from "node:crypto";
-import { and, eq, gt } from "drizzle-orm";
+import { randomUUID, timingSafeEqual } from "node:crypto";
+import { and, eq } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { db } from "@/db/client";
 import {
@@ -138,6 +138,23 @@ export async function requestGuestOTP(
       }
     }
 
+    const existingOtp = await db.query.guestEventOtp.findFirst({
+      where: and(
+        eq(guestEventOtp.email, normalizedEmail),
+        eq(guestEventOtp.matchSessionId, eventId),
+      ),
+    });
+    const now = new Date();
+    if (existingOtp?.lockedUntil && existingOtp.lockedUntil > now) {
+      return { success: false, error: "OTP_LOCKED" };
+    }
+    if (
+      existingOtp?.createdAt &&
+      existingOtp.createdAt > new Date(now.getTime() - 60_000)
+    ) {
+      return { success: false, error: "OTP_COOLDOWN" };
+    }
+
     const otp = generateOTP();
     const expiresAt = new Date(Date.now() + 10 * 60 * 1000);
 
@@ -237,12 +254,37 @@ export async function verifyGuestOTP(
       where: and(
         eq(guestEventOtp.email, normalizedEmail),
         eq(guestEventOtp.matchSessionId, eventId),
-        eq(guestEventOtp.otp, otp),
-        gt(guestEventOtp.expiresAt, new Date()),
       ),
     });
 
     if (!record) {
+      return { success: false, error: "Código inválido ou expirado" };
+    }
+
+    const now = new Date();
+    if (record.lockedUntil && record.lockedUntil > now) {
+      return { success: false, error: "OTP_LOCKED" };
+    }
+    if (record.expiresAt <= now) {
+      await db.delete(guestEventOtp).where(eq(guestEventOtp.id, record.id));
+      return { success: false, error: "Código inválido ou expirado" };
+    }
+
+    const provided = Buffer.from(otp);
+    const expected = Buffer.from(record.otp);
+    const matches =
+      provided.length === expected.length &&
+      timingSafeEqual(provided, expected);
+    if (!matches) {
+      const attempts = record.attempts + 1;
+      await db
+        .update(guestEventOtp)
+        .set({
+          attempts,
+          lockedUntil:
+            attempts >= 5 ? new Date(now.getTime() + 15 * 60_000) : null,
+        })
+        .where(eq(guestEventOtp.id, record.id));
       return { success: false, error: "Código inválido ou expirado" };
     }
 

@@ -29,6 +29,9 @@ export function getGuestOtpErrorMessage(
     return t("errors.hasFines");
   }
 
+  if (res.error === "OTP_LOCKED") return t("errors.otpLocked");
+  if (res.error === "OTP_COOLDOWN") return t("errors.otpCooldown");
+
   return res.error || fallback;
 }
 

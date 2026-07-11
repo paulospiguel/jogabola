@@ -8,6 +8,8 @@ export const guestEventOtp = pgTable("guest_event_otp", {
     .notNull()
     .references(() => matchSessions.id, { onDelete: "cascade" }),
   otp: text("otp").notNull(),
+  attempts: integer("attempts").notNull().default(0),
+  lockedUntil: timestamp("locked_until"),
   expiresAt: timestamp("expires_at").notNull(),
   createdAt: timestamp("created_at").defaultNow(),
 });

@@ -189,7 +189,7 @@ export function AthleteRsvpSheet({
       onSuccess("confirmed", res.reservationId);
       handleNextAfterRsvp(res.reservationId);
     } else {
-      setError(res.error || t("invalidCode"));
+      setError(getGuestOtpErrorMessage(t, res, t("invalidCode")));
     }
   }
 
