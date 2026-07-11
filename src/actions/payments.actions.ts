@@ -44,7 +44,7 @@ const requestPaymentProofSchema = z.object({
   paymentId: z.number().int().positive(),
 });
 
-function toUiPaymentStatus(status: string) {
+export function toUiPaymentStatus(status: string) {
   if (status === PAYMENT_STATUS.PAID_UNVERIFIED) {
     return PAYMENT_OVERVIEW_STATUS.VALIDATING;
   }
