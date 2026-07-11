@@ -1,5 +1,6 @@
 "use server";
 
+import { randomUUID } from "node:crypto";
 import { and, eq, gt } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { db } from "@/db/client";
@@ -269,17 +270,19 @@ export async function verifyGuestOTP(
       .returning({ id: attendance.id });
 
     // 2. Upsert match_reservation (required for payments)
+    const guestAccessToken = randomUUID();
     const [reservation] = await db
       .insert(matchReservations)
       .values({
         matchSessionId: eventId,
         playerId: targetUser.id,
+        guestAccessToken,
         status: "reserved_unpaid",
         updatedAt: new Date(),
       })
       .onConflictDoUpdate({
         target: [matchReservations.matchSessionId, matchReservations.playerId],
-        set: { updatedAt: new Date() },
+        set: { guestAccessToken, updatedAt: new Date() },
       })
       .returning();
 
@@ -321,6 +324,7 @@ export async function verifyGuestOTP(
     return {
       success: true,
       reservationId: reservation.id,
+      guestAccessToken,
       guestData: {
         id: targetUser.id,
         email: normalizedEmail,

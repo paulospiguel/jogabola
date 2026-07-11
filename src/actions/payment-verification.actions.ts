@@ -4,11 +4,12 @@ import { eq } from "drizzle-orm";
 import { db } from "@/db/client";
 import { paymentPrechecks, paymentProofs, payments } from "@/db/schema";
 import { withAction } from "@/lib/action-helpers";
+import { canActOnReservation } from "@/lib/reservation-access";
 import { verifyPaymentProofSchema } from "@/schemas/payments.schema";
 
 export const verifyPaymentProof = withAction(
   verifyPaymentProofSchema,
-  async ({ aiCheck, paymentProofId }) => {
+  async ({ aiCheck, guestAccessToken, paymentProofId }) => {
     const [proof] = await db
       .select()
       .from(paymentProofs)
@@ -17,6 +18,19 @@ export const verifyPaymentProof = withAction(
 
     if (!proof) {
       return { success: false, error: { code: "PAYMENT_PROOF_NOT_FOUND" } };
+    }
+
+    const payment = await db.query.payments.findFirst({
+      columns: { matchReservationId: true },
+      where: eq(payments.id, proof.paymentId),
+    });
+    if (!payment) {
+      return { success: false, error: { code: "PAYMENT_NOT_FOUND" } };
+    }
+    if (
+      !(await canActOnReservation(payment.matchReservationId, guestAccessToken))
+    ) {
+      return { success: false, error: { code: "FORBIDDEN" } };
     }
 
     const nextStatus =

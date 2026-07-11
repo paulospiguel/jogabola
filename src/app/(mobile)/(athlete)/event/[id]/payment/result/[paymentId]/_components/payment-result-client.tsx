@@ -12,6 +12,7 @@ import {
 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { useCallback, useState } from "react";
 import { submitPaymentProof } from "@/actions/payments.actions";
@@ -109,10 +110,15 @@ function getStatusConfig(status: string): StatusConfig {
 
 interface ProofUploadProps {
   paymentId: number;
+  guestAccessToken?: string;
   onUploaded: () => void;
 }
 
-function ProofUpload({ paymentId, onUploaded }: ProofUploadProps) {
+function ProofUpload({
+  paymentId,
+  guestAccessToken,
+  onUploaded,
+}: ProofUploadProps) {
   const t = useTranslations("paymentResult");
   const [preview, setPreview] = useState<string | null>(null);
   const [isPdf, setIsPdf] = useState(false);
@@ -122,10 +128,15 @@ function ProofUpload({ paymentId, onUploaded }: ProofUploadProps) {
 
   const { state, upload, reset } = useProofUpload({
     paymentId,
+    guestAccessToken,
     onSuccess: async publicUrl => {
       // After R2 upload succeeds, record the proof URL in our DB
       setSubmitting(true);
-      const res = await submitPaymentProof({ paymentId, fileUrl: publicUrl });
+      const res = await submitPaymentProof({
+        paymentId,
+        fileUrl: publicUrl,
+        guestAccessToken,
+      });
       setSubmitting(false);
 
       if (res.success) {
@@ -298,6 +309,8 @@ export function PaymentResultClient({
   eventId,
 }: PaymentResultClientProps) {
   const t = useTranslations("paymentResult");
+  const guestAccessToken =
+    useSearchParams().get("guestAccessToken") ?? undefined;
   const tRsvp = useTranslations("athleteRsvp.paymentMethodCard");
   const { payment, isLoading, error, refetch } = usePayment(paymentId);
   const eventSlug = payment?.eventSlug;
@@ -400,6 +413,7 @@ export function PaymentResultClient({
           <div className="w-full">
             <ProofUpload
               paymentId={paymentId}
+              guestAccessToken={guestAccessToken}
               onUploaded={() => {
                 setProofUploaded(true);
                 void refetch();

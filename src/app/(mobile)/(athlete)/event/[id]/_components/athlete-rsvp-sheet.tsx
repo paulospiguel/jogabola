@@ -65,6 +65,7 @@ export function AthleteRsvpSheet({
   const [guestName, setGuestName] = useState("");
   const [guestEmail, setGuestEmail] = useState("");
   const [guestOtp, setGuestOtp] = useState("");
+  const [guestAccessToken, setGuestAccessToken] = useState<string>();
 
   const [loginEmail, setLoginEmail] = useState("");
   const [loginOtp, setLoginOtp] = useState("");
@@ -184,6 +185,7 @@ export function AthleteRsvpSheet({
     setLoading(false);
     if (res.success) {
       if (res.guestData) saveGuest(res.guestData);
+      setGuestAccessToken(res.guestAccessToken);
       onSuccess("confirmed", res.reservationId);
       handleNextAfterRsvp(res.reservationId);
     } else {
@@ -255,10 +257,14 @@ export function AthleteRsvpSheet({
       amountCents: event.priceCents,
       currency: event.currency,
       method,
+      guestAccessToken,
     });
     if (res.success && res.data) {
+      const tokenQuery = guestAccessToken
+        ? `?guestAccessToken=${encodeURIComponent(guestAccessToken)}`
+        : "";
       router.push(
-        `/event/${eventSlug || eventId}/payment/result/${res.data.id}`,
+        `/event/${eventSlug || eventId}/payment/result/${res.data.id}${tokenQuery}`,
       );
       return res.data;
     } else {
@@ -406,14 +412,14 @@ export function AthleteRsvpSheet({
               const p = await handlePaymentIntent("mbway");
               if (p)
                 router.push(
-                  `/event/${eventSlug || eventId}/payment/result/${p.id}`,
+                  `/event/${eventSlug || eventId}/payment/result/${p.id}${guestAccessToken ? `?guestAccessToken=${encodeURIComponent(guestAccessToken)}` : ""}`,
                 );
             }}
             onTransferProof={async () => {
               const p = await handlePaymentIntent("transfer");
               if (p)
                 router.push(
-                  `/event/${eventSlug || eventId}/payment/result/${p.id}`,
+                  `/event/${eventSlug || eventId}/payment/result/${p.id}${guestAccessToken ? `?guestAccessToken=${encodeURIComponent(guestAccessToken)}` : ""}`,
                 );
             }}
             onPayLater={() => setStep("success")}

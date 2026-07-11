@@ -11,11 +11,13 @@ export type UploadState =
 
 interface UseProofUploadOptions {
   paymentId: number;
+  guestAccessToken?: string;
   onSuccess?: (publicUrl: string) => void;
 }
 
 export function useProofUpload({
   paymentId,
+  guestAccessToken,
   onSuccess,
 }: UseProofUploadOptions) {
   const [state, setState] = useState<UploadState>({ status: "idle" });
@@ -28,6 +30,7 @@ export function useProofUpload({
         paymentId,
         contentType: file.type,
         sizeBytes: file.size,
+        guestAccessToken,
       });
 
       if (!res.success) {

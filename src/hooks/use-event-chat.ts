@@ -64,7 +64,7 @@ export function useEventDetailChat({
     if (!canChat) return;
 
     const client = new Ably.Realtime({
-      authUrl: "/api/ably/token",
+      authUrl: `/api/ably/token?eventId=${eventId}`,
       echoMessages: false,
     });
     const channel = client.channels.get(eventChannelName(eventId));

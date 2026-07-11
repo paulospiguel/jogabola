@@ -12,20 +12,30 @@ import {
   players,
   user,
 } from "@/db/schema";
-import { withAction } from "@/lib/action-helpers";
+import { withAuthAction } from "@/lib/action-helpers";
 import { auth } from "@/lib/auth";
 import { userBelongsToTeamRoster } from "@/lib/event-roster-access";
 import { hasPendingFines } from "@/lib/fines";
 import { trackServerEvent } from "@/lib/posthog-server";
+import { canManageTeam } from "@/lib/team-access";
 import { upsertAttendanceSchema } from "@/schemas/attendance.schema";
 
 function isCancelledEventStatus(status: string | null | undefined) {
   return status === "cancelled" || status === "canceled";
 }
 
-export const upsertAttendance = withAction(
+export const upsertAttendance = withAuthAction(
   upsertAttendanceSchema,
-  async data => {
+  async (currentUser, data) => {
+    if (data.playerId !== currentUser.id) {
+      const event = await db.query.matchSessions.findFirst({
+        columns: { teamId: true },
+        where: eq(matchSessions.id, data.matchSessionId),
+      });
+      if (!event || !(await canManageTeam(currentUser.id, event.teamId))) {
+        return { success: false, error: { code: "FORBIDDEN" } };
+      }
+    }
     const [row] = await db
       .insert(attendance)
       .values({ ...data, updatedAt: new Date() })
@@ -458,6 +468,13 @@ export async function managerUpdateParticipantStatus(
       return { success: false as const, error: "Evento não encontrado" };
     }
 
+    if (!(await canManageTeam(session.user.id, event.teamId))) {
+      return {
+        success: false as const,
+        error: "Sem permissão para gerir este evento",
+      };
+    }
+
     const isGuest = targetUserId.startsWith("guest-");
 
     if (isGuest) {
@@ -509,6 +526,13 @@ export async function managerRemoveParticipant(
       return { success: false as const, error: "Evento não encontrado" };
     }
 
+    if (!(await canManageTeam(session.user.id, event.teamId))) {
+      return {
+        success: false as const,
+        error: "Sem permissão para gerir este evento",
+      };
+    }
+
     const isGuest = targetUserId.startsWith("guest-");
 
     if (isGuest) {
@@ -551,6 +575,13 @@ export async function managerBlockParticipant(
 
     if (!event) {
       return { success: false as const, error: "Evento não encontrado" };
+    }
+
+    if (!(await canManageTeam(session.user.id, event.teamId))) {
+      return {
+        success: false as const,
+        error: "Sem permissão para gerir este evento",
+      };
     }
 
     const isGuest = targetUserId.startsWith("guest-");

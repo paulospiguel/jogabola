@@ -31,7 +31,7 @@ export interface ChatMessage {
 /** Access rule: the team captain (owner) always; otherwise the user must have
  * confirmed attendance AND (when the event requires payment) an approved
  * payment. Pending/unpaid/reserve see only the blurred teaser. */
-async function canParticipateInChat(
+export async function canParticipateInChat(
   eventId: number,
   userId: string,
 ): Promise<boolean> {

@@ -46,6 +46,7 @@ export const matchReservations = pgTable(
     playerId: text("player_id")
       .notNull()
       .references(() => user.id, { onDelete: "cascade" }),
+    guestAccessToken: text("guest_access_token"),
     status: text("status").notNull().default("reserved_unpaid"),
     createdAt: timestamp("created_at").defaultNow(),
     updatedAt: timestamp("updated_at").defaultNow(),
