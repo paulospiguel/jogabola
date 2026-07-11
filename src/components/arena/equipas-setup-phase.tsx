@@ -1,7 +1,14 @@
 "use client";
 
-import { Brain, Check, ChevronRight, Sparkles, UserPlus, Users } from "lucide-react";
-import { useTranslations } from "next-intl";
+import {
+  Brain,
+  Check,
+  ChevronRight,
+  Sparkles,
+  UserPlus,
+  Users,
+} from "lucide-react";
+import type { useTranslations } from "next-intl";
 import { Cta } from "@/components/arena/cta";
 import type { Guest } from "@/components/arena/guests-sheet";
 import { GuestsSheet } from "@/components/arena/guests-sheet";
@@ -65,9 +72,17 @@ export function EquipasSetupPhase({
               )}
             >
               {statusOk ? (
-                <Check size={15} className="text-arena-success" strokeWidth={2.2} />
+                <Check
+                  size={15}
+                  className="text-arena-success"
+                  strokeWidth={2.2}
+                />
               ) : (
-                <Users size={15} className="text-arena-warning" strokeWidth={2.2} />
+                <Users
+                  size={15}
+                  className="text-arena-warning"
+                  strokeWidth={2.2}
+                />
               )}
             </div>
             <div className="min-w-0">
@@ -201,7 +216,11 @@ export function EquipasSetupPhase({
             className="flex w-full items-center gap-3 rounded-[12px] border border-dashed border-arena-primary/44 bg-arena-surface px-3.5 py-3 active:scale-[0.97]"
           >
             <div className="flex size-9 shrink-0 items-center justify-center rounded-[11px] border border-arena-primary/33 bg-arena-primary/18">
-              <UserPlus size={17} className="text-arena-primary" strokeWidth={2.2} />
+              <UserPlus
+                size={17}
+                className="text-arena-primary"
+                strokeWidth={2.2}
+              />
             </div>
             <div className="flex-1 text-left">
               <div className="text-[13px] font-bold text-arena-text">
@@ -213,7 +232,11 @@ export function EquipasSetupPhase({
                   : t("guests.addSub")}
               </div>
             </div>
-            <ChevronRight size={16} className="text-arena-text-muted" strokeWidth={2} />
+            <ChevronRight
+              size={16}
+              className="text-arena-text-muted"
+              strokeWidth={2}
+            />
           </button>
         ) : (
           <div className="flex flex-col gap-1.5">
@@ -274,7 +297,9 @@ export function EquipasSetupPhase({
           fullWidth
           disabled={!canGenerate}
           onClick={onGenerate}
-          className={cn(canGenerate && "shadow-[0_0_24px_rgba(124,255,79,0.33)]")}
+          className={cn(
+            canGenerate && "shadow-[0_0_24px_rgba(124,255,79,0.33)]",
+          )}
         >
           <Sparkles size={17} strokeWidth={2.2} />
           {canGenerate

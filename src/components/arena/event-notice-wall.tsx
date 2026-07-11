@@ -2,13 +2,9 @@
 
 import { formatDistanceToNow } from "date-fns";
 import { enUS, es, fr, pt } from "date-fns/locale";
-import {
-  Megaphone,
-  Send,
-  Trash2,
-} from "lucide-react";
+import { Megaphone, Send, Trash2 } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import {
   createEventNotice,
   deleteEventNotice,
@@ -52,18 +48,18 @@ export function EventNoticeWall({ eventId, isManager }: EventNoticeWallProps) {
   const [sending, setSending] = useState(false);
   const [showInput, setShowInput] = useState(false);
 
-  useEffect(() => {
-    loadNotices();
-  }, [eventId]);
-
-  async function loadNotices() {
+  const loadNotices = useCallback(async () => {
     setLoading(true);
     const res = await getEventNotices(eventId);
     if (res.success) {
       setNotices(res.data as unknown as Notice[]);
     }
     setLoading(false);
-  }
+  }, [eventId]);
+
+  useEffect(() => {
+    void loadNotices();
+  }, [loadNotices]);
 
   async function handleSend() {
     if (!message.trim()) return;
@@ -155,9 +151,9 @@ export function EventNoticeWall({ eventId, isManager }: EventNoticeWallProps) {
               "group relative flex flex-col gap-2 rounded-xl border-l-4 p-4 transition-all",
               "bg-arena-surface border-arena-border",
               notice.type === "urgent" &&
-              "border-l-arena-danger bg-arena-danger/5",
+                "border-l-arena-danger bg-arena-danger/5",
               notice.type === "field_change" &&
-              "border-l-arena-warning bg-arena-warning/5",
+                "border-l-arena-warning bg-arena-warning/5",
               notice.type === "info" && "border-l-arena-info bg-arena-info/5",
             )}
           >

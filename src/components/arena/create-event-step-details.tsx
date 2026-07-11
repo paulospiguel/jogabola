@@ -1,9 +1,9 @@
 "use client";
 
 import { Users } from "lucide-react";
-import { useTranslations } from "next-intl";
-import { cn } from "@/lib/utils";
+import type { useTranslations } from "next-intl";
 import { EventDatePicker } from "@/components/ui/event-date-picker";
+import { cn } from "@/lib/utils";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
 import {
@@ -13,7 +13,10 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../ui/select";
-import type { CreateEventFormState, SetFormField } from "./create-event-form-types";
+import type {
+  CreateEventFormState,
+  SetFormField,
+} from "./create-event-form-types";
 
 interface CreateEventStepDetailsProps {
   form: Pick<

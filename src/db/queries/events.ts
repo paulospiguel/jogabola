@@ -36,7 +36,7 @@ export async function queryEventByIdOrSlug(idOrSlug: number | string) {
     .where(
       typeof idOrSlug === "number" || !isNaN(Number(idOrSlug))
         ? eq(matchSessions.id, Number(idOrSlug))
-        : eq(matchSessions.slug, String(idOrSlug))
+        : eq(matchSessions.slug, String(idOrSlug)),
     )
     .limit(1);
   return event ?? null;

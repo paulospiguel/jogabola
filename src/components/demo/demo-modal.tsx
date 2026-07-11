@@ -15,10 +15,7 @@ interface DemoModalProps {
   className?: string;
 }
 
-export function DemoModal({
-  label,
-  className,
-}: DemoModalProps) {
+export function DemoModal({ label, className }: DemoModalProps) {
   const t = useTranslations("videoDemo");
   const resolvedLabel = label ?? t("openLabel");
   const [open, setOpen] = useState(false);

@@ -13,7 +13,7 @@ import {
 import Image from "next/image";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useState } from "react";
 import { submitPaymentProof } from "@/actions/payments.actions";
 import { PAYMENT_STATUS } from "@/constants/payments";
 import { usePayment } from "@/hooks/use-payments";
@@ -114,7 +114,6 @@ interface ProofUploadProps {
 
 function ProofUpload({ paymentId, onUploaded }: ProofUploadProps) {
   const t = useTranslations("paymentResult");
-  const inputRef = useRef<HTMLInputElement>(null);
   const [preview, setPreview] = useState<string | null>(null);
   const [isPdf, setIsPdf] = useState(false);
   const [submitting, setSubmitting] = useState(false);
@@ -137,6 +136,7 @@ function ProofUpload({ paymentId, onUploaded }: ProofUploadProps) {
       }
     },
   });
+  const isUploading = state.status === "uploading" || submitting;
 
   const handleFile = useCallback(
     (file: File) => {
@@ -168,11 +168,11 @@ function ProofUpload({ paymentId, onUploaded }: ProofUploadProps) {
 
   function handleDrop(e: React.DragEvent) {
     e.preventDefault();
+    if (isUploading) return;
     const file = e.dataTransfer.files?.[0];
     if (file) handleFile(file);
   }
 
-  const isUploading = state.status === "uploading" || submitting;
   const uploadError =
     state.status === "error" ? state.message : submitError || "";
 
@@ -196,25 +196,22 @@ function ProofUpload({ paymentId, onUploaded }: ProofUploadProps) {
       </p>
 
       {/* Drop zone */}
+      {/* biome-ignore lint/a11y/noStaticElementInteractions: The wrapper only receives drag events for its native file input. */}
       <div
-        role="button"
-        tabIndex={0}
-        onClick={() => inputRef.current?.click()}
         onDrop={handleDrop}
         onDragOver={e => e.preventDefault()}
-        onKeyDown={e => e.key === "Enter" && inputRef.current?.click()}
         className={cn(
-          "relative flex min-h-[140px] cursor-pointer flex-col items-center justify-center gap-3 overflow-hidden rounded-[14px] border-2 border-dashed transition-all",
+          "relative flex min-h-[140px] flex-col items-center justify-center gap-3 overflow-hidden rounded-[14px] border-2 border-dashed transition-all has-[input:focus-visible]:border-arena-primary has-[input:focus-visible]:ring-4 has-[input:focus-visible]:ring-arena-primary/15",
           isUploading
-            ? "border-arena-primary/40 bg-arena-primary/5"
-            : "border-arena-border bg-arena-surface hover:border-arena-primary/40 hover:bg-arena-primary/5",
+            ? "cursor-not-allowed border-arena-primary/40 bg-arena-primary/5"
+            : "cursor-pointer border-arena-border bg-arena-surface hover:border-arena-primary/40 hover:bg-arena-primary/5",
         )}
       >
         <input
-          ref={inputRef}
           type="file"
           accept="image/*,application/pdf"
-          className="sr-only"
+          aria-label={t("proof.dropzone")}
+          className="absolute inset-0 z-10 size-full cursor-pointer opacity-0 disabled:pointer-events-none disabled:cursor-not-allowed"
           onChange={handleInputChange}
           disabled={isUploading}
         />

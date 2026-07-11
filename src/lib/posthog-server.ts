@@ -10,10 +10,13 @@ export function getPostHogServer() {
   }
 
   const apiKey = process.env.NEXT_PUBLIC_POSTHOG_KEY;
-  const host = process.env.NEXT_PUBLIC_POSTHOG_HOST || "https://eu.i.posthog.com";
+  const host =
+    process.env.NEXT_PUBLIC_POSTHOG_HOST || "https://eu.i.posthog.com";
 
   if (!apiKey) {
-    console.warn("[PostHog] NEXT_PUBLIC_POSTHOG_KEY is not set. Server events will be dropped.");
+    console.warn(
+      "[PostHog] NEXT_PUBLIC_POSTHOG_KEY is not set. Server events will be dropped.",
+    );
     return null;
   }
 
@@ -33,7 +36,7 @@ export function getPostHogServer() {
 export function trackServerEvent(
   distinctId: string,
   event: string,
-  properties?: Record<string, any>
+  properties?: Record<string, any>,
 ) {
   const client = getPostHogServer();
   if (client) {

@@ -12,9 +12,9 @@ import {
 } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useState } from "react";
+import { PAYMENT_STATUS } from "@/constants/payments";
 import { cn } from "@/lib/utils";
 import type { PaymentMethod } from "@/types/payments";
-import { PAYMENT_STATUS } from "@/constants/payments";
 
 export type PaymentMethodStatus = "idle" | "pending" | "paid" | "rejected";
 
@@ -27,7 +27,12 @@ export interface MethodState {
 
 export function useMethodMeta(): Record<
   PaymentMethod,
-  { label: string; description: string; icon: React.ElementType; accent: string }
+  {
+    label: string;
+    description: string;
+    icon: React.ElementType;
+    accent: string;
+  }
 > {
   const t = useTranslations("athleteRsvp.paymentMethodCard");
   return {
@@ -84,7 +89,9 @@ export function StatusPill({ status }: { status: PaymentMethodStatus }) {
       )}
     >
       {status === PAYMENT_STATUS.PAID && <Check size={9} strokeWidth={3} />}
-      {status === PAYMENT_STATUS.PENDING && <Loader2 size={9} className="animate-spin" />}
+      {status === PAYMENT_STATUS.PENDING && (
+        <Loader2 size={9} className="animate-spin" />
+      )}
       {status === PAYMENT_STATUS.REJECTED && <AlertCircle size={9} />}
       {s.label}
     </span>

@@ -2,7 +2,7 @@
 
 import { Check, Globe } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useLocale, useTranslations, useFormatter } from "next-intl";
+import { useFormatter, useLocale, useTranslations } from "next-intl";
 import { useState, useTransition } from "react";
 import { setLocale } from "@/actions/locale.actions";
 import {
@@ -193,10 +193,14 @@ export default function LanguageSelector({
                   </span>
                   <span className="min-w-0">
                     <span className="block truncate text-base font-extrabold leading-snug tracking-normal text-arena-text">
-                      {languageFormatter.displayName(lang, { type: "language" })}
+                      {languageFormatter.displayName(lang, {
+                        type: "language",
+                      })}
                     </span>
                     <span className="block truncate text-xs font-semibold leading-snug tracking-normal text-arena-text-muted">
-                      {languageFormatter.displayName(lang, { type: "language" })}
+                      {languageFormatter.displayName(lang, {
+                        type: "language",
+                      })}
                     </span>
                   </span>
                 </span>

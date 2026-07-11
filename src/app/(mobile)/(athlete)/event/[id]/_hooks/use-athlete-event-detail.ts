@@ -6,8 +6,8 @@ import {
   cancelUserAttendance,
   confirmUserAttendance,
 } from "@/actions/attendance.actions";
-import type { Participant } from "@/hooks/use-event-attendance";
 import { ATTENDANCE_STATUS } from "@/constants/attendance";
+import type { Participant } from "@/hooks/use-event-attendance";
 
 interface UseAthleteEventDetailOptions {
   eventId: number;

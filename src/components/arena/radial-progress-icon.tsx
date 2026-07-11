@@ -20,13 +20,14 @@ export function RadialProgressIcon({
 }: RadialProgressIconProps) {
   // Normalizar progresso entre 0 e 100
   const normalizedProgress = Math.min(100, Math.max(0, progress));
-  
+
   // Raio do círculo (com base em viewBox 24x24)
   const radius = 9.5;
   // Perímetro do círculo
   const circumference = 2 * Math.PI * radius;
   // Offset para simular o preenchimento no sentido dos ponteiros do relógio
-  const strokeDashoffset = circumference - (normalizedProgress / 100) * circumference;
+  const strokeDashoffset =
+    circumference - (normalizedProgress / 100) * circumference;
 
   const isZero = normalizedProgress === 0;
   const isFull = normalizedProgress === 100;
@@ -34,7 +35,7 @@ export function RadialProgressIcon({
   // Lógica de Cores por Escala (Vermelho, Amarelo, Verde Neon)
   let strokeColor = "#7CFF4F"; // Verde Neon (Excelente >= 61% / rating >= 6.1)
   let trackClass = "text-arena-primary/10";
-  
+
   if (isZero) {
     strokeColor = "#6B7280"; // Cinza se for 0%
     trackClass = "text-arena-text-muted/20";
@@ -47,13 +48,16 @@ export function RadialProgressIcon({
   }
 
   return (
-    <div 
+    <div
       className="inline-flex items-center justify-center shrink-0"
       style={{ width: size, height: size }}
     >
       <svg
         viewBox="0 0 24 24"
-        className={cn("w-full h-full shrink-0 select-none overflow-visible", className)}
+        className={cn(
+          "w-full h-full shrink-0 select-none overflow-visible",
+          className,
+        )}
         aria-valuenow={normalizedProgress}
         aria-valuemin={0}
         aria-valuemax={100}
@@ -69,7 +73,7 @@ export function RadialProgressIcon({
           strokeWidth={strokeWidth}
           className={cn("transition-colors duration-300", trackClass)}
         />
-        
+
         {/* Círculo de Progresso Ativo (Preenchimento Estilo Relógio) */}
         {!isZero && (
           <circle
@@ -85,7 +89,7 @@ export function RadialProgressIcon({
             transform="rotate(-90 12 12)" // Iniciar do topo (12 horas)
             className={cn(
               "transition-all duration-300 ease-out",
-              isFull ? "drop-shadow-[0_0_3px_rgba(124,255,79,0.4)]" : ""
+              isFull ? "drop-shadow-[0_0_3px_rgba(124,255,79,0.4)]" : "",
             )}
           />
         )}
@@ -99,9 +103,9 @@ export function RadialProgressIcon({
             dominantBaseline="central"
             fill={strokeColor}
             className="font-bold select-none tracking-tighter"
-            style={{ 
-              fontSize: valueText.length > 2 ? "6px" : "7px", 
-              fontFamily: "Inter, Sora, sans-serif" 
+            style={{
+              fontSize: valueText.length > 2 ? "6px" : "7px",
+              fontFamily: "Inter, Sora, sans-serif",
             }}
           >
             {valueText}

@@ -10,10 +10,10 @@ import {
   Smartphone,
 } from "lucide-react";
 import { useTranslations } from "next-intl";
-import type { TeamPaymentConfig } from "@/types/payments";
 import { PAYMENT_STATUS } from "@/constants/payments";
-import { CopyButton } from "./payment-method-shared";
+import type { TeamPaymentConfig } from "@/types/payments";
 import type { PaymentMethodStatus } from "./payment-method-shared";
+import { CopyButton } from "./payment-method-shared";
 
 function formatIban(iban: string): string {
   const clean = iban.replace(/\s+/g, "").toUpperCase();
@@ -113,7 +113,9 @@ export function MbwayMethodCard({
             <span className="text-[11px] text-arena-text-muted">
               {t("methods.mbway.amount")}
             </span>
-            <span className="text-[13px] font-bold text-arena-text">{amount}</span>
+            <span className="text-[13px] font-bold text-arena-text">
+              {amount}
+            </span>
           </div>
         </div>
       )}
@@ -260,7 +262,9 @@ export function TransferMethodCard({
           <span className="text-[11px] text-arena-text-muted">
             {t("methods.mbway.amount")}
           </span>
-          <span className="text-[13px] font-bold text-arena-text">{amount}</span>
+          <span className="text-[13px] font-bold text-arena-text">
+            {amount}
+          </span>
         </div>
       </div>
 

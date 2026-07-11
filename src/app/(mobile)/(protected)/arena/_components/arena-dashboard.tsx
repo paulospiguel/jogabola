@@ -1,5 +1,6 @@
 "use client";
 
+import { motion } from "framer-motion";
 import {
   Calendar,
   ChevronLeft,
@@ -13,21 +14,20 @@ import {
   Users,
   Zap,
 } from "lucide-react";
-import { motion } from "framer-motion";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
 import { useEffect, useState } from "react";
 import { AddPlayerSheet } from "@/components/arena/add-player-sheet";
-import { Cta } from "@/components/arena/cta";
+import { JbAvatar } from "@/components/arena/avatar";
 import { CreateEventSheet } from "@/components/arena/create-event-sheet";
 import { CreateTeamSheet } from "@/components/arena/create-team-sheet";
-import { JbAvatar } from "@/components/arena/avatar";
+import { Cta } from "@/components/arena/cta";
 import { PlayerRow } from "@/components/arena/player-row";
 import Loading from "@/components/loading";
 import { useDashboardData } from "@/hooks/use-dashboard";
 import { useEventAttendance } from "@/hooks/use-event-attendance";
-import type { EventStatus } from "@/types/events";
 import { FEATURES } from "@/lib/features";
+import type { EventStatus } from "@/types/events";
 
 interface ArenaDashboardProps {
   userId: string;
@@ -460,11 +460,19 @@ export function ArenaDashboard({ userId }: ArenaDashboardProps) {
                       className="flex flex-col gap-2 rounded-[14px] border border-arena-border bg-arena-surface p-3.5 transition-all duration-150 hover:border-arena-primary/35 hover:bg-arena-surface-el active:scale-[0.97]"
                     >
                       <div className="flex size-9 items-center justify-center rounded-[11px] bg-arena-highlight/15 border border-arena-highlight/30">
-                        <Trophy size={18} className="text-arena-highlight" strokeWidth={1.7} />
+                        <Trophy
+                          size={18}
+                          className="text-arena-highlight"
+                          strokeWidth={1.7}
+                        />
                       </div>
                       <div>
-                        <div className="text-[13px] font-bold text-arena-text">{t("sections.rankings")}</div>
-                        <div className="mt-0.5 text-[11px] text-arena-text-muted">{t("sections.rankingsSub")}</div>
+                        <div className="text-[13px] font-bold text-arena-text">
+                          {t("sections.rankings")}
+                        </div>
+                        <div className="mt-0.5 text-[11px] text-arena-text-muted">
+                          {t("sections.rankingsSub")}
+                        </div>
                       </div>
                     </Link>
                   )}
@@ -474,11 +482,19 @@ export function ArenaDashboard({ userId }: ArenaDashboardProps) {
                       className="flex flex-col gap-2 rounded-[14px] border border-arena-border bg-arena-surface p-3.5 transition-all duration-150 hover:border-arena-primary/35 hover:bg-arena-surface-el active:scale-[0.97]"
                     >
                       <div className="flex size-9 items-center justify-center rounded-[11px] bg-arena-info/15 border border-arena-info/30">
-                        <History size={18} className="text-arena-info" strokeWidth={1.7} />
+                        <History
+                          size={18}
+                          className="text-arena-info"
+                          strokeWidth={1.7}
+                        />
                       </div>
                       <div>
-                        <div className="text-[13px] font-bold text-arena-text">{t("sections.historical")}</div>
-                        <div className="mt-0.5 text-[11px] text-arena-text-muted">{t("sections.historicalSub")}</div>
+                        <div className="text-[13px] font-bold text-arena-text">
+                          {t("sections.historical")}
+                        </div>
+                        <div className="mt-0.5 text-[11px] text-arena-text-muted">
+                          {t("sections.historicalSub")}
+                        </div>
                       </div>
                     </Link>
                   )}

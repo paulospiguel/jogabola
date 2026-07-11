@@ -11,11 +11,8 @@ import {
   StripeMethodCard,
   TransferMethodCard,
 } from "./payment-method-cards";
-import {
-  StatusPill,
-  useMethodMeta,
-} from "./payment-method-shared";
 import type { MethodState, PaymentMethodStatus } from "./payment-method-shared";
+import { StatusPill, useMethodMeta } from "./payment-method-shared";
 
 export type { PaymentMethodStatus };
 

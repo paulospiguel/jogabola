@@ -4,8 +4,8 @@ import { and, eq, inArray, isNull, sql } from "drizzle-orm";
 import { z } from "zod";
 import { db } from "@/db/client";
 import {
-  players,
   playerRatings,
+  players,
   session,
   teamMembers,
   teams,

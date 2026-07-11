@@ -65,11 +65,17 @@ export function GuestInfoStep({
 
       <p className="text-center text-[10px] text-arena-text-muted">
         {t("terms.prefix")}{" "}
-        <Link href="/terms" className="underline hover:text-arena-text transition-colors">
+        <Link
+          href="/terms"
+          className="underline hover:text-arena-text transition-colors"
+        >
           {t("terms.terms")}
         </Link>{" "}
         {t("terms.and")}{" "}
-        <Link href="/privacy" className="underline hover:text-arena-text transition-colors">
+        <Link
+          href="/privacy"
+          className="underline hover:text-arena-text transition-colors"
+        >
           {t("terms.privacy")}
         </Link>
         .

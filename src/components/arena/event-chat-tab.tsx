@@ -1,9 +1,9 @@
 "use client";
 
-import { motion, AnimatePresence } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import {
-  EyeOff,
   Eye,
+  EyeOff,
   Lock,
   MessageSquare,
   Send,
@@ -14,8 +14,8 @@ import type { useTranslations } from "next-intl";
 import { useCallback, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { cn } from "@/lib/utils";
 import type { EventChatMessage } from "@/hooks/use-event-chat";
+import { cn } from "@/lib/utils";
 
 interface EventChatTabProps {
   chatMessages: EventChatMessage[];
@@ -251,7 +251,7 @@ export function EventChatTab({
                 className={cn(
                   "flex items-start gap-2.5 max-w-[85%] select-none",
                   msg.self ? "self-end flex-row-reverse" : "self-start",
-                  (msg.self || isCaptain) ? "cursor-pointer" : "",
+                  msg.self || isCaptain ? "cursor-pointer" : "",
                 )}
                 onClick={() => openMenu(msg)}
               >
@@ -291,7 +291,10 @@ export function EventChatTab({
                         </span>
                         {/* Censurado label overlay */}
                         <div className="absolute inset-0 flex items-center justify-center gap-1.5">
-                          <EyeOff size={11} className="text-arena-text-muted shrink-0" />
+                          <EyeOff
+                            size={11}
+                            className="text-arena-text-muted shrink-0"
+                          />
                           <span className="text-[10px] font-bold text-arena-text-muted">
                             {t("interactive.messageCensored")}
                           </span>

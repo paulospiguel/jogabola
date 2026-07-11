@@ -1,14 +1,8 @@
 "use client";
 
+import { ArrowLeft, ArrowLeftRight, Shuffle, Sparkles, X } from "lucide-react";
+import type { useTranslations } from "next-intl";
 import type { BalancedPlayer } from "@/actions/team-balancer.actions";
-import {
-  ArrowLeft,
-  ArrowLeftRight,
-  Shuffle,
-  Sparkles,
-  X,
-} from "lucide-react";
-import { useTranslations } from "next-intl";
 import { cn } from "@/lib/utils";
 import { PlayerRow } from "./equipas-player-row";
 
@@ -89,14 +83,20 @@ export function EquipasResultPhase({
               isBalanced ? "text-arena-primary" : "text-arena-warning",
             )}
           >
-            {isBalanced ? t("result.balanced_ok") : t("result.balanced_ok_rough")}
+            {isBalanced
+              ? t("result.balanced_ok")
+              : t("result.balanced_ok_rough")}
           </span>
         </div>
 
         {/* Swap mode banner */}
         {swapMode && (
           <div className="flex items-center gap-2 rounded-[11px] border border-arena-info/44 bg-arena-info/14 px-3 py-2.5">
-            <ArrowLeftRight size={14} className="text-arena-info" strokeWidth={2.2} />
+            <ArrowLeftRight
+              size={14}
+              className="text-arena-info"
+              strokeWidth={2.2}
+            />
             <div className="flex-1 text-[11px] font-semibold text-arena-info">
               {swapPick
                 ? t("result.swapPick", {
@@ -164,9 +164,7 @@ export function EquipasResultPhase({
                   color={TEAM_COLORS[tIdx]}
                   selected={swapPick?.player.id === p.id}
                   muted={
-                    swapMode &&
-                    swapPick !== null &&
-                    swapPick.player.id !== p.id
+                    swapMode && swapPick !== null && swapPick.player.id !== p.id
                   }
                   onPress={swapMode ? () => onSwap(p, tIdx) : undefined}
                 />

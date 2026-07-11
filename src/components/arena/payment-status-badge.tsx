@@ -1,6 +1,15 @@
 "use client";
 
-import { AlertTriangle, Banknote, CircleDollarSign, Clock, CreditCard, Hourglass, Smartphone, X } from "lucide-react";
+import {
+  AlertTriangle,
+  Banknote,
+  CircleDollarSign,
+  Clock,
+  CreditCard,
+  Hourglass,
+  Smartphone,
+  X,
+} from "lucide-react";
 import { useTranslations } from "next-intl";
 import { PAYMENT_STATUS } from "@/constants/payments";
 import { cn } from "@/lib/utils";
@@ -70,17 +79,22 @@ export function PaymentStatusBadge({
         </div>
       )}
 
-      {(effectiveStatus === PAYMENT_STATUS.REJECTED || effectiveStatus === PAYMENT_STATUS.REFUNDED) && (
+      {(effectiveStatus === PAYMENT_STATUS.REJECTED ||
+        effectiveStatus === PAYMENT_STATUS.REFUNDED) && (
         <div className="flex size-6 shrink-0 items-center justify-center rounded-full border border-arena-danger/25 bg-arena-danger/10 text-arena-danger">
           <X size={12} strokeWidth={2.5} />
         </div>
       )}
 
       {/* Method icon — only when paid or verifying */}
-      {(effectiveStatus === PAYMENT_STATUS.APPROVED || effectiveStatus === PAYMENT_STATUS.PAID_UNVERIFIED) && MethodIcon && (
-        <MethodIcon size={12} className="text-arena-text-muted transition-colors hover:text-arena-text" />
-      )}
+      {(effectiveStatus === PAYMENT_STATUS.APPROVED ||
+        effectiveStatus === PAYMENT_STATUS.PAID_UNVERIFIED) &&
+        MethodIcon && (
+          <MethodIcon
+            size={12}
+            className="text-arena-text-muted transition-colors hover:text-arena-text"
+          />
+        )}
     </div>
   );
 }
-

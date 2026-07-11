@@ -1,7 +1,7 @@
 "use client";
 
 import { Check, Search } from "lucide-react";
-import { useTranslations } from "next-intl";
+import type { useTranslations } from "next-intl";
 import { cn } from "@/lib/utils";
 import { Input } from "../ui/input";
 import { getAvatarColor } from "./create-event-avatar-color";

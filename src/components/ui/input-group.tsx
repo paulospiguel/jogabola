@@ -9,6 +9,7 @@ import { cn } from "@/lib/utils";
 
 function InputGroup({ className, ...props }: React.ComponentProps<"div">) {
   return (
+    // biome-ignore lint/a11y/useSemanticElements: This control wrapper must retain its generic div prop contract.
     <div
       data-slot="input-group"
       role="group"
@@ -62,6 +63,7 @@ function InputGroupAddon({
   ...props
 }: React.ComponentProps<"div"> & VariantProps<typeof inputGroupAddonVariants>) {
   return (
+    // biome-ignore lint/a11y/useSemanticElements: Addons can contain mixed adornments and controls, not a fieldset.
     <div
       role="group"
       data-slot="input-group-addon"

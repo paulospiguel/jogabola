@@ -12,7 +12,9 @@ export default async function ArenaNotificationsPage() {
   }
 
   const notificationsResult = await getNotifications();
-  const notifications = notificationsResult.success ? notificationsResult.data : [];
+  const notifications = notificationsResult.success
+    ? notificationsResult.data
+    : [];
 
   return (
     <NotificationsList

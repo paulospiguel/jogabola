@@ -1,10 +1,16 @@
 "use client";
 
-import { ChevronsUpDown, ListTree, Lock, Plus, Shield, Zap } from "lucide-react";
+import {
+  ChevronsUpDown,
+  ListTree,
+  Lock,
+  Plus,
+  Shield,
+  Zap,
+} from "lucide-react";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
 import { useState } from "react";
-import { useLockedTeam } from "./locked-team-context";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -22,6 +28,7 @@ import {
 import { useTeams } from "@/hooks/use-teams";
 import { cn } from "@/lib/utils";
 import { CreateTeamSheet } from "./create-team-sheet";
+import { useLockedTeam } from "./locked-team-context";
 
 export interface Team {
   id: number;
@@ -238,7 +245,8 @@ function SidebarTeamSwitcher() {
           <div
             className={cn(
               "flex h-12 w-full cursor-default items-center gap-3 rounded-xl border border-arena-border/30 bg-arena-surface-el/30 px-3 opacity-60 select-none",
-              collapsed && "h-10 w-10 justify-center border-none bg-transparent p-0",
+              collapsed &&
+                "h-10 w-10 justify-center border-none bg-transparent p-0",
             )}
             title={t("lockedToTeam")}
             aria-disabled="true"
@@ -261,7 +269,10 @@ function SidebarTeamSwitcher() {
                     {t("lockedToTeam")}
                   </span>
                 </div>
-                <Lock className="ml-auto size-3.5 shrink-0 text-arena-text-muted/50" strokeWidth={2} />
+                <Lock
+                  className="ml-auto size-3.5 shrink-0 text-arena-text-muted/50"
+                  strokeWidth={2}
+                />
               </>
             )}
           </div>

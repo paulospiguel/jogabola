@@ -85,7 +85,8 @@ export function AthleteEventDetail({
   });
 
   const isCancelled =
-    event.status === EVENT_STATUS.CANCELLED || String(event.status) === "canceled";
+    event.status === EVENT_STATUS.CANCELLED ||
+    String(event.status) === "canceled";
   const total = Number(event.maxParticipants) || 14;
   const isFull = confirmed.length >= total;
   const myPaymentStatus =

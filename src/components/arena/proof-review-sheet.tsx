@@ -16,8 +16,8 @@ import {
 } from "@/actions/payments.actions";
 import { JbAvatar } from "@/components/arena/avatar";
 import { BottomSheet } from "@/components/arena/bottom-sheet";
-import type { Payment } from "@/hooks/use-payments";
 import { PAYMENT_REVIEW_STATUS } from "@/constants/payments";
+import type { Payment } from "@/hooks/use-payments";
 import { cn } from "@/lib/utils";
 
 interface ProofReviewSheetProps {
@@ -59,7 +59,9 @@ export function ProofReviewSheet({
   const actionDisabled = isPending || !paymentId;
 
   function runStatusAction(
-    status: typeof PAYMENT_REVIEW_STATUS.APPROVED | typeof PAYMENT_REVIEW_STATUS.REJECTED,
+    status:
+      | typeof PAYMENT_REVIEW_STATUS.APPROVED
+      | typeof PAYMENT_REVIEW_STATUS.REJECTED,
   ) {
     setPendingAction(
       status === PAYMENT_REVIEW_STATUS.APPROVED ? "approve" : "reject",

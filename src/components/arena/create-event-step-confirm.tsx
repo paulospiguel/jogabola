@@ -2,8 +2,15 @@
 
 import { format } from "date-fns";
 import { pt } from "date-fns/locale";
-import { AlertCircle, Calendar, Clock, Compass, MapPin, Shield } from "lucide-react";
-import { useTranslations } from "next-intl";
+import {
+  AlertCircle,
+  Calendar,
+  Clock,
+  Compass,
+  MapPin,
+  Shield,
+} from "lucide-react";
+import type { useTranslations } from "next-intl";
 import { cn } from "@/lib/utils";
 import { getAvatarColor } from "./create-event-avatar-color";
 import type { CreateEventFormState } from "./create-event-form-types";
@@ -46,7 +53,9 @@ export function CreateEventStepConfirm({
               form.type === "game" ? "text-arena-primary" : "text-[#00D8F6]",
             )}
           >
-            {form.type === "game" ? t("types.game.label") : t("types.training.label")}
+            {form.type === "game"
+              ? t("types.game.label")
+              : t("types.training.label")}
           </span>
         </div>
 

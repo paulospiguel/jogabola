@@ -25,7 +25,10 @@ interface LockedTeamProviderProps {
  * will render as read-only (disabled), because the context
  * belongs to a single team and switching makes no sense here.
  */
-export function LockedTeamProvider({ teamId, children }: LockedTeamProviderProps) {
+export function LockedTeamProvider({
+  teamId,
+  children,
+}: LockedTeamProviderProps) {
   return (
     <LockedTeamContext.Provider value={{ lockedTeamId: teamId }}>
       {children}

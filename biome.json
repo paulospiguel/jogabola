@@ -59,6 +59,12 @@
       "selfCloseVoidElements": "always"
     }
   },
+  "overrides": [
+    {
+      "includes": ["src/assets/lottie/*.json"],
+      "formatter": { "enabled": false }
+    }
+  ],
   "assist": {
     "enabled": true,
     "actions": {

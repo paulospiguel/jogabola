@@ -1,5 +1,5 @@
-import { type Locale } from "@/i18n/configs";
-import { type Language } from "@/types/languages";
+import type { Locale } from "@/i18n/configs";
+import type { Language } from "@/types/languages";
 
 export const LANGUAGES: Record<Locale, Language> = {
   en: {

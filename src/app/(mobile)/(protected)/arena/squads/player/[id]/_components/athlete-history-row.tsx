@@ -20,7 +20,10 @@ interface AthleteHistoryRowProps {
 export function AthleteHistoryRow({ item, index }: AthleteHistoryRowProps) {
   const t = useTranslations("arenaAthleteProfile");
 
-  const statusMap: Record<string, { label: string; icon: React.ReactNode; cls: string }> = {
+  const statusMap: Record<
+    string,
+    { label: string; icon: React.ReactNode; cls: string }
+  > = {
     [ATTENDANCE_STATUS.CONFIRMED]: {
       label: t("attendanceStatus.confirmed"),
       icon: <Check size={10} strokeWidth={2.5} />,
