@@ -3,6 +3,7 @@
 import { ChevronLeft, Flag } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import { uid } from "./format";
 import { EventTimeline } from "./event-timeline";
 import { LogCardSheet } from "./log-card-sheet";
 import { LogGoalSheet } from "./log-goal-sheet";
@@ -10,7 +11,7 @@ import { MatchControls } from "./match-controls";
 import { Scoreboard } from "./scoreboard";
 import { SummaryModal } from "./summary-modal";
 import { TimerRing } from "./timer-ring";
-import type { TeamSide } from "./types";
+import type { Player, TeamSide } from "./types";
 import { deriveClock, score, useLiveMatch } from "./use-match-store";
 
 export function MatchView({ id }: { id: string }) {
@@ -128,6 +129,11 @@ export function MatchView({ id }: { id: string }) {
           onConfirm={(playerId, assistId) =>
             actions.addGoal(goalSide, playerId, assistId)
           }
+          onAddPlayer={(name) => {
+            const p: Player = { id: uid(), name };
+            actions.addPlayerToTeam(goalSide, p);
+            return p;
+          }}
           onClose={() => setGoalSide(null)}
         />
       )}
@@ -137,6 +143,11 @@ export function MatchView({ id }: { id: string }) {
           onConfirm={(playerId, card) =>
             actions.addCard(cardSide, playerId, card)
           }
+          onAddPlayer={(name) => {
+            const p: Player = { id: uid(), name };
+            actions.addPlayerToTeam(cardSide, p);
+            return p;
+          }}
           onClose={() => setCardSide(null)}
         />
       )}

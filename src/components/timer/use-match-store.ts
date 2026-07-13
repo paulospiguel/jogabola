@@ -9,6 +9,7 @@ import type {
   MatchConfig,
   MatchEvent,
   MatchType,
+  Player,
   SavedTeam,
   Team,
   TeamSide,
@@ -340,6 +341,27 @@ export function useLiveMatch(id: string) {
     });
   }, []);
 
+  const addPlayerToTeam = useCallback(
+    (side: TeamSide, player: Player) => {
+      setMatch(prev => {
+        if (!prev) return prev;
+        const team = prev.teams[side];
+        // Avoid duplicates (same id) in case of concurrent calls.
+        if (team.players.some(p => p.id === player.id)) return prev;
+        const next: Match = {
+          ...prev,
+          teams: {
+            ...prev.teams,
+            [side]: { ...team, players: [...team.players, player] },
+          },
+        };
+        upsertMatch(next);
+        return next;
+      });
+    },
+    [],
+  );
+
   return {
     match,
     now,
@@ -353,6 +375,7 @@ export function useLiveMatch(id: string) {
       addGoal,
       addCard,
       removeEvent,
+      addPlayerToTeam,
     },
   };
 }
