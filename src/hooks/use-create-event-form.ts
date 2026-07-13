@@ -1,11 +1,11 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
 import { useTranslations } from "next-intl";
+import { useEffect, useMemo, useState } from "react";
 import { createEvent, updateEvent } from "@/actions/match-sessions.actions";
+import type { CreateEventFormState } from "@/components/arena/create-event-form-types";
 import { useSquad } from "@/hooks/use-squad";
 import { useTeamPaymentSettings } from "@/hooks/use-team-payment-settings";
-import type { CreateEventFormState } from "@/components/arena/create-event-form-types";
 
 interface UseCreateEventFormOptions {
   teamId?: number;
@@ -30,7 +30,11 @@ interface UseCreateEventFormOptions {
   };
 }
 
-export function useCreateEventForm({ teamId, onCreated, eventToEdit }: UseCreateEventFormOptions) {
+export function useCreateEventForm({
+  teamId,
+  onCreated,
+  eventToEdit,
+}: UseCreateEventFormOptions) {
   const t = useTranslations("arenaCreateEvent");
   const { players } = useSquad();
   const { settings } = useTeamPaymentSettings(teamId);
@@ -47,15 +51,28 @@ export function useCreateEventForm({ teamId, onCreated, eventToEdit }: UseCreate
   const [form, setForm] = useState<CreateEventFormState>(() => {
     if (eventToEdit) {
       return {
-        type: (eventToEdit.type === "training" || eventToEdit.type === "game" || eventToEdit.type === "challenge") ? eventToEdit.type : "game",
+        type:
+          eventToEdit.type === "training" ||
+          eventToEdit.type === "game" ||
+          eventToEdit.type === "challenge"
+            ? eventToEdit.type
+            : "game",
         title: eventToEdit.title,
         location: eventToEdit.location,
-        startDate: typeof eventToEdit.startDate === "string" ? new Date(eventToEdit.startDate) : eventToEdit.startDate,
+        startDate:
+          typeof eventToEdit.startDate === "string"
+            ? new Date(eventToEdit.startDate)
+            : eventToEdit.startDate,
         maxPlayers: eventToEdit.maxParticipants || "14",
-        recurrence: (eventToEdit.recurrence === "weekly" || eventToEdit.recurrence === "monthly") ? eventToEdit.recurrence : "once",
+        recurrence:
+          eventToEdit.recurrence === "weekly" ||
+          eventToEdit.recurrence === "monthly"
+            ? eventToEdit.recurrence
+            : "once",
         priceCents: eventToEdit.priceCents || 0,
         paymentRequired: eventToEdit.paymentRequired || false,
-        paymentDeadlineHours: eventToEdit.paymentDeadlineHours?.toString() || "",
+        paymentDeadlineHours:
+          eventToEdit.paymentDeadlineHours?.toString() || "",
         rosterOnly: eventToEdit.rosterOnly || false,
         rosterPriorityHours: 0,
         mbwayEnabled: eventToEdit.mbwayEnabled || false,
@@ -206,7 +223,8 @@ export function useCreateEventForm({ teamId, onCreated, eventToEdit }: UseCreate
       setDone(true);
       onCreated?.();
     } else {
-      setError(t("error"));
+      const code = result.error.code;
+      setError(t.has(`errors.${code}`) ? t(`errors.${code}`) : t("error"));
     }
   }
 

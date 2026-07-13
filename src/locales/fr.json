@@ -311,7 +311,12 @@
       "telegram": "Telegram",
       "shareMessage": "Convocation : {title} — Confirmez votre présence :"
     },
-    "error": "Erreur lors de la création de l'événement. Veuillez réessayer.",
+    "error": "Erreur lors de la création de l’événement. Veuillez réessayer.",
+    "errors": {
+      "FORBIDDEN": "Vous n’avez pas l’autorisation de créer un événement pour cette équipe.",
+      "UNAUTHORIZED": "Vous devez être connecté pour créer un événement.",
+      "TEAM_NOT_FOUND": "Aucune équipe n’est disponible pour cet événement."
+    },
     "info": "Après avoir créé l'événement, vous pouvez ajouter des joueurs et gérer la convocation à partir de la page de l'événement.",
     "access": {
       "rosterOnly": "Effectif Uniquement",
@@ -1248,7 +1253,9 @@
     "positions": {
       "GK": "Gardien",
       "CB": "Défenseur",
+      "DEF": "Défenseur",
       "MID": "Milieu",
+      "FWD": "Avant",
       "FW": "Avant"
     }
   },

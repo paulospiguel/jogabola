@@ -1,5 +1,6 @@
 "use client";
 
+import { useQueryClient } from "@tanstack/react-query";
 import { motion } from "framer-motion";
 import {
   Calendar,
@@ -289,6 +290,7 @@ export function EventsList({ upcoming, past }: EventsListProps) {
   const t = useTranslations("arenaEvents");
   const [sheet, setSheet] = useState(false);
   const [activeIndex, setActiveIndex] = useState(0);
+  const queryClient = useQueryClient();
   const { activeTeamId } = useTeams();
   const { events } = useEvents({
     upcomingOnly: false,
@@ -336,6 +338,9 @@ export function EventsList({ upcoming, past }: EventsListProps) {
       {sheet ? (
         <CreateEventSheet
           onClose={() => setSheet(false)}
+          onCreated={() => {
+            void queryClient.invalidateQueries({ queryKey: ["events"] });
+          }}
           teamId={activeTeamId ?? undefined}
         />
       ) : null}

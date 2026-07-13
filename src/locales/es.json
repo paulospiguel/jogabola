@@ -312,6 +312,11 @@
       "shareMessage": "Convocatoria: {title} — Confirma tu asistencia:"
     },
     "error": "Error al crear el evento. Inténtalo de nuevo.",
+    "errors": {
+      "FORBIDDEN": "No tienes permiso para crear un evento en este equipo.",
+      "UNAUTHORIZED": "Debes iniciar sesión para crear un evento.",
+      "TEAM_NOT_FOUND": "No hay ningún equipo disponible para este evento."
+    },
     "info": "Tras crear el evento, puedes añadir jugadores y gestionar la convocatoria desde la página del evento.",
     "access": {
       "rosterOnly": "Solo Plantilla",
@@ -1248,7 +1253,9 @@
     "positions": {
       "GK": "Portero",
       "CB": "Defensa",
+      "DEF": "Defensa",
       "MID": "Centrocampista",
+      "FWD": "Delantero",
       "FW": "Delantero"
     }
   },

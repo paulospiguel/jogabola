@@ -312,6 +312,11 @@
       "shareMessage": "Convocatória: {title} — Confirma a tua presença:"
     },
     "error": "Erro ao criar evento. Tente novamente.",
+    "errors": {
+      "FORBIDDEN": "Não tens permissão para criar um evento nesta equipa.",
+      "UNAUTHORIZED": "Tens de iniciar sessão para criar um evento.",
+      "TEAM_NOT_FOUND": "Não existe nenhuma equipa disponível para este evento."
+    },
     "info": "Após criar o evento, pode adicionar jogadores e gerir a convocatória a partir da página do evento.",
     "access": {
       "rosterOnly": "Apenas Plantel",
@@ -1248,7 +1253,9 @@
     "positions": {
       "GK": "Guarda-Redes",
       "CB": "Defesa",
+      "DEF": "Defesa",
       "MID": "Médio",
+      "FWD": "Avançado",
       "FW": "Avançado"
     }
   },

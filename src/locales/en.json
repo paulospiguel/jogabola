@@ -312,6 +312,11 @@
       "shareMessage": "Invitation: {title} — Confirm your attendance:"
     },
     "error": "Error creating event. Please try again.",
+    "errors": {
+      "FORBIDDEN": "You do not have permission to create an event for this team.",
+      "UNAUTHORIZED": "You must be signed in to create an event.",
+      "TEAM_NOT_FOUND": "No team is available for this event."
+    },
     "info": "After creating the event, you can add players and manage the squad call from the event page.",
     "access": {
       "rosterOnly": "Roster Only",
@@ -1248,7 +1253,9 @@
     "positions": {
       "GK": "Goalkeeper",
       "CB": "Defender",
+      "DEF": "Defender",
       "MID": "Midfielder",
+      "FWD": "Forward",
       "FW": "Forward"
     }
   },
