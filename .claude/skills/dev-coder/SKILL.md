@@ -125,80 +125,10 @@ type Result<T> =
 
 Use the current MVP Arena layout as the source of truth, not the older PES/gamer
 theme. The Arena UI is quiet, dense, dark, mobile-first, and operational.
-
-### Arena Tokens
-
-Define and consume standardized Tailwind v4 tokens from `src/styles/globals.css`:
-
-```css
---color-arena-bg: #0b0f14;
---color-arena-bg-sec: #111827;
---color-arena-surface: #151c26;
---color-arena-surface-el: #1b2430;
---color-arena-border: #263244;
---color-arena-text: #f5f7fa;
---color-arena-text-sec: #a7b0be;
---color-arena-text-muted: #6b7280;
---color-arena-primary: #7cff4f;
---color-arena-success: #22c55e;
---color-arena-warning: #f59e0b;
---color-arena-danger: #ef4444;
---color-arena-info: #38bdf8;
---color-arena-highlight: #facc15;
-```
-
-Use utilities like:
-
-- `bg-arena-bg`, `bg-arena-surface`, `bg-arena-bg-sec`
-- `text-arena-text`, `text-arena-text-sec`, `text-arena-text-muted`
-- `border-arena-border`
-- `bg-arena-primary`, `text-arena-primary`
-- state colors: `arena-success`, `arena-warning`, `arena-danger`, `arena-info`
-
-Do not hardcode Arena hex colors in JSX unless the value is truly dynamic
-(canvas drawing, avatar color generation, chart palette).
-
-### Styling Rules
-
-- Use Tailwind classes first. Avoid `style={{ ... }}`.
-- Use `cn()` from `@/lib/utils` for conditional classes.
-- Use `@theme` tokens for repeated colors, not scattered arbitrary hex.
-- Inline style is allowed only for computed values:
-  - dynamic color generated from data
-  - progress/flex/position values derived from runtime state
-  - canvas/animation library internals
-- Mobile first: base styles target mobile; add `md:`/`lg:` for desktop.
-- Desktop Arena uses fixed left sidebar; mobile uses bottom nav only.
-- Cards: prefer `rounded-[14px]` / `rounded-2xl`, `border-arena-border`,
-  `bg-arena-surface`.
-- Buttons: use icon+label for commands. Icon-only needs `aria-label`.
-- Avoid nested decorative cards and marketing hero layouts inside operational
-  Arena screens.
-
-### Arena Layout Pattern
-
-For protected Arena screens:
-
-```tsx
-<div className="jb-page">
-  <div className="jb-page-inner">
-    <header className="jb-topbar">...</header>
-    <section className="jb-stack">...</section>
-  </div>
-</div>
-```
-
-Shared CSS classes such as `jb-page`, `jb-card`, `jb-action`,
-`jb-section-label`, `jb-dashboard-grid`, and `jb-stack` should stay in
-`globals.css` and use Arena tokens internally.
-
-### Background / Motion
-
-- Arena background may use `DotGrid` and subtle radial overlays.
-- Keep background layers behind content and pointer-safe unless interaction is
-  explicitly required.
-- Motion should support utility, not spectacle. Use short transitions and avoid
-  layout shift.
+Tailwind-first styling, Arena color tokens, layout patterns, components, and
+the visual QA checklist are detailed in `references/ui-agent.md` — read it
+before UI work. Do not hardcode Arena hex colors in JSX unless the value is
+truly dynamic (canvas drawing, avatar color generation, chart palette).
 
 ## Refactor Policy
 
