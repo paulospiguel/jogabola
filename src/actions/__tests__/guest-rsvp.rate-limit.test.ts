@@ -47,7 +47,7 @@ vi.mock("@/lib/event-roster-access", () => ({
 vi.mock("@/lib/fines", () => ({
   hasPendingFines: vi.fn().mockResolvedValue(false),
 }));
-vi.mock("@/lib/posthog-server", () => ({ trackServerEvent: vi.fn() }));
+vi.mock("@/lib/analytics-server", () => ({ trackServerEvent: vi.fn() }));
 vi.mock("next/cache", () => ({ revalidatePath: vi.fn() }));
 
 const { requestGuestOTP, verifyGuestOTP } = await import(

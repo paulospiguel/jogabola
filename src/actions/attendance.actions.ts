@@ -13,10 +13,10 @@ import {
   user,
 } from "@/db/schema";
 import { withAuthAction } from "@/lib/action-helpers";
+import { trackServerEvent } from "@/lib/analytics-server";
 import { auth } from "@/lib/auth";
 import { userBelongsToTeamRoster } from "@/lib/event-roster-access";
 import { hasPendingFines } from "@/lib/fines";
-import { trackServerEvent } from "@/lib/posthog-server";
 import { canManageTeam } from "@/lib/team-access";
 import { upsertAttendanceSchema } from "@/schemas/attendance.schema";
 

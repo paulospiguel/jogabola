@@ -44,7 +44,7 @@ vi.mock("@/actions/notifications.actions", () => ({
   notifyPaymentValidationRequired: vi.fn(),
 }));
 vi.mock("@/lib/email", () => ({ sendPaymentProofRequest: vi.fn() }));
-vi.mock("@/lib/posthog-server", () => ({ trackServerEvent: vi.fn() }));
+vi.mock("@/lib/analytics-server", () => ({ trackServerEvent: vi.fn() }));
 vi.mock("@/lib/s3", () => ({
   getPresignedUploadUrl: vi.fn(),
   getR2PublicUrl: vi.fn(),

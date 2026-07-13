@@ -11,6 +11,7 @@ import {
   matchSessions,
   user,
 } from "@/db/schema";
+import { trackServerEvent } from "@/lib/analytics-server";
 import {
   getEmailDeliveryErrorCode,
   sendAttendanceConfirmed,
@@ -21,7 +22,6 @@ import {
   normalizeRosterEmail,
 } from "@/lib/event-roster-access";
 import { hasPendingFines } from "@/lib/fines";
-import { trackServerEvent } from "@/lib/posthog-server";
 
 function generateOTP() {
   return Math.floor(100000 + Math.random() * 900000).toString();

@@ -1,17 +1,6 @@
-import { beforeAll, describe, expect, it, vi } from "vitest";
+import { describe, expect, it } from "vitest";
 import { PAYMENT_OVERVIEW_STATUS, PAYMENT_STATUS } from "@/constants/payments";
-
-vi.mock("@/db/client", () => ({ db: {} }));
-vi.mock("@/lib/auth", () => ({ auth: { api: { getSession: vi.fn() } } }));
-vi.mock("@/lib/email", () => ({ sendPaymentProofRequest: vi.fn() }));
-vi.mock("@/lib/posthog-server", () => ({ trackServerEvent: vi.fn() }));
-
-let toUiPaymentStatus: (status: string) => string;
-
-beforeAll(async () => {
-  const paymentsActions = await import("@/actions/payments.actions");
-  toUiPaymentStatus = paymentsActions.toUiPaymentStatus;
-});
+import { toUiPaymentStatus } from "@/lib/payment-status";
 
 describe("toUiPaymentStatus", () => {
   it("maps paid unverified payments to validating", () => {

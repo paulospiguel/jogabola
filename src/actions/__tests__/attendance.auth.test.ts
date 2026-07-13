@@ -26,7 +26,7 @@ vi.mock("@/lib/event-roster-access", () => ({
   userBelongsToTeamRoster: vi.fn(),
 }));
 vi.mock("@/lib/fines", () => ({ hasPendingFines: vi.fn() }));
-vi.mock("@/lib/posthog-server", () => ({ trackServerEvent: vi.fn() }));
+vi.mock("@/lib/analytics-server", () => ({ trackServerEvent: vi.fn() }));
 
 const { managerBlockParticipant, managerRemoveParticipant, upsertAttendance } =
   await import("@/actions/attendance.actions");

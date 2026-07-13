@@ -12,9 +12,9 @@ import {
   user as userTable,
 } from "@/db/schema";
 import { withAction, withAuthAction } from "@/lib/action-helpers";
+import { trackServerEvent } from "@/lib/analytics-server";
 import { sendEmail } from "@/lib/email";
 import { canCreateTeam, normalizePlanTier } from "@/lib/plan-limits";
-import { trackServerEvent } from "@/lib/posthog-server";
 import { userCanAccessTeam, userIsTeamOwner } from "@/lib/team-access";
 import {
   addPlayerToRosterSchema,

@@ -6,11 +6,7 @@ import { revalidatePath } from "next/cache";
 import { headers } from "next/headers";
 import { z } from "zod";
 import { notifyPaymentValidationRequired } from "@/actions/notifications.actions";
-import {
-  PAYMENT_OVERVIEW_STATUS,
-  PAYMENT_REVIEW_STATUS,
-  PAYMENT_STATUS,
-} from "@/constants/payments";
+import { PAYMENT_REVIEW_STATUS, PAYMENT_STATUS } from "@/constants/payments";
 import { db } from "@/db/client";
 import {
   matchReservations,
@@ -21,9 +17,10 @@ import {
   user,
 } from "@/db/schema";
 import { withAction, withAuthAction } from "@/lib/action-helpers";
+import { trackServerEvent } from "@/lib/analytics-server";
 import { auth } from "@/lib/auth";
 import { sendPaymentProofRequest } from "@/lib/email";
-import { trackServerEvent } from "@/lib/posthog-server";
+import { toUiPaymentStatus } from "@/lib/payment-status";
 import { canActOnReservation } from "@/lib/reservation-access";
 import { getPresignedUploadUrl, getR2PublicUrl } from "@/lib/s3";
 import { canManageTeam, userCanAccessTeam } from "@/lib/team-access";
@@ -44,19 +41,6 @@ const updatePaymentStatusSchema = z.object({
 const requestPaymentProofSchema = z.object({
   paymentId: z.number().int().positive(),
 });
-
-export function toUiPaymentStatus(status: string) {
-  if (status === PAYMENT_STATUS.PAID_UNVERIFIED) {
-    return PAYMENT_OVERVIEW_STATUS.VALIDATING;
-  }
-  if (status === PAYMENT_STATUS.APPROVED) {
-    return PAYMENT_OVERVIEW_STATUS.CONFIRMED;
-  }
-  if (status === PAYMENT_STATUS.REJECTED) {
-    return PAYMENT_OVERVIEW_STATUS.REFUSED;
-  }
-  return status;
-}
 
 export const createPayment = withAction(createPaymentSchema, async data => {
   const { guestAccessToken, ...paymentData } = data;
