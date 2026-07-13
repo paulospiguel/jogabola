@@ -34,6 +34,7 @@ export default function Footer({ className }: FooterProps) {
         { label: t("links.features"), href: "/#funcionalidades" },
         { label: t("links.plans"), href: "/pricing" },
         { label: t("links.roadmap"), href: "/roadmap" },
+        { label: t("links.timer"), href: "/timer" },
       ],
     },
     {
