@@ -64,7 +64,7 @@ export function useEventDetailChat({
     if (!canChat) return;
 
     const client = new Ably.Realtime({
-      authUrl: "/api/ably/token",
+      authUrl: `/api/ably/token?eventId=${eventId}`,
       echoMessages: false,
     });
     const channel = client.channels.get(eventChannelName(eventId));
@@ -122,15 +122,12 @@ export function useEventDetailChat({
     }
   }, [inputMessage, sending, eventId, appendMessage]);
 
-  const handleDeleteMessage = useCallback(
-    async (messageId: number) => {
-      const result = await deleteMyMessage(messageId);
-      if (result.success) {
-        setMessages(prev => prev.filter(m => m.id !== messageId));
-      }
-    },
-    [],
-  );
+  const handleDeleteMessage = useCallback(async (messageId: number) => {
+    const result = await deleteMyMessage(messageId);
+    if (result.success) {
+      setMessages(prev => prev.filter(m => m.id !== messageId));
+    }
+  }, []);
 
   const handleCensorMessage = useCallback(
     async (messageId: number) => {
@@ -144,7 +141,10 @@ export function useEventDetailChat({
         setMessages(prev =>
           prev.map(m =>
             m.id === messageId
-              ? { ...m, censoredAt: alreadyCensored ? null : new Date().toISOString() }
+              ? {
+                  ...m,
+                  censoredAt: alreadyCensored ? null : new Date().toISOString(),
+                }
               : m,
           ),
         );

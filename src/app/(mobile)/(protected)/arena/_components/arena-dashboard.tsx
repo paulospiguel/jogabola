@@ -472,8 +472,19 @@ export function ArenaDashboard({ userId }: ArenaDashboardProps) {
                           className="text-arena-highlight"
                           strokeWidth={1.7}
                         />
+                        <Trophy
+                          size={18}
+                          className="text-arena-highlight"
+                          strokeWidth={1.7}
+                        />
                       </div>
                       <div>
+                        <div className="text-[13px] font-bold text-arena-text">
+                          {t("sections.rankings")}
+                        </div>
+                        <div className="mt-0.5 text-[11px] text-arena-text-muted">
+                          {t("sections.rankingsSub")}
+                        </div>
                         <div className="text-[13px] font-bold text-arena-text">
                           {t("sections.rankings")}
                         </div>

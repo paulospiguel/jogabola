@@ -11,7 +11,7 @@ import {
   X,
 } from "lucide-react";
 import { useTranslations } from "next-intl";
-import { Map, Marker } from "pigeon-maps";
+import { Marker, Map as PigeonMap } from "pigeon-maps";
 import { useEffect, useRef, useState } from "react";
 import { updateEvent } from "@/actions/match-sessions.actions";
 
@@ -126,7 +126,12 @@ export function LocationMap({
               <MapPin size={28} className="animate-pulse text-arena-primary" />
             </div>
           ) : coords ? (
-            <Map center={coords} zoom={15} height={208} attribution={false}>
+            <PigeonMap
+              center={coords}
+              zoom={15}
+              height={208}
+              attribution={false}
+            >
               <Marker anchor={coords} payload={location}>
                 <div className="flex flex-col items-center">
                   <div className="flex size-9 items-center justify-center rounded-full border-2 border-white bg-arena-primary shadow-lg">
@@ -139,7 +144,7 @@ export function LocationMap({
                   <div className="-mt-1 h-2 w-0.5 bg-arena-primary" />
                 </div>
               </Marker>
-            </Map>
+            </PigeonMap>
           ) : (
             <div className="flex h-full items-center justify-center bg-arena-bg-sec">
               <div className="text-center">

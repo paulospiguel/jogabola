@@ -5,8 +5,8 @@ import {
   CheckCircle2,
   Fingerprint,
   Loader2,
-  Zap,
   Lock,
+  Zap,
 } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useEffect, useState } from "react";
@@ -112,7 +112,10 @@ export function PasskeyPromptGate({
       <DialogContent className="border-arena-border bg-[#0B0F14]/98 max-w-[360px] p-6 sm:rounded-3xl shadow-[0_0_50px_rgba(0,0,0,0.8),0_0_20px_rgba(124,255,79,0.08)] outline-none overflow-hidden [&>button]:absolute [&>button]:right-5 [&>button]:top-5 [&>button]:bg-[#151C26]/80 [&>button]:border [&>button]:border-arena-border [&>button]:rounded-xl [&>button]:p-1.5 [&>button]:text-arena-text-sec [&>button]:hover:text-arena-text [&>button]:hover:bg-[#1B2430] [&>button]:transition-all [&>button]:opacity-100">
         <DialogHeader className="flex flex-col items-center">
           <div className="flex h-20 w-20 items-center justify-center rounded-[20px] border border-arena-primary/20 bg-arena-primary/5 text-arena-primary mb-5 relative shadow-[inset_0_0_12px_rgba(124,255,79,0.15)]">
-            <Fingerprint className="h-10 w-10 text-arena-primary" strokeWidth={1.5} />
+            <Fingerprint
+              className="h-10 w-10 text-arena-primary"
+              strokeWidth={1.5}
+            />
           </div>
           <DialogTitle className="text-2xl font-extrabold text-arena-text text-center font-sora tracking-tight mt-1">
             {translations.title}

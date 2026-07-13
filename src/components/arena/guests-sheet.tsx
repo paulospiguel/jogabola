@@ -23,10 +23,10 @@ const LEVELS: {
   rating: number;
   color: string;
 }[] = [
-    { id: "beginner", rating: 5.5, color: "#F59E0B" },
-    { id: "medium", rating: 7, color: "#38BDF8" },
-    { id: "good", rating: 8.5, color: "#7CFF4F" },
-  ];
+  { id: "beginner", rating: 5.5, color: "#F59E0B" },
+  { id: "medium", rating: 7, color: "#38BDF8" },
+  { id: "good", rating: 8.5, color: "#7CFF4F" },
+];
 
 interface GuestsSheetProps {
   guests: Guest[];
@@ -57,17 +57,14 @@ export function GuestsSheet({
   const initialList = guests.length
     ? guests
     : Array.from(
-      { length: Math.min(Math.max(suggestedMissing, 1), 11) },
-      (_, i) => makeGuest(i),
-    );
+        { length: Math.min(Math.max(suggestedMissing, 1), 11) },
+        (_, i) => makeGuest(i),
+      );
 
   const [local, setLocal] = useState<Guest[]>(initialList);
 
   function add() {
-    setLocal(l => [
-      ...l,
-      makeGuest(l.length),
-    ]);
+    setLocal(l => [...l, makeGuest(l.length)]);
   }
 
   function remove(id: string) {
@@ -83,7 +80,13 @@ export function GuestsSheet({
     setLocal(l =>
       l.map(g =>
         g.id === id
-          ? { ...g, level: levelId, rating: lv.rating, levelLabel: t(`guests.levels.${levelId}.label`), levelColor: lv.color }
+          ? {
+              ...g,
+              level: levelId,
+              rating: lv.rating,
+              levelLabel: t(`guests.levels.${levelId}.label`),
+              levelColor: lv.color,
+            }
           : g,
       ),
     );
@@ -99,10 +102,16 @@ export function GuestsSheet({
       <div className="flex flex-col gap-0 pb-2">
         {/* Info banner */}
         <div className="mx-1 mb-4 flex items-start gap-2.5 rounded-[11px] border border-arena-info/33 bg-arena-info/10 px-3 py-2.5">
-          <AlertCircle size={14} className="mt-0.5 shrink-0 text-arena-info" strokeWidth={2} />
+          <AlertCircle
+            size={14}
+            className="mt-0.5 shrink-0 text-arena-info"
+            strokeWidth={2}
+          />
           <p className="text-[11px] leading-relaxed text-arena-text-sec">
             {t.rich("guests.infoText", {
-              strong: (chunks) => <strong className="font-bold text-arena-text">{chunks}</strong>,
+              strong: chunks => (
+                <strong className="font-bold text-arena-text">{chunks}</strong>
+              ),
             })}
           </p>
         </div>
@@ -176,7 +185,12 @@ export function GuestsSheet({
         <Cta variant="secondary" size="md" className="flex-1" onClick={onClose}>
           {t("guests.cancel")}
         </Cta>
-        <Cta variant="primary" size="md" className="flex-[2] gap-1.5" onClick={save}>
+        <Cta
+          variant="primary"
+          size="md"
+          className="flex-[2] gap-1.5"
+          onClick={save}
+        >
           <Check size={15} strokeWidth={2.5} />
           {t("guests.save", { count: local.length })}
         </Cta>

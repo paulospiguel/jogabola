@@ -6,11 +6,7 @@ import { revalidatePath } from "next/cache";
 import { headers } from "next/headers";
 import { z } from "zod";
 import { notifyPaymentValidationRequired } from "@/actions/notifications.actions";
-import {
-  PAYMENT_OVERVIEW_STATUS,
-  PAYMENT_REVIEW_STATUS,
-  PAYMENT_STATUS,
-} from "@/constants/payments";
+import { PAYMENT_REVIEW_STATUS, PAYMENT_STATUS } from "@/constants/payments";
 import { db } from "@/db/client";
 import {
   matchReservations,
@@ -21,9 +17,11 @@ import {
   user,
 } from "@/db/schema";
 import { withAction, withAuthAction } from "@/lib/action-helpers";
+import { trackServerEvent } from "@/lib/analytics-server";
 import { auth } from "@/lib/auth";
 import { sendPaymentProofRequest } from "@/lib/email";
-import { trackServerEvent } from "@/lib/posthog-server";
+import { toUiPaymentStatus } from "@/lib/payment-status";
+import { canActOnReservation } from "@/lib/reservation-access";
 import { getPresignedUploadUrl, getR2PublicUrl } from "@/lib/s3";
 import { canManageTeam, userCanAccessTeam } from "@/lib/team-access";
 import {
@@ -44,20 +42,12 @@ const requestPaymentProofSchema = z.object({
   paymentId: z.number().int().positive(),
 });
 
-function toUiPaymentStatus(status: string) {
-  if (status === PAYMENT_STATUS.PAID_UNVERIFIED) {
-    return PAYMENT_OVERVIEW_STATUS.VALIDATING;
-  }
-  if (status === PAYMENT_STATUS.APPROVED) {
-    return PAYMENT_OVERVIEW_STATUS.CONFIRMED;
-  }
-  if (status === PAYMENT_STATUS.REJECTED) {
-    return PAYMENT_OVERVIEW_STATUS.REFUSED;
-  }
-  return status;
-}
-
 export const createPayment = withAction(createPaymentSchema, async data => {
+  const { guestAccessToken, ...paymentData } = data;
+  if (!(await canActOnReservation(data.matchReservationId, guestAccessToken))) {
+    return { success: false, error: { code: "FORBIDDEN" } };
+  }
+
   let initialStatus:
     | typeof PAYMENT_STATUS.PENDING
     | typeof PAYMENT_STATUS.PAID_UNVERIFIED = PAYMENT_STATUS.PENDING;
@@ -83,7 +73,7 @@ export const createPayment = withAction(createPaymentSchema, async data => {
 
   const [payment] = await db
     .insert(payments)
-    .values({ ...data, status: initialStatus })
+    .values({ ...paymentData, status: initialStatus })
     .returning();
   return { success: true, data: payment };
 });
@@ -91,7 +81,27 @@ export const createPayment = withAction(createPaymentSchema, async data => {
 export const submitPaymentProof = withAction(
   submitPaymentProofSchema,
   async data => {
-    const [proof] = await db.insert(paymentProofs).values(data).returning();
+    const payment = await db.query.payments.findFirst({
+      columns: { matchReservationId: true },
+      where: eq(payments.id, data.paymentId),
+    });
+    if (!payment) {
+      return { success: false, error: { code: "PAYMENT_NOT_FOUND" } };
+    }
+    if (
+      !(await canActOnReservation(
+        payment.matchReservationId,
+        data.guestAccessToken,
+      ))
+    ) {
+      return { success: false, error: { code: "FORBIDDEN" } };
+    }
+
+    const { guestAccessToken: _, ...proofData } = data;
+    const [proof] = await db
+      .insert(paymentProofs)
+      .values(proofData)
+      .returning();
     await db
       .update(payments)
       .set({ status: PAYMENT_STATUS.PAID_UNVERIFIED, updatedAt: new Date() })
@@ -171,7 +181,7 @@ function normalizeContentType(contentType: string) {
 export const requestPresignedUrl = withAction(
   requestPresignedUrlSchema,
   async data => {
-    const { paymentId, sizeBytes } = data;
+    const { guestAccessToken, paymentId, sizeBytes } = data;
     const contentType = normalizeContentType(data.contentType);
 
     if (!ALLOWED_TYPES.has(contentType)) {
@@ -195,11 +205,10 @@ export const requestPresignedUrl = withAction(
       };
     }
 
-    const [paymentRow] = await db
-      .select({ id: payments.id })
-      .from(payments)
-      .where(eq(payments.id, paymentId))
-      .limit(1);
+    const paymentRow = await db.query.payments.findFirst({
+      columns: { id: true, matchReservationId: true },
+      where: eq(payments.id, paymentId),
+    });
 
     if (!paymentRow) {
       return {
@@ -209,6 +218,15 @@ export const requestPresignedUrl = withAction(
           message: "Pagamento não encontrado.",
         },
       };
+    }
+
+    if (
+      !(await canActOnReservation(
+        paymentRow.matchReservationId,
+        guestAccessToken,
+      ))
+    ) {
+      return { success: false, error: { code: "FORBIDDEN" } };
     }
 
     // Auth check: guests are allowed

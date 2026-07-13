@@ -1,11 +1,14 @@
 "use client";
 
 import { Calendar, Check, Compass, Shield } from "lucide-react";
-import { useTranslations } from "next-intl";
+import type { useTranslations } from "next-intl";
 import { cn } from "@/lib/utils";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
-import type { CreateEventFormState, SetFormField } from "./create-event-form-types";
+import type {
+  CreateEventFormState,
+  SetFormField,
+} from "./create-event-form-types";
 
 interface CreateEventStepTypeProps {
   type: CreateEventFormState["type"];
@@ -47,7 +50,11 @@ export function CreateEventStepType({
             </div>
           </div>
           {type === "game" && (
-            <Check size={16} strokeWidth={3} className="text-arena-primary mr-1" />
+            <Check
+              size={16}
+              strokeWidth={3}
+              className="text-arena-primary mr-1"
+            />
           )}
         </button>
 
@@ -103,7 +110,11 @@ export function CreateEventStepType({
             </div>
           </div>
           {type === "other" && (
-            <Check size={16} strokeWidth={3} className="text-arena-primary mr-1" />
+            <Check
+              size={16}
+              strokeWidth={3}
+              className="text-arena-primary mr-1"
+            />
           )}
         </button>
       </div>

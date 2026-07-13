@@ -1,8 +1,8 @@
 "use server";
 
 import { z } from "zod";
+import { trackServerEvent } from "@/lib/analytics-server";
 import { addToWaitlist } from "@/lib/notion";
-import { trackServerEvent } from "@/lib/posthog-server";
 
 const schema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters long."),

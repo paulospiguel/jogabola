@@ -1,9 +1,9 @@
 import { and, eq } from "drizzle-orm";
+import { sendNotification } from "@/actions/notifications.actions";
 import { db } from "@/db/client";
 import { attendance } from "@/db/schema";
 import { user } from "@/db/schema/users";
 import { sendEventReminder } from "@/lib/email";
-import { sendNotification } from "@/actions/notifications.actions";
 
 /**
  * Envia lembretes de evento (e-mail + notificação in-app) para todos os
@@ -86,17 +86,14 @@ export async function sendEventReminderCron(
     // Idempotency: check if reminder already sent for this event
     const existingReminder = await db.query.notifications.findFirst({
       where: (n, { and, eq }) =>
-        and(
-          eq(n.userId, attendee.playerId!),
-          eq(n.type, "event_reminder_24h"),
-        ),
+        and(eq(n.userId, attendee.playerId!), eq(n.type, "event_reminder_24h")),
       columns: { id: true, metadata: true },
     });
 
     const isDuplicate =
       existingReminder &&
-      (existingReminder.metadata as Record<string, unknown>)
-        ?.matchSessionId === eventId;
+      (existingReminder.metadata as Record<string, unknown>)?.matchSessionId ===
+        eventId;
 
     if (isDuplicate) {
       skipped++;

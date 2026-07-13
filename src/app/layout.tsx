@@ -39,13 +39,9 @@ export default async function RootLayout({
         <NextIntlClientProvider messages={dictionary}>
           <Providers>{children}</Providers>
         </NextIntlClientProvider>
-        <Script
-          id="sw-registration"
-          strategy="afterInteractive"
-          dangerouslySetInnerHTML={{
-            __html: `if ('serviceWorker' in navigator) { navigator.serviceWorker.register('/sw.js'); }`,
-          }}
-        />
+        <Script id="sw-registration" strategy="afterInteractive">
+          {`if ('serviceWorker' in navigator) { navigator.serviceWorker.register('/sw.js'); }`}
+        </Script>
       </body>
     </html>
   );

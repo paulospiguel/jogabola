@@ -6,11 +6,11 @@ import { useRouter } from "next/navigation";
 import { useLocale, useTranslations } from "next-intl";
 import { useRef, useState, useTransition } from "react";
 import { setLocale } from "@/actions/locale.actions";
+import { LANGUAGES } from "@/constants/languages";
 import { type Locale, locales } from "@/i18n/configs";
 import { signOut } from "@/lib/auth-client";
 import { cn } from "@/lib/utils";
-import { type Language } from "@/types/languages";
-import { LANGUAGES } from "@/constants/languages";
+import type { Language } from "@/types/languages";
 
 function LanguageFlag({
   language,

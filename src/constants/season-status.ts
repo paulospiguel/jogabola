@@ -3,4 +3,5 @@ export const SEASON_STATUS = {
   FINISHED: "finished",
 } as const;
 
-export type SeasonStatusValue = (typeof SEASON_STATUS)[keyof typeof SEASON_STATUS];
+export type SeasonStatusValue =
+  (typeof SEASON_STATUS)[keyof typeof SEASON_STATUS];

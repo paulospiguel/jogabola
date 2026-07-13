@@ -157,7 +157,9 @@ export function PaymentProofViewer({
         </DialogTrigger>
         <DialogContent className="max-w-[90vw] md:max-w-2xl bg-arena-surface border-arena-border p-0 overflow-hidden flex flex-col h-[85vh] md:h-auto md:max-h-[85vh]">
           <DialogHeader className="p-4 border-b border-arena-border/50 shrink-0">
-            <DialogTitle className="text-arena-text font-sora">{openLabel}</DialogTitle>
+            <DialogTitle className="text-arena-text font-sora">
+              {openLabel}
+            </DialogTitle>
           </DialogHeader>
           <div className="flex-1 p-0 bg-black flex justify-center items-center min-h-[300px] overflow-hidden">
             {isPdf ? (

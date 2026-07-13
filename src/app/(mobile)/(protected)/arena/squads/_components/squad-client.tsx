@@ -115,8 +115,7 @@ export function SquadClient({ userId }: { userId: string }) {
               {t("title")}
             </h1>
 
-            <div className="flex items-center gap-2">
-            </div>
+            <div className="flex items-center gap-2"></div>
           </header>
 
           {/* Search Bar */}
@@ -155,7 +154,11 @@ export function SquadClient({ userId }: { userId: string }) {
                     {t("search.noResults")}
                   </p>
                 </div>
-                <Cta variant="primary" size="sm" onClick={() => setShowAdd(true)}>
+                <Cta
+                  variant="primary"
+                  size="sm"
+                  onClick={() => setShowAdd(true)}
+                >
                   {t("actions.addPlayer")}
                 </Cta>
               </div>

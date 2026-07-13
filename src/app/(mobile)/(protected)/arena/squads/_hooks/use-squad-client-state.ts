@@ -30,10 +30,13 @@ function emailLimitFor(planTier: string) {
 
 function matchesFilter(player: SquadPlayer, filter: SquadFilterKey): boolean {
   if (filter === "all") return true;
-  if (filter === "confirmed") return player.status === ATTENDANCE_STATUS.CONFIRMED;
+  if (filter === "confirmed")
+    return player.status === ATTENDANCE_STATUS.CONFIRMED;
   if (filter === "reserve") return player.status === ATTENDANCE_STATUS.RESERVE;
   if (filter === "pending") {
-    return player.status === ATTENDANCE_STATUS.PENDING || player.status === "new";
+    return (
+      player.status === ATTENDANCE_STATUS.PENDING || player.status === "new"
+    );
   }
   return true;
 }

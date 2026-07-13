@@ -1,6 +1,6 @@
 import { type ClassValue, clsx } from "clsx";
 import { format, formatDistanceToNowStrict } from "date-fns";
-import { type Locale, enUS, es, fr, pt } from "date-fns/locale";
+import { enUS, es, fr, type Locale, pt } from "date-fns/locale";
 import { twMerge } from "tailwind-merge";
 import { defaultLocale, locales } from "@/i18n/configs";
 

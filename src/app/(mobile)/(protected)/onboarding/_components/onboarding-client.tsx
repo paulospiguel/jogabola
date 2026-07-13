@@ -1,10 +1,10 @@
 "use client";
 
+import { useStatsigClient } from "@statsig/react-bindings";
 import { AnimatePresence, motion } from "framer-motion";
 import { Check, Users } from "lucide-react";
 import Image from "next/image";
 import { useTranslations } from "next-intl";
-import posthog from "posthog-js";
 import { useState } from "react";
 import {
   completeOnboarding,
@@ -137,6 +137,7 @@ interface OnboardingClientProps {
 
 export function OnboardingClient({ userName }: OnboardingClientProps) {
   const t = useTranslations("onboarding");
+  const { logEvent } = useStatsigClient();
   const resolvedName = userName ?? t("defaultName");
   const [step, setStep] = useState<Step>("role");
   const [selected, setSelected] = useState<UserRole | null>(null);
@@ -188,7 +189,7 @@ export function OnboardingClient({ userName }: OnboardingClientProps) {
         setError(t("errors.save"));
         return;
       }
-      posthog.capture("onboarding_role_selected", { role: selected });
+      logEvent("onboarding_role_selected", undefined, { role: selected });
       setStep("survey");
     } catch {
       setError(t("errors.unexpected"));

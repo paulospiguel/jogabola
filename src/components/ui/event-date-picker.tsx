@@ -16,9 +16,7 @@ const LOCALE_MAP: Record<string, Locale> = {
   fr,
 };
 
-const HOURS = Array.from({ length: 24 }, (_, i) =>
-  String(i).padStart(2, "0"),
-);
+const HOURS = Array.from({ length: 24 }, (_, i) => String(i).padStart(2, "0"));
 const MINUTES = ["00", "15", "30", "45"];
 
 const ITEM_H = 36; // px height of each drum item
@@ -37,8 +35,12 @@ function DrumPicker({
   const containerRef = React.useRef<HTMLDivElement>(null);
   const isProgrammaticScroll = React.useRef(false);
   const isMounted = React.useRef(false);
-  const scrollTimeout = React.useRef<ReturnType<typeof setTimeout> | null>(null);
-  const debounceTimeout = React.useRef<ReturnType<typeof setTimeout> | null>(null);
+  const scrollTimeout = React.useRef<ReturnType<typeof setTimeout> | null>(
+    null,
+  );
+  const debounceTimeout = React.useRef<ReturnType<typeof setTimeout> | null>(
+    null,
+  );
   const [localValue, setLocalValue] = React.useState(value);
 
   // Sincroniza localValue quando a prop value mudar externamente
@@ -79,7 +81,7 @@ function DrumPicker({
 
     if (idx >= 0 && idx < items.length) {
       const newValue = items[idx];
-      
+
       // Atualiza o destaque visual de imediato para uma resposta tátil excelente
       if (newValue !== localValue) {
         setLocalValue(newValue);
@@ -273,8 +275,7 @@ export function EventDatePicker({
                 months: "w-full",
                 month: "w-full",
                 caption: "flex items-center justify-between px-1 pb-2",
-                caption_label:
-                  "text-sm font-bold text-arena-text capitalize",
+                caption_label: "text-sm font-bold text-arena-text capitalize",
                 nav: "flex gap-1",
                 nav_button:
                   "h-7 w-7 flex items-center justify-center rounded-lg border border-arena-border/50 text-arena-text-muted hover:text-arena-text hover:border-arena-primary/40 transition-all",

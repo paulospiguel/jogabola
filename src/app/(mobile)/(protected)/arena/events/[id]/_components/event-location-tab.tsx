@@ -1,7 +1,7 @@
 "use client";
 
 import { Bus, Car, Train } from "lucide-react";
-import { useTranslations } from "next-intl";
+import type { useTranslations } from "next-intl";
 import { LocationMap } from "@/components/arena/location-map";
 
 interface EventLocationTabProps {

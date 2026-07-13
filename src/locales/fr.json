@@ -2901,6 +2901,8 @@
       "processPayment": "Erreur lors du traitement du paiement.",
       "resend": "Erreur lors du renvoi.",
       "resendPin": "Erreur lors du renvoi du PIN.",
+      "otpLocked": "Trop de tentatives. Réessayez dans 15 minutes.",
+      "otpCooldown": "Attendez une minute avant de demander un nouveau PIN.",
       "email": {
         "RESEND_API_KEY_MISSING": "L'envoi d'email n'est pas configuré : RESEND_API_KEY est manquant.",
         "RESEND_API_KEY_INVALID": "La clé Resend est invalide. Vérifiez RESEND_API_KEY.",

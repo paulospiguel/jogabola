@@ -58,8 +58,7 @@ export const selfAssessmentInputSchema = z
   })
   .refine(
     data =>
-      data.primaryPosition !== "GK" ||
-      typeof data.goalkeeping === "number",
+      data.primaryPosition !== "GK" || typeof data.goalkeeping === "number",
     {
       message: "goalkeeping rating required for goalkeepers",
       path: ["goalkeeping"],

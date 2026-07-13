@@ -66,7 +66,7 @@ function getTrustedOrigins(): string[] {
       if (!origins.includes(baseOrigin)) {
         origins.push(baseOrigin);
       }
-      
+
       const localIpVariant = `${url.protocol}//127.0.0.1${url.port ? `:${url.port}` : ""}`;
       if (!origins.includes(localIpVariant)) {
         origins.push(localIpVariant);
@@ -114,7 +114,10 @@ function getTrustedOrigins(): string[] {
         }
       }
     } catch (e) {
-      console.error("Failed to dynamically add local IPs to trusted origins", e);
+      console.error(
+        "Failed to dynamically add local IPs to trusted origins",
+        e,
+      );
     }
   }
 

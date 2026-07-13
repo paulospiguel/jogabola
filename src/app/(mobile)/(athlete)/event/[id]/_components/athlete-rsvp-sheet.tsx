@@ -8,12 +8,12 @@ import { requestAuthSignInOTP } from "@/actions/auth-otp.actions";
 import { requestGuestOTP, verifyGuestOTP } from "@/actions/guest-rsvp.actions";
 import { createPayment } from "@/actions/payments.actions";
 import { BottomSheet } from "@/components/arena/bottom-sheet";
+import { ATTENDANCE_STATUS } from "@/constants/attendance";
 import { useEvent } from "@/hooks/use-events";
 import { useGuestSession } from "@/hooks/use-guest-session";
 import { usePublicTeamPaymentSettings } from "@/hooks/use-team-payment-settings";
 import { signIn } from "@/lib/auth-client";
 import type { PaymentMethod } from "@/types/payments";
-import { ATTENDANCE_STATUS } from "@/constants/attendance";
 import {
   getAttendanceErrorMessage,
   getGuestOtpErrorMessage,
@@ -65,11 +65,14 @@ export function AthleteRsvpSheet({
   const [guestName, setGuestName] = useState("");
   const [guestEmail, setGuestEmail] = useState("");
   const [guestOtp, setGuestOtp] = useState("");
+  const [guestAccessToken, setGuestAccessToken] = useState<string>();
 
   const [loginEmail, setLoginEmail] = useState("");
   const [loginOtp, setLoginOtp] = useState("");
 
-  const [reservationId, setReservationId] = useState<number | null>(guestReservationId);
+  const [reservationId, setReservationId] = useState<number | null>(
+    guestReservationId,
+  );
   const autoConfirmKeyRef = useRef<string | null>(null);
 
   const { event } = useEvent(eventId);
@@ -115,7 +118,16 @@ export function AthleteRsvpSheet({
         }
       });
     }
-  }, [eventId, event?.rosterPriorityHours, onSuccess, reservationId, resumePayment, step, t, userId]);
+  }, [
+    eventId,
+    event?.rosterPriorityHours,
+    onSuccess,
+    reservationId,
+    resumePayment,
+    step,
+    t,
+    userId,
+  ]);
 
   function clearError() {
     setError("");
@@ -141,34 +153,52 @@ export function AthleteRsvpSheet({
     }
     setLoading(true);
     clearError();
-    const res = await requestGuestOTP(eventId, guestName.trim(), guestEmail.trim());
+    const res = await requestGuestOTP(
+      eventId,
+      guestName.trim(),
+      guestEmail.trim(),
+    );
     setLoading(false);
     if (res.success) {
       setStep("guest-otp");
     } else {
-      setError(getGuestOtpErrorMessage(t, res, t("errors.sendCode"), event?.rosterPriorityHours));
+      setError(
+        getGuestOtpErrorMessage(
+          t,
+          res,
+          t("errors.sendCode"),
+          event?.rosterPriorityHours,
+        ),
+      );
     }
   }
 
   async function handleGuestVerifyOTP(e: React.FormEvent) {
     e.preventDefault();
-    if (guestOtp.length < 6) { setError(t("enterCode")); return; }
+    if (guestOtp.length < 6) {
+      setError(t("enterCode"));
+      return;
+    }
     setLoading(true);
     clearError();
     const res = await verifyGuestOTP(eventId, guestEmail, guestOtp, guestName);
     setLoading(false);
     if (res.success) {
       if (res.guestData) saveGuest(res.guestData);
+      setGuestAccessToken(res.guestAccessToken);
       onSuccess("confirmed", res.reservationId);
       handleNextAfterRsvp(res.reservationId);
     } else {
-      setError(res.error || t("invalidCode"));
+      setError(getGuestOtpErrorMessage(t, res, t("invalidCode")));
     }
   }
 
   async function handleLoginSendOTP(e: React.FormEvent) {
     e.preventDefault();
-    if (!loginEmail.trim()) { setError(t("enterEmail")); return; }
+    if (!loginEmail.trim()) {
+      setError(t("enterEmail"));
+      return;
+    }
     setLoading(true);
     clearError();
     const result = await requestAuthSignInOTP(loginEmail);
@@ -182,11 +212,22 @@ export function AthleteRsvpSheet({
 
   async function handleLoginVerifyOTP(e: React.FormEvent) {
     e.preventDefault();
-    if (loginOtp.length < 6) { setError(t("enterCode")); return; }
+    if (loginOtp.length < 6) {
+      setError(t("enterCode"));
+      return;
+    }
     setLoading(true);
     clearError();
-    const name = loginEmail.split("@")[0]?.replace(/[._-]+/g, " ").trim() || t("defaultName");
-    const result = await signIn.emailOtp({ email: loginEmail, otp: loginOtp, name });
+    const name =
+      loginEmail
+        .split("@")[0]
+        ?.replace(/[._-]+/g, " ")
+        .trim() || t("defaultName");
+    const result = await signIn.emailOtp({
+      email: loginEmail,
+      otp: loginOtp,
+      name,
+    });
     if (result.error) {
       setError(result.error.message || t("invalidCode"));
       setLoading(false);
@@ -216,9 +257,15 @@ export function AthleteRsvpSheet({
       amountCents: event.priceCents,
       currency: event.currency,
       method,
+      guestAccessToken,
     });
     if (res.success && res.data) {
-      router.push(`/event/${eventSlug || eventId}/payment/result/${res.data.id}`);
+      const tokenQuery = guestAccessToken
+        ? `?guestAccessToken=${encodeURIComponent(guestAccessToken)}`
+        : "";
+      router.push(
+        `/event/${eventSlug || eventId}/payment/result/${res.data.id}${tokenQuery}`,
+      );
       return res.data;
     } else {
       setError(t("errors.processPayment"));
@@ -256,14 +303,24 @@ export function AthleteRsvpSheet({
             guest={guest}
             loading={loading}
             onConfirm={() => handleGuestSendOTP()}
-            onNotMe={() => { setStep("choose"); setGuestName(""); setGuestEmail(""); }}
+            onNotMe={() => {
+              setStep("choose");
+              setGuestName("");
+              setGuestEmail("");
+            }}
           />
         )}
 
         {step === "choose" && (
           <ChooseStep
-            onGuest={() => { clearError(); setStep("guest-info"); }}
-            onLogin={() => { clearError(); setStep("login-email"); }}
+            onGuest={() => {
+              clearError();
+              setStep("guest-info");
+            }}
+            onLogin={() => {
+              clearError();
+              setStep("login-email");
+            }}
           />
         )}
 
@@ -271,7 +328,10 @@ export function AthleteRsvpSheet({
           <LoginEmailStep
             loading={loading}
             loginEmail={loginEmail}
-            onBack={() => { clearError(); setStep("choose"); }}
+            onBack={() => {
+              clearError();
+              setStep("choose");
+            }}
             onLoginEmailChange={setLoginEmail}
             onSubmit={handleLoginSendOTP}
           />
@@ -282,12 +342,18 @@ export function AthleteRsvpSheet({
             loading={loading}
             loginEmail={loginEmail}
             loginOtp={loginOtp}
-            onBack={() => { clearError(); setStep("login-email"); }}
+            onBack={() => {
+              clearError();
+              setStep("login-email");
+            }}
             onLoginOtpChange={setLoginOtp}
             onResend={async () => {
               clearError();
               const result = await requestAuthSignInOTP(loginEmail);
-              if (!result.success) setError(getGuestOtpErrorMessage(t, result, t("errors.resend")));
+              if (!result.success)
+                setError(
+                  getGuestOtpErrorMessage(t, result, t("errors.resend")),
+                );
             }}
             onSubmit={handleLoginVerifyOTP}
           />
@@ -300,7 +366,10 @@ export function AthleteRsvpSheet({
             loading={loading}
             onNameChange={setGuestName}
             onEmailChange={setGuestEmail}
-            onBack={() => { clearError(); setStep("choose"); }}
+            onBack={() => {
+              clearError();
+              setStep("choose");
+            }}
             onSubmit={handleGuestSendOTP}
           />
         )}
@@ -311,12 +380,22 @@ export function AthleteRsvpSheet({
             guestOtp={guestOtp}
             loading={loading}
             onOtpChange={setGuestOtp}
-            onBack={() => { clearError(); setStep("guest-info"); }}
+            onBack={() => {
+              clearError();
+              setStep("guest-info");
+            }}
             onSubmit={handleGuestVerifyOTP}
             onResend={async () => {
               clearError();
-              const res = await requestGuestOTP(eventId, guestName.trim(), guestEmail.trim());
-              if (!res.success) setError(getGuestOtpErrorMessage(t, res, t("errors.resendPin")));
+              const res = await requestGuestOTP(
+                eventId,
+                guestName.trim(),
+                guestEmail.trim(),
+              );
+              if (!res.success)
+                setError(
+                  getGuestOtpErrorMessage(t, res, t("errors.resendPin")),
+                );
             }}
           />
         )}
@@ -326,14 +405,22 @@ export function AthleteRsvpSheet({
             amountCents={event.priceCents}
             currency={event.currency}
             paymentConfig={paymentConfig}
-            onCashIntent={async () => { await handlePaymentIntent("cash"); }}
+            onCashIntent={async () => {
+              await handlePaymentIntent("cash");
+            }}
             onMbwayProof={async () => {
               const p = await handlePaymentIntent("mbway");
-              if (p) router.push(`/event/${eventSlug || eventId}/payment/result/${p.id}`);
+              if (p)
+                router.push(
+                  `/event/${eventSlug || eventId}/payment/result/${p.id}${guestAccessToken ? `?guestAccessToken=${encodeURIComponent(guestAccessToken)}` : ""}`,
+                );
             }}
             onTransferProof={async () => {
               const p = await handlePaymentIntent("transfer");
-              if (p) router.push(`/event/${eventSlug || eventId}/payment/result/${p.id}`);
+              if (p)
+                router.push(
+                  `/event/${eventSlug || eventId}/payment/result/${p.id}${guestAccessToken ? `?guestAccessToken=${encodeURIComponent(guestAccessToken)}` : ""}`,
+                );
             }}
             onPayLater={() => setStep("success")}
           />

@@ -13,6 +13,7 @@ export const createPaymentSchema = z.object({
     .positive({ message: "VALIDATION_AMOUNT_REQUIRED" }),
   currency: z.string().length(3).default("EUR"),
   method: z.enum(PAYMENT_METHODS),
+  guestAccessToken: z.string().optional(),
 });
 
 export const submitPaymentProofSchema = z.object({
@@ -25,12 +26,14 @@ export const submitPaymentProofSchema = z.object({
     .string()
     .max(500, { message: "VALIDATION_NOTES_TOO_LONG" })
     .optional(),
+  guestAccessToken: z.string().optional(),
 });
 
 export const requestPresignedUrlSchema = z.object({
   paymentId: z.number().int().positive(),
   contentType: z.string(),
   sizeBytes: z.number().int().positive(),
+  guestAccessToken: z.string().optional(),
 });
 
 export const verifyPaymentProofSchema = z.object({
@@ -38,6 +41,7 @@ export const verifyPaymentProofSchema = z.object({
     .number()
     .int()
     .positive({ message: "VALIDATION_PAYMENT_PROOF_REQUIRED" }),
+  guestAccessToken: z.string().optional(),
   aiCheck: z.object({
     decision: z.enum(["likely_valid", "needs_review", "likely_invalid"]),
     confidence: z.number().min(0).max(1),

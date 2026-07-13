@@ -225,14 +225,16 @@ export function AddPlayerSheet({
             onClick={() => set("admin", !form.admin)}
             className={cn(
               "relative h-[22px] w-10 shrink-0 rounded-full transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-arena-primary/30",
-              form.admin ? "bg-arena-primary" : "bg-[#1E293B] border border-arena-border",
+              form.admin
+                ? "bg-arena-primary"
+                : "bg-[#1E293B] border border-arena-border",
             )}
           >
             <span
               className={cn(
                 "block size-[14px] rounded-full transition-transform duration-200 shadow-sm",
-                form.admin 
-                  ? "translate-x-[22px] bg-arena-bg" 
+                form.admin
+                  ? "translate-x-[22px] bg-arena-bg"
                   : "translate-x-[3px] bg-arena-text-muted",
               )}
             />

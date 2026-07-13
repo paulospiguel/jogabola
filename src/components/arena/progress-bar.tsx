@@ -25,7 +25,9 @@ export function ProgressBar({
         <div className="mb-2 flex items-center justify-between text-[11px] font-semibold">
           {label && <span className="text-arena-primary">{label}</span>}
           {showPercent && (
-            <span className="text-arena-primary">{Math.round(pct)}% concluído</span>
+            <span className="text-arena-primary">
+              {Math.round(pct)}% concluído
+            </span>
           )}
         </div>
       )}

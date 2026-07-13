@@ -1,6 +1,15 @@
 export const LIGA_STANDINGS = [
   { pos: 1, name: "Benfica B", j: 18, v: 13, e: 3, d: 2, pts: 42, own: false },
-  { pos: 2, name: "FC Bairro Alto", j: 18, v: 11, e: 4, d: 3, pts: 37, own: true },
+  {
+    pos: 2,
+    name: "FC Bairro Alto",
+    j: 18,
+    v: 11,
+    e: 4,
+    d: 3,
+    pts: 37,
+    own: true,
+  },
   { pos: 3, name: "Sporting C", j: 18, v: 10, e: 5, d: 3, pts: 35, own: false },
   { pos: 4, name: "Porto B", j: 18, v: 9, e: 4, d: 5, pts: 31, own: false },
   { pos: 5, name: "Académica", j: 18, v: 8, e: 5, d: 5, pts: 29, own: false },

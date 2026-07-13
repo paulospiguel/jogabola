@@ -172,7 +172,9 @@ export function PaymentsListTab({
                         {payment.amount}
                       </strong>
                       <p className="text-[9px] text-arena-text-muted mt-0.5">
-                        {t("ago", { time: formatRelativeTime(payment.date, locale) })}
+                        {t("ago", {
+                          time: formatRelativeTime(payment.date, locale),
+                        })}
                       </p>
                     </div>
                   </div>

@@ -52,11 +52,14 @@ export const auth = betterAuth({
         const logPath = path.join(process.cwd(), "auth-error.log");
         const logData = {
           timestamp: new Date().toISOString(),
-          error: error instanceof Error ? {
-            name: error.name,
-            message: error.message,
-            stack: error.stack,
-          } : error,
+          error:
+            error instanceof Error
+              ? {
+                  name: error.name,
+                  message: error.message,
+                  stack: error.stack,
+                }
+              : error,
           url: ctx?.request?.url || "unknown",
           method: ctx?.request?.method || "unknown",
         };
@@ -64,7 +67,7 @@ export const auth = betterAuth({
       } catch (e) {
         console.error("Failed to write to auth-error.log", e);
       }
-    }
+    },
   },
   baseURL: env.baseURL,
   trustedOrigins,

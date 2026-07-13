@@ -1,14 +1,14 @@
 "use client";
 
 import { CheckIcon } from "@animateicons/react/lucide";
-import { useTranslations } from "next-intl";
+import type { useTranslations } from "next-intl";
 import { JbBadge } from "@/components/arena/badge";
-import { ATTENDANCE_STATUS } from "@/constants/attendance";
 import { EventNoticeWall } from "@/components/arena/event-notice-wall";
 import {
   ParticipantRow,
   participantRowPosition,
 } from "@/components/arena/participant-row";
+import { ATTENDANCE_STATUS } from "@/constants/attendance";
 import type { Participant } from "@/hooks/use-event-attendance";
 
 interface AthleteEventListTabProps {
@@ -85,8 +85,14 @@ export function AthleteEventListTab({
               </div>
               <div className="flex flex-col">
                 {[
-                  ...reserves.map(p => ({ ...p, status: ATTENDANCE_STATUS.RESERVE })),
-                  ...pending.map(p => ({ ...p, status: ATTENDANCE_STATUS.PENDING })),
+                  ...reserves.map(p => ({
+                    ...p,
+                    status: ATTENDANCE_STATUS.RESERVE,
+                  })),
+                  ...pending.map(p => ({
+                    ...p,
+                    status: ATTENDANCE_STATUS.PENDING,
+                  })),
                 ].map((p, i, arr) => (
                   <ParticipantRow
                     key={p.id}

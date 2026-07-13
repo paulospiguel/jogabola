@@ -17,7 +17,11 @@ import {
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
-const REMOVE_ERROR_CODES = ["TEAM_NOT_FOUND", "CANNOT_REMOVE_OWNER", "PLAYER_NOT_IN_TEAM"] as const;
+const REMOVE_ERROR_CODES = [
+  "TEAM_NOT_FOUND",
+  "CANNOT_REMOVE_OWNER",
+  "PLAYER_NOT_IN_TEAM",
+] as const;
 
 interface RemoveFromRosterDialogProps {
   activeTeamId: number | null;
@@ -49,7 +53,10 @@ export function RemoveFromRosterDialog({
     setIsRemoving(true);
     setError(null);
 
-    const result = await removePlayerFromRoster({ teamId: activeTeamId, playerId });
+    const result = await removePlayerFromRoster({
+      teamId: activeTeamId,
+      playerId,
+    });
     setIsRemoving(false);
 
     if (!result.success) {
@@ -62,7 +69,9 @@ export function RemoveFromRosterDialog({
     }
 
     await queryClient.invalidateQueries({ queryKey: ["squad", activeTeamId] });
-    await queryClient.invalidateQueries({ queryKey: ["athlete-profile", playerId, activeTeamId] });
+    await queryClient.invalidateQueries({
+      queryKey: ["athlete-profile", playerId, activeTeamId],
+    });
     setOpen(false);
     onRemoved();
   }
@@ -86,7 +95,9 @@ export function RemoveFromRosterDialog({
           <div className="mb-2 flex size-12 items-center justify-center rounded-2xl border border-arena-danger/25 bg-arena-danger/10 text-arena-danger">
             <UserMinus size={24} strokeWidth={2} />
           </div>
-          <AlertDialogTitle className="text-arena-text">{t("removeDialog.title")}</AlertDialogTitle>
+          <AlertDialogTitle className="text-arena-text">
+            {t("removeDialog.title")}
+          </AlertDialogTitle>
           <AlertDialogDescription className="text-arena-text-sec">
             {t("removeDialog.description", { name: playerName })}
           </AlertDialogDescription>
@@ -116,7 +127,9 @@ export function RemoveFromRosterDialog({
             type="button"
           >
             <UserMinus className="mr-2" size={16} />
-            {isRemoving ? t("removeDialog.removing") : t("removeDialog.confirm")}
+            {isRemoving
+              ? t("removeDialog.removing")
+              : t("removeDialog.confirm")}
           </Button>
         </AlertDialogFooter>
       </AlertDialogContent>

@@ -16,7 +16,7 @@ import {
   user,
 } from "@/db/schema";
 import { getAuthUser, withAction } from "@/lib/action-helpers";
-import { trackServerEvent } from "@/lib/posthog-server";
+import { trackServerEvent } from "@/lib/analytics-server";
 import {
   canManageTeam,
   getAccessibleTeamIds,
