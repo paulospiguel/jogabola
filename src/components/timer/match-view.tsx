@@ -1,8 +1,9 @@
 "use client";
 
-import { ChevronLeft } from "lucide-react";
+import { ChevronLeft, Flag } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import { uid } from "./format";
 import { EventTimeline } from "./event-timeline";
 import { LogCardSheet } from "./log-card-sheet";
 import { LogGoalSheet } from "./log-goal-sheet";
@@ -10,7 +11,7 @@ import { MatchControls } from "./match-controls";
 import { Scoreboard } from "./scoreboard";
 import { SummaryModal } from "./summary-modal";
 import { TimerRing } from "./timer-ring";
-import type { TeamSide } from "./types";
+import type { Player, TeamSide } from "./types";
 import { deriveClock, score, useLiveMatch } from "./use-match-store";
 
 export function MatchView({ id }: { id: string }) {
@@ -85,6 +86,23 @@ export function MatchView({ id }: { id: string }) {
         periods={match.config.periods}
       />
 
+      {match.state.status === "ended" && !summaryOpen && (
+        <div className="flex flex-col items-center gap-2 rounded-[16px] border border-arena-border bg-arena-surface/60 px-4 py-5 text-center">
+          <span className="grid size-10 place-items-center rounded-full bg-arena-primary/15">
+            <Flag size={18} className="text-arena-primary" />
+          </span>
+          <p className="text-sm font-extrabold text-arena-text">Jogo terminado</p>
+          <p className="text-xs text-arena-text-muted">O resultado foi registado.</p>
+          <button
+            type="button"
+            onClick={() => setSummaryOpen(true)}
+            className="mt-1 rounded-[10px] bg-arena-primary px-4 py-2 text-xs font-bold text-arena-bg"
+          >
+            Ver resumo
+          </button>
+        </div>
+      )}
+
       <MatchControls
         status={match.state.status}
         isLastPeriod={isLastPeriod}
@@ -111,6 +129,11 @@ export function MatchView({ id }: { id: string }) {
           onConfirm={(playerId, assistId) =>
             actions.addGoal(goalSide, playerId, assistId)
           }
+          onAddPlayer={(name) => {
+            const p: Player = { id: uid(), name };
+            actions.addPlayerToTeam(goalSide, p);
+            return p;
+          }}
           onClose={() => setGoalSide(null)}
         />
       )}
@@ -120,6 +143,11 @@ export function MatchView({ id }: { id: string }) {
           onConfirm={(playerId, card) =>
             actions.addCard(cardSide, playerId, card)
           }
+          onAddPlayer={(name) => {
+            const p: Player = { id: uid(), name };
+            actions.addPlayerToTeam(cardSide, p);
+            return p;
+          }}
           onClose={() => setCardSide(null)}
         />
       )}

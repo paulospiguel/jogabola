@@ -77,9 +77,22 @@ export function MatchControls({
   onCard,
 }: MatchControlsProps) {
   const [confirmRestart, setConfirmRestart] = useState(false);
+  const [confirmEnd, setConfirmEnd] = useState(false);
   const running = status === "running";
   const ended = status === "ended";
   const logDisabled = ended;
+
+  function armEnd() {
+    setConfirmEnd(true);
+    setConfirmRestart(false);
+  }
+  function cancelEnd() {
+    setConfirmEnd(false);
+  }
+  function commitEnd(action: () => void) {
+    setConfirmEnd(false);
+    action();
+  }
 
   return (
     <div className="flex flex-col gap-3">
@@ -117,19 +130,50 @@ export function MatchControls({
           {running ? "Pausa" : status === "idle" ? "Começar" : "Continuar"}
         </motion.button>
 
-        <motion.button
-          type="button"
-          whileTap={{ scale: 0.94 }}
-          disabled={ended}
-          aria-label={isLastPeriod ? "Terminar jogo" : "Próxima parte"}
-          onClick={() => {
-            cueTap();
-            onNext();
-          }}
-          className="grid h-14 w-14 place-items-center rounded-[14px] border border-arena-border bg-arena-surface text-arena-text-sec disabled:opacity-40"
-        >
-          {isLastPeriod ? <Square size={18} /> : <SkipForward size={20} />}
-        </motion.button>
+        {/* Skip / End-match button — requires second tap when on last period */}
+        {isLastPeriod && !ended ? (
+          confirmEnd ? (
+            <motion.button
+              type="button"
+              initial={{ scale: 0.9 }}
+              animate={{ scale: 1 }}
+              whileTap={{ scale: 0.94 }}
+              aria-label="Confirmar fim do jogo"
+              onClick={() => commitEnd(onNext)}
+              onBlur={cancelEnd}
+              className="grid h-14 w-14 place-items-center rounded-[14px] bg-arena-danger text-[10px] font-bold text-white"
+            >
+              Sim?
+            </motion.button>
+          ) : (
+            <motion.button
+              type="button"
+              whileTap={{ scale: 0.94 }}
+              aria-label="Terminar jogo"
+              onClick={() => {
+                cueTap();
+                armEnd();
+              }}
+              className="grid h-14 w-14 place-items-center rounded-[14px] border border-arena-border bg-arena-surface text-arena-text-sec"
+            >
+              <Square size={18} />
+            </motion.button>
+          )
+        ) : (
+          <motion.button
+            type="button"
+            whileTap={{ scale: 0.94 }}
+            disabled={ended}
+            aria-label="Próxima parte"
+            onClick={() => {
+              cueTap();
+              onNext();
+            }}
+            className="grid h-14 w-14 place-items-center rounded-[14px] border border-arena-border bg-arena-surface text-arena-text-sec disabled:opacity-40"
+          >
+            <SkipForward size={20} />
+          </motion.button>
+        )}
 
         {!confirmRestart ? (
           <motion.button
@@ -159,14 +203,26 @@ export function MatchControls({
         )}
       </div>
 
+      {/* "Terminar jogo agora" link — also requires second tap */}
       {!ended && status !== "idle" && (
-        <button
-          type="button"
-          onClick={onEnd}
-          className="self-center text-xs font-semibold text-arena-text-muted underline-offset-2 hover:text-arena-text-sec hover:underline"
-        >
-          Terminar jogo agora
-        </button>
+        confirmEnd ? (
+          <button
+            type="button"
+            onClick={() => commitEnd(onEnd)}
+            onBlur={cancelEnd}
+            className="self-center text-xs font-bold text-arena-danger underline-offset-2 hover:underline"
+          >
+            Confirmas? Terminar
+          </button>
+        ) : (
+          <button
+            type="button"
+            onClick={armEnd}
+            className="self-center text-xs font-semibold text-arena-text-muted underline-offset-2 hover:text-arena-text-sec hover:underline"
+          >
+            Terminar jogo agora
+          </button>
+        )
       )}
     </div>
   );
