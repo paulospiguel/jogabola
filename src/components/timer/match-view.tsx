@@ -1,6 +1,6 @@
 "use client";
 
-import { ChevronLeft } from "lucide-react";
+import { ChevronLeft, Flag } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { EventTimeline } from "./event-timeline";
@@ -84,6 +84,23 @@ export function MatchView({ id }: { id: string }) {
         period={match.state.period}
         periods={match.config.periods}
       />
+
+      {match.state.status === "ended" && !summaryOpen && (
+        <div className="flex flex-col items-center gap-2 rounded-[16px] border border-arena-border bg-arena-surface/60 px-4 py-5 text-center">
+          <span className="grid size-10 place-items-center rounded-full bg-arena-primary/15">
+            <Flag size={18} className="text-arena-primary" />
+          </span>
+          <p className="text-sm font-extrabold text-arena-text">Jogo terminado</p>
+          <p className="text-xs text-arena-text-muted">O resultado foi registado.</p>
+          <button
+            type="button"
+            onClick={() => setSummaryOpen(true)}
+            className="mt-1 rounded-[10px] bg-arena-primary px-4 py-2 text-xs font-bold text-arena-bg"
+          >
+            Ver resumo
+          </button>
+        </div>
+      )}
 
       <MatchControls
         status={match.state.status}

@@ -96,13 +96,13 @@ export function EventTimeline({
                 className="shrink-0 rounded-md px-2 py-0.5 text-[10px] font-extrabold uppercase"
                 style={{ background: `${team.color}22`, color: team.color }}
               >
-                {team.name.slice(0, 3)}
+                {team.name.slice(0, 1)}
               </span>
               <button
                 type="button"
                 aria-label="Remover lance"
                 onClick={() => onRemove(ev.id)}
-                className="shrink-0 rounded-md p-1.5 text-arena-text-muted opacity-0 transition hover:text-arena-danger group-hover:opacity-100"
+                className="shrink-0 rounded-md p-1.5 text-arena-text-muted opacity-40 transition hover:text-arena-danger hover:opacity-100 active:text-arena-danger active:opacity-100 focus-visible:opacity-100"
               >
                 <Trash2 size={14} />
               </button>

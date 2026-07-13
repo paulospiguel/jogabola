@@ -55,7 +55,9 @@ function PlayerPill({
 }
 
 export function LogGoalSheet({ team, onConfirm, onClose }: LogGoalSheetProps) {
-  const [scorer, setScorer] = useState<string | null>(null);
+  const [scorer, setScorer] = useState<string | null>(
+    team.players.length === 1 ? team.players[0].id : null,
+  );
   const [assist, setAssist] = useState<string | null>(null);
   const hasPlayers = team.players.length > 0;
 

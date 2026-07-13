@@ -14,7 +14,9 @@ interface LogCardSheetProps {
 }
 
 export function LogCardSheet({ team, onConfirm, onClose }: LogCardSheetProps) {
-  const [player, setPlayer] = useState<string | null>(null);
+  const [player, setPlayer] = useState<string | null>(
+    team.players.length === 1 ? team.players[0].id : null,
+  );
   const [card, setCard] = useState<CardColor>("yellow");
   const hasPlayers = team.players.length > 0;
   const cardHex = card === "yellow" ? "#FACC15" : "#EF4444";
