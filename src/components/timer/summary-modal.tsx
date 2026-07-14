@@ -1,8 +1,10 @@
 "use client";
 
+import { useStatsigClient } from "@statsig/react-bindings";
 import { motion } from "framer-motion";
 import { Check, Copy, Home, Plus, Share2 } from "lucide-react";
 import { useMemo, useState } from "react";
+import QRCode from "react-qr-code";
 import { BottomSheet } from "@/components/arena/bottom-sheet";
 import { Cta } from "@/components/arena/cta";
 import { formatMinute } from "./format";
@@ -23,6 +25,7 @@ export function SummaryModal({
   onHome: () => void;
 }) {
   const s = score(match);
+  const { logEvent } = useStatsigClient();
   const [copied, setCopied] = useState(false);
 
   const shareUrl = useMemo(() => {
@@ -30,13 +33,10 @@ export function SummaryModal({
     return `${window.location.origin}/timer/resultado?d=${encodeResult(match)}`;
   }, [match]);
 
-  const qrSrc = shareUrl
-    ? `https://api.qrserver.com/v1/create-qr-code/?size=180x180&bgcolor=151C26&color=7CFF4F&data=${encodeURIComponent(shareUrl)}`
-    : "";
-
   async function copy() {
     try {
       await navigator.clipboard.writeText(`${resultText(match)}\n${shareUrl}`);
+      logEvent("timer_result_shared", undefined, { method: "copy" });
       setCopied(true);
       setTimeout(() => setCopied(false), 1800);
     } catch {
@@ -52,6 +52,7 @@ export function SummaryModal({
           text: resultText(match),
           url: shareUrl,
         });
+        logEvent("timer_result_shared", undefined, { method: "web_share" });
         return;
       } catch {
         /* user cancelled — fall through */
@@ -136,15 +137,15 @@ export function SummaryModal({
 
         {/* share */}
         <div className="flex items-center gap-3 rounded-[16px] border border-arena-border bg-arena-surface p-3">
-          {qrSrc && (
-            // biome-ignore lint/performance/noImgElement: external QR service, not a static asset
-            <img
-              src={qrSrc}
-              alt="QR do resultado"
-              width={88}
-              height={88}
-              className="rounded-lg"
-            />
+          {shareUrl && (
+            <div className="rounded-lg bg-arena-surface-el p-1.5">
+              <QRCode
+                value={shareUrl}
+                size={76}
+                bgColor="transparent"
+                fgColor="#7CFF4F"
+              />
+            </div>
           )}
           <div className="flex flex-1 flex-col gap-2">
             <Cta size="sm" fullWidth onClick={share}>

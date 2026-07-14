@@ -1,10 +1,11 @@
 "use client";
 
+import { useStatsigClient } from "@statsig/react-bindings";
 import { ChevronLeft, Flag } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { uid } from "./format";
 import { EventTimeline } from "./event-timeline";
+import { uid } from "./format";
 import { LogCardSheet } from "./log-card-sheet";
 import { LogGoalSheet } from "./log-goal-sheet";
 import { MatchControls } from "./match-controls";
@@ -16,6 +17,7 @@ import { deriveClock, score, useLiveMatch } from "./use-match-store";
 
 export function MatchView({ id }: { id: string }) {
   const router = useRouter();
+  const { logEvent } = useStatsigClient();
   const { match, now, actions } = useLiveMatch(id);
   const [goalSide, setGoalSide] = useState<TeamSide | null>(null);
   const [cardSide, setCardSide] = useState<TeamSide | null>(null);
@@ -91,8 +93,12 @@ export function MatchView({ id }: { id: string }) {
           <span className="grid size-10 place-items-center rounded-full bg-arena-primary/15">
             <Flag size={18} className="text-arena-primary" />
           </span>
-          <p className="text-sm font-extrabold text-arena-text">Jogo terminado</p>
-          <p className="text-xs text-arena-text-muted">O resultado foi registado.</p>
+          <p className="text-sm font-extrabold text-arena-text">
+            Jogo terminado
+          </p>
+          <p className="text-xs text-arena-text-muted">
+            O resultado foi registado.
+          </p>
           <button
             type="button"
             onClick={() => setSummaryOpen(true)}
@@ -111,7 +117,10 @@ export function MatchView({ id }: { id: string }) {
         onToggle={actions.toggle}
         onNext={actions.nextPeriod}
         onRestart={actions.restart}
-        onEnd={actions.endMatch}
+        onEnd={() => {
+          logEvent("timer_match_ended", undefined, { type: match.type });
+          actions.endMatch();
+        }}
         onGoal={setGoalSide}
         onCard={setCardSide}
       />
@@ -129,7 +138,7 @@ export function MatchView({ id }: { id: string }) {
           onConfirm={(playerId, assistId) =>
             actions.addGoal(goalSide, playerId, assistId)
           }
-          onAddPlayer={(name) => {
+          onAddPlayer={name => {
             const p: Player = { id: uid(), name };
             actions.addPlayerToTeam(goalSide, p);
             return p;
@@ -143,7 +152,7 @@ export function MatchView({ id }: { id: string }) {
           onConfirm={(playerId, card) =>
             actions.addCard(cardSide, playerId, card)
           }
-          onAddPlayer={(name) => {
+          onAddPlayer={name => {
             const p: Player = { id: uid(), name };
             actions.addPlayerToTeam(cardSide, p);
             return p;

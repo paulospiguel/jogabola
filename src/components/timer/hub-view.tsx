@@ -1,5 +1,6 @@
 "use client";
 
+import { useStatsigClient } from "@statsig/react-bindings";
 import { AnimatePresence, motion } from "framer-motion";
 import { Plus, Timer, Trash2 } from "lucide-react";
 import { useRouter } from "next/navigation";
@@ -89,6 +90,7 @@ function MatchCard({
 
 export function HubView() {
   const router = useRouter();
+  const { logEvent } = useStatsigClient();
   const [matches, setMatches] = useState<Match[]>([]);
   const [setupOpen, setSetupOpen] = useState(false);
 
@@ -103,6 +105,7 @@ export function HubView() {
     config: MatchConfig,
   ) {
     const match = createMatch(type, teamA, teamB, config);
+    logEvent("timer_match_created", undefined, { type });
     upsertMatch(match);
     for (const t of [teamA, teamB]) {
       if (t.players.length > 0) {
