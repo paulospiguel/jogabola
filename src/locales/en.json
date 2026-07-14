@@ -3388,6 +3388,19 @@
       "ending": "Ending…",
       "endedTitle": "Tournament finished",
       "endedDescription": "The final standings are ready.",
+      "champion": {
+        "title": "Champion",
+        "topScorer": "Top scorer",
+        "share": "Share",
+        "copy": "Copy link",
+        "copied": "Copied!",
+        "newTournament": "New tournament",
+        "shareTitle": "JogaBola tournament result",
+        "unavailable": "Sharing this result is unavailable.",
+        "shareError": "The result could not be shared. Please try again.",
+        "copyError": "The link could not be copied. Please try again.",
+        "qrAria": "QR code to share the tournament result"
+      },
       "standings": {
         "title": "Standings",
         "team": "Team",

@@ -3388,6 +3388,19 @@
       "ending": "A terminar…",
       "endedTitle": "Torneio terminado",
       "endedDescription": "A classificação final está pronta.",
+      "champion": {
+        "title": "Campeão",
+        "topScorer": "Artilheiro",
+        "share": "Partilhar",
+        "copy": "Copiar link",
+        "copied": "Copiado!",
+        "newTournament": "Novo torneio",
+        "shareTitle": "Resultado do torneio JogaBola",
+        "unavailable": "A partilha deste resultado não está disponível.",
+        "shareError": "Não foi possível partilhar o resultado. Tenta novamente.",
+        "copyError": "Não foi possível copiar o link. Tenta novamente.",
+        "qrAria": "Código QR para partilhar o resultado do torneio"
+      },
       "standings": {
         "title": "Classificação",
         "team": "Equipa",

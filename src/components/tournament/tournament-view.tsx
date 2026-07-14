@@ -158,7 +158,7 @@ export function TournamentView({ id }: TournamentViewProps) {
     return (
       <TournamentEndedView
         tournament={tournament}
-        onBack={() => router.push("/timer/tournament")}
+        onNewTournament={() => router.push("/timer/tournament")}
       />
     );
   }

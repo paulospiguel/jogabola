@@ -3388,6 +3388,19 @@
       "ending": "Finalisation…",
       "endedTitle": "Tournoi terminé",
       "endedDescription": "Le classement final est prêt.",
+      "champion": {
+        "title": "Champion",
+        "topScorer": "Meilleur buteur",
+        "share": "Partager",
+        "copy": "Copier le lien",
+        "copied": "Copié !",
+        "newTournament": "Nouveau tournoi",
+        "shareTitle": "Résultat du tournoi JogaBola",
+        "unavailable": "Le partage de ce résultat est indisponible.",
+        "shareError": "Impossible de partager le résultat. Réessayez.",
+        "copyError": "Impossible de copier le lien. Réessayez.",
+        "qrAria": "Code QR pour partager le résultat du tournoi"
+      },
       "standings": {
         "title": "Classement",
         "team": "Équipe",
