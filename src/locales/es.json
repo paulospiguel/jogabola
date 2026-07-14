@@ -3395,6 +3395,23 @@
         "goalDifference": "DG",
         "played": "PJ"
       }
+    },
+    "match": {
+      "endedTitle": "Partido finalizado",
+      "endedDescription": "El resultado se ha registrado.",
+      "viewSummary": "Ver resumen",
+      "continueTournament": "Continuar torneo",
+      "continuing": "Continuando…",
+      "finalizeError": "No se pudo guardar el resultado. Inténtalo de nuevo.",
+      "decision": {
+        "title": "Empate — ¿quién ganó la decisión?",
+        "description": "Los goles de la decisión no cuentan para el resultado. Elige al equipo ganador.",
+        "selectMethod": "Elige primero cómo se tomó la decisión.",
+        "methods": {
+          "coin": "Pares o impares",
+          "penalties": "Penaltis"
+        }
+      }
     }
   }
 }

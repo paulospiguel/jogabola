@@ -67,7 +67,6 @@ describe("createTournamentTimerMatch", () => {
       tournament.teams[0],
       tournament.teams[1],
     );
-
     expect(match.type).toBe("jogo");
     expect(match.teams).toEqual({
       A: { name: "Alfa", color: "#7CFF4F", players: [] },
@@ -79,6 +78,13 @@ describe("createTournamentTimerMatch", () => {
       periods: 1,
       sound: true,
     });
+    expect(match.tournamentContext).toEqual({
+      tournamentId: "cup-1",
+      teamAId: "a",
+      teamBId: "b",
+      queue: ["c"],
+    });
+    expect(match.tournamentContext?.queue).not.toBe(tournament.queue);
   });
 });
 
@@ -107,6 +113,8 @@ describe("persistence verification", () => {
       tournament.teams[0],
       tournament.teams[1],
     );
+    const context = match.tournamentContext;
+    if (!context) throw new Error("Expected tournament context");
 
     expect(isPersistedTimerMatch(match, null)).toBe(false);
     expect(
@@ -119,6 +127,17 @@ describe("persistence verification", () => {
       }),
     ).toBe(false);
     expect(isPersistedTimerMatch(match, match)).toBe(true);
+    expect(
+      isPersistedTimerMatch(match, {
+        ...match,
+        tournamentContext: {
+          tournamentId: context.tournamentId,
+          teamAId: context.teamAId,
+          teamBId: context.teamBId,
+          queue: ["outra"],
+        },
+      }),
+    ).toBe(false);
   });
 
   it("only confirms the matching tournament in ended status", () => {

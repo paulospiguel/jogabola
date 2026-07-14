@@ -31,6 +31,21 @@ export function isPersistedTimerMatch(
 ): boolean {
   if (!persisted) return false;
 
+  const expectedContext = expected.tournamentContext;
+  const persistedContext = persisted.tournamentContext;
+  const contextMatches = expectedContext
+    ? Boolean(
+        persistedContext &&
+          persistedContext.tournamentId === expectedContext.tournamentId &&
+          persistedContext.teamAId === expectedContext.teamAId &&
+          persistedContext.teamBId === expectedContext.teamBId &&
+          persistedContext.queue.length === expectedContext.queue.length &&
+          persistedContext.queue.every(
+            (teamId, index) => teamId === expectedContext.queue[index],
+          ),
+      )
+    : persistedContext === undefined;
+
   return (
     persisted.id === expected.id &&
     persisted.type === expected.type &&
@@ -42,7 +57,8 @@ export function isPersistedTimerMatch(
     persisted.config.mode === expected.config.mode &&
     persisted.config.periodLenSec === expected.config.periodLenSec &&
     persisted.config.periods === expected.config.periods &&
-    persisted.config.sound === expected.config.sound
+    persisted.config.sound === expected.config.sound &&
+    contextMatches
   );
 }
 
@@ -58,7 +74,14 @@ export function createTournamentTimerMatch(
   teamA: TournamentTeam,
   teamB: TournamentTeam,
 ): Match {
-  return createMatch(
+  if (!tournament.currentPair) {
+    throw new Error("Tournament has no current pair");
+  }
+  const [teamAId, teamBId] = tournament.currentPair;
+  if (teamA.id !== teamAId || teamB.id !== teamBId) {
+    throw new Error("Tournament teams do not match the current pair");
+  }
+  const match = createMatch(
     "jogo",
     { name: teamA.name, color: teamA.color, players: teamA.players },
     { name: teamB.name, color: teamB.color, players: teamB.players },
@@ -69,4 +92,13 @@ export function createTournamentTimerMatch(
       sound: tournament.config.sound,
     },
   );
+  return {
+    ...match,
+    tournamentContext: {
+      tournamentId: tournament.id,
+      teamAId,
+      teamBId,
+      queue: [...tournament.queue],
+    },
+  };
 }

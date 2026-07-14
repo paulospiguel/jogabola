@@ -44,6 +44,13 @@ export interface MatchState {
   inStoppage: boolean;
 }
 
+export interface TournamentMatchContext {
+  tournamentId: string;
+  teamAId: string;
+  teamBId: string;
+  queue: string[];
+}
+
 export interface Match {
   id: string;
   type: MatchType;
@@ -52,6 +59,7 @@ export interface Match {
   config: MatchConfig;
   state: MatchState;
   events: MatchEvent[];
+  tournamentContext?: TournamentMatchContext;
 }
 
 /** Lightweight saved team for reuse across matches. */

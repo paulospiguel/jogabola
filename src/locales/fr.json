@@ -3395,6 +3395,23 @@
         "goalDifference": "DB",
         "played": "MJ"
       }
+    },
+    "match": {
+      "endedTitle": "Match terminé",
+      "endedDescription": "Le résultat a été enregistré.",
+      "viewSummary": "Voir le résumé",
+      "continueTournament": "Continuer le tournoi",
+      "continuing": "Continuation…",
+      "finalizeError": "Impossible d’enregistrer le résultat. Réessayez.",
+      "decision": {
+        "title": "Égalité — qui a remporté la décision ?",
+        "description": "Les buts de la décision ne comptent pas dans le résultat. Choisissez l’équipe gagnante.",
+        "selectMethod": "Choisissez d’abord comment la décision a été prise.",
+        "methods": {
+          "coin": "Pair ou impair",
+          "penalties": "Tirs au but"
+        }
+      }
     }
   }
 }

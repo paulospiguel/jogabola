@@ -3395,6 +3395,23 @@
         "goalDifference": "DG",
         "played": "J"
       }
+    },
+    "match": {
+      "endedTitle": "Jogo terminado",
+      "endedDescription": "O resultado foi registado.",
+      "viewSummary": "Ver resumo",
+      "continueTournament": "Continuar torneio",
+      "continuing": "A continuar…",
+      "finalizeError": "Não foi possível guardar o resultado. Tenta novamente.",
+      "decision": {
+        "title": "Empate — quem ganhou a decisão?",
+        "description": "Os golos da decisão não contam para o resultado. Escolhe a equipa vencedora.",
+        "selectMethod": "Escolhe primeiro como foi tomada a decisão.",
+        "methods": {
+          "coin": "Par ou ímpar",
+          "penalties": "Penáltis"
+        }
+      }
     }
   }
 }

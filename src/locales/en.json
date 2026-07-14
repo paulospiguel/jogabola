@@ -3395,6 +3395,23 @@
         "goalDifference": "GD",
         "played": "P"
       }
+    },
+    "match": {
+      "endedTitle": "Match finished",
+      "endedDescription": "The result has been recorded.",
+      "viewSummary": "View summary",
+      "continueTournament": "Continue tournament",
+      "continuing": "Continuing…",
+      "finalizeError": "The result could not be saved. Please try again.",
+      "decision": {
+        "title": "Draw — who won the decision?",
+        "description": "Decision goals do not count towards the result. Choose the winning team.",
+        "selectMethod": "First choose how the decision was made.",
+        "methods": {
+          "coin": "Odds or evens",
+          "penalties": "Penalties"
+        }
+      }
     }
   }
 }
