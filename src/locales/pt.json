@@ -3364,6 +3364,37 @@
       "continue": "Continuar",
       "start": "Começar torneio",
       "saving": "A preparar…"
+    },
+    "view": {
+      "kicker": "Torneio em campo",
+      "fallbackName": "Torneio rápido",
+      "back": "Voltar aos torneios",
+      "loading": "A carregar torneio…",
+      "notFoundTitle": "Torneio não encontrado",
+      "notFoundDescription": "Este torneio já não existe ou não está guardado neste dispositivo.",
+      "loadErrorTitle": "Não foi possível carregar o torneio",
+      "loadErrorDescription": "Ocorreu um problema ao ler os dados guardados. Tenta novamente.",
+      "invalidTitle": "Dados do torneio inválidos",
+      "invalidDescription": "Uma das equipas deste jogo já não está disponível. Volta aos torneios para continuar.",
+      "retry": "Tentar novamente",
+      "actionError": "Não foi possível concluir a ação. Tenta novamente.",
+      "currentMatch": "Jogo atual",
+      "versus": "{teamA} contra {teamB}",
+      "versusShort": "vs",
+      "startMatch": "Iniciar jogo",
+      "starting": "A iniciar…",
+      "queue": "Fila de espera",
+      "endTournament": "Terminar torneio",
+      "ending": "A terminar…",
+      "endedTitle": "Torneio terminado",
+      "endedDescription": "A classificação final está pronta.",
+      "standings": {
+        "title": "Classificação",
+        "team": "Equipa",
+        "points": "Pts",
+        "goalDifference": "DG",
+        "played": "J"
+      }
     }
   }
 }

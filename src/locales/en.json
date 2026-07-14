@@ -3364,6 +3364,37 @@
       "continue": "Continue",
       "start": "Start tournament",
       "saving": "Getting ready…"
+    },
+    "view": {
+      "kicker": "Tournament on the pitch",
+      "fallbackName": "Quick tournament",
+      "back": "Back to tournaments",
+      "loading": "Loading tournament…",
+      "notFoundTitle": "Tournament not found",
+      "notFoundDescription": "This tournament no longer exists or is not saved on this device.",
+      "loadErrorTitle": "Could not load the tournament",
+      "loadErrorDescription": "There was a problem reading the saved data. Please try again.",
+      "invalidTitle": "Invalid tournament data",
+      "invalidDescription": "One of the teams in this match is no longer available. Return to tournaments to continue.",
+      "retry": "Try again",
+      "actionError": "The action could not be completed. Please try again.",
+      "currentMatch": "Current match",
+      "versus": "{teamA} versus {teamB}",
+      "versusShort": "vs",
+      "startMatch": "Start match",
+      "starting": "Starting…",
+      "queue": "Waiting queue",
+      "endTournament": "End tournament",
+      "ending": "Ending…",
+      "endedTitle": "Tournament finished",
+      "endedDescription": "The final standings are ready.",
+      "standings": {
+        "title": "Standings",
+        "team": "Team",
+        "points": "Pts",
+        "goalDifference": "GD",
+        "played": "P"
+      }
     }
   }
 }

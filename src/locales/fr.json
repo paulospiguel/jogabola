@@ -3364,6 +3364,37 @@
       "continue": "Continuer",
       "start": "Démarrer le tournoi",
       "saving": "Préparation…"
+    },
+    "view": {
+      "kicker": "Tournoi sur le terrain",
+      "fallbackName": "Tournoi rapide",
+      "back": "Retour aux tournois",
+      "loading": "Chargement du tournoi…",
+      "notFoundTitle": "Tournoi introuvable",
+      "notFoundDescription": "Ce tournoi n’existe plus ou n’est pas enregistré sur cet appareil.",
+      "loadErrorTitle": "Impossible de charger le tournoi",
+      "loadErrorDescription": "Un problème est survenu lors de la lecture des données enregistrées. Réessayez.",
+      "invalidTitle": "Données du tournoi invalides",
+      "invalidDescription": "L’une des équipes de ce match n’est plus disponible. Revenez aux tournois pour continuer.",
+      "retry": "Réessayer",
+      "actionError": "Impossible de terminer l’action. Réessayez.",
+      "currentMatch": "Match en cours",
+      "versus": "{teamA} contre {teamB}",
+      "versusShort": "vs",
+      "startMatch": "Démarrer le match",
+      "starting": "Démarrage…",
+      "queue": "File d’attente",
+      "endTournament": "Terminer le tournoi",
+      "ending": "Finalisation…",
+      "endedTitle": "Tournoi terminé",
+      "endedDescription": "Le classement final est prêt.",
+      "standings": {
+        "title": "Classement",
+        "team": "Équipe",
+        "points": "Pts",
+        "goalDifference": "DB",
+        "played": "MJ"
+      }
     }
   }
 }
