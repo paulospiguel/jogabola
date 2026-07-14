@@ -9,10 +9,9 @@ import { loadMatch, upsertMatch } from "@/components/timer/use-match-store";
 import { TournamentEndedView } from "./tournament-ended-view";
 import {
   createTournamentTimerMatch,
+  endTournament,
   findTeamById,
   isPersistedTimerMatch,
-  isTournamentEndedPersisted,
-  markTournamentEnded,
   resolveTournamentViewState,
 } from "./tournament-match";
 import { TournamentPairing } from "./tournament-pairing";
@@ -105,12 +104,10 @@ export function TournamentView({ id }: TournamentViewProps) {
     setEnding(true);
     setActionError(false);
     try {
-      const ended = markTournamentEnded(tournament);
-      await tournamentRepository.save(ended);
-      const persisted = await tournamentRepository.get(ended.id);
-      if (!isTournamentEndedPersisted(ended, persisted)) {
-        throw new Error("Tournament persistence verification failed");
-      }
+      const persisted = await endTournament(
+        tournamentRepository,
+        tournament.id,
+      );
       setTournament(persisted);
     } catch {
       setActionError(true);

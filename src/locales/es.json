@@ -3363,7 +3363,8 @@
       "back": "Volver",
       "continue": "Continuar",
       "start": "Empezar torneo",
-      "saving": "Preparando…"
+      "saving": "Preparando…",
+      "saveError": "No se pudo guardar el torneo. Inténtalo de nuevo."
     },
     "view": {
       "kicker": "Torneo en el campo",
@@ -3399,7 +3400,8 @@
         "unavailable": "No se puede compartir este resultado.",
         "shareError": "No se pudo compartir el resultado. Inténtalo de nuevo.",
         "copyError": "No se pudo copiar el enlace. Inténtalo de nuevo.",
-        "qrAria": "Código QR para compartir el resultado del torneo"
+        "qrAria": "Código QR para compartir el resultado del torneo",
+        "unknownPlayer": "Jugador"
       },
       "standings": {
         "title": "Clasificación",
@@ -3408,6 +3410,20 @@
         "goalDifference": "DG",
         "played": "PJ"
       }
+    },
+    "result": {
+      "invalidTitle": "Resultado no válido o caducado",
+      "invalidDescription": "Este resultado ya no está disponible. Abre los torneos para empezar otro.",
+      "openTournaments": "Abrir torneos",
+      "champion": "Campeón",
+      "standings": "Clasificación final",
+      "teamFallback": "Equipo",
+      "points": "{count, plural, one {# pto} other {# ptos}}",
+      "score": "{goalsFor}-{goalsAgainst}",
+      "scoreAria": "{goalsFor} goles marcados y {goalsAgainst} encajados",
+      "topScorer": "Máximo goleador",
+      "goals": "{count, plural, one {# gol} other {# goles}}",
+      "createMine": "Crear mi torneo"
     },
     "match": {
       "endedTitle": "Partido finalizado",

@@ -134,7 +134,7 @@ export function TournamentEndedView({
                 className="flex items-center justify-between text-sm"
               >
                 <span className="font-semibold text-arena-text">
-                  {scorer.name}
+                  {scorer.name || t("unknownPlayer")}
                 </span>
                 <span className="font-sora font-extrabold tabular-nums text-arena-primary">
                   {scorer.goals}

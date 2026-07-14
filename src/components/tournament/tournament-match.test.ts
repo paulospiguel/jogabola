@@ -1,12 +1,15 @@
 import { describe, expect, it } from "vitest";
+import { withTournamentLock } from "./tournament-lock";
 import {
   createTournamentTimerMatch,
+  endTournament,
   findTeamById,
   isPersistedTimerMatch,
   isTournamentEndedPersisted,
   markTournamentEnded,
   resolveTournamentViewState,
 } from "./tournament-match";
+import type { TournamentRepository } from "./tournament-store";
 import type { Tournament } from "./types";
 
 function fixture(): Tournament {
@@ -45,6 +48,74 @@ describe("markTournamentEnded", () => {
     expect(ended.matches).toBe(tournament.matches);
     expect(ended.queue).toBe(tournament.queue);
     expect(ended.config).toBe(tournament.config);
+  });
+});
+
+describe("endTournament", () => {
+  it("serializes with a finishing match and preserves its fresh tournament data", async () => {
+    let stored = fixture();
+    let releaseFinalize = () => {};
+    const finalizeCanFinish = new Promise<void>(resolve => {
+      releaseFinalize = resolve;
+    });
+    const repository: Pick<TournamentRepository, "get" | "save"> = {
+      async get(id) {
+        return stored.id === id ? structuredClone(stored) : null;
+      },
+      async save(tournament) {
+        stored = structuredClone(tournament);
+      },
+    };
+
+    const finalize = withTournamentLock(stored.id, async () => {
+      await finalizeCanFinish;
+      stored = {
+        ...stored,
+        teams: [
+          { ...stored.teams[0], players: [{ id: "new", name: "Nova" }] },
+          ...stored.teams.slice(1),
+        ],
+        matches: [
+          {
+            id: "m1",
+            teamAId: "a",
+            teamBId: "b",
+            scoreA: 1,
+            scoreB: 0,
+            outcome: "regA",
+            goals: [{ playerId: "new", teamId: "a", atSec: 12 }],
+            endedAt: 200,
+          },
+        ],
+        currentPair: ["a", "c"],
+        queue: ["b"],
+      };
+    });
+    const ending = endTournament(repository, stored.id);
+
+    await Promise.resolve();
+    expect(stored.status).toBe("running");
+    releaseFinalize();
+    await Promise.all([finalize, ending]);
+
+    expect(stored).toMatchObject({
+      status: "ended",
+      currentPair: ["a", "c"],
+      queue: ["b"],
+    });
+    expect(stored.matches).toHaveLength(1);
+    expect(stored.teams[0]?.players).toEqual([{ id: "new", name: "Nova" }]);
+  });
+
+  it("rejects a missing tournament", async () => {
+    const repository: Pick<TournamentRepository, "get" | "save"> = {
+      get: async () => null,
+      save: async () => undefined,
+    };
+
+    await expect(endTournament(repository, "missing")).rejects.toThrow(
+      "not found",
+    );
   });
 });
 

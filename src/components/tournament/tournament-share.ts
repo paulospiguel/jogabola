@@ -137,7 +137,7 @@ function isCanonicalPayload(data: string): boolean {
 export function buildTournamentSharedResult(
   tournament: Tournament,
 ): TournamentSharedResult {
-  const scorers = computeTopScorers(tournament);
+  const scorers = computeTopScorers(tournament).filter(scorer => scorer.name);
   const maxGoals = scorers[0]?.goals ?? 0;
 
   return {

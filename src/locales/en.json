@@ -3363,7 +3363,8 @@
       "back": "Back",
       "continue": "Continue",
       "start": "Start tournament",
-      "saving": "Getting ready…"
+      "saving": "Getting ready…",
+      "saveError": "The tournament could not be saved. Try again."
     },
     "view": {
       "kicker": "Tournament on the pitch",
@@ -3399,7 +3400,8 @@
         "unavailable": "Sharing this result is unavailable.",
         "shareError": "The result could not be shared. Please try again.",
         "copyError": "The link could not be copied. Please try again.",
-        "qrAria": "QR code to share the tournament result"
+        "qrAria": "QR code to share the tournament result",
+        "unknownPlayer": "Player"
       },
       "standings": {
         "title": "Standings",
@@ -3408,6 +3410,20 @@
         "goalDifference": "GD",
         "played": "P"
       }
+    },
+    "result": {
+      "invalidTitle": "Invalid or expired result",
+      "invalidDescription": "This result is no longer available. Open tournaments to start another one.",
+      "openTournaments": "Open tournaments",
+      "champion": "Champion",
+      "standings": "Final standings",
+      "teamFallback": "Team",
+      "points": "{count, plural, one {# pt} other {# pts}}",
+      "score": "{goalsFor}-{goalsAgainst}",
+      "scoreAria": "{goalsFor} goals scored and {goalsAgainst} conceded",
+      "topScorer": "Top scorer",
+      "goals": "{count, plural, one {# goal} other {# goals}}",
+      "createMine": "Create my tournament"
     },
     "match": {
       "endedTitle": "Match finished",

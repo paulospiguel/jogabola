@@ -209,7 +209,7 @@ describe("computeTopScorers", () => {
       },
       {
         playerId: "missing",
-        name: "Jogador",
+        name: "",
         teamId: "t3",
         goals: 1,
         matchesPlayed: 1,
@@ -274,14 +274,14 @@ describe("computeTopScorers", () => {
     expect(result).toEqual([
       {
         playerId: "ghost",
-        name: "Jogador",
+        name: "",
         teamId: "unknown",
         goals: 2,
         matchesPlayed: 2,
       },
       {
         playerId: "other",
-        name: "Jogador",
+        name: "",
         teamId: "missing",
         goals: 1,
         matchesPlayed: 0,

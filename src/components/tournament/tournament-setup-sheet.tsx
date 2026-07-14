@@ -4,7 +4,7 @@ import { AnimatePresence } from "framer-motion";
 import { Trophy } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { BottomSheet } from "@/components/arena/bottom-sheet";
 import { Cta } from "@/components/arena/cta";
 import { uid } from "@/components/timer/format";
@@ -14,6 +14,7 @@ import { loadTeams } from "@/components/timer/use-match-store";
 import { cn } from "@/lib/utils";
 import { drawPlayers, mulberry32 } from "./draw";
 import { initQueue } from "./engine";
+import { saveTournamentWithVerification } from "./tournament-persistence";
 import {
   parsePlayerNames,
   resolveStartingOrder,
@@ -56,6 +57,8 @@ export function TournamentSetupSheet({ onClose }: TournamentSetupSheetProps) {
   const [sound, setSound] = useState(true);
   const [shuffleStart, setShuffleStart] = useState(false);
   const [saving, setSaving] = useState(false);
+  const [saveError, setSaveError] = useState(false);
+  const savingRef = useRef(false);
   const stepTitles = [
     t("setup.steps.teams"),
     t("setup.steps.rules"),
@@ -102,11 +105,18 @@ export function TournamentSetupSheet({ onClose }: TournamentSetupSheetProps) {
   }
 
   async function finish() {
-    if (!hasValidTeams || teams.length < 3 || teams.length > 6 || saving) {
+    if (
+      !hasValidTeams ||
+      teams.length < 3 ||
+      teams.length > 6 ||
+      savingRef.current
+    ) {
       return;
     }
 
+    savingRef.current = true;
     setSaving(true);
+    setSaveError(false);
     const normalizedTeams = teams.map(team => ({
       ...team,
       name: team.name.trim().slice(0, TOURNAMENT_NAME_MAX_LENGTH),
@@ -138,9 +148,15 @@ export function TournamentSetupSheet({ onClose }: TournamentSetupSheetProps) {
       status: "running",
     };
 
-    await tournamentRepository.save(tournament);
-    onClose();
-    router.push(`/timer/tournament/${tournament.id}`);
+    try {
+      await saveTournamentWithVerification(tournamentRepository, tournament);
+      onClose();
+      router.push(`/timer/tournament/${tournament.id}`);
+    } catch {
+      savingRef.current = false;
+      setSaving(false);
+      setSaveError(true);
+    }
   }
 
   return (
@@ -225,6 +241,11 @@ export function TournamentSetupSheet({ onClose }: TournamentSetupSheetProps) {
             </Cta>
           )}
         </div>
+        {saveError ? (
+          <p role="alert" className="text-sm text-arena-danger">
+            {t("setup.saveError")}
+          </p>
+        ) : null}
       </div>
     </BottomSheet>
   );

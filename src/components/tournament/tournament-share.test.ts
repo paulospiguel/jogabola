@@ -152,6 +152,19 @@ describe("buildTournamentSharedResult", () => {
       decodeTournamentResult(encodeTournamentResult(tournament))?.top,
     ).toHaveLength(101);
   });
+
+  it("exclui artilheiros sem nome do resultado partilhado", () => {
+    const tournament = fixture();
+    tournament.matches[0] = {
+      ...tournament.matches[0],
+      goals: [{ playerId: "missing", teamId: "l", atSec: 10 }],
+    };
+
+    expect(buildTournamentSharedResult(tournament).top).toEqual([
+      ["Ana", 1],
+      ["Zé", 1],
+    ]);
+  });
 });
 
 describe("tournament share round-trip", () => {

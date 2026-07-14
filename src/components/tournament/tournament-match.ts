@@ -1,5 +1,10 @@
 import type { Match } from "@/components/timer/types";
 import { createMatch } from "@/components/timer/use-match-store";
+import { withTournamentLock } from "./tournament-lock";
+import {
+  saveTournamentWithVerification,
+  type TournamentPersistenceRepository,
+} from "./tournament-persistence";
 import type { Tournament, TournamentTeam } from "./types";
 
 export function findTeamById(
@@ -11,6 +16,20 @@ export function findTeamById(
 
 export function markTournamentEnded(tournament: Tournament): Tournament {
   return { ...tournament, status: "ended" };
+}
+
+export async function endTournament(
+  repository: TournamentPersistenceRepository,
+  tournamentId: string,
+): Promise<Tournament> {
+  return withTournamentLock(tournamentId, async () => {
+    const fresh = await repository.get(tournamentId);
+    if (!fresh) throw new Error(`Tournament ${tournamentId} not found`);
+    return saveTournamentWithVerification(repository, {
+      ...fresh,
+      status: "ended",
+    });
+  });
 }
 
 export function resolveTournamentViewState(

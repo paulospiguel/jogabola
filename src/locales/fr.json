@@ -3363,7 +3363,8 @@
       "back": "Retour",
       "continue": "Continuer",
       "start": "Démarrer le tournoi",
-      "saving": "Préparation…"
+      "saving": "Préparation…",
+      "saveError": "Impossible d’enregistrer le tournoi. Réessayez."
     },
     "view": {
       "kicker": "Tournoi sur le terrain",
@@ -3399,7 +3400,8 @@
         "unavailable": "Le partage de ce résultat est indisponible.",
         "shareError": "Impossible de partager le résultat. Réessayez.",
         "copyError": "Impossible de copier le lien. Réessayez.",
-        "qrAria": "Code QR pour partager le résultat du tournoi"
+        "qrAria": "Code QR pour partager le résultat du tournoi",
+        "unknownPlayer": "Joueur"
       },
       "standings": {
         "title": "Classement",
@@ -3408,6 +3410,20 @@
         "goalDifference": "DB",
         "played": "MJ"
       }
+    },
+    "result": {
+      "invalidTitle": "Résultat invalide ou expiré",
+      "invalidDescription": "Ce résultat n’est plus disponible. Ouvrez les tournois pour en commencer un autre.",
+      "openTournaments": "Ouvrir les tournois",
+      "champion": "Champion",
+      "standings": "Classement final",
+      "teamFallback": "Équipe",
+      "points": "{count, plural, one {# pt} other {# pts}}",
+      "score": "{goalsFor}-{goalsAgainst}",
+      "scoreAria": "{goalsFor} buts marqués et {goalsAgainst} encaissés",
+      "topScorer": "Meilleur buteur",
+      "goals": "{count, plural, one {# but} other {# buts}}",
+      "createMine": "Créer mon tournoi"
     },
     "match": {
       "endedTitle": "Match terminé",

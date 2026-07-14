@@ -123,8 +123,7 @@ export function computeTopScorers(tournament: Tournament): ScorerEntry[] {
       scorers.set(goal.playerId, {
         playerId: goal.playerId,
         name:
-          team?.players.find(player => player.id === goal.playerId)?.name ??
-          "Jogador",
+          team?.players.find(player => player.id === goal.playerId)?.name ?? "",
         teamId: goal.teamId,
         goals: 1,
         matchesPlayed: matchesByTeam.get(goal.teamId) ?? 0,
@@ -136,6 +135,7 @@ export function computeTopScorers(tournament: Tournament): ScorerEntry[] {
     (left, right) =>
       right.goals - left.goals ||
       left.matchesPlayed - right.matchesPlayed ||
+      Number(left.name.length === 0) - Number(right.name.length === 0) ||
       left.name.localeCompare(right.name),
   );
 }
