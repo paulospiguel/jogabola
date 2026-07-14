@@ -1,14 +1,23 @@
 "use client";
 
+import { useStatsigClient } from "@statsig/react-bindings";
 import { motion } from "framer-motion";
 import { Timer } from "lucide-react";
 import Link from "next/link";
+import { useTranslations } from "next-intl";
+import { useEffect } from "react";
 import { formatMinute } from "./format";
 import { decodeResult } from "./share";
 import { onColor } from "./team-color";
 
 export function ResultView({ data }: { data: string | null }) {
+  const t = useTranslations("timerShared");
+  const { logEvent } = useStatsigClient();
   const r = data ? decodeResult(data) : null;
+
+  useEffect(() => {
+    if (data) logEvent("timer_result_viewed");
+  }, [data, logEvent]);
 
   if (!r) {
     return (
@@ -133,8 +142,19 @@ export function ResultView({ data }: { data: string | null }) {
       )}
 
       <Link
+        data-testid="timer-result-cta"
+        href="/auth?utm_source=timer&utm_medium=share&utm_campaign=resultado"
+        onClick={() => logEvent("timer_cta_clicked")}
+        className="mt-2 flex flex-col items-center rounded-[14px] bg-arena-primary px-4 py-3.5 text-center"
+      >
+        <span className="font-extrabold text-arena-bg">{t("cta")}</span>
+        <span className="text-xs font-semibold text-arena-bg/70">
+          {t("ctaHint")}
+        </span>
+      </Link>
+      <Link
         href="/timer"
-        className="mt-2 flex items-center justify-center rounded-[14px] bg-arena-primary py-3.5 font-extrabold text-arena-bg"
+        className="flex items-center justify-center rounded-[14px] border border-arena-border py-3 text-sm font-bold text-arena-text-sec"
       >
         Criar o meu jogo
       </Link>

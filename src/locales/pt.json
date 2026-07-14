@@ -2453,6 +2453,10 @@
       "title": "Configurações da Partida"
     }
   },
+  "timerShared": {
+    "cta": "Organiza a tua equipa no JogaBola",
+    "ctaHint": "Convocatórias, estatísticas e rankings — grátis."
+  },
   "onboarding": {
     "badge": {
       "soon": "Em breve",

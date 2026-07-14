@@ -89,5 +89,18 @@ export function resultText(match: Match): string {
     const team = side === "A" ? r.a.n : r.b.n;
     lines.push(`⚽ ${formatMinute(min * 60)} ${name} (${team})`);
   }
+  lines.push("via jogabola.app/timer");
   return lines.join("\n");
+}
+
+export function resultOgTitle(r: SharedResult): string {
+  return `${r.a.n} ${r.sa}–${r.sb} ${r.b.n} · JogaBola`;
+}
+
+export function resultOgDescription(r: SharedResult): string {
+  const base =
+    "Resultado registado ao vivo com o Cronómetro JogaBola — sem login.";
+  if (r.g.length === 0) return base;
+  const plural = r.g.length === 1 ? "golo" : "golos";
+  return `${r.g.length} ${plural} · ${base}`;
 }
