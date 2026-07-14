@@ -186,13 +186,25 @@ Mapeamento 1-para-1 do modelo normalizado:
 
 Os refs `teamAId`/`playerId` do modelo TS já são FKs — nenhuma remodelação necessária.
 
+## Branding / identidade visual
+
+Reforçar a marca reutilizando o componente `Logo` (`src/components/logo.tsx`) — logotipo real em vez de só ícone+texto:
+
+- **Header dos ecrãs do torneio** (hub, setup, vista do torneio): `Logo variant="white" size="header"`.
+- **Página de resultado partilhado** (superfície viral, vista pelo recetor): `Logo variant="white"` em destaque no topo, com `href="/"` para levar o recetor ao site (reforça marca + funil de aquisição).
+- **Ecrã de campeão/final**: `Logo` + asset `trophy.svg` (`src/assets/images/trophy.svg`) na celebração do vencedor.
+
+Assets: `@/assets/logos/jogabola-white.svg` (via componente `Logo`), `@/assets/images/trophy.svg`. O logotipo branco assenta no fundo escuro `bg-arena-bg` (tokens Arena mantidos).
+
+Nota técnica: `Logo` é `"use client"` e usa `useSession`/`useRouterUtils`. Nos ecrãs standalone do timer, usar sem lógica de redirect dependente de sessão (`href="/"` simples ou sem `href` para logo estático) — evita acoplamento à sessão autenticada.
+
 ## Partilha
 
-Resultado final (campeão + tabela + artilheiro) codificado no URL reutilizando o padrão base64url de `share.ts` → página pública de resultado do torneio com `generateMetadata` (OG dinâmico), como no cronómetro.
+Resultado final (campeão + tabela + artilheiro) codificado no URL reutilizando o padrão base64url de `share.ts` → página pública de resultado do torneio com `generateMetadata` (OG dinâmico), como no cronómetro. O topo da página usa o `Logo` (ver Branding).
 
 ## Estrutura de ficheiros
 
-**Reutiliza:** `createMatch`, `MatchView`, `LogGoalSheet`, `EventTimeline`, `Scoreboard`, `team-color.ts`, `format.ts`, padrão de `share.ts`, `BottomSheet`, `Cta`, tokens Arena.
+**Reutiliza:** `createMatch`, `MatchView`, `LogGoalSheet`, `EventTimeline`, `Scoreboard`, `team-color.ts`, `format.ts`, padrão de `share.ts`, `BottomSheet`, `Cta`, componente `Logo` (`src/components/logo.tsx`), asset `trophy.svg`, tokens Arena.
 
 **Novo (namespace `tournament`, sob o espaço do timer):**
 - `types.ts` — tipos acima.
