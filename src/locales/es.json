@@ -2473,6 +2473,10 @@
       "title": "Configuración del partido"
     }
   },
+  "timerShared": {
+    "cta": "Organiza tu equipo en JogaBola",
+    "ctaHint": "Convocatorias, estadísticas y rankings — gratis."
+  },
   "onboarding": {
     "badge": {
       "soon": "Próximo",

@@ -2473,6 +2473,10 @@
       "title": "Paramètres du match"
     }
   },
+  "timerShared": {
+    "cta": "Gère ton équipe sur JogaBola",
+    "ctaHint": "Convocations, statistiques et classements — gratuit."
+  },
   "onboarding": {
     "badge": {
       "soon": "Bientôt",

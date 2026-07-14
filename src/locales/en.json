@@ -2473,6 +2473,10 @@
       "title": "Match Settings"
     }
   },
+  "timerShared": {
+    "cta": "Run your team on JogaBola",
+    "ctaHint": "Call-ups, stats and rankings — free."
+  },
   "onboarding": {
     "badge": {
       "soon": "Soon",
