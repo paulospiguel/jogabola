@@ -3302,5 +3302,145 @@
       "active": "In progress",
       "finished": "Finished"
     }
+  },
+  "Tournament": {
+    "title": "Tournament",
+    "fallbackName": "Quick tournament",
+    "status": {
+      "setup": "Setup",
+      "running": "In progress",
+      "ended": "Finished"
+    },
+    "hub": {
+      "subtitle": "Winner stays, match after match",
+      "newTournament": "New tournament",
+      "saved": "Saved tournaments",
+      "loading": "Loading tournaments",
+      "teamCount": "{count, plural, one {# team} other {# teams}}",
+      "currentPair": "{teamA} vs {teamB}",
+      "emptyTitle": "No tournaments yet",
+      "emptyDescription": "Build 3 to 6 teams, set the rules and start playing.",
+      "emptyCta": "Create tournament"
+    },
+    "setup": {
+      "title": "New tournament · {step}",
+      "steps": {
+        "teams": "Teams",
+        "rules": "Configuration",
+        "draw": "Draw"
+      },
+      "defaultTeam": "Team {number}",
+      "teamNamePlaceholder": "Team name",
+      "removeTeam": "Remove {name}",
+      "chooseColor": "Choose colour {color}",
+      "savedTeam": "{name} · {count, plural, one {# player} other {# players}}",
+      "playerPlaceholder": "Add player",
+      "addPlayer": "Add player",
+      "editPlayer": "Edit {name}",
+      "removePlayer": "Remove {name}",
+      "addTeam": "Add team",
+      "drawPlayersTitle": "Draw players",
+      "drawPlayersDescription": "Paste names separated by commas or lines. The draw distributes them across the teams.",
+      "drawPlaceholder": "Anna, Ben, Carla…",
+      "drawPlayers": "Distribute players",
+      "shuffleOrder": "Shuffle starting order",
+      "shuffleOrderDescription": "Sets the first match and the waiting order.",
+      "shuffleEnabled": "On",
+      "shuffleDisabled": "Off",
+      "modes": {
+        "always": {
+          "title": "Winner stays",
+          "description": "The winning team stays on the pitch."
+        },
+        "maxTwoInARow": {
+          "title": "Maximum 2 in a row",
+          "description": "After two wins, the winner takes a rest."
+        }
+      },
+      "matchDuration": "Time per match",
+      "minutesSuffix": "min",
+      "sound": "Sound + vibration",
+      "back": "Back",
+      "continue": "Continue",
+      "start": "Start tournament",
+      "saving": "Getting ready…",
+      "saveError": "The tournament could not be saved. Try again."
+    },
+    "view": {
+      "kicker": "Tournament on the pitch",
+      "fallbackName": "Quick tournament",
+      "back": "Back to tournaments",
+      "loading": "Loading tournament…",
+      "notFoundTitle": "Tournament not found",
+      "notFoundDescription": "This tournament no longer exists or is not saved on this device.",
+      "loadErrorTitle": "Could not load the tournament",
+      "loadErrorDescription": "There was a problem reading the saved data. Please try again.",
+      "invalidTitle": "Invalid tournament data",
+      "invalidDescription": "One of the teams in this match is no longer available. Return to tournaments to continue.",
+      "retry": "Try again",
+      "actionError": "The action could not be completed. Please try again.",
+      "currentMatch": "Current match",
+      "versus": "{teamA} versus {teamB}",
+      "versusShort": "vs",
+      "startMatch": "Start match",
+      "starting": "Starting…",
+      "queue": "Waiting queue",
+      "endTournament": "End tournament",
+      "ending": "Ending…",
+      "endedTitle": "Tournament finished",
+      "endedDescription": "The final standings are ready.",
+      "champion": {
+        "title": "Champion",
+        "topScorer": "Top scorer",
+        "share": "Share",
+        "copy": "Copy link",
+        "copied": "Copied!",
+        "newTournament": "New tournament",
+        "shareTitle": "JogaBola tournament result",
+        "unavailable": "Sharing this result is unavailable.",
+        "shareError": "The result could not be shared. Please try again.",
+        "copyError": "The link could not be copied. Please try again.",
+        "qrAria": "QR code to share the tournament result",
+        "unknownPlayer": "Player"
+      },
+      "standings": {
+        "title": "Standings",
+        "team": "Team",
+        "points": "Pts",
+        "goalDifference": "GD",
+        "played": "P"
+      }
+    },
+    "result": {
+      "invalidTitle": "Invalid or expired result",
+      "invalidDescription": "This result is no longer available. Open tournaments to start another one.",
+      "openTournaments": "Open tournaments",
+      "champion": "Champion",
+      "standings": "Final standings",
+      "teamFallback": "Team",
+      "points": "{count, plural, one {# pt} other {# pts}}",
+      "score": "{goalsFor}-{goalsAgainst}",
+      "scoreAria": "{goalsFor} goals scored and {goalsAgainst} conceded",
+      "topScorer": "Top scorer",
+      "goals": "{count, plural, one {# goal} other {# goals}}",
+      "createMine": "Create my tournament"
+    },
+    "match": {
+      "endedTitle": "Match finished",
+      "endedDescription": "The result has been recorded.",
+      "viewSummary": "View summary",
+      "continueTournament": "Continue tournament",
+      "continuing": "Continuing…",
+      "finalizeError": "The result could not be saved. Please try again.",
+      "decision": {
+        "title": "Draw — who won the decision?",
+        "description": "Decision goals do not count towards the result. Choose the winning team.",
+        "selectMethod": "First choose how the decision was made.",
+        "methods": {
+          "coin": "Odds or evens",
+          "penalties": "Penalties"
+        }
+      }
+    }
   }
 }

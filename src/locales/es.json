@@ -3302,5 +3302,145 @@
       "active": "En curso",
       "finished": "Finalizada"
     }
+  },
+  "Tournament": {
+    "title": "Torneo",
+    "fallbackName": "Torneo rápido",
+    "status": {
+      "setup": "Por configurar",
+      "running": "En curso",
+      "ended": "Finalizado"
+    },
+    "hub": {
+      "subtitle": "El ganador sigue, partido tras partido",
+      "newTournament": "Nuevo torneo",
+      "saved": "Torneos guardados",
+      "loading": "Cargando torneos",
+      "teamCount": "{count, plural, one {# equipo} other {# equipos}}",
+      "currentPair": "{teamA} vs {teamB}",
+      "emptyTitle": "Aún no hay torneos",
+      "emptyDescription": "Monta de 3 a 6 equipos, define las reglas y empieza a jugar.",
+      "emptyCta": "Crear torneo"
+    },
+    "setup": {
+      "title": "Nuevo torneo · {step}",
+      "steps": {
+        "teams": "Equipos",
+        "rules": "Configuración",
+        "draw": "Sorteo"
+      },
+      "defaultTeam": "Equipo {number}",
+      "teamNamePlaceholder": "Nombre del equipo",
+      "removeTeam": "Eliminar {name}",
+      "chooseColor": "Elegir color {color}",
+      "savedTeam": "{name} · {count, plural, one {# jugador} other {# jugadores}}",
+      "playerPlaceholder": "Añadir jugador",
+      "addPlayer": "Añadir jugador",
+      "editPlayer": "Editar {name}",
+      "removePlayer": "Eliminar {name}",
+      "addTeam": "Añadir equipo",
+      "drawPlayersTitle": "Sortear jugadores",
+      "drawPlayersDescription": "Pega los nombres separados por comas o líneas. El sorteo los distribuye entre los equipos.",
+      "drawPlaceholder": "Ana, Bruno, Carla…",
+      "drawPlayers": "Distribuir jugadores",
+      "shuffleOrder": "Barajar quién empieza",
+      "shuffleOrderDescription": "Define el primer partido y el orden de espera.",
+      "shuffleEnabled": "Activado",
+      "shuffleDisabled": "Desactivado",
+      "modes": {
+        "always": {
+          "title": "El ganador sigue",
+          "description": "El equipo que gana se queda en el campo."
+        },
+        "maxTwoInARow": {
+          "title": "Máximo 2 seguidos",
+          "description": "Tras dos victorias, el ganador descansa."
+        }
+      },
+      "matchDuration": "Tiempo por partido",
+      "minutesSuffix": "min",
+      "sound": "Sonido + vibración",
+      "back": "Volver",
+      "continue": "Continuar",
+      "start": "Empezar torneo",
+      "saving": "Preparando…",
+      "saveError": "No se pudo guardar el torneo. Inténtalo de nuevo."
+    },
+    "view": {
+      "kicker": "Torneo en el campo",
+      "fallbackName": "Torneo rápido",
+      "back": "Volver a los torneos",
+      "loading": "Cargando torneo…",
+      "notFoundTitle": "Torneo no encontrado",
+      "notFoundDescription": "Este torneo ya no existe o no está guardado en este dispositivo.",
+      "loadErrorTitle": "No se pudo cargar el torneo",
+      "loadErrorDescription": "Hubo un problema al leer los datos guardados. Inténtalo de nuevo.",
+      "invalidTitle": "Datos del torneo no válidos",
+      "invalidDescription": "Uno de los equipos de este partido ya no está disponible. Vuelve a los torneos para continuar.",
+      "retry": "Intentar de nuevo",
+      "actionError": "No se pudo completar la acción. Inténtalo de nuevo.",
+      "currentMatch": "Partido actual",
+      "versus": "{teamA} contra {teamB}",
+      "versusShort": "vs",
+      "startMatch": "Iniciar partido",
+      "starting": "Iniciando…",
+      "queue": "Cola de espera",
+      "endTournament": "Finalizar torneo",
+      "ending": "Finalizando…",
+      "endedTitle": "Torneo finalizado",
+      "endedDescription": "La clasificación final está lista.",
+      "champion": {
+        "title": "Campeón",
+        "topScorer": "Máximo goleador",
+        "share": "Compartir",
+        "copy": "Copiar enlace",
+        "copied": "¡Copiado!",
+        "newTournament": "Nuevo torneo",
+        "shareTitle": "Resultado del torneo JogaBola",
+        "unavailable": "No se puede compartir este resultado.",
+        "shareError": "No se pudo compartir el resultado. Inténtalo de nuevo.",
+        "copyError": "No se pudo copiar el enlace. Inténtalo de nuevo.",
+        "qrAria": "Código QR para compartir el resultado del torneo",
+        "unknownPlayer": "Jugador"
+      },
+      "standings": {
+        "title": "Clasificación",
+        "team": "Equipo",
+        "points": "Pts",
+        "goalDifference": "DG",
+        "played": "PJ"
+      }
+    },
+    "result": {
+      "invalidTitle": "Resultado no válido o caducado",
+      "invalidDescription": "Este resultado ya no está disponible. Abre los torneos para empezar otro.",
+      "openTournaments": "Abrir torneos",
+      "champion": "Campeón",
+      "standings": "Clasificación final",
+      "teamFallback": "Equipo",
+      "points": "{count, plural, one {# pto} other {# ptos}}",
+      "score": "{goalsFor}-{goalsAgainst}",
+      "scoreAria": "{goalsFor} goles marcados y {goalsAgainst} encajados",
+      "topScorer": "Máximo goleador",
+      "goals": "{count, plural, one {# gol} other {# goles}}",
+      "createMine": "Crear mi torneo"
+    },
+    "match": {
+      "endedTitle": "Partido finalizado",
+      "endedDescription": "El resultado se ha registrado.",
+      "viewSummary": "Ver resumen",
+      "continueTournament": "Continuar torneo",
+      "continuing": "Continuando…",
+      "finalizeError": "No se pudo guardar el resultado. Inténtalo de nuevo.",
+      "decision": {
+        "title": "Empate — ¿quién ganó la decisión?",
+        "description": "Los goles de la decisión no cuentan para el resultado. Elige al equipo ganador.",
+        "selectMethod": "Elige primero cómo se tomó la decisión.",
+        "methods": {
+          "coin": "Pares o impares",
+          "penalties": "Penaltis"
+        }
+      }
+    }
   }
 }

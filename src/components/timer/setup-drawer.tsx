@@ -161,7 +161,7 @@ function TeamEditor({
   );
 }
 
-function Stepper({
+export function Stepper({
   label,
   value,
   suffix,
@@ -184,9 +184,9 @@ function Stepper({
       <div className="flex items-center gap-3">
         <button
           type="button"
-          aria-label="Diminuir"
+          aria-label={`${label}: −`}
           onClick={() => onChange(Math.max(min, value - step))}
-          className="grid size-8 place-items-center rounded-lg border border-arena-border bg-arena-surface-el text-arena-text-sec"
+          className="press grid size-8 place-items-center rounded-lg border border-arena-border bg-arena-surface-el text-arena-text-sec"
         >
           <Minus size={15} />
         </button>
@@ -200,9 +200,9 @@ function Stepper({
         </span>
         <button
           type="button"
-          aria-label="Aumentar"
+          aria-label={`${label}: +`}
           onClick={() => onChange(Math.min(max, value + step))}
-          className="grid size-8 place-items-center rounded-lg border border-arena-border bg-arena-surface-el text-arena-text-sec"
+          className="press grid size-8 place-items-center rounded-lg border border-arena-border bg-arena-surface-el text-arena-text-sec"
         >
           <Plus size={15} />
         </button>

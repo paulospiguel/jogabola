@@ -11,6 +11,7 @@ interface BottomSheetProps {
   onClose: () => void;
   title?: string;
   noPad?: boolean;
+  hideClose?: boolean;
   children: React.ReactNode;
 }
 
@@ -18,6 +19,7 @@ export function BottomSheet({
   onClose,
   title,
   noPad,
+  hideClose,
   children,
 }: BottomSheetProps) {
   const t = useTranslations("common");
@@ -48,16 +50,18 @@ export function BottomSheet({
         {title && (
           <div className="flex items-center justify-between border-arena-border border-b px-5 pt-3 pb-2.5">
             <span className="text-base font-bold text-arena-text">{title}</span>
-            <Button
-              className="size-[30px] min-h-0 min-w-0 rounded-[9px] border border-arena-border bg-arena-surface text-arena-text-sec hover:bg-arena-surface-el"
-              onClick={onClose}
-              type="button"
-              variant="ghost"
-              size="icon-sm"
-              aria-label={t("close")}
-            >
-              <X size={14} strokeWidth={2} />
-            </Button>
+            {!hideClose && (
+              <Button
+                className="size-[30px] min-h-0 min-w-0 rounded-[9px] border border-arena-border bg-arena-surface text-arena-text-sec hover:bg-arena-surface-el"
+                onClick={onClose}
+                type="button"
+                variant="ghost"
+                size="icon-sm"
+                aria-label={t("close")}
+              >
+                <X size={14} strokeWidth={2} />
+              </Button>
+            )}
           </div>
         )}
 
