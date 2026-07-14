@@ -3302,5 +3302,68 @@
       "active": "En cours",
       "finished": "Terminée"
     }
+  },
+  "Tournament": {
+    "title": "Tournoi",
+    "fallbackName": "Tournoi rapide",
+    "status": {
+      "setup": "À configurer",
+      "running": "En cours",
+      "ended": "Terminé"
+    },
+    "hub": {
+      "subtitle": "Le vainqueur reste, match après match",
+      "newTournament": "Nouveau tournoi",
+      "saved": "Tournois enregistrés",
+      "loading": "Chargement des tournois",
+      "teamCount": "{count, plural, one {# équipe} other {# équipes}}",
+      "currentPair": "{teamA} contre {teamB}",
+      "emptyTitle": "Aucun tournoi pour le moment",
+      "emptyDescription": "Composez 3 à 6 équipes, définissez les règles et commencez à jouer.",
+      "emptyCta": "Créer un tournoi"
+    },
+    "setup": {
+      "title": "Nouveau tournoi · {step}",
+      "steps": {
+        "teams": "Équipes",
+        "rules": "Configuration",
+        "draw": "Tirage"
+      },
+      "defaultTeam": "Équipe {number}",
+      "teamNamePlaceholder": "Nom de l’équipe",
+      "removeTeam": "Supprimer {name}",
+      "chooseColor": "Choisir la couleur {color}",
+      "savedTeam": "{name} · {count, plural, one {# joueur} other {# joueurs}}",
+      "playerPlaceholder": "Ajouter un joueur",
+      "addPlayer": "Ajouter un joueur",
+      "editPlayer": "Modifier {name}",
+      "removePlayer": "Supprimer {name}",
+      "addTeam": "Ajouter une équipe",
+      "drawPlayersTitle": "Tirer les joueurs au sort",
+      "drawPlayersDescription": "Collez les noms séparés par des virgules ou des lignes. Le tirage les répartit entre les équipes.",
+      "drawPlaceholder": "Anna, Bruno, Carla…",
+      "drawPlayers": "Répartir les joueurs",
+      "shuffleOrder": "Mélanger l’ordre de départ",
+      "shuffleOrderDescription": "Définit le premier match et l’ordre d’attente.",
+      "shuffleEnabled": "Activé",
+      "shuffleDisabled": "Désactivé",
+      "modes": {
+        "always": {
+          "title": "Le vainqueur reste",
+          "description": "L’équipe gagnante reste sur le terrain."
+        },
+        "maxTwoInARow": {
+          "title": "Maximum 2 d’affilée",
+          "description": "Après deux victoires, le vainqueur se repose."
+        }
+      },
+      "matchDuration": "Temps par match",
+      "minutesSuffix": "min",
+      "sound": "Son + vibration",
+      "back": "Retour",
+      "continue": "Continuer",
+      "start": "Démarrer le tournoi",
+      "saving": "Préparation…"
+    }
   }
 }

@@ -3302,5 +3302,68 @@
       "active": "Em curso",
       "finished": "Concluída"
     }
+  },
+  "Tournament": {
+    "title": "Torneio",
+    "fallbackName": "Torneio rápido",
+    "status": {
+      "setup": "Por configurar",
+      "running": "Em curso",
+      "ended": "Terminado"
+    },
+    "hub": {
+      "subtitle": "Vencedor fica, jogo após jogo",
+      "newTournament": "Novo torneio",
+      "saved": "Torneios guardados",
+      "loading": "A carregar torneios",
+      "teamCount": "{count, plural, one {# equipa} other {# equipas}}",
+      "currentPair": "{teamA} vs {teamB}",
+      "emptyTitle": "Ainda não há torneios",
+      "emptyDescription": "Monta 3 a 6 equipas, define as regras e começa a jogar.",
+      "emptyCta": "Criar torneio"
+    },
+    "setup": {
+      "title": "Novo torneio · {step}",
+      "steps": {
+        "teams": "Equipas",
+        "rules": "Configuração",
+        "draw": "Sorteio"
+      },
+      "defaultTeam": "Equipa {number}",
+      "teamNamePlaceholder": "Nome da equipa",
+      "removeTeam": "Remover {name}",
+      "chooseColor": "Escolher cor {color}",
+      "savedTeam": "{name} · {count, plural, one {# jogador} other {# jogadores}}",
+      "playerPlaceholder": "Adicionar jogador",
+      "addPlayer": "Adicionar jogador",
+      "editPlayer": "Editar {name}",
+      "removePlayer": "Remover {name}",
+      "addTeam": "Adicionar equipa",
+      "drawPlayersTitle": "Sortear jogadores",
+      "drawPlayersDescription": "Cola os nomes separados por vírgulas ou linhas. O sorteio distribui-os pelas equipas.",
+      "drawPlaceholder": "Ana, Bruno, Carla…",
+      "drawPlayers": "Distribuir jogadores",
+      "shuffleOrder": "Baralhar quem começa",
+      "shuffleOrderDescription": "Define o primeiro jogo e a ordem de espera.",
+      "shuffleEnabled": "Ativo",
+      "shuffleDisabled": "Inativo",
+      "modes": {
+        "always": {
+          "title": "Vencedor fica",
+          "description": "Quem ganha mantém-se em campo."
+        },
+        "maxTwoInARow": {
+          "title": "Máximo de 2 seguidos",
+          "description": "Após duas vitórias, o vencedor descansa."
+        }
+      },
+      "matchDuration": "Tempo por partida",
+      "minutesSuffix": "min",
+      "sound": "Som + vibração",
+      "back": "Voltar",
+      "continue": "Continuar",
+      "start": "Começar torneio",
+      "saving": "A preparar…"
+    }
   }
 }

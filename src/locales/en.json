@@ -3302,5 +3302,68 @@
       "active": "In progress",
       "finished": "Finished"
     }
+  },
+  "Tournament": {
+    "title": "Tournament",
+    "fallbackName": "Quick tournament",
+    "status": {
+      "setup": "Setup",
+      "running": "In progress",
+      "ended": "Finished"
+    },
+    "hub": {
+      "subtitle": "Winner stays, match after match",
+      "newTournament": "New tournament",
+      "saved": "Saved tournaments",
+      "loading": "Loading tournaments",
+      "teamCount": "{count, plural, one {# team} other {# teams}}",
+      "currentPair": "{teamA} vs {teamB}",
+      "emptyTitle": "No tournaments yet",
+      "emptyDescription": "Build 3 to 6 teams, set the rules and start playing.",
+      "emptyCta": "Create tournament"
+    },
+    "setup": {
+      "title": "New tournament · {step}",
+      "steps": {
+        "teams": "Teams",
+        "rules": "Configuration",
+        "draw": "Draw"
+      },
+      "defaultTeam": "Team {number}",
+      "teamNamePlaceholder": "Team name",
+      "removeTeam": "Remove {name}",
+      "chooseColor": "Choose colour {color}",
+      "savedTeam": "{name} · {count, plural, one {# player} other {# players}}",
+      "playerPlaceholder": "Add player",
+      "addPlayer": "Add player",
+      "editPlayer": "Edit {name}",
+      "removePlayer": "Remove {name}",
+      "addTeam": "Add team",
+      "drawPlayersTitle": "Draw players",
+      "drawPlayersDescription": "Paste names separated by commas or lines. The draw distributes them across the teams.",
+      "drawPlaceholder": "Anna, Ben, Carla…",
+      "drawPlayers": "Distribute players",
+      "shuffleOrder": "Shuffle starting order",
+      "shuffleOrderDescription": "Sets the first match and the waiting order.",
+      "shuffleEnabled": "On",
+      "shuffleDisabled": "Off",
+      "modes": {
+        "always": {
+          "title": "Winner stays",
+          "description": "The winning team stays on the pitch."
+        },
+        "maxTwoInARow": {
+          "title": "Maximum 2 in a row",
+          "description": "After two wins, the winner takes a rest."
+        }
+      },
+      "matchDuration": "Time per match",
+      "minutesSuffix": "min",
+      "sound": "Sound + vibration",
+      "back": "Back",
+      "continue": "Continue",
+      "start": "Start tournament",
+      "saving": "Getting ready…"
+    }
   }
 }
