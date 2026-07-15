@@ -16,16 +16,21 @@ torneios.
 ## Comportamento
 
 - Agrupar eventos de golo pelo par `team + playerId`.
-- Agrupar também golos sem jogador, separadamente por equipa.
+- Agrupar também golos sem jogador (`playerId === ""`), separadamente por
+  equipa. Um ID não vazio cujo jogador já não exista no plantel continua a ser
+  agrupado pelo ID persistido e não é combinado com o grupo sem jogador.
 - Mostrar uma linha por grupo com o nome do jogador, a equipa e os tempos dos
   golos em ordem cronológica, por exemplo `12' · 27' · 43'`.
 - Não mostrar assistências nas linhas agrupadas.
 - Manter cada cartão como uma linha individual.
 - Ordenar as linhas da cronologia pelo evento mais recente representado em cada
-  linha, do mais recente para o mais antigo.
+  linha, do mais recente para o mais antigo. `Match.events` guarda a ordem de
+  registo; quando dois eventos têm o mesmo `atSec`, o evento com o maior índice
+  original é considerado mais recente. O mesmo critério desempata linhas.
 - O botão de remoção de uma linha de golos elimina apenas o golo mais recente
-  desse grupo. Depois da remoção, a linha mantém os restantes tempos; desaparece
-  apenas quando já não houver golos no grupo.
+  desse grupo, usando o maior par `(atSec, índice original)`. Depois da remoção,
+  a linha mantém os restantes tempos; desaparece apenas quando já não houver
+  golos no grupo.
 - Manter a acessibilidade e a dimensão de alvo tátil existentes no comando de
   remoção.
 
@@ -42,7 +47,12 @@ Cada grupo de golos expõe:
 - o instante mais recente, usado para ordenar a cronologia;
 - o ID do golo mais recente, usado pelo botão de remoção.
 
-Os cartões mantêm o ID do evento como chave e como alvo de remoção.
+Os cartões mantêm o ID do evento como chave e como alvo de remoção. Mesmo quando
+intercalado entre golos do mesmo jogador, um cartão nunca integra o grupo nem se
+torna o alvo de remoção desse grupo.
+
+A transformação cria novos arrays e itens de apresentação. Não ordena nem
+altera diretamente `Match.events` ou os objetos de evento recebidos.
 
 ## Testes
 
@@ -55,7 +65,12 @@ provar:
 4. cartões permanecem individuais;
 5. a cronologia é ordenada pelo evento mais recente de cada item;
 6. o ID de remoção corresponde ao golo mais recente do grupo;
-7. golos sem jogador são agrupados apenas dentro da respetiva equipa.
+7. eventos no mesmo segundo usam a ordem original de registo como desempate;
+8. golos sem jogador (`playerId === ""`) são agrupados apenas dentro da
+   respetiva equipa, enquanto IDs não vazios desconhecidos permanecem separados;
+9. uma sequência `golo → cartão → golo` do mesmo jogador produz um grupo de
+   golos e um cartão, removendo apenas o segundo golo;
+10. a transformação não altera a ordem nem os objetos do array recebido.
 
 Depois dos testes focados, executar a suite completa, `pnpm ts-check`, Biome nos
 ficheiros alterados e `git diff --check`.
