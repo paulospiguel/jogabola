@@ -6,6 +6,11 @@ export type TournamentPersistenceRepository = Pick<
   "get" | "save"
 >;
 
+export type TournamentDeletionRepository = Pick<
+  TournamentRepository,
+  "get" | "remove"
+>;
+
 export function tournamentsEqual(
   actual: Tournament | null,
   expected: Tournament,
@@ -23,4 +28,15 @@ export async function saveTournamentWithVerification(
     throw new Error("Tournament persistence verification failed");
   }
   return persisted;
+}
+
+export async function deleteTournamentWithVerification(
+  repository: TournamentDeletionRepository,
+  tournamentId: string,
+): Promise<void> {
+  await repository.remove(tournamentId);
+  const persisted = await repository.get(tournamentId);
+  if (persisted !== null) {
+    throw new Error("Tournament deletion verification failed");
+  }
 }

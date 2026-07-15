@@ -14,6 +14,39 @@ export function formatMinute(atSec: number): string {
   return `${Math.floor(atSec / 60)}'`;
 }
 
+const PT_MONTHS = [
+  "jan",
+  "fev",
+  "mar",
+  "abr",
+  "mai",
+  "jun",
+  "jul",
+  "ago",
+  "set",
+  "out",
+  "nov",
+  "dez",
+] as const;
+
+export function formatMatchDate(createdAt: number, now = Date.now()): string {
+  const createdDate = new Date(createdAt);
+  const today = new Date(now);
+  const time = `${String(createdDate.getHours()).padStart(2, "0")}:${String(createdDate.getMinutes()).padStart(2, "0")}`;
+
+  if (createdDate.toDateString() === today.toDateString()) {
+    return `hoje · ${time}`;
+  }
+
+  const yesterday = new Date(today);
+  yesterday.setDate(yesterday.getDate() - 1);
+  if (createdDate.toDateString() === yesterday.toDateString()) {
+    return `ontem · ${time}`;
+  }
+
+  return `${createdDate.getDate()} ${PT_MONTHS[createdDate.getMonth()]}`;
+}
+
 export function uid(): string {
   return (
     Math.random().toString(36).slice(2, 10) + Date.now().toString(36).slice(-4)

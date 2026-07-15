@@ -3319,6 +3319,7 @@
     },
     "hub": {
       "subtitle": "Le vainqueur reste, match après match",
+      "openTimer": "Chronomètre",
       "newTournament": "Nouveau tournoi",
       "saved": "Tournois enregistrés",
       "loading": "Chargement des tournois",
@@ -3326,7 +3327,13 @@
       "currentPair": "{teamA} contre {teamB}",
       "emptyTitle": "Aucun tournoi pour le moment",
       "emptyDescription": "Composez 3 à 6 équipes, définissez les règles et commencez à jouer.",
-      "emptyCta": "Créer un tournoi"
+      "emptyCta": "Créer un tournoi",
+      "deleteTournament": "Supprimer {name}",
+      "confirmDeleteTournament": "Confirmer la suppression de {name}",
+      "deletingTournament": "Suppression de {name}",
+      "deleteConfirm": "Sûr ?",
+      "deleting": "Suppression…",
+      "deleteError": "Impossible de supprimer le tournoi. Réessaie."
     },
     "setup": {
       "title": "Nouveau tournoi · {step}",
