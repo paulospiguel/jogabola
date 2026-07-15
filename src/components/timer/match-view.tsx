@@ -18,6 +18,7 @@ import { SummaryModal } from "./summary-modal";
 import { TimerRing } from "./timer-ring";
 import type { Player, TeamSide } from "./types";
 import { deriveClock, score, useLiveMatch } from "./use-match-store";
+import { useWakeLock } from "./use-wake-lock";
 
 export function MatchView({ id }: { id: string }) {
   const router = useRouter();
@@ -25,6 +26,7 @@ export function MatchView({ id }: { id: string }) {
   const t = useTranslations("Tournament.match");
   const { logEvent } = useStatsigClient();
   const { match, now, actions } = useLiveMatch(id);
+  useWakeLock(match?.state.status === "running");
   const [goalSide, setGoalSide] = useState<TeamSide | null>(null);
   const [cardSide, setCardSide] = useState<TeamSide | null>(null);
   const [summaryOpen, setSummaryOpen] = useState(false);
