@@ -23,6 +23,7 @@ import { sendPaymentProofRequest } from "@/lib/email";
 import { toUiPaymentStatus } from "@/lib/payment-status";
 import { canActOnReservation } from "@/lib/reservation-access";
 import { getPresignedUploadUrl, getR2PublicUrl } from "@/lib/s3";
+import { classifyErrorSafely } from "@/lib/safe-error";
 import { canManageTeam, userCanAccessTeam } from "@/lib/team-access";
 import {
   createPaymentSchema,
@@ -145,7 +146,11 @@ export const submitPaymentProof = withAction(
           event_id: paymentRow.eventId,
         });
       }
-    } catch {
+    } catch (error) {
+      console.error(
+        "payments:submitPaymentProof notification failed",
+        classifyErrorSafely(error),
+      );
       // Non-blocking: notification failure should not break payment flow
     }
 
@@ -535,7 +540,11 @@ export async function markPaymentManually(
     revalidatePath(`/arena/events/${eventId}`);
     revalidatePath(`/event/${eventId}`);
     return { success: true as const };
-  } catch {
+  } catch (error) {
+    console.error(
+      "payments:markPaymentManually failed",
+      classifyErrorSafely(error),
+    );
     return { success: false as const, error: "Erro ao registar pagamento" };
   }
 }
@@ -623,7 +632,8 @@ export async function getPaymentById(paymentId: number): Promise<
         transferRequiresProof: row.transferRequiresProof,
       },
     };
-  } catch {
+  } catch (error) {
+    console.error("payments:getPaymentById failed", classifyErrorSafely(error));
     return { success: false, error: "Erro ao carregar pagamento" };
   }
 }
