@@ -13,6 +13,7 @@ import { uid } from "./format";
 import { LogCardSheet } from "./log-card-sheet";
 import { LogGoalSheet } from "./log-goal-sheet";
 import { MatchControls } from "./match-controls";
+import { NEW_MATCH_SETUP_HREF } from "./navigation";
 import { Scoreboard } from "./scoreboard";
 import { SummaryModal } from "./summary-modal";
 import { TimerRing } from "./timer-ring";
@@ -235,7 +236,7 @@ export function MatchView({ id }: { id: string }) {
           match={match}
           onClose={() => setSummaryOpen(false)}
           onHome={() => router.push("/timer")}
-          onNewGame={() => router.push("/timer")}
+          onNewGame={() => router.push(NEW_MATCH_SETUP_HREF)}
         />
       )}
       {decisionOpen && tournamentId && (

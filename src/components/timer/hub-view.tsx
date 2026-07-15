@@ -4,9 +4,15 @@ import { useStatsigClient } from "@statsig/react-bindings";
 import { AnimatePresence, motion } from "framer-motion";
 import { Plus, Timer, Trash2, Trophy } from "lucide-react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useEffect, useReducer, useState } from "react";
 import { formatMatchDate, uid } from "./format";
+import {
+  createSetupNavigationState,
+  reduceSetupNavigationState,
+  shouldOpenSetup,
+  TIMER_HUB_HREF,
+} from "./navigation";
 import { SetupDrawer } from "./setup-drawer";
 import type { Match, MatchConfig, MatchType, Team } from "./types";
 import {
@@ -118,9 +124,22 @@ function MatchCard({
 
 export function HubView() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const openSetupFromUrl = shouldOpenSetup(searchParams);
   const { logEvent } = useStatsigClient();
   const [matches, setMatches] = useState<Match[]>([]);
-  const [setupOpen, setSetupOpen] = useState(false);
+  const [setupNavigation, dispatchSetupNavigation] = useReducer(
+    reduceSetupNavigationState,
+    undefined,
+    createSetupNavigationState,
+  );
+
+  useEffect(() => {
+    dispatchSetupNavigation({
+      type: "url_changed",
+      requested: openSetupFromUrl,
+    });
+  }, [openSetupFromUrl]);
 
   useEffect(() => {
     setMatches(loadStandaloneMatches());
@@ -145,7 +164,7 @@ export function HubView() {
         });
       }
     }
-    setSetupOpen(false);
+    dispatchSetupNavigation({ type: "close" });
     router.push(`/timer/jogo/${match.id}`);
   }
 
@@ -181,7 +200,7 @@ export function HubView() {
       <motion.button
         type="button"
         whileTap={{ scale: 0.97 }}
-        onClick={() => setSetupOpen(true)}
+        onClick={() => dispatchSetupNavigation({ type: "open" })}
         className="flex items-center justify-center gap-2 rounded-[16px] bg-arena-primary py-4 font-extrabold text-arena-bg shadow-[0_0_32px_rgba(124,255,79,.18)]"
       >
         <Plus size={20} /> Novo jogo / treino
@@ -215,9 +234,12 @@ export function HubView() {
         )}
       </section>
 
-      {setupOpen && (
+      {setupNavigation.isOpen && (
         <SetupDrawer
-          onClose={() => setSetupOpen(false)}
+          onClose={() => {
+            dispatchSetupNavigation({ type: "close" });
+            if (openSetupFromUrl) router.replace(TIMER_HUB_HREF);
+          }}
           onCreate={handleCreate}
         />
       )}

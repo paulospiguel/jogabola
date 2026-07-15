@@ -6,6 +6,16 @@ import { useEffect, useRef } from "react";
 import { createPortal } from "react-dom";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { getWrappedFocusTarget } from "./focus-trap";
+
+const FOCUSABLE_SELECTOR = [
+  "a[href]",
+  "button:not([disabled])",
+  "input:not([disabled])",
+  "select:not([disabled])",
+  "textarea:not([disabled])",
+  '[tabindex]:not([tabindex="-1"])',
+].join(",");
 
 interface BottomSheetProps {
   onClose: () => void;
@@ -23,20 +33,81 @@ export function BottomSheet({
   children,
 }: BottomSheetProps) {
   const t = useTranslations("common");
-  const portalRef = useRef<HTMLElement | null>(null);
+  const dialogRef = useRef<HTMLDivElement | null>(null);
+  const onCloseRef = useRef(onClose);
+  onCloseRef.current = onClose;
 
   useEffect(() => {
-    portalRef.current = document.body;
+    const dialog = dialogRef.current;
+    if (!dialog) return;
+
+    const previouslyFocused =
+      document.activeElement instanceof HTMLElement
+        ? document.activeElement
+        : null;
+
+    dialog.focus({ preventScroll: true });
+
+    function handleKeyDown(event: KeyboardEvent) {
+      const openDialogs = document.querySelectorAll<HTMLElement>(
+        '[role="dialog"][aria-modal="true"]',
+      );
+      if (openDialogs.item(openDialogs.length - 1) !== dialog) return;
+
+      if (event.key === "Escape") {
+        event.preventDefault();
+        onCloseRef.current();
+        return;
+      }
+
+      if (event.key !== "Tab") return;
+
+      const focusableElements = Array.from(
+        dialog.querySelectorAll<HTMLElement>(FOCUSABLE_SELECTOR),
+      ).filter(element => element.getClientRects().length > 0);
+
+      if (focusableElements.length === 0) {
+        event.preventDefault();
+        dialog.focus({ preventScroll: true });
+        return;
+      }
+
+      const activeElement =
+        document.activeElement instanceof HTMLElement
+          ? document.activeElement
+          : null;
+      const target = getWrappedFocusTarget(
+        focusableElements,
+        activeElement,
+        event.shiftKey,
+      );
+      if (!target) return;
+
+      event.preventDefault();
+      target.focus();
+    }
+
+    document.addEventListener("keydown", handleKeyDown);
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown);
+      if (previouslyFocused?.isConnected) {
+        previouslyFocused.focus({ preventScroll: true });
+      }
+    };
   }, []);
 
   const sheet = (
     <div
+      ref={dialogRef}
       aria-modal="true"
-      onKeyDown={e => {
-        if (e.key === "Escape") onClose();
-      }}
       role="dialog"
       className="fixed inset-0 z-[9999] flex flex-col justify-end bg-[#04070A]/75 backdrop-blur-sm animate-[fadeIn_.15s_ease] sm:justify-center sm:items-center sm:p-6"
+      onKeyDown={event => {
+        if (event.key !== "Escape") return;
+        event.preventDefault();
+        event.stopPropagation();
+        onCloseRef.current();
+      }}
       onClick={e => {
         if (e.target === e.currentTarget) onClose();
       }}
