@@ -7,7 +7,10 @@ import type { Match, MatchEvent } from "./types";
 
 function playerName(match: Match, ev: MatchEvent): string {
   const p = match.teams[ev.team].players.find(x => x.id === ev.playerId);
-  return p?.name ?? (ev.type === "goal" ? "Golo" : "Cartão");
+  if (p?.name) return p.name;
+  // No player assigned — attribute the event to the team so it stays readable.
+  const team = match.teams[ev.team].name;
+  return ev.type === "goal" ? `Golo · ${team}` : `Cartão · ${team}`;
 }
 
 function assistName(match: Match, ev: MatchEvent): string | null {
@@ -93,10 +96,10 @@ export function EventTimeline({
                 )}
               </div>
               <span
-                className="shrink-0 rounded-md px-2 py-0.5 text-[10px] font-extrabold uppercase"
+                className="max-w-[72px] shrink-0 truncate rounded-md px-2 py-0.5 text-[10px] font-extrabold uppercase"
                 style={{ background: `${team.color}22`, color: team.color }}
               >
-                {team.name.slice(0, 1)}
+                {team.name}
               </span>
               <button
                 type="button"

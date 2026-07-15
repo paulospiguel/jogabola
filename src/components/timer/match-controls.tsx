@@ -80,7 +80,8 @@ export function MatchControls({
   const [confirmEnd, setConfirmEnd] = useState(false);
   const running = status === "running";
   const ended = status === "ended";
-  const logDisabled = ended;
+  // Goals/cards only make sense once the match has started.
+  const logDisabled = ended || status === "idle";
 
   function armEnd() {
     setConfirmEnd(true);
@@ -204,8 +205,9 @@ export function MatchControls({
       </div>
 
       {/* "Terminar jogo agora" link — also requires second tap */}
-      {!ended && status !== "idle" && (
-        confirmEnd ? (
+      {!ended &&
+        status !== "idle" &&
+        (confirmEnd ? (
           <button
             type="button"
             onClick={() => commitEnd(onEnd)}
@@ -222,8 +224,7 @@ export function MatchControls({
           >
             Terminar jogo agora
           </button>
-        )
-      )}
+        ))}
     </div>
   );
 }
