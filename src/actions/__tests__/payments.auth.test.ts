@@ -2,6 +2,8 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 
 const mocks = vi.hoisted(() => {
   const returning = vi.fn();
+  const updateWhere = vi.fn().mockResolvedValue(undefined);
+  const set = vi.fn(() => ({ where: updateWhere }));
   const values = vi.fn(() => ({ returning }));
   return {
     getSession: vi.fn(),
@@ -9,10 +11,9 @@ const mocks = vi.hoisted(() => {
     paymentFindFirst: vi.fn(),
     reservationFindFirst: vi.fn(),
     returning,
+    set,
     selectResults: [] as unknown[][],
-    update: vi.fn(() => ({
-      set: vi.fn(() => ({ where: vi.fn().mockResolvedValue(undefined) })),
-    })),
+    update: vi.fn(() => ({ set })),
     values,
   };
 });
@@ -166,5 +167,38 @@ describe("payment reservation authorization", () => {
       success: false,
       error: { code: "FORBIDDEN" },
     });
+  });
+
+  it("requires manual review despite a likely-valid client AI precheck", async () => {
+    mocks.getSession.mockResolvedValue({
+      session: {},
+      user: { id: "owner", name: "Owner", email: "owner@example.com" },
+    });
+    mocks.selectResults.push([{ id: 3, paymentId: 9 }]);
+    mocks.paymentFindFirst.mockResolvedValue({ matchReservationId: 7 });
+    mocks.reservationFindFirst.mockResolvedValue({
+      playerId: "owner",
+      guestAccessToken: null,
+    });
+
+    const result = await verifyPaymentProof({
+      paymentProofId: 3,
+      aiCheck: {
+        decision: "likely_valid",
+        confidence: 0.99,
+        riskFlags: [],
+      },
+    });
+
+    expect(result.success).toBe(true);
+    expect(mocks.values).toHaveBeenCalledWith(
+      expect.objectContaining({
+        decision: "likely_valid",
+        confidence: 99,
+      }),
+    );
+    expect(mocks.set).toHaveBeenCalledWith(
+      expect.objectContaining({ status: "review_required" }),
+    );
   });
 });
