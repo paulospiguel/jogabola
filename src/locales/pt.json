@@ -3319,6 +3319,7 @@
     },
     "hub": {
       "subtitle": "Vencedor fica, jogo após jogo",
+      "openTimer": "Cronómetro",
       "newTournament": "Novo torneio",
       "saved": "Torneios guardados",
       "loading": "A carregar torneios",

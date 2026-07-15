@@ -1,6 +1,7 @@
 "use client";
 import { AnimatePresence, motion } from "framer-motion";
-import { Plus, Trophy } from "lucide-react";
+import { Plus, Timer, Trophy } from "lucide-react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { useEffect, useState } from "react";
@@ -47,7 +48,7 @@ export function TournamentHubView() {
   }, []);
   return (
     <main className="mx-auto flex min-h-dvh w-full max-w-[720px] flex-col px-4 pb-12 sm:px-6">
-      <header className="flex items-center justify-between gap-4 pt-5 pb-6 sm:pt-8">
+      <header className="flex items-center justify-between gap-3 pt-5 pb-6 sm:pt-8">
         <div className="flex min-w-0 items-center gap-3">
           <Logo variant="white" size="header" className="shrink-0" />
           <span className="h-7 w-px bg-arena-border" aria-hidden="true" />
@@ -60,6 +61,12 @@ export function TournamentHubView() {
             </p>
           </div>
         </div>
+        <Link
+          href="/timer"
+          className="press flex min-h-11 shrink-0 items-center gap-1.5 rounded-[10px] border border-arena-border bg-arena-surface px-3 py-2 text-xs font-bold text-arena-text-sec transition-colors hover:border-arena-primary/40 hover:text-arena-primary"
+        >
+          <Timer size={14} /> {t("hub.openTimer")}
+        </Link>
       </header>
       <Cta
         onClick={() => setSetupOpen(true)}

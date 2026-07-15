@@ -3319,6 +3319,7 @@
     },
     "hub": {
       "subtitle": "El ganador sigue, partido tras partido",
+      "openTimer": "Cronómetro",
       "newTournament": "Nuevo torneo",
       "saved": "Torneos guardados",
       "loading": "Cargando torneos",

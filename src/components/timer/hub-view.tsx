@@ -2,7 +2,8 @@
 
 import { useStatsigClient } from "@statsig/react-bindings";
 import { AnimatePresence, motion } from "framer-motion";
-import { Plus, Timer, Trash2 } from "lucide-react";
+import { Plus, Timer, Trash2, Trophy } from "lucide-react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { uid } from "./format";
@@ -150,18 +151,26 @@ export function HubView() {
 
   return (
     <div className="mx-auto flex min-h-dvh w-full max-w-[480px] flex-col px-4 pb-10">
-      <header className="flex items-center gap-2.5 pt-6 pb-5">
-        <span className="grid size-10 place-items-center rounded-xl bg-arena-primary/15 ring-1 ring-arena-primary/40">
-          <Timer size={20} className="text-arena-primary" />
-        </span>
-        <div className="flex flex-col">
-          <h1 className="font-sora text-lg font-extrabold leading-none text-arena-text">
-            Cronómetro
-          </h1>
-          <span className="text-xs text-arena-text-sec">
-            Gestor de jogos &amp; treinos
+      <header className="flex items-center justify-between gap-3 pt-6 pb-5">
+        <div className="flex min-w-0 items-center gap-2.5">
+          <span className="grid size-10 place-items-center rounded-xl bg-arena-primary/15 ring-1 ring-arena-primary/40">
+            <Timer size={20} className="text-arena-primary" />
           </span>
+          <div className="flex min-w-0 flex-col">
+            <h1 className="truncate font-sora text-lg font-extrabold leading-none text-arena-text">
+              Cronómetro
+            </h1>
+            <span className="block max-w-full truncate text-xs text-arena-text-sec">
+              Gestor de jogos &amp; treinos
+            </span>
+          </div>
         </div>
+        <Link
+          href="/timer/tournament"
+          className="press flex min-h-11 shrink-0 items-center gap-1.5 rounded-[10px] border border-arena-border bg-arena-surface px-3 py-2 text-xs font-bold text-arena-text-sec transition-colors hover:border-arena-primary/40 hover:text-arena-primary"
+        >
+          <Trophy size={14} /> Torneios
+        </Link>
       </header>
 
       <motion.button

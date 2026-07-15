@@ -3319,6 +3319,7 @@
     },
     "hub": {
       "subtitle": "Winner stays, match after match",
+      "openTimer": "Timer",
       "newTournament": "New tournament",
       "saved": "Saved tournaments",
       "loading": "Loading tournaments",

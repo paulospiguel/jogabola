@@ -3319,6 +3319,7 @@
     },
     "hub": {
       "subtitle": "Le vainqueur reste, match après match",
+      "openTimer": "Chronomètre",
       "newTournament": "Nouveau tournoi",
       "saved": "Tournois enregistrés",
       "loading": "Chargement des tournois",
