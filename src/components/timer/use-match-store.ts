@@ -43,6 +43,14 @@ export function loadMatches(): Match[] {
   return read<Match[]>(K_MATCHES, []).sort((a, b) => b.createdAt - a.createdAt);
 }
 
+export function standaloneOnly(matches: Match[]): Match[] {
+  return matches.filter(match => !match.tournamentContext);
+}
+
+export function loadStandaloneMatches(): Match[] {
+  return standaloneOnly(loadMatches());
+}
+
 export function loadMatch(id: string): Match | null {
   return read<Match[]>(K_MATCHES, []).find(m => m.id === id) ?? null;
 }

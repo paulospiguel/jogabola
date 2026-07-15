@@ -11,7 +11,7 @@ import type { Match, MatchConfig, MatchType, Team } from "./types";
 import {
   createMatch,
   deleteMatch,
-  loadMatches,
+  loadStandaloneMatches,
   saveTeam,
   score,
   upsertMatch,
@@ -95,7 +95,7 @@ export function HubView() {
   const [setupOpen, setSetupOpen] = useState(false);
 
   useEffect(() => {
-    setMatches(loadMatches());
+    setMatches(loadStandaloneMatches());
   }, []);
 
   function handleCreate(
@@ -123,7 +123,7 @@ export function HubView() {
 
   function remove(id: string) {
     deleteMatch(id);
-    setMatches(loadMatches());
+    setMatches(loadStandaloneMatches());
   }
 
   return (
