@@ -31,11 +31,6 @@ export function formatTime(d: Date | string) {
   return format(date, "HH:mm");
 }
 
-export enum FileType {
-  Pdf = "application/pdf",
-  Heic = "image/heic",
-}
-
 export function stripSpecialCharacters(inputString: string) {
   return inputString?.replace(/[^a-zA-Z0-9\s.()-]/g, "");
 }
@@ -48,12 +43,12 @@ export function shuffle(array: unknown[]) {
   return array;
 }
 
-export const isSupportedFilePreview = (type: FileType) => {
+export const isSupportedFilePreview = (type: string) => {
   if (!type) {
     return false;
   }
 
-  if (type === FileType.Heic) {
+  if (type === "image/heic") {
     return false;
   }
 
@@ -62,7 +57,7 @@ export const isSupportedFilePreview = (type: FileType) => {
   }
 
   switch (type) {
-    case FileType.Pdf:
+    case "application/pdf":
       return true;
     default:
       return false;

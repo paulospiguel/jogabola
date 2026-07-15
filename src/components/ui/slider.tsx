@@ -5,10 +5,12 @@ import * as React from "react";
 
 import { cn } from "@/lib/utils";
 
-export enum NameSlider {
-  MIN = 0,
-  MAX = 1,
-}
+export const NameSlider = {
+  MIN: 0,
+  MAX: 1,
+} as const;
+
+export type NameSlider = (typeof NameSlider)[keyof typeof NameSlider];
 
 type SliderProps = React.ComponentPropsWithoutRef<
   typeof SliderPrimitive.Root
