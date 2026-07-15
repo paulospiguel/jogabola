@@ -3263,6 +3263,7 @@
   },
   "arenaRankings": {
     "title": "Rankings",
+    "demoNotice": "Datos de demostración: tus resultados reales aparecerán aquí pronto.",
     "tabs": {
       "league": "Liga",
       "scorers": "Goleadores",
@@ -3286,6 +3287,7 @@
   },
   "arenaHistorical": {
     "title": "Historial",
+    "demoNotice": "Datos de demostración: tus resultados reales aparecerán aquí pronto.",
     "champion": "CAMPEÓN",
     "sections": {
       "seasons": "Temporadas",
