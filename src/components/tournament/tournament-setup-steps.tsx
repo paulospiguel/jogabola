@@ -1,10 +1,11 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Plus, Shuffle, Trophy } from "lucide-react";
+import { ChevronDown, ChevronUp, Plus, Shuffle, Trophy } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { Cta } from "@/components/arena/cta";
 import { Stepper } from "@/components/timer/setup-drawer";
+import { onColor } from "@/components/timer/team-color";
 import type { SavedTeam } from "@/components/timer/types";
 import { cn } from "@/lib/utils";
 import { parsePlayerNames } from "./tournament-setup";
@@ -60,19 +61,98 @@ export function TeamsSetupStep({
 }
 
 interface DrawSetupStepProps {
+  teams: TournamentTeam[];
   drawInput: string;
   shuffleStart: boolean;
   onDrawInputChange: (value: string) => void;
   onDistribute: () => void;
   onShuffleStartChange: (value: boolean) => void;
+  onMoveTeam: (index: number, direction: -1 | 1) => void;
+}
+
+function StartOrderList({
+  teams,
+  disabled,
+  onMove,
+}: {
+  teams: TournamentTeam[];
+  disabled: boolean;
+  onMove: (index: number, direction: -1 | 1) => void;
+}) {
+  const t = useTranslations("Tournament.setup");
+
+  return (
+    <div
+      className={cn(
+        "rounded-[16px] border border-arena-border bg-arena-surface p-4 transition-opacity",
+        disabled && "opacity-45",
+      )}
+    >
+      <h3 className="text-sm font-bold text-arena-text">{t("startOrder")}</h3>
+      <p className="mt-0.5 text-xs leading-relaxed text-arena-text-muted">
+        {disabled ? t("startOrderShuffled") : t("startOrderDescription")}
+      </p>
+      <ul className="mt-3 flex flex-col gap-1.5">
+        {teams.map((team, index) => (
+          <li
+            key={team.id}
+            className="flex items-center gap-2.5 rounded-[12px] bg-arena-surface-el px-2.5 py-2"
+          >
+            <span
+              className="grid size-7 shrink-0 place-items-center rounded-lg text-xs font-extrabold"
+              style={{ background: team.color, color: onColor(team.color) }}
+              aria-hidden="true"
+            >
+              {index + 1}
+            </span>
+            <span className="min-w-0 flex-1 truncate text-sm font-semibold text-arena-text">
+              {team.name}
+            </span>
+            <span
+              className={cn(
+                "shrink-0 rounded-full px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide",
+                index < 2
+                  ? "bg-arena-primary/15 text-arena-primary"
+                  : "bg-arena-surface text-arena-text-muted",
+              )}
+            >
+              {index < 2 ? t("startOrderPlays") : t("startOrderWaits")}
+            </span>
+            <span className="flex shrink-0 gap-1">
+              <button
+                type="button"
+                aria-label={t("startOrderMoveUp", { name: team.name })}
+                disabled={disabled || index === 0}
+                onClick={() => onMove(index, -1)}
+                className="press grid size-8 place-items-center rounded-lg border border-arena-border bg-arena-surface text-arena-text-sec disabled:opacity-30"
+              >
+                <ChevronUp size={15} />
+              </button>
+              <button
+                type="button"
+                aria-label={t("startOrderMoveDown", { name: team.name })}
+                disabled={disabled || index === teams.length - 1}
+                onClick={() => onMove(index, 1)}
+                className="press grid size-8 place-items-center rounded-lg border border-arena-border bg-arena-surface text-arena-text-sec disabled:opacity-30"
+              >
+                <ChevronDown size={15} />
+              </button>
+            </span>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
 }
 
 export function DrawSetupStep({
+  teams,
   drawInput,
   shuffleStart,
   onDrawInputChange,
   onDistribute,
   onShuffleStartChange,
+  onMoveTeam,
 }: DrawSetupStepProps) {
   const t = useTranslations("Tournament");
 
@@ -150,6 +230,12 @@ export function DrawSetupStep({
             : t("setup.shuffleDisabled")}
         </span>
       </button>
+
+      <StartOrderList
+        teams={teams}
+        disabled={shuffleStart}
+        onMove={onMoveTeam}
+      />
     </motion.div>
   );
 }

@@ -3311,6 +3311,12 @@
       "running": "Em curso",
       "ended": "Terminado"
     },
+    "liveBar": {
+      "paused": "Em pausa",
+      "pendingFinish": "Por concluir",
+      "notStarted": "Por começar",
+      "backToMatch": "Voltar ao jogo em curso"
+    },
     "hub": {
       "subtitle": "Vencedor fica, jogo após jogo",
       "newTournament": "Novo torneio",
@@ -3347,6 +3353,13 @@
       "shuffleOrderDescription": "Define o primeiro jogo e a ordem de espera.",
       "shuffleEnabled": "Ativo",
       "shuffleDisabled": "Inativo",
+      "startOrder": "Ordem de início",
+      "startOrderDescription": "As duas primeiras equipas jogam já; as restantes esperam por esta ordem.",
+      "startOrderShuffled": "O sorteio vai definir a ordem ao começar.",
+      "startOrderPlays": "Joga",
+      "startOrderWaits": "Espera",
+      "startOrderMoveUp": "Subir {name}",
+      "startOrderMoveDown": "Descer {name}",
       "modes": {
         "always": {
           "title": "Vencedor fica",

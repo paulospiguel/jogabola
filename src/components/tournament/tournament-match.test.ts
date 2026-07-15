@@ -3,6 +3,7 @@ import { withTournamentLock } from "./tournament-lock";
 import {
   createTournamentTimerMatch,
   endTournament,
+  findActiveTournamentMatch,
   findTeamById,
   isPersistedTimerMatch,
   isTournamentEndedPersisted,
@@ -34,6 +35,54 @@ function fixture(): Tournament {
     status: "running",
   };
 }
+
+describe("findActiveTournamentMatch", () => {
+  it("finds the unfinalized match carrying this tournament's context", () => {
+    const tournament = fixture();
+    const live = createTournamentTimerMatch(
+      tournament,
+      tournament.teams[0],
+      tournament.teams[1],
+    );
+    const unrelated = createTournamentTimerMatch(
+      { ...fixture(), id: "cup-2" },
+      tournament.teams[0],
+      tournament.teams[1],
+    );
+
+    expect(findActiveTournamentMatch(tournament, [unrelated, live])).toBe(live);
+  });
+
+  it("ignores matches already folded into the tournament history", () => {
+    const tournament = fixture();
+    const live = createTournamentTimerMatch(
+      tournament,
+      tournament.teams[0],
+      tournament.teams[1],
+    );
+    const finalized: Tournament = {
+      ...tournament,
+      matches: [
+        {
+          id: live.id,
+          teamAId: "a",
+          teamBId: "b",
+          scoreA: 1,
+          scoreB: 0,
+          outcome: "regA",
+          goals: [],
+          endedAt: 1,
+        },
+      ],
+    };
+
+    expect(findActiveTournamentMatch(finalized, [live])).toBeNull();
+  });
+
+  it("returns null when no match belongs to the tournament", () => {
+    expect(findActiveTournamentMatch(fixture(), [])).toBeNull();
+  });
+});
 
 describe("markTournamentEnded", () => {
   it("changes only the status and preserves the final pairing and data references", () => {

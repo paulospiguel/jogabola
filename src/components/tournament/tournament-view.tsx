@@ -5,11 +5,18 @@ import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { useEffect, useRef, useState } from "react";
 import { Logo } from "@/components/logo";
-import { loadMatch, upsertMatch } from "@/components/timer/use-match-store";
+import type { Match } from "@/components/timer/types";
+import {
+  loadMatch,
+  loadMatches,
+  upsertMatch,
+} from "@/components/timer/use-match-store";
 import { TournamentEndedView } from "./tournament-ended-view";
+import { TournamentLiveMatchBar } from "./tournament-live-match-bar";
 import {
   createTournamentTimerMatch,
   endTournament,
+  findActiveTournamentMatch,
   findTeamById,
   isPersistedTimerMatch,
   resolveTournamentViewState,
@@ -38,8 +45,19 @@ export function TournamentView({ id }: TournamentViewProps) {
   const [actionError, setActionError] = useState(false);
   const [starting, setStarting] = useState(false);
   const [ending, setEnding] = useState(false);
+  const [liveMatch, setLiveMatch] = useState<Match | null>(null);
   const startingRef = useRef(false);
   const endingRef = useRef(false);
+
+  // Detect a live (unfinalized) timer match for this tournament so the user
+  // can check the table mid-game and jump back without losing the clock.
+  useEffect(() => {
+    if (!tournament) {
+      setLiveMatch(null);
+      return;
+    }
+    setLiveMatch(findActiveTournamentMatch(tournament, loadMatches()));
+  }, [tournament]);
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: retryCount intentionally triggers a fresh repository read.
   useEffect(() => {
@@ -69,6 +87,13 @@ export function TournamentView({ id }: TournamentViewProps) {
 
   function handleStartMatch() {
     if (startingRef.current || !tournament?.currentPair) return;
+
+    // A live match already exists — resume it instead of creating a duplicate.
+    if (liveMatch) {
+      router.push(`/timer/jogo/${liveMatch.id}?tournament=${tournament.id}`);
+      return;
+    }
+
     const teamA = findTeamById(tournament, tournament.currentPair[0]);
     const teamB = findTeamById(tournament, tournament.currentPair[1]);
     if (!teamA || !teamB) {
@@ -205,6 +230,15 @@ export function TournamentView({ id }: TournamentViewProps) {
           </h1>
         </div>
       </header>
+
+      {liveMatch ? (
+        <div className="mb-6">
+          <TournamentLiveMatchBar
+            tournamentId={tournament.id}
+            match={liveMatch}
+          />
+        </div>
+      ) : null}
 
       <div className="grid gap-6 md:grid-cols-[minmax(0,1.05fr)_minmax(300px,.95fr)]">
         <div className="flex flex-col gap-6">

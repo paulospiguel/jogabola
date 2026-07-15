@@ -89,6 +89,16 @@ export function TournamentSetupSheet({ onClose }: TournamentSetupSheetProps) {
     setTeams(current => current.filter(team => team.id !== id));
   }
 
+  function moveTeam(index: number, direction: -1 | 1) {
+    setTeams(current => {
+      const target = index + direction;
+      if (target < 0 || target >= current.length) return current;
+      const next = [...current];
+      [next[index], next[target]] = [next[target], next[index]];
+      return next;
+    });
+  }
+
   function distributePlayers() {
     const names = parsePlayerNames(drawInput);
     if (names.length === 0) return;
@@ -203,11 +213,13 @@ export function TournamentSetupSheet({ onClose }: TournamentSetupSheetProps) {
           {step === 2 ? (
             <DrawSetupStep
               key="draw"
+              teams={teams}
               drawInput={drawInput}
               shuffleStart={shuffleStart}
               onDrawInputChange={setDrawInput}
               onDistribute={distributePlayers}
               onShuffleStartChange={setShuffleStart}
+              onMoveTeam={moveTeam}
             />
           ) : null}
         </AnimatePresence>

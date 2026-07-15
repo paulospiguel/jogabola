@@ -106,7 +106,11 @@ export function MatchView({ id }: { id: string }) {
         <button
           type="button"
           aria-label="Voltar"
-          onClick={() => router.push("/timer")}
+          onClick={() =>
+            router.push(
+              tournamentId ? `/timer/tournament/${tournamentId}` : "/timer",
+            )
+          }
           className="grid size-9 place-items-center rounded-lg border border-arena-border bg-arena-surface text-arena-text-sec"
         >
           <ChevronLeft size={18} />

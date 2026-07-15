@@ -88,6 +88,25 @@ export function isTournamentEndedPersisted(
   return persisted?.id === expected.id && persisted.status === "ended";
 }
 
+/**
+ * The tournament's live timer match: carries this tournament's context and
+ * was not yet folded into the tournament history (covers running, paused,
+ * idle, and ended-but-unfinalized matches, e.g. a pending draw decision).
+ */
+export function findActiveTournamentMatch(
+  tournament: Tournament,
+  timerMatches: Match[],
+): Match | null {
+  const finalizedIds = new Set(tournament.matches.map(item => item.id));
+  return (
+    timerMatches.find(
+      item =>
+        item.tournamentContext?.tournamentId === tournament.id &&
+        !finalizedIds.has(item.id),
+    ) ?? null
+  );
+}
+
 export function createTournamentTimerMatch(
   tournament: Tournament,
   teamA: TournamentTeam,

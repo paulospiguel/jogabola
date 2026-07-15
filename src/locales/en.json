@@ -3311,6 +3311,12 @@
       "running": "In progress",
       "ended": "Finished"
     },
+    "liveBar": {
+      "paused": "Paused",
+      "pendingFinish": "To finish",
+      "notStarted": "Not started",
+      "backToMatch": "Back to the live match"
+    },
     "hub": {
       "subtitle": "Winner stays, match after match",
       "newTournament": "New tournament",
@@ -3347,6 +3353,13 @@
       "shuffleOrderDescription": "Sets the first match and the waiting order.",
       "shuffleEnabled": "On",
       "shuffleDisabled": "Off",
+      "startOrder": "Starting order",
+      "startOrderDescription": "The first two teams play now; the rest wait in this order.",
+      "startOrderShuffled": "The draw will set the order when you start.",
+      "startOrderPlays": "Plays",
+      "startOrderWaits": "Waits",
+      "startOrderMoveUp": "Move {name} up",
+      "startOrderMoveDown": "Move {name} down",
       "modes": {
         "always": {
           "title": "Winner stays",

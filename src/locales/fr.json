@@ -3311,6 +3311,12 @@
       "running": "En cours",
       "ended": "Terminé"
     },
+    "liveBar": {
+      "paused": "En pause",
+      "pendingFinish": "À finaliser",
+      "notStarted": "Pas commencé",
+      "backToMatch": "Revenir au match en cours"
+    },
     "hub": {
       "subtitle": "Le vainqueur reste, match après match",
       "newTournament": "Nouveau tournoi",
@@ -3347,6 +3353,13 @@
       "shuffleOrderDescription": "Définit le premier match et l’ordre d’attente.",
       "shuffleEnabled": "Activé",
       "shuffleDisabled": "Désactivé",
+      "startOrder": "Ordre de départ",
+      "startOrderDescription": "Les deux premières équipes jouent maintenant ; les autres attendent dans cet ordre.",
+      "startOrderShuffled": "Le tirage définira l’ordre au démarrage.",
+      "startOrderPlays": "Joue",
+      "startOrderWaits": "Attend",
+      "startOrderMoveUp": "Monter {name}",
+      "startOrderMoveDown": "Descendre {name}",
       "modes": {
         "always": {
           "title": "Le vainqueur reste",
