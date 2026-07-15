@@ -6,7 +6,7 @@ import { Plus, Timer, Trash2, Trophy } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { uid } from "./format";
+import { formatMatchDate, uid } from "./format";
 import { SetupDrawer } from "./setup-drawer";
 import type { Match, MatchConfig, MatchType, Team } from "./types";
 import {
@@ -76,10 +76,15 @@ function MatchCard({
             <span className="text-arena-text-muted">vs</span>{" "}
             {match.teams.B.name}
           </span>
-          <span
-            className={`mt-1 w-fit rounded-full px-2 py-0.5 text-[10px] font-bold ${st.cls}`}
-          >
-            {st.label}
+          <span className="mt-1 flex items-center gap-2">
+            <span
+              className={`w-fit rounded-full px-2 py-0.5 text-[10px] font-bold ${st.cls}`}
+            >
+              {st.label}
+            </span>
+            <span className="text-[10px] text-arena-text-muted">
+              {formatMatchDate(match.createdAt)}
+            </span>
           </span>
         </div>
         <span className="font-sora text-xl font-extrabold tabular-nums text-arena-text">
