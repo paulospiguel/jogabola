@@ -42,6 +42,15 @@ function MatchCard({
   onOpen: () => void;
   onDelete: () => void;
 }) {
+  const [confirmDelete, setConfirmDelete] = useState(false);
+
+  useEffect(() => {
+    if (!confirmDelete) return;
+
+    const timeoutId = window.setTimeout(() => setConfirmDelete(false), 3000);
+    return () => window.clearTimeout(timeoutId);
+  }, [confirmDelete]);
+
   const s = score(match);
   const st = STATUS_LABEL[match.state.status];
   return (
@@ -78,11 +87,24 @@ function MatchCard({
       </button>
       <button
         type="button"
-        aria-label="Eliminar"
-        onClick={onDelete}
-        className="shrink-0 rounded-lg p-2 text-arena-text-muted opacity-0 transition hover:text-arena-danger group-hover:opacity-100"
+        aria-label={
+          confirmDelete ? "Confirmar eliminação do jogo" : "Eliminar jogo"
+        }
+        onClick={() => {
+          if (confirmDelete) {
+            onDelete();
+            return;
+          }
+          setConfirmDelete(true);
+        }}
+        onBlur={() => setConfirmDelete(false)}
+        className={`btn-press min-h-11 min-w-11 shrink-0 transition ${
+          confirmDelete
+            ? "rounded-lg bg-arena-danger px-2.5 py-2 text-xs font-bold text-white"
+            : "rounded-lg p-2 text-arena-text-muted opacity-60 hover:text-arena-danger hover:opacity-100"
+        }`}
       >
-        <Trash2 size={16} />
+        {confirmDelete ? "Sim?" : <Trash2 size={16} />}
       </button>
     </motion.div>
   );
