@@ -3326,7 +3326,13 @@
       "currentPair": "{teamA} vs {teamB}",
       "emptyTitle": "No tournaments yet",
       "emptyDescription": "Build 3 to 6 teams, set the rules and start playing.",
-      "emptyCta": "Create tournament"
+      "emptyCta": "Create tournament",
+      "deleteTournament": "Delete {name}",
+      "confirmDeleteTournament": "Confirm deletion of {name}",
+      "deletingTournament": "Deleting {name}",
+      "deleteConfirm": "Sure?",
+      "deleting": "Deleting…",
+      "deleteError": "The tournament could not be deleted. Try again."
     },
     "setup": {
       "title": "New tournament · {step}",

@@ -1,5 +1,8 @@
 import { describe, expect, it } from "vitest";
-import { saveTournamentWithVerification } from "./tournament-persistence";
+import {
+  deleteTournamentWithVerification,
+  saveTournamentWithVerification,
+} from "./tournament-persistence";
 import type { TournamentRepository } from "./tournament-store";
 import type { Tournament } from "./types";
 
@@ -86,5 +89,60 @@ describe("saveTournamentWithVerification", () => {
       saveTournamentWithVerification(repository, fixture()),
     ).rejects.toThrow("storage unavailable");
     expect(reads).toBe(0);
+  });
+});
+
+describe("deleteTournamentWithVerification", () => {
+  it("resolves after the tournament is confirmed missing", async () => {
+    const repository: Pick<TournamentRepository, "get" | "remove"> = {
+      remove: async () => undefined,
+      get: async () => null,
+    };
+
+    await expect(
+      deleteTournamentWithVerification(repository, "cup-1"),
+    ).resolves.toBeUndefined();
+  });
+
+  it("rejects when the tournament remains after removal", async () => {
+    const repository: Pick<TournamentRepository, "get" | "remove"> = {
+      remove: async () => undefined,
+      get: async () => fixture(),
+    };
+
+    await expect(
+      deleteTournamentWithVerification(repository, "cup-1"),
+    ).rejects.toThrow("verification failed");
+  });
+
+  it("propagates a removal rejection without reading back", async () => {
+    let reads = 0;
+    const repository: Pick<TournamentRepository, "get" | "remove"> = {
+      remove: async () => {
+        throw new Error("storage unavailable");
+      },
+      get: async () => {
+        reads += 1;
+        return null;
+      },
+    };
+
+    await expect(
+      deleteTournamentWithVerification(repository, "cup-1"),
+    ).rejects.toThrow("storage unavailable");
+    expect(reads).toBe(0);
+  });
+
+  it("propagates a readback rejection after removal", async () => {
+    const repository: Pick<TournamentRepository, "get" | "remove"> = {
+      remove: async () => undefined,
+      get: async () => {
+        throw new Error("readback unavailable");
+      },
+    };
+
+    await expect(
+      deleteTournamentWithVerification(repository, "cup-1"),
+    ).rejects.toThrow("readback unavailable");
   });
 });

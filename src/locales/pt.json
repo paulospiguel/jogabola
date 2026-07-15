@@ -3326,7 +3326,13 @@
       "currentPair": "{teamA} vs {teamB}",
       "emptyTitle": "Ainda não há torneios",
       "emptyDescription": "Monta 3 a 6 equipas, define as regras e começa a jogar.",
-      "emptyCta": "Criar torneio"
+      "emptyCta": "Criar torneio",
+      "deleteTournament": "Eliminar {name}",
+      "confirmDeleteTournament": "Confirmar eliminação de {name}",
+      "deletingTournament": "A eliminar {name}",
+      "deleteConfirm": "Sim?",
+      "deleting": "A eliminar…",
+      "deleteError": "Não foi possível eliminar o torneio. Tenta novamente."
     },
     "setup": {
       "title": "Novo torneio · {step}",
