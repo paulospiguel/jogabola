@@ -1,45 +1,32 @@
 "use client";
 
 import { motion } from "framer-motion";
-import {
-  ArrowLeft,
-  Instagram,
-  Mail,
-  MessageSquare,
-  Twitter,
-} from "lucide-react";
+import { ArrowLeft, AtSign, Instagram, Mail } from "lucide-react";
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
+import { APP } from "@/constants/app";
 
 export default function ContactPage() {
+  const t = useTranslations("contactPage");
   const contactMethods = [
     {
       icon: Mail,
-      title: "Email",
-      value: "suporte@jogabola.pt",
-      href: "mailto:suporte@jogabola.pt",
-      color: "blue",
+      title: t("methods.email.label"),
+      value: APP.CONTACT.SUPPORT_EMAIL,
+      href: `mailto:${APP.CONTACT.SUPPORT_EMAIL}`,
     },
     {
       icon: Instagram,
-      title: "Instagram",
-      value: "@jogabola",
-      href: "https://instagram.com/jogabola",
-      color: "pink",
+      title: t("methods.instagram.label"),
+      value: APP.CONTACT.INSTAGRAM_HANDLE,
+      href: APP.SOCIAL.INSTAGRAM,
     },
     {
-      icon: Twitter,
-      title: "Twitter",
-      value: "@jogabola",
-      href: "https://twitter.com/jogabola",
-      color: "sky",
-    },
-    {
-      icon: MessageSquare,
-      title: "Discord",
-      value: "Comunidade JogaBola",
-      href: "#",
-      color: "emerald",
+      icon: AtSign,
+      title: t("methods.x.label"),
+      value: APP.CONTACT.X_HANDLE,
+      href: APP.SOCIAL.TWITTER,
     },
   ];
 
@@ -56,41 +43,46 @@ export default function ContactPage() {
             <Button
               variant="ghost"
               asChild
-              className="mb-8 text-gray-400 hover:text-white"
+              className="press mb-8 text-gray-400 hover:text-white"
             >
               <Link href="/" className="flex items-center gap-2">
                 <ArrowLeft className="h-4 w-4" />
-                Voltar ao Início
+                {t("backHome")}
               </Link>
             </Button>
           </div>
 
-          <h1 className="text-4xl font-extrabold text-white md:text-5xl lg:text-6xl mb-6">
-            Fala Connosco
+          <h1 className="mb-6 text-4xl font-extrabold text-white md:text-5xl lg:text-6xl">
+            {t("title")}
           </h1>
-          <p className="text-xl text-gray-400 max-w-2xl mx-auto">
-            Tens dúvidas, sugestões ou apenas queres dizer olá? Estamos aqui
-            para ajudar a tua equipa a entrar em campo.
+          <p className="mx-auto max-w-2xl text-xl text-gray-400">
+            {t("description")}
           </p>
         </motion.div>
 
         <div className="grid gap-6 md:grid-cols-2">
-          {contactMethods.map((method, i) => (
+          {contactMethods.map((method, index) => (
             <motion.a
               key={method.title}
               href={method.href}
+              target={method.href.startsWith("mailto:") ? undefined : "_blank"}
+              rel={
+                method.href.startsWith("mailto:")
+                  ? undefined
+                  : "noopener noreferrer"
+              }
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: i * 0.1 }}
-              className="flex items-center gap-6 rounded-3xl border border-white/5 bg-white/5 p-8 backdrop-blur-md transition-all hover:border-white/10 hover:bg-white/10 group"
+              transition={{ duration: 0.5, delay: index * 0.1 }}
+              className="press group flex items-center gap-6 rounded-3xl border border-white/5 bg-white/5 p-8 backdrop-blur-md transition-all hover:border-white/10 hover:bg-white/10"
             >
-              <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-white/5 text-white group-hover:scale-110 transition-transform">
+              <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-white/5 text-white transition-transform group-hover:scale-110">
                 <method.icon className="h-7 w-7" />
               </div>
               <div>
-                <h3 className="text-sm font-bold tracking-widest text-gray-400 uppercase mb-1">
+                <h2 className="mb-1 text-sm font-bold tracking-widest text-gray-400 uppercase">
                   {method.title}
-                </h3>
+                </h2>
                 <p className="text-lg font-bold text-white">{method.value}</p>
               </div>
             </motion.a>

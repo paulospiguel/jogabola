@@ -2921,6 +2921,22 @@
     "namePlaceholder": "Nom complet",
     "defaultName": "Athlète"
   },
+  "contactPage": {
+    "backHome": "Retour à l'accueil",
+    "title": "Parlez-nous",
+    "description": "Des questions ou des suggestions ? Nous sommes là pour aider votre équipe à entrer sur le terrain.",
+    "methods": {
+      "email": {
+        "label": "E-mail"
+      },
+      "instagram": {
+        "label": "Instagram"
+      },
+      "x": {
+        "label": "X"
+      }
+    }
+  },
   "pricingPage": {
     "eyebrow": "Plans",
     "title": "Des tarifs pour chaque étape de ton équipe",

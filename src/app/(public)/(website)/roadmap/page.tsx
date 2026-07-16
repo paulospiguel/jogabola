@@ -63,7 +63,7 @@ export default async function RoadmapPage() {
     <main className="min-h-screen bg-[#080a25] px-4 py-20">
       <div className="mx-auto max-w-3xl">
         <div className="mb-16 text-center">
-          <Logo isAnimate href="home" className="mx-auto mb-6" size="medium" />
+          <Logo isAnimate href="/" className="mx-auto mb-6" size="medium" />
           <p className="mb-3 text-xs font-black uppercase tracking-[0.3em] text-neon-primary/80">
             {t("eyebrow")}
           </p>

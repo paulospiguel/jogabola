@@ -25,6 +25,11 @@ export const APP = {
     FACEBOOK: "https://facebook.com/jogabola.app",
     YOUTUBE: "https://youtube.com/jogabola.app",
   },
+  CONTACT: {
+    SUPPORT_EMAIL: "suporte@jogabola.pt",
+    INSTAGRAM_HANDLE: "@jogabola.app",
+    X_HANDLE: "@jogabola_app",
+  },
   VERSION: process.env.NEXT_PUBLIC_APP_VERSION || packageJson.version,
   ROUTES: {
     HOME: "/",

@@ -2921,6 +2921,22 @@
     "namePlaceholder": "Full name",
     "defaultName": "Athlete"
   },
+  "contactPage": {
+    "backHome": "Back to home",
+    "title": "Talk to us",
+    "description": "Questions or suggestions? We are here to help your team get onto the pitch.",
+    "methods": {
+      "email": {
+        "label": "Email"
+      },
+      "instagram": {
+        "label": "Instagram"
+      },
+      "x": {
+        "label": "X"
+      }
+    }
+  },
   "pricingPage": {
     "eyebrow": "Plans",
     "title": "Pricing for every stage of your team",

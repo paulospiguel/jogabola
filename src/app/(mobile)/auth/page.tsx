@@ -109,7 +109,16 @@ export default function LoginPage() {
     defaultValues: { code: "" },
   });
 
+  function trackAuthStarted(method: "email_otp" | "google" | "passkey") {
+    if (!analyticsAllowed) return;
+    logEvent("auth_started", undefined, {
+      intent: isRegisterMode ? "register" : "login",
+      method,
+    });
+  }
+
   async function requestCode(values: EmailInput) {
+    trackAuthStarted("email_otp");
     setLoading(true);
     try {
       const email = values.email.trim().toLowerCase();
@@ -181,6 +190,7 @@ export default function LoginPage() {
   }
 
   async function handleGoogleLogin() {
+    trackAuthStarted("google");
     setSocialLoading("google");
     try {
       const result = await signIn.social({ provider: "google", callbackURL });
@@ -199,6 +209,7 @@ export default function LoginPage() {
   }
 
   async function handlePasskeyLogin() {
+    trackAuthStarted("passkey");
     setSocialLoading("passkey");
     try {
       const result = await signIn.passkey();

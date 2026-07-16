@@ -1262,7 +1262,7 @@
   "company": {
     "description": "Encontra a tua equipa ideal ou cria a tua própria, gere os teus atletas e participa em ligas lendárias!",
     "legalName": "JogaBola Foundation LLC",
-    "slogan": "O melhor lugar para encontrar a tua malta e jogar uma pelada.",
+    "slogan": "O melhor lugar para encontrar a tua malta e jogar à bola.",
     "name": "JogaBola"
   },
   "cookieConsent": {
@@ -1575,7 +1575,7 @@
       "titleHighlight": "Sem grupos de WhatsApp.",
       "titlePart3": "Sem confusão.",
       "titlePart4": "A tua arena.",
-      "description": "Fim aos grupos de WhatsApp. Confirmações, pagamentos e comprovativos no mesmo sítio — para capitães que levam a pelada a sério.",
+      "description": "Fim aos grupos de WhatsApp. Confirmações, pagamentos e comprovativos no mesmo sítio — para capitães que levam o jogo a sério.",
       "joinWaitlist": "Entrar na lista de espera",
       "signIn": "Entrar",
       "goToArena": "Ir para Arena",
@@ -1805,7 +1805,7 @@
         },
         {
           "name": "Bruno R.",
-          "role": "Organizador · Pelada da Quinta",
+          "role": "Organizador · Jogo da Quinta",
           "text": "Simples, rápido, faz o que prometeu. Para quem organiza jogos toda a semana, poupa horas desde a primeira convocatória."
         },
         {
@@ -2900,6 +2900,22 @@
     },
     "namePlaceholder": "Nome completo",
     "defaultName": "Atleta"
+  },
+  "contactPage": {
+    "backHome": "Voltar ao início",
+    "title": "Fala connosco",
+    "description": "Tens dúvidas ou sugestões? Estamos aqui para ajudar a tua equipa a entrar em campo.",
+    "methods": {
+      "email": {
+        "label": "Email"
+      },
+      "instagram": {
+        "label": "Instagram"
+      },
+      "x": {
+        "label": "X"
+      }
+    }
   },
   "pricingPage": {
     "eyebrow": "Planos",
