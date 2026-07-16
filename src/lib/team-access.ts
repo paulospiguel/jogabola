@@ -1,6 +1,7 @@
 import { and, eq, inArray } from "drizzle-orm";
 import { db } from "@/db/client";
 import { teamMembers, teams } from "@/db/schema";
+import { MANAGEMENT_ROLES } from "@/lib/team-capabilities";
 
 export async function userCanAccessTeam(
   userId: string,
@@ -72,7 +73,7 @@ export async function canManageTeam(
     where: and(
       eq(teamMembers.teamId, teamId),
       eq(teamMembers.playerId, userId),
-      inArray(teamMembers.role, ["owner", "manager"]),
+      inArray(teamMembers.role, MANAGEMENT_ROLES),
     ),
   });
   return Boolean(membership);

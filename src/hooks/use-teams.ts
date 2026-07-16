@@ -3,7 +3,22 @@
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useEffect } from "react";
 import { create } from "zustand";
+import type { getMyTeams } from "@/actions/teams.actions";
 import { useSession } from "@/lib/auth-client";
+
+type MyTeamsResult = Awaited<ReturnType<typeof getMyTeams>>;
+
+/**
+ * DTO shape returned by `getMyTeams`: each team the user can access,
+ * annotated with their real role and a presentation-only `canManage` flag.
+ * `canManage` drives which cockpit actions render — it must never be used
+ * to gate a mutation, only the server-side canManageTeam/userIsTeamOwner
+ * checks may do that.
+ */
+export type TeamSummary = Extract<
+  MyTeamsResult,
+  { success: true }
+>["data"][number];
 
 interface TeamStore {
   activeTeamId: number | null;
@@ -79,10 +94,17 @@ export function useTeams() {
     );
   };
 
+  // The active team's role/capability always come from the getMyTeams DTO
+  // (server-trusted), never from session.user.role.
+  const activeTeam =
+    (myTeams ?? []).find(team => team.id === activeTeamId) ?? null;
+
   return {
     activeTeamId,
     setActiveTeamId,
     myTeams: myTeams ?? [],
+    activeTeam,
+    activeTeamCanManage: activeTeam?.canManage ?? false,
     isLoading,
     refetch,
     planTier: planData?.planTier ?? "free",
