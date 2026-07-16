@@ -18,6 +18,10 @@ export function HistoricalClient() {
     <div className="min-h-screen bg-arena-bg pb-24">
       <ScreenHeader title={t("title")} />
 
+      <p className="mx-4 mt-3 rounded-[12px] border border-arena-warning/30 bg-arena-warning/10 px-3 py-2 text-xs font-semibold text-arena-warning">
+        {t("demoNotice")}
+      </p>
+
       <div className="px-4 pt-4">
         <div className="mb-2.5 px-0.5 text-[11px] font-bold uppercase tracking-[0.7px] text-arena-text-muted">
           {t("sections.seasons")}

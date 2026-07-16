@@ -1,12 +1,12 @@
 "use client";
 
-import { useStatsigClient } from "@statsig/react-bindings";
 import { motion } from "framer-motion";
 import { Check, Copy, Home, Plus, Share2 } from "lucide-react";
 import { useMemo, useState } from "react";
 import QRCode from "react-qr-code";
 import { BottomSheet } from "@/components/arena/bottom-sheet";
 import { Cta } from "@/components/arena/cta";
+import { useAnalytics } from "@/providers/analytics";
 import { formatMinute } from "./format";
 import { encodeResult, resultText } from "./share";
 import { onColor } from "./team-color";
@@ -25,7 +25,7 @@ export function SummaryModal({
   onHome: () => void;
 }) {
   const s = score(match);
-  const { logEvent } = useStatsigClient();
+  const { logEvent } = useAnalytics();
   const [copied, setCopied] = useState(false);
 
   const shareUrl = useMemo(() => {

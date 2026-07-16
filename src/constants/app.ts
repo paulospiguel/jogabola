@@ -1,3 +1,5 @@
+import packageJson from "../../package.json";
+
 export const APP = {
   APP_NAME: "Jogabola",
   COMPANY: {
@@ -23,7 +25,12 @@ export const APP = {
     FACEBOOK: "https://facebook.com/jogabola.app",
     YOUTUBE: "https://youtube.com/jogabola.app",
   },
-  VERSION: process.env.VERSION || "1.0.0",
+  CONTACT: {
+    SUPPORT_EMAIL: "suporte@jogabola.pt",
+    INSTAGRAM_HANDLE: "@jogabola.app",
+    X_HANDLE: "@jogabola_app",
+  },
+  VERSION: process.env.NEXT_PUBLIC_APP_VERSION || packageJson.version,
   ROUTES: {
     HOME: "/",
   },

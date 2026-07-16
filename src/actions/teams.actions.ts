@@ -104,7 +104,7 @@ export const createTeam = withAuthAction(
       .set({ teamId: team.id, updatedAt: new Date() })
       .where(eq(session.userId, user.id));
 
-    trackServerEvent(user.id, "team_created", {
+    await trackServerEvent(user.id, "team_created", {
       team_id: team.id,
       plan_tier: planTier,
     });
@@ -177,7 +177,7 @@ export const addPlayerToRoster = withAuthAction(
         })
         .returning();
 
-      trackServerEvent(user.id, "player_invited", {
+      await trackServerEvent(user.id, "player_invited", {
         team_id: teamId,
         is_existing_user: true,
         player_position: data.position ?? null,
@@ -226,7 +226,7 @@ export const addPlayerToRoster = withAuthAction(
       })
       .returning({ id: players.id, name: players.displayName });
 
-    trackServerEvent(user.id, "player_invited", {
+    await trackServerEvent(user.id, "player_invited", {
       team_id: teamId,
       is_existing_user: false,
       player_position: data.position ?? null,
@@ -283,7 +283,7 @@ export const switchActiveTeam = withAuthAction(
       .set({ teamId, updatedAt: new Date() })
       .where(eq(session.userId, user.id));
 
-    trackServerEvent(user.id, "team_switched", { team_id: teamId });
+    await trackServerEvent(user.id, "team_switched", { team_id: teamId });
 
     return { success: true, data: { teamId } };
   },

@@ -9,10 +9,13 @@ import { Suspense, useEffect, useState } from "react";
 import { joinWaitlist } from "@/actions/waitlist.actions";
 import { Logo } from "@/components/logo";
 import { signOut, useSession } from "@/lib/auth-client";
+import { useAnalytics, useAnalyticsConsent } from "@/providers/analytics";
 
 function WaitlistContent() {
   const searchParams = useSearchParams();
   const { data: session } = useSession();
+  const analyticsAllowed = useAnalyticsConsent();
+  const { logEvent } = useAnalytics();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
@@ -37,6 +40,9 @@ function WaitlistContent() {
     const result = await joinWaitlist({ name, email });
 
     if (result.success) {
+      if (analyticsAllowed) {
+        logEvent("waitlist_joined");
+      }
       setDone(true);
     } else {
       const err = result.error;
@@ -171,7 +177,7 @@ function WaitlistContent() {
                   {session ? (
                     <>
                       {tWaitlist.rich("sessionActive", {
-                        email: chunks => (
+                        email: _chunks => (
                           <span className="text-white/45 font-semibold">
                             {session.user.email}
                           </span>

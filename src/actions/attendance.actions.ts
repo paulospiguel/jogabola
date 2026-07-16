@@ -17,6 +17,7 @@ import { trackServerEvent } from "@/lib/analytics-server";
 import { auth } from "@/lib/auth";
 import { userBelongsToTeamRoster } from "@/lib/event-roster-access";
 import { hasPendingFines } from "@/lib/fines";
+import { classifyErrorSafely } from "@/lib/safe-error";
 import { canManageTeam } from "@/lib/team-access";
 import { upsertAttendanceSchema } from "@/schemas/attendance.schema";
 
@@ -311,12 +312,18 @@ export async function confirmUserAttendance(eventId: number) {
       })
       .returning();
 
-    trackServerEvent(userId, "attendance_confirmed", { event_id: eventId });
+    await trackServerEvent(userId, "attendance_confirmed", {
+      event_id: eventId,
+    });
 
     revalidatePath(`/event/${eventId}`);
     revalidatePath(`/arena/events/${eventId}`);
     return { success: true as const, reservationId: reservation.id };
-  } catch {
+  } catch (error) {
+    console.error(
+      "attendance:confirmUserAttendance failed",
+      classifyErrorSafely(error),
+    );
     return { success: false as const, error: "Erro ao confirmar presença" };
   }
 }
@@ -368,7 +375,7 @@ export async function cancelUserAttendance(eventId: number) {
         ),
       );
 
-    trackServerEvent(session.user.id, "attendance_cancelled", {
+    await trackServerEvent(session.user.id, "attendance_cancelled", {
       event_id: eventId,
       is_late_cancellation: isLateCancellation,
     });
@@ -376,7 +383,11 @@ export async function cancelUserAttendance(eventId: number) {
     revalidatePath(`/event/${eventId}`);
     revalidatePath(`/arena/events/${eventId}`);
     return { success: true as const };
-  } catch {
+  } catch (error) {
+    console.error(
+      "attendance:cancelUserAttendance failed",
+      classifyErrorSafely(error),
+    );
     return { success: false as const, error: "Erro ao cancelar presença" };
   }
 }

@@ -5,6 +5,7 @@ import { revalidatePath } from "next/cache";
 import { db } from "@/db/client";
 import { user } from "@/db/schema";
 import { withAuthAction } from "@/lib/action-helpers";
+import { classifyErrorSafely } from "@/lib/safe-error";
 import { updateProfileSchema } from "@/schemas/profile.schema";
 
 export const updateUserProfile = withAuthAction(
@@ -32,7 +33,11 @@ export const updateUserProfile = withAuthAction(
       revalidatePath("/arena");
 
       return { success: true, data: profile };
-    } catch {
+    } catch (error) {
+      console.error(
+        "profile:updateUserProfile failed",
+        classifyErrorSafely(error),
+      );
       return { success: false, error: { code: "PROFILE_UPDATE_FAILED" } };
     }
   },

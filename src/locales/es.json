@@ -2444,6 +2444,46 @@
       "hint": "Toca el tiempo para editar • Toca la fila para jugador",
       "title": "Eventos del partido"
     },
+    "match": {
+      "controls": {
+        "card": "Tarjeta",
+        "confirmEnd": "Confirmar final del partido",
+        "confirmEndShort": "¿Confirmas? Terminar",
+        "confirmRestart": "Confirmar reinicio del partido",
+        "endMatch": "Terminar partido",
+        "endNow": "Terminar partido ahora",
+        "goal": "Gol",
+        "logCardForTeam": "Registrar tarjeta para {team}",
+        "logGoalForTeam": "Registrar gol para {team}",
+        "nextPeriod": "Siguiente parte",
+        "pause": "Pausa",
+        "restart": "Reiniciar",
+        "resume": "Continuar",
+        "start": "Empezar",
+        "yes": "¿Sí?"
+      },
+      "goalSheet": {
+        "assist": "Asistencia (opcional)",
+        "register": "Registrar gol",
+        "scorer": "Goleador",
+        "selectScorer": "Seleccionar goleador",
+        "title": "Gol · {team}",
+        "unassigned": "Sin goleador"
+      },
+      "playerPicker": {
+        "addPlaceholder": "Añadir jugador…",
+        "addPlayer": "Añadir jugador",
+        "emptyPlaceholder": "Nombre del jugador (opcional)"
+      },
+      "timeline": {
+        "cardForTeam": "Tarjeta · {team}",
+        "emptyDescription": "Registra goles y tarjetas durante el partido.",
+        "emptyTitle": "Aún no hay jugadas",
+        "goalForTeam": "Gol · {team}",
+        "removeEvent": "Eliminar jugada",
+        "removeLatestGoal": "Eliminar el último gol de esta fila"
+      }
+    },
     "settings": {
       "gameParts": {
         "extraTime": "Tiempo extra",
@@ -2921,6 +2961,22 @@
     "namePlaceholder": "Nombre completo",
     "defaultName": "Atleta"
   },
+  "contactPage": {
+    "backHome": "Volver al inicio",
+    "title": "Habla con nosotros",
+    "description": "¿Tienes preguntas o sugerencias? Estamos aquí para ayudar a tu equipo a salir al campo.",
+    "methods": {
+      "email": {
+        "label": "Email"
+      },
+      "instagram": {
+        "label": "Instagram"
+      },
+      "x": {
+        "label": "X"
+      }
+    }
+  },
   "pricingPage": {
     "eyebrow": "Planes",
     "title": "Precios para cada fase de tu equipo",
@@ -3263,6 +3319,7 @@
   },
   "arenaRankings": {
     "title": "Rankings",
+    "demoNotice": "Datos de demostración: tus resultados reales aparecerán aquí pronto.",
     "tabs": {
       "league": "Liga",
       "scorers": "Goleadores",
@@ -3286,6 +3343,7 @@
   },
   "arenaHistorical": {
     "title": "Historial",
+    "demoNotice": "Datos de demostración: tus resultados reales aparecerán aquí pronto.",
     "champion": "CAMPEÓN",
     "sections": {
       "seasons": "Temporadas",

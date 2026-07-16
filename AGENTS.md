@@ -37,5 +37,19 @@ O fluxo canónico deste repositório é o **Superpowers** (brainstorming → wri
 
 A skill `dev-coder` (`.claude/skills/dev-coder/`) é o standard de implementação por omissão: arquitetura, regras de TypeScript/React, Server Actions, e tokens visuais Arena.
 
+## Agent skills
+
+### Issue tracker
+
+Issues e PRDs vivem no GitHub Issues deste repositório. Ver `docs/agents/issue-tracker.md`.
+
+### Triage labels
+
+Usar `needs-triage`, `needs-info`, `ready-for-agent`, `ready-for-human` e `wontfix`. Ver `docs/agents/triage-labels.md`.
+
+### Domain docs
+
+Repositório single-context com `CONTEXT.md` e ADRs globais em `docs/adr/`. Ver `docs/agents/domain.md`.
+
 ## Verificação
 `pnpm lint` · `pnpm ts-check` · `pnpm test` · `pnpm build`

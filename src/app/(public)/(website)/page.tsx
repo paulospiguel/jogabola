@@ -5,7 +5,6 @@ import {
   ArrowRight,
   CheckCircle2,
   Receipt,
-  Star,
   Users,
   Wallet,
   Zap,
@@ -22,6 +21,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { useSession } from "@/lib/auth-client";
 import { cn } from "@/lib/utils";
+import { useAnalytics } from "@/providers/analytics";
 
 type Problem = {
   title: string;
@@ -41,12 +41,6 @@ type Feature = Step & {
 type JourneyStep = Step & {
   label: string;
   screen: PhoneScreen;
-};
-
-type Testimonial = {
-  name: string;
-  role: string;
-  text: string;
 };
 
 const fadeUp = {
@@ -138,12 +132,13 @@ const HeroSection = () => {
   const t = useTranslations("homePage.hero");
   const headerT = useTranslations("header");
   const { data: session } = useSession();
+  const { logEvent } = useAnalytics();
 
   const ctaHref = session?.user ? "/arena" : "/auth";
   const ctaLabel = session?.user ? t("goToArena") : headerT("launchJourney");
 
   return (
-    <section className="relative min-h-screen overflow-hidden bg-[#06090D] px-5 pt-28 pb-10 md:px-10 lg:px-20 lg:pt-32">
+    <section className="relative min-h-screen overflow-hidden bg-[#06090D] px-5 pt-28 pb-10 md:px-10 lg:min-h-[680px] lg:px-20 lg:pt-20 lg:pb-8">
       <div className="absolute inset-0" style={meshStyle} />
       <div className="absolute inset-0 opacity-40" style={gridStyle} />
       <div
@@ -168,13 +163,13 @@ const HeroSection = () => {
           </span>
         </div>
 
-        <div className="mt-8 grid items-center gap-12 lg:grid-cols-[1.45fr_1fr]">
+        <div className="mt-8 grid items-center gap-12 lg:mt-6 lg:grid-cols-[1.45fr_1fr]">
           <motion.div
             initial={false}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.75 }}
           >
-            <h1 className="font-sora text-[60px] leading-[0.9] font-extrabold tracking-normal text-arena-text md:text-[112px] lg:text-[168px]">
+            <h1 className="font-sora text-[60px] leading-[0.9] font-extrabold tracking-normal text-arena-text md:text-[96px] lg:text-[120px]">
               <span>{t("headline.play")} </span>
               <span className="italic" style={textStroke()}>
                 {t("headline.more")}
@@ -191,38 +186,25 @@ const HeroSection = () => {
             <div className="mt-9 flex flex-wrap gap-3">
               <Button
                 asChild
-                className="rounded-full bg-arena-primary px-6 py-6 text-sm font-extrabold text-[#0B0F14] shadow-[0_0_32px_rgba(124,255,79,.45)] hover:bg-arena-primary/90"
+                className="press rounded-full bg-arena-primary px-6 py-6 text-sm font-extrabold text-[#0B0F14] shadow-[0_0_32px_rgba(124,255,79,.45)] hover:bg-arena-primary/90"
               >
-                <Link href={ctaHref}>
+                <Link
+                  href={ctaHref}
+                  onClick={() =>
+                    logEvent("landing_cta_clicked", undefined, {
+                      destination: session?.user ? "arena" : "auth",
+                      location: "hero",
+                    })
+                  }
+                >
                   {ctaLabel}
                   <ArrowRight className="ml-2 size-4" />
                 </Link>
               </Button>
               <DemoModal
                 label={t("secondaryCta")}
-                className="inline-flex items-center rounded-full border border-arena-border bg-arena-bg/60 px-6 py-3.5 text-sm font-bold text-arena-text backdrop-blur-xl hover:bg-arena-surface transition-colors"
+                className="press inline-flex items-center rounded-full border border-arena-border bg-arena-bg/60 px-6 py-3.5 text-sm font-bold text-arena-text backdrop-blur-xl hover:bg-arena-surface transition-colors"
               />
-            </div>
-
-            <div className="mt-10 flex flex-wrap items-center gap-4 rounded-[14px] border border-arena-border bg-arena-bg/45 p-4 backdrop-blur-md">
-              <span className="size-2 rounded-full bg-arena-primary shadow-[0_0_12px_rgba(124,255,79,.9)] animate-[pulseDot_1.6s_ease-in-out_infinite]" />
-              <p className="text-xs font-semibold text-arena-text-sec">
-                <strong className="text-arena-text">{t("tickerStrong")}</strong>{" "}
-                {t("ticker")}
-              </p>
-              <div className="ml-auto flex">
-                {["SF", "BR", "MA", "AS", "JM"].map((avatar, index) => (
-                  <span
-                    key={avatar}
-                    className="-ml-2 flex size-7 items-center justify-center rounded-full border-2 border-arena-bg text-[9px] font-extrabold text-[#0B0F14] first:ml-0"
-                    style={{
-                      background: `oklch(58% 0.13 ${[10, 130, 200, 260, 55][index]})`,
-                    }}
-                  >
-                    {avatar}
-                  </span>
-                ))}
-              </div>
             </div>
           </motion.div>
 
@@ -233,7 +215,7 @@ const HeroSection = () => {
             className="relative hidden justify-center lg:flex"
           >
             <div className="absolute top-16 left-1/2 size-[420px] -translate-x-1/2 rounded-full bg-arena-primary/25 blur-[36px]" />
-            <PhoneMockup scale={1.05} screen="team" className="relative z-10" />
+            <PhoneMockup scale={0.82} screen="team" className="relative z-10" />
             <div className="absolute top-20 -left-8 z-20 rotate-[-6deg] rounded-[14px] border border-arena-primary/35 bg-arena-bg/80 px-4 py-3 shadow-2xl backdrop-blur-xl">
               <div className="flex items-center gap-2 text-sm font-extrabold text-arena-text">
                 <CheckCircle2 className="size-4 text-arena-primary" />
@@ -483,70 +465,18 @@ const JourneySection = () => {
   );
 };
 
-const TestimonialsSection = () => {
-  const t = useTranslations("homePage.testimonialsOusada");
-  const testimonials = t.raw("items") as Testimonial[];
-  const starKeys = ["one", "two", "three", "four", "five"];
-
-  return (
-    <MotionSection number="05" label={t("kicker")}>
-      <SectionTitle>
-        {t("titlePrefix")}{" "}
-        <span className="bg-linear-to-r from-arena-primary to-arena-info bg-clip-text text-transparent">
-          {t("titleHighlight")}
-        </span>
-      </SectionTitle>
-      <div className="mt-14 grid gap-5 md:grid-cols-2">
-        {testimonials.map((testimonial, index) => (
-          <motion.article
-            key={testimonial.name}
-            {...fadeUp}
-            transition={{ duration: 0.5, delay: index * 0.08 }}
-            className="relative overflow-hidden rounded-[8px] border border-arena-border bg-linear-to-br from-arena-surface to-arena-bg-sec p-7"
-          >
-            <div className="absolute top-2 right-6 font-sora text-[80px] font-extrabold leading-none text-arena-primary/20">
-              “
-            </div>
-            <div className="mb-6 flex gap-1 text-arena-primary">
-              {starKeys.map(star => (
-                <Star
-                  key={star}
-                  className="size-4"
-                  fill="currentColor"
-                  strokeWidth={0}
-                />
-              ))}
-            </div>
-            <p className="relative font-sora text-xl leading-8 font-bold text-arena-text">
-              {testimonial.text}
-            </p>
-            <div className="mt-8 flex items-center gap-3">
-              <div className="flex size-11 items-center justify-center rounded-full bg-arena-primary font-extrabold text-[#0B0F14]">
-                {testimonial.name.slice(0, 2)}
-              </div>
-              <div>
-                <div className="font-bold text-arena-text">
-                  {testimonial.name}
-                </div>
-                <div className="text-xs font-semibold text-arena-text-muted">
-                  {testimonial.role}
-                </div>
-              </div>
-            </div>
-          </motion.article>
-        ))}
-      </div>
-    </MotionSection>
-  );
-};
-
 const FinalCta = () => {
   const t = useTranslations("homePage.finalCta");
   const [email, setEmail] = useState("");
   const router = useRouter();
+  const { logEvent } = useAnalytics();
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    logEvent("landing_cta_clicked", undefined, {
+      destination: "waitlist",
+      location: "final_form",
+    });
     if (email) {
       router.push(`/waitlist?email=${encodeURIComponent(email)}`);
     } else {
@@ -582,14 +512,20 @@ const FinalCta = () => {
           />
           <Button
             type="submit"
-            className="rounded-xl bg-arena-primary px-6 py-6 font-extrabold text-[#0B0F14] shadow-[0_0_28px_rgba(124,255,79,.45)] hover:bg-arena-primary/90"
+            className="press rounded-xl bg-arena-primary px-6 py-6 font-extrabold text-[#0B0F14] shadow-[0_0_28px_rgba(124,255,79,.45)] hover:bg-arena-primary/90"
           >
             {t("cta")}
           </Button>
         </form>
         <Link
           href="/auth"
-          className="mt-7 inline-flex text-sm font-bold text-arena-text-sec transition-colors hover:text-arena-text"
+          onClick={() =>
+            logEvent("landing_cta_clicked", undefined, {
+              destination: "auth",
+              location: "final_link",
+            })
+          }
+          className="press mt-7 inline-flex text-sm font-bold text-arena-text-sec transition-colors hover:text-arena-text"
         >
           {t("link")}
         </Link>
@@ -607,7 +543,6 @@ export default function Home() {
       <HowSection />
       <FeaturesSection />
       <JourneySection />
-      <TestimonialsSection />
       <FinalCta />
     </main>
   );

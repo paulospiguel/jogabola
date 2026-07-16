@@ -5,6 +5,7 @@ import { emailOTP } from "better-auth/plugins";
 import { eq } from "drizzle-orm";
 import { db } from "@/db/client";
 import * as schema from "@/db/schema";
+import { logAuthErrorSafely } from "@/lib/auth-error-logger";
 import { authConfig } from "./auth/config";
 
 const env = authConfig.getEnv();
@@ -42,31 +43,10 @@ const socialProviders = {
     }),
 };
 
-import fs from "fs";
-import path from "path";
-
 export const auth = betterAuth({
   onAPIError: {
-    onError: (error, ctx: any) => {
-      try {
-        const logPath = path.join(process.cwd(), "auth-error.log");
-        const logData = {
-          timestamp: new Date().toISOString(),
-          error:
-            error instanceof Error
-              ? {
-                  name: error.name,
-                  message: error.message,
-                  stack: error.stack,
-                }
-              : error,
-          url: ctx?.request?.url || "unknown",
-          method: ctx?.request?.method || "unknown",
-        };
-        fs.appendFileSync(logPath, JSON.stringify(logData, null, 2) + "\n");
-      } catch (e) {
-        console.error("Failed to write to auth-error.log", e);
-      }
+    onError: error => {
+      logAuthErrorSafely(error);
     },
   },
   baseURL: env.baseURL,
@@ -77,10 +57,6 @@ export const auth = betterAuth({
       ...schema,
     },
   }),
-  emailAndPassword: {
-    enabled: true,
-    requireEmailVerification: false,
-  },
   ...(socialProviders && { socialProviders }),
   plugins: [
     passkey({

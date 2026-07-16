@@ -9,9 +9,6 @@ import logo from "@/assets/logos/jogabola-logo.svg";
 import logoWhite from "@/assets/logos/jogabola-white.svg";
 import newLogoAnimated from "@/assets/logos/logo_animado.gif";
 import { APP } from "@/constants/app";
-import { useRouterUtils } from "@/hooks/use-router-utils";
-
-import { useSession } from "@/lib/auth-client";
 import { cn } from "@/lib/utils";
 
 const sizes = {
@@ -45,8 +42,6 @@ export const Logo: React.FC<LogoProps> = ({
   href,
 }) => {
   const t = useTranslations();
-  const { data: session } = useSession();
-  const { redirectToJourney, redirectToHome } = useRouterUtils();
   const logoSize = sizes[size];
   let logotipo: StaticImageData;
 
@@ -62,23 +57,6 @@ export const Logo: React.FC<LogoProps> = ({
         break;
     }
   }
-
-  const handleClick = (e: React.MouseEvent) => {
-    if (href === "home") {
-      e.preventDefault();
-      return redirectToHome();
-    }
-
-    if (session?.user?.id && href === "/") {
-      e.preventDefault();
-      redirectToJourney();
-    }
-
-    if (href) {
-      e.preventDefault();
-      window.open(href, "_blank");
-    }
-  };
 
   const content = (
     <>
@@ -104,8 +82,7 @@ export const Logo: React.FC<LogoProps> = ({
   return (
     <Link
       href={href}
-      onClick={handleClick}
-      className={cn("relative flex", logoSize, className)}
+      className={cn("press relative flex", logoSize, className)}
     >
       {content}
 

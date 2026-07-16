@@ -10,6 +10,7 @@ import {
 } from "@/actions/event-chat.actions";
 import { avatarColor, initials } from "@/components/arena/tokens";
 import { EVENT_CHAT_MESSAGE_EVENT, eventChannelName } from "@/lib/ably";
+import { classifyErrorSafely } from "@/lib/safe-error";
 
 export interface EventChatMessage {
   id: number;
@@ -78,8 +79,18 @@ export function useEventDetailChat({
     return () => {
       channel.unsubscribe(EVENT_CHAT_MESSAGE_EVENT, handler);
       try {
-        Promise.resolve(client.close()).catch(() => {});
-      } catch (e) {}
+        Promise.resolve(client.close()).catch(error => {
+          console.error(
+            "event-chat: failed to close realtime client",
+            classifyErrorSafely(error),
+          );
+        });
+      } catch (error) {
+        console.error(
+          "event-chat: failed to close realtime client",
+          classifyErrorSafely(error),
+        );
+      }
     };
   }, [canChat, eventId, appendMessage]);
 

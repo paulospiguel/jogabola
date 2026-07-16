@@ -7,9 +7,13 @@ import { useTranslations } from "next-intl";
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
-
-// Bump when cookie categories/policy change — forces re-consent (RGPD).
-const CONSENT_VERSION = 1;
+import {
+  ANALYTICS_CONSENT_CHANGE_EVENT,
+  CONSENT_SETTINGS_COOKIE,
+  CONSENT_VERSION,
+  createConsentRecord,
+  parseConsentRecord,
+} from "@/lib/consent";
 
 export default function CookieConsent() {
   const t = useTranslations("cookieConsent");
@@ -28,31 +32,25 @@ export default function CookieConsent() {
 
   // Load saved per-category preferences into the switches.
   const loadSavedSettings = () => {
-    const settingsStr = localStorage.getItem("cookie-consent-settings");
-    if (!settingsStr) return;
-    try {
-      const settings = JSON.parse(settingsStr);
-      setFunctionalAllowed(!!settings.functional);
-      setAnalyticsAllowed(!!settings.analytics);
-      setMarketingAllowed(!!settings.marketing);
-    } catch {
-      // ignore
-    }
+    const record = parseConsentRecord(
+      localStorage.getItem(CONSENT_SETTINGS_COOKIE),
+    );
+    if (!record) return null;
+
+    setFunctionalAllowed(record.settings.functional);
+    setAnalyticsAllowed(record.settings.analytics);
+    setMarketingAllowed(record.settings.marketing);
+    return record;
   };
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: run once on mount
   useEffect(() => {
     setMounted(true);
-    const consent = localStorage.getItem("cookie-consent");
-    const storedVersion = Number(
-      localStorage.getItem("cookie-consent-version") ?? "0",
-    );
-
-    loadSavedSettings();
+    const consentRecord = loadSavedSettings();
 
     // No prior consent, or policy/categories changed → ask again (RGPD).
     // Never auto-open on the privacy page (avoid nagging there).
-    if (!isPrivacyPage && (!consent || storedVersion !== CONSENT_VERSION)) {
+    if (!isPrivacyPage && !consentRecord) {
       setIsVisible(true);
     }
   }, []);
@@ -76,25 +74,23 @@ export default function CookieConsent() {
     settings: { functional: boolean; analytics: boolean; marketing: boolean },
   ) => {
     // Proof-of-consent record (RGPD accountability): what, when, which version.
-    const record = {
-      status,
-      settings,
-      version: CONSENT_VERSION,
-      timestamp: new Date().toISOString(),
-    };
+    const record = createConsentRecord(status, settings);
+    const serializedRecord = JSON.stringify(record);
 
     // 1. Save to Local Storage
     localStorage.setItem("cookie-consent", status);
-    localStorage.setItem("cookie-consent-settings", JSON.stringify(settings));
+    localStorage.setItem(CONSENT_SETTINGS_COOKIE, serializedRecord);
     localStorage.setItem("cookie-consent-version", String(CONSENT_VERSION));
-    localStorage.setItem("cookie-consent-record", JSON.stringify(record));
+    localStorage.setItem("cookie-consent-record", serializedRecord);
 
     // 2. Save to document.cookie (6 months — ePrivacy/CNPD: consent ≤ 6 months)
     const maxAge = 180 * 24 * 60 * 60; // 6 months in seconds
     // biome-ignore lint/suspicious/noDocumentCookie: Necessário para o Next.js Middleware ler o consentimento no servidor
     document.cookie = `cookie-consent=${status}; path=/; max-age=${maxAge}; SameSite=Lax; Secure`;
     // biome-ignore lint/suspicious/noDocumentCookie: Necessário para o Next.js Middleware ler o consentimento no servidor
-    document.cookie = `cookie-consent-settings=${JSON.stringify(settings)}; path=/; max-age=${maxAge}; SameSite=Lax; Secure`;
+    document.cookie = `${CONSENT_SETTINGS_COOKIE}=${encodeURIComponent(serializedRecord)}; path=/; max-age=${maxAge}; SameSite=Lax; Secure`;
+
+    window.dispatchEvent(new Event(ANALYTICS_CONSENT_CHANGE_EVENT));
 
     setIsVisible(false);
   };

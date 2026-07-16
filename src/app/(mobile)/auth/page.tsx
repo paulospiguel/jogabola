@@ -1,7 +1,6 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useStatsigClient } from "@statsig/react-bindings";
 import { AnimatePresence, motion } from "framer-motion";
 import { ArrowLeft, ArrowRight, Fingerprint, Loader2, X } from "lucide-react";
 import Link from "next/link";
@@ -17,6 +16,8 @@ import { Logo } from "@/components/logo";
 import { APP } from "@/constants/app";
 import { useToast } from "@/hooks/use-toast-custom";
 import { signIn, useSession } from "@/lib/auth-client";
+import { useAnalytics, useAnalyticsConsent } from "@/providers/analytics";
+import { AppVersion } from "./_components/app-version";
 
 type AuthStep = "email" | "code";
 
@@ -64,7 +65,8 @@ export default function LoginPage() {
   const searchParams = useSearchParams();
   const { data } = useSession();
   const { toast } = useToast();
-  const { logEvent } = useStatsigClient();
+  const { logEvent } = useAnalytics();
+  const analyticsAllowed = useAnalyticsConsent();
   const callbackURL = getSafeCallbackURL(searchParams.get("callbackURL"));
   const isRegisterMode = searchParams.get("mode") === "register";
 
@@ -108,7 +110,16 @@ export default function LoginPage() {
     defaultValues: { code: "" },
   });
 
+  function trackAuthStarted(method: "email_otp" | "google" | "passkey") {
+    if (!analyticsAllowed) return;
+    logEvent("auth_started", undefined, {
+      intent: isRegisterMode ? "register" : "login",
+      method,
+    });
+  }
+
   async function requestCode(values: EmailInput) {
+    trackAuthStarted("email_otp");
     setLoading(true);
     try {
       const email = values.email.trim().toLowerCase();
@@ -159,10 +170,9 @@ export default function LoginPage() {
         );
       }
 
-      logEvent("login_completed", undefined, {
-        method: "email_otp",
-        email: collectedEmail,
-      });
+      if (analyticsAllowed) {
+        logEvent("login_completed", undefined, { method: "email_otp" });
+      }
 
       toast.success(
         t("messages.loginSuccessTitle"),
@@ -181,12 +191,15 @@ export default function LoginPage() {
   }
 
   async function handleGoogleLogin() {
+    trackAuthStarted("google");
     setSocialLoading("google");
     try {
       const result = await signIn.social({ provider: "google", callbackURL });
       if (result.error)
         throw new Error(result.error.message || t("messages.socialError"));
-      logEvent("login_completed", undefined, { method: "google" });
+      if (analyticsAllowed) {
+        logEvent("login_completed", undefined, { method: "google" });
+      }
       if (result.data?.url) window.location.href = result.data.url;
     } catch (err: unknown) {
       const message =
@@ -197,12 +210,15 @@ export default function LoginPage() {
   }
 
   async function handlePasskeyLogin() {
+    trackAuthStarted("passkey");
     setSocialLoading("passkey");
     try {
       const result = await signIn.passkey();
       if (result?.error)
         throw new Error(result.error.message || t("messages.socialError"));
-      logEvent("login_completed", undefined, { method: "passkey" });
+      if (analyticsAllowed) {
+        logEvent("login_completed", undefined, { method: "passkey" });
+      }
       if (result?.data) window.location.href = callbackURL;
     } catch (err: unknown) {
       const message =
@@ -494,7 +510,7 @@ export default function LoginPage() {
           initial={{ opacity: 0 }}
           transition={{ duration: 1, delay: 0.5 }}
         >
-          v{APP.VERSION} • {t("builtForChampions")}
+          <AppVersion label={t("builtForChampions")} version={APP.VERSION} />
         </motion.p>
       </div>
     </div>

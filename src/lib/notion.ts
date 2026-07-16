@@ -1,12 +1,19 @@
 import { Client } from "@notionhq/client";
 
-enum TypeProperty {
-  Tester = "Tester",
-  Waitlist = "Waitlist",
-  Team = "Team",
-  Investor = "Investor",
-  Developer = "Developer",
-}
+const TypeProperty = {
+  Tester: "Tester",
+  Waitlist: "Waitlist",
+  Team: "Team",
+  Investor: "Investor",
+  Developer: "Developer",
+} as const;
+
+type TypeProperty = (typeof TypeProperty)[keyof typeof TypeProperty];
+
+const TESTER_TYPES: readonly TypeProperty[] = [
+  TypeProperty.Tester,
+  TypeProperty.Developer,
+];
 
 function getNotionClient() {
   const apiKey = process.env.NOTION_API_KEY;
@@ -32,16 +39,10 @@ export async function isTesterEmail(email: string): Promise<boolean> {
       const response = await notion.dataSources.query({
         data_source_id: dataSourceId,
         filter: {
-          or: [
-            {
-              property: "Type",
-              select: { equals: TypeProperty.Tester },
-            },
-            {
-              property: "Type",
-              select: { equals: TypeProperty.Developer },
-            },
-          ],
+          or: TESTER_TYPES.map(type => ({
+            property: "Type",
+            select: { equals: type },
+          })),
         },
       });
       const emails = new Set<string>();

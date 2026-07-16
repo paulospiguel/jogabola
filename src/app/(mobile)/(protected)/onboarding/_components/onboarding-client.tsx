@@ -1,6 +1,5 @@
 "use client";
 
-import { useStatsigClient } from "@statsig/react-bindings";
 import { AnimatePresence, motion } from "framer-motion";
 import { Check, Users } from "lucide-react";
 import Image from "next/image";
@@ -18,6 +17,7 @@ import { Cta } from "@/components/arena/cta";
 import { ProgressBar } from "@/components/arena/progress-bar";
 import { APP } from "@/constants/app";
 import { cn } from "@/lib/utils";
+import { useAnalytics } from "@/providers/analytics";
 import { OnboardingMenu } from "./onboarding-menu";
 import { SurveyStep } from "./survey-step";
 
@@ -137,7 +137,7 @@ interface OnboardingClientProps {
 
 export function OnboardingClient({ userName }: OnboardingClientProps) {
   const t = useTranslations("onboarding");
-  const { logEvent } = useStatsigClient();
+  const { logEvent } = useAnalytics();
   const resolvedName = userName ?? t("defaultName");
   const [step, setStep] = useState<Step>("role");
   const [selected, setSelected] = useState<UserRole | null>(null);

@@ -189,7 +189,7 @@ export async function createEvent(input: {
     }
   }
 
-  trackServerEvent(authUser.id, "event_created", {
+  await trackServerEvent(authUser.id, "event_created", {
     event_id: event.id,
     event_type: input.type,
     payment_required: input.paymentRequired ?? false,

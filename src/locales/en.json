@@ -2444,6 +2444,46 @@
       "hint": "Tap time to edit • Tap row for player",
       "title": "Match Events"
     },
+    "match": {
+      "controls": {
+        "card": "Card",
+        "confirmEnd": "Confirm end of match",
+        "confirmEndShort": "Confirm? End",
+        "confirmRestart": "Confirm match restart",
+        "endMatch": "End match",
+        "endNow": "End match now",
+        "goal": "Goal",
+        "logCardForTeam": "Record card for {team}",
+        "logGoalForTeam": "Record goal for {team}",
+        "nextPeriod": "Next period",
+        "pause": "Pause",
+        "restart": "Restart",
+        "resume": "Resume",
+        "start": "Start",
+        "yes": "Yes?"
+      },
+      "goalSheet": {
+        "assist": "Assist (optional)",
+        "register": "Record goal",
+        "scorer": "Scorer",
+        "selectScorer": "Select scorer",
+        "title": "Goal · {team}",
+        "unassigned": "No scorer"
+      },
+      "playerPicker": {
+        "addPlaceholder": "Add player…",
+        "addPlayer": "Add player",
+        "emptyPlaceholder": "Player name (optional)"
+      },
+      "timeline": {
+        "cardForTeam": "Card · {team}",
+        "emptyDescription": "Record goals and cards during the match.",
+        "emptyTitle": "No events yet",
+        "goalForTeam": "Goal · {team}",
+        "removeEvent": "Remove event",
+        "removeLatestGoal": "Remove the latest goal from this row"
+      }
+    },
     "settings": {
       "gameParts": {
         "extraTime": "Extra Time",
@@ -2921,6 +2961,22 @@
     "namePlaceholder": "Full name",
     "defaultName": "Athlete"
   },
+  "contactPage": {
+    "backHome": "Back to home",
+    "title": "Talk to us",
+    "description": "Questions or suggestions? We are here to help your team get onto the pitch.",
+    "methods": {
+      "email": {
+        "label": "Email"
+      },
+      "instagram": {
+        "label": "Instagram"
+      },
+      "x": {
+        "label": "X"
+      }
+    }
+  },
   "pricingPage": {
     "eyebrow": "Plans",
     "title": "Pricing for every stage of your team",
@@ -3263,6 +3319,7 @@
   },
   "arenaRankings": {
     "title": "Rankings",
+    "demoNotice": "Demo data — your real results will show up here soon.",
     "tabs": {
       "league": "League",
       "scorers": "Top Scorers",
@@ -3286,6 +3343,7 @@
   },
   "arenaHistorical": {
     "title": "History",
+    "demoNotice": "Demo data — your real results will show up here soon.",
     "champion": "CHAMPION",
     "sections": {
       "seasons": "Seasons",

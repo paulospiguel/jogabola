@@ -1,7 +1,8 @@
 "use client";
 
 import { AnimatePresence, motion } from "framer-motion";
-import { Trash2 } from "lucide-react";
+import { CircleDot, RectangleVertical, Trash2 } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { formatMinute } from "./format";
 import {
   buildTimelineItems,
@@ -10,22 +11,20 @@ import {
 } from "./timeline-items";
 import type { Match, MatchEvent } from "./types";
 
-function cardName(match: Match, ev: MatchEvent): string {
+function cardPlayerName(match: Match, ev: MatchEvent): string | null {
   const p = match.teams[ev.team].players.find(x => x.id === ev.playerId);
-  if (p?.name) return p.name;
-  return `Cartão · ${match.teams[ev.team].name}`;
+  return p?.name ?? null;
 }
 
-function goalGroupName(match: Match, item: GoalGroupItem): string {
+function goalPlayerName(match: Match, item: GoalGroupItem): string | null {
   const p = match.teams[item.team].players.find(x => x.id === item.playerId);
-  if (p?.name) return p.name;
-  return `Golo · ${match.teams[item.team].name}`;
+  return p?.name ?? null;
 }
 
 function GoalIcon() {
   return (
-    <span className="grid size-7 place-items-center rounded-full bg-arena-primary/15 text-base">
-      ⚽
+    <span className="grid size-7 place-items-center rounded-full bg-arena-primary/15 text-arena-primary">
+      <CircleDot aria-hidden="true" size={16} strokeWidth={1.7} />
     </span>
   );
 }
@@ -37,7 +36,12 @@ function CardIcon({ ev }: { ev: MatchEvent }) {
       className="grid size-7 place-items-center rounded-full"
       style={{ background: `${hex}26` }}
     >
-      <span className="h-3.5 w-2.5 rounded-[2px]" style={{ background: hex }} />
+      <RectangleVertical
+        aria-hidden="true"
+        size={15}
+        strokeWidth={1.7}
+        style={{ color: hex }}
+      />
     </span>
   );
 }
@@ -51,6 +55,7 @@ function TimelineRow({
   item: TimelineItem;
   onRemove: (id: string) => void;
 }) {
+  const t = useTranslations("timer.match.timeline");
   const team = match.teams[item.kind === "card" ? item.event.team : item.team];
   const isGroup = item.kind === "goals" && item.atSecs.length > 1;
 
@@ -71,8 +76,10 @@ function TimelineRow({
       <div className="flex min-w-0 flex-1 flex-col">
         <span className="truncate text-sm font-semibold text-arena-text">
           {item.kind === "card"
-            ? cardName(match, item.event)
-            : goalGroupName(match, item)}
+            ? (cardPlayerName(match, item.event) ??
+              t("cardForTeam", { team: team.name }))
+            : (goalPlayerName(match, item) ??
+              t("goalForTeam", { team: team.name }))}
           {isGroup && (
             <span className="ml-1.5 font-bold text-arena-primary">
               ×{item.atSecs.length}
@@ -95,13 +102,13 @@ function TimelineRow({
         type="button"
         aria-label={
           item.kind === "goals" && item.atSecs.length > 1
-            ? "Remover o último golo desta linha"
-            : "Remover lance"
+            ? t("removeLatestGoal")
+            : t("removeEvent")
         }
         onClick={() =>
           onRemove(item.kind === "card" ? item.event.id : item.latestEventId)
         }
-        className="shrink-0 rounded-md p-1.5 text-arena-text-muted opacity-40 transition hover:text-arena-danger hover:opacity-100 active:text-arena-danger active:opacity-100 focus-visible:opacity-100"
+        className="press grid size-11 shrink-0 place-items-center rounded-md text-arena-text-muted opacity-40 transition hover:text-arena-danger hover:opacity-100 active:text-arena-danger active:opacity-100 focus-visible:opacity-100"
       >
         <Trash2 size={14} />
       </button>
@@ -116,16 +123,17 @@ export function EventTimeline({
   match: Match;
   onRemove: (id: string) => void;
 }) {
+  const t = useTranslations("timer.match.timeline");
   const items = buildTimelineItems(match.events);
 
   if (items.length === 0) {
     return (
       <div className="rounded-[16px] border border-arena-border border-dashed bg-arena-surface/50 px-4 py-8 text-center">
         <p className="text-sm font-semibold text-arena-text-sec">
-          Ainda sem lances
+          {t("emptyTitle")}
         </p>
         <p className="mt-1 text-xs text-arena-text-muted">
-          Regista golos e cartões durante o jogo.
+          {t("emptyDescription")}
         </p>
       </div>
     );
