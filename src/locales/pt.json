@@ -676,9 +676,12 @@
     "actions": {
       "create": "Criar",
       "createEvent": "Criar evento",
+      "retry": "Tentar novamente",
       "viewCalendar": "Calendário"
     },
     "empty": {
+      "errorDescription": "Verifica a tua ligação e tenta novamente.",
+      "errorTitle": "Não foi possível carregar os eventos",
       "noPast": "Sem histórico ainda.",
       "subtitle": "Cria o primeiro evento da tua equipa.",
       "title": "Sem eventos"
@@ -689,7 +692,7 @@
       "view": "Ver",
       "nextEvent": "Evento seguinte",
       "prevEvent": "Evento anterior",
-      "noEvents": "Sem eventos próximos. Cria um!"
+      "noEventsMemberDescription": "A equipa ainda não tem eventos agendados. Consulta o calendário para novidades."
     },
     "stats": {
       "confirmed": "Confirmados",

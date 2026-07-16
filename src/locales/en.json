@@ -676,9 +676,12 @@
     "actions": {
       "create": "Create",
       "createEvent": "Create event",
+      "retry": "Try again",
       "viewCalendar": "Calendar"
     },
     "empty": {
+      "errorDescription": "Check your connection and try again.",
+      "errorTitle": "We couldn't load your events",
       "noPast": "No history yet.",
       "subtitle": "Create your team's first event.",
       "title": "No events"
@@ -689,7 +692,7 @@
       "view": "View",
       "nextEvent": "Next event",
       "prevEvent": "Previous event",
-      "noEvents": "No upcoming events. Create one!"
+      "noEventsMemberDescription": "Your team doesn't have any scheduled events yet. Check the calendar for updates."
     },
     "stats": {
       "confirmed": "Confirmed",

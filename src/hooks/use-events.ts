@@ -1,6 +1,6 @@
 "use client";
 
-import { useQuery } from "@tanstack/react-query";
+import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import { getEvent, getEvents } from "@/actions/match-sessions.actions";
 import { useTeams } from "@/hooks/use-teams";
 import type { EventView } from "@/types/events";
@@ -44,6 +44,11 @@ export function useEvents(options?: UseEventsOptions) {
     enabled: enabled && !!activeTeamId,
     staleTime: 1000 * 60 * 5,
     refetchOnWindowFocus: false,
+    // Keeps the previous team's/query key's data on screen while a new
+    // fetch (team switch, refetch) is in flight, instead of resetting to
+    // `undefined` — avoids flashing the events list to blank. Mirrors
+    // `use-dashboard.ts`'s events/squad queries.
+    placeholderData: keepPreviousData,
   });
 
   return {
