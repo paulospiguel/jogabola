@@ -1,18 +1,18 @@
 "use client";
 
-import { useStatsigClient } from "@statsig/react-bindings";
 import { motion } from "framer-motion";
 import { Timer } from "lucide-react";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
 import { useEffect } from "react";
+import { useAnalytics } from "@/providers/analytics";
 import { formatMinute } from "./format";
 import { decodeResult } from "./share";
 import { onColor } from "./team-color";
 
 export function ResultView({ data }: { data: string | null }) {
   const t = useTranslations("timerShared");
-  const { logEvent } = useStatsigClient();
+  const { logEvent } = useAnalytics();
   const r = data ? decodeResult(data) : null;
 
   useEffect(() => {

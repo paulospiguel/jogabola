@@ -64,6 +64,92 @@ describe("transitionAnalyticsClient", () => {
 });
 
 describe("AnalyticsLifecycleController", () => {
+  it("never updates identity after consent is revoked during initialization", async () => {
+    const initialization = deferred();
+    const client = createClient();
+    client.initializeAsync.mockImplementationOnce(() => initialization.promise);
+    const controller = new AnalyticsLifecycleController(client);
+
+    const enable = controller.transition({
+      enabled: true,
+      userID: "anonymous",
+    });
+    await vi.waitFor(() =>
+      expect(client.initializeAsync).toHaveBeenCalledOnce(),
+    );
+    const revoke = controller.transition({
+      enabled: false,
+      userID: "anonymous",
+    });
+    initialization.resolve();
+
+    await Promise.all([enable, revoke]);
+    expect(client.updateUserAsync).not.toHaveBeenCalled();
+    expect(client.shutdown).toHaveBeenCalledOnce();
+    expect(controller.currentState.enabled).toBe(false);
+  });
+
+  it("reenables logging when consent returns during initialization", async () => {
+    const initialization = deferred();
+    const client = createClient();
+    client.initializeAsync.mockImplementationOnce(() => initialization.promise);
+    const controller = new AnalyticsLifecycleController(client);
+
+    const enable = controller.transition({
+      enabled: true,
+      userID: "anonymous",
+    });
+    await vi.waitFor(() =>
+      expect(client.initializeAsync).toHaveBeenCalledOnce(),
+    );
+    const revoke = controller.transition({
+      enabled: false,
+      userID: "anonymous",
+    });
+    const reactivate = controller.transition({
+      enabled: true,
+      userID: "anonymous",
+    });
+    initialization.resolve();
+
+    await Promise.all([enable, revoke, reactivate]);
+    expect(client.updateRuntimeOptions).toHaveBeenLastCalledWith({
+      loggingEnabled: "browser-only",
+    });
+    expect(controller.currentState.enabled).toBe(true);
+  });
+
+  it("does not lose a synchronous disabled no-op followed by enable", async () => {
+    const client = createClient();
+    const controller = new AnalyticsLifecycleController(client);
+
+    const noOp = controller.transition({ enabled: false, userID: "anonymous" });
+    const enable = controller.transition({ enabled: true, userID: "user-1" });
+
+    await Promise.all([noOp, enable]);
+    expect(client.initializeAsync).toHaveBeenCalledOnce();
+    expect(client.updateUserAsync).toHaveBeenCalledWith({ userID: "user-1" });
+    expect(controller.currentState).toEqual({
+      enabled: true,
+      userID: "user-1",
+    });
+  });
+
+  it("does not lose a synchronous enabled no-op followed by revoke", async () => {
+    const client = createClient();
+    const controller = new AnalyticsLifecycleController(client, {
+      enabled: true,
+      userID: "user-1",
+    });
+
+    const noOp = controller.transition({ enabled: true, userID: "user-1" });
+    const revoke = controller.transition({ enabled: false, userID: "user-1" });
+
+    await Promise.all([noOp, revoke]);
+    expect(client.shutdown).toHaveBeenCalledOnce();
+    expect(controller.currentState.enabled).toBe(false);
+  });
+
   it("coalesces hydration from anonymous to the authenticated user", async () => {
     const firstIdentity = deferred();
     const client = createClient();
@@ -105,6 +191,7 @@ describe("AnalyticsLifecycleController", () => {
       enabled: false,
       userID: "anonymous",
     });
+    await vi.waitFor(() => expect(client.shutdown).toHaveBeenCalledOnce());
     const reactivate = controller.transition({
       enabled: true,
       userID: "user-1",

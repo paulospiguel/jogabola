@@ -1,10 +1,18 @@
 "use client";
 
-import { StatsigProvider, useClientAsyncInit } from "@statsig/react-bindings";
+import { useClientAsyncInit } from "@statsig/react-bindings";
 import { StatsigSessionReplayPlugin } from "@statsig/session-replay";
 import { StatsigAutoCapturePlugin } from "@statsig/web-analytics";
 import type React from "react";
-import { createContext, useContext, useEffect, useRef, useState } from "react";
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { AnalyticsLifecycleController } from "@/lib/analytics-lifecycle";
 import { useSession } from "@/lib/auth-client";
 import {
@@ -15,17 +23,36 @@ import {
   scheduleAnalyticsConsentExpiry,
 } from "@/lib/consent";
 
-const AnalyticsConsentContext = createContext(false);
+type BrowserStatsigClient = ReturnType<typeof useClientAsyncInit>["client"];
+type AnalyticsLogEvent = (
+  eventName: string,
+  value?: string | number,
+  metadata?: Record<string, string>,
+) => void;
 
-export function useAnalyticsConsent() {
+interface AnalyticsContextValue {
+  analyticsAllowed: boolean;
+  logEvent: AnalyticsLogEvent;
+}
+
+const AnalyticsConsentContext = createContext<AnalyticsContextValue>({
+  analyticsAllowed: false,
+  logEvent: () => undefined,
+});
+
+export function useAnalytics() {
   return useContext(AnalyticsConsentContext);
 }
 
-function StatsigClientProvider({
-  children,
+export function useAnalyticsConsent() {
+  return useAnalytics().analyticsAllowed;
+}
+
+function StatsigRuntime({
+  onClientChange,
   userID,
 }: {
-  children: React.ReactNode;
+  onClientChange: (client: BrowserStatsigClient | null) => void;
   userID: string;
 }) {
   const { client } = useClientAsyncInit(
@@ -51,15 +78,18 @@ function StatsigClientProvider({
   const lifecycle = lifecycleRef.current.controller;
 
   useEffect(() => {
+    onClientChange(client);
+    return () => onClientChange(null);
+  }, [client, onClientChange]);
+
+  useEffect(() => {
     const applyState = (enabled: boolean) => {
       void lifecycle.transition({ enabled, userID }).catch(() => {
         console.error("[Statsig] Client lifecycle transition failed.");
       });
     };
     const stopAnalyticsWhenRevoked = () => {
-      if (!getStoredAnalyticsConsent(localStorage)) {
-        applyState(false);
-      }
+      if (!getStoredAnalyticsConsent(localStorage)) applyState(false);
     };
     const stopAnalyticsFromAnotherTab = (event: StorageEvent) => {
       if (getAnalyticsConsentFromStorageChange(event) === false) {
@@ -68,7 +98,6 @@ function StatsigClientProvider({
     };
 
     applyState(true);
-
     window.addEventListener(
       ANALYTICS_CONSENT_CHANGE_EVENT,
       stopAnalyticsWhenRevoked,
@@ -83,11 +112,7 @@ function StatsigClientProvider({
     };
   }, [lifecycle, userID]);
 
-  return (
-    <StatsigProvider client={client} loadingComponent={children}>
-      {children}
-    </StatsigProvider>
-  );
+  return null;
 }
 
 export default function AnalyticsProvider({
@@ -97,8 +122,22 @@ export default function AnalyticsProvider({
 }) {
   const { data: session } = useSession();
   const [analyticsAllowed, setAnalyticsAllowed] = useState(false);
+  const analyticsClientRef = useRef<BrowserStatsigClient | null>(null);
   const userID = session?.user?.id ?? "anonymous";
   const hasClientKey = Boolean(process.env.NEXT_PUBLIC_STATSIG_CLIENT_KEY);
+
+  const handleClientChange = useCallback(
+    (client: BrowserStatsigClient | null) => {
+      analyticsClientRef.current = client;
+    },
+    [],
+  );
+  const logEvent = useCallback<AnalyticsLogEvent>(
+    (eventName, value, metadata) => {
+      analyticsClientRef.current?.logEvent(eventName, value, metadata);
+    },
+    [],
+  );
 
   useEffect(() => {
     let stopExpiryTimer: () => void = () => undefined;
@@ -148,15 +187,17 @@ export default function AnalyticsProvider({
     };
   }, []);
 
+  const contextValue = useMemo(
+    () => ({ analyticsAllowed, logEvent }),
+    [analyticsAllowed, logEvent],
+  );
+
   return (
-    <AnalyticsConsentContext.Provider value={analyticsAllowed}>
+    <AnalyticsConsentContext.Provider value={contextValue}>
+      {children}
       {analyticsAllowed && hasClientKey ? (
-        <StatsigClientProvider userID={userID}>
-          {children}
-        </StatsigClientProvider>
-      ) : (
-        children
-      )}
+        <StatsigRuntime onClientChange={handleClientChange} userID={userID} />
+      ) : null}
     </AnalyticsConsentContext.Provider>
   );
 }

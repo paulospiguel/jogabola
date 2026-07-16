@@ -1,7 +1,6 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useStatsigClient } from "@statsig/react-bindings";
 import { AnimatePresence, motion } from "framer-motion";
 import { ArrowLeft, ArrowRight, Fingerprint, Loader2, X } from "lucide-react";
 import Link from "next/link";
@@ -17,7 +16,7 @@ import { Logo } from "@/components/logo";
 import { APP } from "@/constants/app";
 import { useToast } from "@/hooks/use-toast-custom";
 import { signIn, useSession } from "@/lib/auth-client";
-import { useAnalyticsConsent } from "@/providers/analytics";
+import { useAnalytics, useAnalyticsConsent } from "@/providers/analytics";
 
 type AuthStep = "email" | "code";
 
@@ -65,7 +64,7 @@ export default function LoginPage() {
   const searchParams = useSearchParams();
   const { data } = useSession();
   const { toast } = useToast();
-  const { logEvent } = useStatsigClient();
+  const { logEvent } = useAnalytics();
   const analyticsAllowed = useAnalyticsConsent();
   const callbackURL = getSafeCallbackURL(searchParams.get("callbackURL"));
   const isRegisterMode = searchParams.get("mode") === "register";

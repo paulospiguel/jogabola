@@ -152,6 +152,20 @@ describe("trackServerEvent", () => {
     expect(mocks.logEvent).not.toHaveBeenCalled();
   });
 
+  it("keeps synchronous initialization failures non-blocking", async () => {
+    process.env.STATSIG_SERVER_SECRET_KEY = "secret-key";
+    mocks.cookieValue = consentRecord();
+    mocks.initialize.mockImplementationOnce(() => {
+      throw new Error("unavailable");
+    });
+    const { trackServerEvent } = await import("@/lib/analytics-server");
+
+    await expect(
+      trackServerEvent("user-1", "event_name"),
+    ).resolves.toBeUndefined();
+    expect(mocks.logEvent).not.toHaveBeenCalled();
+  });
+
   it("stops waiting when the first Statsig initialization is pending", async () => {
     vi.useFakeTimers();
     process.env.STATSIG_SERVER_SECRET_KEY = "secret-key";
@@ -169,6 +183,25 @@ describe("trackServerEvent", () => {
     expect(settled).toBe(true);
     expect(mocks.logEvent).not.toHaveBeenCalled();
     expect(mocks.flushEvents).not.toHaveBeenCalled();
+  });
+
+  it("coalesces repeated requests while the real initialization is pending", async () => {
+    vi.useFakeTimers();
+    process.env.STATSIG_SERVER_SECRET_KEY = "secret-key";
+    mocks.cookieValue = consentRecord();
+    mocks.initialize.mockImplementation(() => new Promise(() => undefined));
+    const { trackServerEvent } = await import("@/lib/analytics-server");
+
+    const first = trackServerEvent("user-1", "first_event");
+    await vi.advanceTimersByTimeAsync(1_000);
+    await first;
+    const second = trackServerEvent("user-1", "second_event");
+    await vi.advanceTimersByTimeAsync(1_000);
+    await second;
+
+    expect(mocks.statsigConstructor).toHaveBeenCalledOnce();
+    expect(mocks.initialize).toHaveBeenCalledOnce();
+    expect(mocks.logEvent).not.toHaveBeenCalled();
   });
 
   it("keeps event logging failures non-blocking", async () => {
@@ -208,6 +241,24 @@ describe("trackServerEvent", () => {
     await vi.advanceTimersByTimeAsync(1_000);
 
     await expect(tracking).resolves.toBeUndefined();
+  });
+
+  it("coalesces repeated requests while the real flush is pending", async () => {
+    vi.useFakeTimers();
+    process.env.STATSIG_SERVER_SECRET_KEY = "secret-key";
+    mocks.cookieValue = consentRecord();
+    mocks.flushEvents.mockImplementation(() => new Promise(() => undefined));
+    const { trackServerEvent } = await import("@/lib/analytics-server");
+
+    const first = trackServerEvent("user-1", "first_event");
+    await vi.advanceTimersByTimeAsync(1_000);
+    await first;
+    const second = trackServerEvent("user-1", "second_event");
+    await vi.advanceTimersByTimeAsync(1_000);
+    await second;
+
+    expect(mocks.logEvent).toHaveBeenCalledTimes(2);
+    expect(mocks.flushEvents).toHaveBeenCalledOnce();
   });
 
   it("does not flush without consent", async () => {

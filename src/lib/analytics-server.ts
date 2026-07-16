@@ -2,19 +2,38 @@ import { Statsig, StatsigUser } from "@statsig/statsig-node-core";
 import { cookies } from "next/headers";
 import { CONSENT_SETTINGS_COOKIE, parseAnalyticsConsent } from "@/lib/consent";
 
-let clientPromise: Promise<Statsig | null> | null = null;
-let warnedMissingKey = false;
 const INIT_TIMEOUT_MS = 250;
 const FLUSH_TIMEOUT_MS = 250;
+const INIT_RETRY_COOLDOWN_MS = 30_000;
 
-async function initializeWithTimeout(client: Statsig): Promise<Statsig | null> {
+interface ServerClientState {
+  client: Statsig;
+  initialization: Promise<Statsig | null>;
+  key: string;
+  retryAfter: number;
+  status: "initializing" | "ready" | "failed";
+}
+
+interface FlushState {
+  client: Statsig;
+  operation: Promise<unknown>;
+}
+
+let clientState: ServerClientState | null = null;
+let flushState: FlushState | null = null;
+let warnedMissingKey = false;
+
+async function waitWithTimeout<T>(
+  operation: Promise<T>,
+  timeoutMs: number,
+): Promise<T | null> {
   let timeout: ReturnType<typeof setTimeout> | undefined;
 
   try {
     return await Promise.race([
-      client.initialize().then(() => client),
+      operation,
       new Promise<null>(resolve => {
-        timeout = setTimeout(() => resolve(null), INIT_TIMEOUT_MS);
+        timeout = setTimeout(() => resolve(null), timeoutMs);
       }),
     ]);
   } finally {
@@ -22,7 +41,41 @@ async function initializeWithTimeout(client: Statsig): Promise<Statsig | null> {
   }
 }
 
-function getStatsigClient(): Promise<Statsig | null> {
+function createClientState(key: string): ServerClientState {
+  const client = new Statsig(key, { initTimeoutMs: INIT_TIMEOUT_MS });
+  const state: ServerClientState = {
+    client,
+    initialization: Promise.resolve(null),
+    key,
+    retryAfter: 0,
+    status: "initializing",
+  };
+
+  try {
+    state.initialization = client
+      .initialize()
+      .then(() => {
+        state.status = "ready";
+        return client;
+      })
+      .catch(() => {
+        state.status = "failed";
+        state.retryAfter = Date.now() + INIT_RETRY_COOLDOWN_MS;
+        console.error("[Statsig] Server SDK initialization failed.");
+        return null;
+      });
+  } catch {
+    state.status = "failed";
+    state.retryAfter = Date.now() + INIT_RETRY_COOLDOWN_MS;
+    state.initialization = Promise.resolve(null);
+    console.error("[Statsig] Server SDK initialization failed.");
+  }
+
+  clientState = state;
+  return state;
+}
+
+async function getStatsigClient(): Promise<Statsig | null> {
   const key = process.env.STATSIG_SERVER_SECRET_KEY;
   if (!key) {
     if (!warnedMissingKey) {
@@ -31,26 +84,19 @@ function getStatsigClient(): Promise<Statsig | null> {
       );
       warnedMissingKey = true;
     }
-    return Promise.resolve(null);
+    return null;
   }
 
-  if (!clientPromise) {
-    const client = new Statsig(key, { initTimeoutMs: INIT_TIMEOUT_MS });
-    clientPromise = initializeWithTimeout(client)
-      .then(initializedClient => {
-        if (!initializedClient) {
-          console.error("[Statsig] Server SDK initialization timed out.");
-          clientPromise = null;
-        }
-        return initializedClient;
-      })
-      .catch(() => {
-        console.error("[Statsig] Server SDK initialization failed.");
-        clientPromise = null;
-        return null;
-      });
+  let state = clientState;
+  if (!state || state.key !== key) {
+    state = createClientState(key);
+  } else if (state.status === "failed") {
+    if (Date.now() < state.retryAfter) return null;
+    state = createClientState(key);
   }
-  return clientPromise;
+
+  if (state.status === "ready") return state.client;
+  return waitWithTimeout(state.initialization, INIT_TIMEOUT_MS);
 }
 
 function toMetadata(properties?: Record<string, unknown>) {
@@ -71,18 +117,19 @@ function toMetadata(properties?: Record<string, unknown>) {
 }
 
 async function flushEventsWithTimeout(client: Statsig): Promise<void> {
-  let timeout: ReturnType<typeof setTimeout> | undefined;
+  let state = flushState;
+  if (!state || state.client !== client) {
+    const operation = client.flushEvents();
+    state = { client, operation };
+    flushState = state;
 
-  try {
-    await Promise.race([
-      client.flushEvents(),
-      new Promise<void>(resolve => {
-        timeout = setTimeout(resolve, FLUSH_TIMEOUT_MS);
-      }),
-    ]);
-  } finally {
-    if (timeout) clearTimeout(timeout);
+    const clearFlush = () => {
+      if (flushState === state) flushState = null;
+    };
+    void operation.then(clearFlush, clearFlush);
   }
+
+  await waitWithTimeout(state.operation, FLUSH_TIMEOUT_MS);
 }
 
 export async function hasAnalyticsConsent(): Promise<boolean> {
@@ -103,11 +150,17 @@ export async function trackServerEvent(
 ): Promise<void> {
   if (!(await hasAnalyticsConsent())) return;
 
-  const client = await getStatsigClient();
+  let client: Statsig | null;
+  try {
+    client = await getStatsigClient();
+  } catch {
+    console.error("[Statsig] Server SDK setup failed.");
+    return;
+  }
   if (!client) return;
 
   try {
-    client?.logEvent(
+    client.logEvent(
       new StatsigUser({ userID: distinctId }),
       event,
       null,

@@ -1,11 +1,11 @@
 "use client";
 
-import { useStatsigClient } from "@statsig/react-bindings";
 import { AnimatePresence, motion } from "framer-motion";
 import { Plus, Timer, Trash2, Trophy } from "lucide-react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useReducer, useState } from "react";
+import { useAnalytics } from "@/providers/analytics";
 import { formatMatchDate, uid } from "./format";
 import {
   createSetupNavigationState,
@@ -126,7 +126,7 @@ export function HubView() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const openSetupFromUrl = shouldOpenSetup(searchParams);
-  const { logEvent } = useStatsigClient();
+  const { logEvent } = useAnalytics();
   const [matches, setMatches] = useState<Match[]>([]);
   const [setupNavigation, dispatchSetupNavigation] = useReducer(
     reduceSetupNavigationState,

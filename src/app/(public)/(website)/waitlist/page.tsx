@@ -1,6 +1,5 @@
 "use client";
 
-import { useStatsigClient } from "@statsig/react-bindings";
 import { AnimatePresence, motion } from "framer-motion";
 import { ArrowRight, CheckCircle, Loader2 } from "lucide-react";
 import Link from "next/link";
@@ -10,13 +9,13 @@ import { Suspense, useEffect, useState } from "react";
 import { joinWaitlist } from "@/actions/waitlist.actions";
 import { Logo } from "@/components/logo";
 import { signOut, useSession } from "@/lib/auth-client";
-import { useAnalyticsConsent } from "@/providers/analytics";
+import { useAnalytics, useAnalyticsConsent } from "@/providers/analytics";
 
 function WaitlistContent() {
   const searchParams = useSearchParams();
   const { data: session } = useSession();
   const analyticsAllowed = useAnalyticsConsent();
-  const { logEvent } = useStatsigClient();
+  const { logEvent } = useAnalytics();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);

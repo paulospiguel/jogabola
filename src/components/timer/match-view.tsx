@@ -1,6 +1,5 @@
 "use client";
 
-import { useStatsigClient } from "@statsig/react-bindings";
 import { ChevronLeft, Flag } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useTranslations } from "next-intl";
@@ -8,6 +7,7 @@ import { useEffect, useRef, useState } from "react";
 import { TournamentDecisionSheet } from "@/components/tournament/tournament-decision-sheet";
 import { finalizeTournamentMatch } from "@/components/tournament/tournament-match-bridge";
 import type { DecisionMethod } from "@/components/tournament/types";
+import { useAnalytics } from "@/providers/analytics";
 import { EventTimeline } from "./event-timeline";
 import { uid } from "./format";
 import { LogCardSheet } from "./log-card-sheet";
@@ -25,7 +25,7 @@ export function MatchView({ id }: { id: string }) {
   const router = useRouter();
   const tournamentId = useSearchParams().get("tournament");
   const t = useTranslations("Tournament.match");
-  const { logEvent } = useStatsigClient();
+  const { logEvent } = useAnalytics();
   const { match, now, actions } = useLiveMatch(id);
   useWakeLock(match?.state.status === "running");
   const [goalSide, setGoalSide] = useState<TeamSide | null>(null);
