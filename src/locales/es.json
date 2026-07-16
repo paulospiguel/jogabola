@@ -2449,6 +2449,7 @@
         "card": "Tarjeta",
         "confirmEnd": "Confirmar final del partido",
         "confirmEndShort": "¿Confirmas? Terminar",
+        "confirmRestart": "Confirmar reinicio del partido",
         "endMatch": "Terminar partido",
         "endNow": "Terminar partido ahora",
         "goal": "Gol",

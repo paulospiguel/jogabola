@@ -30,6 +30,13 @@ describe("timer accessibility contract", () => {
     expect(source).toContain("min-w-11");
   });
 
+  it("keeps destructive match controls named and at least 44px tall", () => {
+    const source = readTimerSource("match-controls.tsx");
+
+    expect(source).toContain('aria-label={t("confirmRestart")}');
+    expect(source.match(/press flex min-h-11 items-center/g)).toHaveLength(2);
+  });
+
   it("keeps the timeline remove command at least 44px and press-responsive", () => {
     const source = readTimerSource("event-timeline.tsx");
 

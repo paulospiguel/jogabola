@@ -205,6 +205,7 @@ export function MatchControls({
             initial={{ scale: 0.9 }}
             animate={{ scale: 1 }}
             whileTap={{ scale: 0.94 }}
+            aria-label={t("confirmRestart")}
             onClick={() => {
               setConfirmRestart(false);
               onRestart();
@@ -225,7 +226,7 @@ export function MatchControls({
             type="button"
             onClick={() => commitEnd(onEnd)}
             onBlur={cancelEnd}
-            className="self-center text-xs font-bold text-arena-danger underline-offset-2 hover:underline"
+            className="press flex min-h-11 items-center self-center rounded-md px-3 text-xs font-bold text-arena-danger underline-offset-2 hover:underline"
           >
             {t("confirmEndShort")}
           </button>
@@ -233,7 +234,7 @@ export function MatchControls({
           <button
             type="button"
             onClick={armEnd}
-            className="self-center text-xs font-semibold text-arena-text-muted underline-offset-2 hover:text-arena-text-sec hover:underline"
+            className="press flex min-h-11 items-center self-center rounded-md px-3 text-xs font-semibold text-arena-text-muted underline-offset-2 hover:text-arena-text-sec hover:underline"
           >
             {t("endNow")}
           </button>

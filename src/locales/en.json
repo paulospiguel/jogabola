@@ -2449,6 +2449,7 @@
         "card": "Card",
         "confirmEnd": "Confirm end of match",
         "confirmEndShort": "Confirm? End",
+        "confirmRestart": "Confirm match restart",
         "endMatch": "End match",
         "endNow": "End match now",
         "goal": "Goal",

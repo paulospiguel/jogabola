@@ -2449,6 +2449,7 @@
         "card": "Carton",
         "confirmEnd": "Confirmer la fin du match",
         "confirmEndShort": "Confirmer ? Terminer",
+        "confirmRestart": "Confirmer le redémarrage du match",
         "endMatch": "Terminer le match",
         "endNow": "Terminer le match maintenant",
         "goal": "But",
