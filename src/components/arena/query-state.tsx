@@ -15,13 +15,19 @@ export type QueryViewState =
   | { status: "loading" }
   | { status: "error" }
   | { status: "empty" }
-  | { status: "success"; isRefreshing: boolean };
+  | { status: "success"; isRefreshing: boolean; hasBackgroundError: boolean };
 
 /**
  * Pure state-derivation for a single query's UI. Callers (Dashboard, Plantel,
  * Cobranças) map their query hook's flags onto this input and switch on the
  * resulting `status` to pick between skeleton, ArenaQueryError, ArenaEmptyState
  * or the real content — without duplicating this precedence logic per screen.
+ *
+ * Note on `success.hasBackgroundError`: once we have data, a failed refetch
+ * never demotes the screen back to the full `error` state — the user keeps
+ * seeing their last good data instead of losing it to a network blip. That
+ * failure is still surfaced via `hasBackgroundError` so callers can show a
+ * banner/toast on top of the stale content instead of silently swallowing it.
  */
 export function deriveQueryViewState({
   hasData,
@@ -41,7 +47,16 @@ export function deriveQueryViewState({
     return { status: "empty" };
   }
 
-  return { status: "success", isRefreshing: isFetching };
+  // hasData is true from here on. `isFetching` alone drives `isRefreshing`
+  // (a retry currently in flight); `hasBackgroundError` only turns on once
+  // that attempt has settled (`!isFetching`) and left an `error` behind —
+  // while mid-retry, `isRefreshing` already communicates the busy state, and
+  // we don't want the two flags to be true at the same time.
+  return {
+    status: "success",
+    isRefreshing: isFetching,
+    hasBackgroundError: !isFetching && Boolean(error),
+  };
 }
 
 export interface ArenaQueryErrorProps {

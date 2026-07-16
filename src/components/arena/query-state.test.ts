@@ -59,7 +59,11 @@ describe("deriveQueryViewState", () => {
         isFetching: false,
         error: null,
       }),
-    ).toEqual({ status: "success", isRefreshing: false });
+    ).toEqual({
+      status: "success",
+      isRefreshing: false,
+      hasBackgroundError: false,
+    });
   });
 
   it("preserves success and marks isRefreshing during a background refetch with data", () => {
@@ -70,7 +74,26 @@ describe("deriveQueryViewState", () => {
         isFetching: true,
         error: null,
       }),
-    ).toEqual({ status: "success", isRefreshing: true });
+    ).toEqual({
+      status: "success",
+      isRefreshing: true,
+      hasBackgroundError: false,
+    });
+  });
+
+  it("flags hasBackgroundError when a background refetch settles with an error but stale data remains", () => {
+    expect(
+      deriveQueryViewState({
+        hasData: true,
+        isInitialLoading: false,
+        isFetching: false,
+        error: new Error("background refetch failed"),
+      }),
+    ).toEqual({
+      status: "success",
+      isRefreshing: false,
+      hasBackgroundError: true,
+    });
   });
 });
 

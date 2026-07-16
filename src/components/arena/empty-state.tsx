@@ -47,6 +47,7 @@ export function ArenaEmptyState(props: ArenaEmptyStateProps) {
           alt={props.image.alt}
           width={props.image.width}
           height={props.image.height}
+          sizes={`(max-width: 640px) 100vw, ${props.image.width}px`}
           className="mb-3 h-auto w-full object-contain"
           style={{ maxWidth: props.image.width }}
         />
