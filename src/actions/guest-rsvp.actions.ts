@@ -330,7 +330,7 @@ export async function verifyGuestOTP(
 
     await db.delete(guestEventOtp).where(eq(guestEventOtp.id, record.id));
 
-    trackServerEvent(targetUser.id, "guest_rsvp_completed", {
+    await trackServerEvent(targetUser.id, "guest_rsvp_completed", {
       event_id: eventId,
     });
 

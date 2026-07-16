@@ -7,6 +7,10 @@ import { useTranslations } from "next-intl";
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
+import {
+  ANALYTICS_CONSENT_CHANGE_EVENT,
+  CONSENT_SETTINGS_COOKIE,
+} from "@/lib/consent";
 
 // Bump when cookie categories/policy change — forces re-consent (RGPD).
 const CONSENT_VERSION = 1;
@@ -85,7 +89,7 @@ export default function CookieConsent() {
 
     // 1. Save to Local Storage
     localStorage.setItem("cookie-consent", status);
-    localStorage.setItem("cookie-consent-settings", JSON.stringify(settings));
+    localStorage.setItem(CONSENT_SETTINGS_COOKIE, JSON.stringify(settings));
     localStorage.setItem("cookie-consent-version", String(CONSENT_VERSION));
     localStorage.setItem("cookie-consent-record", JSON.stringify(record));
 
@@ -94,7 +98,9 @@ export default function CookieConsent() {
     // biome-ignore lint/suspicious/noDocumentCookie: Necessário para o Next.js Middleware ler o consentimento no servidor
     document.cookie = `cookie-consent=${status}; path=/; max-age=${maxAge}; SameSite=Lax; Secure`;
     // biome-ignore lint/suspicious/noDocumentCookie: Necessário para o Next.js Middleware ler o consentimento no servidor
-    document.cookie = `cookie-consent-settings=${JSON.stringify(settings)}; path=/; max-age=${maxAge}; SameSite=Lax; Secure`;
+    document.cookie = `${CONSENT_SETTINGS_COOKIE}=${encodeURIComponent(JSON.stringify(settings))}; path=/; max-age=${maxAge}; SameSite=Lax; Secure`;
+
+    window.dispatchEvent(new Event(ANALYTICS_CONSENT_CHANGE_EVENT));
 
     setIsVisible(false);
   };

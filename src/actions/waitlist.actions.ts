@@ -1,7 +1,6 @@
 "use server";
 
 import { z } from "zod";
-import { trackServerEvent } from "@/lib/analytics-server";
 import { addToWaitlist } from "@/lib/notion";
 
 const schema = z.object({
@@ -19,7 +18,6 @@ export async function joinWaitlist(input: unknown) {
 
   try {
     await addToWaitlist(name, email);
-    trackServerEvent(email, "waitlist_joined", { name });
     return { success: true };
   } catch (err) {
     console.error("[waitlist] error:", err);

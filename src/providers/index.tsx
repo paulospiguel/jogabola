@@ -21,8 +21,10 @@ export function Providers({ children }: ProviderProps) {
         enableSystem={false}
         disableTransitionOnChange
       >
-        <AnalyticsProvider>{children}</AnalyticsProvider>
-        <CookieConsent />
+        <AnalyticsProvider>
+          {children}
+          <CookieConsent />
+        </AnalyticsProvider>
         <Toaster />
       </ThemeProvider>
     </QueryClientProvider>

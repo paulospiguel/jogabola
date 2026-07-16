@@ -17,6 +17,7 @@ import { Logo } from "@/components/logo";
 import { APP } from "@/constants/app";
 import { useToast } from "@/hooks/use-toast-custom";
 import { signIn, useSession } from "@/lib/auth-client";
+import { useAnalyticsConsent } from "@/providers/analytics";
 
 type AuthStep = "email" | "code";
 
@@ -65,6 +66,7 @@ export default function LoginPage() {
   const { data } = useSession();
   const { toast } = useToast();
   const { logEvent } = useStatsigClient();
+  const analyticsAllowed = useAnalyticsConsent();
   const callbackURL = getSafeCallbackURL(searchParams.get("callbackURL"));
   const isRegisterMode = searchParams.get("mode") === "register";
 
@@ -159,10 +161,9 @@ export default function LoginPage() {
         );
       }
 
-      logEvent("login_completed", undefined, {
-        method: "email_otp",
-        email: collectedEmail,
-      });
+      if (analyticsAllowed) {
+        logEvent("login_completed", undefined, { method: "email_otp" });
+      }
 
       toast.success(
         t("messages.loginSuccessTitle"),
@@ -186,7 +187,9 @@ export default function LoginPage() {
       const result = await signIn.social({ provider: "google", callbackURL });
       if (result.error)
         throw new Error(result.error.message || t("messages.socialError"));
-      logEvent("login_completed", undefined, { method: "google" });
+      if (analyticsAllowed) {
+        logEvent("login_completed", undefined, { method: "google" });
+      }
       if (result.data?.url) window.location.href = result.data.url;
     } catch (err: unknown) {
       const message =
@@ -202,7 +205,9 @@ export default function LoginPage() {
       const result = await signIn.passkey();
       if (result?.error)
         throw new Error(result.error.message || t("messages.socialError"));
-      logEvent("login_completed", undefined, { method: "passkey" });
+      if (analyticsAllowed) {
+        logEvent("login_completed", undefined, { method: "passkey" });
+      }
       if (result?.data) window.location.href = callbackURL;
     } catch (err: unknown) {
       const message =

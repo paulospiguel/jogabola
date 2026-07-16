@@ -1,4 +1,6 @@
 import { Statsig, StatsigUser } from "@statsig/statsig-node-core";
+import { cookies } from "next/headers";
+import { CONSENT_SETTINGS_COOKIE, parseAnalyticsConsent } from "@/lib/consent";
 
 let clientPromise: Promise<Statsig | null> | null = null;
 let warnedMissingKey = false;
@@ -20,8 +22,8 @@ function getStatsigClient(): Promise<Statsig | null> {
     clientPromise = client
       .initialize()
       .then(() => client)
-      .catch(error => {
-        console.error("[Statsig] Server SDK initialization failed:", error);
+      .catch(() => {
+        console.error("[Statsig] Server SDK initialization failed.");
         clientPromise = null;
         return null;
       });
@@ -46,17 +48,35 @@ function toMetadata(properties?: Record<string, unknown>) {
   );
 }
 
-export function trackServerEvent(
+export async function hasAnalyticsConsent(): Promise<boolean> {
+  try {
+    const cookieStore = await cookies();
+    return parseAnalyticsConsent(
+      cookieStore.get(CONSENT_SETTINGS_COOKIE)?.value,
+    );
+  } catch {
+    return false;
+  }
+}
+
+export async function trackServerEvent(
   distinctId: string,
   event: string,
   properties?: Record<string, unknown>,
-): void {
-  void getStatsigClient().then(client => {
+): Promise<void> {
+  if (!(await hasAnalyticsConsent())) return;
+
+  const client = await getStatsigClient();
+  if (!client) return;
+
+  try {
     client?.logEvent(
       new StatsigUser({ userID: distinctId }),
       event,
       null,
       toMetadata(properties),
     );
-  });
+  } catch {
+    console.error("[Statsig] Server event logging failed.");
+  }
 }

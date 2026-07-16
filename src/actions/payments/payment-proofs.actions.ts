@@ -94,7 +94,7 @@ export const submitPaymentProof = withAction(
           paymentId: data.paymentId,
           eventId: paymentRow.eventId,
         });
-        trackServerEvent(paymentRow.athleteId, "payment_submitted", {
+        await trackServerEvent(paymentRow.athleteId, "payment_submitted", {
           payment_id: data.paymentId,
           event_id: paymentRow.eventId,
         });

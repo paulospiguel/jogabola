@@ -98,7 +98,7 @@ export const updatePaymentStatus = withAuthAction(
       .where(eq(payments.id, paymentId));
 
     if (status === PAYMENT_REVIEW_STATUS.APPROVED) {
-      trackServerEvent(currentUser.id, "payment_approved", {
+      await trackServerEvent(currentUser.id, "payment_approved", {
         payment_id: paymentId,
         event_id: paymentRow.eventId,
       });

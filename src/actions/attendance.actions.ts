@@ -312,7 +312,9 @@ export async function confirmUserAttendance(eventId: number) {
       })
       .returning();
 
-    trackServerEvent(userId, "attendance_confirmed", { event_id: eventId });
+    await trackServerEvent(userId, "attendance_confirmed", {
+      event_id: eventId,
+    });
 
     revalidatePath(`/event/${eventId}`);
     revalidatePath(`/arena/events/${eventId}`);
@@ -373,7 +375,7 @@ export async function cancelUserAttendance(eventId: number) {
         ),
       );
 
-    trackServerEvent(session.user.id, "attendance_cancelled", {
+    await trackServerEvent(session.user.id, "attendance_cancelled", {
       event_id: eventId,
       is_late_cancellation: isLateCancellation,
     });
