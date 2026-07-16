@@ -2452,6 +2452,8 @@
         "endMatch": "Terminer le match",
         "endNow": "Terminer le match maintenant",
         "goal": "But",
+        "logCardForTeam": "Enregistrer un carton pour {team}",
+        "logGoalForTeam": "Enregistrer un but pour {team}",
         "nextPeriod": "Période suivante",
         "pause": "Pause",
         "restart": "Recommencer",

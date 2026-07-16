@@ -48,11 +48,12 @@ function TeamActions({
         type="button"
         whileTap={{ scale: 0.95 }}
         disabled={disabled}
+        aria-label={t("logGoalForTeam", { team: team.name })}
         onClick={() => {
           cueTap();
           onGoal(side);
         }}
-        className="flex items-center justify-center gap-1.5 rounded-[12px] py-3 text-sm font-extrabold disabled:opacity-40"
+        className="press flex min-h-11 min-w-11 items-center justify-center gap-1.5 rounded-[12px] py-3 text-sm font-extrabold disabled:opacity-40"
         style={{ background: team.color, color: onColor(team.color) }}
       >
         <Goal aria-hidden="true" size={17} strokeWidth={1.7} /> {t("goal")}
@@ -61,11 +62,12 @@ function TeamActions({
         type="button"
         whileTap={{ scale: 0.95 }}
         disabled={disabled}
+        aria-label={t("logCardForTeam", { team: team.name })}
         onClick={() => {
           cueTap();
           onCard(side);
         }}
-        className="flex items-center justify-center gap-1.5 rounded-[12px] border border-arena-border bg-arena-surface py-2.5 text-xs font-bold text-arena-text-sec disabled:opacity-40"
+        className="press flex min-h-11 min-w-11 items-center justify-center gap-1.5 rounded-[12px] border border-arena-border bg-arena-surface py-2.5 text-xs font-bold text-arena-text-sec disabled:opacity-40"
       >
         <span className="h-4 w-2.5 rounded-[2px] border border-arena-highlight" />
         {t("card")}

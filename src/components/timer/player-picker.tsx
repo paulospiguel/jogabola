@@ -49,7 +49,8 @@ function PlayerPill({
       type="button"
       whileTap={{ scale: 0.96 }}
       onClick={onClick}
-      className="flex items-center gap-2 rounded-[12px] border px-3 py-2.5 text-left text-sm font-semibold transition-colors"
+      aria-pressed={active}
+      className="press flex min-h-11 items-center gap-2 rounded-[12px] border px-3 py-2.5 text-left text-sm font-semibold transition-colors"
       style={{
         borderColor: active ? color : "var(--color-arena-border)",
         background: active ? `${color}1f` : "var(--color-arena-surface)",

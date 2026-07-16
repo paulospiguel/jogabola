@@ -2452,6 +2452,8 @@
         "endMatch": "End match",
         "endNow": "End match now",
         "goal": "Goal",
+        "logCardForTeam": "Record card for {team}",
+        "logGoalForTeam": "Record goal for {team}",
         "nextPeriod": "Next period",
         "pause": "Pause",
         "restart": "Restart",

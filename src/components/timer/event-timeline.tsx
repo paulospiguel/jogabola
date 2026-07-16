@@ -108,7 +108,7 @@ function TimelineRow({
         onClick={() =>
           onRemove(item.kind === "card" ? item.event.id : item.latestEventId)
         }
-        className="shrink-0 rounded-md p-1.5 text-arena-text-muted opacity-40 transition hover:text-arena-danger hover:opacity-100 active:text-arena-danger active:opacity-100 focus-visible:opacity-100"
+        className="press grid size-11 shrink-0 place-items-center rounded-md text-arena-text-muted opacity-40 transition hover:text-arena-danger hover:opacity-100 active:text-arena-danger active:opacity-100 focus-visible:opacity-100"
       >
         <Trash2 size={14} />
       </button>
