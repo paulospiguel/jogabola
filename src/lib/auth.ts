@@ -5,7 +5,7 @@ import { emailOTP } from "better-auth/plugins";
 import { eq } from "drizzle-orm";
 import { db } from "@/db/client";
 import * as schema from "@/db/schema";
-import { classifyErrorSafely } from "@/lib/safe-error";
+import { logAuthErrorSafely } from "@/lib/auth-error-logger";
 import { authConfig } from "./auth/config";
 
 const env = authConfig.getEnv();
@@ -14,18 +14,6 @@ const trustedOrigins = authConfig.getTrustedOrigins();
 function normalizeImage(value: string | null | undefined) {
   const trimmed = value?.trim();
   return trimmed ? trimmed : null;
-}
-
-function getRequestMethodSafely(context: unknown): string {
-  try {
-    if (!context || typeof context !== "object") return "unknown";
-    const request: unknown = Reflect.get(context, "request");
-    if (!request || typeof request !== "object") return "unknown";
-    const method: unknown = Reflect.get(request, "method");
-    return typeof method === "string" ? method : "unknown";
-  } catch {
-    return "unknown";
-  }
 }
 
 const socialProviders = {
@@ -57,11 +45,8 @@ const socialProviders = {
 
 export const auth = betterAuth({
   onAPIError: {
-    onError: (error, ctx) => {
-      console.error("[auth] request failed", {
-        error: classifyErrorSafely(error),
-        method: getRequestMethodSafely(ctx),
-      });
+    onError: error => {
+      logAuthErrorSafely(error);
     },
   },
   baseURL: env.baseURL,

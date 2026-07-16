@@ -21,6 +21,7 @@ describe("auth runtime contract", () => {
     } else {
       process.env.NEXT_PUBLIC_APP_VERSION = originalPublicVersion;
     }
+    vi.restoreAllMocks();
     vi.resetModules();
   });
 
@@ -45,10 +46,10 @@ describe("auth runtime contract", () => {
     ).not.toContain("process.env.VERSION");
   });
 
-  it("logs only a safe error classification and request method", () => {
-    expect(authErrorSource).toContain("classifyErrorSafely(error)");
-    expect(authErrorSource).toContain("getRequestMethodSafely(ctx)");
-    expect(authErrorSource).toContain('console.error("[auth] request failed"');
+  it("delegates API errors without request metadata", () => {
+    expect(authErrorSource).toContain("logAuthErrorSafely(error)");
+    expect(authErrorSource).not.toContain("getRequestMethodSafely");
+    expect(authErrorSource).not.toContain("method");
     expect(authSource).not.toMatch(/from ["'](?:node:)?fs["']/);
     expect(authSource).not.toContain("appendFileSync");
     expect(authSource).not.toContain("auth-error.log");
@@ -56,6 +57,30 @@ describe("auth runtime contract", () => {
     expect(authErrorSource).not.toContain("error.stack");
     expect(authErrorSource).not.toContain("error.message");
     expect(authErrorSource).not.toMatch(/headers|body|email/);
+  });
+
+  it("logs the exact safe shape without error details or PII", async () => {
+    const loggerModule = await import("@/lib/auth-error-logger");
+    expect(loggerModule).toHaveProperty("logAuthErrorSafely");
+
+    const logger: unknown = Reflect.get(loggerModule, "logAuthErrorSafely");
+    expect(logger).toBeTypeOf("function");
+    const consoleError = vi
+      .spyOn(console, "error")
+      .mockImplementation(() => {});
+    const error = Object.assign(new Error("user@example.com"), {
+      method: "POST",
+      url: "https://example.com/auth?email=user@example.com",
+    });
+
+    Reflect.apply(logger as (...args: unknown[]) => unknown, undefined, [
+      error,
+    ]);
+
+    expect(consoleError).toHaveBeenCalledOnce();
+    expect(consoleError).toHaveBeenCalledWith("[auth] request failed", {
+      error: { name: "Error" },
+    });
   });
 
   it("does not expose unused password authentication", () => {
