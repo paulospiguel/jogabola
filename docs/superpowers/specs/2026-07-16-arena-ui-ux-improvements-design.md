@@ -53,15 +53,16 @@ Um evento é elegível quando tem `startDate >= now` e `status !== "cancelled"`.
 
 ### Matriz da próxima ação
 
-O mapper recebe `canManageTeam`, `activeEvent` e `squadCount`. Não recebe dados de pagamentos nem faz chamadas de rede. A saída é composta por uma ação primária e zero ou mais ações secundárias.
+O mapper recebe `hasTeam`, `canManageTeam`, `activeEvent` e `squadCount`. Não recebe dados de pagamentos nem faz chamadas de rede. A saída é composta por uma ação primária e zero ou mais ações secundárias. Se `hasTeam === false`, o mapper devolve `null`; o estado existente de criar/selecionar equipa bloqueia o cockpit.
 
 | Tipo | Condição | Ação | Destino |
 |---|---|---|---|
-| Primária | `canManageTeam && !activeEvent` | Criar evento | Abrir `CreateEventSheet` |
-| Primária | `activeEvent` | Ver evento | `/arena/events/{id}` |
-| Primária | `!canManageTeam && !activeEvent` | Consultar plantel | `/arena/squads` |
-| Secundária | `canManageTeam && !activeEvent && squadCount === 0` | Adicionar jogador | Abrir `AddPlayerSheet` |
-| Secundária | `canManageTeam && !activeEvent && squadCount > 0` | Ver plantel | `/arena/squads` |
+| Sem ação | `!hasTeam` | O fluxo sem equipa assume o ecrã | Sem destino do cockpit |
+| Primária | `hasTeam && canManageTeam && !activeEvent` | Criar evento | Abrir `CreateEventSheet` |
+| Primária | `hasTeam && activeEvent` | Ver evento | `/arena/events/{id}` |
+| Primária | `hasTeam && !canManageTeam && !activeEvent` | Consultar plantel | `/arena/squads` |
+| Secundária | `hasTeam && canManageTeam && !activeEvent && squadCount === 0` | Adicionar jogador | Abrir `AddPlayerSheet` |
+| Secundária | `hasTeam && canManageTeam && !activeEvent && squadCount > 0` | Ver plantel | `/arena/squads` |
 
 “Partilhar equipa” é ação secundária apenas quando a equipa e o mecanismo de partilha existentes estiverem disponíveis; não bloqueia o incremento. A validação de pagamentos permanece em Cobranças e não entra no mapper sem uma fonte de dados própria aprovada no futuro.
 
