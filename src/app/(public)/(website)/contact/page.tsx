@@ -60,7 +60,7 @@ export default function ContactPage() {
           </p>
         </motion.div>
 
-        <div className="grid gap-6 md:grid-cols-2">
+        <div className="grid gap-6 lg:grid-cols-3">
           {contactMethods.map((method, index) => (
             <motion.a
               key={method.title}

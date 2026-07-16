@@ -138,7 +138,7 @@ const HeroSection = () => {
   const ctaLabel = session?.user ? t("goToArena") : headerT("launchJourney");
 
   return (
-    <section className="relative min-h-screen overflow-hidden bg-[#06090D] px-5 pt-28 pb-10 md:px-10 lg:min-h-[760px] lg:px-20 lg:pt-28">
+    <section className="relative min-h-screen overflow-hidden bg-[#06090D] px-5 pt-28 pb-10 md:px-10 lg:min-h-[680px] lg:px-20 lg:pt-28">
       <div className="absolute inset-0" style={meshStyle} />
       <div className="absolute inset-0 opacity-40" style={gridStyle} />
       <div

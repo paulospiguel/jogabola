@@ -87,6 +87,15 @@ describe("public website production contract", () => {
     expect(source).not.toContain('t("ticker")');
   });
 
+  it("keeps the public hero compact and the contact grid balanced", () => {
+    const landing = readSource("src/app/(public)/(website)/page.tsx");
+    const contact = readSource("src/app/(public)/(website)/contact/page.tsx");
+
+    expect(landing).toContain("lg:min-h-[680px]");
+    expect(contact).toContain("lg:grid-cols-3");
+    expect(contact).not.toContain("md:grid-cols-2");
+  });
+
   it("tracks only the missing consent-gated public funnel events", () => {
     const landing = readSource("src/app/(public)/(website)/page.tsx");
     const auth = readSource("src/app/(mobile)/auth/page.tsx");
