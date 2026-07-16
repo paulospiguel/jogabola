@@ -74,3 +74,4 @@ bun.lockb
 .env.local
 
 /plans
+.worktrees
