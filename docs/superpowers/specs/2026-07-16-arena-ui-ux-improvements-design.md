@@ -31,7 +31,7 @@ Tornar a Arena mais rápida, clara e operacional para o capitão, corrigindo fal
 
 Corrigir responsividade, carregamentos, erros, acessibilidade táctil e performance de imagens. O shell da Arena, navegação e cabeçalhos permanecem visíveis durante queries. Dashboard, Plantel e Cobranças passam a usar skeletons estruturais. Erros apresentam mensagem útil e ação “Tentar novamente”; empty states ficam reservados a respostas válidas sem dados.
 
-Os componentes partilhados `EmptyState`, loading, `BottomNav` e shell Arena terão contratos consistentes para os estados loading, error, empty e success. Não serão introduzidas novas queries nem lógica de negócio no cliente.
+Os componentes partilhados `EmptyState`, loading, `BottomNav` e shell Arena terão contratos consistentes para os estados loading, error, empty e success. Não serão introduzidas novas queries, autorizações ou regras de domínio no cliente.
 
 ### Incremento 2: cockpit do capitão
 
@@ -49,18 +49,19 @@ Com evento ativo, o evento ocupa a posição principal. As métricas aparecem as
 
 Para este trabalho, “sem eventos” significa não existir qualquer evento futuro elegível no resultado de `getEvents({ upcomingOnly: true })`. Eventos passados, realizados ou fechados não impedem o empty state do cockpit.
 
-Um evento é elegível quando tem `startDate >= now` e `status !== "cancelled"`. Quando existem vários, o ativo é o primeiro por `startDate` ascendente; em empate, o menor `id` vence. A lista devolvida pelo servidor já é futura, mas o selector puro aplica estas regras para tornar o contrato explícito e testável.
+Um evento é elegível quando tem `startDate >= now` e `status !== "cancelled"`. Quando existem vários, o ativo é o primeiro por `startDate` ascendente; em empate, o menor `id` vence. A lista devolvida pelo servidor já é futura. Um utilitário puro na camada de apresentação do dashboard (`_utils`) normaliza ordenação e exclusão visual de cancelados; não decide acesso, ciclo de vida nem mutações. O cliente recebe apenas eventos já autorizados pelo servidor.
 
 ### Matriz da próxima ação
 
-O mapper recebe `canManageTeam`, `activeEvent` e `squadCount`. Não recebe dados de pagamentos nem faz chamadas de rede.
+O mapper recebe `canManageTeam`, `activeEvent` e `squadCount`. Não recebe dados de pagamentos nem faz chamadas de rede. A saída é composta por uma ação primária e zero ou mais ações secundárias.
 
-| Precedência | Condição | Ação | Destino |
+| Tipo | Condição | Ação | Destino |
 |---|---|---|---|
-| 1 | `canManageTeam && !activeEvent` | Criar evento | Abrir `CreateEventSheet` |
-| 2 | `activeEvent` | Ver evento | `/arena/events/{id}` |
-| 3 | `canManageTeam && !activeEvent && squadCount === 0` | Adicionar jogador, como ação secundária | Abrir `AddPlayerSheet` |
-| 4 | Sem permissão e sem evento | Consultar plantel | `/arena/squads` |
+| Primária | `canManageTeam && !activeEvent` | Criar evento | Abrir `CreateEventSheet` |
+| Primária | `activeEvent` | Ver evento | `/arena/events/{id}` |
+| Primária | `!canManageTeam && !activeEvent` | Consultar plantel | `/arena/squads` |
+| Secundária | `canManageTeam && !activeEvent && squadCount === 0` | Adicionar jogador | Abrir `AddPlayerSheet` |
+| Secundária | `canManageTeam && !activeEvent && squadCount > 0` | Ver plantel | `/arena/squads` |
 
 “Partilhar equipa” é ação secundária apenas quando a equipa e o mecanismo de partilha existentes estiverem disponíveis; não bloqueia o incremento. A validação de pagamentos permanece em Cobranças e não entra no mapper sem uma fonte de dados própria aprovada no futuro.
 
@@ -98,7 +99,7 @@ Esta é uma alteração deliberada ao mapa mobile descrito em `DESIGN.md`: Cobra
 | Superfície | Loading | Erro parcial/total | Empty | Retry |
 |---|---|---|---|---|
 | Dashboard | Shell + skeletons independentes de evento e plantel | Se uma query falhar, a outra secção continua visível; erro local na secção falhada. Se ambas falharem, dois erros locais, sem bloquear navegação | Sem evento futuro mostra próxima ação; plantel vazio mostra ação secundária se autorizada | Refetch apenas da query da secção |
-| Eventos | Cabeçalho + skeleton da lista | Erro da lista substitui apenas a lista | Nenhum evento futuro mostra `EmptyState` | Refetch de eventos |
+| Eventos | Cabeçalho + skeleton da lista | Erro da lista substitui apenas a lista | A secção “Próximos” mostra `EmptyState` quando não há futuros; “Anteriores” permanece visível se tiver eventos | Refetch de eventos |
 | Plantel | Cabeçalho + skeleton de linhas | Erro substitui a lista, preservando pesquisa/cabeçalho quando úteis | Nenhum membro mostra `EmptyState` | Refetch de plantel |
 | Cobranças | Cabeçalho + skeleton de métricas/lista; métodos mantêm estado próprio | Erro de pagamentos não apaga definições carregadas e vice-versa | Nenhum pagamento mostra estado vazio dentro do tab | Refetch da query falhada |
 
@@ -175,7 +176,8 @@ O inventário, prompts, seed/reference notes, finalidade, dimensões e aprovaç�
 - `BottomNav`: configura cinco destinos e garante contratos de acessibilidade.
 - `EmptyState`: apresenta empty states responsivos e aceita asset ou ícone sem impor dimensões fixas.
 - Skeletons locais: representam dashboard, plantel e cobranças sem conhecer regras de negócio.
-- Componentes de tipo de evento e posições: trocam emojis por assets de branding sem alterar os valores de domínio.
+- Componentes de tipo de evento: trocam emojis de Jogo/Treino por assets de branding sem alterar os valores de domínio.
+- Componentes de posições e Cronómetro: trocam emojis funcionais por ícones Lucide adequados.
 - Locales: única fonte de texto visível, com paridade entre quatro idiomas.
 
 ## Fluxo de dados
