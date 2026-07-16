@@ -1,5 +1,7 @@
-import { readFileSync } from "node:fs";
+import { existsSync, readFileSync } from "node:fs";
 import path from "node:path";
+import { type ComponentType, createElement } from "react";
+import { renderToString } from "react-dom/server";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import packageJson from "../../../package.json";
 
@@ -11,15 +13,29 @@ const authErrorSource = authSource.slice(
   authSource.indexOf("onAPIError:"),
   authSource.indexOf("baseURL:"),
 );
+const authPageSource = readFileSync(
+  path.join(process.cwd(), "src/app/(mobile)/auth/page.tsx"),
+  "utf8",
+);
+const appVersionComponentPath = path.join(
+  process.cwd(),
+  "src/app/(mobile)/auth/_components/app-version.tsx",
+);
 
 describe("auth runtime contract", () => {
   const originalPublicVersion = process.env.NEXT_PUBLIC_APP_VERSION;
+  const originalServerVersion = process.env.VERSION;
 
   afterEach(() => {
     if (originalPublicVersion === undefined) {
       delete process.env.NEXT_PUBLIC_APP_VERSION;
     } else {
       process.env.NEXT_PUBLIC_APP_VERSION = originalPublicVersion;
+    }
+    if (originalServerVersion === undefined) {
+      delete process.env.VERSION;
+    } else {
+      process.env.VERSION = originalServerVersion;
     }
     vi.restoreAllMocks();
     vi.resetModules();
@@ -44,6 +60,42 @@ describe("auth runtime contract", () => {
     expect(
       readFileSync(path.join(process.cwd(), "src/constants/app.ts"), "utf8"),
     ).not.toContain("process.env.VERSION");
+  });
+
+  it("renders identical auth version markup on the server and client", async () => {
+    expect(existsSync(appVersionComponentPath)).toBe(true);
+    expect(authPageSource).toContain("<AppVersion");
+    if (!existsSync(appVersionComponentPath)) return;
+
+    delete process.env.NEXT_PUBLIC_APP_VERSION;
+    process.env.VERSION = "server-only-release";
+    vi.resetModules();
+    const { APP: serverApp } = await import("@/constants/app");
+
+    delete process.env.VERSION;
+    vi.resetModules();
+    const { APP: clientApp } = await import("@/constants/app");
+    const componentModule = await vi.importActual<Record<string, unknown>>(
+      "@/app/(mobile)/auth/_components/app-version",
+    );
+    const AppVersion = Reflect.get(
+      componentModule,
+      "AppVersion",
+    ) as ComponentType<{
+      label: string;
+      version: string;
+    }>;
+    const label = "Construído para campeões";
+
+    const serverMarkup = renderToString(
+      createElement(AppVersion, { label, version: serverApp.VERSION }),
+    );
+    const clientMarkup = renderToString(
+      createElement(AppVersion, { label, version: clientApp.VERSION }),
+    );
+
+    expect(serverMarkup).toBe(clientMarkup);
+    expect(serverMarkup).toContain(`v${packageJson.version}`);
   });
 
   it("delegates API errors without request metadata", () => {

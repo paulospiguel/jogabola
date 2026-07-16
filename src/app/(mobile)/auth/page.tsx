@@ -17,6 +17,7 @@ import { APP } from "@/constants/app";
 import { useToast } from "@/hooks/use-toast-custom";
 import { signIn, useSession } from "@/lib/auth-client";
 import { useAnalytics, useAnalyticsConsent } from "@/providers/analytics";
+import { AppVersion } from "./_components/app-version";
 
 type AuthStep = "email" | "code";
 
@@ -509,7 +510,7 @@ export default function LoginPage() {
           initial={{ opacity: 0 }}
           transition={{ duration: 1, delay: 0.5 }}
         >
-          v{APP.VERSION} • {t("builtForChampions")}
+          <AppVersion label={t("builtForChampions")} version={APP.VERSION} />
         </motion.p>
       </div>
     </div>
