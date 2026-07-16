@@ -80,7 +80,10 @@ export const Logo: React.FC<LogoProps> = ({
   }
 
   return (
-    <Link href={href} className={cn("relative flex", logoSize, className)}>
+    <Link
+      href={href}
+      className={cn("press relative flex", logoSize, className)}
+    >
       {content}
 
       {isBeta && (

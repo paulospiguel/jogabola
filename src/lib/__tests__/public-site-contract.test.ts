@@ -37,6 +37,7 @@ describe("public website production contract", () => {
     expect(source).not.toMatch(/href=["']home["']/);
     expect(logo).not.toContain('href === "home"');
     expect(logo).not.toContain("window.open(");
+    expect(logo).toContain('cn("press relative flex"');
   });
 
   it("uses jogo as the PT-PT public vocabulary", () => {
