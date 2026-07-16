@@ -1,8 +1,6 @@
 "use client";
 
 import { useClientAsyncInit } from "@statsig/react-bindings";
-import { StatsigSessionReplayPlugin } from "@statsig/session-replay";
-import { StatsigAutoCapturePlugin } from "@statsig/web-analytics";
 import type React from "react";
 import {
   createContext,
@@ -62,12 +60,6 @@ function StatsigRuntime({
   const { client } = useClientAsyncInit(
     process.env.NEXT_PUBLIC_STATSIG_CLIENT_KEY || "",
     { userID },
-    {
-      plugins: [
-        new StatsigAutoCapturePlugin(),
-        new StatsigSessionReplayPlugin(),
-      ],
-    },
   );
   const lifecycleRef = useRef<{
     client: typeof client;

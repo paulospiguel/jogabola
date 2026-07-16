@@ -17,6 +17,7 @@ interface ServerClientState {
 
 interface FlushState {
   client: Statsig;
+  coveredRequest: number;
   generation: number;
   operation: Promise<unknown>;
   retryAfter: number;
@@ -31,6 +32,8 @@ interface WaitResult<T> {
 let clientGeneration = 0;
 let clientState: ServerClientState | null = null;
 let flushGeneration = 0;
+let flushedRequest = 0;
+let flushRequest = 0;
 let flushState: FlushState | null = null;
 let warnedMissingKey = false;
 
@@ -163,6 +166,7 @@ function createFlushState(client: Statsig): FlushState {
   const generation = ++flushGeneration;
   const state: FlushState = {
     client,
+    coveredRequest: flushRequest,
     generation,
     operation: Promise.resolve(),
     retryAfter: 0,
@@ -185,6 +189,7 @@ function createFlushState(client: Statsig): FlushState {
         state.generation === generation &&
         state.status === "pending"
       ) {
+        flushedRequest = Math.max(flushedRequest, state.coveredRequest);
         flushState = null;
       }
       return value;
@@ -202,16 +207,23 @@ function createFlushState(client: Statsig): FlushState {
 }
 
 async function flushEventsWithTimeout(client: Statsig): Promise<void> {
-  let state = flushState;
-  if (!state || state.client !== client) {
-    state = createFlushState(client);
-  } else if (state.status === "cooldown") {
-    if (Date.now() < state.retryAfter) return;
-    state = createFlushState(client);
-  }
+  const requestedFlush = ++flushRequest;
 
-  const result = await waitWithTimeout(state.operation, FLUSH_TIMEOUT_MS);
-  if (result.timedOut) putFlushOnCooldown(state);
+  while (flushedRequest < requestedFlush) {
+    let state = flushState;
+    if (!state || state.client !== client) {
+      state = createFlushState(client);
+    } else if (state.status === "cooldown") {
+      if (Date.now() < state.retryAfter) return;
+      state = createFlushState(client);
+    }
+
+    const result = await waitWithTimeout(state.operation, FLUSH_TIMEOUT_MS);
+    if (result.timedOut) {
+      putFlushOnCooldown(state);
+      return;
+    }
+  }
 }
 
 export async function hasAnalyticsConsent(): Promise<boolean> {

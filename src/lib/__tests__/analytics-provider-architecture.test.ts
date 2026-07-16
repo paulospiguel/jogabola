@@ -16,4 +16,24 @@ describe("AnalyticsProvider architecture", () => {
       /\{hasActivatedAnalytics && hasClientKey \? \([\s\S]*<StatsigRuntime[\s\S]*enabled=\{analyticsAllowed\}/,
     );
   });
+
+  it("does not attach automatic capture or session replay plugins", () => {
+    const source = fs.readFileSync(
+      path.join(process.cwd(), "src/providers/analytics.tsx"),
+      "utf8",
+    );
+    const packageJson = JSON.parse(
+      fs.readFileSync(path.join(process.cwd(), "package.json"), "utf8"),
+    ) as { dependencies?: Record<string, string> };
+
+    expect(source).not.toContain("StatsigAutoCapturePlugin");
+    expect(source).not.toContain("StatsigSessionReplayPlugin");
+    expect(source).not.toMatch(/plugins\s*:/);
+    expect(packageJson.dependencies).not.toHaveProperty(
+      "@statsig/web-analytics",
+    );
+    expect(packageJson.dependencies).not.toHaveProperty(
+      "@statsig/session-replay",
+    );
+  });
 });

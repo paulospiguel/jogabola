@@ -267,6 +267,37 @@ describe("trackServerEvent", () => {
     ).resolves.toBeUndefined();
   });
 
+  it("starts a second flush for an event logged during an active flush", async () => {
+    process.env.STATSIG_SERVER_SECRET_KEY = "secret-key";
+    mocks.cookieValue = consentRecord();
+    const firstFlush = deferred();
+    const secondFlush = deferred();
+    mocks.flushEvents
+      .mockImplementationOnce(() => firstFlush.promise)
+      .mockImplementationOnce(() => secondFlush.promise);
+    const { trackServerEvent } = await import("@/lib/analytics-server");
+
+    const first = trackServerEvent("user-1", "first_event");
+    await vi.waitFor(() => expect(mocks.flushEvents).toHaveBeenCalledOnce());
+    const second = trackServerEvent("user-1", "second_event");
+    await vi.waitFor(() => expect(mocks.logEvent).toHaveBeenCalledTimes(2));
+    expect(mocks.flushEvents).toHaveBeenCalledOnce();
+
+    firstFlush.resolve();
+    await vi.waitFor(() => expect(mocks.flushEvents).toHaveBeenCalledTimes(2));
+    await first;
+
+    let secondSettled = false;
+    void second.then(() => {
+      secondSettled = true;
+    });
+    await Promise.resolve();
+    expect(secondSettled).toBe(false);
+
+    secondFlush.resolve();
+    await expect(second).resolves.toBeUndefined();
+  });
+
   it("recovers through cooldown after a synchronous flush failure", async () => {
     vi.useFakeTimers();
     process.env.STATSIG_SERVER_SECRET_KEY = "secret-key";
@@ -302,7 +333,7 @@ describe("trackServerEvent", () => {
     await expect(tracking).resolves.toBeUndefined();
   });
 
-  it("coalesces repeated requests while the real flush is pending", async () => {
+  it("does not start another flush during the timeout cooldown", async () => {
     vi.useFakeTimers();
     process.env.STATSIG_SERVER_SECRET_KEY = "secret-key";
     mocks.cookieValue = consentRecord();
