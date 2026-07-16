@@ -33,10 +33,8 @@ export const verifyPaymentProof = withAction(
       return { success: false, error: { code: "FORBIDDEN" } };
     }
 
-    const nextStatus =
-      aiCheck.decision === "likely_valid" && aiCheck.confidence >= 0.85
-        ? "paid_unverified"
-        : "review_required";
+    // Security: client-supplied AI hints must never auto-approve a payment.
+    const nextStatus = "review_required" as const;
 
     const [precheck] = await db
       .insert(paymentPrechecks)

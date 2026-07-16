@@ -40,6 +40,10 @@ export function RankingsClient() {
     <div className="min-h-screen bg-arena-bg pb-24">
       <ScreenHeader title={t("title")} />
 
+      <p className="mx-4 mt-3 rounded-[12px] border border-arena-warning/30 bg-arena-warning/10 px-3 py-2 text-xs font-semibold text-arena-warning">
+        {t("demoNotice")}
+      </p>
+
       <div className="sticky top-14 z-20 flex gap-0 border-b border-arena-border bg-arena-bg">
         {tabs.map(item => (
           <button
