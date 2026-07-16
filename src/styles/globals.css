@@ -558,6 +558,38 @@
     color: var(--color-arena-primary);
   }
 
+  /* Placeholder discreto para conteúdo em carregamento. Não anima
+     largura/altura/posição (evita layout shift), só o brilho via
+     transform numa pseudo-camada. Ver .jb-hero-card--live acima para
+     o mesmo padrão de respeito a prefers-reduced-motion. */
+  .jb-skeleton {
+    position: relative;
+    overflow: hidden;
+    border-radius: 10px;
+    background: var(--color-arena-surface-el);
+  }
+
+  .jb-skeleton::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    transform: translateX(-100%);
+    background: linear-gradient(
+      90deg,
+      transparent,
+      rgba(245, 247, 250, 0.06),
+      transparent
+    );
+    animation: jb-skeleton-shimmer 1.6s ease-in-out infinite;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .jb-skeleton::after {
+      animation: none;
+      transform: none;
+    }
+  }
+
   @media (min-width: 768px) {
     .jb-arena-shell {
       padding-bottom: 0;
@@ -604,6 +636,12 @@
   }
   50% {
     opacity: 0.4;
+  }
+}
+
+@keyframes jb-skeleton-shimmer {
+  100% {
+    transform: translateX(100%);
   }
 }
 
