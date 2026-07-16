@@ -245,4 +245,31 @@ describe("AnalyticsLifecycleController", () => {
       userID: "anonymous",
     });
   });
+
+  it("fails closed after a concurrent identity update rejects", async () => {
+    const client = createClient();
+    client.updateUserAsync.mockRejectedValueOnce(new Error("unavailable"));
+    const controller = new AnalyticsLifecycleController(client, {
+      enabled: true,
+      userID: "anonymous",
+    });
+
+    const userOne = controller.transition({ enabled: true, userID: "user-1" });
+    controller.transition({ enabled: true, userID: "user-2" });
+
+    await expect(userOne).rejects.toThrow("unavailable");
+    expect(client.updateRuntimeOptions).toHaveBeenLastCalledWith({
+      loggingEnabled: "disabled",
+    });
+    expect(controller.currentState).toEqual({
+      enabled: false,
+      userID: "anonymous",
+    });
+
+    await controller.transition({ enabled: true, userID: "user-2" });
+    expect(client.initializeAsync).toHaveBeenCalledOnce();
+    expect(client.updateUserAsync).toHaveBeenLastCalledWith({
+      userID: "user-2",
+    });
+  });
 });

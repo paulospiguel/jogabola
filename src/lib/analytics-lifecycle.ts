@@ -107,10 +107,21 @@ export class AnalyticsLifecycleController {
   }
 
   private async drain(): Promise<void> {
-    while (!statesMatch(this.appliedState, this.desiredState)) {
-      const target = { ...this.desiredState };
-      const generation = this.generation;
-      await this.applyTransition(target, generation);
+    try {
+      while (!statesMatch(this.appliedState, this.desiredState)) {
+        const target = { ...this.desiredState };
+        const generation = this.generation;
+        await this.applyTransition(target, generation);
+      }
+    } catch (error) {
+      this.client.updateRuntimeOptions({ loggingEnabled: "disabled" });
+      this.appliedState = {
+        enabled: false,
+        userID: this.appliedState.userID,
+      };
+      this.desiredState = { ...this.appliedState };
+      this.generation += 1;
+      throw error;
     }
   }
 

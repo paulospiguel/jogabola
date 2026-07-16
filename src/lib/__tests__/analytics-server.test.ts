@@ -9,6 +9,16 @@ const mocks = vi.hoisted(() => ({
   userConstructor: vi.fn(),
 }));
 
+function deferred() {
+  let resolve!: () => void;
+  let reject!: (error: Error) => void;
+  const promise = new Promise<void>((done, fail) => {
+    resolve = done;
+    reject = fail;
+  });
+  return { promise, reject, resolve };
+}
+
 vi.mock("next/headers", () => ({
   cookies: vi.fn(async () => ({
     get: vi.fn(() =>
@@ -204,6 +214,35 @@ describe("trackServerEvent", () => {
     expect(mocks.logEvent).not.toHaveBeenCalled();
   });
 
+  it("uses cooldown and a new generation after initialization times out", async () => {
+    vi.useFakeTimers();
+    process.env.STATSIG_SERVER_SECRET_KEY = "secret-key";
+    mocks.cookieValue = consentRecord();
+    const staleInitialization = deferred();
+    mocks.initialize
+      .mockImplementationOnce(() => staleInitialization.promise)
+      .mockResolvedValueOnce(undefined);
+    const { trackServerEvent } = await import("@/lib/analytics-server");
+
+    const timedOut = trackServerEvent("user-1", "timed_out");
+    await vi.advanceTimersByTimeAsync(250);
+    await timedOut;
+
+    await trackServerEvent("user-1", "during_cooldown");
+    expect(mocks.initialize).toHaveBeenCalledOnce();
+
+    await vi.advanceTimersByTimeAsync(30_000);
+    await trackServerEvent("user-1", "retry");
+    expect(mocks.initialize).toHaveBeenCalledTimes(2);
+
+    staleInitialization.resolve();
+    await Promise.resolve();
+    await trackServerEvent("user-1", "after_late_resolution");
+
+    expect(mocks.initialize).toHaveBeenCalledTimes(2);
+    expect(mocks.logEvent).toHaveBeenCalledTimes(2);
+  });
+
   it("keeps event logging failures non-blocking", async () => {
     process.env.STATSIG_SERVER_SECRET_KEY = "secret-key";
     mocks.cookieValue = consentRecord();
@@ -226,6 +265,26 @@ describe("trackServerEvent", () => {
     await expect(
       trackServerEvent("user-1", "event_name"),
     ).resolves.toBeUndefined();
+  });
+
+  it("recovers through cooldown after a synchronous flush failure", async () => {
+    vi.useFakeTimers();
+    process.env.STATSIG_SERVER_SECRET_KEY = "secret-key";
+    mocks.cookieValue = consentRecord();
+    mocks.flushEvents
+      .mockImplementationOnce(() => {
+        throw new Error("unavailable");
+      })
+      .mockResolvedValueOnce(undefined);
+    const { trackServerEvent } = await import("@/lib/analytics-server");
+
+    await trackServerEvent("user-1", "sync_flush_failure");
+    await trackServerEvent("user-1", "during_flush_cooldown");
+    expect(mocks.flushEvents).toHaveBeenCalledOnce();
+
+    await vi.advanceTimersByTimeAsync(30_000);
+    await trackServerEvent("user-1", "flush_retry");
+    expect(mocks.flushEvents).toHaveBeenCalledTimes(2);
   });
 
   it("stops waiting when event flushing times out", async () => {
@@ -259,6 +318,38 @@ describe("trackServerEvent", () => {
 
     expect(mocks.logEvent).toHaveBeenCalledTimes(2);
     expect(mocks.flushEvents).toHaveBeenCalledOnce();
+  });
+
+  it("uses cooldown and ignores a stale flush resolution after timeout", async () => {
+    vi.useFakeTimers();
+    process.env.STATSIG_SERVER_SECRET_KEY = "secret-key";
+    mocks.cookieValue = consentRecord();
+    const staleFlush = deferred();
+    const retryFlush = deferred();
+    mocks.flushEvents
+      .mockImplementationOnce(() => staleFlush.promise)
+      .mockImplementationOnce(() => retryFlush.promise);
+    const { trackServerEvent } = await import("@/lib/analytics-server");
+
+    const timedOut = trackServerEvent("user-1", "timed_out_flush");
+    await vi.advanceTimersByTimeAsync(250);
+    await timedOut;
+
+    await trackServerEvent("user-1", "flush_cooldown");
+    expect(mocks.flushEvents).toHaveBeenCalledOnce();
+
+    await vi.advanceTimersByTimeAsync(30_000);
+    const retry = trackServerEvent("user-1", "flush_retry");
+    await vi.waitFor(() => expect(mocks.flushEvents).toHaveBeenCalledTimes(2));
+
+    staleFlush.resolve();
+    await Promise.resolve();
+    const joinsRetry = trackServerEvent("user-1", "joins_retry");
+    expect(mocks.flushEvents).toHaveBeenCalledTimes(2);
+
+    await vi.advanceTimersByTimeAsync(250);
+    await Promise.all([retry, joinsRetry]);
+    retryFlush.resolve();
   });
 
   it("does not flush without consent", async () => {

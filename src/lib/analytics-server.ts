@@ -4,36 +4,50 @@ import { CONSENT_SETTINGS_COOKIE, parseAnalyticsConsent } from "@/lib/consent";
 
 const INIT_TIMEOUT_MS = 250;
 const FLUSH_TIMEOUT_MS = 250;
-const INIT_RETRY_COOLDOWN_MS = 30_000;
+const RETRY_COOLDOWN_MS = 30_000;
 
 interface ServerClientState {
   client: Statsig;
+  generation: number;
   initialization: Promise<Statsig | null>;
   key: string;
   retryAfter: number;
-  status: "initializing" | "ready" | "failed";
+  status: "initializing" | "ready" | "cooldown";
 }
 
 interface FlushState {
   client: Statsig;
+  generation: number;
   operation: Promise<unknown>;
+  retryAfter: number;
+  status: "pending" | "cooldown";
 }
 
+interface WaitResult<T> {
+  timedOut: boolean;
+  value: T | null;
+}
+
+let clientGeneration = 0;
 let clientState: ServerClientState | null = null;
+let flushGeneration = 0;
 let flushState: FlushState | null = null;
 let warnedMissingKey = false;
 
 async function waitWithTimeout<T>(
   operation: Promise<T>,
   timeoutMs: number,
-): Promise<T | null> {
+): Promise<WaitResult<T>> {
   let timeout: ReturnType<typeof setTimeout> | undefined;
 
   try {
     return await Promise.race([
-      operation,
-      new Promise<null>(resolve => {
-        timeout = setTimeout(() => resolve(null), timeoutMs);
+      operation.then(value => ({ timedOut: false, value })),
+      new Promise<WaitResult<T>>(resolve => {
+        timeout = setTimeout(
+          () => resolve({ timedOut: true, value: null }),
+          timeoutMs,
+        );
       }),
     ]);
   } finally {
@@ -41,37 +55,53 @@ async function waitWithTimeout<T>(
   }
 }
 
+function putClientOnCooldown(state: ServerClientState): void {
+  if (clientState !== state) return;
+  state.status = "cooldown";
+  state.retryAfter = Date.now() + RETRY_COOLDOWN_MS;
+  state.generation += 1;
+}
+
 function createClientState(key: string): ServerClientState {
   const client = new Statsig(key, { initTimeoutMs: INIT_TIMEOUT_MS });
+  const generation = ++clientGeneration;
   const state: ServerClientState = {
     client,
+    generation,
     initialization: Promise.resolve(null),
     key,
     retryAfter: 0,
     status: "initializing",
   };
+  clientState = state;
 
   try {
     state.initialization = client
       .initialize()
       .then(() => {
-        state.status = "ready";
-        return client;
+        if (
+          clientState === state &&
+          state.generation === generation &&
+          state.status === "initializing"
+        ) {
+          state.status = "ready";
+          return client;
+        }
+        return null;
       })
       .catch(() => {
-        state.status = "failed";
-        state.retryAfter = Date.now() + INIT_RETRY_COOLDOWN_MS;
-        console.error("[Statsig] Server SDK initialization failed.");
+        if (clientState === state && state.generation === generation) {
+          putClientOnCooldown(state);
+          console.error("[Statsig] Server SDK initialization failed.");
+        }
         return null;
       });
   } catch {
-    state.status = "failed";
-    state.retryAfter = Date.now() + INIT_RETRY_COOLDOWN_MS;
+    putClientOnCooldown(state);
     state.initialization = Promise.resolve(null);
     console.error("[Statsig] Server SDK initialization failed.");
   }
 
-  clientState = state;
   return state;
 }
 
@@ -90,13 +120,19 @@ async function getStatsigClient(): Promise<Statsig | null> {
   let state = clientState;
   if (!state || state.key !== key) {
     state = createClientState(key);
-  } else if (state.status === "failed") {
+  } else if (state.status === "cooldown") {
     if (Date.now() < state.retryAfter) return null;
     state = createClientState(key);
   }
 
   if (state.status === "ready") return state.client;
-  return waitWithTimeout(state.initialization, INIT_TIMEOUT_MS);
+
+  const result = await waitWithTimeout(state.initialization, INIT_TIMEOUT_MS);
+  if (result.timedOut) {
+    putClientOnCooldown(state);
+    return null;
+  }
+  return result.value;
 }
 
 function toMetadata(properties?: Record<string, unknown>) {
@@ -116,20 +152,66 @@ function toMetadata(properties?: Record<string, unknown>) {
   );
 }
 
+function putFlushOnCooldown(state: FlushState): void {
+  if (flushState !== state) return;
+  state.status = "cooldown";
+  state.retryAfter = Date.now() + RETRY_COOLDOWN_MS;
+  state.generation += 1;
+}
+
+function createFlushState(client: Statsig): FlushState {
+  const generation = ++flushGeneration;
+  const state: FlushState = {
+    client,
+    generation,
+    operation: Promise.resolve(),
+    retryAfter: 0,
+    status: "pending",
+  };
+  flushState = state;
+
+  let flushOperation: Promise<unknown>;
+  try {
+    flushOperation = client.flushEvents();
+  } catch (error) {
+    putFlushOnCooldown(state);
+    throw error;
+  }
+
+  const operation = flushOperation.then(
+    value => {
+      if (
+        flushState === state &&
+        state.generation === generation &&
+        state.status === "pending"
+      ) {
+        flushState = null;
+      }
+      return value;
+    },
+    error => {
+      if (flushState === state && state.generation === generation) {
+        putFlushOnCooldown(state);
+      }
+      throw error;
+    },
+  );
+  state.operation = operation;
+  void operation.catch(() => undefined);
+  return state;
+}
+
 async function flushEventsWithTimeout(client: Statsig): Promise<void> {
   let state = flushState;
   if (!state || state.client !== client) {
-    const operation = client.flushEvents();
-    state = { client, operation };
-    flushState = state;
-
-    const clearFlush = () => {
-      if (flushState === state) flushState = null;
-    };
-    void operation.then(clearFlush, clearFlush);
+    state = createFlushState(client);
+  } else if (state.status === "cooldown") {
+    if (Date.now() < state.retryAfter) return;
+    state = createFlushState(client);
   }
 
-  await waitWithTimeout(state.operation, FLUSH_TIMEOUT_MS);
+  const result = await waitWithTimeout(state.operation, FLUSH_TIMEOUT_MS);
+  if (result.timedOut) putFlushOnCooldown(state);
 }
 
 export async function hasAnalyticsConsent(): Promise<boolean> {

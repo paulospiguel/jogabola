@@ -11,8 +11,9 @@ describe("AnalyticsProvider architecture", () => {
 
     expect(source).not.toContain("StatsigClientProvider");
     expect(source).not.toContain("<StatsigProvider");
+    expect(source).toContain("hasActivatedAnalytics");
     expect(source).toMatch(
-      /<AnalyticsConsentContext\.Provider[^>]*>[\s\S]*\{children\}[\s\S]*<StatsigRuntime/,
+      /\{hasActivatedAnalytics && hasClientKey \? \([\s\S]*<StatsigRuntime[\s\S]*enabled=\{analyticsAllowed\}/,
     );
   });
 });

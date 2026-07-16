@@ -13,6 +13,12 @@ import {
   useRef,
   useState,
 } from "react";
+import {
+  type AnalyticsEventClient,
+  type AnalyticsLogEvent,
+  applyAnalyticsConsent,
+  createConsentGatedLogger,
+} from "@/lib/analytics-client-gate";
 import { AnalyticsLifecycleController } from "@/lib/analytics-lifecycle";
 import { useSession } from "@/lib/auth-client";
 import {
@@ -24,12 +30,6 @@ import {
 } from "@/lib/consent";
 
 type BrowserStatsigClient = ReturnType<typeof useClientAsyncInit>["client"];
-type AnalyticsLogEvent = (
-  eventName: string,
-  value?: string | number,
-  metadata?: Record<string, string>,
-) => void;
-
 interface AnalyticsContextValue {
   analyticsAllowed: boolean;
   logEvent: AnalyticsLogEvent;
@@ -49,10 +49,14 @@ export function useAnalyticsConsent() {
 }
 
 function StatsigRuntime({
+  enabled,
   onClientChange,
+  onLifecycleFailure,
   userID,
 }: {
+  enabled: boolean;
   onClientChange: (client: BrowserStatsigClient | null) => void;
+  onLifecycleFailure: () => void;
   userID: string;
 }) {
   const { client } = useClientAsyncInit(
@@ -83,34 +87,11 @@ function StatsigRuntime({
   }, [client, onClientChange]);
 
   useEffect(() => {
-    const applyState = (enabled: boolean) => {
-      void lifecycle.transition({ enabled, userID }).catch(() => {
-        console.error("[Statsig] Client lifecycle transition failed.");
-      });
-    };
-    const stopAnalyticsWhenRevoked = () => {
-      if (!getStoredAnalyticsConsent(localStorage)) applyState(false);
-    };
-    const stopAnalyticsFromAnotherTab = (event: StorageEvent) => {
-      if (getAnalyticsConsentFromStorageChange(event) === false) {
-        applyState(false);
-      }
-    };
-
-    applyState(true);
-    window.addEventListener(
-      ANALYTICS_CONSENT_CHANGE_EVENT,
-      stopAnalyticsWhenRevoked,
-    );
-    window.addEventListener("storage", stopAnalyticsFromAnotherTab);
-    return () => {
-      window.removeEventListener(
-        ANALYTICS_CONSENT_CHANGE_EVENT,
-        stopAnalyticsWhenRevoked,
-      );
-      window.removeEventListener("storage", stopAnalyticsFromAnotherTab);
-    };
-  }, [lifecycle, userID]);
+    void lifecycle.transition({ enabled, userID }).catch(() => {
+      console.error("[Statsig] Client lifecycle transition failed.");
+      onLifecycleFailure();
+    });
+  }, [enabled, lifecycle, onLifecycleFailure, userID]);
 
   return null;
 }
@@ -122,7 +103,9 @@ export default function AnalyticsProvider({
 }) {
   const { data: session } = useSession();
   const [analyticsAllowed, setAnalyticsAllowed] = useState(false);
-  const analyticsClientRef = useRef<BrowserStatsigClient | null>(null);
+  const [hasActivatedAnalytics, setHasActivatedAnalytics] = useState(false);
+  const consentRef = useRef(false);
+  const analyticsClientRef = useRef<AnalyticsEventClient | null>(null);
   const userID = session?.user?.id ?? "anonymous";
   const hasClientKey = Boolean(process.env.NEXT_PUBLIC_STATSIG_CLIENT_KEY);
 
@@ -132,10 +115,15 @@ export default function AnalyticsProvider({
     },
     [],
   );
-  const logEvent = useCallback<AnalyticsLogEvent>(
-    (eventName, value, metadata) => {
-      analyticsClientRef.current?.logEvent(eventName, value, metadata);
-    },
+  const commitConsent = useCallback((allowed: boolean) => {
+    applyAnalyticsConsent(consentRef, allowed, setAnalyticsAllowed);
+    if (allowed) setHasActivatedAnalytics(true);
+  }, []);
+  const handleLifecycleFailure = useCallback(() => {
+    commitConsent(false);
+  }, [commitConsent]);
+  const logEvent = useMemo<AnalyticsLogEvent>(
+    () => createConsentGatedLogger(consentRef, analyticsClientRef),
     [],
   );
 
@@ -146,27 +134,22 @@ export default function AnalyticsProvider({
       stopExpiryTimer();
       stopExpiryTimer = scheduleAnalyticsConsentExpiry(
         localStorage.getItem(CONSENT_SETTINGS_COOKIE),
-        () => window.dispatchEvent(new Event(ANALYTICS_CONSENT_CHANGE_EVENT)),
+        () => commitConsent(false),
       );
     };
     const syncConsent = () => {
-      setAnalyticsAllowed(getStoredAnalyticsConsent(localStorage));
+      commitConsent(getStoredAnalyticsConsent(localStorage));
       scheduleExpiry();
     };
     const syncConsentFromAnotherTab = (event: StorageEvent) => {
       const nextConsent = getAnalyticsConsentFromStorageChange(event);
       if (nextConsent !== null) {
-        setAnalyticsAllowed(nextConsent);
+        commitConsent(nextConsent);
         scheduleExpiry();
       }
     };
     const revalidateVisibleConsent = () => {
-      if (!getStoredAnalyticsConsent(localStorage)) {
-        window.dispatchEvent(new Event(ANALYTICS_CONSENT_CHANGE_EVENT));
-        return;
-      }
-
-      setAnalyticsAllowed(true);
+      commitConsent(getStoredAnalyticsConsent(localStorage));
       scheduleExpiry();
     };
     const revalidateWhenVisible = () => {
@@ -185,7 +168,7 @@ export default function AnalyticsProvider({
       window.removeEventListener("focus", revalidateVisibleConsent);
       document.removeEventListener("visibilitychange", revalidateWhenVisible);
     };
-  }, []);
+  }, [commitConsent]);
 
   const contextValue = useMemo(
     () => ({ analyticsAllowed, logEvent }),
@@ -195,8 +178,13 @@ export default function AnalyticsProvider({
   return (
     <AnalyticsConsentContext.Provider value={contextValue}>
       {children}
-      {analyticsAllowed && hasClientKey ? (
-        <StatsigRuntime onClientChange={handleClientChange} userID={userID} />
+      {hasActivatedAnalytics && hasClientKey ? (
+        <StatsigRuntime
+          enabled={analyticsAllowed}
+          onClientChange={handleClientChange}
+          onLifecycleFailure={handleLifecycleFailure}
+          userID={userID}
+        />
       ) : null}
     </AnalyticsConsentContext.Provider>
   );
