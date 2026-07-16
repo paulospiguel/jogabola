@@ -1,4 +1,4 @@
-import { describe, expect, it } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 import {
   CONSENT_MAX_AGE_MS,
   CONSENT_SETTINGS_COOKIE,
@@ -8,6 +8,7 @@ import {
   getStoredAnalyticsConsent,
   parseAnalyticsConsent,
   parseConsentRecord,
+  scheduleAnalyticsConsentExpiry,
 } from "@/lib/consent";
 
 const NOW = Date.parse("2026-07-16T09:00:00.000Z");
@@ -158,5 +159,25 @@ describe("cross-tab storage changes", () => {
         NOW,
       ),
     ).toBeNull();
+  });
+});
+
+describe("consent expiry scheduling", () => {
+  afterEach(() => {
+    vi.useRealTimers();
+  });
+
+  it("expires consent in a long-lived tab at the exact validity limit", async () => {
+    vi.useFakeTimers();
+    vi.setSystemTime(NOW);
+    const onExpire = vi.fn();
+    const stop = scheduleAnalyticsConsentExpiry(record(), onExpire);
+
+    await vi.advanceTimersByTimeAsync(CONSENT_MAX_AGE_MS - 1);
+    expect(onExpire).not.toHaveBeenCalled();
+
+    await vi.advanceTimersByTimeAsync(1);
+    expect(onExpire).toHaveBeenCalledOnce();
+    stop();
   });
 });

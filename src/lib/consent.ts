@@ -2,6 +2,7 @@ export const CONSENT_SETTINGS_COOKIE = "cookie-consent-settings";
 export const ANALYTICS_CONSENT_CHANGE_EVENT = "jb:analytics-consent-change";
 export const CONSENT_VERSION = 2;
 export const CONSENT_MAX_AGE_MS = 180 * 24 * 60 * 60 * 1000;
+const MAX_TIMER_DELAY_MS = 2_147_483_647;
 
 export type ConsentStatus = "accepted" | "declined" | "custom";
 
@@ -75,7 +76,7 @@ export function parseConsentRecord(
 
   const timestamp = Date.parse(candidate.timestamp);
   const age = now - timestamp;
-  if (!Number.isFinite(timestamp) || age < 0 || age > CONSENT_MAX_AGE_MS) {
+  if (!Number.isFinite(timestamp) || age < 0 || age >= CONSENT_MAX_AGE_MS) {
     return null;
   }
 
@@ -122,4 +123,36 @@ export function getAnalyticsConsentFromStorageChange(
   }
 
   return parseAnalyticsConsent(change.newValue, now);
+}
+
+export function scheduleAnalyticsConsentExpiry(
+  value: string | null | undefined,
+  onExpire: () => void,
+  now: () => number = Date.now,
+): () => void {
+  const record = parseConsentRecord(value, now());
+  if (!record) return () => undefined;
+
+  const expiresAt = Date.parse(record.timestamp) + CONSENT_MAX_AGE_MS;
+  let timer: ReturnType<typeof setTimeout> | undefined;
+  let stopped = false;
+
+  const scheduleNext = () => {
+    if (stopped) return;
+
+    const remaining = expiresAt - now();
+    if (remaining <= 0) {
+      onExpire();
+      return;
+    }
+
+    timer = setTimeout(scheduleNext, Math.min(remaining, MAX_TIMER_DELAY_MS));
+  };
+
+  scheduleNext();
+
+  return () => {
+    stopped = true;
+    if (timer) clearTimeout(timer);
+  };
 }

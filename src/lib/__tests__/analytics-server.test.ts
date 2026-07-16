@@ -25,8 +25,8 @@ vi.mock("@statsig/statsig-node-core", () => ({
     initialize = mocks.initialize;
     logEvent = mocks.logEvent;
 
-    constructor(key: string) {
-      mocks.statsigConstructor(key);
+    constructor(key: string, options?: { initTimeoutMs?: number }) {
+      mocks.statsigConstructor(key, options);
     }
   },
   StatsigUser: class {
@@ -132,6 +132,9 @@ describe("trackServerEvent", () => {
       { team_id: 2 },
     );
     expect(mocks.flushEvents).toHaveBeenCalledOnce();
+    expect(mocks.statsigConstructor).toHaveBeenCalledWith("secret-key", {
+      initTimeoutMs: 250,
+    });
     expect(mocks.logEvent.mock.invocationCallOrder[0]).toBeLessThan(
       mocks.flushEvents.mock.invocationCallOrder[0] ?? 0,
     );
@@ -147,6 +150,25 @@ describe("trackServerEvent", () => {
       trackServerEvent("user-1", "event_name"),
     ).resolves.toBeUndefined();
     expect(mocks.logEvent).not.toHaveBeenCalled();
+  });
+
+  it("stops waiting when the first Statsig initialization is pending", async () => {
+    vi.useFakeTimers();
+    process.env.STATSIG_SERVER_SECRET_KEY = "secret-key";
+    mocks.cookieValue = consentRecord();
+    mocks.initialize.mockImplementationOnce(() => new Promise(() => undefined));
+    const { trackServerEvent } = await import("@/lib/analytics-server");
+
+    let settled = false;
+    void trackServerEvent("user-1", "event_name").then(() => {
+      settled = true;
+    });
+    await vi.advanceTimersByTimeAsync(1_000);
+    await Promise.resolve();
+
+    expect(settled).toBe(true);
+    expect(mocks.logEvent).not.toHaveBeenCalled();
+    expect(mocks.flushEvents).not.toHaveBeenCalled();
   });
 
   it("keeps event logging failures non-blocking", async () => {

@@ -34,3 +34,61 @@ export async function transitionAnalyticsClient(
     await client.updateUserAsync({ userID: next.userID });
   }
 }
+
+function statesMatch(
+  left: AnalyticsRuntimeState,
+  right: AnalyticsRuntimeState,
+): boolean {
+  return left.enabled === right.enabled && left.userID === right.userID;
+}
+
+const INITIAL_RUNTIME_STATE: AnalyticsRuntimeState = {
+  enabled: false,
+  userID: "anonymous",
+};
+
+export class AnalyticsLifecycleController {
+  private appliedState: AnalyticsRuntimeState;
+  private desiredState: AnalyticsRuntimeState;
+  private running: Promise<void> | null = null;
+
+  constructor(
+    private readonly client: AnalyticsClientLifecycle,
+    initialState: AnalyticsRuntimeState = INITIAL_RUNTIME_STATE,
+  ) {
+    this.appliedState = { ...initialState };
+    this.desiredState = { ...initialState };
+  }
+
+  get currentState(): AnalyticsRuntimeState {
+    return { ...this.appliedState };
+  }
+
+  transition(next: AnalyticsRuntimeState): Promise<void> {
+    this.desiredState = { ...next };
+
+    // Privacy must not wait for an in-flight identity or initialization request.
+    if (!next.enabled) {
+      this.client.updateRuntimeOptions({ loggingEnabled: "disabled" });
+    }
+
+    if (!this.running) {
+      const run = this.drain();
+      this.running = run;
+      const clearRunning = () => {
+        if (this.running === run) this.running = null;
+      };
+      void run.then(clearRunning, clearRunning);
+    }
+
+    return this.running;
+  }
+
+  private async drain(): Promise<void> {
+    while (!statesMatch(this.appliedState, this.desiredState)) {
+      const target = { ...this.desiredState };
+      await transitionAnalyticsClient(this.client, this.appliedState, target);
+      this.appliedState = target;
+    }
+  }
+}
