@@ -92,7 +92,15 @@ describe("public website production contract", () => {
     const contact = readSource("src/app/(public)/(website)/contact/page.tsx");
 
     expect(landing).toContain("lg:min-h-[680px]");
+    expect(landing).toContain("lg:pt-20");
+    expect(landing).toContain("lg:pb-8");
+    expect(landing).toContain("lg:mt-6");
+    expect(landing).toContain("<PhoneMockup scale={0.82}");
+    expect(contact).toContain("max-w-6xl");
     expect(contact).toContain("lg:grid-cols-3");
+    expect(contact).toContain("lg:flex-col");
+    expect(contact).toContain("min-w-0");
+    expect(contact).toContain("break-words");
     expect(contact).not.toContain("md:grid-cols-2");
   });
 

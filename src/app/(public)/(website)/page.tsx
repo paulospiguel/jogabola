@@ -138,7 +138,7 @@ const HeroSection = () => {
   const ctaLabel = session?.user ? t("goToArena") : headerT("launchJourney");
 
   return (
-    <section className="relative min-h-screen overflow-hidden bg-[#06090D] px-5 pt-28 pb-10 md:px-10 lg:min-h-[680px] lg:px-20 lg:pt-28">
+    <section className="relative min-h-screen overflow-hidden bg-[#06090D] px-5 pt-28 pb-10 md:px-10 lg:min-h-[680px] lg:px-20 lg:pt-20 lg:pb-8">
       <div className="absolute inset-0" style={meshStyle} />
       <div className="absolute inset-0 opacity-40" style={gridStyle} />
       <div
@@ -163,7 +163,7 @@ const HeroSection = () => {
           </span>
         </div>
 
-        <div className="mt-8 grid items-center gap-12 lg:grid-cols-[1.45fr_1fr]">
+        <div className="mt-8 grid items-center gap-12 lg:mt-6 lg:grid-cols-[1.45fr_1fr]">
           <motion.div
             initial={false}
             animate={{ opacity: 1, x: 0 }}
@@ -215,7 +215,7 @@ const HeroSection = () => {
             className="relative hidden justify-center lg:flex"
           >
             <div className="absolute top-16 left-1/2 size-[420px] -translate-x-1/2 rounded-full bg-arena-primary/25 blur-[36px]" />
-            <PhoneMockup scale={1.05} screen="team" className="relative z-10" />
+            <PhoneMockup scale={0.82} screen="team" className="relative z-10" />
             <div className="absolute top-20 -left-8 z-20 rotate-[-6deg] rounded-[14px] border border-arena-primary/35 bg-arena-bg/80 px-4 py-3 shadow-2xl backdrop-blur-xl">
               <div className="flex items-center gap-2 text-sm font-extrabold text-arena-text">
                 <CheckCircle2 className="size-4 text-arena-primary" />

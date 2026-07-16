@@ -32,7 +32,7 @@ export default function ContactPage() {
 
   return (
     <main className="min-h-screen bg-slate-950 pt-32 pb-20">
-      <div className="container mx-auto max-w-4xl px-4 md:px-6">
+      <div className="container mx-auto max-w-6xl px-4 md:px-6">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -74,16 +74,18 @@ export default function ContactPage() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: index * 0.1 }}
-              className="press group flex items-center gap-6 rounded-3xl border border-white/5 bg-white/5 p-8 backdrop-blur-md transition-all hover:border-white/10 hover:bg-white/10"
+              className="press group flex items-center gap-6 rounded-3xl border border-white/5 bg-white/5 p-8 backdrop-blur-md transition-all hover:border-white/10 hover:bg-white/10 lg:flex-col lg:items-start"
             >
-              <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-white/5 text-white transition-transform group-hover:scale-110">
+              <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-white/5 text-white transition-transform group-hover:scale-110">
                 <method.icon className="h-7 w-7" />
               </div>
-              <div>
+              <div className="w-full min-w-0">
                 <h2 className="mb-1 text-sm font-bold tracking-widest text-gray-400 uppercase">
                   {method.title}
                 </h2>
-                <p className="text-lg font-bold text-white">{method.value}</p>
+                <p className="break-words text-lg font-bold text-white">
+                  {method.value}
+                </p>
               </div>
             </motion.a>
           ))}
