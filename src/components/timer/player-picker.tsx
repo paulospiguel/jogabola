@@ -142,7 +142,7 @@ export function PlayerPicker({
           placeholder={
             visible.length === 0 ? t("emptyPlaceholder") : t("addPlaceholder")
           }
-          className="h-10 flex-1 rounded-[10px] border border-arena-border bg-arena-surface-el px-3 text-sm text-arena-text outline-none placeholder:text-arena-text-muted focus:border-arena-primary"
+          className="h-11 flex-1 rounded-[10px] border border-arena-border bg-arena-surface-el px-3 text-sm text-arena-text outline-none placeholder:text-arena-text-muted focus:border-arena-primary"
         />
         <motion.button
           type="button"
@@ -150,7 +150,7 @@ export function PlayerPicker({
           disabled={!draft.trim()}
           onClick={commit}
           aria-label={t("addPlayer")}
-          className="grid size-10 shrink-0 place-items-center rounded-[10px] bg-arena-primary text-arena-bg disabled:opacity-40"
+          className="grid size-11 shrink-0 place-items-center rounded-[10px] bg-arena-primary text-arena-bg disabled:opacity-40"
         >
           {visible.length === 0 ? <UserPlus size={16} /> : <Plus size={18} />}
         </motion.button>
