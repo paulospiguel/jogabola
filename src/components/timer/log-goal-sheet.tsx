@@ -58,7 +58,7 @@ export function LogGoalSheet({
             players={players}
             selectedId={assist}
             teamColor="#38BDF8"
-            onSelect={(id) => setAssist(a => (a === id ? null : id))}
+            onSelect={id => setAssist(a => (a === id ? null : id))}
             onAddPlayer={handleAddAssist}
             label="Assistência (opcional)"
             excludeId={scorer}

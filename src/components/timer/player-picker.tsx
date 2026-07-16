@@ -73,9 +73,7 @@ export function PlayerPicker({
   const [draft, setDraft] = useState("");
   const inputRef = useRef<HTMLInputElement>(null);
 
-  const visible = excludeId
-    ? players.filter((p) => p.id !== excludeId)
-    : players;
+  const visible = excludeId ? players.filter(p => p.id !== excludeId) : players;
 
   function commit() {
     const name = draft.trim();
@@ -94,7 +92,7 @@ export function PlayerPicker({
 
       {visible.length > 0 && (
         <div className="grid grid-cols-2 gap-2">
-          {visible.map((p) => (
+          {visible.map(p => (
             <PlayerPill
               key={p.id}
               player={p}
@@ -111,8 +109,8 @@ export function PlayerPicker({
         <input
           ref={inputRef}
           value={draft}
-          onChange={(e) => setDraft(e.target.value)}
-          onKeyDown={(e) => {
+          onChange={e => setDraft(e.target.value)}
+          onKeyDown={e => {
             if (e.key === "Enter") {
               e.preventDefault();
               commit();
