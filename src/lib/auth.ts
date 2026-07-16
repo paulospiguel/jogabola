@@ -5,6 +5,7 @@ import { emailOTP } from "better-auth/plugins";
 import { eq } from "drizzle-orm";
 import { db } from "@/db/client";
 import * as schema from "@/db/schema";
+import { classifyErrorSafely } from "@/lib/safe-error";
 import { authConfig } from "./auth/config";
 
 const env = authConfig.getEnv();
@@ -13,6 +14,18 @@ const trustedOrigins = authConfig.getTrustedOrigins();
 function normalizeImage(value: string | null | undefined) {
   const trimmed = value?.trim();
   return trimmed ? trimmed : null;
+}
+
+function getRequestMethodSafely(context: unknown): string {
+  try {
+    if (!context || typeof context !== "object") return "unknown";
+    const request: unknown = Reflect.get(context, "request");
+    if (!request || typeof request !== "object") return "unknown";
+    const method: unknown = Reflect.get(request, "method");
+    return typeof method === "string" ? method : "unknown";
+  } catch {
+    return "unknown";
+  }
 }
 
 const socialProviders = {
@@ -42,31 +55,13 @@ const socialProviders = {
     }),
 };
 
-import fs from "fs";
-import path from "path";
-
 export const auth = betterAuth({
   onAPIError: {
-    onError: (error, ctx: any) => {
-      try {
-        const logPath = path.join(process.cwd(), "auth-error.log");
-        const logData = {
-          timestamp: new Date().toISOString(),
-          error:
-            error instanceof Error
-              ? {
-                  name: error.name,
-                  message: error.message,
-                  stack: error.stack,
-                }
-              : error,
-          url: ctx?.request?.url || "unknown",
-          method: ctx?.request?.method || "unknown",
-        };
-        fs.appendFileSync(logPath, JSON.stringify(logData, null, 2) + "\n");
-      } catch (e) {
-        console.error("Failed to write to auth-error.log", e);
-      }
+    onError: (error, ctx) => {
+      console.error("[auth] request failed", {
+        error: classifyErrorSafely(error),
+        method: getRequestMethodSafely(ctx),
+      });
     },
   },
   baseURL: env.baseURL,
@@ -77,10 +72,6 @@ export const auth = betterAuth({
       ...schema,
     },
   }),
-  emailAndPassword: {
-    enabled: true,
-    requireEmailVerification: false,
-  },
   ...(socialProviders && { socialProviders }),
   plugins: [
     passkey({
