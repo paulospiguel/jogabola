@@ -4,6 +4,7 @@ import { CONSENT_SETTINGS_COOKIE, parseAnalyticsConsent } from "@/lib/consent";
 
 let clientPromise: Promise<Statsig | null> | null = null;
 let warnedMissingKey = false;
+const FLUSH_TIMEOUT_MS = 250;
 
 function getStatsigClient(): Promise<Statsig | null> {
   const key = process.env.STATSIG_SERVER_SECRET_KEY;
@@ -48,6 +49,21 @@ function toMetadata(properties?: Record<string, unknown>) {
   );
 }
 
+async function flushEventsWithTimeout(client: Statsig): Promise<void> {
+  let timeout: ReturnType<typeof setTimeout> | undefined;
+
+  try {
+    await Promise.race([
+      client.flushEvents(),
+      new Promise<void>(resolve => {
+        timeout = setTimeout(resolve, FLUSH_TIMEOUT_MS);
+      }),
+    ]);
+  } finally {
+    if (timeout) clearTimeout(timeout);
+  }
+}
+
 export async function hasAnalyticsConsent(): Promise<boolean> {
   try {
     const cookieStore = await cookies();
@@ -76,7 +92,8 @@ export async function trackServerEvent(
       null,
       toMetadata(properties),
     );
+    await flushEventsWithTimeout(client);
   } catch {
-    console.error("[Statsig] Server event logging failed.");
+    console.error("[Statsig] Server event delivery failed.");
   }
 }

@@ -4,10 +4,15 @@ import { StatsigProvider, useClientAsyncInit } from "@statsig/react-bindings";
 import { StatsigSessionReplayPlugin } from "@statsig/session-replay";
 import { StatsigAutoCapturePlugin } from "@statsig/web-analytics";
 import type React from "react";
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useContext, useEffect, useRef, useState } from "react";
+import {
+  type AnalyticsRuntimeState,
+  transitionAnalyticsClient,
+} from "@/lib/analytics-lifecycle";
 import { useSession } from "@/lib/auth-client";
 import {
   ANALYTICS_CONSENT_CHANGE_EVENT,
+  getAnalyticsConsentFromStorageChange,
   getStoredAnalyticsConsent,
 } from "@/lib/consent";
 
@@ -34,24 +39,45 @@ function StatsigClientProvider({
       ],
     },
   );
+  const runtimeState = useRef<AnalyticsRuntimeState>({
+    enabled: false,
+    userID,
+  });
 
   useEffect(() => {
+    const applyState = (next: AnalyticsRuntimeState) => {
+      const previous = runtimeState.current;
+      runtimeState.current = next;
+      void transitionAnalyticsClient(client, previous, next).catch(() => {
+        console.error("[Statsig] Client lifecycle transition failed.");
+      });
+    };
     const stopAnalyticsWhenRevoked = () => {
       if (!getStoredAnalyticsConsent(localStorage)) {
-        void client.shutdown();
+        applyState({ enabled: false, userID: runtimeState.current.userID });
       }
     };
+    const stopAnalyticsFromAnotherTab = (event: StorageEvent) => {
+      if (getAnalyticsConsentFromStorageChange(event) === false) {
+        applyState({ enabled: false, userID: runtimeState.current.userID });
+      }
+    };
+
+    applyState({ enabled: true, userID });
 
     window.addEventListener(
       ANALYTICS_CONSENT_CHANGE_EVENT,
       stopAnalyticsWhenRevoked,
     );
-    return () =>
+    window.addEventListener("storage", stopAnalyticsFromAnotherTab);
+    return () => {
       window.removeEventListener(
         ANALYTICS_CONSENT_CHANGE_EVENT,
         stopAnalyticsWhenRevoked,
       );
-  }, [client]);
+      window.removeEventListener("storage", stopAnalyticsFromAnotherTab);
+    };
+  }, [client, userID]);
 
   return (
     <StatsigProvider client={client} loadingComponent={children}>
@@ -74,17 +100,24 @@ export default function AnalyticsProvider({
     const syncConsent = () => {
       setAnalyticsAllowed(getStoredAnalyticsConsent(localStorage));
     };
+    const syncConsentFromAnotherTab = (event: StorageEvent) => {
+      const nextConsent = getAnalyticsConsentFromStorageChange(event);
+      if (nextConsent !== null) setAnalyticsAllowed(nextConsent);
+    };
 
     syncConsent();
     window.addEventListener(ANALYTICS_CONSENT_CHANGE_EVENT, syncConsent);
-    return () =>
+    window.addEventListener("storage", syncConsentFromAnotherTab);
+    return () => {
       window.removeEventListener(ANALYTICS_CONSENT_CHANGE_EVENT, syncConsent);
+      window.removeEventListener("storage", syncConsentFromAnotherTab);
+    };
   }, []);
 
   return (
     <AnalyticsConsentContext.Provider value={analyticsAllowed}>
       {analyticsAllowed && hasClientKey ? (
-        <StatsigClientProvider key={userID} userID={userID}>
+        <StatsigClientProvider userID={userID}>
           {children}
         </StatsigClientProvider>
       ) : (
