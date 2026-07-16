@@ -128,7 +128,7 @@ Durante um refetch, conteúdo válido anterior permanece visível com indicaçã
 
 ## Traduções PT-PT
 
-A revisão fica limitada aos namespaces `arenaDashboard`, `arenaEvents`, `arenaNav`, `arenaNoTeamModal`, `arenaEventDetail`, `arenaSquad`, `arenaPayments` e `arenaProfile`, mais as strings dos componentes partilhados diretamente usados por essas superfícies. Emails, Timer fora dos pontos de integração e website público ficam fora deste passe linguístico.
+A revisão fica limitada aos namespaces `arenaDashboard`, `arenaEvents`, `arenaNav`, `arenaNoTeamModal`, `arenaEventDetail`, `arenaSquad`, `arenaPayments` e `profilePage`, mais as strings dos componentes partilhados diretamente usados por essas superfícies. Emails, Timer fora dos pontos de integração e website público ficam fora deste passe linguístico.
 
 - Usar sentence case: “Criar evento”, “Adicionar jogador”.
 - Usar “capitão” como papel operacional principal; “organizador” apenas quando o contexto o exigir.
