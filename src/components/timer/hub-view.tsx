@@ -1,7 +1,7 @@
 "use client";
 
 import { AnimatePresence, motion } from "framer-motion";
-import { Plus, Timer, Trash2, Trophy } from "lucide-react";
+import { CircleDot, Plus, Timer, Trash2, Trophy } from "lucide-react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useReducer, useState } from "react";
@@ -212,7 +212,12 @@ export function HubView() {
         </h2>
         {matches.length === 0 ? (
           <div className="rounded-[16px] border border-arena-border border-dashed bg-arena-surface/40 px-4 py-10 text-center">
-            <span className="text-3xl">⚽</span>
+            <CircleDot
+              aria-hidden="true"
+              className="mx-auto text-arena-primary"
+              size={30}
+              strokeWidth={1.5}
+            />
             <p className="mt-2 text-sm font-semibold text-arena-text">
               Sem jogos ainda
             </p>

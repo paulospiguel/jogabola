@@ -1,7 +1,15 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Pause, Play, RotateCcw, SkipForward, Square } from "lucide-react";
+import {
+  Goal,
+  Pause,
+  Play,
+  RotateCcw,
+  SkipForward,
+  Square,
+} from "lucide-react";
+import { useTranslations } from "next-intl";
 import { useState } from "react";
 import { cueTap } from "./feedback";
 import { onColor } from "./team-color";
@@ -33,6 +41,7 @@ function TeamActions({
   onGoal: (s: TeamSide) => void;
   onCard: (s: TeamSide) => void;
 }) {
+  const t = useTranslations("timer.match.controls");
   return (
     <div className="flex flex-1 flex-col gap-2">
       <motion.button
@@ -46,7 +55,7 @@ function TeamActions({
         className="flex items-center justify-center gap-1.5 rounded-[12px] py-3 text-sm font-extrabold disabled:opacity-40"
         style={{ background: team.color, color: onColor(team.color) }}
       >
-        <span className="text-base">⚽</span> Golo
+        <Goal aria-hidden="true" size={17} strokeWidth={1.7} /> {t("goal")}
       </motion.button>
       <motion.button
         type="button"
@@ -58,7 +67,8 @@ function TeamActions({
         }}
         className="flex items-center justify-center gap-1.5 rounded-[12px] border border-arena-border bg-arena-surface py-2.5 text-xs font-bold text-arena-text-sec disabled:opacity-40"
       >
-        <span className="h-4 w-2.5 rounded-[2px] bg-arena-highlight" /> Cartão
+        <span className="h-4 w-2.5 rounded-[2px] border border-arena-highlight" />
+        {t("card")}
       </motion.button>
     </div>
   );
@@ -76,6 +86,7 @@ export function MatchControls({
   onGoal,
   onCard,
 }: MatchControlsProps) {
+  const t = useTranslations("timer.match.controls");
   const [confirmRestart, setConfirmRestart] = useState(false);
   const [confirmEnd, setConfirmEnd] = useState(false);
   const running = status === "running";
@@ -128,7 +139,7 @@ export function MatchControls({
           className="flex h-14 flex-1 items-center justify-center gap-2 rounded-[14px] bg-arena-primary font-extrabold text-arena-bg disabled:opacity-40"
         >
           {running ? <Pause size={20} /> : <Play size={20} />}
-          {running ? "Pausa" : status === "idle" ? "Começar" : "Continuar"}
+          {running ? t("pause") : status === "idle" ? t("start") : t("resume")}
         </motion.button>
 
         {/* Skip / End-match button — requires second tap when on last period */}
@@ -139,18 +150,18 @@ export function MatchControls({
               initial={{ scale: 0.9 }}
               animate={{ scale: 1 }}
               whileTap={{ scale: 0.94 }}
-              aria-label="Confirmar fim do jogo"
+              aria-label={t("confirmEnd")}
               onClick={() => commitEnd(onNext)}
               onBlur={cancelEnd}
               className="grid h-14 w-14 place-items-center rounded-[14px] bg-arena-danger text-[10px] font-bold text-white"
             >
-              Sim?
+              {t("yes")}
             </motion.button>
           ) : (
             <motion.button
               type="button"
               whileTap={{ scale: 0.94 }}
-              aria-label="Terminar jogo"
+              aria-label={t("endMatch")}
               onClick={() => {
                 cueTap();
                 armEnd();
@@ -165,7 +176,7 @@ export function MatchControls({
             type="button"
             whileTap={{ scale: 0.94 }}
             disabled={ended}
-            aria-label="Próxima parte"
+            aria-label={t("nextPeriod")}
             onClick={() => {
               cueTap();
               onNext();
@@ -180,7 +191,7 @@ export function MatchControls({
           <motion.button
             type="button"
             whileTap={{ scale: 0.94 }}
-            aria-label="Reiniciar"
+            aria-label={t("restart")}
             onClick={() => setConfirmRestart(true)}
             className="grid h-14 w-14 place-items-center rounded-[14px] border border-arena-border bg-arena-surface text-arena-text-muted"
           >
@@ -199,7 +210,7 @@ export function MatchControls({
             onBlur={() => setConfirmRestart(false)}
             className="grid h-14 w-14 place-items-center rounded-[14px] bg-arena-danger text-[10px] font-bold text-white"
           >
-            Sim?
+            {t("yes")}
           </motion.button>
         )}
       </div>
@@ -214,7 +225,7 @@ export function MatchControls({
             onBlur={cancelEnd}
             className="self-center text-xs font-bold text-arena-danger underline-offset-2 hover:underline"
           >
-            Confirmas? Terminar
+            {t("confirmEndShort")}
           </button>
         ) : (
           <button
@@ -222,7 +233,7 @@ export function MatchControls({
             onClick={armEnd}
             className="self-center text-xs font-semibold text-arena-text-muted underline-offset-2 hover:text-arena-text-sec hover:underline"
           >
-            Terminar jogo agora
+            {t("endNow")}
           </button>
         ))}
     </div>

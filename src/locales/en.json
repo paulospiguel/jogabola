@@ -2444,6 +2444,43 @@
       "hint": "Tap time to edit • Tap row for player",
       "title": "Match Events"
     },
+    "match": {
+      "controls": {
+        "card": "Card",
+        "confirmEnd": "Confirm end of match",
+        "confirmEndShort": "Confirm? End",
+        "endMatch": "End match",
+        "endNow": "End match now",
+        "goal": "Goal",
+        "nextPeriod": "Next period",
+        "pause": "Pause",
+        "restart": "Restart",
+        "resume": "Resume",
+        "start": "Start",
+        "yes": "Yes?"
+      },
+      "goalSheet": {
+        "assist": "Assist (optional)",
+        "register": "Record goal",
+        "scorer": "Scorer",
+        "selectScorer": "Select scorer",
+        "title": "Goal · {team}",
+        "unassigned": "No scorer"
+      },
+      "playerPicker": {
+        "addPlaceholder": "Add player…",
+        "addPlayer": "Add player",
+        "emptyPlaceholder": "Player name (optional)"
+      },
+      "timeline": {
+        "cardForTeam": "Card · {team}",
+        "emptyDescription": "Record goals and cards during the match.",
+        "emptyTitle": "No events yet",
+        "goalForTeam": "Goal · {team}",
+        "removeEvent": "Remove event",
+        "removeLatestGoal": "Remove the latest goal from this row"
+      }
+    },
     "settings": {
       "gameParts": {
         "extraTime": "Extra Time",

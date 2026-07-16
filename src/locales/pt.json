@@ -2424,6 +2424,43 @@
       "hint": "Toque no tempo para editar • Toque na linha para jogador",
       "title": "Eventos da Partida"
     },
+    "match": {
+      "controls": {
+        "card": "Cartão",
+        "confirmEnd": "Confirmar fim do jogo",
+        "confirmEndShort": "Confirmas? Terminar",
+        "endMatch": "Terminar jogo",
+        "endNow": "Terminar jogo agora",
+        "goal": "Golo",
+        "nextPeriod": "Próxima parte",
+        "pause": "Pausa",
+        "restart": "Reiniciar",
+        "resume": "Continuar",
+        "start": "Começar",
+        "yes": "Sim?"
+      },
+      "goalSheet": {
+        "assist": "Assistência (opcional)",
+        "register": "Registar golo",
+        "scorer": "Marcador",
+        "selectScorer": "Selecionar marcador",
+        "title": "Golo · {team}",
+        "unassigned": "Sem marcador"
+      },
+      "playerPicker": {
+        "addPlaceholder": "Adicionar jogador…",
+        "addPlayer": "Adicionar jogador",
+        "emptyPlaceholder": "Nome do jogador (opcional)"
+      },
+      "timeline": {
+        "cardForTeam": "Cartão · {team}",
+        "emptyDescription": "Regista golos e cartões durante o jogo.",
+        "emptyTitle": "Ainda sem lances",
+        "goalForTeam": "Golo · {team}",
+        "removeEvent": "Remover lance",
+        "removeLatestGoal": "Remover o último golo desta linha"
+      }
+    },
     "settings": {
       "gameParts": {
         "extraTime": "Prolongamento",

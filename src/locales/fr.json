@@ -2444,6 +2444,43 @@
       "hint": "Touchez le temps pour modifier • Touchez la ligne pour le joueur",
       "title": "Événements du match"
     },
+    "match": {
+      "controls": {
+        "card": "Carton",
+        "confirmEnd": "Confirmer la fin du match",
+        "confirmEndShort": "Confirmer ? Terminer",
+        "endMatch": "Terminer le match",
+        "endNow": "Terminer le match maintenant",
+        "goal": "But",
+        "nextPeriod": "Période suivante",
+        "pause": "Pause",
+        "restart": "Recommencer",
+        "resume": "Continuer",
+        "start": "Commencer",
+        "yes": "Oui ?"
+      },
+      "goalSheet": {
+        "assist": "Passe décisive (facultatif)",
+        "register": "Enregistrer le but",
+        "scorer": "Buteur",
+        "selectScorer": "Sélectionner le buteur",
+        "title": "But · {team}",
+        "unassigned": "Sans buteur"
+      },
+      "playerPicker": {
+        "addPlaceholder": "Ajouter un joueur…",
+        "addPlayer": "Ajouter un joueur",
+        "emptyPlaceholder": "Nom du joueur (facultatif)"
+      },
+      "timeline": {
+        "cardForTeam": "Carton · {team}",
+        "emptyDescription": "Enregistrez les buts et les cartons pendant le match.",
+        "emptyTitle": "Aucune action pour le moment",
+        "goalForTeam": "But · {team}",
+        "removeEvent": "Supprimer l'action",
+        "removeLatestGoal": "Supprimer le dernier but de cette ligne"
+      }
+    },
     "settings": {
       "gameParts": {
         "extraTime": "Prolongation",
