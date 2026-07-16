@@ -43,7 +43,35 @@ O dashboard adota a opção aprovada “Ação primeiro”. Sem eventos, apresen
 
 Confirmados, Reservas e Pendentes não aparecem sem um evento. “Esta semana” e “Descobrir” são ocultados quando não têm conteúdo.
 
-Com evento ativo, o evento ocupa a posição principal. A próxima ação usa apenas dados já disponíveis e pode encaminhar para consultar o evento, completar vagas ou validar pagamentos. As métricas aparecem associadas ao evento.
+Com evento ativo, o evento ocupa a posição principal. As métricas aparecem associadas ao evento.
+
+### Definição de evento ativo
+
+Para este trabalho, “sem eventos” significa não existir qualquer evento futuro elegível no resultado de `getEvents({ upcomingOnly: true })`. Eventos passados, realizados ou fechados não impedem o empty state do cockpit.
+
+Um evento é elegível quando tem `startDate >= now` e `status !== "cancelled"`. Quando existem vários, o ativo é o primeiro por `startDate` ascendente; em empate, o menor `id` vence. A lista devolvida pelo servidor já é futura, mas o selector puro aplica estas regras para tornar o contrato explícito e testável.
+
+### Matriz da próxima ação
+
+O mapper recebe `canManageTeam`, `activeEvent` e `squadCount`. Não recebe dados de pagamentos nem faz chamadas de rede.
+
+| Precedência | Condição | Ação | Destino |
+|---|---|---|---|
+| 1 | `canManageTeam && !activeEvent` | Criar evento | Abrir `CreateEventSheet` |
+| 2 | `activeEvent` | Ver evento | `/arena/events/{id}` |
+| 3 | `canManageTeam && !activeEvent && squadCount === 0` | Adicionar jogador, como ação secundária | Abrir `AddPlayerSheet` |
+| 4 | Sem permissão e sem evento | Consultar plantel | `/arena/squads` |
+
+“Partilhar equipa” é ação secundária apenas quando a equipa e o mecanismo de partilha existentes estiverem disponíveis; não bloqueia o incremento. A validação de pagamentos permanece em Cobranças e não entra no mapper sem uma fonte de dados própria aprovada no futuro.
+
+### Papéis e permissões
+
+O cockpit otimizado serve prioritariamente owner/capitão e co-capitão (`manager`). A capacidade `canManageTeam` é derivada no servidor com as regras existentes de `canManageTeam`, nunca inferida apenas de `user.role` no cliente.
+
+- Owner e `manager`: podem ver ações de criar evento e adicionar jogador, sujeitas às autorizações existentes.
+- Coach/player ou outro membro: veem evento, plantel e métricas, mas não recebem CTAs de mutação.
+- Utilizador sem equipa: mantém o fluxo atual de criação/seleção de equipa; não vê ações que exijam equipa.
+- Convidados sem conta usam o fluxo público de atleta e estão fora do dashboard autenticado.
 
 ### Incremento 3: refinamento
 
@@ -61,7 +89,20 @@ A barra inferior fica com cinco destinos:
 
 O Cronómetro deixa a barra fixa. Passa a estar disponível no contexto de um evento e como atalho secundário do dashboard. Todos os destinos e ações têm área clicável mínima de 44×44 px. O desktop mantém sidebar própria e maior densidade.
 
+Esta é uma alteração deliberada ao mapa mobile descrito em `DESIGN.md`: Cobranças permanece na barra por ser uma tarefa operacional recorrente do capitão. Avisos/Notificações continuam acessíveis pelo sino persistente da `MobileTopBar` e pela rota `/arena/notifications`; não entram na barra inferior. A implementação atualiza `DESIGN.md` para remover a divergência documental. O estado ativo deve reconhecer subrotas de cada destino, enquanto o sino usa estado não lido próprio.
+
 ## Estados de interface
+
+### Contratos por superfície
+
+| Superfície | Loading | Erro parcial/total | Empty | Retry |
+|---|---|---|---|---|
+| Dashboard | Shell + skeletons independentes de evento e plantel | Se uma query falhar, a outra secção continua visível; erro local na secção falhada. Se ambas falharem, dois erros locais, sem bloquear navegação | Sem evento futuro mostra próxima ação; plantel vazio mostra ação secundária se autorizada | Refetch apenas da query da secção |
+| Eventos | Cabeçalho + skeleton da lista | Erro da lista substitui apenas a lista | Nenhum evento futuro mostra `EmptyState` | Refetch de eventos |
+| Plantel | Cabeçalho + skeleton de linhas | Erro substitui a lista, preservando pesquisa/cabeçalho quando úteis | Nenhum membro mostra `EmptyState` | Refetch de plantel |
+| Cobranças | Cabeçalho + skeleton de métricas/lista; métodos mantêm estado próprio | Erro de pagamentos não apaga definições carregadas e vice-versa | Nenhum pagamento mostra estado vazio dentro do tab | Refetch da query falhada |
+
+Durante um refetch, conteúdo válido anterior permanece visível com indicação não bloqueante. Loading inicial tem precedência apenas dentro da secção sem dados. Erro tem precedência sobre empty. Empty só é calculado após sucesso.
 
 ### Loading
 
@@ -85,7 +126,7 @@ O Cronómetro deixa a barra fixa. Passa a estar disponível no contexto de um ev
 
 ## Traduções PT-PT
 
-A revisão cobre chaves usadas pelas rotas Arena, componentes partilhados e navegação.
+A revisão fica limitada aos namespaces `arenaDashboard`, `arenaEvents`, `arenaNav`, `arenaNoTeamModal`, `arenaEventDetail`, `arenaSquad`, `arenaPayments` e `arenaProfile`, mais as strings dos componentes partilhados diretamente usados por essas superfícies. Emails, Timer fora dos pontos de integração e website público ficam fora deste passe linguístico.
 
 - Usar sentence case: “Criar evento”, “Adicionar jogador”.
 - Usar “capitão” como papel operacional principal; “organizador” apenas quando o contexto o exigir.
@@ -93,6 +134,7 @@ A revisão cobre chaves usadas pelas rotas Arena, componentes partilhados e nave
 - Rever formatos de data, hora, moeda, género e pluralização.
 - Evitar texto hardcoded nos componentes.
 - Sincronizar qualquer chave criada ou alterada em `src/locales/pt.json`, `en.json`, `es.json` e `fr.json`.
+- Verificar paridade por estrutura e placeholders nos quatro ficheiros. A revisão editorial de naturalidade é obrigatória apenas para PT-PT; os restantes idiomas devem conservar significado e interpoladores corretos.
 
 ## Sistema de iconografia e assets
 
@@ -115,9 +157,16 @@ Características obrigatórias:
 - enquadramento e espessura consistentes;
 - sem texto embutido na imagem.
 
-Antes de gerar, será produzido um inventário de assets e emojis em uso. Assets existentes adequados serão reutilizados. A primeira vaga cobre Jogo/Treino e os restantes casos de UI onde emojis funcionam como iconografia, incluindo posições e Cronómetro. Emojis permitidos pelo produto, como o troféu de campeão e bandeiras, não precisam de ser substituídos salvo decisão específica.
+Antes de gerar, será produzido um inventário de assets e emojis em uso. Assets existentes adequados serão reutilizados. A classificação é explícita:
 
-Cada asset terá nome semântico, prompt documentado, finalidade, dimensões e regra de utilização. O formato preferido é PNG ou WebP transparente, com variantes 1× e 2×. A integração usa `next/image` com `sizes` e prioridade adequados ao contexto.
+- **Branding a substituir:** seleção de tipo de evento Jogo e Treino em `create-event-dialog.utils.ts` e fluxos equivalentes; estados vazios que hoje usem bola ou outro emoji como ilustração.
+- **Operacional a migrar para Lucide:** emojis funcionais do Cronómetro, resultado e posições. Estes não recebem imagens GPT porque comunicam ação ou estado.
+- **Conteúdo permitido:** 🏆 quando significa campeão e bandeiras, conforme `AGENTS.md`; emojis em conteúdo partilhado pelo utilizador não são alterados.
+- **Fora desta vaga:** emojis editoriais de emails. Serão registados no inventário, mas exigem um projeto próprio por limitações de clientes de email.
+
+Cada asset será gerado numa tela quadrada de 1024×1024 px, com conteúdo dentro de uma safe area central de 84%. Depois de aprovado, será exportado como WebP transparente a 256×256 (1×) e 512×512 (2×); a fonte PNG de 1024×1024 fica preservada. Deve continuar reconhecível a 56×56 px e não pode conter texto, extremidades cortadas ou halos claros no fundo transparente.
+
+O inventário, prompts, seed/reference notes, finalidade, dimensões e aprovação serão versionados em `docs/design/arena-brand-assets.md`. Ficheiros finais vivem em `src/assets/images/branding/`. O utilizador aprova visualmente cada família antes da integração. A implementação usa `next/image`, reserva dimensões para evitar layout shift e define `sizes` de acordo com o tamanho renderizado.
 
 ## Componentes e responsabilidades
 
@@ -173,6 +222,15 @@ Retry invalida ou refaz apenas a query que falhou. A criação de evento e adiç
 - Percorrer Plantel, Cobranças e Perfil.
 - Validar legibilidade e coerência dos novos assets em fundo escuro.
 - Rever PT-PT no contexto, não apenas nos ficheiros JSON.
+
+### Limites mensuráveis
+
+- `document.documentElement.scrollWidth === document.documentElement.clientWidth` a 320, 390, 768 e 1440 px nas cinco rotas auditadas.
+- Texto, CTA e ilustração dos empty states ficam integralmente dentro do viewport, sem clipping ou transformações fora da área visível.
+- Todas as imagens acima da dobra reservam `width`/`height` ou `fill` + `sizes`; nenhum novo aviso de imagem do Next.js nas rotas em âmbito.
+- Skeleton e conteúdo final ocupam a mesma estrutura principal, sem salto visível de cabeçalho ou navegação.
+- Simplificação visual concreta: remover o CTA duplicado do dashboard, ocultar “Esta semana” e “Descobrir” quando vazios, reduzir o padrão de fundo sob blocos densos e eliminar cards aninhados nas superfícies tocadas.
+- Todos os elementos interativos mobile medem pelo menos 44 px em ambas as dimensões, ou têm uma caixa clicável invisível equivalente.
 
 ## Critérios de sucesso
 
