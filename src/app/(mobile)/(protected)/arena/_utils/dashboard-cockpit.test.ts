@@ -1,8 +1,10 @@
 import { describe, expect, it } from "vitest";
 import {
   buildCockpitActions,
+  buildDashboardViewModel,
   type DashboardEvent,
   selectActiveEvent,
+  selectSecondaryEvents,
 } from "./dashboard-cockpit";
 
 describe("buildCockpitActions", () => {
@@ -154,5 +156,219 @@ describe("selectActiveEvent", () => {
     };
 
     expect(selectActiveEvent([cancelled, later], now)).toEqual(later);
+  });
+});
+
+describe("selectSecondaryEvents", () => {
+  const now = new Date("2026-07-16T12:00:00.000Z");
+
+  it("returns the remaining upcoming events deterministically sorted, excluding the active one", () => {
+    const active: DashboardEvent = {
+      id: 2,
+      startsAt: new Date("2026-07-18T12:00:00.000Z"),
+      status: "scheduled",
+    };
+    const later: DashboardEvent = {
+      id: 5,
+      startsAt: new Date("2026-07-25T12:00:00.000Z"),
+      status: "scheduled",
+    };
+    // Same startsAt as each other — tie must break on the lowest id, same
+    // rule as selectActiveEvent, so ordering never depends on input order.
+    const tiedA: DashboardEvent = {
+      id: 9,
+      startsAt: new Date("2026-07-20T12:00:00.000Z"),
+      status: "confirmed",
+    };
+    const tiedB: DashboardEvent = {
+      id: 4,
+      startsAt: new Date("2026-07-20T12:00:00.000Z"),
+      status: "confirmed",
+    };
+
+    expect(
+      selectSecondaryEvents([later, active, tiedA, tiedB], active, now),
+    ).toEqual([tiedB, tiedA, later]);
+  });
+
+  it("excludes cancelled and past events", () => {
+    const cancelled: DashboardEvent = {
+      id: 1,
+      startsAt: new Date("2026-07-19T12:00:00.000Z"),
+      status: "cancelled",
+    };
+    const past: DashboardEvent = {
+      id: 2,
+      startsAt: new Date("2026-07-01T12:00:00.000Z"),
+      status: "scheduled",
+    };
+
+    expect(selectSecondaryEvents([cancelled, past], null, now)).toEqual([]);
+  });
+
+  it("returns an empty array when there is nothing beyond the active event", () => {
+    const active: DashboardEvent = {
+      id: 1,
+      startsAt: new Date("2026-07-18T12:00:00.000Z"),
+      status: "scheduled",
+    };
+
+    expect(selectSecondaryEvents([active], active, now)).toEqual([]);
+  });
+});
+
+describe("buildDashboardViewModel", () => {
+  const now = new Date("2026-07-16T12:00:00.000Z");
+
+  it("produces exactly one primary CTA and hides metrics/week/discover without a team event", () => {
+    const viewModel = buildDashboardViewModel({
+      hasTeam: true,
+      canManageTeam: true,
+      events: [],
+      squadCount: 0,
+      now,
+      isDiscoverFeatureActive: false,
+      hasDiscoverContent: false,
+    });
+
+    expect(viewModel.actions).toEqual({
+      primary: { type: "create-event" },
+      secondary: [{ type: "add-player" }],
+    });
+    expect(Array.isArray(viewModel.actions?.primary)).toBe(false);
+    expect(viewModel.showMetrics).toBe(false);
+    expect(viewModel.showWeek).toBe(false);
+    expect(viewModel.showDiscover).toBe(false);
+  });
+
+  it("surfaces the active event and shows metrics once one exists", () => {
+    const active: DashboardEvent = {
+      id: 1,
+      startsAt: new Date("2026-07-20T12:00:00.000Z"),
+      status: "scheduled",
+    };
+
+    const viewModel = buildDashboardViewModel({
+      hasTeam: true,
+      canManageTeam: true,
+      events: [active],
+      squadCount: 5,
+      now,
+      isDiscoverFeatureActive: false,
+      hasDiscoverContent: false,
+    });
+
+    expect(viewModel.activeEvent).toEqual(active);
+    expect(viewModel.actions?.primary).toEqual({
+      type: "view-event",
+      eventId: 1,
+    });
+    expect(viewModel.showMetrics).toBe(true);
+  });
+
+  it("sends a member without management permission to the squad", () => {
+    const viewModel = buildDashboardViewModel({
+      hasTeam: true,
+      canManageTeam: false,
+      events: [],
+      squadCount: 3,
+      now,
+      isDiscoverFeatureActive: false,
+      hasDiscoverContent: false,
+    });
+
+    expect(viewModel.actions).toEqual({
+      primary: { type: "view-squad" },
+      secondary: [],
+    });
+  });
+
+  it("does not offer add-player to a managed team that already has a squad", () => {
+    const viewModel = buildDashboardViewModel({
+      hasTeam: true,
+      canManageTeam: true,
+      events: [],
+      squadCount: 4,
+      now,
+      isDiscoverFeatureActive: false,
+      hasDiscoverContent: false,
+    });
+
+    expect(viewModel.actions).toEqual({
+      primary: { type: "create-event" },
+      secondary: [],
+    });
+  });
+
+  it("shows the week section only when secondary events exist beyond the active one", () => {
+    const active: DashboardEvent = {
+      id: 1,
+      startsAt: new Date("2026-07-18T12:00:00.000Z"),
+      status: "scheduled",
+    };
+    const secondary: DashboardEvent = {
+      id: 2,
+      startsAt: new Date("2026-07-22T12:00:00.000Z"),
+      status: "scheduled",
+    };
+
+    const withoutSecondary = buildDashboardViewModel({
+      hasTeam: true,
+      canManageTeam: true,
+      events: [active],
+      squadCount: 1,
+      now,
+      isDiscoverFeatureActive: false,
+      hasDiscoverContent: false,
+    });
+    expect(withoutSecondary.showWeek).toBe(false);
+    expect(withoutSecondary.secondaryEvents).toEqual([]);
+
+    const withSecondary = buildDashboardViewModel({
+      hasTeam: true,
+      canManageTeam: true,
+      events: [active, secondary],
+      squadCount: 1,
+      now,
+      isDiscoverFeatureActive: false,
+      hasDiscoverContent: false,
+    });
+    expect(withSecondary.showWeek).toBe(true);
+    expect(withSecondary.secondaryEvents).toEqual([secondary]);
+  });
+
+  it.each([
+    [false, false, false],
+    [true, false, false],
+    [false, true, false],
+    [true, true, true],
+  ])("shows discover only when the feature is active AND has content (feature=%s, content=%s -> %s)", (isDiscoverFeatureActive, hasDiscoverContent, expected) => {
+    const viewModel = buildDashboardViewModel({
+      hasTeam: true,
+      canManageTeam: true,
+      events: [],
+      squadCount: 1,
+      now,
+      isDiscoverFeatureActive,
+      hasDiscoverContent,
+    });
+
+    expect(viewModel.showDiscover).toBe(expected);
+  });
+
+  it("returns null actions and hides every section when there is no team", () => {
+    const viewModel = buildDashboardViewModel({
+      hasTeam: false,
+      canManageTeam: false,
+      events: [],
+      squadCount: 0,
+      now,
+      isDiscoverFeatureActive: true,
+      hasDiscoverContent: true,
+    });
+
+    expect(viewModel.actions).toBeNull();
+    expect(viewModel.showMetrics).toBe(false);
+    expect(viewModel.showWeek).toBe(false);
   });
 });

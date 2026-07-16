@@ -458,6 +458,21 @@
       "event": "Evento",
       "player": "Jugador"
     },
+    "cockpit": {
+      "noEventManagerTitle": "Crea tu próxima convocatoria",
+      "noEventManagerDescription": "Todavía no tienes ningún evento programado. Crea un partido o entrenamiento para empezar a convocar.",
+      "noEventMemberTitle": "Sin eventos programados",
+      "noEventMemberDescription": "Tu equipo aún no tiene ningún evento. Consulta la plantilla mientras tanto.",
+      "createEvent": "Crear evento",
+      "addPlayer": "Añadir jugador",
+      "viewSquad": "Ver plantilla",
+      "openTimer": "Cronómetro",
+      "eventsErrorTitle": "No se pudieron cargar los eventos",
+      "eventsErrorDescription": "Comprueba tu conexión e inténtalo de nuevo.",
+      "squadErrorTitle": "No se pudo cargar la plantilla",
+      "squadErrorDescription": "Comprueba tu conexión e inténtalo de nuevo.",
+      "retry": "Intentar de nuevo"
+    },
     "defaultUser": "Usuario",
     "hero": {
       "nextMatch": "Próximo Partido",
