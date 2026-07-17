@@ -3,7 +3,7 @@
 import { useQuery } from "@tanstack/react-query";
 
 export function useTeamPaymentSettings(teamId?: number | string) {
-  const { data, isLoading, error, refetch } = useQuery({
+  const { data, isLoading, isFetching, error, refetch } = useQuery({
     queryKey: ["team-payment-settings", teamId],
     enabled: !!teamId,
     queryFn: async () => {
@@ -24,6 +24,7 @@ export function useTeamPaymentSettings(teamId?: number | string) {
   return {
     settings: data,
     isLoading,
+    isFetching,
     error,
     refetch,
   };

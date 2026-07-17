@@ -1013,7 +1013,8 @@
       "uploadProof": "Charger des Preuves",
       "setMethods": "Méthodes de Paiement",
       "autoValidate": "Validation automatique",
-      "relevant": "Autres Actions"
+      "relevant": "Autres Actions",
+      "retry": "Réessayer"
     },
     "noPayments": "Aucun paiement trouvé",
     "noPaymentsSub": "Aucun enregistrement de paiement correspondant trouvé dans ce filtre.",
@@ -1078,7 +1079,11 @@
       "creditCard": "Carte de crédit"
     },
     "markRefund": "Rembourser",
-    "markCredit": "Convertir en Crédit"
+    "markCredit": "Convertir en Crédit",
+    "empty": {
+      "errorTitle": "Impossible de charger les paiements",
+      "errorDescription": "Vérifiez votre connexion et réessayez."
+    }
   },
   "arenaBadges": {
     "new": "Nouveau",
@@ -1114,7 +1119,8 @@
     },
     "actions": {
       "add": "Ajouter",
-      "addPlayer": "Ajouter un joueur"
+      "addPlayer": "Ajouter un joueur",
+      "retry": "Réessayer"
     },
     "filters": {
       "all": "Tous",
@@ -1180,6 +1186,12 @@
       "remove": "Retirer co-capitaine",
       "removeDesc": "Révoquer les permissions de gestion. Redevient joueur.",
       "removeLabel": "Retirer"
+    },
+    "empty": {
+      "title": "Aucun joueur dans l'effectif pour l'instant",
+      "subtitle": "Ajoutez le premier joueur pour commencer à gérer les convocations.",
+      "errorTitle": "Impossible de charger l'effectif",
+      "errorDescription": "Vérifiez votre connexion et réessayez."
     }
   },
   "common": {

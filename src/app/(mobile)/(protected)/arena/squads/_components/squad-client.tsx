@@ -5,8 +5,11 @@ import { Plus, Users2 } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { AddPlayerSheet } from "@/components/arena/add-player-sheet";
 import { Cta } from "@/components/arena/cta";
-import Loading from "@/components/loading";
-import { Button } from "@/components/ui/button";
+import { ArenaEmptyState } from "@/components/arena/empty-state";
+import {
+  ArenaQueryError,
+  deriveQueryViewState,
+} from "@/components/arena/query-state";
 import { useSquadClientState } from "../_hooks/use-squad-client-state";
 import { SquadEmailSheet } from "./squad-email-sheet";
 import { SquadFilterPills } from "./squad-filter-pills";
@@ -15,9 +18,36 @@ import { SquadGroupsStrip } from "./squad-groups-strip";
 import { SquadPlayerRow } from "./squad-player-row";
 import { SquadSearchBar } from "./squad-search-bar";
 
+/**
+ * Structural loading placeholder for the roster's initial fetch. Mirrors
+ * `EventsListSkeleton`'s `animate-pulse` + `bg-arena-surface-el`
+ * convention (established in Task 3/4) so every skeleton in the app reads
+ * as one visual language. Only replaces the list body — header, search
+ * bar, filter pills and groups strip stay mounted around it.
+ */
+function SquadListSkeleton() {
+  return (
+    <div className="space-y-2" aria-hidden="true">
+      {[0, 1, 2, 3, 4].map(i => (
+        <div
+          key={`squad-skeleton-${i}`}
+          className="flex items-center gap-3 rounded-[14px] border border-arena-border bg-arena-surface px-3 py-3.5"
+        >
+          <div className="size-[46px] shrink-0 animate-pulse rounded-full bg-arena-surface-el" />
+          <div className="min-w-0 flex-1 space-y-2">
+            <div className="h-3.5 w-2/3 animate-pulse rounded-full bg-arena-surface-el" />
+            <div className="h-3 w-1/3 animate-pulse rounded-full bg-arena-surface-el" />
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
 export function SquadClient({ userId }: { userId: string }) {
   const t = useTranslations("arenaSquad");
   const {
+    activeTeamCanManage,
     activeTeamId,
     closeGroupSheet,
     editingGroupId,
@@ -34,7 +64,6 @@ export function SquadClient({ userId }: { userId: string }) {
     groupOpen,
     groups,
     groupSelection,
-    isLoading,
     isSendingEmail,
     openCreateGroup,
     openEditGroup,
@@ -51,16 +80,16 @@ export function SquadClient({ userId }: { userId: string }) {
     setSearch,
     setShowAdd,
     showAdd,
+    squadState,
     toggleGroupPlayer,
   } = useSquadClientState();
 
-  if (isLoading) {
-    return (
-      <div className="flex h-full items-center justify-center">
-        <Loading text={t("loading")} />
-      </div>
-    );
-  }
+  const squadViewState = deriveQueryViewState({
+    hasData: squadState.players.length > 0,
+    isInitialLoading: squadState.isInitialLoading,
+    isFetching: squadState.isFetching,
+    error: squadState.error,
+  });
 
   return (
     <>
@@ -138,9 +167,38 @@ export function SquadClient({ userId }: { userId: string }) {
             t={t}
           />
 
-          {/* List */}
+          {/* List — only this body swaps between skeleton/error/empty/list.
+              Header, search bar, filter pills and groups strip above stay
+              mounted regardless of the roster query's state. */}
           <div className="flex-1 overflow-y-auto px-4 pb-24">
-            {filteredPlayers.length === 0 ? (
+            {squadViewState.status === "loading" ? (
+              <SquadListSkeleton />
+            ) : squadViewState.status === "error" ? (
+              <ArenaQueryError
+                title={t("empty.errorTitle")}
+                description={t("empty.errorDescription")}
+                retryLabel={t("actions.retry")}
+                onRetry={squadState.refetch}
+                isRetrying={squadState.isFetching}
+              />
+            ) : squadViewState.status === "empty" ? (
+              <ArenaEmptyState
+                icon={Users2}
+                title={t("empty.title")}
+                description={t("empty.subtitle")}
+                action={
+                  activeTeamCanManage ? (
+                    <Cta
+                      variant="primary"
+                      size="sm"
+                      onClick={() => setShowAdd(true)}
+                    >
+                      {t("actions.addPlayer")}
+                    </Cta>
+                  ) : undefined
+                }
+              />
+            ) : filteredPlayers.length === 0 ? (
               <div className="flex flex-col items-center justify-center gap-3 py-12 text-center">
                 <div className="flex size-14 items-center justify-center rounded-[16px] border border-arena-border bg-arena-surface">
                   <Users2

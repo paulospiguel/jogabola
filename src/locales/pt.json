@@ -1060,7 +1060,8 @@
       "uploadProof": "Carregar Comprovativos",
       "setMethods": "Métodos de Pagamento",
       "autoValidate": "Auto-validação",
-      "relevant": "Outras Ações"
+      "relevant": "Outras Ações",
+      "retry": "Tentar novamente"
     },
     "status": {
       "pending": "Pendente",
@@ -1078,7 +1079,11 @@
       "validating": "Pago - aguarda validação"
     },
     "markRefund": "Devolver (Estorno)",
-    "markCredit": "Deixar em Crédito"
+    "markCredit": "Deixar em Crédito",
+    "empty": {
+      "errorTitle": "Não foi possível carregar os pagamentos",
+      "errorDescription": "Verifica a tua ligação e tenta novamente."
+    }
   },
   "arenaBadges": {
     "new": "Novo",
@@ -1114,7 +1119,8 @@
     },
     "actions": {
       "add": "Adicionar",
-      "addPlayer": "Adicionar jogador"
+      "addPlayer": "Adicionar jogador",
+      "retry": "Tentar novamente"
     },
     "filters": {
       "all": "Todos",
@@ -1180,6 +1186,12 @@
       "remove": "Remover co-capitão",
       "removeDesc": "Revogar permissões de gestão. Fica como jogador.",
       "removeLabel": "Remover"
+    },
+    "empty": {
+      "title": "Ainda não há jogadores no plantel",
+      "subtitle": "Adiciona o primeiro jogador para começares a gerir convocatórias.",
+      "errorTitle": "Não foi possível carregar o plantel",
+      "errorDescription": "Verifica a tua ligação e tenta novamente."
     }
   },
   "common": {

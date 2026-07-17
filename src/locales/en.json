@@ -1075,10 +1075,15 @@
       "uploadProof": "Upload Proofs",
       "setMethods": "Payment Methods",
       "autoValidate": "Auto-validation",
-      "relevant": "Other Actions"
+      "relevant": "Other Actions",
+      "retry": "Try again"
     },
     "markRefund": "Refund",
-    "markCredit": "Convert to Credit"
+    "markCredit": "Convert to Credit",
+    "empty": {
+      "errorTitle": "We couldn't load the payments",
+      "errorDescription": "Check your connection and try again."
+    }
   },
   "arenaBadges": {
     "new": "New",
@@ -1114,7 +1119,8 @@
     },
     "actions": {
       "add": "Add",
-      "addPlayer": "Add player"
+      "addPlayer": "Add player",
+      "retry": "Try again"
     },
     "filters": {
       "all": "All",
@@ -1180,6 +1186,12 @@
       "remove": "Remove co-captain",
       "removeDesc": "Revoke management permissions. Reverts to player.",
       "removeLabel": "Remove"
+    },
+    "empty": {
+      "title": "No players in the roster yet",
+      "subtitle": "Add your first player to start managing call-ups.",
+      "errorTitle": "We couldn't load the roster",
+      "errorDescription": "Check your connection and try again."
     }
   },
   "common": {

@@ -23,7 +23,7 @@ export interface SquadPlayer {
 export function useSquad() {
   const { activeTeamId } = useTeams();
 
-  const { data, isLoading, error, refetch } = useQuery({
+  const { data, isLoading, isFetching, error, refetch } = useQuery({
     queryKey: ["squad", activeTeamId],
     enabled: !!activeTeamId,
     queryFn: async (): Promise<SquadPlayer[]> => {
@@ -45,6 +45,7 @@ export function useSquad() {
     players: data ?? [],
     activeTeamId,
     isLoading,
+    isFetching,
     error,
     refetch,
   };

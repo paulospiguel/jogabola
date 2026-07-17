@@ -1013,7 +1013,8 @@
       "uploadProof": "Cargar Comprobantes",
       "setMethods": "Métodos de Pago",
       "autoValidate": "Auto-validación",
-      "relevant": "Otras Acciones"
+      "relevant": "Otras Acciones",
+      "retry": "Intentar de nuevo"
     },
     "noPayments": "Ningún pago encontrado",
     "noPaymentsSub": "No se encontraron registros de pago correspondientes en este filtro.",
@@ -1078,7 +1079,11 @@
       "creditCard": "Tarjeta de crédito"
     },
     "markRefund": "Reembolso",
-    "markCredit": "Dejar como Crédito"
+    "markCredit": "Dejar como Crédito",
+    "empty": {
+      "errorTitle": "No se pudieron cargar los pagos",
+      "errorDescription": "Comprueba tu conexión e inténtalo de nuevo."
+    }
   },
   "arenaBadges": {
     "new": "Nuevo",
@@ -1114,7 +1119,8 @@
     },
     "actions": {
       "add": "Añadir",
-      "addPlayer": "Añadir jugador"
+      "addPlayer": "Añadir jugador",
+      "retry": "Intentar de nuevo"
     },
     "filters": {
       "all": "Todos",
@@ -1180,6 +1186,12 @@
       "remove": "Quitar co-capitán",
       "removeDesc": "Revocar permisos de gestión. Vuelve a ser jugador.",
       "removeLabel": "Quitar"
+    },
+    "empty": {
+      "title": "Aún no hay jugadores en la plantilla",
+      "subtitle": "Añade el primer jugador para empezar a gestionar las convocatorias.",
+      "errorTitle": "No se pudo cargar la plantilla",
+      "errorDescription": "Comprueba tu conexión e inténtalo de nuevo."
     }
   },
   "common": {

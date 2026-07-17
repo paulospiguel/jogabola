@@ -3,6 +3,10 @@ import Link from "next/link";
 import { useLocale } from "next-intl";
 import { JbAvatar } from "@/components/arena/avatar";
 import { ArenaEmptyState } from "@/components/arena/empty-state";
+import {
+  ArenaQueryError,
+  deriveQueryViewState,
+} from "@/components/arena/query-state";
 import { VerifiedBadge } from "@/components/arena/verified-badge";
 import { ButtonGroup } from "@/components/ui/button-group";
 import {
@@ -11,7 +15,10 @@ import {
 } from "@/constants/payments";
 import type { Payment } from "@/hooks/use-payments";
 import { cn, formatRelativeTime } from "@/lib/utils";
-import type { PaymentsFilter } from "../_hooks/use-payments-page-state";
+import type {
+  PaymentsFilter,
+  PaymentsSectionState,
+} from "../_hooks/use-payments-page-state";
 
 type TranslationFn = (
   key: string,
@@ -22,8 +29,8 @@ interface PaymentsListTabProps {
   activeFilter: PaymentsFilter;
   badgeT: TranslationFn;
   filteredPayments: Payment[];
-  isLoading: boolean;
   onSelectProofPayment: (payment: Payment) => void;
+  paymentsState: PaymentsSectionState;
   setActiveFilter: (filter: PaymentsFilter) => void;
   t: TranslationFn;
 }
@@ -86,16 +93,49 @@ function PaymentStatusBadge({
   );
 }
 
+/**
+ * Structural loading placeholder for the payments list's initial fetch.
+ * Mirrors `EventsListSkeleton`'s `animate-pulse` + `bg-arena-surface-el`
+ * convention (established in Task 3/4) so every skeleton in the app reads
+ * as one visual language.
+ */
+function PaymentsListSkeleton() {
+  return (
+    <div className="space-y-3" aria-hidden="true">
+      {[0, 1, 2].map(i => (
+        <div
+          key={`payment-skeleton-${i}`}
+          className="jb-card flex items-center gap-3 p-3.5"
+        >
+          <div className="size-10 shrink-0 animate-pulse rounded-full bg-arena-surface-el" />
+          <div className="min-w-0 flex-1 space-y-2">
+            <div className="h-3.5 w-1/2 animate-pulse rounded-full bg-arena-surface-el" />
+            <div className="h-3 w-1/3 animate-pulse rounded-full bg-arena-surface-el" />
+          </div>
+          <div className="h-4 w-14 shrink-0 animate-pulse rounded-full bg-arena-surface-el" />
+        </div>
+      ))}
+    </div>
+  );
+}
+
 export function PaymentsListTab({
   activeFilter,
   badgeT,
   filteredPayments,
-  isLoading,
   onSelectProofPayment,
+  paymentsState,
   setActiveFilter,
   t,
 }: PaymentsListTabProps) {
   const locale = useLocale();
+  const paymentsViewState = deriveQueryViewState({
+    hasData: paymentsState.payments.length > 0,
+    isInitialLoading: paymentsState.isInitialLoading,
+    isFetching: paymentsState.isFetching,
+    error: paymentsState.error,
+  });
+
   return (
     <>
       <div className="overflow-x-auto pb-3 scrollbar-none w-full">
@@ -119,10 +159,16 @@ export function PaymentsListTab({
       </div>
 
       <div className="grid gap-3 mt-2">
-        {isLoading ? (
-          <div className="jb-card flex items-center justify-center p-12 text-arena-text-muted">
-            <span className="animate-pulse">{t("loading")}</span>
-          </div>
+        {paymentsViewState.status === "loading" ? (
+          <PaymentsListSkeleton />
+        ) : paymentsViewState.status === "error" ? (
+          <ArenaQueryError
+            title={t("empty.errorTitle")}
+            description={t("empty.errorDescription")}
+            retryLabel={t("actions.retry")}
+            onRetry={paymentsState.refetch}
+            isRetrying={paymentsState.isFetching}
+          />
         ) : filteredPayments.length === 0 ? (
           <ArenaEmptyState
             icon={Wallet}
