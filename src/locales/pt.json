@@ -460,7 +460,7 @@
   },
   "arenaDashboard": {
     "actions": {
-      "createEvent": "Criar Evento",
+      "createEvent": "Criar evento",
       "event": "Evento",
       "player": "Jogador"
     },
@@ -481,7 +481,7 @@
     },
     "defaultUser": "Utilizador",
     "hero": {
-      "nextMatch": "Próximo Jogo",
+      "nextMatch": "Próximo jogo",
       "nextEvent": "Próximo evento",
       "prevEvent": "Evento anterior",
       "noEvents": "Sem eventos próximos. Cria um!",
@@ -513,8 +513,8 @@
       "reserves": "Reservas",
       "new": "Novos"
     },
-    "add-player": "Adicionar Jogador",
-    "create-event": "Criar Evento"
+    "add-player": "Adicionar jogador",
+    "create-event": "Criar evento"
   },
   "arenaEventDetail": {
     "actions": {
@@ -696,7 +696,7 @@
     },
     "kicker": "Agenda",
     "hero": {
-      "nextMatch": "Próximo Jogo",
+      "nextMatch": "Próximo jogo",
       "view": "Ver",
       "nextEvent": "Evento seguinte",
       "prevEvent": "Evento anterior",
@@ -730,14 +730,14 @@
       "completed": "✓ Concluído"
     },
     "dangerZone": "Zona de Perigo",
-    "deleteEvent": "Excluir Evento",
+    "deleteEvent": "Eliminar evento",
     "deleteWarningTitle": "Tem a certeza?",
     "deleteWarningDesc": "Esta ação não pode ser desfeita. Todos os jogadores confirmados serão notificados do cancelamento.",
-    "cannotDeletePaidEvent": "Este evento tem pagamentos associados. Por questões de integridade financeira, não é possível excluí-lo. Deseja cancelar o evento em vez disso?",
-    "cancelEventInstead": "Cancelar Evento",
-    "eventDeleted": "Evento excluído com sucesso",
-    "deleteError": "Erro ao excluir o evento",
-    "cancelWarningTitle": "Cancelar Evento",
+    "cannotDeletePaidEvent": "Este evento tem pagamentos associados. Por questões de integridade financeira, não é possível eliminá-lo. Deseja cancelar o evento em vez disso?",
+    "cancelEventInstead": "Cancelar evento",
+    "eventDeleted": "Evento eliminado com sucesso",
+    "deleteError": "Erro ao eliminar o evento",
+    "cancelWarningTitle": "Cancelar evento",
     "cancelWarningDesc": "O evento passará ao estado cancelado. As vagas ficarão indisponíveis e os pagamentos poderão ser geridos."
   },
   "arenaNav": {
@@ -1206,6 +1206,7 @@
     "accept": "Aceitar",
     "actions": "Ações",
     "back": "Voltar",
+    "betaLabel": "Beta",
     "cancel": "Cancelar",
     "city": "Cidade",
     "close": "Fechar",
@@ -2313,7 +2314,7 @@
     "tabs": {
       "activities": "Atividades",
       "overview": "Visão geral",
-      "settings": "Configurações",
+      "settings": "Definições",
       "teams": "Minhas equipas"
     },
     "dashboard": {
