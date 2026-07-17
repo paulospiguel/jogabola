@@ -93,7 +93,7 @@ export default async function ArenaLayout({
 
           <MobileTopBar />
 
-          <main className="jb-arena-shell relative flex-1 pt-16 md:pt-0">
+          <main className="jb-arena-shell relative min-w-0 flex-1 pt-16 md:pt-0">
             {children}
           </main>
 

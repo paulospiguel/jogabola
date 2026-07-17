@@ -513,6 +513,7 @@
   .jb-stack {
     display: grid;
     gap: 8px;
+    min-width: 0;
   }
 
   .jb-stat-grid {
