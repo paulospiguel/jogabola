@@ -6,13 +6,6 @@ import { db } from "@/db/client";
 import { notifications } from "@/db/schema";
 import { getAuthUser } from "@/lib/action-helpers";
 
-// Re-exported for backwards compat — these are pure server helpers, not HTTP endpoints
-export {
-  ensureDeadlineReminders,
-  notifyPaymentValidationRequired,
-  sendNotification,
-} from "@/lib/notifications";
-
 export async function getNotifications() {
   const user = await getAuthUser();
   if (!user)
