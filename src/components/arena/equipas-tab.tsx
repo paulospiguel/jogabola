@@ -29,7 +29,7 @@ interface EquipasTabProps {
   canEdit: boolean;
 }
 
-export function EquipasTab({ eventId, confirmed, canEdit }: EquipasTabProps) {
+export function EquipasTab({ eventId, confirmed }: EquipasTabProps) {
   const t = useTranslations("arenaEquipas");
   const [guests, setGuests] = useState<Guest[]>([]);
   const [format, setFormat] = useState<Format>({ pPerTeam: 7, nTeams: 2 });

@@ -98,7 +98,7 @@ function getTrustedOrigins(): string[] {
   // Programmatically trust local network IPs (e.g. 192.168.x.x) during development
   if (process.env.NODE_ENV !== "production") {
     try {
-      const os = require("os");
+      const os = require("node:os");
       const interfaces = os.networkInterfaces();
       for (const name of Object.keys(interfaces)) {
         const ifaceList = interfaces[name];

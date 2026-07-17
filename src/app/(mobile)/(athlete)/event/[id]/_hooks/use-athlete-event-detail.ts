@@ -32,7 +32,6 @@ export function useAthleteEventDetail({
   userName,
   initialMyStatus,
   priceCents,
-  rosterOnly,
   t,
   refetch,
 }: UseAthleteEventDetailOptions) {
@@ -84,7 +83,7 @@ export function useAthleteEventDetail({
     void refetch();
   }
 
-  async function handleConfirm(isCancelled: boolean, isFull: boolean) {
+  async function handleConfirm(isCancelled: boolean) {
     if (isCancelled) return;
     setActionError("");
 

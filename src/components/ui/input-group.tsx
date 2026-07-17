@@ -64,6 +64,7 @@ function InputGroupAddon({
 }: React.ComponentProps<"div"> & VariantProps<typeof inputGroupAddonVariants>) {
   return (
     // biome-ignore lint/a11y/useSemanticElements: Addons can contain mixed adornments and controls, not a fieldset.
+    // biome-ignore lint/a11y/useKeyWithClickEvents: click-to-focus convenience on non-interactive addon, keyboard events not applicable without tabIndex
     <div
       role="group"
       data-slot="input-group-addon"

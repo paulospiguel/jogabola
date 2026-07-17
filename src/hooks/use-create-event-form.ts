@@ -99,7 +99,7 @@ export function useCreateEventForm({
   });
 
   const [inputFee, setInputFee] = useState(() => {
-    if (eventToEdit && eventToEdit.priceCents && eventToEdit.priceCents > 0) {
+    if (eventToEdit?.priceCents && eventToEdit.priceCents > 0) {
       return `${(eventToEdit.priceCents / 100).toFixed(2)}€`;
     }
     return t("placeholders.fee");

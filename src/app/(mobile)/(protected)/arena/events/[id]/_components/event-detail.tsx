@@ -6,6 +6,7 @@ import {
   Clock,
   Compass,
   List,
+  type LucideIcon,
   MapPin,
   MessageSquare,
   Settings2,
@@ -155,8 +156,7 @@ export function EventDetail({
     }
   };
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const TABS: { id: Tab; label: string; icon: any }[] = [
+  const TABS: { id: Tab; label: string; icon: LucideIcon }[] = [
     { id: "roster", label: t("tabs.roster"), icon: List },
     { id: "teams", label: t("tabs.teams"), icon: Users },
     { id: "location", label: t("tabs.location"), icon: MapPin },

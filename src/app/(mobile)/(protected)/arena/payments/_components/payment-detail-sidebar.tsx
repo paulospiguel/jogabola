@@ -49,7 +49,7 @@ export function PaymentDetailSidebar({
 
   const handleRefund = async () => {
     const pId = parseInt(payment.id.replace("PAY-", ""), 10);
-    if (isNaN(pId)) return;
+    if (Number.isNaN(pId)) return;
     setLoadingAction("refund");
     await markPaymentAsRefunded(pId);
     setLoadingAction(null);
@@ -58,7 +58,7 @@ export function PaymentDetailSidebar({
 
   const handleCredit = async () => {
     const pId = parseInt(payment.id.replace("PAY-", ""), 10);
-    if (isNaN(pId)) return;
+    if (Number.isNaN(pId)) return;
     setLoadingAction("credit");
     await markPaymentAsCredited(pId);
     setLoadingAction(null);

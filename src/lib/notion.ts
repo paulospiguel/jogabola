@@ -1,4 +1,4 @@
-import { Client } from "@notionhq/client";
+import { Client, isFullPage } from "@notionhq/client";
 
 const TypeProperty = {
   Tester: "Tester",
@@ -47,9 +47,12 @@ export async function isTesterEmail(email: string): Promise<boolean> {
       });
       const emails = new Set<string>();
       for (const page of response.results) {
-        const props = (page as any)?.properties;
-        const emailProp = props?.Email?.email as string | null;
-        if (emailProp) emails.add(emailProp.toLowerCase().trim());
+        if (!isFullPage(page)) continue;
+
+        const emailProperty = page.properties.Email;
+        if (emailProperty?.type === "email" && emailProperty.email) {
+          emails.add(emailProperty.email.toLowerCase().trim());
+        }
       }
 
       testerCache = { emails, expiresAt: now + 5 * 60 * 1000 };
@@ -59,7 +62,7 @@ export async function isTesterEmail(email: string): Promise<boolean> {
     }
   }
 
-  return testerCache!.emails.has(email.toLowerCase().trim());
+  return testerCache?.emails.has(email.toLowerCase().trim());
 }
 
 export async function addToWaitlist(

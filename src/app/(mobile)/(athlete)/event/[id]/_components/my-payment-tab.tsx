@@ -2,7 +2,6 @@
 
 import { Check, Clock, Info, X } from "lucide-react";
 import { useTranslations } from "next-intl";
-import { ATTENDANCE_STATUS } from "@/constants/attendance";
 import { PAYMENT_STATUS } from "@/constants/payments";
 import { useMyPaymentForEvent } from "@/hooks/use-my-payment-for-event";
 import { cn } from "@/lib/utils";

@@ -38,13 +38,13 @@ interface MessageMenuState {
 }
 
 // Decorative placeholder bubbles for the blurred locked-chat teaser.
-const TEASER_BUBBLES: { self: boolean; w: number }[] = [
-  { self: false, w: 180 },
-  { self: true, w: 120 },
-  { self: false, w: 150 },
-  { self: false, w: 200 },
-  { self: true, w: 90 },
-  { self: false, w: 160 },
+const TEASER_BUBBLES: { id: string; self: boolean; w: number }[] = [
+  { id: "teaser-a", self: false, w: 180 },
+  { id: "teaser-b", self: true, w: 120 },
+  { id: "teaser-c", self: false, w: 150 },
+  { id: "teaser-d", self: false, w: 200 },
+  { id: "teaser-e", self: true, w: 90 },
+  { id: "teaser-f", self: false, w: 160 },
 ];
 
 export function EventChatTab({
@@ -97,9 +97,9 @@ export function EventChatTab({
           aria-hidden="true"
           className="flex flex-1 flex-col gap-3.5 p-4 blur-[7px] select-none pointer-events-none opacity-60"
         >
-          {TEASER_BUBBLES.map((b, i) => (
+          {TEASER_BUBBLES.map(b => (
             <div
-              key={`teaser-${i}`}
+              key={b.id}
               className={cn(
                 "flex items-start gap-2.5 max-w-[80%]",
                 b.self ? "self-end flex-row-reverse" : "self-start",

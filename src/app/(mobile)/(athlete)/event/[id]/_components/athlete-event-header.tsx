@@ -168,21 +168,8 @@ interface AthleteEventHeaderProps {
 
 export function AthleteEventHeader({
   event,
-  confirmedCount,
-  myStatus,
-  userName,
-  isLoading,
   t,
-}: AthleteEventHeaderProps) {
-  const isGame =
-    event.type === "match" ||
-    event.type === "game" ||
-    event.type === "challenge";
-  const isCancelled =
-    event.status === EVENT_STATUS.CANCELLED || event.status === "canceled";
-  const isRosterOnly = event.rosterOnly ?? false;
-  const total = Number(event.maxParticipants) || 14;
-
+}: Pick<AthleteEventHeaderProps, "event" | "t">) {
   return (
     <header className="sticky top-0 z-30 flex h-14 items-center justify-end px-4">
       <EventShareButton eventTitle={event.title} t={t} />

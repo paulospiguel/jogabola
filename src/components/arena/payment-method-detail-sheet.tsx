@@ -135,10 +135,8 @@ export function PaymentMethodDetailSheet({
     }
   }
 
-  const methodKey = type as keyof typeof t;
-
   return (
-    <BottomSheet title={t(`${type}.title` as any)} onClose={onClose}>
+    <BottomSheet title={t(`${type}.title`)} onClose={onClose}>
       <div className="flex flex-col gap-5 p-5 pb-8">
         {/* Method header */}
         <div
@@ -157,10 +155,10 @@ export function PaymentMethodDetailSheet({
           </div>
           <div>
             <p className="text-[14px] font-bold text-arena-text">
-              {t(`${type}.title` as any)}
+              {t(`${type}.title`)}
             </p>
             <p className="text-[11px] text-arena-text-muted">
-              {t(`${type}.description` as any)}
+              {t(`${type}.description`)}
             </p>
           </div>
         </div>

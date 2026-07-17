@@ -459,7 +459,7 @@ export async function getPlayerHistory(playerId: string, teamId: number) {
           eq(matchSessions.teamId, teamId),
           registeredUser
             ? eq(attendance.playerId, registeredUser.id)
-            : eq(attendance.guestEmail, playerEmail!),
+            : eq(attendance.guestEmail, playerEmail ?? ""),
         ),
       )
       .orderBy(desc(matchSessions.startsAt));

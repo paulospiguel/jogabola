@@ -78,7 +78,8 @@ export async function sendEventReminderCron(
   let skipped = 0;
 
   for (const attendee of confirmedAttendees) {
-    if (!attendee.playerId || !attendee.playerEmail) {
+    const { playerId, playerEmail } = attendee;
+    if (!playerId || !playerEmail) {
       skipped++;
       continue;
     }
@@ -86,7 +87,7 @@ export async function sendEventReminderCron(
     // Idempotency: check if reminder already sent for this event
     const existingReminder = await db.query.notifications.findFirst({
       where: (n, { and, eq }) =>
-        and(eq(n.userId, attendee.playerId!), eq(n.type, "event_reminder_24h")),
+        and(eq(n.userId, playerId), eq(n.type, "event_reminder_24h")),
       columns: { id: true, metadata: true },
     });
 
@@ -101,7 +102,7 @@ export async function sendEventReminderCron(
     }
 
     // Send email
-    await sendEventReminder(attendee.playerEmail, attendee.playerName, {
+    await sendEventReminder(playerEmail, attendee.playerName, {
       id: event.id,
       title: event.title,
       date: eventDate,
@@ -114,7 +115,7 @@ export async function sendEventReminderCron(
 
     // Send in-app notification
     await sendNotification({
-      userId: attendee.playerId,
+      userId: playerId,
       type: "event_reminder_24h",
       title: `Jogo amanhã — ${event.title}`,
       message: `O teu jogo começa em ${hoursUntil}h. Local: ${event.location}.`,
@@ -188,7 +189,8 @@ export async function sendPaymentRemindersCron(): Promise<{
       );
 
     for (const attendee of confirmedAttendees) {
-      if (!attendee.playerId) {
+      const { playerId } = attendee;
+      if (!playerId) {
         skipped++;
         continue;
       }
@@ -198,7 +200,7 @@ export async function sendPaymentRemindersCron(): Promise<{
         where: (mr, { and, eq }) =>
           and(
             eq(mr.matchSessionId, event.id),
-            eq(mr.playerId, attendee.playerId!),
+            eq(mr.playerId, playerId),
           ),
         columns: { id: true, status: true },
       });
@@ -217,7 +219,7 @@ export async function sendPaymentRemindersCron(): Promise<{
       const existingReminder = await db.query.notifications.findFirst({
         where: (n, { and, eq }) =>
           and(
-            eq(n.userId, attendee.playerId!),
+            eq(n.userId, playerId),
             eq(n.type, "payment_deadline_reminder"),
           ),
         columns: { id: true, metadata: true },
@@ -235,7 +237,7 @@ export async function sendPaymentRemindersCron(): Promise<{
 
       // Send in-app notification
       await sendNotification({
-        userId: attendee.playerId,
+        userId: playerId,
         type: "payment_deadline_reminder",
         title: `Prazo de pagamento ultrapassado — ${event.title}`,
         message: `O prazo de pagamento para "${event.title}" já passou. Regulariza o pagamento para garantires o teu lugar.`,

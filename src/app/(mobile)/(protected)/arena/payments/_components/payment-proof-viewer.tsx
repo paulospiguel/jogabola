@@ -169,6 +169,7 @@ export function PaymentProofViewer({
                 className="w-full h-full bg-white border-0"
               />
             ) : (
+              // biome-ignore lint/performance/noImgElement: dynamic user-uploaded image, next/Image requires fixed dimensions/domains
               <img
                 src={proofUrl}
                 alt={alt}

@@ -122,7 +122,16 @@ export default function Header() {
 
           {session?.user && !isHome && (
             <div className="hidden md:block">
-              <UserMenu user={session.user as any} />
+              <UserMenu
+                user={
+                  session.user as {
+                    id: string | number;
+                    name: string;
+                    email: string;
+                    image?: string | null;
+                  }
+                }
+              />
             </div>
           )}
 
@@ -163,7 +172,16 @@ export default function Header() {
               <SheetFooter className="border-border-default flex-col gap-3 border-t pt-4">
                 {session?.user && !isHome && (
                   <div className="flex flex-col items-center gap-4 py-4">
-                    <UserMenu user={session.user as any} />
+                    <UserMenu
+                      user={
+                        session.user as {
+                          id: string | number;
+                          name: string;
+                          email: string;
+                          image?: string | null;
+                        }
+                      }
+                    />
                     <div className="flex flex-col items-center">
                       <p className="text-sm font-medium text-white">
                         {session.user.name}
