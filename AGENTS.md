@@ -35,7 +35,7 @@ Next.js 16 (App Router, `next dev --turbo`) · React 19 · TypeScript · pnpm ·
 ## Workflow de agentes
 O fluxo canónico deste repositório é o **Superpowers** (brainstorming → writing-plans → executing-plans → verification-before-completion). Planos vivem em `docs/superpowers/plans/`. Não usar o pipeline GSD (`/gsd:*`) neste repositório.
 
-A skill `dev-coder` (`.claude/skills/dev-coder/`) é o standard de implementação por omissão: arquitetura, regras de TypeScript/React, Server Actions, e tokens visuais Arena.
+A skill `dev-coder` (`.agents/skills/dev-coder/`) é o standard de implementação por omissão: arquitetura, regras de TypeScript/React, Server Actions, e tokens visuais Arena.
 
 ## Agent skills
 
