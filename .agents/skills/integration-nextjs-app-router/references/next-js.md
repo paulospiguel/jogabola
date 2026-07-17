@@ -2,28 +2,28 @@
 
 PostHog makes it easy to get data about traffic and usage of your [Next.js](https://nextjs.org/) app. Integrating PostHog into your site enables analytics about user behavior, custom events capture, session recordings, feature flags, and more.
 
-This guide walks you through integrating PostHog into your Next.js app using the [React](/docs/libraries/react.md) and the [Node.js](/docs/libraries/node.md) SDKs.
+This guide walks you through integrating PostHog into your Next.js app using the [React](https://posthog.com/docs/libraries/react.md) and the [Node.js](https://posthog.com/docs/libraries/node.md) SDKs.
 
 > You can see a working example of this integration in our [Next.js demo app](https://github.com/PostHog/posthog-js/tree/main/playground/nextjs).
 
 Next.js has both client and server-side rendering, as well as pages and app routers. We'll cover all of these options in this guide.
 
-> **Try `@posthog/next` (pre-release):** A simplified Next.js integration with synchronized client/server identity, server-side flag bootstrapping, and a built-in API proxy. [Read the setup guide →](/docs/libraries/next-js/posthog-next.md)
+> **Try `@posthog/next` (pre-release):** A simplified Next.js integration with synchronized client/server identity, server-side flag bootstrapping, and a built-in API proxy. [Read the setup guide →](https://posthog.com/docs/libraries/next-js/posthog-next.md)
 
 ## Prerequisites
 
 To follow this guide along, you need:
 
-1.  A PostHog instance (either [Cloud](https://app.posthog.com/signup) or [self-hosted](/docs/self-host.md))
+1.  A PostHog instance (either [Cloud](https://app.posthog.com/signup) or [self-hosted](https://posthog.com/docs/self-host.md))
 2.  A Next.js application
 
 ## Beta: integration via LLM
 
-Install PostHog for Next.js in seconds with our wizard by running this prompt with [LLM coding agents](/blog/envoy-wizard-llm-agent.md) like Cursor and Bolt, or by running it in your terminal.
+Install PostHog for Next.js in seconds with our wizard by running this prompt with [LLM coding agents](https://posthog.com/blog/envoy-wizard-llm-agent.md) like Cursor and Bolt, or by running it in your terminal.
 
 `npx @posthog/wizard@latest`
 
-[Learn more](/wizard.md)
+[Learn more](https://posthog.com/wizard.md)
 
 Or, to integrate manually, continue with the rest of this guide.
 
@@ -107,31 +107,31 @@ If you need flag values after the app has rendered, you’ll want to:
 
 Both approaches avoid flicker and give you the same outcome as bootstrapping, as long as you use the same `distinct_id` across client and server.
 
-See the [bootstrapping guide](/docs/feature-flags/bootstrapping.md) for more information.
+See the [bootstrapping guide](https://posthog.com/docs/feature-flags/bootstrapping.md) for more information.
 
 ## Identifying users
 
-> **Identifying users is required.** Call `posthog.identify('your-user-id')` after login to link events to a known user. This is what connects frontend event captures, [session replays](/docs/session-replay.md), [LLM traces](/docs/ai-engineering.md), and [error tracking](/docs/error-tracking.md) to the same person — and lets backend events link back too.
+> **Identifying users is required.** Call `posthog.identify('your-user-id')` after login to link events to a known user. This is what connects frontend event captures, [session replays](https://posthog.com/docs/session-replay.md), [LLM traces](https://posthog.com/docs/ai-engineering.md), and [error tracking](https://posthog.com/docs/error-tracking.md) to the same person — and lets backend events link back too.
 >
-> See our guide on [identifying users](/docs/getting-started/identify-users.md) for how to set this up.
+> See our guide on [identifying users](https://posthog.com/docs/getting-started/identify-users.md) for how to set this up.
 
 Set up a reverse proxy (recommended)
 
-We recommend [setting up a reverse proxy](/docs/advanced/proxy.md), so that events are less likely to be intercepted by tracking blockers.
+We recommend [setting up a reverse proxy](https://posthog.com/docs/advanced/proxy.md), so that events are less likely to be intercepted by tracking blockers.
 
-We have our [own managed reverse proxy service](/docs/advanced/proxy/managed-reverse-proxy.md), which is free for all PostHog Cloud users, routes through our infrastructure, and makes setting up your proxy easy.
+We have our [own managed reverse proxy service](https://posthog.com/docs/advanced/proxy/managed-reverse-proxy.md), which is free for all PostHog Cloud users, routes through our infrastructure, and makes setting up your proxy easy.
 
-If you don't want to use our managed service then there are several other options for creating a reverse proxy, including using [Cloudflare](/docs/advanced/proxy/cloudflare.md), [AWS Cloudfront](/docs/advanced/proxy/cloudfront.md), and [Vercel](/docs/advanced/proxy/vercel.md).
+If you don't want to use our managed service then there are several other options for creating a reverse proxy, including using [Cloudflare](https://posthog.com/docs/advanced/proxy/cloudflare.md), [AWS Cloudfront](https://posthog.com/docs/advanced/proxy/cloudfront.md), and [Vercel](https://posthog.com/docs/advanced/proxy/vercel.md).
 
 Grouping products in one project (recommended)
 
-If you have multiple customer-facing products (e.g. a marketing website + mobile app + web app), it's best to install PostHog on them all and [group them in one project](/docs/settings/projects.md).
+If you have multiple customer-facing products (e.g. a marketing website + mobile app + web app), it's best to install PostHog on them all and [group them in one project](https://posthog.com/docs/settings/projects.md).
 
 This makes it possible to track users across their entire journey (e.g. from visiting your marketing website to signing up for your product), or how they use your product across multiple platforms.
 
 Add IPs to Firewall/WAF allowlists (recommended)
 
-For certain features like [heatmaps](/docs/toolbar/heatmaps.md), your Web Application Firewall (WAF) may be blocking PostHog’s requests to your site. Add these IP addresses to your WAF allowlist or rules to let PostHog access your site.
+For certain features like [heatmaps](https://posthog.com/docs/toolbar/heatmaps.md), your Web Application Firewall (WAF) may be blocking PostHog’s requests to your site. Add these IP addresses to your WAF allowlist or rules to let PostHog access your site.
 
 **EU**: `3.75.65.221`, `18.197.246.42`, `3.120.223.253`
 
@@ -161,7 +161,7 @@ export default function Home() {
 
 ### Using React hooks
 
-The [React feature flag hooks](/docs/libraries/react.md#feature-flags) work automatically when PostHog is initialized via `instrumentation-client.ts`. The hooks use the initialized posthog-js singleton:
+The [React feature flag hooks](https://posthog.com/docs/libraries/react.md#feature-flags) work automatically when PostHog is initialized via `instrumentation-client.ts`. The hooks use the initialized posthog-js singleton:
 
 JavaScript
 
@@ -178,16 +178,16 @@ export default function FeatureComponent() {
 
 ### Usage
 
-See the [React SDK docs](/docs/libraries/react.md) for examples of how to use:
+See the [React SDK docs](https://posthog.com/docs/libraries/react.md) for examples of how to use:
 
--   [`posthog-js` functions like custom event capture, user identification, and more.](/docs/libraries/react.md#using-posthog-js-functions)
--   [Feature flags including variants and payloads.](/docs/libraries/react.md#feature-flags)
+-   [`posthog-js` functions like custom event capture, user identification, and more.](https://posthog.com/docs/libraries/react.md#using-posthog-js-functions)
+-   [Feature flags including variants and payloads.](https://posthog.com/docs/libraries/react.md#feature-flags)
 
-You can also read [the full `posthog-js` documentation](/docs/libraries/js/features.md) for all the usable functions.
+You can also read [the full `posthog-js` documentation](https://posthog.com/docs/libraries/js/features.md) for all the usable functions.
 
 ## Server-side analytics
 
-Next.js enables you to both server-side render pages and add server-side functionality. To integrate PostHog into your Next.js app on the server-side, you can use the [Node SDK](/docs/libraries/node.md).
+Next.js enables you to both server-side render pages and add server-side functionality. To integrate PostHog into your Next.js app on the server-side, you can use the [Node SDK](https://posthog.com/docs/libraries/node.md).
 
 First, install the `posthog-node` library:
 
@@ -366,13 +366,13 @@ posthog.init(process.env.NEXT_PUBLIC_POSTHOG_TOKEN, {
 
 ## Configuring a reverse proxy to PostHog
 
-To improve the reliability of client-side tracking and make requests less likely to be intercepted by tracking blockers, you can setup a reverse proxy in Next.js. Read more about deploying a reverse proxy using [Next.js rewrites](/docs/advanced/proxy/nextjs.md), [Next.js middleware](/docs/advanced/proxy/nextjs-middleware.md), and [Vercel rewrites](/docs/advanced/proxy/vercel.md).
+To improve the reliability of client-side tracking and make requests less likely to be intercepted by tracking blockers, you can setup a reverse proxy in Next.js. Read more about deploying a reverse proxy using [Next.js rewrites](https://posthog.com/docs/advanced/proxy/nextjs.md), [Next.js middleware](https://posthog.com/docs/advanced/proxy/nextjs-middleware.md), and [Vercel rewrites](https://posthog.com/docs/advanced/proxy/vercel.md).
 
 ## Further reading
 
--   [How to set up Next.js analytics, feature flags, and more](/tutorials/nextjs-analytics.md)
--   [How to set up Next.js pages router analytics, feature flags, and more](/tutorials/nextjs-pages-analytics.md)
--   [How to set up Next.js A/B tests](/tutorials/nextjs-ab-tests.md)
+-   [How to set up Next.js analytics, feature flags, and more](https://posthog.com/tutorials/nextjs-analytics.md)
+-   [How to set up Next.js pages router analytics, feature flags, and more](https://posthog.com/tutorials/nextjs-pages-analytics.md)
+-   [How to set up Next.js A/B tests](https://posthog.com/tutorials/nextjs-ab-tests.md)
 
 ### Community questions
 
