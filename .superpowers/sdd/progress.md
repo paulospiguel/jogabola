@@ -1,0 +1,16 @@
+# Arena UI/UX Improvements - Progress Ledger
+
+Plan: docs/superpowers/plans/2026-07-16-arena-ui-ux-improvements.md
+Worktree: .worktrees/arena-ui-ux (branch arena-ui-ux-improvements)
+Base HEAD before Task 1: 1e9f181
+
+Task 1: complete (commits 1e9f181..50f2725, review clean)
+Task 2: complete (commits 50f2725..d7aaff1, review clean after 1 fix round — background refetch error signal added)
+Task 3: complete (commits d7aaff1..fbfb889, review clean; Minor notes: desktop dual-primary CTA, dead view-event switch case, possibly orphaned locale keys hero.noEvents/actions.createEvent)
+Task 4: complete (commits fbfb889..3fada3c, review clean; Minor notes: EventPartitionStatus duplicates EventStatus union, skeleton grid missing min-w-0)
+Task 5: complete (commits 3fada3c..b6e8e70, review clean; Minor notes: no render test for manager CTA gate/metricsReady, paymentsViewState derived twice, PaymentMethodsTab has no own loading/error state - pre-existing, out of scope)
+Task 6: complete (commits b6e8e70..800398d, review clean; Minor notes: .press/.btn-press confirmed non-functional repo-wide (pre-existing), isBottomNavItemActive startsWith has no boundary check (pre-existing, unchanged))
+Task 7: complete (commits 800398d..a4b1f47, review clean; Minor notes: positions.ts entirely unused outside its own test - dead module, follow-up worth considering)
+Task 8: complete (commit a4b1f47..5dcef1e, human-gated - user approved all 5 icons). Tool deviation: GPT Images unavailable, used FLUX.2 pro + local ImageMagick color-key background removal instead (confirmed with user). All 3 reuse-candidate assets (game/training/other) failed the quality grid (wrong dims, inconsistent style, jb-training/other/money lacked alpha) - regenerated all 5 event-type icons as one consistent set instead of only friendly/meeting. New assets live in src/assets/images/branding/ (new dir), old src/assets/images/jb-*.png untouched/superseded. No task review dispatched (human-gated task executed directly, not via subagent).
+Task 9: complete (commits 5dcef1e..d6037f8, review clean). Notable finding: EVENT_TYPE_META was dead code (Task 7 doc's claim it's consumed by create-event-step-type.tsx was wrong - picker is 3 hardcoded buttons using a different "types.*" locale namespace). friendly/meeting event types remain uncreatable in the app UI (pre-existing gap, correctly out of scope). Minor: labelKey/descriptionKey on EVENT_TYPE_META point at nonexistent locale keys, unconsumed, pre-existing latent trap.
+Task 10: complete (commits d6037f8..7303520, review clean). Coordination incident during this task: a separately-launched friendly/meeting background session wrote directly into this shared worktree (not an isolated one as expected), leaving broken uncommitted work mixed with Task 10's edits. Discovered via git status collision, safety-stashed (stash@{0}, still present), confirmed with user the other session had stopped, reverted the collision cleanly, resumed Task 10 on clean HEAD. Verified via review: exactly 6 files in final commit, zero residue from the collision. Note for future: spawn_task-created sessions may not always isolate into a fresh worktree - check git status before/during if launching one mid-plan.

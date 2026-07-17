@@ -1,0 +1,50 @@
+<h2>Qual deve ser a hierarquia do cockpit do capitão?</h2>
+<p class="subtitle">As duas opções preservam a identidade atual. Escolhe a estrutura que melhor responde à pergunta “o que tenho de resolver agora?”.</p>
+
+<div class="cards">
+  <div class="card" data-choice="a" onclick="toggleSelect(this)">
+    <div class="card-image" style="background:#0b0f14;padding:18px;color:#f5f7fa;min-height:430px">
+      <div style="font-size:11px;letter-spacing:1px;color:#6b7280">A TUA EQUIPA</div>
+      <div style="font-size:24px;font-weight:800;margin:4px 0 18px">⚽ Estrela</div>
+      <div style="border:1px solid #36503a;background:#151c26;border-radius:16px;padding:16px">
+        <div style="font-size:10px;color:#7cff4f;font-weight:800">PRÓXIMA AÇÃO</div>
+        <div style="font-size:18px;font-weight:800;margin:8px 0">Cria a próxima convocatória</div>
+        <div style="font-size:12px;color:#a7b0be;margin-bottom:14px">Ainda não há jogos ou treinos marcados.</div>
+        <button class="mock-button" style="background:#7cff4f;color:#0b0f14;width:100%;border:0">Criar evento</button>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px">
+        <div style="background:#151c26;border-radius:12px;padding:13px"><b>Adicionar jogador</b><br><small style="color:#6b7280">Completa o plantel</small></div>
+        <div style="background:#151c26;border-radius:12px;padding:13px"><b>Partilhar equipa</b><br><small style="color:#6b7280">Convida a malta</small></div>
+      </div>
+      <div style="margin-top:18px;font-size:11px;color:#6b7280">PLANTEL</div>
+      <div style="margin-top:8px;background:#151c26;border-radius:12px;padding:14px">Paulo Spiguel · Defesa</div>
+    </div>
+    <div class="card-body">
+      <h3>A. Ação primeiro</h3>
+      <p>Uma ação operacional domina o ecrã. Métricas só aparecem quando existe um evento.</p>
+    </div>
+  </div>
+
+  <div class="card" data-choice="b" onclick="toggleSelect(this)">
+    <div class="card-image" style="background:#0b0f14;padding:18px;color:#f5f7fa;min-height:430px">
+      <div style="font-size:11px;letter-spacing:1px;color:#6b7280">A TUA EQUIPA</div>
+      <div style="font-size:24px;font-weight:800;margin:4px 0 18px">⚽ Estrela</div>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px">
+        <div style="background:#151c26;border-radius:12px;padding:13px;text-align:center"><b style="color:#7cff4f;font-size:20px">0</b><br><small>Confirmados</small></div>
+        <div style="background:#151c26;border-radius:12px;padding:13px;text-align:center"><b style="color:#f59e0b;font-size:20px">0</b><br><small>Reservas</small></div>
+        <div style="background:#151c26;border-radius:12px;padding:13px;text-align:center"><b style="color:#a7b0be;font-size:20px">0</b><br><small>Pendentes</small></div>
+      </div>
+      <div style="border:1px solid #36503a;background:#151c26;border-radius:16px;padding:16px;margin-top:12px">
+        <div style="font-size:10px;color:#7cff4f;font-weight:800">COMEÇA A ORGANIZAR</div>
+        <div style="font-size:18px;font-weight:800;margin:8px 0">Sem eventos próximos</div>
+        <button class="mock-button" style="background:#7cff4f;color:#0b0f14;width:100%;border:0">Criar evento</button>
+      </div>
+      <div style="margin-top:18px;font-size:11px;color:#6b7280">ESTA SEMANA</div>
+      <div style="margin-top:8px;background:#151c26;border-radius:12px;padding:14px;color:#a7b0be">Nenhum evento agendado.</div>
+    </div>
+    <div class="card-body">
+      <h3>B. Estado primeiro</h3>
+      <p>Preserva a estrutura atual, compacta métricas e dá ao empty state um CTA único.</p>
+    </div>
+  </div>
+</div>
