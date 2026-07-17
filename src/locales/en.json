@@ -513,6 +513,7 @@
     "actions": {
       "cancel": "Cancel Attendance",
       "confirm": "Confirm Attendance",
+      "timer": "Open Timer",
       "cancelled": "Event cancelled",
       "cancelConfirm": {
         "title": "Cancel attendance?",

@@ -513,6 +513,7 @@
     "actions": {
       "cancel": "Cancelar Asistencia",
       "confirm": "Confirmar Asistencia",
+      "timer": "Abrir Cronómetro",
       "cancelled": "Evento cancelado",
       "cancelConfirm": {
         "title": "¿Cancelar asistencia?",

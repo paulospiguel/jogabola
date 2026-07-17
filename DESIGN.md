@@ -148,7 +148,9 @@ Inspirado em Lucide. Sempre `strokeLinecap=round` + `strokeLinejoin=round`.
 ## 8. Navegação
 
 ### Mobile
-- **Bottom nav 5 itens:** Equipa · Plantel · Eventos · Avisos · Perfil
+- **Bottom nav 5 itens:** Equipa · Plantel · Eventos · Cobranças · Perfil — âmbito estritamente operacional de equipa; cada destino tem alvo de toque mínimo 44×44px e microinteração `.press`
+- **Notificações vivem no sino da topbar** (`mobile-top-bar.tsx`), nunca na bottom nav
+- **Cronómetro é contextual, não um slot fixo da bottom nav:** atalho no action bar do detalhe de evento (`event-action-bar.tsx`) e atalho secundário no dashboard quando há evento ativo (`arena-dashboard.tsx`, `.jb-action` → `/timer`)
 - **Header com back arrow** em ecrãs internos (Rankings, Histórico, Player detail)
 - Dashboard tem cards "Descobrir" para Rankings / Histórico / Perfil de Equipa
 
@@ -235,7 +237,7 @@ Inspirado em Lucide. Sempre `strokeLinecap=round` + `strokeLinejoin=round`.
 | `<JbAvatar>` | `arena/avatar.tsx` | Prefixo `Jb` mantido (colisão shadcn `Avatar`) |
 | `<JbBadge>` | `arena/badge.tsx` | Prefixo `Jb` mantido (colisão shadcn `Badge`) |
 | `<ArenaSidebar>` | `arena/sidebar.tsx` | Renomeado de `Sidebar` (colisão shadcn) |
-| `<BottomNav>` | `arena/bottom-nav.tsx` | |
+| `<BottomNav>` | `arena/bottom-nav.tsx` | itens vêm de `arena/bottom-nav-items.ts` (`BOTTOM_NAV_ITEMS`, `isBottomNavItemActive`), testável em isolado |
 | `<BottomSheet>` | `arena/bottom-sheet.tsx` | spring cubic-bezier(.16,1,.3,1) 320ms |
 | `<MobileTopBar>` | `arena/mobile-top-bar.tsx` | |
 | `<ScreenHeader>` | `arena/screen-header.tsx` | |

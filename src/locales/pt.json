@@ -513,6 +513,7 @@
     "actions": {
       "cancel": "Cancelar Presença",
       "confirm": "Confirmar Presença",
+      "timer": "Abrir Cronómetro",
       "cancelled": "Evento cancelado",
       "cancelConfirm": {
         "title": "Cancelar presença?",
@@ -741,7 +742,7 @@
     "notifications": "Notificações",
     "payments": "Cobranças",
     "profile": "Perfil",
-    "settings": "Configurações",
+    "settings": "Definições",
     "timer": "Cronómetro",
     "signOut": "Sair",
     "teamSwitcher": {

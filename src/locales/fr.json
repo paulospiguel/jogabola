@@ -513,6 +513,7 @@
     "actions": {
       "cancel": "Annuler la présence",
       "confirm": "Confirmer la présence",
+      "timer": "Ouvrir le chronomètre",
       "cancelled": "Événement annulé",
       "cancelConfirm": {
         "title": "Annuler la présence ?",
