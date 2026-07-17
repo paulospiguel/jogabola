@@ -317,26 +317,28 @@ export function ArenaDashboard({ userId }: ArenaDashboardProps) {
               </div>
             </div>
 
-            <div className="flex items-center gap-2">
-              <Cta
-                variant="secondary"
-                size="sm"
-                className="hidden md:inline-flex"
-                onClick={() => setSheet("add-player")}
-              >
-                <Users size={15} />
-                {t("actions.player")}
-              </Cta>
-              <Cta
-                variant="primary"
-                size="sm"
-                className="hidden md:inline-flex"
-                onClick={() => setSheet("create-event")}
-              >
-                <Plus size={15} />
-                {t("actions.event")}
-              </Cta>
-            </div>
+            {activeTeamCanManage && (
+              <div className="flex items-center gap-2">
+                <Cta
+                  variant="secondary"
+                  size="sm"
+                  className="hidden md:inline-flex"
+                  onClick={() => setSheet("add-player")}
+                >
+                  <Users size={15} />
+                  {t("actions.player")}
+                </Cta>
+                <Cta
+                  variant="primary"
+                  size="sm"
+                  className="hidden md:inline-flex"
+                  onClick={() => setSheet("create-event")}
+                >
+                  <Plus size={15} />
+                  {t("actions.event")}
+                </Cta>
+              </div>
+            )}
           </header>
 
           <div className="jb-dashboard-grid">
