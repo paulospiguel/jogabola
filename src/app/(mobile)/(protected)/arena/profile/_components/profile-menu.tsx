@@ -13,6 +13,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+import { signOut } from "@/lib/auth-client";
 
 type ActiveSheet = "notifications" | "security" | "edit-profile";
 
@@ -23,8 +24,9 @@ interface ProfileMenuProps {
 export function ProfileMenu({ onOpenSheet }: ProfileMenuProps) {
   const t = useTranslations("profilePage");
 
-  const handleLogout = () => {
-    window.location.href = "/auth/sign-out";
+  const handleLogout = async () => {
+    await signOut();
+    window.location.href = "/";
   };
 
   return (

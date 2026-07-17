@@ -116,7 +116,11 @@ export function ArenaSidebar() {
                     <SidebarMenuButton
                       asChild={!isLocked}
                       isActive={isActive && !isLocked}
-                      tooltip={isLocked ? t("createTeam") : t(item.labelKey)}
+                      tooltip={
+                        isLocked
+                          ? t("teamSwitcher.createTeam")
+                          : t(item.labelKey)
+                      }
                       className={cn(
                         "h-11 rounded-[10px] transition-all duration-200",
                         isLocked

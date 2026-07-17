@@ -3,6 +3,10 @@ import { resolve } from "node:path";
 import { describe, expect, it } from "vitest";
 
 const projectRoot = resolve(__dirname, "../../..");
+const arenaSidebarSource = readFileSync(
+  resolve(projectRoot, "src/components/arena/sidebar.tsx"),
+  "utf8",
+);
 
 // Task 10 scope: only the namespaces touched across the Arena UI/UX plan.
 // Other namespaces (e.g. `common`, `onboarding`) are intentionally out of
@@ -117,6 +121,24 @@ describe("arena locale contract", () => {
   const locales = Object.fromEntries(
     LOCALES.map(locale => [locale, readLocale(locale)]),
   ) as Record<Locale, Record<string, JsonValue>>;
+
+  it("resolves literal ArenaSidebar translation keys in every locale", () => {
+    const literalKeys = Array.from(
+      arenaSidebarSource.matchAll(/\bt\("([^"]+)"\)/g),
+      match => match[1],
+    );
+    const missingKeys = LOCALES.flatMap(locale =>
+      literalKeys
+        .filter(
+          key =>
+            typeof getAtPath(locales[locale].arenaNav as JsonValue, key) !==
+            "string",
+        )
+        .map(key => `${locale}.arenaNav.${key}`),
+    );
+
+    expect(missingKeys).toEqual([]);
+  });
 
   it.each(
     IN_SCOPE_NAMESPACES,
