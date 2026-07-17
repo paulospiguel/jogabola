@@ -35,7 +35,6 @@ export function AthleteEventRsvpBar({
   actionLoading,
   actionError,
   onConfirm,
-  onCancel,
   onResumePayment,
   t,
 }: AthleteEventRsvpBarProps) {

@@ -107,7 +107,7 @@ export const auth = betterAuth({
   databaseHooks: {
     session: {
       create: {
-        before: async (session): Promise<{ data: any }> => {
+        before: async session => {
           const userTeams = await db
             .select({ id: schema.teams.id })
             .from(schema.teams)
@@ -128,7 +128,7 @@ export const auth = betterAuth({
     },
     user: {
       create: {
-        before: async (user): Promise<{ data: any }> => ({
+        before: async user => ({
           data: {
             ...user,
             image: normalizeImage(user.image),
@@ -140,7 +140,7 @@ export const auth = betterAuth({
         },
       },
       update: {
-        before: async (user): Promise<{ data: any }> => ({
+        before: async user => ({
           data: {
             ...user,
             ...(Object.hasOwn(user, "image")

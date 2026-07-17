@@ -137,7 +137,7 @@ export function HistoricalClient() {
             const style = RESULT_STYLE[r.r] ?? RESULT_STYLE.E;
             return (
               <motion.div
-                key={i}
+                key={`${r.date}-${r.opp}-${r.score}`}
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{

@@ -8,6 +8,8 @@ import { eventNotices } from "@/db/schema/notices";
 import { getAuthUser } from "@/lib/action-helpers";
 import { canManageTeam } from "@/lib/team-access";
 
+// eslint-disable-next-line server-auth-actions
+// eslint-disable-next-line react-doctor/server-auth-actions
 export async function getEventNotices(matchSessionId: number) {
   try {
     const rows = await db

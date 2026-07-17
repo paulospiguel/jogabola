@@ -9,8 +9,12 @@ if (!databaseUrl) {
   throw new Error("DATABASE_URL is required");
 }
 
+const globalForDb = globalThis as {
+  postgresClient?: ReturnType<typeof postgres>;
+};
+
 const client =
-  (globalThis as any).postgresClient ??
+  globalForDb.postgresClient ??
   postgres(databaseUrl, {
     ssl: "require",
     max: 1,
@@ -18,7 +22,7 @@ const client =
   });
 
 if (process.env.NODE_ENV !== "production") {
-  (globalThis as any).postgresClient = client;
+  globalForDb.postgresClient = client;
 }
 
 export const db = drizzle(client, { schema });

@@ -12,7 +12,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
-import { locales } from "@/i18n/configs";
+import { type Locale, locales } from "@/i18n/configs";
 import { cn } from "@/lib/utils";
 
 const LANGUAGES = {
@@ -102,7 +102,7 @@ export function SettingsForm({ initialSettings }: SettingsFormProps) {
                     {LANGUAGES[settings.locale as keyof typeof LANGUAGES]?.icon}
                   </span>
                   <span className="font-medium">
-                    {tLoc(settings.locale as any)}
+                    {tLoc(settings.locale as Locale)}
                   </span>
                 </div>
               </SelectValue>
@@ -118,7 +118,7 @@ export function SettingsForm({ initialSettings }: SettingsFormProps) {
                     <span className="text-lg">
                       {LANGUAGES[loc as keyof typeof LANGUAGES].icon}
                     </span>
-                    <span>{tLoc(loc as any)}</span>
+                    <span>{tLoc(loc as Locale)}</span>
                   </div>
                 </SelectItem>
               ))}

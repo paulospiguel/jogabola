@@ -15,7 +15,7 @@ import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { useCallback, useState } from "react";
-import { submitPaymentProof } from "@/actions/payments.actions";
+import { submitPaymentProof } from "@/actions/payments/payments.actions";
 import { PAYMENT_STATUS } from "@/constants/payments";
 import { usePayment } from "@/hooks/use-payments";
 import { useProofUpload } from "@/hooks/use-proof-upload";

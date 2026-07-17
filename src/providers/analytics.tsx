@@ -61,17 +61,25 @@ function StatsigRuntime({
     process.env.NEXT_PUBLIC_STATSIG_CLIENT_KEY || "",
     { userID },
   );
-  const lifecycleRef = useRef<{
-    client: typeof client;
-    controller: AnalyticsLifecycleController;
-  } | null>(null);
-  if (!lifecycleRef.current || lifecycleRef.current.client !== client) {
-    lifecycleRef.current = {
+  const [lifecycleState, setLifecycleState] = useState(() => ({
+    client,
+    controller: new AnalyticsLifecycleController(client),
+  }));
+
+  if (lifecycleState.client !== client) {
+    setLifecycleState({
       client,
       controller: new AnalyticsLifecycleController(client),
-    };
+    });
   }
-  const lifecycle = lifecycleRef.current.controller;
+
+  const lifecycle = useMemo(
+    () =>
+      lifecycleState.client === client
+        ? lifecycleState.controller
+        : new AnalyticsLifecycleController(client),
+    [client, lifecycleState],
+  );
 
   useEffect(() => {
     onClientChange(client);

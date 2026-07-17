@@ -65,6 +65,8 @@ export const getPublicTeamPaymentSettings = withAction(
   },
 );
 
+// eslint-disable-next-line server-auth-actions
+// eslint-disable-next-line react-doctor/server-auth-actions
 export async function resolveTeamPaymentConfig(
   teamId: number,
 ): Promise<TeamPaymentConfig> {

@@ -14,7 +14,7 @@ export type OnboardingSurveyData = {
 
 export async function completeOnboarding(role: UserRole) {
   const authUser = await getAuthUser();
-  if (!authUser) return { success: false, error: "Não autenticado" };
+  if (!authUser) return { success: false, error: "UNAUTHORIZED" };
 
   await db
     .update(userTable)
@@ -26,7 +26,7 @@ export async function completeOnboarding(role: UserRole) {
 
 export async function saveSurvey(data: OnboardingSurveyData) {
   const authUser = await getAuthUser();
-  if (!authUser) return { success: false, error: "Não autenticado" };
+  if (!authUser) return { success: false, error: "UNAUTHORIZED" };
 
   const surveyData = {
     survey_v1: {

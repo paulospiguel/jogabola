@@ -13,7 +13,7 @@ import { useState, useTransition } from "react";
 import {
   requestPaymentProof,
   updatePaymentStatus,
-} from "@/actions/payments.actions";
+} from "@/actions/payments/payments.actions";
 import { JbAvatar } from "@/components/arena/avatar";
 import { BottomSheet } from "@/components/arena/bottom-sheet";
 import { PAYMENT_REVIEW_STATUS } from "@/constants/payments";

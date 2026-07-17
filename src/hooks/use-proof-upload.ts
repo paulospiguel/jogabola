@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { requestPresignedUrl } from "@/actions/payments.actions";
+import { requestPresignedUrl } from "@/actions/payments/payments.actions";
 
 export type UploadState =
   | { status: "idle" }

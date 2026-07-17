@@ -64,7 +64,8 @@ export function DemoModal({ label, className }: DemoModalProps) {
       </button>
 
       {open && (
-        // biome-ignore lint/a11y/useKeyWithClickEvents: backdrop click-to-close
+        // biome-ignore lint/a11y/noStaticElementInteractions: backdrop overlay, click-to-close via event delegation
+        // biome-ignore lint/a11y/useKeyWithClickEvents: Escape handled via window keydown listener
         <div
           className="fixed inset-0 z-50 bg-black/85 backdrop-blur-sm flex items-center justify-center p-4"
           onClick={handleBackdropClick}

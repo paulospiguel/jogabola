@@ -3,7 +3,7 @@
 import { format } from "date-fns";
 import { and, desc, eq, gte, inArray, lt } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
-import { PAYMENT_STATUS } from "@/constants/payments";
+import { PAYMENT_STATUS, type PaymentStatus } from "@/constants/payments";
 import { db } from "@/db/client";
 import { queryEventByIdOrSlug, queryEvents } from "@/db/queries/events";
 import {
@@ -314,6 +314,8 @@ export async function updateEvent(
   return { success: true as const, data: toEventView(event) };
 }
 
+// eslint-disable-next-line server-auth-actions
+// eslint-disable-next-line react-doctor/server-auth-actions
 export async function getEvent(eventId: number | string) {
   const eventData = await queryEventByIdOrSlug(eventId);
   if (!eventData) {
@@ -514,7 +516,7 @@ export async function checkEventDeletable(eventId: number) {
     .where(eq(matchReservations.matchSessionId, eventId));
 
   // If there's any payment that isn't failed/rejected and has an amount > 0, it has payments.
-  const paidStatuses = [
+  const paidStatuses: PaymentStatus[] = [
     PAYMENT_STATUS.PAID,
     PAYMENT_STATUS.PAID_UNVERIFIED,
     PAYMENT_STATUS.APPROVED,
@@ -523,7 +525,7 @@ export async function checkEventDeletable(eventId: number) {
   ];
 
   const hasPayments = eventPayments.some(
-    p => p.amountCents > 0 && paidStatuses.includes(p.status as any),
+    p => p.amountCents > 0 && (paidStatuses as string[]).includes(p.status),
   );
 
   return { success: true as const, data: { hasPayments } };

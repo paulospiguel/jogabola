@@ -6,7 +6,7 @@ import { useMemo, useState, useTransition } from "react";
 import {
   requestPaymentProof,
   updatePaymentStatus,
-} from "@/actions/payments.actions";
+} from "@/actions/payments/payments.actions";
 import {
   PAYMENT_OVERVIEW_STATUS,
   PAYMENT_REVIEW_STATUS,

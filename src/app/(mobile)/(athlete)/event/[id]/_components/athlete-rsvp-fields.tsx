@@ -120,16 +120,17 @@ function useResendTimer() {
     setSeconds(RESEND_SECONDS);
     if (intervalRef.current) clearInterval(intervalRef.current);
     intervalRef.current = setInterval(() => {
-      setSeconds(value => {
-        if (value <= 1) {
-          const id = intervalRef.current;
-          if (id) clearInterval(id);
-          return 0;
-        }
-        return value - 1;
-      });
+      setSeconds(prev => Math.max(0, prev - 1));
     }, 1000);
   }, []);
+
+  // Stop the interval when countdown hits zero (side effect outside updater)
+  useEffect(() => {
+    if (seconds <= 0 && intervalRef.current) {
+      clearInterval(intervalRef.current);
+      intervalRef.current = null;
+    }
+  }, [seconds]);
 
   useEffect(() => {
     start();
@@ -138,7 +139,11 @@ function useResendTimer() {
     };
   }, [start]);
 
-  return { seconds, canResend: seconds === 0, restart: start };
+  return {
+    seconds: Math.max(0, seconds),
+    canResend: seconds <= 0,
+    restart: start,
+  };
 }
 
 export function ResendTimer({

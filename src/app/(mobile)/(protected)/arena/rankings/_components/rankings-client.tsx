@@ -140,12 +140,12 @@ export function RankingsClient() {
                     </span>
                   )}
                 </div>
-                {[row.j, row.v, row.e, row.d].map((v, vi) => (
+                {(["j", "v", "e", "d"] as const).map(stat => (
                   <span
-                    key={vi}
+                    key={stat}
                     className="w-7 text-center text-[12px] text-arena-text-sec"
                   >
-                    {v}
+                    {row[stat]}
                   </span>
                 ))}
                 <span

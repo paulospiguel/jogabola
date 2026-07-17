@@ -3,7 +3,7 @@
 import { Loader2 } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useState } from "react";
-import { markPaymentManually } from "@/actions/payments.actions";
+import { markPaymentManually } from "@/actions/payments/payments.actions";
 import { BottomSheet } from "@/components/arena/bottom-sheet";
 import { cn } from "@/lib/utils";
 

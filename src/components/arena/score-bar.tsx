@@ -94,9 +94,9 @@ export function ScoreBar({ score, className }: ScoreBarProps) {
         className="w-full"
       >
         <div className="flex h-[10px] gap-[2px] overflow-hidden rounded-full">
-          {BAR_SEGMENTS.map((color, i) => (
+          {BAR_SEGMENTS.map(color => (
             <div
-              key={i}
+              key={color}
               className="h-full flex-1 transition-opacity duration-150 hover:opacity-80"
               style={{ backgroundColor: color }}
             />

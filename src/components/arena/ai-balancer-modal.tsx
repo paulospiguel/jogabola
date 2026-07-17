@@ -35,6 +35,8 @@ export function AiBalancerModal({
   return (
     <>
       {/* Backdrop */}
+      {/* biome-ignore lint/a11y/noStaticElementInteractions: backdrop click-to-close */}
+      {/* biome-ignore lint/a11y/useKeyWithClickEvents: backdrop click-to-close */}
       <div
         className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm"
         onClick={!isGenerating ? onClose : undefined}
@@ -92,7 +94,9 @@ export function AiBalancerModal({
                   min="0"
                   max="20"
                   value={guestsCount}
-                  onChange={e => setGuestsCount(parseInt(e.target.value) || 0)}
+                  onChange={e =>
+                    setGuestsCount(parseInt(e.target.value, 10) || 0)
+                  }
                   disabled={isGenerating}
                   className="flex-1 rounded-[12px] border border-arena-border bg-arena-surface px-4 py-2.5 text-white outline-none focus:border-arena-primary focus:ring-1 focus:ring-arena-primary"
                   placeholder="0"

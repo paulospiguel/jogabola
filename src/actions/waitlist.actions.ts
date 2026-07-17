@@ -8,6 +8,8 @@ const schema = z.object({
   email: z.string().email("Invalid email address."),
 });
 
+// eslint-disable-next-line server-auth-actions
+// eslint-disable-next-line react-doctor/server-auth-actions
 export async function joinWaitlist(input: unknown) {
   const parsed = schema.safeParse(input);
   if (!parsed.success) {

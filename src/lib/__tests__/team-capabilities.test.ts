@@ -3,7 +3,7 @@ import {
   buildAccessibleTeamSummaries,
   isManagementRole,
   MANAGEMENT_ROLES,
-} from "./team-capabilities";
+} from "../team-capabilities";
 
 describe("isManagementRole", () => {
   it("treats owner and manager as management roles", () => {

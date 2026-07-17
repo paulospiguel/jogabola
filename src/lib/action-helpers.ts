@@ -64,3 +64,21 @@ export function withAuthAction<S extends ZodTypeAny, T>(
     return fn(user, parsed.data);
   };
 }
+
+/**
+ * Guard wrapper for query Server Actions that receive typed parameters but
+ * don't need Zod validation (e.g. numeric IDs from the router).
+ *
+ * Usage:
+ *   export const getMyData = withAuthQuery(async (user) => { ... });
+ */
+export function withAuthQuery<T>(
+  fn: (user: AuthUser) => Promise<T>,
+): () => Promise<T | ActionResult<never>> {
+  return async () => {
+    const user = await getAuthUser();
+    if (!user)
+      return { success: false as const, error: { code: "UNAUTHORIZED" } };
+    return fn(user);
+  };
+}

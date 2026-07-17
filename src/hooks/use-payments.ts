@@ -49,7 +49,9 @@ export function usePayments() {
     queryFn: async (): Promise<Payment[]> => {
       if (!activeTeamId) return [];
 
-      const { getTeamPayments } = await import("@/actions/payments.actions");
+      const { getTeamPayments } = await import(
+        "@/actions/payments/payments.actions"
+      );
       const res = await getTeamPayments({ teamId: activeTeamId });
 
       if (!res.success) {
@@ -77,7 +79,9 @@ export function usePayment(paymentId: number | null) {
     refetchOnWindowFocus: true,
     queryFn: async () => {
       if (!paymentId) return null;
-      const { getPaymentById } = await import("@/actions/payments.actions");
+      const { getPaymentById } = await import(
+        "@/actions/payments/payments.actions"
+      );
       const res = await getPaymentById(paymentId);
       if (!res.success) {
         throw new Error(res.error);

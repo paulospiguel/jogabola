@@ -76,7 +76,8 @@ export function GuestsSheet({
   }
 
   function setLevel(id: string, levelId: GuestLevel) {
-    const lv = LEVELS.find(x => x.id === levelId)!;
+    const lv = LEVELS.find(x => x.id === levelId);
+    if (!lv) return;
     setLocal(l =>
       l.map(g =>
         g.id === id

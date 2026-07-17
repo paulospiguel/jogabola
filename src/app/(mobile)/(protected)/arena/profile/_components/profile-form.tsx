@@ -47,10 +47,14 @@ export function ProfileForm({ profile }: ProfileFormProps) {
       const result = await passkey.addPasskey();
       if (result?.error) throw new Error(result.error.message);
       setPasskeyStatus("added");
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error("Passkey error:", err);
       setPasskeyErrorMsg(
-        err?.message || err?.toString() || "Erro desconhecido",
+        err instanceof Error
+          ? err.message
+          : typeof err === "string"
+            ? err
+            : "Erro desconhecido",
       );
       setPasskeyStatus("error");
     }

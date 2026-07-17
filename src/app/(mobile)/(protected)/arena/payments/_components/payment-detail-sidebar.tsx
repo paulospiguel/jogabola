@@ -5,7 +5,7 @@ import { useState } from "react";
 import {
   markPaymentAsCredited,
   markPaymentAsRefunded,
-} from "@/actions/payments.actions";
+} from "@/actions/payments/payments.actions";
 import { JbAvatar } from "@/components/arena/avatar";
 import { type BadgeStatus, JbBadge } from "@/components/arena/badge";
 import { ScoreBar, type ScoreLevel } from "@/components/arena/score-bar";
@@ -49,7 +49,7 @@ export function PaymentDetailSidebar({
 
   const handleRefund = async () => {
     const pId = parseInt(payment.id.replace("PAY-", ""), 10);
-    if (isNaN(pId)) return;
+    if (Number.isNaN(pId)) return;
     setLoadingAction("refund");
     await markPaymentAsRefunded(pId);
     setLoadingAction(null);
@@ -58,7 +58,7 @@ export function PaymentDetailSidebar({
 
   const handleCredit = async () => {
     const pId = parseInt(payment.id.replace("PAY-", ""), 10);
-    if (isNaN(pId)) return;
+    if (Number.isNaN(pId)) return;
     setLoadingAction("credit");
     await markPaymentAsCredited(pId);
     setLoadingAction(null);

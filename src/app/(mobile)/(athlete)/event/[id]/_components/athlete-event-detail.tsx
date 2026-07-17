@@ -1,8 +1,8 @@
 "use client";
 
-import { MessageSquare } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 import { useState } from "react";
+import type { getEvent } from "@/actions/match-sessions.actions";
 import { EventChatTab } from "@/components/arena/event-chat-tab";
 import { LocationMap } from "@/components/arena/location-map";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -17,25 +17,6 @@ import { AthleteEventListTab } from "./athlete-event-list-tab";
 import { AthleteEventRsvpBar } from "./athlete-event-rsvp-bar";
 import { AthleteRsvpSheet } from "./athlete-rsvp-sheet";
 import { MyPaymentTab } from "./my-payment-tab";
-
-interface Event {
-  id: number;
-  teamId: number;
-  title: string;
-  type: string;
-  location: string;
-  startDate: Date;
-  status: string;
-  recurrence: string;
-  maxParticipants?: string | null;
-  priceCents: number;
-  currency: string;
-  rosterOnly?: boolean;
-  description?: string | null;
-  images?: string[];
-}
-
-import type { getEvent } from "@/actions/match-sessions.actions";
 
 type EventData = NonNullable<
   Extract<Awaited<ReturnType<typeof getEvent>>, { success: true }>["data"]
@@ -55,6 +36,7 @@ export function AthleteEventDetail({
   initialMyStatus,
 }: AthleteEventDetailProps) {
   const t = useTranslations("athleteEventPublic");
+  const tChat = useTranslations("arenaEventDetail");
   const locale = useLocale();
   const [activeTab, setActiveTab] = useState<string>("list");
 
@@ -223,7 +205,7 @@ export function AthleteEventDetail({
               canChat={true}
               isCaptain={false}
               sending={sending}
-              t={t as any}
+              t={tChat}
             />
           </TabsContent>
         )}
@@ -240,7 +222,7 @@ export function AthleteEventDetail({
           canResumePayment={canResumePayment}
           actionLoading={actionLoading}
           actionError={actionError}
-          onConfirm={() => handleConfirm(isCancelled, isFull)}
+          onConfirm={() => handleConfirm(isCancelled)}
           onCancel={handleCancel}
           onResumePayment={() => {
             setResumePayment(true);
