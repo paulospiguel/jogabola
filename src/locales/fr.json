@@ -330,6 +330,7 @@
       "title": "Inviter depuis l'effectif",
       "subtitle": "Sélectionnez des athlètes ou des listes à pré-inviter.",
       "lastSquad": "Re-convoquer le dernier effectif",
+      "search": "Rechercher un athlète...",
       "empty": "Aucun athlète dans l'effectif pour le moment.",
       "verified": "Athlète vérifié",
       "manual": "Ajouté manuellement",
@@ -417,7 +418,10 @@
       "sendCallup": "Envoyer la Convocation",
       "successSent": "Convocation envoyée à <strongComponent>{count} joueurs</strongComponent>.",
       "selectedCount": "{count} sélectionnés",
-      "notificationSent": "Notification envoyée à {count} joueurs"
+      "notificationSent": "Notification envoyée à {count} joueurs",
+      "confirm": {
+        "rosterTitle": "Athlètes Convoqués"
+      }
     }
   },
   "arenaCreateTeam": {

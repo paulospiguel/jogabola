@@ -330,6 +330,7 @@
       "title": "Invite from squad",
       "subtitle": "Select specific athletes or lists to pre-invite.",
       "lastSquad": "Re-convoke last squad",
+      "search": "Search athlete...",
       "empty": "There are no athletes in the squad yet.",
       "verified": "Verified athlete",
       "manual": "Manually added",
@@ -417,7 +418,10 @@
       "sendCallup": "Send Callup",
       "successSent": "Callup sent to <strongComponent>{count} players</strongComponent>.",
       "selectedCount": "{count} selected",
-      "notificationSent": "Notification sent to {count} players"
+      "notificationSent": "Notification sent to {count} players",
+      "confirm": {
+        "rosterTitle": "Called-Up Players"
+      }
     }
   },
   "arenaCreateTeam": {
