@@ -81,7 +81,11 @@ bun.lockb
 !.claude/napkin.md
 !.claude/skills
 !.claude/skills/
-!.claude/skills/*
+.claude/skills/*
+!.claude/skills/dev-coder
+!.claude/skills/react-doctor
+!.claude/skills/builder-business
+!.claude/skills/integration-nextjs-app-router
 .codex
 !.codex/napkin.md
 .env.local
