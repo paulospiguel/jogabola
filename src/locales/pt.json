@@ -330,6 +330,7 @@
       "title": "Convidar do plantel",
       "subtitle": "Seleciona atletas específicos ou listas para pré-convocar.",
       "lastSquad": "Re-convocar último plantel",
+      "search": "Pesquisar atleta...",
       "empty": "Ainda não há atletas no plantel.",
       "verified": "Atleta verificado",
       "manual": "Adicionado manualmente",
@@ -417,7 +418,10 @@
       "sendCallup": "Enviar Convocatória",
       "successSent": "Convocatória enviada a <strongComponent>{count} jogadores</strongComponent>.",
       "selectedCount": "{count} selecionados",
-      "notificationSent": "Notificação enviada a {count} jogadores"
+      "notificationSent": "Notificação enviada a {count} jogadores",
+      "confirm": {
+        "rosterTitle": "Atletas Convocados"
+      }
     }
   },
   "arenaCreateTeam": {

@@ -330,6 +330,7 @@
       "title": "Invitar desde la plantilla",
       "subtitle": "Selecciona atletas específicos o listas para preconvocar.",
       "lastSquad": "Re-convocar última plantilla",
+      "search": "Buscar atleta...",
       "empty": "Aún no hay atletas en la plantilla.",
       "verified": "Atleta verificado",
       "manual": "Añadido manualmente",
@@ -417,7 +418,10 @@
       "sendCallup": "Enviar Convocatoria",
       "successSent": "Convocatoria enviada a <strongComponent>{count} jugadores</strongComponent>.",
       "selectedCount": "{count} seleccionados",
-      "notificationSent": "Notificación enviada a {count} jugadores"
+      "notificationSent": "Notificación enviada a {count} jugadores",
+      "confirm": {
+        "rosterTitle": "Atletas Convocados"
+      }
     }
   },
   "arenaCreateTeam": {
