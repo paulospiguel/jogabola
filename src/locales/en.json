@@ -405,6 +405,13 @@
         "label": "Other"
       }
     },
+    "typeOptions": {
+      "game": { "alt": "Match icon" },
+      "training": { "alt": "Training icon" },
+      "friendly": { "alt": "Friendly match icon" },
+      "meeting": { "alt": "Meeting icon" },
+      "other": { "alt": "Other event type icon" }
+    },
     "final": {
       "stepsInfo": "Players receive a notification and can confirm/decline directly.",
       "sendCallup": "Send Callup",

@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Timer } from "lucide-react";
+import { CircleDot, Timer } from "lucide-react";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
 import { useEffect } from "react";
@@ -94,7 +94,7 @@ export function ResultView({ data }: { data: string | null }) {
               <span className="w-8 font-mono text-xs text-arena-text-muted">
                 {formatMinute(min * 60)}
               </span>
-              <span>⚽</span>
+              <CircleDot size={14} className="shrink-0 text-arena-text-muted" />
               <span className="font-semibold text-arena-text">{name}</span>
               {assist && (
                 <span className="text-xs text-arena-info">

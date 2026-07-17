@@ -1,7 +1,7 @@
 "use client";
 
 import { AnimatePresence, motion } from "framer-motion";
-import { Minus, Plus, X } from "lucide-react";
+import { Minus, Plus, Target, Trophy, X } from "lucide-react";
 import { useState } from "react";
 import { BottomSheet } from "@/components/arena/bottom-sheet";
 import { Cta } from "@/components/arena/cta";
@@ -279,8 +279,12 @@ export function SetupDrawer({ onClose, onCreate }: SetupDrawerProps) {
                         : "var(--color-arena-surface)",
                   }}
                 >
-                  <span className="text-3xl">
-                    {tp === "jogo" ? "🏆" : "🎯"}
+                  <span className="text-arena-text">
+                    {tp === "jogo" ? (
+                      <Trophy size={28} />
+                    ) : (
+                      <Target size={28} />
+                    )}
                   </span>
                   <span className="text-sm font-bold text-arena-text capitalize">
                     {tp}

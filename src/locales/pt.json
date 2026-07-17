@@ -405,6 +405,13 @@
         "label": "Outro"
       }
     },
+    "typeOptions": {
+      "game": { "alt": "Ícone de jogo" },
+      "training": { "alt": "Ícone de treino" },
+      "friendly": { "alt": "Ícone de particular" },
+      "meeting": { "alt": "Ícone de reunião" },
+      "other": { "alt": "Ícone de outro tipo de evento" }
+    },
     "final": {
       "stepsInfo": "Os jogadores recebem notificação e podem confirmar/recusar diretamente.",
       "sendCallup": "Enviar Convocatória",

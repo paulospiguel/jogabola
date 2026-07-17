@@ -1,7 +1,12 @@
 "use client";
 
-import { Calendar, Check, Compass, Shield } from "lucide-react";
+import { Check } from "lucide-react";
+import Image from "next/image";
 import type { useTranslations } from "next-intl";
+import {
+  EVENT_TYPE_META,
+  type EventTypeVisual,
+} from "@/components/shared/events/create-event-dialog.utils";
 import { cn } from "@/lib/utils";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
@@ -9,6 +14,38 @@ import type {
   CreateEventFormState,
   SetFormField,
 } from "./create-event-form-types";
+
+const TYPE_BADGE_SIZE = 36;
+
+function EventTypeVisualBadge({
+  visual,
+  t,
+}: {
+  visual: EventTypeVisual;
+  t: ReturnType<typeof useTranslations<"arenaCreateEvent">>;
+}) {
+  if (visual.kind === "icon") {
+    const Icon = visual.icon;
+    return (
+      <span className="size-9 rounded-xl bg-arena-surface-el flex items-center justify-center shrink-0 text-arena-text-sec">
+        <Icon size={16} />
+      </span>
+    );
+  }
+
+  return (
+    <span className="size-9 rounded-xl bg-arena-surface-el flex items-center justify-center shrink-0 overflow-hidden">
+      <Image
+        src={visual.image}
+        alt={t(visual.altKey)}
+        width={TYPE_BADGE_SIZE}
+        height={TYPE_BADGE_SIZE}
+        sizes={`${TYPE_BADGE_SIZE}px`}
+        className="h-full w-full object-contain"
+      />
+    </span>
+  );
+}
 
 interface CreateEventStepTypeProps {
   type: CreateEventFormState["type"];
@@ -37,9 +74,7 @@ export function CreateEventStepType({
           )}
         >
           <div className="flex items-center gap-3">
-            <span className="size-9 bg-arena-primary/10 rounded-xl flex items-center justify-center shrink-0 text-arena-primary">
-              <Shield size={16} />
-            </span>
+            <EventTypeVisualBadge visual={EVENT_TYPE_META.game.visual} t={t} />
             <div>
               <span className="block text-[13px] font-extrabold text-arena-text leading-none">
                 {t("types.game.label")}
@@ -69,9 +104,10 @@ export function CreateEventStepType({
           )}
         >
           <div className="flex items-center gap-3">
-            <span className="size-9 bg-[#00D8F6]/10 rounded-xl flex items-center justify-center shrink-0 text-[#00D8F6]">
-              <Compass size={16} />
-            </span>
+            <EventTypeVisualBadge
+              visual={EVENT_TYPE_META.training.visual}
+              t={t}
+            />
             <div>
               <span className="block text-[13px] font-extrabold text-arena-text leading-none">
                 {t("types.training.label")}
@@ -97,9 +133,7 @@ export function CreateEventStepType({
           )}
         >
           <div className="flex items-center gap-3">
-            <span className="size-9 bg-arena-info/10 rounded-xl flex items-center justify-center shrink-0 text-arena-info">
-              <Calendar size={16} />
-            </span>
+            <EventTypeVisualBadge visual={EVENT_TYPE_META.other.visual} t={t} />
             <div>
               <span className="block text-[13px] font-extrabold text-arena-text leading-none">
                 {t("types.other.label")}

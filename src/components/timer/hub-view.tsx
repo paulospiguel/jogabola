@@ -1,7 +1,7 @@
 "use client";
 
 import { AnimatePresence, motion } from "framer-motion";
-import { Plus, Timer, Trash2, Trophy } from "lucide-react";
+import { CircleDot, Plus, Target, Timer, Trash2, Trophy } from "lucide-react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useReducer, useState } from "react";
@@ -73,8 +73,8 @@ function MatchCard({
         onClick={onOpen}
         className="flex flex-1 items-center gap-3 text-left"
       >
-        <span className="grid size-10 shrink-0 place-items-center rounded-xl bg-arena-surface-el text-base">
-          {match.type === "jogo" ? "🏆" : "🎯"}
+        <span className="grid size-10 shrink-0 place-items-center rounded-xl bg-arena-surface-el text-arena-text-sec">
+          {match.type === "jogo" ? <Trophy size={18} /> : <Target size={18} />}
         </span>
         <div className="flex min-w-0 flex-1 flex-col">
           <span className="truncate text-sm font-bold text-arena-text">
@@ -212,7 +212,7 @@ export function HubView() {
         </h2>
         {matches.length === 0 ? (
           <div className="rounded-[16px] border border-arena-border border-dashed bg-arena-surface/40 px-4 py-10 text-center">
-            <span className="text-3xl">⚽</span>
+            <CircleDot size={32} className="mx-auto text-arena-text-muted" />
             <p className="mt-2 text-sm font-semibold text-arena-text">
               Sem jogos ainda
             </p>
