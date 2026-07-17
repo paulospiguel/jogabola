@@ -600,8 +600,8 @@ export function ArenaDashboard({ userId }: ArenaDashboardProps) {
                       .slice(0, 5)
                       .map(p => (
                         <PlayerRow
-                          {...p}
                           key={p.id}
+                          {...p}
                           href={`/arena/squads/player/${p.id}`}
                         />
                       ))

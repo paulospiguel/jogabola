@@ -67,10 +67,14 @@ export function LocationMap({
   }, [location]);
 
   useEffect(() => {
+    let timeoutId: ReturnType<typeof setTimeout>;
     if (editing) {
       setDraft(location);
-      setTimeout(() => inputRef.current?.focus(), 50);
+      timeoutId = setTimeout(() => inputRef.current?.focus(), 50);
     }
+    return () => {
+      if (timeoutId) clearTimeout(timeoutId);
+    };
   }, [editing, location]);
 
   async function handleSave() {

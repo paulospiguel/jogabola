@@ -315,6 +315,7 @@ export async function updateEvent(
 }
 
 // eslint-disable-next-line server-auth-actions
+// eslint-disable-next-line react-doctor/server-auth-actions
 export async function getEvent(eventId: number | string) {
   const eventData = await queryEventByIdOrSlug(eventId);
   if (!eventData) {

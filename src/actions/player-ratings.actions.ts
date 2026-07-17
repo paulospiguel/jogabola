@@ -92,6 +92,7 @@ export async function saveSelfAssessment(input: unknown) {
 
 /** Mapa userId -> overall, para o balanceador (apenas dos que se avaliaram). */
 // eslint-disable-next-line server-auth-actions
+// eslint-disable-next-line react-doctor/server-auth-actions
 export async function getRatingsForUsers(
   userIds: string[],
 ): Promise<Map<string, number>> {

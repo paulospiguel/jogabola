@@ -71,6 +71,12 @@ function DrumPicker({
         isProgrammaticScroll.current = false;
       }, 350);
     }
+
+    return () => {
+      if (scrollTimeout.current) {
+        clearTimeout(scrollTimeout.current);
+      }
+    };
   }, [value, items]);
 
   const handleScroll = (e: React.UIEvent<HTMLDivElement>) => {

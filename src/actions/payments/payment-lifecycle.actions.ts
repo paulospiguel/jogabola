@@ -205,11 +205,13 @@ export async function markPaymentManually(
 }
 
 // eslint-disable-next-line server-auth-actions
+// eslint-disable-next-line react-doctor/server-auth-actions
 export async function markPaymentAsRefunded(paymentId: number) {
   return await updatePaymentStatusByOwner(paymentId, PAYMENT_STATUS.REFUNDED);
 }
 
 // eslint-disable-next-line server-auth-actions
+// eslint-disable-next-line react-doctor/server-auth-actions
 export async function markPaymentAsCredited(paymentId: number) {
   return await updatePaymentStatusByOwner(paymentId, PAYMENT_STATUS.CREDITED);
 }
