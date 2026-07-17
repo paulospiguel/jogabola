@@ -25,7 +25,7 @@ export function MobileTopBar() {
         />
 
         {/* Unified Selector de Equipa */}
-        <div className="shrink-0 min-w-0 m-auto">
+        <div className="min-w-0 m-auto">
           <TeamSwitcher variant="header" />
         </div>
       </div>
