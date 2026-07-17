@@ -197,7 +197,7 @@ export async function getMyPaymentForEvent(eventId: number): Promise<
   try {
     const session = await auth.api.getSession({ headers: await headers() });
     if (!session?.user?.id) {
-      return { success: false, error: "Não autenticado" };
+      return { success: false, error: "UNAUTHORIZED" };
     }
 
     const userId = session.user.id;

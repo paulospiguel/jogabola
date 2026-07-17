@@ -12,7 +12,7 @@ import {
   players,
   user,
 } from "@/db/schema";
-import { withAuthAction } from "@/lib/action-helpers";
+import { getAuthUser, withAuthAction } from "@/lib/action-helpers";
 import { trackServerEvent } from "@/lib/analytics-server";
 import { auth } from "@/lib/auth";
 import { userBelongsToTeamRoster } from "@/lib/event-roster-access";
@@ -50,6 +50,10 @@ export const upsertAttendance = withAuthAction(
 );
 
 export async function getAttendanceForMatchSession(matchSessionId: number) {
+  const userAuth = await getAuthUser();
+  if (!userAuth)
+    return { success: false as const, error: "UNAUTHORIZED" };
+
   const rows = await db
     .select()
     .from(attendance)
@@ -58,6 +62,10 @@ export async function getAttendanceForMatchSession(matchSessionId: number) {
 }
 
 export async function getEventAttendanceWithUsers(eventId: number) {
+  const userAuth = await getAuthUser();
+  if (!userAuth)
+    return { success: false as const, error: "UNAUTHORIZED" };
+
   const records = await db
     .select({
       id: attendance.id,
@@ -160,6 +168,10 @@ function mapPaymentToEventStatus(
 /** Roster for the event-detail roster tab: main (confirmed) + reserves, with
  * position (from team membership) and payment-derived status. Real data. */
 export async function getEventRoster(eventId: number) {
+  const userAuth = await getAuthUser();
+  if (!userAuth)
+    return { success: false as const, error: "UNAUTHORIZED" };
+
   const records = await db
     .select({
       attendanceId: attendance.id,
@@ -236,7 +248,7 @@ export async function getEventRoster(eventId: number) {
 export async function confirmUserAttendance(eventId: number) {
   const session = await auth.api.getSession({ headers: await headers() });
   if (!session?.user?.id) {
-    return { success: false as const, error: "Não autenticado" };
+    return { success: false as const, error: "UNAUTHORIZED" };
   }
 
   const userId = session.user.id;
@@ -331,7 +343,7 @@ export async function confirmUserAttendance(eventId: number) {
 export async function cancelUserAttendance(eventId: number) {
   const session = await auth.api.getSession({ headers: await headers() });
   if (!session?.user?.id) {
-    return { success: false as const, error: "Não autenticado" };
+    return { success: false as const, error: "UNAUTHORIZED" };
   }
 
   try {
@@ -396,6 +408,9 @@ export async function getUserEventAttendanceStatus(
   eventId: number,
   userId: string,
 ) {
+  const userAuth = await getAuthUser();
+  if (!userAuth) return null;
+
   if (!userId) return null;
 
   const record = await db.query.attendance.findFirst({
@@ -409,6 +424,10 @@ export async function getUserEventAttendanceStatus(
 }
 
 export async function getPlayerHistory(playerId: string, teamId: number) {
+  const userAuth = await getAuthUser();
+  if (!userAuth)
+    return { success: false as const, error: "UNAUTHORIZED" };
+
   try {
     // 1. Find the player (registered or guest)
     const [registeredUser] = await db
@@ -466,7 +485,7 @@ export async function managerUpdateParticipantStatus(
 ) {
   const session = await auth.api.getSession({ headers: await headers() });
   if (!session?.user?.id) {
-    return { success: false as const, error: "Não autenticado" };
+    return { success: false as const, error: "UNAUTHORIZED" };
   }
 
   try {
@@ -524,7 +543,7 @@ export async function managerRemoveParticipant(
 ) {
   const session = await auth.api.getSession({ headers: await headers() });
   if (!session?.user?.id) {
-    return { success: false as const, error: "Não autenticado" };
+    return { success: false as const, error: "UNAUTHORIZED" };
   }
 
   try {
@@ -575,7 +594,7 @@ export async function managerBlockParticipant(
 ) {
   const session = await auth.api.getSession({ headers: await headers() });
   if (!session?.user?.id) {
-    return { success: false as const, error: "Não autenticado" };
+    return { success: false as const, error: "UNAUTHORIZED" };
   }
 
   try {

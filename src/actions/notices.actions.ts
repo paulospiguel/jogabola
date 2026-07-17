@@ -8,6 +8,7 @@ import { eventNotices } from "@/db/schema/notices";
 import { getAuthUser } from "@/lib/action-helpers";
 import { canManageTeam } from "@/lib/team-access";
 
+// eslint-disable-next-line server-auth-actions
 export async function getEventNotices(matchSessionId: number) {
   try {
     const rows = await db
@@ -39,7 +40,7 @@ export async function createEventNotice(input: {
   type?: string;
 }) {
   const user = await getAuthUser();
-  if (!user) return { success: false as const, error: "Não autenticado" };
+  if (!user) return { success: false as const, error: "UNAUTHORIZED" };
 
   try {
     const event = await db.query.matchSessions.findFirst({
@@ -75,7 +76,7 @@ export async function createEventNotice(input: {
 
 export async function deleteEventNotice(noticeId: number) {
   const user = await getAuthUser();
-  if (!user) return { success: false as const, error: "Não autenticado" };
+  if (!user) return { success: false as const, error: "UNAUTHORIZED" };
 
   try {
     const notice = await db.query.eventNotices.findFirst({

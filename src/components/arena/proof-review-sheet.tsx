@@ -13,7 +13,7 @@ import { useState, useTransition } from "react";
 import {
   requestPaymentProof,
   updatePaymentStatus,
-} from "@/actions/payments.actions";
+} from "@/actions/payments/payments.actions";
 import { JbAvatar } from "@/components/arena/avatar";
 import { BottomSheet } from "@/components/arena/bottom-sheet";
 import { PAYMENT_REVIEW_STATUS } from "@/constants/payments";
@@ -116,11 +116,10 @@ export function ProofReviewSheet({
       <div className="flex flex-col gap-4 px-5 py-4 pb-8 max-h-[82vh] overflow-y-auto">
         {feedback && (
           <div
-            className={`rounded-xl border px-3.5 py-2.5 text-[12px] font-semibold leading-relaxed ${
-              feedback.type === "success"
+            className={`rounded-xl border px-3.5 py-2.5 text-[12px] font-semibold leading-relaxed ${feedback.type === "success"
                 ? "border-arena-success/30 bg-arena-success/10 text-arena-success"
                 : "border-arena-danger/30 bg-arena-danger/10 text-arena-danger"
-            }`}
+              }`}
           >
             {feedback.message}
           </div>

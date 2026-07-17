@@ -41,7 +41,7 @@ vi.mock("@/lib/auth", () => ({
 vi.mock("next/headers", () => ({
   headers: async () => new Headers(),
 }));
-vi.mock("@/actions/notifications.actions", () => ({
+vi.mock("@/lib/notifications", () => ({
   notifyPaymentValidationRequired: vi.fn(),
 }));
 vi.mock("@/lib/email", () => ({ sendPaymentProofRequest: vi.fn() }));
@@ -52,10 +52,10 @@ vi.mock("@/lib/s3", () => ({
 }));
 
 const { createPayment, submitPaymentProof } = await import(
-  "@/actions/payments.actions"
+  "@/actions/payments/payments.actions"
 );
 const { verifyPaymentProof } = await import(
-  "@/actions/payment-verification.actions"
+  "@/actions/payments/payment-verification.actions"
 );
 
 const paymentInput = {

@@ -4,6 +4,7 @@ import { cookies } from "next/headers";
 import { type Locale, locales } from "@/i18n/configs";
 import type { ActionResult } from "@/types/common";
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any, server-auth-actions
 export async function setLocale(
   input: unknown,
 ): Promise<ActionResult<{ locale: Locale }>> {

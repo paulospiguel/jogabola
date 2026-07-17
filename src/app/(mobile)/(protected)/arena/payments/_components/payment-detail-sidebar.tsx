@@ -5,7 +5,7 @@ import { useState } from "react";
 import {
   markPaymentAsCredited,
   markPaymentAsRefunded,
-} from "@/actions/payments.actions";
+} from "@/actions/payments/payments.actions";
 import { JbAvatar } from "@/components/arena/avatar";
 import { type BadgeStatus, JbBadge } from "@/components/arena/badge";
 import { ScoreBar, type ScoreLevel } from "@/components/arena/score-bar";

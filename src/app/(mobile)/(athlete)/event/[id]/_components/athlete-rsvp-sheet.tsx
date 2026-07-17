@@ -6,7 +6,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { confirmUserAttendance } from "@/actions/attendance.actions";
 import { requestAuthSignInOTP } from "@/actions/auth-otp.actions";
 import { requestGuestOTP, verifyGuestOTP } from "@/actions/guest-rsvp.actions";
-import { createPayment } from "@/actions/payments.actions";
+import { createPayment } from "@/actions/payments/payments.actions";
 import { BottomSheet } from "@/components/arena/bottom-sheet";
 import { ATTENDANCE_STATUS } from "@/constants/attendance";
 import { useEvent } from "@/hooks/use-events";

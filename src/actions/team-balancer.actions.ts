@@ -21,6 +21,7 @@ export interface BalancerGuest {
   rating: number;
 }
 
+// eslint-disable-next-line server-auth-actions
 export async function balanceTeamsWithAI(
   eventId: number,
   guests: BalancerGuest[],

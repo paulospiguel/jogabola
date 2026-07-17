@@ -1,5 +1,6 @@
 import { and, eq } from "drizzle-orm";
-import { sendNotification } from "@/actions/notifications.actions";
+import { sendNotification } from "@/lib/notifications";
+
 import { db } from "@/db/client";
 import { attendance } from "@/db/schema";
 import { user } from "@/db/schema/users";

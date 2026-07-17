@@ -121,7 +121,7 @@ export async function markPaymentManually(
 ) {
   const session = await auth.api.getSession({ headers: await headers() });
   if (!session?.user?.id) {
-    return { success: false as const, error: "Não autenticado" };
+    return { success: false as const, error: "UNAUTHORIZED" };
   }
 
   const managerId = session.user.id;
@@ -204,10 +204,12 @@ export async function markPaymentManually(
   }
 }
 
+// eslint-disable-next-line server-auth-actions
 export async function markPaymentAsRefunded(paymentId: number) {
   return await updatePaymentStatusByOwner(paymentId, PAYMENT_STATUS.REFUNDED);
 }
 
+// eslint-disable-next-line server-auth-actions
 export async function markPaymentAsCredited(paymentId: number) {
   return await updatePaymentStatusByOwner(paymentId, PAYMENT_STATUS.CREDITED);
 }
@@ -215,7 +217,7 @@ export async function markPaymentAsCredited(paymentId: number) {
 async function updatePaymentStatusByOwner(paymentId: number, status: string) {
   const session = await auth.api.getSession({ headers: await headers() });
   if (!session?.user?.id)
-    return { success: false as const, error: "Não autenticado" };
+    return { success: false as const, error: "UNAUTHORIZED" };
 
   const userId = session.user.id;
 

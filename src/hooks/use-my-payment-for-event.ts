@@ -7,7 +7,7 @@ export function useMyPaymentForEvent(eventId: number) {
     queryKey: ["myPayment", eventId],
     queryFn: async () => {
       const { getMyPaymentForEvent } = await import(
-        "@/actions/payments.actions"
+        "@/actions/payments/payments.actions"
       );
       const res = await getMyPaymentForEvent(eventId);
       if (!res.success) {

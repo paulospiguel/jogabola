@@ -15,7 +15,7 @@ import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { useCallback, useState } from "react";
-import { submitPaymentProof } from "@/actions/payments.actions";
+import { submitPaymentProof } from "@/actions/payments/payments.actions";
 import { PAYMENT_STATUS } from "@/constants/payments";
 import { usePayment } from "@/hooks/use-payments";
 import { useProofUpload } from "@/hooks/use-proof-upload";
@@ -51,15 +51,15 @@ type StatusConfig = {
   iconColor: string;
   iconBorder: string;
   titleKey:
-    | "paid.title"
-    | "paid_unverified.title"
-    | "failed.title"
-    | "pending.title";
+  | "paid.title"
+  | "paid_unverified.title"
+  | "failed.title"
+  | "pending.title";
   captionKey:
-    | "paid.caption"
-    | "paid_unverified.caption"
-    | "failed.caption"
-    | "pending.caption";
+  | "paid.caption"
+  | "paid_unverified.caption"
+  | "failed.caption"
+  | "pending.caption";
 };
 
 function getStatusConfig(status: string): StatusConfig {

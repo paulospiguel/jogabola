@@ -35,6 +35,9 @@ export async function canParticipateInChat(
   eventId: number,
   userId: string,
 ): Promise<boolean> {
+  const authUser = await getAuthUser();
+  if (!authUser) return false;
+
   const event = await db.query.matchSessions.findFirst({
     columns: { teamId: true, paymentRequired: true },
     where: eq(matchSessions.id, eventId),

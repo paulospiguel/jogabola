@@ -314,6 +314,7 @@ export async function updateEvent(
   return { success: true as const, data: toEventView(event) };
 }
 
+// eslint-disable-next-line server-auth-actions
 export async function getEvent(eventId: number | string) {
   const eventData = await queryEventByIdOrSlug(eventId);
   if (!eventData) {

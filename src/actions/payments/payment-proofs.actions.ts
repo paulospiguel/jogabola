@@ -4,7 +4,6 @@ import { randomUUID } from "node:crypto";
 import { eq } from "drizzle-orm";
 import { headers } from "next/headers";
 import { z } from "zod";
-import { notifyPaymentValidationRequired } from "@/actions/notifications.actions";
 import { PAYMENT_STATUS } from "@/constants/payments";
 import { db } from "@/db/client";
 import {
@@ -19,6 +18,7 @@ import { withAction, withAuthAction } from "@/lib/action-helpers";
 import { trackServerEvent } from "@/lib/analytics-server";
 import { auth } from "@/lib/auth";
 import { sendPaymentProofRequest } from "@/lib/email";
+import { notifyPaymentValidationRequired } from "@/lib/notifications";
 import { canActOnReservation } from "@/lib/reservation-access";
 import { getPresignedUploadUrl, getR2PublicUrl } from "@/lib/s3";
 import { classifyErrorSafely } from "@/lib/safe-error";
