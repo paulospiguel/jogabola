@@ -1,6 +1,6 @@
-# Verificação — Arena UI/UX Improvements (Task 11)
+# Verificação — Arena UI/UX Improvements (Tasks 11–12)
 
-> Referente a `docs/superpowers/plans/2026-07-16-arena-ui-ux-improvements.md`, Task 11 (Refinamento visual, performance e responsividade).
+> Referente a `docs/superpowers/plans/2026-07-16-arena-ui-ux-improvements.md`, Task 11 (Refinamento visual, performance e responsividade) e Task 12 (Verificação final contra a especificação, `docs/superpowers/specs/2026-07-16-arena-ui-ux-improvements-design.md`).
 
 ## 0. Ruído visual (Step 1)
 
@@ -105,3 +105,77 @@ Nenhuma falha pré-existente adicional encontrada além dos avisos de lint já d
 2. **3px de overflow benigno em `/arena`** — ver secção 2. Não é uma regressão; não recomendo correção adicional.
 3. **Duas chaves de tradução por traduzir** em `arenaCreateEvent.invite`/`arenaCreateEvent.final.confirm` — pré-existentes, fora de âmbito deste plano; recomenda-se um follow-up.
 4. **`.press`/`.btn-press` continuam sem definição CSS** em todo o repositório — já identificado e reportado como follow-up separado durante as Tasks 2, 4 e 6 (não repetido aqui).
+
+---
+
+# Task 12 — Verificação final contra a especificação
+
+## 8. Suite completa, reexecutada fresca (Step 5)
+
+```
+pnpm lint       → exit 0
+pnpm ts-check   → exit 0, sem output
+pnpm test       → 45 ficheiros, 386/386 testes a passar
+pnpm build      → sucesso, 31/31 páginas geradas
+```
+
+Contratos específicos confirmados isoladamente (Step 4):
+```
+pnpm vitest run src/lib/__tests__/arena-locale-contract.test.ts src/lib/__tests__/arena-iconography-contract.test.ts
+→ 2 ficheiros, 15/15 testes a passar
+```
+
+## 9. Assets aprovados (Step 3)
+
+`src/assets/images/branding/` contém exatamente os 5 assets marcados `approved` em `docs/design/arena-brand-assets.md` (secção 6.3, aprovados 2026-07-17): `jb-game`, `jb-training`, `jb-friendly`, `jb-meeting`, `jb-other` — cada um com fonte `.png` + exports `@1x.webp`/`@2x.webp`. Nenhum ficheiro extra, nenhum ficheiro em falta. Ícones operacionais (Cronómetro, posições) continuam 100% Lucide — confirmado pelo contrato de iconografia (secção 8 acima) e por não haver `raster` a substituir controlos/estado em nenhum ficheiro tocado.
+
+## 10. Percurso manual (Step 2)
+
+Sessão `ui-review-owner@jogabola.test`, equipa `[UI-REVIEW] Active`:
+
+- **Arena → criar evento → detalhe do evento → Cronómetro**: fluxo completo executado durante a Task 11 (criação do evento `[UI-REVIEW] Treino`) e revalidado nesta task — `/arena/events/11` carrega corretamente, mostra "Vagas 0/14", abas Convocatória/Equipas/Local, e contém dois links reais para `/timer` (um com texto "Cronómetro", outro com `aria-label="Abrir Cronómetro"`), confirmando o atalho contextual da Task 6.
+- **Plantel, Cobranças, Perfil**: percorridos e capturados em screenshot durante a Task 11 (secção 3 acima) em todos os quatro breakpoints; sem estados quebrados, sem overflow, ações coerentes com o papel de capitão.
+- **Repetir o cockpit como owner e como `player`**: **bloqueado**. Ver secção 1 ("Sessão de membro `player` — bloqueada"). Não foi possível provar em runtime que um membro sem `canManageTeam` não recebe CTAs de mutação através de uma sessão real — a garantia atual assenta inteiramente na cobertura de testes automatizados das Tasks 1, 3 e 5 (`team-capabilities.test.ts`, `dashboard-cockpit.test.ts`: caso "membro sem evento recebe view-squad", "membro sem permissão"), não numa verificação visual em runtime com uma segunda conta. Confirmado com o utilizador antes de prosseguir sem este passo (ver histórico da conversa) — este item **permanece explicitamente em aberto**, não deve ser interpretado como concluído.
+
+## 11. Matriz requisito → evidência
+
+Cobre "Critérios de sucesso" e "Limites mensuráveis" do spec (`docs/superpowers/specs/2026-07-16-arena-ui-ux-improvements-design.md`).
+
+| Requisito (spec) | Evidência | Estado |
+|---|---|---|
+| Capitão sem eventos encontra "Criar evento" sem CTAs duplicados | `dashboard-cockpit.test.ts` (Task 3): "no-event state produz exatamente um CTA primário"; screenshot Task 11 320/1440px mostra um único botão "Criar evento" | ✅ |
+| Dashboard não mostra métricas sem contexto | `deriveDashboardQueryState`/`showMetrics` (Task 3): métricas só renderizam com `activeEvent`; confirmado visualmente (equipa Empty não mostra Confirmados/Reservas/Pendentes) | ✅ |
+| Nenhum conteúdo/CTA cortado nos breakpoints definidos | Secção 3 (Task 11): 20/20 combinações rota×viewport sem overflow real (o único resíduo de 3px em `/arena`@320 é um artefacto benigno de scrollbar, não um corte de conteúdo — confirmado visualmente) | ✅ |
+| Navegação mobile com 5 destinos, todos ≥44×44px | `bottom-nav.test.ts` (Task 6): exatamente 5 itens, sem `/timer`; `min-h-11 min-w-11` no código de `bottom-nav.tsx`/`mobile-top-bar.tsx` | ✅ |
+| Loading, error e empty visual e semanticamente distintos | `query-state.test.ts` (Task 2): precedência error>empty>success testada; `deriveQueryViewState` usado consistentemente nas Tasks 3–5 | ✅ |
+| Arena não usa emojis operacionais/branding nos casos substituídos | `arena-iconography-contract.test.ts` (Task 9): 7/7 a passar, cobre `create-event-dialog.utils.ts`, `create-event-step-type.tsx`, 4 ficheiros do Timer | ✅ |
+| Novos assets pertencem à família visual existente | Aprovação visual do utilizador (Task 8, secção 6.3 de `arena-brand-assets.md`) — outline verde-escuro espesso, moldura hexagonal, paleta lima/amarelo, sem texto, fundo transparente confirmado por amostragem de pixel | ✅ |
+| Quatro traduções sincronizadas, PT-PT natural | `arena-locale-contract.test.ts` (Task 10): 8/8 namespaces sem divergência de chave/placeholder; revisão editorial PT-PT feita na Task 10 ("pelada"→"jogar à bola", sentence case, "Definições") | ✅ |
+| `scrollWidth === clientWidth` a 320/390/768/1440px nas 5 rotas | Secção 3 (Task 11) | ✅ (ressalva do resíduo benigno documentada) |
+| Empty states sem clipping/transformações fora da área visível | Screenshot Task 11 320px: empty state de `/arena` e `/arena/events` totalmente dentro do viewport | ✅ |
+| Imagens acima da dobra reservam `width`/`height` ou `fill`+`sizes`; zero avisos novos do Next.js | `pnpm build` (secção 8): zero avisos de imagem; `logo.tsx` (Task 10) e `create-event-step-type.tsx`/brand images (Task 9) usam `next/image` com dimensões explícitas | ✅ |
+| Skeleton e conteúdo final com a mesma estrutura, sem salto de cabeçalho/navegação | `DashboardSkeleton` (Task 3): representa topbar+próxima ação+plantel sem ocupar o ecrã inteiro nem esconder navegação — testado e confirmado visualmente | ✅ |
+| CTA duplicado removido; "Esta semana"/"Descobrir" ocultos quando vazios; padrão de fundo reduzido; cards aninhados eliminados | CTA duplicado removido na Task 3 (`git diff` documentado na review dessa task); `showWeek`/`showDiscover` testados; ruído visual revisto sem necessidade de mudança adicional (secção 0 desta task) | ✅ |
+| Todos os elementos interativos mobile ≥44px | `min-h-11 min-w-11` sistemático em `bottom-nav.tsx`, `mobile-top-bar.tsx` (Task 6); `ArenaQueryError` (Task 2) | ✅ |
+| Owner/manager veem criar evento e adicionar jogador; coach/player não recebem CTAs de mutação | Testado automaticamente (`team-capabilities.test.ts`, `dashboard-cockpit.test.ts`); **não verificado em runtime com sessão real** — ver secção 10 | ⚠️ Bloqueado (ver secção 1) |
+
+## 12. Handoff final
+
+**Estado:** plano substancialmente completo e verificado, com uma limitação explícita e documentada, não uma falha silenciosa.
+
+**Concluído e verificado:**
+- Todas as 11 tasks de implementação (1–11) commitadas, cada uma com revisão de tarefa própria (spec compliance + qualidade) — clean em todas.
+- Suite completa (lint/ts-check/test/build) verde, reexecutada fresca nesta task.
+- Contratos automáticos (locale, iconografia, cockpit, query-state) todos a passar.
+- Verificação visual/manual em 4 breakpoints × 5 rotas, sem cortes reais de conteúdo.
+- Assets de branding aprovados pelo utilizador e integrados corretamente; nenhum ícone operacional substituído por raster.
+- Uma regressão real (overflow horizontal mobile) encontrada durante a própria verificação, diagnosticada, e corrigida em dois commits corretamente atribuídos às tasks responsáveis.
+
+**Não concluído — bloqueado, não inferido:**
+- Verificação em runtime do cockpit como sessão `player` real (membro sem `canManageTeam`). A app não tem atualmente nenhum mecanismo (onboarding "Atleta" desativado; sem fluxo de convite/join a equipa) para criar essa sessão. Confirmado com o utilizador: avançar sem ela, documentar como pendente. **Este item não deve ser marcado como concluído até essa sessão existir e o percurso ser repetido.**
+
+**Achados fora de âmbito, registados para follow-up separado (não bloqueiam este plano):**
+- Duas chaves de tradução por traduzir em `arenaCreateEvent` (namespace pré-existente, fora do âmbito de todas as 12 tasks).
+- `.press`/`.btn-press` sem definição CSS em todo o repositório (identificado nas Tasks 2, 4, 6).
+- `positions.ts` é um módulo órfão sem consumidores (identificado na Task 7).
+- Botões para criar eventos `friendly`/`meeting` não existem na UI, apesar dos tipos e assets já suportarem — gap de produto pré-existente, não desta plano (identificado durante a Task 10).
