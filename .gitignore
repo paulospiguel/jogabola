@@ -53,6 +53,9 @@ packages/email/public
 storybook-static
 tailwind.css
 
+# agent runtime / caches
+.superpowers/
+
 # Supabase
 .branches
 .temp
