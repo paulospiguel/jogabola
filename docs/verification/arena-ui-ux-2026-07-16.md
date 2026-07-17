@@ -2,6 +2,10 @@
 
 > Referente a `docs/superpowers/plans/2026-07-16-arena-ui-ux-improvements.md`, Task 11 (Refinamento visual, performance e responsividade).
 
+## 0. Ruído visual (Step 1)
+
+Revistas as superfícies tocadas (`/arena`, `/arena/squads`, `/arena/payments`) via screenshot em 320/390/768/1440px. `.jb-arena-bg` (padrão de pontos, opacidade 0.72) permanece subtil e não compete com o conteúdo; não foram encontrados cards aninhados (`jb-card`/`jb-panel` dentro de si próprios) nas rotas verificadas; `.jb-section-label` já usa `letter-spacing: 1.2px` a 11px, dentro do razoável para maiúsculas pequenas; o verde (`--color-arena-primary`) mantém-se reservado a ação/seleção (pill "Todos" ativo, FAB, CTAs). Avaliação: as Tasks 1–10 já deixaram esta superfície sem ruído visual significativo — nenhuma alteração adicional foi necessária, evitando introduzir uma direção visual nova sem motivo.
+
 ## 1. Fixtures reutilizáveis criadas (Step 3)
 
 Criadas exclusivamente através dos fluxos normais da app (sign-up por email OTP, onboarding, criar equipa, criar evento, adicionar jogador) — sem SQL ad hoc.
