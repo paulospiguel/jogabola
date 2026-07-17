@@ -1,61 +1,56 @@
 "use client";
 
-import { COMPANY, TRANSLATION_KEYS } from "@/constants/app";
-import { cn } from "@/utils";
-import { useTranslations } from "next-intl";
 import Image, { type StaticImageData } from "next/image";
 import Link from "next/link";
-
-import logoAnimated from "@/assets/animations/jogabola-loop.gif";
-import logoGreen from "@/assets/logos/jogabola-green.svg";
+import { useTranslations } from "next-intl";
+import type React from "react";
+import type { ComponentProps } from "react";
 import logo from "@/assets/logos/jogabola-logo.svg";
 import logoWhite from "@/assets/logos/jogabola-white.svg";
-import React, { ComponentProps } from "react";
+import newLogoAnimated from "@/assets/logos/logo_animado.gif";
+import { APP } from "@/constants/app";
+import { cn } from "@/lib/utils";
 
 const sizes = {
-  mini: "w-20 h-20",
-  small: "h-16 w-24",
+  mini: "w-16 h-20",
+  small: "h-24 w-28",
   medium: "h-28 w-48",
   large: "h-36 w-72",
+  header: "h-8 w-24",
 } as const;
 
 type LogoProps = {
   className?: ComponentProps<"div">["className"];
   size?: keyof typeof sizes;
   isAnimate?: boolean;
-  color?: "white" | "default" | "green" | "blue";
+  variant?: "white" | "default";
+  isBeta?: boolean;
+  href?: string;
 };
 
 const imageColors = {
   white: logoWhite,
-  green: logoGreen,
-  blue: logo,
   default: logo,
-  withBorder: logo,
 };
 
 export const Logo: React.FC<LogoProps> = ({
-  color,
+  variant,
   className,
   isAnimate,
+  isBeta,
   size = "medium",
+  href,
 }) => {
   const t = useTranslations();
   const logoSize = sizes[size];
   let logotipo: StaticImageData;
 
   if (isAnimate) {
-    logotipo = logoAnimated;
+    logotipo = newLogoAnimated;
   } else {
-    switch (color) {
+    switch (variant) {
       case "white":
         logotipo = imageColors.white;
-        break;
-      case "green":
-        logotipo = imageColors.green;
-        break;
-      case "blue":
-        logotipo = imageColors.blue;
         break;
       default:
         logotipo = imageColors.default;
@@ -63,18 +58,47 @@ export const Logo: React.FC<LogoProps> = ({
     }
   }
 
-  return (
-    <Link href="/" className={cn("relative flex", logoSize, className)}>
+  const content = (
+    <>
       <Image
         unoptimized
         src={logotipo}
-        alt="Logo Jogabola"
+        alt={t(APP.COMPANY.NAME)}
         fill
+        sizes="(max-width: 768px) 40vw, 200px"
         className="object-contain"
       />
       <span className="sr-only">
-        {COMPANY.NAME} - {t(TRANSLATION_KEYS.COMPANY.SLOGAN)}
+        {t(APP.COMPANY.NAME)} — {t(APP.COMPANY.SLOGAN)}
       </span>
+    </>
+  );
+
+  if (!href) {
+    return (
+      <div className={cn("relative flex", logoSize, className)}>{content}</div>
+    );
+  }
+
+  return (
+    <Link
+      href={href}
+      className={cn("press relative flex", logoSize, className)}
+    >
+      {content}
+
+      {isBeta && (
+        <span
+          className={cn(
+            "absolute rounded-full border border-[#7CFF4F]/25 bg-[#7CFF4F]/10 font-bold tracking-widest text-[#7CFF4F] uppercase",
+            size === "header"
+              ? "-right-2 -top-0.5 px-1.5 py-0.25 text-[8px]"
+              : "-right-4 top-3 px-2 py-0.5 text-[10px]",
+          )}
+        >
+          {t("common.betaLabel")}
+        </span>
+      )}
     </Link>
   );
 };

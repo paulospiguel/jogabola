@@ -1,0 +1,22 @@
+{
+  "HOME_STATS": {
+    "clubs": {
+      "value": "10k+",
+      "label": "clubs",
+      "key": "clubs",
+      "isRating": false
+    },
+    "players": {
+      "value": "500k+",
+      "label": "players",
+      "key": "players",
+      "isRating": false
+    },
+    "averageRating": {
+      "value": "4.9",
+      "label": "rating",
+      "key": "averageRating",
+      "isRating": true
+    }
+  }
+}

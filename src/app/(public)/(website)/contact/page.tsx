@@ -1,178 +1,96 @@
 "use client";
 
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
+import { motion } from "framer-motion";
+import { ArrowLeft, AtSign, Instagram, Mail } from "lucide-react";
+import Link from "next/link";
 import { useTranslations } from "next-intl";
-import { useState } from "react";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
-import { Text } from "@/components/ui/Text";
-import Loading from "@/components/loading";
-import { Send } from "lucide-react";
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectLabel,
-  SelectValue,
-} from "@/components/ui/select";
-import { SelectTrigger } from "@radix-ui/react-select";
-import { LuBook, LuBug, LuHand, LuMailQuestion } from "react-icons/lu";
-import { sendEmail } from "@/actions/sendEmail";
-
-const subjects = [
-  { value: "suggestion", label: "Suggestion", icon: LuBook },
-  { value: "bug", label: "Bug", icon: LuBug },
-  { value: "question", label: "Question", icon: LuMailQuestion },
-  { value: "other", label: "Other", icon: LuHand },
-];
-
-// Definição local do schema para validação no cliente
-const contactSchema = z.object({
-  name: z.string().min(2, "contact.name_required"),
-  email: z.string().email("contact.email_invalid"),
-  message: z.string().min(3, "contact.message_required"),
-  subject: z.string().optional().default(subjects[0].value),
-});
-
-type ContactFormValues = z.infer<typeof contactSchema>;
+import { APP } from "@/constants/app";
 
 export default function ContactPage() {
-  const [loading, setLoading] = useState(false);
-  const [success, setSuccess] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-
-  const t = useTranslations();
-
-  subjects.forEach(subject => {
-    if (subject.value === "suggestion") {
-      subject.label = t("contact.suggestion");
-    } else if (subject.value === "bug") {
-      subject.label = t("contact.bug");
-    } else if (subject.value === "question") {
-      subject.label = t("contact.question");
-    } else if (subject.value === "other") {
-      subject.label = t("contact.other");
-    }
-  });
-
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-    reset,
-  } = useForm<ContactFormValues>({
-    resolver: zodResolver(contactSchema),
-  });
-
-  const handleFormSubmit = async (data: ContactFormValues) => {
-    setLoading(true);
-    setError(null);
-    setSuccess(false);
-    try {
-      // Usando a rota de API em vez de Server Action
-      const response = await sendEmail(data);
-
-      if (!response.success) {
-        throw new Error(String(response.error || t("contact.send_error")));
-      }
-
-      setSuccess(true);
-      reset();
-    } catch (err: any) {
-      console.error("Erro ao enviar email:", err);
-      setError(err.message || t("contact.send_error"));
-    } finally {
-      setLoading(false);
-    }
-  };
+  const t = useTranslations("contactPage");
+  const contactMethods = [
+    {
+      icon: Mail,
+      title: t("methods.email.label"),
+      value: APP.CONTACT.SUPPORT_EMAIL,
+      href: `mailto:${APP.CONTACT.SUPPORT_EMAIL}`,
+    },
+    {
+      icon: Instagram,
+      title: t("methods.instagram.label"),
+      value: APP.CONTACT.INSTAGRAM_HANDLE,
+      href: APP.SOCIAL.INSTAGRAM,
+    },
+    {
+      icon: AtSign,
+      title: t("methods.x.label"),
+      value: APP.CONTACT.X_HANDLE,
+      href: APP.SOCIAL.TWITTER,
+    },
+  ];
 
   return (
-    <div className="mx-auto w-full max-w-4xl space-y-4 p-6">
-      <Text variant="h2" fontWeight="bold">
-        {t("contact.title")}
-      </Text>
-      <Text variant="h3" fontWeight="bold">
-        {t("contact.subtitle")}
-      </Text>
-      <form onSubmit={handleSubmit(handleFormSubmit)}>
-        <div className="space-y-4">
-          <Select {...register("subject")} defaultValue={subjects[0].value}>
-            <SelectTrigger
-              tabIndex={0}
-              aria-label={t("contact.subject")}
-              className="h-10 w-full rounded-3xl border-2 data-[state=open]:border-teal-600 md:w-[180px]"
+    <main className="min-h-screen bg-slate-950 pt-32 pb-20">
+      <div className="container mx-auto max-w-6xl px-4 md:px-6">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+          className="mb-16 text-center"
+        >
+          <div className="flex justify-start">
+            <Button
+              variant="ghost"
+              asChild
+              className="press mb-8 text-gray-400 hover:text-white"
             >
-              <SelectValue placeholder={t("contact.subject")} />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectGroup>
-                <SelectLabel>{t("contact.subject")}</SelectLabel>
-                {subjects.map(subject => (
-                  <SelectItem key={subject.value} value={subject.value}>
-                    <li className="flex items-center px-2">
-                      <subject.icon className="mr-1 h-4 w-4" />
-                      <span>{subject.label}</span>
-                    </li>
-                  </SelectItem>
-                ))}
-              </SelectGroup>
-            </SelectContent>
-          </Select>
+              <Link href="/" className="flex items-center gap-2">
+                <ArrowLeft className="h-4 w-4" />
+                {t("backHome")}
+              </Link>
+            </Button>
+          </div>
 
-          <Input
-            {...register("name")}
-            placeholder={t("contact.name")}
-            aria-label={t("contact.name")}
-            tabIndex={0}
-            autoComplete="name"
-            className={errors.name ? "border-red-500" : ""}
-          />
-          {errors.name && <Text color="danger">{t(errors.name.message!)}</Text>}
-          <Input
-            {...register("email")}
-            placeholder={t("contact.email")}
-            aria-label={t("contact.email")}
-            tabIndex={0}
-            autoComplete="email"
-            className={errors.email ? "border-red-500" : ""}
-          />
-          {errors.email && (
-            <Text color="danger">{t(errors.email.message!)}</Text>
-          )}
-          <Textarea
-            {...register("message")}
-            placeholder={t("contact.message")}
-            aria-label={t("contact.message")}
-            tabIndex={0}
-            rows={5}
-            className={errors.message ? "border-red-500" : ""}
-          />
-          {errors.message && (
-            <Text color="danger">{t(errors.message.message!)}</Text>
-          )}
-          <Button
-            type="submit"
-            disabled={loading}
-            aria-label={t("contact.send")}
-            className="float-right w-full rounded-4xl md:min-w-[120px] dark:bg-teal-800"
-          >
-            {loading ? (
-              <Loading size="small" />
-            ) : (
-              <>
-                <Send className="mr-2" />
-                {t("contact.send")}
-              </>
-            )}
-          </Button>
-          {success && <Text color="green">{t("contact.send_success")}</Text>}
-          {error && <Text color="red">{error}</Text>}
+          <h1 className="mb-6 text-4xl font-extrabold text-white md:text-5xl lg:text-6xl">
+            {t("title")}
+          </h1>
+          <p className="mx-auto max-w-2xl text-xl text-gray-400">
+            {t("description")}
+          </p>
+        </motion.div>
+
+        <div className="grid gap-6 lg:grid-cols-3">
+          {contactMethods.map((method, index) => (
+            <motion.a
+              key={method.title}
+              href={method.href}
+              target={method.href.startsWith("mailto:") ? undefined : "_blank"}
+              rel={
+                method.href.startsWith("mailto:")
+                  ? undefined
+                  : "noopener noreferrer"
+              }
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: index * 0.1 }}
+              className="press group flex items-center gap-6 rounded-3xl border border-white/5 bg-white/5 p-8 backdrop-blur-md transition-all hover:border-white/10 hover:bg-white/10 lg:flex-col lg:items-start"
+            >
+              <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-white/5 text-white transition-transform group-hover:scale-110">
+                <method.icon className="h-7 w-7" />
+              </div>
+              <div className="w-full min-w-0">
+                <h2 className="mb-1 text-sm font-bold tracking-widest text-gray-400 uppercase">
+                  {method.title}
+                </h2>
+                <p className="break-words text-lg font-bold text-white">
+                  {method.value}
+                </p>
+              </div>
+            </motion.a>
+          ))}
         </div>
-      </form>
-    </div>
+      </div>
+    </main>
   );
 }

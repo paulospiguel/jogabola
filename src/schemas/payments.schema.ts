@@ -1,0 +1,85 @@
+import { z } from "zod";
+
+export const PAYMENT_METHODS = ["stripe", "mbway", "cash", "transfer"] as const;
+
+export const createPaymentSchema = z.object({
+  matchReservationId: z
+    .number()
+    .int()
+    .positive({ message: "VALIDATION_RESERVATION_REQUIRED" }),
+  amountCents: z
+    .number()
+    .int()
+    .positive({ message: "VALIDATION_AMOUNT_REQUIRED" }),
+  currency: z.string().length(3).default("EUR"),
+  method: z.enum(PAYMENT_METHODS),
+  guestAccessToken: z.string().optional(),
+});
+
+export const submitPaymentProofSchema = z.object({
+  paymentId: z
+    .number()
+    .int()
+    .positive({ message: "VALIDATION_PAYMENT_REQUIRED" }),
+  fileUrl: z.string().url({ message: "VALIDATION_PROOF_URL_INVALID" }),
+  notes: z
+    .string()
+    .max(500, { message: "VALIDATION_NOTES_TOO_LONG" })
+    .optional(),
+  guestAccessToken: z.string().optional(),
+});
+
+export const requestPresignedUrlSchema = z.object({
+  paymentId: z.number().int().positive(),
+  contentType: z.string(),
+  sizeBytes: z.number().int().positive(),
+  guestAccessToken: z.string().optional(),
+});
+
+export const verifyPaymentProofSchema = z.object({
+  paymentProofId: z
+    .number()
+    .int()
+    .positive({ message: "VALIDATION_PAYMENT_PROOF_REQUIRED" }),
+  guestAccessToken: z.string().optional(),
+  aiCheck: z.object({
+    decision: z.enum(["likely_valid", "needs_review", "likely_invalid"]),
+    confidence: z.number().min(0).max(1),
+    extractedAmount: z.number().optional(),
+    extractedDate: z.string().optional(),
+    extractedRecipient: z.string().optional(),
+    riskFlags: z.array(z.string()).default([]),
+  }),
+});
+
+export const upsertTeamPaymentSettingsSchema = z.object({
+  teamId: z.number().int().positive(),
+  stripeEnabled: z.boolean().default(false),
+  stripeAccountId: z.string().optional(),
+  mbwayEnabled: z.boolean().default(false),
+  mbwayPhone: z
+    .string()
+    .regex(/^\+?[0-9\s]{9,15}$/, "Número inválido")
+    .optional()
+    .or(z.literal("")),
+  mbwayName: z.string().max(80).optional(),
+  cashEnabled: z.boolean().default(true),
+  cashInstructions: z.string().max(300).optional(),
+  transferEnabled: z.boolean().default(false),
+  transferIban: z.preprocess(
+    val => (typeof val === "string" ? val.replace(/\s+/g, "") : val),
+    z
+      .string()
+      .regex(/^[A-Z]{2}[0-9]{2}[A-Z0-9]{11,30}$/i, "IBAN inválido")
+      .optional()
+      .or(z.literal("")),
+  ),
+  transferName: z.string().max(80).optional(),
+});
+
+export type CreatePaymentInput = z.infer<typeof createPaymentSchema>;
+export type SubmitPaymentProofInput = z.infer<typeof submitPaymentProofSchema>;
+export type VerifyPaymentProofInput = z.infer<typeof verifyPaymentProofSchema>;
+export type UpsertTeamPaymentSettingsInput = z.infer<
+  typeof upsertTeamPaymentSettingsSchema
+>;

@@ -1,0 +1,28 @@
+{
+  "plans": {
+    "base": {
+      "tier": "BASE",
+      "name": "Base",
+      "price": "0",
+      "yearPrice": "0",
+      "cta": "startForFree",
+      "isPopular": false
+    },
+    "pro": {
+      "tier": "PRO",
+      "name": "Pro",
+      "price": "20",
+      "yearPrice": "200",
+      "cta": "startForFree",
+      "isPopular": true
+    },
+    "elite": {
+      "tier": "ELITE",
+      "name": "Elite",
+      "price": "40",
+      "yearPrice": "400",
+      "cta": "startForFree",
+      "isPopular": false
+    }
+  }
+}

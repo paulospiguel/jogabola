@@ -1,0 +1,1 @@
+ALTER TABLE "user" ADD COLUMN IF NOT EXISTS "plan_tier" text NOT NULL DEFAULT 'free';

@@ -1,0 +1,33 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches:
+      - master
+      - "releases/**"
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 11
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm lint
+      - run: pnpm ts-check
+      - run: pnpm test
+      - run: pnpm build
+        env:
+          # Non-sensitive placeholders used only to validate the production build.
+          DATABASE_URL: postgresql://ci:ci@127.0.0.1:5432/jogabola_ci
+          BETTER_AUTH_SECRET: ci-only-build-secret-not-for-runtime-use-0123456789abcdef
+          NEXT_PUBLIC_APP_URL: http://localhost:3000
+          NEXTAUTH_URL: http://localhost:3000
+          RESEND_API_KEY: re_ci_only_build_key

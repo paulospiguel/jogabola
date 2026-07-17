@@ -1,10 +1,10 @@
 "use client";
 
-import { cn } from "@/lib/utils";
 import { ArrowLeft, ArrowRight } from "lucide-react";
-import { motion, AnimatePresence } from "motion/react";
-
-import { useEffect, useState } from "react";
+import { AnimatePresence, motion } from "motion/react";
+import Image from "next/image";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { cn } from "@/lib/utils";
 import { Text } from "./Text";
 
 type GallerySource = {
@@ -24,9 +24,9 @@ export const AnimatedGallery = ({
 }) => {
   const [active, setActive] = useState(0);
 
-  const handleNext = () => {
+  const handleNext = useCallback(() => {
     setActive(prev => (prev + 1) % gallerySources.length);
-  };
+  }, [gallerySources.length]);
 
   const handlePrev = () => {
     setActive(
@@ -43,7 +43,17 @@ export const AnimatedGallery = ({
       const interval = setInterval(handleNext, 5000);
       return () => clearInterval(interval);
     }
-  }, [autoplay]);
+  }, [autoplay, handleNext]);
+
+  const quoteWords = useMemo(
+    () =>
+      gallerySources[active].quote.split(" ").map((word, index) => ({
+        id: `${active}-${index}-${word}`,
+        index,
+        word,
+      })),
+    [active, gallerySources],
+  );
 
   const randomRotateY = () => {
     return Math.floor(Math.random() * 21) - 10;
@@ -90,7 +100,7 @@ export const AnimatedGallery = ({
                 }}
                 className="absolute inset-0 origin-bottom"
               >
-                <img
+                <Image
                   src={testimonial.src}
                   alt={testimonial.name}
                   width={view === "mobile" ? 630 : 500}
@@ -134,9 +144,9 @@ export const AnimatedGallery = ({
               {gallerySources[active].designation}
             </p>
             <motion.p className="mt-8 text-lg text-gray-500 dark:text-neutral-300">
-              {gallerySources[active].quote.split(" ").map((word, index) => (
+              {quoteWords.map(({ id, index, word }) => (
                 <motion.span
-                  key={index}
+                  key={id}
                   initial={{
                     filter: "blur(10px)",
                     opacity: 0,

@@ -1,12 +1,14 @@
 @import "tailwindcss";
+@import "./design-tokens.css";
+@import "./accessibility.css";
 
-@plugin 'tailwindcss-animate';
+@plugin "tailwindcss-animate";
 
 @custom-variant dark (&:is(.dark *));
 
 .dark {
-  --background: var(--color-blue-850);
-  --foreground: oklch(0.985 0 0);
+  --background: #0b0f14;
+  --foreground: #f5f7fa;
   --card: oklch(0.205 0 0);
   --card-foreground: oklch(0.985 0 0);
   --popover: oklch(0.205 0 0);
@@ -29,18 +31,53 @@
   --chart-3: oklch(0.769 0.188 70.08);
   --chart-4: oklch(0.627 0.265 303.9);
   --chart-5: oklch(0.645 0.246 16.439);
-  --sidebar: oklch(0.205 0 0);
-  --sidebar-foreground: oklch(0.985 0 0);
-  --sidebar-primary: oklch(0.488 0.243 264.376);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.269 0 0);
-  --sidebar-accent-foreground: oklch(0.985 0 0);
-  --sidebar-border: oklch(1 0 0 / 10%);
-  --sidebar-ring: oklch(0.556 0 0);
+  --sidebar: var(--color-arena-bg-sec);
+  --sidebar-foreground: var(--color-arena-text);
+  --sidebar-primary: var(--color-arena-primary);
+  --sidebar-primary-foreground: var(--color-arena-bg);
+  --sidebar-accent: var(--color-arena-surface-el);
+  --sidebar-accent-foreground: var(--color-arena-primary);
+  --sidebar-border: var(--color-arena-border);
+  --sidebar-ring: var(--color-arena-primary);
 }
 
 :root {
-  --background: hsl(0, 0%, 100%);
+  /* Usar valores dark como padrão */
+  --background: #0b0f14;
+  --foreground: #f5f7fa;
+  --card: oklch(0.205 0 0);
+  --card-foreground: oklch(0.985 0 0);
+  --popover: oklch(0.205 0 0);
+  --popover-foreground: oklch(0.985 0 0);
+  --primary: oklch(0.922 0 0);
+  --primary-foreground: oklch(0.205 0 0);
+  --secondary: oklch(0.269 0 0);
+  --secondary-foreground: oklch(0.985 0 0);
+  --muted: oklch(0.269 0 0);
+  --muted-foreground: oklch(0.708 0 0);
+  --accent: oklch(0.269 0 0);
+  --accent-foreground: oklch(0.985 0 0);
+  --destructive: oklch(0.704 0.191 22.216);
+  --destructive-foreground: hsl(0 0% 98%);
+  --border: oklch(1 0 0 / 10%);
+  --input: oklch(1 0 0 / 15%);
+  --ring: oklch(0.556 0 0);
+  --chart-1: oklch(0.488 0.243 264.376);
+  --chart-2: oklch(0.696 0.17 162.48);
+  --chart-3: oklch(0.769 0.188 70.08);
+  --chart-4: oklch(0.627 0.265 303.9);
+  --chart-5: oklch(0.645 0.246 16.439);
+  --radius: 0.625rem;
+  --sidebar: var(--color-arena-bg-sec);
+  --sidebar-foreground: var(--color-arena-text);
+  --sidebar-primary: var(--color-arena-primary);
+  --sidebar-primary-foreground: var(--color-arena-bg);
+  --sidebar-accent: var(--color-arena-surface-el);
+  --sidebar-accent-foreground: var(--color-arena-primary);
+  --sidebar-border: var(--color-arena-border);
+  --sidebar-ring: var(--color-arena-primary);
+
+  /* Variáveis customizadas */
   --background-primary: hsl(151, 100%, 32%);
   --background-primary-dark: hsl(147, 10%, 5%);
   --player-primary: hsl(18, 93%, 54%);
@@ -50,65 +87,98 @@
   --primary-blue: hsl(241, 49%, 33%);
   --brand-secondary: hsl(239 100% 18.2%);
   --color-primary-foreground: hsl(0, 0%, 100%);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.145 0 0);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.145 0 0);
-  --primary: oklch(0.205 0 0);
-  --primary-foreground: oklch(0.985 0 0);
-  --secondary: oklch(0.97 0 0);
-  --secondary-foreground: oklch(0.205 0 0);
-  --muted: oklch(0.97 0 0);
-  --muted-foreground: oklch(0.556 0 0);
-  --accent: oklch(0.97 0 0);
-  --accent-foreground: oklch(0.205 0 0);
-  --destructive: oklch(0.577 0.245 27.325);
-  --destructive-foreground: hsl(0 0% 98%);
-  --border: oklch(0.922 0 0);
-  --input: oklch(0.922 0 0);
-  --ring: oklch(0.708 0 0);
-  --chart-1: oklch(0.646 0.222 41.116);
-  --chart-2: oklch(0.6 0.118 184.704);
-  --chart-3: oklch(0.398 0.07 227.392);
-  --chart-4: oklch(0.828 0.189 84.429);
-  --chart-5: oklch(0.769 0.188 70.08);
-  --radius: 0.625rem;
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.145 0 0);
-  --sidebar: oklch(0.985 0 0);
-  --sidebar-foreground: oklch(0.145 0 0);
-  --sidebar-primary: oklch(0.205 0 0);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.97 0 0);
-  --sidebar-accent-foreground: oklch(0.205 0 0);
-  --sidebar-border: oklch(0.922 0 0);
-  --sidebar-ring: oklch(0.708 0 0);
 }
 
 @theme {
+  /* Import design tokens */
   --color-background: var(--background);
-  --color-background-dark: var(--color-blue-850);
+  --color-background-dark: var(--color-background-dark);
   --color-foreground: var(--foreground);
-  --color-black: #0b0d17;
-  --color-blue: #72d0ff;
-  --color-yellow: #f2b824;
-  --color-green: #00ff00;
-  --color-blue-900: #1a1c2c;
-  --color-blue-800: #282854;
-  --color-blue-850: #18193b;
 
+  /* Map design tokens to Tailwind utilities - Direct color values */
+  --color-neon-primary: #6fffe9;
+  --color-neon-secondary: #24ffe6;
+  --color-accent-blue: #02a7ff;
   --color-brand-green: #00cfb1;
+  --color-blue-neon: #00f0ff;
+  --color-active-text: #1effbf;
+  --color-secondary-text: #ba93ff;
+
+  /* Countdown colors */
+  --color-countdown-bg: #343650;
+  --color-countdown-dot: #191a24;
+  --color-countdown-text: #a5b4fc;
+  --color-countdown-label: #8486a9;
+
+  /* Toast colors */
+  --color-toast-bg: #050312;
+
+  /* Popover colors */
+  --color-popover-dark: #0b1933;
+
+  /* JogaBola Arena v2 */
+  --color-arena-bg: #0b0f14;
+  --color-arena-bg-sec: #111827;
+  --color-arena-surface: #151c26;
+  --color-arena-surface-el: #1b2430;
+  --color-arena-border: #263244;
+  --color-arena-text: #f5f7fa;
+  --color-arena-text-sec: #a7b0be;
+  --color-arena-text-muted: #6b7280;
+  --color-arena-primary: #7cff4f;
+  --color-arena-success: #22c55e;
+  --color-arena-warning: #f59e0b;
+  --color-arena-danger: #ef4444;
+  --color-arena-info: #38bdf8;
+  --color-arena-highlight: #facc15;
+
+  /* user status colors */
+  --user-online: #22c55e;
+  --user-offline: #6b7280;
+  --user-away: #f59e0b;
+  --user-verified: #3b82f6;
+
+  /* Transition durations */
+  --duration-75: 75ms;
+  --duration-100: 100ms;
+  --duration-150: 150ms;
+  --duration-200: 200ms;
+  --duration-300: 300ms;
+  --duration-500: 500ms;
+  --duration-700: 700ms;
+  --duration-1000: 1000ms;
 
   --animate-fade-in-scale: fade-in-scale 0.3s ease-out;
   --animate-marquee-horizontal: marquee-x 0.5s infinite linear;
   --animate-marquee-vertical: marquee-y 0.5s linear infinite;
   --animate-infinite-scroll: infinite-scroll 25s linear infinite;
   --animate-trail: trail 10s linear infinite;
+  --animate-shake: shake 0.4s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
 
   --font-display: "Concert One", "sans-serif";
   --font-heading: "Bebas Neue", "sans-serif";
   --font-body: "Inter", "sans-serif";
   --font-mono: "Fira Sans", "sans-serif";
+
+  @keyframes shake {
+    0%,
+    100% {
+      transform: translateX(0);
+    }
+    10%,
+    30%,
+    50%,
+    70%,
+    90% {
+      transform: translateX(-4px);
+    }
+    20%,
+    40%,
+    60%,
+    80% {
+      transform: translateX(4px);
+    }
+  }
 
   @keyframes fade-in-scale {
     0% {
@@ -122,19 +192,40 @@
   }
 
   @keyframes marquee-x {
-    from: {
+    from {
       transform: translateX(0);
     }
-    to: {
+    to {
       transform: translateX(calc(-100% - 2rem));
     }
   }
 
+  @keyframes pulseDot {
+    0%,
+    100% {
+      transform: scale(1);
+      opacity: 1;
+    }
+    50% {
+      transform: scale(1.6);
+      opacity: 0.4;
+    }
+  }
+
+  @keyframes marqueeScroll {
+    from {
+      transform: translateX(0);
+    }
+    to {
+      transform: translateX(-50%);
+    }
+  }
+
   @keyframes marquee-y {
-    from: {
+    from {
       transform: translateY(0);
     }
-    to: {
+    to {
       transform: translateY(calc(-100% - 2rem));
     }
   }
@@ -159,16 +250,443 @@
 }
 
 @layer base {
-  *,
-  ::after,
-  ::before,
-  ::backdrop,
-  ::file-selector-button {
-    border-color: var(--color-gray-200, currentColor);
+  /* Dyslexia-friendly typography defaults */
+  body {
+    font-family: var(--font-dyslexia-friendly, var(--font-body));
+    line-height: var(--line-height-comfortable, 1.75);
+    letter-spacing: var(--letter-spacing-comfortable, 0.02em);
+    /* Base font size - can be overridden by Tailwind text-* classes */
+  }
+
+  /* Improved focus styles */
+  :focus-visible {
+    outline: 3px solid var(--color-focus-ring, var(--color-neon-primary));
+    outline-offset: 2px;
+  }
+
+  /* Preserve rounded-full border-radius on focus for form elements - use attribute selector for better specificity */
+  input[class*="rounded-full"]:focus-visible,
+  input[class*="rounded-full"]:focus,
+  input[class*="rounded-full"]:focus-within,
+  select[class*="rounded-full"]:focus-visible,
+  select[class*="rounded-full"]:focus,
+  select[class*="rounded-full"]:focus-within,
+  textarea[class*="rounded-full"]:focus-visible,
+  textarea[class*="rounded-full"]:focus,
+  textarea[class*="rounded-full"]:focus-within,
+  button[class*="rounded-full"]:focus-visible,
+  button[class*="rounded-full"]:focus,
+  button[class*="rounded-full"]:focus-within {
+    border-radius: 9999px !important;
+  }
+
+  /* Force rounded-full on all inputs with rounded-full class */
+  input[class*="rounded-full"],
+  select[class*="rounded-full"],
+  textarea[class*="rounded-full"],
+  button[class*="rounded-full"] {
+    border-radius: 9999px !important;
+  }
+
+  /* Exception for Switch component - allow smaller height */
+  button[data-state],
+  [role="switch"],
+  [data-radix-switch-root] {
+    min-height: unset !important;
+  }
+
+  /* Force background color on Switch Thumb */
+  [data-radix-switch-thumb] {
+    background-color: var(--background) !important;
+  }
+
+  /* Icon minimum sizes */
+  svg {
+    min-width: 20px;
+    min-height: 20px;
+  }
+
+  /* Plain links by default; underline is opt-in */
+  a {
+    text-decoration: none;
+  }
+}
+
+@layer components {
+  .jb-arena {
+    background: var(--color-arena-bg);
+    color: var(--color-arena-text);
+    min-height: 100vh;
+    position: relative;
+  }
+
+  .jb-arena::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    background:
+      radial-gradient(
+        circle at 18% 12%,
+        rgba(124, 255, 79, 0.05),
+        transparent 28%
+      ),
+      radial-gradient(
+        circle at 92% 18%,
+        rgba(56, 189, 248, 0.06),
+        transparent 30%
+      ),
+      linear-gradient(180deg, rgba(11, 15, 20, 0.2), rgba(11, 15, 20, 0.82));
+    z-index: 0;
+  }
+
+  .jb-arena-bg {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    opacity: 0.72;
+  }
+
+  .jb-arena-shell {
+    position: relative;
+    z-index: 1;
+    min-height: 100vh;
+    padding-bottom: 84px;
+  }
+
+  .jb-page {
+    width: 100%;
+    min-height: 100%;
+    padding: 16px 20px 24px;
+  }
+
+  .jb-page-flush {
+    padding: 0 0 24px;
+  }
+
+  .jb-page-inner {
+    width: min(100%, 1180px);
+    margin-inline: auto;
+  }
+
+  .jb-topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 16px;
+  }
+
+  .jb-kicker {
+    color: var(--color-arena-text-muted);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+
+  .jb-title {
+    color: var(--color-arena-text);
+    font-family: var(--font-sora), var(--font-inter), sans-serif;
+    font-size: 22px;
+    font-weight: 800;
+    letter-spacing: 0;
+    line-height: 1.1;
+  }
+
+  .jb-section-label {
+    color: var(--color-arena-text-muted);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1.2px;
+    text-transform: uppercase;
+    padding: 12px 0 6px;
+  }
+
+  .jb-panel,
+  .jb-card {
+    background: var(--color-arena-surface);
+    border: 1px solid var(--color-arena-border);
+    border-radius: 14px;
+  }
+
+  .jb-hero-card {
+    display: block;
+    padding: 16px;
+    border-radius: 18px;
+    border: 1px solid rgba(124, 255, 79, 0.2);
+    background:
+      radial-gradient(
+        circle at 88% 12%,
+        rgba(56, 189, 248, 0.16),
+        transparent 32%
+      ),
+      linear-gradient(135deg, var(--color-arena-surface-el), #1e2b3c);
+    box-shadow: 0 4px 24px rgba(124, 255, 79, 0.05);
+    text-decoration: none;
+  }
+
+  /* Borda em gradiente animado (próximo evento em destaque).
+     Mantém o fundo existente em padding-box e desenha um conic-gradient
+     rotativo em border-box. Usa os tokens do design system. */
+  .jb-hero-card--live {
+    --jb-border-angle: 0deg;
+    border: 1px solid transparent;
+    background:
+      radial-gradient(
+        circle at 88% 12%,
+        rgba(56, 189, 248, 0.16),
+        transparent 32%
+      )
+      padding-box,
+      linear-gradient(135deg, var(--color-arena-surface-el), #1e2b3c)
+      padding-box,
+      conic-gradient(
+        from var(--jb-border-angle),
+        rgba(38, 50, 68, 0.55) 78%,
+        var(--color-arena-primary) 86%,
+        #d6ffc4 90%,
+        var(--color-arena-info) 92%,
+        var(--color-arena-primary) 94%,
+        rgba(38, 50, 68, 0.55)
+      )
+      border-box;
+    box-shadow: 0 4px 28px rgba(124, 255, 79, 0.1);
+    animation: jb-border-spin 4s linear infinite;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .jb-hero-card--live {
+      animation: none;
+    }
+  }
+
+  .jb-icon-tile {
+    width: 42px;
+    height: 42px;
+    border-radius: 12px;
+    display: grid;
+    place-items: center;
+    flex-shrink: 0;
+  }
+
+  .jb-action {
+    min-height: 44px;
+    border-radius: 12px;
+    border: 1px solid rgba(124, 255, 79, 0.27);
+    background: rgba(124, 255, 79, 0.04);
+    color: var(--color-arena-primary);
+    font-size: 15px;
+    font-weight: 700;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding-inline: 16px;
+    transition:
+      transform 0.1s ease,
+      opacity 0.15s ease,
+      border-color 0.15s ease;
+  }
+
+  .jb-action:hover {
+    opacity: 0.92;
+    border-color: rgba(124, 255, 79, 0.45);
+  }
+
+  .jb-action:active {
+    transform: scale(0.98);
+  }
+
+  .jb-action-primary {
+    border-color: transparent;
+    background: var(--color-arena-primary);
+    color: #0b0f14;
+  }
+
+  .jb-dashboard-grid {
+    display: grid;
+    gap: 14px;
+  }
+
+  .jb-stack {
+    display: grid;
+    gap: 8px;
+    min-width: 0;
+  }
+
+  .jb-stat-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 8px;
+  }
+
+  .jb-list-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 14px;
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .jb-toolbar {
+    display: flex;
+    gap: 8px;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+
+  .jb-toolbar::-webkit-scrollbar {
+    display: none;
+  }
+
+  .jb-chip {
+    white-space: nowrap;
+    border-radius: 8px;
+    border: 1px solid var(--color-arena-border);
+    background: var(--color-arena-surface);
+    color: var(--color-arena-text-sec);
+    padding: 5px 12px;
+    font-size: 12px;
+    font-weight: 600;
+  }
+
+  .jb-chip-active {
+    border-color: rgba(124, 255, 79, 0.4);
+    background: rgba(124, 255, 79, 0.08);
+    color: var(--color-arena-primary);
+  }
+
+  /* Placeholder discreto para conteúdo em carregamento. Não anima
+     largura/altura/posição (evita layout shift), só o brilho via
+     transform numa pseudo-camada. Ver .jb-hero-card--live acima para
+     o mesmo padrão de respeito a prefers-reduced-motion. */
+  .jb-skeleton {
+    position: relative;
+    overflow: hidden;
+    border-radius: 10px;
+    background: var(--color-arena-surface-el);
+  }
+
+  .jb-skeleton::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    transform: translateX(-100%);
+    background: linear-gradient(
+      90deg,
+      transparent,
+      rgba(245, 247, 250, 0.06),
+      transparent
+    );
+    animation: jb-skeleton-shimmer 1.6s ease-in-out infinite;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .jb-skeleton::after {
+      animation: none;
+      transform: none;
+    }
+  }
+
+  @media (min-width: 768px) {
+    .jb-arena-shell {
+      padding-bottom: 0;
+    }
+
+    .jb-page {
+      padding: 28px;
+    }
+
+    .jb-page-flush {
+      padding: 28px;
+    }
+
+    .jb-dashboard-grid {
+      grid-template-columns: minmax(0, 1.5fr) minmax(320px, 0.85fr);
+      align-items: start;
+      gap: 18px;
+    }
+
+    .jb-title {
+      font-size: 28px;
+    }
+  }
+}
+
+/* Ângulo animável da borda em gradiente (jb-hero-card--live).
+   Registado via @property para permitir transição/animação do ângulo. */
+@property --jb-border-angle {
+  syntax: "<angle>";
+  inherits: false;
+  initial-value: 0deg;
+}
+
+@keyframes jb-border-spin {
+  to {
+    --jb-border-angle: 360deg;
+  }
+}
+
+@keyframes jb-pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.4;
+  }
+}
+
+@keyframes jb-skeleton-shimmer {
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: none;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes badgePop {
+  0% {
+    transform: scale(1);
+  }
+  40% {
+    transform: scale(1.35);
+  }
+  70% {
+    transform: scale(0.9);
+  }
+  100% {
+    transform: scale(1);
   }
 }
 
 @theme inline {
+  --font-sora: var(--font-sora);
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-card: var(--card);
@@ -212,15 +730,15 @@
 */
 
 @layer base {
-  * {
+  *,
+  ::after,
+  ::before,
+  ::backdrop,
+  ::file-selector-button {
     @apply border-border outline-ring/50;
   }
   body {
-    @apply bg-background text-foreground;
-  }
-  .dark body {
-    background-color: var(--color-background-dark);
-    color: var(--color-white);
+    @apply bg-arena-bg text-arena-text;
   }
 }
 
@@ -228,4 +746,45 @@
   syntax: "<angle>";
   initial-value: 0deg;
   inherits: false;
+}
+
+/* JogaBola v2 animations */
+@keyframes slideUp {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: none;
+  }
+}
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@keyframes badgePop {
+  0% {
+    transform: scale(1);
+  }
+  40% {
+    transform: scale(1.35);
+  }
+  70% {
+    transform: scale(0.9);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+@keyframes pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.4;
+  }
 }

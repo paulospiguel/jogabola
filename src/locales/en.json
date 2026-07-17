@@ -1,107 +1,1229 @@
 {
-  "aboutPage": {
-    "title": "About"
+  "arena": {
+    "actions": {
+      "createTournament": "Create Tournament",
+      "inviteFriends": "Invite Friends",
+      "newMatch": "New Match",
+      "quickActions": "⚡ Quick Actions",
+      "scheduleMatch": "Schedule Match",
+      "viewStats": "View Statistics"
+    },
+    "activity": {
+      "title": "Recent Activity"
+    },
+    "events": {
+      "details": {
+        "about": "About the event",
+        "actions": {
+          "organizer": {
+            "addParticipant": "Add Participant",
+            "createChat": "Create Event Chat",
+            "editEvent": "Edit Event",
+            "manageParticipants": "Manage Participants"
+          },
+          "participant": {
+            "createChat": "Create Event Chat",
+            "invitePeople": "Invite People",
+            "manageParticipants": "Manage Participants"
+          }
+        },
+        "back": "Back",
+        "criteria": "Participation criteria",
+        "favorite": "Favourite",
+        "favorited": "Favourited",
+        "follow": "Follow",
+        "following": "Following",
+        "join": "Join event",
+        "loading": "Loading event...",
+        "messageModal": {
+          "cancel": "Cancel",
+          "description": "Send a message to the event organiser",
+          "label": "Message",
+          "placeholder": "Write your message here...",
+          "send": "Send",
+          "sending": "Sending...",
+          "title": "Send message to organiser"
+        },
+        "notFound": "Event not found",
+        "organizer": "Organiser",
+        "participants": "participants",
+        "participating": "You are participating",
+        "sendMessage": "Send message",
+        "share": "Share"
+      },
+      "title": "Upcoming Events",
+      "viewAll": "View all events"
+    },
+    "header": {
+      "description": "Keep track of your team's pace, organize matches and keep the community always active.",
+      "openMenu": "Open navigation menu",
+      "quote": "Track the performance of your players, build detailed statistics and monitor the performance of your team.",
+      "searchPlaceholder": "Search matches, players, or stats...",
+      "subtitle": "Arena Central",
+      "title": "Welcome back to the Arena ⚽"
+    },
+    "matches": {
+      "status": {
+        "confirmed": "✓ Confirmed",
+        "pending": "⏳ Pending"
+      },
+      "title": "Upcoming Matches",
+      "viewAll": "View all matches"
+    },
+    "notifications": {
+      "ago1hour": "1 hour ago",
+      "ago2hours": "2 hours ago",
+      "ago5min": "5 minutes ago",
+      "newMatch": "New match available",
+      "teamInvite": "Team invitation",
+      "title": "Notifications",
+      "tournamentStarting": "Tournament starting"
+    },
+    "stats": {
+      "activeTeams": "Active Teams",
+      "matchesPlayed": "Matches Played",
+      "thisWeek": "This week",
+      "upcomingMatches": "Upcoming Matches",
+      "winRate": "Win Rate"
+    },
+    "userMenu": {
+      "myAccount": "My Account"
+    }
   },
-  "about": {
-    "title": "About Jogabola",
-    "mission": "Our Mission",
-    "vision": "Our Vision",
-    "values": "Our Values",
-    "mission_vision_values": "Mission, Vision and Values",
-    "benefits": "Benefits",
-    "team": "Our Team",
-    "history": "Our History",
-    "history_text": "Jogabola was founded in {year} with the goal of transforming how people organize and participate in soccer games. Since then, we have worked tirelessly to make soccer more accessible to everyone.",
-    "history_operating": "Operating for {years} years",
-    "statistics": "Our Numbers",
-    "statistics_users": "Users",
-    "statistics_fields": "Fields",
-    "statistics_games": "Games",
-    "statistics_cities": "Cities",
-    "contact": "Contact Us",
-    "follow_us": "Follow Us on Social Media"
-  },
-  "business": {
-    "name": "Jogabola",
-    "slogan": "The best place to find your team and play soccer.",
-    "shortDescription": "The platform that connects soccer lovers with nearby sports fields.",
-    "longDescription": "Jogabola was born from a passion for soccer and the difficulty in organizing matches between friends. Our platform connects passionate players with available fields, simplifying the booking process and helping to form new sports communities.",
-    "mission": "Democratize access to soccer by connecting players and fields in a simple and intuitive way.",
-    "vision": "To be the leading platform connecting players and soccer fields in Brazil.",
-    "values": {
-      "passion": {
-        "title": "Passion for Sport",
-        "description": "We believe in the power of soccer to unite people and communities."
-      },
-      "accessibility": {
-        "title": "Accessibility",
-        "description": "We work to make soccer accessible to everyone, regardless of skill level."
-      },
-      "community": {
-        "title": "Community",
-        "description": "We foster the creation of new friendships and communities through sport."
-      },
-      "innovation": {
-        "title": "Innovation",
-        "description": "We constantly seek new ways to improve our users' experience."
+  "authPage": {
+    "builtForChampions": "Built for Champions",
+    "title": "Sign in to JogaBola",
+    "registerTitle": "Create an athlete account",
+    "registerSubtitle": "Use your email to create a verified account and come back faster for future matches.",
+    "loginSubtitle": "Use your verified account to get quick access to your matches and statistics.",
+    "arena": "Arena",
+    "event": "event",
+    "emailLabel": "Email Address",
+    "emailPlaceholder": "email@example.com",
+    "signIn": "Sign In",
+    "passkeyLogin": "Sign in with Passkey",
+    "googleLogin": "Sign in with Google",
+    "appleLogin": "Sign in with Apple",
+    "orEmail": "or sign in with email",
+    "verifyEmail": "Verify your Email",
+    "codeSentTo": "We've sent an access code to",
+    "codeLabel": "Access Code",
+    "codePlaceholder": "Ex: 123456",
+    "validateCode": "Validate Code",
+    "changeEmail": "Change Email",
+    "terms": "Terms",
+    "privacy": "Privacy",
+    "termsAgreement": "By signing in, you agree to our <terms>Terms of Service</terms> and <privacy>Privacy Policy</privacy>",
+    "back": "Back",
+    "messages": {
+      "codeSentTitle": "Code sent",
+      "codeSentDescription": "We've sent a code to {email}.",
+      "loginSuccessTitle": "Login validated",
+      "loginSuccessDescription": "Entering the {destination}.",
+      "loginErrorTitle": "Login error",
+      "loginErrorDescription": "Could not send the code.",
+      "invalidCodeTitle": "Invalid code",
+      "invalidCodeDescription": "Check the code and try again.",
+      "socialError": "Could not sign in.",
+      "email": {
+        "RESEND_API_KEY_MISSING": "Email sending is not configured: RESEND_API_KEY is missing.",
+        "RESEND_API_KEY_INVALID": "The Resend API key is invalid. Check RESEND_API_KEY.",
+        "RESEND_FROM_INVALID": "The sender address is invalid. Fix EMAIL_FROM.",
+        "RESEND_DOMAIN_NOT_VERIFIED": "The sender domain is not verified in Resend yet.",
+        "RESEND_DEV_DOMAIN_RESTRICTED": "The resend.dev domain only sends to the email that owns the Resend account. Verify your own domain to send codes.",
+        "EMAIL_SEND_FAILED": "Could not send the code by email. Check the email or try again."
       }
     },
-    "benefits": {
-      "findNearby": {
-        "title": "Find Nearby Games",
-        "description": "Locate fields and matches near you with just a few clicks."
-      },
-      "reserveFields": {
-        "title": "Reserve Fields",
-        "description": "Book fields quickly and securely, without complications."
-      },
-      "joinTournaments": {
-        "title": "Join Tournaments",
-        "description": "Sign up for local tournaments and showcase your skills."
-      },
-      "connectPlayers": {
-        "title": "Connect with Players",
-        "description": "Meet other soccer enthusiasts and expand your network."
+    "validation": {
+      "invalidEmail": "Invalid email",
+      "incompleteCode": "Incomplete code",
+      "numbersOnly": "Use numbers only"
+    },
+    "defaultName": "Player"
+  },
+  "arenaAthleteProfile": {
+    "title": "Athlete Profile",
+    "loading": "Loading athlete profile...",
+    "notFound": "Athlete not found",
+    "stats": {
+      "rating": "Rating",
+      "goals": "Goals",
+      "assists": "Assists",
+      "matches": "Matches"
+    },
+    "actions": {
+      "back": "Back to squad",
+      "edit": "Edit",
+      "message": "Message",
+      "remove": "Remove from Squad",
+      "viewAll": "View all"
+    },
+    "info": {
+      "role": "Position",
+      "joined": "Member since",
+      "contact": "Contact"
+    },
+    "analysis": {
+      "title": "Performance Analysis",
+      "evolution": "Evolution of Rating per Match",
+      "periods": {
+        "last10": "Last 10 matches",
+        "season": "Season 2024"
       }
     },
-    "team": {
-      "paulo": {
-        "name": "Paulo Spiguel",
-        "role": "Founder & Developer",
-        "bio": "Passionate about technology and soccer, Paulo combines his two passions to create innovative solutions."
+    "roles": {
+      "captain": "Captain",
+      "coach": "Coach",
+      "owner": "Captain",
+      "manager": "Co-captain",
+      "player": "Player"
+    },
+    "history": {
+      "title": "Activity History",
+      "players": "Players",
+      "empty": "No activity recorded"
+    },
+    "chat": {
+      "badge": "Coming soon",
+      "title": "Chat with athlete",
+      "description": "This conversation will be available in a future version. For now, use the email on the athlete card to reach out directly."
+    },
+    "coCaptain": {
+      "promote": "Make co-captain",
+      "promoteDesc": "Grant management permissions (create events, validate payments).",
+      "promoteLabel": "Promote",
+      "remove": "Remove co-captain",
+      "removeDesc": "Revoke management permissions. Reverts to player.",
+      "removeLabel": "Remove",
+      "errors": {
+        "FORBIDDEN": "You don't have permission for this action.",
+        "TEAM_NOT_FOUND": "Could not confirm the active team.",
+        "CANNOT_MODIFY_OWNER": "The team owner's role cannot be changed.",
+        "PLAYER_NOT_IN_TEAM": "This athlete is no longer part of this squad.",
+        "UNKNOWN_ERROR": "Could not update the role. Please try again."
+      }
+    },
+    "removeDialog": {
+      "title": "Remove from squad?",
+      "description": "You are about to remove {name} from this squad.",
+      "warning": "This removes the athlete from the team and may affect future call-ups. Existing history will not be deleted.",
+      "cancel": "Cancel",
+      "confirm": "Remove athlete",
+      "removing": "Removing...",
+      "errors": {
+        "TEAM_NOT_FOUND": "Could not confirm the active team.",
+        "CANNOT_REMOVE_OWNER": "The team owner cannot be removed from the squad.",
+        "PLAYER_NOT_IN_TEAM": "This athlete is no longer in this squad.",
+        "UNKNOWN_ERROR": "Could not remove the athlete. Try again."
+      }
+    },
+    "notValidated": "Athlete not validated",
+    "notValidatedDesc": "This athlete has not yet created a Jogabola account. Full stats and profile will be available after validation.",
+    "pendingValidation": "Validation pending",
+    "attendanceStatus": {
+      "confirmed": "Confirmed",
+      "refused": "Declined",
+      "reserve": "Reserve"
+    }
+  },
+  "arenaAddPlayer": {
+    "actions": {
+      "add": "Add Player"
+    },
+    "labels": {
+      "admin": "Administrator",
+      "email": "Email *",
+      "fullName": "Full name *",
+      "phone": "Phone",
+      "position": "Position"
+    },
+    "placeholderName": "Player name",
+    "placeholders": {
+      "email": "player@email.com",
+      "name": "Ex: Peter Smith",
+      "phone": "9XX XXX XXX"
+    },
+    "success": "{name} added!",
+    "successSubtitle": "Player registered in the squad.",
+    "title": "Add Player"
+  },
+  "arenaCalendar": {
+    "actions": {
+      "create": "Create Event"
+    },
+    "empty": "No events.",
+    "emptyState": {
+      "description": "Create a game, training session or event for your team.",
+      "title": "No events"
+    },
+    "hero": {
+      "eyebrow": "Arena",
+      "title": "Events calendar"
+    },
+    "kicker": "Arena",
+    "legend": {
+      "event": "Event",
+      "game": "Game",
+      "training": "Training"
+    },
+    "nav": {
+      "eventCount": "{count, plural, one {# event} other {# events}}",
+      "next": "Next",
+      "noEvents": "No events",
+      "prev": "Previous",
+      "rangePlaceholder": "Select date range",
+      "rangeHint": "Click above to choose a period"
+    },
+    "status": {
+      "cancelled": "Cancelled",
+      "confirmed": "Confirmed"
+    },
+    "title": "Events Calendar",
+    "today": "Today",
+    "view": {
+      "month": "Month",
+      "range": "Range",
+      "week": "Week",
+      "year": "Year"
+    },
+    "views": {
+      "ariaLabel": "Calendar view",
+      "month": "Month",
+      "range": "Range",
+      "week": "Week",
+      "year": "Year"
+    }
+  },
+  "arenaCreateEvent": {
+    "createEventTitle": "Create event",
+    "actions": {
+      "back": "Back",
+      "continue": "Continue",
+      "create": "Create Event",
+      "close": "Close"
+    },
+    "convocar": {
+      "preview": "Preview",
+      "shareAfterCreate": "Share the invitation with your team:",
+      "copyLink": "Copy link",
+      "copied": "Copied!",
+      "whatsapp": "WhatsApp",
+      "telegram": "Telegram",
+      "shareMessage": "Invitation: {title} — Confirm your attendance:"
+    },
+    "error": "Error creating event. Please try again.",
+    "errors": {
+      "FORBIDDEN": "You do not have permission to create an event for this team.",
+      "UNAUTHORIZED": "You must be signed in to create an event.",
+      "TEAM_NOT_FOUND": "No team is available for this event."
+    },
+    "info": "After creating the event, you can add players and manage the squad call from the event page.",
+    "access": {
+      "rosterOnly": "Roster Only",
+      "rosterOnlyHint": "Only emails that belong to the current roster can confirm attendance.",
+      "rosterPriority": "Roster priority",
+      "rosterPriorityHint": "Only the roster can confirm until {hours}h before.",
+      "rosterPriorityOff": "No priority",
+      "togglePrivate": "Toggle private event"
+    },
+    "invite": {
+      "title": "Invite from squad",
+      "subtitle": "Select specific athletes or lists to pre-invite.",
+      "lastSquad": "Re-convoke last squad",
+      "search": "Search athlete...",
+      "empty": "There are no athletes in the squad yet.",
+      "verified": "Verified athlete",
+      "manual": "Manually added",
+      "summary": "{count} athlete{count, plural, =1 {} other {s}} pre-invited",
+      "clear": "Clear",
+      "all": "All"
+    },
+    "labels": {
+      "title": "Event Title",
+      "date": "Date",
+      "time": "Time",
+      "location": "Location",
+      "maxPlayers": "Max. players",
+      "recurrence": "Recurrence",
+      "fee": "Participation fee",
+      "private": "Private event",
+      "privateSub": "Open to all invitees"
+    },
+    "payment": {
+      "section": "Payment",
+      "price": "Amount (€)",
+      "required": "Required payment",
+      "requiredHint": "Athletes must pay before confirming",
+      "deadlineHours": "Payment deadline",
+      "deadlineHoursUnit": "h before the game",
+      "acceptMbway": "Accept MBWay",
+      "acceptMbwayHint": "Allow payment via MBWay",
+      "mbwayPhone": "MBWay Phone Number",
+      "transferRequiresProof": "Require proof",
+      "transferRequiresProofHint": "Require upload of transfer receipt",
+      "mbwayPhonePlaceholder": "Ex: 912345678"
+    },
+    "recurrence": {
+      "once": "Once",
+      "weekly": "Weekly",
+      "monthly": "Monthly"
+    },
+    "noTitle": "No title",
+    "placeholders": {
+      "dateTime": "dd/mm/aaaa, hh:mm",
+      "selectDateTime": "Select date & time",
+      "location": "Ex: Pitch 5, Bairro Alto",
+      "match": "Ex: FC Bairro Alto vs Benfica B",
+      "time": "Ex: 18h00",
+      "training": "Ex: Technical Training",
+      "date": "Ex: Sat, 26 Apr",
+      "fee": "€ 0 — free"
+    },
+    "confirm": {
+      "noDate": "No date set",
+      "noTime": "No time set",
+      "noPlayers": "No players called up yet."
+    },
+    "playersCount": "{count} players",
+    "steps": ["Event Type", "Details", "Invite", "Confirm"],
+    "success": "Event created!",
+    "successSubtitle": "Invitation sent successfully.",
+    "types": {
+      "challenge": {
+        "desc": "Challenge other teams",
+        "label": "Challenge"
+      },
+      "game": {
+        "desc": "Official or private",
+        "label": "Match"
+      },
+      "training": {
+        "desc": "Training session",
+        "label": "Training"
+      },
+      "other": {
+        "desc": "Meeting or event",
+        "label": "Other"
+      }
+    },
+    "typeOptions": {
+      "game": { "alt": "Match icon" },
+      "training": { "alt": "Training icon" },
+      "friendly": { "alt": "Friendly match icon" },
+      "meeting": { "alt": "Meeting icon" },
+      "other": { "alt": "Other event type icon" }
+    },
+    "final": {
+      "stepsInfo": "Players receive a notification and can confirm/decline directly.",
+      "sendCallup": "Send Callup",
+      "successSent": "Callup sent to <strongComponent>{count} players</strongComponent>.",
+      "selectedCount": "{count} selected",
+      "notificationSent": "Notification sent to {count} players",
+      "confirm": {
+        "rosterTitle": "Called-Up Players"
       }
     }
   },
-  "countDown": {
-    "title": "Time left",
-    "subtitle": "We're working hard to launch our incredible app.",
-    "days": "Days",
-    "months": "Months",
-    "years": "Years",
-    "weeks": "Weeks",
-    "hours": "Hours",
-    "minutes": "Minutes",
-    "seconds": "Seconds",
-    "day": "Day",
-    "month": "Month",
-    "year": "Year",
-    "week": "Week",
-    "hour": "Hour",
-    "minute": "Minute",
-    "second": "Second"
+  "arenaCreateTeam": {
+    "actions": {
+      "create": "Create Team"
+    },
+    "labels": {
+      "name": "Team Name *",
+      "slug": "Unique Identifier (slug) *",
+      "location": "Location",
+      "description": "About the team",
+      "category": "Category",
+      "homeGround": "Home Ground"
+    },
+    "placeholders": {
+      "name": "E.g.: The Galacticos",
+      "slug": "eg-the-galacticos",
+      "location": "City or Region",
+      "description": "E.g.: Amateur team since 2020...",
+      "category": "E.g.: Amateur, Semi-Pro...",
+      "homeGround": "E.g.: City Stadium"
+    },
+    "success": "Team {name} created successfully!",
+    "successSubtitle": "You can now invite players and organize matches.",
+    "title": "Create New Team",
+    "errors": {
+      "TEAM_NAME_ALREADY_EXISTS": "A team with this name already exists.",
+      "TEAM_SLUG_ALREADY_EXISTS": "This identifier (slug) is already in use by another team.",
+      "TEAM_LIMIT_REACHED": "You have reached the {limit}-team limit on the free plan. Upgrade to create more teams.",
+      "generic": "Error creating team."
+    },
+    "limitReachedTitle": "Free plan limit",
+    "upgradeCta": "View plans"
+  },
+  "arenaNoTeamModal": {
+    "title": "Create a team first",
+    "description": "To access this feature you need to create or have a team associated with your account.",
+    "createTeam": "Create team",
+    "notNow": "Not now"
+  },
+  "arenaDashboard": {
+    "loadingArena": "Loading arena...",
+    "actions": {
+      "createEvent": "Create Event",
+      "event": "Event",
+      "player": "Player"
+    },
+    "cockpit": {
+      "noEventManagerTitle": "Create your next call-up",
+      "noEventManagerDescription": "You don't have any events scheduled yet. Create a match or training session to start calling up players.",
+      "noEventMemberTitle": "No events scheduled",
+      "noEventMemberDescription": "Your team doesn't have any events yet. Check the squad in the meantime.",
+      "createEvent": "Create event",
+      "addPlayer": "Add player",
+      "viewSquad": "View squad",
+      "openTimer": "Timer",
+      "eventsErrorTitle": "Couldn't load events",
+      "eventsErrorDescription": "Check your connection and try again.",
+      "squadErrorTitle": "Couldn't load the squad",
+      "squadErrorDescription": "Check your connection and try again.",
+      "retry": "Try again"
+    },
+    "defaultUser": "User",
+    "hero": {
+      "nextMatch": "Next Match",
+      "nextEvent": "Next event",
+      "prevEvent": "Previous event",
+      "noEvents": "No upcoming events. Create one!",
+      "view": "View"
+    },
+    "kicker": "Your team",
+    "noTeam": {
+      "cta": "Create team",
+      "description": "Select a team in the sidebar or create a new one to get started.",
+      "title": "No team selected"
+    },
+    "sections": {
+      "noSquad": "No players in the squad yet.",
+      "noWeekEvents": "No events scheduled for this week.",
+      "squad": "Squad",
+      "thisWeek": "This week",
+      "viewCalendar": "Calendar",
+      "viewFullSquad": "View full squad",
+      "discover": "Discover",
+      "rankings": "Rankings",
+      "rankingsSub": "League · Top Scorers",
+      "historical": "History",
+      "historicalSub": "Seasons · Results"
+    },
+    "stats": {
+      "confirmed": "Confirmed",
+      "new": "New",
+      "pending": "Pending",
+      "reserves": "Reserves"
+    },
+    "add-player": "Add Player",
+    "create-event": "Create Event"
+  },
+  "arenaEventDetail": {
+    "actions": {
+      "cancel": "Cancel Attendance",
+      "confirm": "Confirm Attendance",
+      "timer": "Open Timer",
+      "cancelled": "Event cancelled",
+      "cancelConfirm": {
+        "title": "Cancel attendance?",
+        "description": "You'll free up your spot in this match. If you already paid, contact the organiser about a refund.",
+        "action": "Cancel attendance",
+        "keep": "Keep attendance"
+      }
+    },
+    "management": {
+      "revokeTitle": "Revoke Attendance?",
+      "revokeDescription": "Are you sure you want to remove {name} from the participants list? This will delete the attendance record.",
+      "revokeConfirm": "Revoke",
+      "blockTitle": "Block Participant?",
+      "blockDescription": "By blocking {name}, the participant will be removed and a no-show fine may be applied. Are you sure?",
+      "blockConfirm": "Block",
+      "cancel": "Go back",
+      "moveToConfirmed": "Move to Starter",
+      "moveToReserve": "Move to Reserve",
+      "revokePresence": "Revoke Presence",
+      "blockParticipant": "Block Athlete"
+    },
+    "lists": {
+      "main": "Main List ({count})",
+      "reserves": "Reserves / Pending ({count})",
+      "loading": "Loading squad...",
+      "emptyConfirmed": "No one has confirmed yet."
+    },
+    "locationMap": {
+      "notFound": "Location not found",
+      "placeholder": "Location address...",
+      "errorSaving": "Error saving. Please try again.",
+      "shareTitle": "Share location",
+      "copyLink": "Copy link",
+      "copied": "Copied!",
+      "saveAriaLabel": "Save",
+      "cancelAriaLabel": "Cancel",
+      "editAriaLabel": "Edit address",
+      "copyAriaLabel": "Copy address"
+    },
+    "officialMatch": "Official Match",
+    "noticeWall": {
+      "title": "Notice Wall",
+      "empty": "No notices for this game yet.",
+      "placeholder": "Write a notice for the team...",
+      "send": "Post",
+      "delete": "Delete",
+      "urgent": "Urgent",
+      "fieldChange": "Field Change",
+      "chatter": "Poke Pending",
+      "unknownAuthor": "Author",
+      "cancel": "Cancel"
+    },
+    "share": {
+      "label": "Invite via",
+      "copyLink": "Copy link",
+      "copied": "Copied!",
+      "whatsapp": "WhatsApp",
+      "telegram": "Telegram",
+      "message": "You've been called up for {title}. Confirm your attendance:"
+    },
+    "shareSheet": {
+      "title": "Share Callup",
+      "event": "EVENT",
+      "qrCode": "QR CODE",
+      "copyLink": "Copy link",
+      "copied": "Copied!",
+      "whatsapp": "WhatsApp",
+      "presenceList": "Attendance List",
+      "presenceListSub": "Public link to see confirmations",
+      "open": "Open",
+      "whatsappText": "You've been summoned to {title}! Confirm your attendance on JogaBola: {url}"
+    },
+    "spots": "Spots",
+    "tabs": {
+      "roster": "Roster",
+      "location": "Venue",
+      "lineup": "Lineup",
+      "teams": "Teams",
+      "chat": "Chat"
+    },
+    "interactive": {
+      "bus": "Bus",
+      "busDesc": "Coming by bus with the team",
+      "car": "Car",
+      "carDesc": "Coming by car with the team",
+      "paymentApproved": "Paid",
+      "free": "Free",
+      "paymentReview": "Under review",
+      "paymentPending": "Pending",
+      "reservesMock": "Reserves ({count})",
+      "reservesStatus": "Reserve",
+      "pendingStatus": "Pending",
+      "squadCount": "Squad · {count}",
+      "missingAlert": "Missing {count, plural, =1 {# player} other {# players}}",
+      "missingAlertSub": "to complete the {format} format ({teamsCount} teams)",
+      "formatLabel": "Match Format",
+      "teamsNumLabel": "Number of Teams",
+      "addGuests": "Add Guests",
+      "addGuestsSub": "Sign up guests to fill the {count, plural, =1 {# vacant spot} other {# vacant spots}}.",
+      "aiBalancerBeta": "AI Team Balancer",
+      "aiBalancerBetaSub": "Generate balanced teams based on player skill levels.",
+      "aiBalancerCta": "Generate {count} Teams with AI",
+      "teamLabel": "Team {label}",
+      "howToGet": "How to get there",
+      "metro": "Metro",
+      "metroDesc": "Baixa-Chiado Station (Blue/Green Line), a 3-minute walk.",
+      "autocarro": "Bus",
+      "autocarroDesc": "Praça Luís de Camões stop (758, 202), a 2-minute walk.",
+      "carro": "Car",
+      "carroDesc": "Difficult parking. Paid underground parking at Camões.",
+      "chatEmpty": "No messages here yet. Send the first one!",
+      "chatPlaceholder": "Type a message for the group...",
+      "chatLockedTitle": "Chat for confirmed & paid players",
+      "chatLockedSub": "Confirm your attendance and complete payment to join the conversation.",
+      "chatLockedCta": "Confirm & pay",
+      "deleteMessage": "Delete message",
+      "censorMessage": "Censor message",
+      "uncensorMessage": "Remove censorship",
+      "messageCensored": "Message censored",
+      "cancel": "Cancel",
+      "squadFull": "Squad Full!",
+      "readyToBalance": "Ready to balance teams",
+      "guest": "Guest"
+    },
+    "types": {
+      "training": "Training",
+      "match": "Match",
+      "game": "Match",
+      "partida": "Match",
+      "jogo": "Match",
+      "challenge": "Challenge",
+      "other": "Other"
+    },
+    "recurrence": {
+      "once": "One-off",
+      "weekly": "Weekly",
+      "monthly": "Monthly"
+    },
+    "aiBalancer": {
+      "button": "AI Balancer ⚡",
+      "modalTitle": "AI Team Balancer",
+      "modalSubtitle": "Early Access / Beta",
+      "pitchDescription": "Use our Artificial Intelligence to analyze history and athlete ratings to create 100% balanced teams. A fair match is a better match!",
+      "guestPrompt": "How many guests today?",
+      "guestLabel": "Number of guests (without account)",
+      "fakePlayer": "Temp Player",
+      "fakePlayerDesc": "No history (guest)",
+      "fillWithFakes": "Fill with Temps",
+      "balanceAction": "Generate Teams",
+      "loading": "Analyzing history and balancing weights...",
+      "teamA": "Team A",
+      "teamB": "Team B",
+      "avgRating": "Avg Rating:"
+    },
+    "titleJogo": "Match Details",
+    "titleTreino": "Training",
+    "training": "Training",
+    "loading": "Loading event details..."
+  },
+  "arenaEvents": {
+    "actions": {
+      "create": "Create",
+      "createEvent": "Create event",
+      "retry": "Try again",
+      "viewCalendar": "Calendar"
+    },
+    "empty": {
+      "errorDescription": "Check your connection and try again.",
+      "errorTitle": "We couldn't load your events",
+      "noPast": "No history yet.",
+      "subtitle": "Create your team's first event.",
+      "title": "No events"
+    },
+    "kicker": "Schedule",
+    "hero": {
+      "nextMatch": "Next Match",
+      "view": "View",
+      "nextEvent": "Next event",
+      "prevEvent": "Previous event",
+      "noEventsMemberDescription": "Your team doesn't have any scheduled events yet. Check the calendar for updates."
+    },
+    "stats": {
+      "confirmed": "Confirmed",
+      "reserves": "Reserves",
+      "pending": "Pending"
+    },
+    "sections": {
+      "past": "Past",
+      "upcoming": "Upcoming",
+      "upcomingEvents": "Upcoming Events",
+      "thisWeek": "This week",
+      "noWeekEvents": "No more scheduled events."
+    },
+    "title": "Events",
+    "editInfo": "Edit Information",
+    "statusLabel": "Event Status",
+    "eventNotFound": "Event not found",
+    "errorUpdating": "Error updating event. Please try again.",
+    "types": {
+      "match": "Match",
+      "training": "Training"
+    },
+    "status": {
+      "scheduled": "Scheduled",
+      "confirmed": "Confirmed",
+      "cancelled": "Cancelled",
+      "completed": "✓ Completed"
+    },
+    "dangerZone": "Danger Zone",
+    "deleteEvent": "Delete Event",
+    "deleteWarningTitle": "Are you sure?",
+    "deleteWarningDesc": "This action cannot be undone. All confirmed players will be notified.",
+    "cannotDeletePaidEvent": "This event has associated payments. To ensure financial integrity, it cannot be deleted. Would you like to cancel it instead?",
+    "cancelEventInstead": "Cancel Event",
+    "eventDeleted": "Event successfully deleted",
+    "deleteError": "Error deleting event",
+    "cancelWarningTitle": "Cancel Event",
+    "cancelWarningDesc": "The event will be marked as cancelled. Spots will be unavailable and payments can be managed."
+  },
+  "arenaNav": {
+    "collapse": "Collapse Menu",
+    "dashboard": "Team",
+    "events": "Events",
+    "squads": "Squads",
+    "expand": "Expand",
+    "notifications": "Notifications",
+    "payments": "Payments",
+    "profile": "Profile",
+    "settings": "Settings",
+    "timer": "Timer",
+    "signOut": "Sign Out",
+    "teamSwitcher": {
+      "createTeam": "Create a team",
+      "myTeam": "My team",
+      "myTeams": "{count} teams",
+      "noTeam": "No team",
+      "select": "Select team",
+      "teamsLabel": "My Teams",
+      "createNewTeam": "Create new team",
+      "upgradePlan": "Upgrade plan",
+      "lockedToTeam": "Event team"
+    },
+    "teams": "Teams"
+  },
+  "arenaPage": {
+    "activeTeams": {
+      "columns": {
+        "form": "Form",
+        "name": "Team Name",
+        "status": "Status"
+      },
+      "title": "Active Teams",
+      "viewAll": "View All →"
+    },
+    "analytics": {
+      "periods": {
+        "month": "Month",
+        "week": "Week",
+        "year": "Year"
+      },
+      "title": "Performance Analytics"
+    },
+    "billingHeader": {
+      "description": "Manage your subscription, upgrade, or view invoices.",
+      "title": "Billing & Plans"
+    },
+    "calendar": {
+      "newEvent": "New event",
+      "noAppointments": "No appointments here yet",
+      "noAppointmentsSub": "Create events for training, matches, or meetings directly on this date.",
+      "scheduleNow": "Schedule now",
+      "scheduledEvents": "scheduled event(s)",
+      "seasonCalendar": "Season calendar",
+      "seasonCalendarSub": "Select a day to see scheduled events or click on a marker for quick details.",
+      "smartSchedule": "Smart schedule",
+      "subtitle": "Organize training sessions, matches, and meetings in one place. Track attendance confirmations, manage changes, and integrate everything with Google Calendar to keep the team aligned.",
+      "syncGcal": "Sync GCal",
+      "syncing": "Syncing..."
+    },
+    "calendarHeader": {
+      "description": "Organize training sessions, matches, and team commitments.",
+      "title": "Team Schedule"
+    },
+    "clubHeader": {
+      "description": "Customize your presence and manage team identity.",
+      "title": "Club Page"
+    },
+    "eventsHeader": {
+      "description": "Manage competitions, ticketing, and matches.",
+      "title": "Events & Tournaments"
+    },
+    "eyebrows": {
+      "arena": "Arena",
+      "billing": "Billing",
+      "calendar": "Calendar",
+      "club": "Club",
+      "events": "Events",
+      "teams": "Teams"
+    },
+    "header": {
+      "description": "Operational overview of squad, schedule, and quick management.",
+      "title": "Club hub"
+    },
+    "hero": {
+      "description": "Operational indicators to track the current amateur season.",
+      "exportStats": "Export stats",
+      "eyebrow": "Arena · club management",
+      "quickManagement": "Quick management",
+      "title": "CLUB OVERVIEW"
+    },
+    "management": {
+      "quickActions": "⚡ Quick Actions",
+      "title": "Management"
+    },
+    "mvp": {
+      "rating": "Rating",
+      "season": "Season",
+      "title": "MVP Race",
+      "viewLeaderboards": "View Leaderboards →"
+    },
+    "quickActions": {
+      "addPlayer": "Add player",
+      "announce": "Announce",
+      "assignKit": "Assign kit",
+      "feesStatus": "Fees status"
+    },
+    "stats": {
+      "activePlayers": {
+        "detail": "8 registered teams",
+        "title": "Active players"
+      },
+      "nextMatch": {
+        "detail": "STADIUM A · PITCH 4",
+        "title": "Next match",
+        "value": "In 4h 22m"
+      },
+      "totalGoals": {
+        "detail": "Avg 2.4 per match",
+        "title": "Total goals"
+      },
+      "winRatio": {
+        "detail": "+5.4% from last month",
+        "title": "Win ratio"
+      }
+    },
+    "teamStatus": {
+      "active": "Active",
+      "rest": "Rest",
+      "training": "Training"
+    },
+    "teamsHeader": {
+      "description": "Manage your squad, track player form, and control team limits according to your plan.",
+      "title": "Active Teams"
+    }
+  },
+  "arenaPayments": {
+    "tabs": {
+      "payments": "Payments",
+      "methods": "Methods",
+      "iapro": "AI PRO"
+    },
+    "filters": {
+      "all": "All",
+      "validating": "To validate",
+      "pending": "Pending",
+      "confirmed": "Paid",
+      "overdue": "Overdue"
+    },
+    "risk": {
+      "low": "Low Risk",
+      "medium": "Medium Risk",
+      "high": "High Risk"
+    },
+    "verifyProof": "View proof",
+    "iapro": {
+      "premium": "PREMIUM",
+      "title": "AI Validation",
+      "subtitle": "Receipts verified automatically",
+      "description": "Our AI analyzes each MBWay or bank transfer receipt: confirms the amount, recipient, and transaction status — and pre-marks it as paid for you to confirm in one click.",
+      "feature1": "Reads amount, IBAN, and reference",
+      "feature2": "Detects fraud attempts",
+      "feature3": "Pre-approves in <3s",
+      "cta": "Try 7 days free"
+    },
+    "proofReview": {
+      "title": "Validate Receipt",
+      "athlete": "Athlete",
+      "event": "Event",
+      "amount": "Amount",
+      "method": "Method",
+      "risk": "Risk",
+      "viewFull": "View full document",
+      "approve": "Approve",
+      "reject": "Reject",
+      "requestProof": "Request new proof",
+      "approveSuccess": "Payment successfully approved!",
+      "rejectSuccess": "Payment successfully rejected!",
+      "requestProofSuccess": "Proof request successfully sent via email.",
+      "error": "Error updating payment.",
+      "ia": {
+        "lowTitle": "AI: Pre-validated (low risk)",
+        "lowDesc": "Amount, recipient, and reference match",
+        "mediumTitle": "AI: Suspicious (medium risk)",
+        "mediumDesc": "Some data might not match perfectly",
+        "highTitle": "AI: Invalid (high risk)",
+        "highDesc": "Receipt data does not match details"
+      },
+      "documentTitle": "Proof document",
+      "documentLabel": "proof"
+    },
+    "kicker": "Payments",
+    "title": "Payments",
+    "titleSub": "Track charges, proofs and payment methods accepted by the team.",
+    "configureBtn": "Configure methods",
+    "loading": "Loading payments...",
+    "mocks": {
+      "match": "Weekly match"
+    },
+    "stats": {
+      "method": "Method",
+      "methodValue": "Manual MBWay",
+      "proofs": "Proofs",
+      "proofsValue": "Upload active",
+      "validation": "Pre-validation",
+      "validationValue": "Ready",
+      "toValidate": "To validate",
+      "overdue": "Overdue",
+      "paid": "Paid",
+      "received": "received"
+    },
+    "status": {
+      "pending": "Pending",
+      "ready": "Ready",
+      "validating": "Validating",
+      "validated": "Validated",
+      "refunded": "Refunded",
+      "credited": "Credited"
+    },
+    "method": {
+      "manualMbway": "Manual MBWay"
+    },
+    "proofs": {
+      "pending": "Proof pending",
+      "validating": "Paid to validate"
+    },
+    "notFound": "Payment not found",
+    "noPayments": "No payments found.",
+    "noPaymentsSub": "No matching payment records found in this filter.",
+    "ago": "{time} ago",
+    "viewDetail": "View details",
+    "methodsTitle": "Accepted Methods",
+    "statusActive": "CONFIRMED",
+    "statusInactive": "INACTIVE",
+    "statusDisabled": "Disabled in settings",
+    "statusSoon": "COMING SOON",
+    "stripeSoon": "Cards — coming soon",
+    "usdcSoon": "Crypto — coming soon",
+    "settings": {
+      "title": "Configure Payment Methods",
+      "subtitle": "Enable and customize how athletes can pay the team.",
+      "methods": "Accepted methods",
+      "saving": "Saving...",
+      "help": "Click a method to configure details.",
+      "done": "Done",
+      "error": "Error saving. Try again.",
+      "active": "Active",
+      "inactive": "Inactive",
+      "notConfigured": "Not configured",
+      "noNumber": "No number",
+      "soon": "Soon",
+      "mbway": {
+        "title": "MBWay",
+        "description": "Manual mobile transfer",
+        "phone": "Phone number",
+        "name": "Recipient name (optional)",
+        "placeholderName": "Ex: John Doe",
+        "errorPhone": "Please enter a phone number for MBWay."
+      },
+      "cash": {
+        "title": "Cash",
+        "description": "In-person payment at the game",
+        "instructions": "Cash payment instructions",
+        "placeholder": "Pay the captain at the start of the game."
+      },
+      "transfer": {
+        "title": "Bank Transfer",
+        "description": "Manual payment via IBAN",
+        "iban": "IBAN",
+        "name": "Account holder name",
+        "placeholderName": "Ex: John Doe",
+        "errorIban": "Please enter a valid IBAN.",
+        "errorName": "Please enter the account holder's name."
+      },
+      "stripe": {
+        "title": "Stripe — Card",
+        "description": "Automatic card payment",
+        "info": "Stripe integration will be configured through the team dashboard. Contact support for more info."
+      }
+    },
+    "methods": {
+      "mbway": "MBWay",
+      "cash": "Cash",
+      "stripe": "Stripe",
+      "transfer": "Transfer",
+      "cashSub": "In-person at the game",
+      "creditCard": "Credit card"
+    },
+    "table": {
+      "title": "Weekly payments",
+      "player": "Athlete",
+      "event": "Event",
+      "amount": "Amount",
+      "method": "Method",
+      "status": "Status",
+      "risk": "Score",
+      "viewProfile": "View Profile",
+      "viewDetail": "View Details",
+      "date": "Date & Time",
+      "match": {
+        "weeklyGame": "Weekly Game"
+      }
+    },
+    "detail": {
+      "title": "Payment Details",
+      "cancelActionsTitle": "Cancellation Actions",
+      "accept": "Accept Payment",
+      "reject": "Reject Payment",
+      "proof": "Proof of Payment",
+      "proofAlt": "Payment Proof",
+      "noProof": "No proof uploaded",
+      "noProofSub": "Wait for athlete to upload or manually verify.",
+      "history": "Athlete History",
+      "verify": "Manual Verify",
+      "requestProof": "Request Proof",
+      "viewProof": "View Full Proof",
+      "summary": "Transaction Summary",
+      "athlete": "Athlete Information",
+      "status": "Update Status",
+      "memberSince": "Club Member since {year}",
+      "requestProofAgain": "Request proof again",
+      "brokenProof": "Could not open the proof",
+      "brokenProofSub": "The file link seems invalid or expired. Ask the athlete to upload the proof again.",
+      "approveSuccess": "Payment approved.",
+      "rejectSuccess": "Payment rejected.",
+      "actionError": "Could not update the payment. Please try again.",
+      "requestProofSuccess": "Request sent to the athlete by email.",
+      "requestProofError": "Could not send the request. Please try again.",
+      "editStatus": "Edit payment decision",
+      "closeStatusEdit": "Close editing",
+      "currentStatus": "Current status",
+      "possibleStatuses": "Possible statuses",
+      "loadingProof": "Loading proof...",
+      "proofReceivedKicker": "Proof",
+      "proofReceivedTitle": "Document received",
+      "proofReceivedDescription": "Check the amount, account holder and date before approving the payment."
+    },
+    "actions": {
+      "back": "Back to list",
+      "download": "Download",
+      "uploadProof": "Upload Proofs",
+      "setMethods": "Payment Methods",
+      "autoValidate": "Auto-validation",
+      "relevant": "Other Actions",
+      "retry": "Try again"
+    },
+    "markRefund": "Refund",
+    "markCredit": "Convert to Credit",
+    "empty": {
+      "errorTitle": "We couldn't load the payments",
+      "errorDescription": "Check your connection and try again."
+    }
+  },
+  "arenaBadges": {
+    "new": "New",
+    "confirmed": "Confirmed",
+    "reserve": "Reserve",
+    "pending": "Pending",
+    "refused": "Refused",
+    "highlight": "Highlight",
+    "waiting": "Waiting",
+    "validating": "Validating",
+    "low": "Low Risk",
+    "medium": "Medium Risk",
+    "high": "High Risk",
+    "scoreIs": "Risk score",
+    "refunded": "Refunded",
+    "credited": "Credited"
+  },
+  "arenaShared": {
+    "calendar": "Calendar",
+    "createEvent": "Create event",
+    "emptyTitle": "No results",
+    "emptyDescription": "Try adjusting the filters."
+  },
+  "arenaSquad": {
+    "roles": {
+      "owner": "Captain",
+      "admin": "Admin",
+      "manager": "Manager",
+      "coach": "Coach",
+      "player": "Player",
+      "guest": "Guest",
+      "co-captain": "Co-captain"
+    },
+    "actions": {
+      "add": "Add",
+      "addPlayer": "Add player",
+      "retry": "Try again"
+    },
+    "filters": {
+      "all": "All",
+      "confirmed": "Confirm.",
+      "verified": "Verified",
+      "manual": "Manual adds",
+      "new": "New",
+      "pending": "Pending",
+      "reserves": "Reserves"
+    },
+    "subtitle": "Recurring athlete hub: manage verified athletes, manual additions, lists and direct communication.",
+    "groups": {
+      "action": "Create list",
+      "title": "Participant lists",
+      "new": "New list",
+      "createTitle": "Create participant list",
+      "editTitle": "Edit participant list",
+      "namePlaceholder": "List name",
+      "create": "Save list",
+      "update": "Update list",
+      "edit": "Edit list",
+      "count": "{count} athlete{count, plural, =1 {} other {s}}"
+    },
+    "email": {
+      "open": "Send email",
+      "title": "Email to {name}",
+      "defaultSubject": "Team message",
+      "subject": "Subject",
+      "message": "Message",
+      "send": "Send email",
+      "sent": "Email sent.",
+      "error": "Could not send email.",
+      "limitReached": "Monthly email limit reached for this plan.",
+      "usage": "{used}/{limit} emails used this month",
+      "unlimited": "Unlimited emails on this plan"
+    },
+    "kicker": "Team",
+    "search": {
+      "noResults": "No players found",
+      "placeholder": "Search player...",
+      "clearSearch": "Clear search"
+    },
+    "stats": {
+      "playerCount": "{count} Player{count, plural, =1 {} other {s}}"
+    },
+    "title": "Squad",
+    "loading": "Loading squad...",
+    "positions": {
+      "GK": "Goalkeeper",
+      "DEF": "Defender",
+      "MID": "Midfielder",
+      "FWD": "Forward",
+      "SUB": "Substitute",
+      "NA": "Not defined"
+    },
+    "notValidated": "Unvalidated Player",
+    "notValidatedDesc": "This player has not yet created their Jogabola account. The complete profile and statistics will be available after validation.",
+    "pendingValidation": "Pending Validation",
+    "coCaptain": {
+      "promote": "Make co-captain",
+      "promoteDesc": "Grant management permissions (create events, validate payments).",
+      "promoteLabel": "Promote",
+      "remove": "Remove co-captain",
+      "removeDesc": "Revoke management permissions. Reverts to player.",
+      "removeLabel": "Remove"
+    },
+    "empty": {
+      "title": "No players in the roster yet",
+      "subtitle": "Add your first player to start managing call-ups.",
+      "errorTitle": "We couldn't load the roster",
+      "errorDescription": "Check your connection and try again."
+    }
   },
   "common": {
     "accept": "Accept",
     "actions": "Actions",
     "back": "Back",
+    "betaLabel": "Beta",
     "cancel": "Cancel",
     "city": "City",
+    "close": "Close",
+    "comingSoon": "Coming soon",
+    "comingSoonDescription": "This area is under development. Soon you will have full access.",
     "confirm": "Confirm",
+    "confirmAction": "Confirm",
     "confirmPassword": "Confirm your password",
     "copyright": "Copyright © {year}. All rights reserved.",
-    "close": "Close",
     "create": "Create",
+    "dark": "Dark",
     "date": "Date",
+    "dateTime": "Date and time",
     "decline": "Decline",
     "delete": "Delete",
     "description": "Description",
@@ -109,13 +1231,30 @@
     "email": "Email",
     "error": "Error",
     "finish": "Finish",
+    "home": "Home",
+    "hour": "Hour",
+    "inDevelopment": "In Development",
+    "invalidDate": "Invalid date",
     "join": "Joining",
     "knowMore": "Know more",
+    "light": "Light",
+    "loadError": "Error loading",
     "loading": "Loading",
-    "logo": "Then",
+    "logo": "Logo",
     "manage": "Manage",
+    "myAccount": "My Account",
     "name": "Name",
     "next": "Next",
+    "nextSlide": "Next slide",
+    "notFilled": "Not filled",
+    "previousSlide": "Previous slide",
+    "retry": "Retry",
+    "selectDate": "Select date",
+    "selectDates": "Select dates",
+    "clear": "Clear",
+    "toggleSidebar": "Toggle sidebar",
+    "toggleTheme": "Toggle theme",
+    "notifications": "Notifications",
     "password": "Password",
     "performance": "Performance",
     "player": "Player",
@@ -129,11 +1268,19 @@
     "playerStats": "Player statistics",
     "playerTeam": "Player's team",
     "players": "Players",
+    "profile": "Profile",
     "rights": "All rights reserved",
     "role": "Position",
     "save": "Save",
+    "search": "Search...",
+    "searchCountry": "Search country...",
     "season": "Season",
+    "selectCompetition": "Select a competition",
+    "settings": "Settings",
+    "signOut": "Sign Out",
+    "statistics": "Statistics",
     "success": "Success",
+    "system": "System",
     "team": "Team",
     "teamDescription": "Team description",
     "teamJouneys": "Team days",
@@ -143,58 +1290,683 @@
     "teamName": "Team name",
     "teamPlayers": "Team players",
     "teamPlayersStats": "Team player statistics",
+    "verified": "Verified",
     "teamStats": "Team statistics",
     "title": "Title",
-    "light": "Light",
-    "dark": "Dark",
-    "system": "System",
-    "toggleTheme": "Toggle theme"
+    "positions": {
+      "GK": "Goalkeeper",
+      "CB": "Defender",
+      "DEF": "Defender",
+      "MID": "Midfielder",
+      "FWD": "Forward",
+      "FW": "Forward"
+    }
   },
   "company": {
+    "name": "JogaBola",
     "description": "Find your ideal team or create your own, manage your athletes and participate in legendary leagues!",
-    "legalName": "JogaBola Foundation LLC",
+    "legalName": "JogaBola Inc",
     "slogan": "The best place to find your crew and play soccer."
   },
-  "footer": {
-    "contact": "Contact",
-    "faq": "FAQ",
+  "contact": {
+    "bug": "Bug",
+    "complaint": "Complaint",
+    "email": "Email",
+    "email_invalid": "Invalid email",
+    "message": "Message",
+    "message_required": "Message is required",
+    "name": "Name",
+    "name_required": "Name is required",
+    "other": "Other",
+    "phone": "Phone",
+    "question": "Question",
+    "send": "Send",
+    "send_error": "Error sending message",
+    "send_success": "Message sent successfully",
+    "subject": "Subject",
+    "subtitle": "Get in touch with us",
+    "suggestion": "Suggestion",
+    "title": "Contact"
+  },
+  "cookieConsent": {
+    "accept": "Accept",
+    "decline": "Decline",
+    "description": "We value your privacy. We use cookies to ensure the website functions properly, analyze traffic, and improve your experience.",
     "privacyPolicy": "Privacy Policy",
+    "title": "Cookie Control",
+    "acceptAll": "Accept all",
+    "rejectAll": "Reject all",
+    "customize": "Customize",
+    "savePreferences": "Save preferences",
+    "back": "Back",
+    "alwaysActive": "Always active",
+    "categories": {
+      "necessary": {
+        "title": "Strictly Necessary",
+        "description": "Essential for the basic functioning of the website (such as login sessions and cookie preferences)."
+      },
+      "functional": {
+        "title": "Functionality and Preferences",
+        "description": "Allow the website to remember your choices (like preferred language or theme)."
+      },
+      "analytics": {
+        "title": "Performance and Analytics",
+        "description": "Help us analyze and improve the application performance by tracking traffic anonymously."
+      },
+      "marketing": {
+        "title": "Marketing and Advertising",
+        "description": "Used to present relevant updates and club or partner campaigns."
+      }
+    }
+  },
+  "currency": {
+    "dollar": "$",
+    "euro": "€",
+    "pound": "£"
+  },
+  "dangerZone": {
+    "delete": {
+      "button": "Yes, Delete Permanently",
+      "confirmLabel": "Type \"{clubName}\" to confirm",
+      "description": "This action will permanently remove the club, players, schedule and all recorded data. Recovery is not possible after confirmation.",
+      "title": "Delete Club"
+    },
+    "description": "Actions in this section may result in permanent loss of statistics, players and squad history. Make sure to create backups and be absolutely certain before proceeding.",
+    "title": "Warning: Irreversible Actions",
+    "transfer": {
+      "button": "Transfer Management",
+      "description": "Transfer full control, financial administration access and team configuration to another existing user in the squad.",
+      "title": "Transfer Club Management"
+    }
+  },
+  "eventPage": {
+    "create": {
+      "placeholders": {
+        "description": "Add details about the event...",
+        "location": "E.g.: Club Training Center",
+        "title": "E.g.: Technical training"
+      }
+    },
+    "filters": {
+      "selectLanguage": "Select a language",
+      "selectLevel": "Select level",
+      "selectPeriod": "Select period"
+    },
+    "search": {
+      "gameStyle": "Game style",
+      "location": "Location",
+      "selectDates": "Select dates",
+      "useCurrentLocation": "Use current location"
+    }
+  },
+  "eventSearch": {
+    "advancedFilters": "Advanced filters",
+    "dateRange": "Select dates",
+    "description": "Search for matches, training sessions, or groups near you. Filter by location, game style, or date range.",
+    "endDate": "End date",
+    "filters": "Filters",
+    "gameStyle": "Game style",
+    "gameStyleOptions": {
+      "competitivo": "Competitive",
+      "misto": "Mixed",
+      "recreativo": "Casual"
+    },
+    "location": "Location",
+    "locationStatus": {
+      "error": {
+        "description": "An error occurred while getting your location. Please try again.",
+        "title": "Location error"
+      },
+      "permissionDenied": {
+        "description": "Allow location access in your browser settings.",
+        "title": "Permission denied"
+      },
+      "success": {
+        "description": "Your current location has been set successfully.",
+        "title": "Location captured"
+      },
+      "timeout": {
+        "description": "Try again to get your location.",
+        "title": "Timed out"
+      },
+      "unavailable": {
+        "description": "Check whether GPS is enabled.",
+        "title": "Location unavailable"
+      },
+      "unsupported": {
+        "description": "Your browser does not support geolocation.",
+        "title": "Geolocation unsupported"
+      }
+    },
+    "search": "Search",
+    "startDate": "Start date",
+    "title": "Find your next match",
+    "useCurrentLocation": "Use current location"
+  },
+  "experience": {
+    "advanced": "Advanced",
+    "beginner": "Beginner",
+    "intermediate": "Intermediate",
+    "professional": "Professional"
+  },
+  "footer": {
+    "columns": {
+      "institutional": "Institutional",
+      "legal": "Legal",
+      "product": "Product"
+    },
+    "contact": "Contact",
+    "copyright": "Copyright © {year} {company}. All rights reserved.",
+    "description": "Find your ideal team or create your own, manage your athletes and participate in legendary leagues!",
+    "faq": "FAQ",
+    "links": {
+      "about": "About",
+      "academy": "Academy",
+      "community": "Community",
+      "contact": "Contact",
+      "cookies": "Cookies",
+      "disclaimer": "Disclaimer",
+      "features": "Features",
+      "partners": "Become a Partner",
+      "plans": "Plans",
+      "privacy": "Privacy",
+      "terms": "Terms",
+      "roadmap": "Roadmap",
+      "timer": "Timer"
+    },
+    "privacyPolicy": "Privacy Policy",
+    "systems": "OPERATING SYSTEMS",
     "termsAndConditions": "Terms and Conditions"
   },
-  "menu": {
-    "home": "Home",
-    "ecosystem": "Ecosystem",
-    "community": "Community",
-    "marketplace": "Marketplace",
-    "academy": "Academy",
-    "about": "About",
-    "contact": "Contact",
-    "privacy": "Privacy",
-    "terms": "Terms",
-    "blog": "Blog",
-    "howItWorks": "How it works",
-    "privacyAndTerms": "Privacy and Terms"
+  "generalSettingsForm": {
+    "email": "Club Email",
+    "location": "Headquarters Location",
+    "nif": "Tax ID / Registration",
+    "officialName": "Official Name",
+    "publicListing": "Public Listing",
+    "publicListingDescription": "Allow the club to appear in global search results. Players will be able to view the page and request to join the squad.",
+    "save": "Save Changes",
+    "saved": "Saved",
+    "saving": "Saving..."
+  },
+  "goals": {
+    "description": "Select all goals that apply to you. This helps us suggest the best features.",
+    "options": {
+      "coach-others": "Coach others",
+      "compete": "Compete in tournaments",
+      "find-team": "Find a team",
+      "have-fun": "Have fun",
+      "improve-skills": "Improve skills",
+      "make-friends": "Make new friends",
+      "organize-games": "Organise games",
+      "stay-fit": "Stay fit",
+      "track-stats": "Track statistics"
+    },
+    "title": "What Are Your Goals?"
   },
   "header": {
     "about": "About us",
+    "arena": "Arena",
+    "fanZone": "Fan Zone",
     "home": "Home",
     "howItWorks": "How it works",
-    "plans": "Plans",
+    "launchJourney": "Launch journey",
     "new": "New",
-    "launchJourney": "Launch journey"
+    "palco": "Stage",
+    "plans": "Plans",
+    "playZone": "Play Zone",
+    "signIn": "Sign In",
+    "universo": "Universe"
   },
   "homePage": {
+    "appMockupAlt": "Jogabola app mockup",
     "createMyTeams": "Create my teams",
+    "cta": {
+      "becomePartner": "Become a Partner",
+      "createAccount": "Create Free Account",
+      "subtitle": "Join thousands of teams that are already revolutionizing their management",
+      "title": "Ready to get started?"
+    },
+    "dashboard": {
+      "confirmed": "CONFIRMED ATTENDANCE",
+      "kicker": "WEEKLY GAME",
+      "players": "players",
+      "title": "Team Dashboard"
+    },
+    "demo": {
+      "stats": {
+        "activePlayers": "Active players",
+        "averageRating": "Average rating",
+        "championships": "Championships"
+      },
+      "subtitle": "See how easy it is to manage your team and achieve victory",
+      "title": "App Demo"
+    },
     "description": "Build your team, challenge your friends, and conquer glory on the pitch.\nThe field is calling. Victory awaits you!",
-    "sponsors": "Sponsors",
-    "startMyJourney": "Start my journey",
-    "title": "Ready to build your dream team?",
-    "watchVideo": "Presentation video",
-    "downloadAppTitle": "Download the app and take control of your journey!",
     "downloadAppDescription": "Get the full Jogabola experience on your phone. Available for iOS and Android.",
+    "downloadAppTitle": "Download the app and take control of your journey!",
     "downloadOnAppStore": "Download on the App Store",
     "downloadOnGooglePlay": "Download on Google Play",
-    "appMockupAlt": "Jogabola app mockup"
+    "ecosystem_full_section": {
+      "modules": {
+        "engagement": {
+          "description": "Fan portal, online ticket sales and loyalty programmes to strengthen the bond with your community.",
+          "title": "Fan Engagement"
+        },
+        "explore": "Explore module",
+        "finance": {
+          "description": "Total control of membership fees, sponsorships and expenses. Automatic reports for impeccable financial health.",
+          "title": "Financial Management"
+        },
+        "health": {
+          "description": "Load monitoring, injury history and physiological follow-up to maximise performance and reduce risk.",
+          "title": "Athlete Health"
+        },
+        "tactical": {
+          "description": "Draw plays, organise line-ups and share technical analysis videos with your staff and athletes in real time.",
+          "title": "Tactical Planning"
+        }
+      },
+      "subtitle": "We developed the necessary tools to professionalise every department of your sports organisation.",
+      "title": "The complete ecosystem for your club management"
+    },
+    "ecosystem_section": {
+      "kicker": "MVP · THE ESSENTIALS",
+      "title": "Everything you need to manage your weekly game",
+      "subtitle": "No extra modules. No learning curve. Start today.",
+      "modules": {
+        "teams": {
+          "title": "Squads and Roster",
+          "description": "Always know who's in your squad and who you're inviting for the next game."
+        },
+        "attendance": {
+          "title": "Attendance and Waiting List",
+          "description": "Confirmed list, reserves and automatic waiting list. No WhatsApp needed."
+        },
+        "payments": {
+          "title": "Integrated Payments",
+          "description": "Track who paid, who's pending and overdue amounts, stress-free."
+        },
+        "proofs": {
+          "title": "Payment Proofs",
+          "description": "Players send the proof. You validate. All in one place."
+        }
+      }
+    },
+    "waitlistCta": {
+      "badge": "EARLY ACCESS",
+      "titlePart1": "Be among the first to",
+      "titlePart2": "organise your game with Jogabola.",
+      "subtitle": "We're in beta. Waitlist is open.",
+      "cta": "Join the waitlist",
+      "alreadyHaveAccess": "Already have access?",
+      "signIn": "Sign in"
+    },
+    "features": {
+      "items": {
+        "accessControl": {
+          "description": "Different permission levels",
+          "title": "Access Control"
+        },
+        "centralizedSchedule": {
+          "description": "Organized training and matches",
+          "title": "Centralized Schedule"
+        },
+        "championshipOrganization": {
+          "description": "Create and manage tournaments",
+          "title": "Championship Organization"
+        },
+        "communication": {
+          "description": "Integrated chat with the team",
+          "title": "Communication"
+        },
+        "performanceAnalysis": {
+          "description": "Detailed statistics",
+          "title": "Performance Analysis"
+        },
+        "playerManagement": {
+          "description": "Profiles, statistics and availability",
+          "title": "Player Management"
+        }
+      },
+      "title": "Complete Features"
+    },
+    "hero": {
+      "badge": "BETA · Early access",
+      "titlePart1": "Your weekly game,",
+      "titlePart2": "organized.",
+      "titleHighlight": "No WhatsApp groups.",
+      "titlePart3": "No confusion.",
+      "titlePart4": "Your arena.",
+      "description": "No more WhatsApp chaos. Attendance, payments, and receipts in one place — for captains who take the weekly game seriously.",
+      "joinWaitlist": "Join the waiting list",
+      "signIn": "Sign In",
+      "goToArena": "Go to Arena",
+      "startJourney": "Start Journey",
+      "watchDemo": "Watch Demo",
+      "headline": {
+        "play": "Play",
+        "more": "more.",
+        "organize": "Organize less."
+      },
+      "secondaryCta": "Watch demo · 0:42",
+      "tickerStrong": "+3 captains",
+      "ticker": "joined the list in the last 24h",
+      "badgeConfirmed": "14 confirmed",
+      "badgePaid": "11/14 players"
+    },
+    "momentumStrip": {
+      "item1": "Game scheduled",
+      "item2": "14 confirmed",
+      "item3": "Payments on track"
+    },
+    "problems": {
+      "kicker": "The problem",
+      "title": "Do you recognize this?",
+      "pain1": {
+        "title": "\"Who's coming to the game?\"",
+        "description": "Confirmations lost in WhatsApp. You never know who shows up.",
+        "resolution": "Real-time attendance list"
+      },
+      "pain2": {
+        "title": "\"Has everyone paid yet?\"",
+        "description": "Chasing players for transfers week after week.",
+        "resolution": "Payment record per player"
+      },
+      "pain3": {
+        "title": "\"Where's the proof?\"",
+        "description": "Images buried in the group. Impossible to validate without wasting time.",
+        "resolution": "Upload and automatic pre-validation"
+      },
+      "titlePrefix": "Does this feel",
+      "titleStroke": "familiar?",
+      "items": [
+        {
+          "title": "“Who is coming?”",
+          "description": "Confirmations get buried in WhatsApp scroll. You never know who shows up until they do.",
+          "resolution": "Real-time attendance with reserves and a waitlist."
+        },
+        {
+          "title": "“Has everyone paid?”",
+          "description": "Chasing players for payment every single week gets old fast.",
+          "resolution": "Payment tracking per player. Paid, pending, and overdue without stress."
+        },
+        {
+          "title": "“Where is the receipt?”",
+          "description": "Images disappear in the group chat. Validation becomes a Saturday morning chore.",
+          "resolution": "Upload and quick pre-validation. You approve with a tap."
+        }
+      ]
+    },
+    "communityReviews": {
+      "kicker": "REVIEWS",
+      "title": "The community speaks",
+      "subtitle": "Real experiences from people replacing group chat chaos with weekly games that are easier to manage.",
+      "previous": "Previous review",
+      "next": "Next review",
+      "cta": "Join the waitlist",
+      "items": {
+        "sarah": {
+          "name": "Sarah Fuller",
+          "date": "February 2026",
+          "text": "I can finally see who confirmed, who is waiting, and who still has not paid without digging through old group messages."
+        },
+        "bruno": {
+          "name": "Bruno Roberts",
+          "date": "February 2026",
+          "text": "Simple to understand and fast to use. If you organize games every week, it saves time from the first call-up."
+        },
+        "mina": {
+          "name": "Mina Adel",
+          "date": "February 2026",
+          "text": "I like having attendance, payments, and proof uploads in one place. The team understands what is missing before match day."
+        },
+        "subbo": {
+          "name": "subbo21",
+          "date": "January 2026",
+          "text": "It helps a lot when there are many players and reserves. I no longer need to be the annoying person asking everything in WhatsApp."
+        }
+      }
+    },
+    "partnersSection": {
+      "emptyState": {
+        "description": "We are in an exciting growth phase and are looking for partners who share our passion for transforming the amateur football world. Together, we can create unique opportunities and revolutionise the sport we love.",
+        "features": [
+          "Global visibility on our platform",
+          "Access to a passionate community",
+          "Co-content creation opportunities",
+          "Real impact on football development"
+        ],
+        "makePartner": "Become Our Partner",
+        "title": "In Search of Visionary Partners"
+      },
+      "makePartner": "Become Our Partner",
+      "subtitle": "Together, we are revolutionising amateur football with the support of brands that believe in our vision.",
+      "title": "Our Partners"
+    },
+    "sponsors": "Sponsors",
+    "startMyJourney": "Start my journey",
+    "stats": {
+      "averageRating": "Average rating",
+      "clubs": "Clubs",
+      "players": "Players",
+      "rating": "Rating",
+      "title": "Jogabola in numbers"
+    },
+    "testimonials": {
+      "items": {
+        "captain": {
+          "name": "Maria Costa",
+          "role": "Captain",
+          "text": "Agility and organization in one place!"
+        },
+        "coach": {
+          "name": "João Silva",
+          "role": "Coach",
+          "text": "Best platform to manage my team!"
+        },
+        "player": {
+          "name": "Pedro Santos",
+          "role": "Player",
+          "text": "More time to focus on the game!"
+        }
+      },
+      "title": "Success Stories"
+    },
+    "title": "Ready to build your dream team?",
+    "watchVideo": "Presentation video",
+    "marquee": {
+      "items": [
+        "No WhatsApp chaos",
+        "Call-ups in seconds",
+        "Stress-free payments",
+        "Receipts in the right place",
+        "Automatic waitlist",
+        "Lighter Saturdays"
+      ]
+    },
+    "how": {
+      "kicker": "How it works",
+      "titlePrefix": "In",
+      "titleHighlight": "eight minutes",
+      "titleSuffix": ", your team plays.",
+      "steps": [
+        {
+          "title": "Create your team",
+          "description": "Invite the squad with a link. Everyone joins from their phone."
+        },
+        {
+          "title": "Schedule the game",
+          "description": "Set date, time, price, and seats. The app opens attendance and the waitlist."
+        },
+        {
+          "title": "Play relaxed",
+          "description": "See who confirmed, who paid, and what is missing. Whistle on the pitch, not in spreadsheets."
+        }
+      ]
+    },
+    "mvp": {
+      "kicker": "MVP · The essentials",
+      "title": "Everything you need.",
+      "titleAccent": "Nothing extra.",
+      "body": "No bloated modules. No learning curve. Just what weekly captains need to organize games.",
+      "items": [
+        {
+          "title": "Squad & Teams",
+          "description": "Your squad in one place. Invite, call up, relax."
+        },
+        {
+          "title": "Attendance & Waitlist",
+          "description": "Confirmed players, reserves, and an automatic waitlist."
+        },
+        {
+          "title": "Payments",
+          "description": "Who paid, who owes, totals per match. Ready to close the books."
+        },
+        {
+          "title": "Receipts",
+          "description": "Players send them, you validate them. Everything stored together."
+        }
+      ]
+    },
+    "journey": {
+      "kicker": "The journey",
+      "title": "From opening to final whistle.",
+      "body": "A short flow to open a team, schedule the game, call up the squad, and close payments inside the app.",
+      "steps": [
+        {
+          "label": "STEP 01",
+          "title": "Choose a role",
+          "description": "Captain or athlete, each person starts on the right path."
+        },
+        {
+          "label": "STEP 02",
+          "title": "Create the event",
+          "description": "Date, place, price, and spots are clear from the start."
+        },
+        {
+          "label": "STEP 03",
+          "title": "Call up the squad",
+          "description": "Confirmations and waitlist update in real time."
+        },
+        {
+          "label": "STEP 04",
+          "title": "Close payments",
+          "description": "Receipt sent, captain notified, accounts settled."
+        }
+      ]
+    },
+    "testimonialsOusada": {
+      "kicker": "Reviews",
+      "titlePrefix": "The community",
+      "titleHighlight": "speaks louder.",
+      "items": [
+        {
+          "name": "Sara F.",
+          "role": "Captain · The Falcons",
+          "text": "I finally know who confirmed and who is late without digging through old messages. I got my Saturday mornings back."
+        },
+        {
+          "name": "Bruno R.",
+          "role": "Organizer · Thursday Kickabout",
+          "text": "Simple, fast, and it does what it promises. For weekly organizers, it saves hours from the first call-up."
+        },
+        {
+          "name": "Mina A.",
+          "role": "Captain · The Wolves",
+          "text": "Attendance, payments, and receipts in one place. The team understands what is missing before game day."
+        },
+        {
+          "name": "André S.",
+          "role": "Captain · FC Quinta",
+          "text": "I no longer need to be the annoying person asking everything on WhatsApp. The app does the dirty work."
+        }
+      ]
+    },
+    "finalCta": {
+      "badge": "Early access · Limited spots",
+      "headline": "Be among the first",
+      "headlineAccent": "to play.",
+      "emailLabel": "Email",
+      "emailPlaceholder": "your-email@example.com",
+      "cta": "Join the list",
+      "link": "Already have access? Sign in"
+    }
+  },
+  "howItWorksPage": {
+    "buttons": {
+      "getStarted": "Get Started",
+      "learnMore": "Learn More"
+    },
+    "cta": {
+      "button": "Get Started",
+      "description": "Be part of the transformation of amateur football. Together, we will create a future where every talent has the opportunity to shine.",
+      "title": "Join the Revolution"
+    },
+    "description": "We transform grassroots, amateur and neighbourhood football into a powerful talent, well-being and health chain through intelligent and accessible tools.",
+    "features": {
+      "analytics": {
+        "description": "Detailed data and insights that help players and teams continuously improve their performance.",
+        "title": "Performance Analytics"
+      },
+      "connect": {
+        "description": "We unite players, coaches, clubs and fans on a single platform that strengthens the amateur football ecosystem.",
+        "title": "Connect Communities"
+      },
+      "development": {
+        "description": "We identify and develop talent through a personalised scouting and training system.",
+        "title": "Talent Development"
+      },
+      "global": {
+        "description": "We expand opportunities beyond local borders, connecting talent to clubs and international competitions.",
+        "title": "Global Reach"
+      },
+      "security": {
+        "description": "A secure and reliable platform that protects data and promotes fair play in all interactions.",
+        "title": "Safe Environment"
+      },
+      "technology": {
+        "description": "Advanced management, performance analysis and competition organisation tools available to everyone.",
+        "title": "Smart Technology"
+      }
+    },
+    "howItWorks": {
+      "subtitle": "Through advanced technology and a community-centred approach, we create a complete ecosystem for football development.",
+      "title": "How We Transform Football"
+    },
+    "mission": {
+      "description": "Professionalize and democratize amateur football, offering powerful tools that transform passion into opportunity, talent into career, and communities into thriving sports development ecosystems.",
+      "title": "Our Mission"
+    },
+    "objectives": {
+      "democratization": {
+        "description": "Make professional tools accessible to all levels of amateur football.",
+        "title": "Democratisation"
+      },
+      "professionalization": {
+        "description": "Raise organisational and management standards in grassroots and amateur football.",
+        "title": "Professionalisation"
+      },
+      "title": "Our Objectives",
+      "vision2030": {
+        "description": "To be the world's leading platform for amateur football management and development, connecting millions of players and creating opportunities on every continent.",
+        "title": "Vision 2030"
+      },
+      "wellness": {
+        "description": "Promote physical and mental health through sport and community.",
+        "title": "Well-being"
+      }
+    },
+    "stats": {
+      "clubs": "Partner Clubs",
+      "countries": "Countries",
+      "games": "Organised Games",
+      "players": "Active Players",
+      "subtitle": "Numbers that show how we are revolutionising amateur football worldwide.",
+      "title": "Global Impact"
+    },
+    "subtitle": "Democratizing Football",
+    "title": "How It Works"
   },
   "locales": {
     "en": "English",
@@ -203,45 +1975,1593 @@
     "placeholder": "Select a language",
     "pt": "Portuguese"
   },
+  "menu": {
+    "about": "About",
+    "academy": "Academy",
+    "becomePartner": "Become a Partner",
+    "blog": "Blog",
+    "careers": "Careers",
+    "community": "Community",
+    "contact": "Contact",
+    "ecosystem": "Ecosystem",
+    "home": "Home",
+    "howItWorks": "How it works",
+    "marketplace": "Marketplace",
+    "privacy": "Privacy",
+    "privacyAndTerms": "Privacy and Terms",
+    "team": "Team",
+    "terms": "Terms",
+    "timer": "Timer"
+  },
   "meta": {
     "description": "The best place to find your crew and play soccer.",
     "title": "JogaBola"
   },
-  "store": {
-    "screen1": {
-      "quote": "The best place to find your team and play soccer.",
-      "name": "JogaBola",
-      "designation": "The best place to find your team and play soccer."
+  "notFound": {
+    "callVARButton": "CALL VAR (GO TO HOME)",
+    "description": "The tactical scheme failed. The play was interrupted by the linesman because the destination you are looking for was not found on the field.",
+    "footer": "JOGABOLA @ 2024 • TACTIQUALLY LOST",
+    "labelRefresh": "REFRESH",
+    "labelVAR": "VAR",
+    "mapButton": "MAP (VIEW SITE MAP)",
+    "offside404": "404_OFFSIDE",
+    "refreshButton": "REFRESH (RESTART MATCH)",
+    "startRoute": "START_ROUTE",
+    "status": {
+      "impediment": "STATUS: OFFSIDE",
+      "positioning": "POSITIONING: WRONG",
+      "var": "VAR: CHECKING..."
     },
-    "screen2": {
-      "quote": "The best place to find your team and play soccer.",
-      "name": "JogaBola",
-      "designation": "The best place to find your team and play soccer."
+    "subtitle": "Incorrect Formation: Misaligned Page",
+    "title": "404 - OFFSIDE!",
+    "warning": "POSITIONING ERROR"
+  },
+  "notificationsPage": {
+    "actions": {
+      "markAllRead": "Mark read"
     },
-    "screen3": {
-      "quote": "The best place to find your team and play soccer.",
-      "name": "JogaBola",
-      "designation": "The best place to find your team and play soccer."
+    "allRead": "All notifications read",
+    "empty": {
+      "description": "You have no pending notifications at the moment. Check back later for updates.",
+      "title": "All caught up"
+    },
+    "header": {
+      "description": "Keep track of everything happening in your team and your matches.",
+      "eyebrow": "Alerts",
+      "title": "Notifications"
+    },
+    "unreadCount": "{count, plural, =1 {One unread notification} other {# unread notifications}}",
+    "filters": {
+      "all": "All",
+      "confirmed": "Confirm.",
+      "declined": "Declined",
+      "system": "System"
+    },
+    "emptyFilter": {
+      "title": "No notifications in this category",
+      "description": "Try another category or check back later."
     }
   },
-  "contact": {
-    "title": "Contact",
-    "subtitle": "Get in touch with us",
-    "name_required": "Name is required",
-    "email_invalid": "Invalid email",
-    "email": "Email",
-    "message": "Message",
-    "name": "Name",
-    "phone": "Phone",
-    "send": "Send",
-    "subject": "Subject",
-    "send_error": "Error sending message",
-    "message_required": "Message is required",
-    "send_success": "Message sent successfully",
-    "suggestion": "Suggestion",
-    "complaint": "Complaint",
-    "question": "Question",
-    "bug": "Bug",
-    "other": "Other"
+  "payment": {
+    "required": "Payment required",
+    "optional": "Optional payment",
+    "timing": {
+      "before": "Before the match",
+      "after": "After the match"
+    },
+    "deadlineHours": "Deadline (hours before match)",
+    "reminderHours": "Remind (hours before deadline)",
+    "policy": {
+      "label": "If deadline expires",
+      "notify": "Notify only",
+      "cancel": "Cancel reservation and free spot"
+    },
+    "deadline": {
+      "label": "Payment deadline",
+      "expiresIn": "Expires in",
+      "expired": "Deadline expired"
+    },
+    "status": {
+      "pending": "Pending",
+      "paid_unverified": "Under review",
+      "review_required": "Review",
+      "approved": "Approved",
+      "rejected": "Rejected",
+      "refunded": "Refunded"
+    },
+    "statusBadge": {
+      "pending": "Payment pending",
+      "paid_unverified": "Awaiting verification",
+      "review_required": "Review required",
+      "approved": "Payment approved",
+      "rejected": "Payment rejected",
+      "refunded": "Payment refunded"
+    },
+    "receipt": {
+      "confirmed": "Payment confirmed",
+      "number": "Receipt"
+    },
+    "reminder": {
+      "email": {
+        "subject": "Payment pending — {eventTitle}",
+        "title": "Payment pending",
+        "cta": "Pay now →"
+      }
+    },
+    "dashboard": {
+      "paid": "Paid",
+      "pending": "Pending",
+      "overdue": "Overdue",
+      "totalReceived": "Total received",
+      "approve": "Approve",
+      "reject": "Reject",
+      "tabLabel": "Payments"
+    },
+    "paymentConfig": {
+      "enable": "Charge payment",
+      "enableHint": "Require payment from players",
+      "amount": "Amount",
+      "when": "When to pay",
+      "expiration": "If deadline expires",
+      "activeMethodsHint": "Active methods (configured in team settings)"
+    }
+  },
+  "organizerPage": {
+    "comingSoon": {
+      "description": "This area is under development. Soon you will have full access to the event organization panel.",
+      "title": "In Development"
+    },
+    "eyebrow": "Organizer",
+    "hero": {
+      "description": "Centralize matches, entries, and venues using the same operational shell as the other protected areas.",
+      "eyebrow": "Calendar orchestration",
+      "title": "Plan competitions with less friction"
+    },
+    "newTournament": "New Tournament",
+    "roadmap": {
+      "description": "The next delivery will connect calendar, participants, and confirmations in a single panel.",
+      "eyebrow": "Next module",
+      "title": "Organization flows are expanding"
+    },
+    "stats": {
+      "activeTournaments": "Active Tournaments",
+      "inProgress": "In progress",
+      "next30days": "Next 30 days",
+      "participants": "Participants",
+      "participantsThisMonth": "+42 this month",
+      "registered": "Registered",
+      "scheduledEvents": "Scheduled Events",
+      "venues": "Venues"
+    },
+    "subtitle": "Organize tournaments and events",
+    "title": "Organizer Area"
+  },
+  "positions": {
+    "default": "Player",
+    "defender": "Defender",
+    "forward": "Forward",
+    "goalkeeper": "Goalkeeper",
+    "midfielder": "Midfielder",
+    "versatile": "Versatile"
+  },
+  "profile": {
+    "availability": {
+      "evenings": "Weekday evenings",
+      "flexible": "Flexible schedule",
+      "specific": "Specific times",
+      "weekends": "Weekends"
+    },
+    "description": "This information helps us personalise your JogaBola experience.",
+    "experience": {
+      "advanced": "Advanced - I play competitively",
+      "beginner": "Beginner - Just starting out",
+      "intermediate": "Intermediate - I play regularly",
+      "professional": "Professional/Semi-professional"
+    },
+    "fields": {
+      "availability": "Availability",
+      "email": "Email",
+      "experience": "Football Experience",
+      "location": "Location",
+      "name": "Full Name"
+    },
+    "title": "Let's Get to Know You"
+  },
+  "arenaSelfAssessment": {
+    "card": {
+      "title": "Self-assessment",
+      "ratedSub": "{position} · used for balancing",
+      "emptyTitle": "Let's do your self-assessment",
+      "emptySub": "Set your position and skills for more balanced teams."
+    },
+    "intro": {
+      "eyebrow": "Self-assessment",
+      "title": "Let's do your self-assessment",
+      "description": "Answer a few quick questions about your position and skills. We use this to balance teams with AI — be honest.",
+      "estimate": "Under 1 minute"
+    },
+    "position": {
+      "eyebrow": "Step 1",
+      "title": "Where do you play?",
+      "description": "Pick your main position and, if you want, a secondary one.",
+      "primaryLabel": "Main position",
+      "secondaryLabel": "Secondary position",
+      "optional": "Optional"
+    },
+    "positions": {
+      "GK": { "label": "Goalkeeper", "hint": "You guard the goal" },
+      "DEF": { "label": "Defender", "hint": "You stop attacks" },
+      "MID": { "label": "Midfielder", "hint": "You link the play" },
+      "FWD": { "label": "Forward", "hint": "You score goals" }
+    },
+    "skill": {
+      "eyebrow": "Skill"
+    },
+    "skills": {
+      "finishing": {
+        "label": "Finishing",
+        "description": "How effective you are at converting chances into goals."
+      },
+      "defense": {
+        "label": "Defending",
+        "description": "Ability to mark, tackle and protect the goal."
+      },
+      "passing": {
+        "label": "Passing",
+        "description": "Accuracy and vision when distributing the ball."
+      },
+      "pace": {
+        "label": "Pace",
+        "description": "Speed and acceleration on the pitch."
+      },
+      "physical": {
+        "label": "Physical",
+        "description": "Strength, stamina and presence in duels."
+      },
+      "technique": {
+        "label": "Technique",
+        "description": "Ball control, dribbling and individual quality."
+      },
+      "goalkeeping": {
+        "label": "Goalkeeping",
+        "description": "Reflexes, positioning and handling."
+      }
+    },
+    "scale": {
+      "prompt": "Tap to rate from 1 to 10",
+      "weak": "Weak",
+      "medium": "Average",
+      "good": "Good",
+      "excellent": "Excellent",
+      "minHint": "1 · Beginner",
+      "maxHint": "Elite · 10"
+    },
+    "review": {
+      "eyebrow": "Review",
+      "title": "Confirm your assessment",
+      "description": "Make sure everything looks right before saving.",
+      "overallLabel": "Overall rating",
+      "edit": "Edit answers"
+    },
+    "actions": {
+      "back": "Back",
+      "start": "Start",
+      "continue": "Continue",
+      "finish": "Finish",
+      "saving": "Saving...",
+      "saved": "Assessment saved"
+    },
+    "errors": {
+      "save": "Could not save the assessment. Please try again."
+    }
+  },
+  "profilePage": {
+    "actions": {
+      "save": "Save profile",
+      "saving": "Saving...",
+      "addPasskey": "Register Passkey",
+      "passkeyAdded": "Passkey registered successfully!",
+      "passkeyError": "Could not register passkey."
+    },
+    "attributes": {
+      "finishing": "Finishing",
+      "passing": "Passing",
+      "speed": "Speed"
+    },
+    "cards": {
+      "account": "Account",
+      "mvpScope": "MVP scope",
+      "mvpScopeDescription": "This profile stores only basic identity. Advanced stats, scouting, and social features stay outside this phase."
+    },
+    "errors": {
+      "PROFILE_NOT_FOUND": "Profile could not be found.",
+      "PROFILE_UPDATE_FAILED": "Could not update profile.",
+      "UNAUTHORIZED": "Sign in to update your profile.",
+      "VALIDATION_ERROR": "Check the highlighted fields.",
+      "VALIDATION_IMAGE_URL_INVALID": "Use a valid photo URL.",
+      "VALIDATION_NAME_TOO_SHORT": "Name must be at least 2 characters."
+    },
+    "fallbacks": {
+      "player": "Athlete",
+      "user": "User"
+    },
+    "feedback": {
+      "errorTitle": "Error",
+      "loadError": "Failed to load profile",
+      "saveError": "Could not save changes.",
+      "updatedDescription": "Changes have been saved.",
+      "updatedTitle": "Profile updated"
+    },
+    "fields": {
+      "email": "Email",
+      "emailReadOnly": "Email is managed by authentication.",
+      "emailStatus": "Email status",
+      "image": "Photo URL",
+      "memberSince": "Member since",
+      "name": "Name"
+    },
+    "security": {
+      "title": "Quick Access",
+      "passkeys": "Passkeys (Biometrics)",
+      "passkeysDesc": "Link your device (FaceID, TouchID, or PIN) to sign in instantly without email codes.",
+      "noPasskeys": "No passkeys linked yet."
+    },
+    "form": {
+      "description": "Used in rosters, attendance confirmations, and payments.",
+      "title": "Public details"
+    },
+    "header": {
+      "description": "Keep the basic account details used across teams, matches, and payments up to date.",
+      "eyebrow": "Profile",
+      "title": "Your profile"
+    },
+    "identity": {
+      "activeProfile": "Active profile",
+      "editPhoto": "Edit photo",
+      "eyebrow": "Identity",
+      "memberSince": "Member since {year}"
+    },
+    "roles": {
+      "fan": "Fan",
+      "manager": "Manager",
+      "organizer": "Organizer",
+      "player": "Amateur athlete"
+    },
+    "stats": {
+      "goals": "Goals",
+      "matches": "Matches"
+    },
+    "status": {
+      "unverified": "Unverified",
+      "verified": "Verified"
+    },
+    "tabs": {
+      "activities": "Activities",
+      "overview": "Overview",
+      "settings": "Settings",
+      "teams": "My teams"
+    },
+    "dashboard": {
+      "games": "Games",
+      "goals": "Goals",
+      "assists": "Assists",
+      "rating": "Rating",
+      "associatedTeams": "Associated Teams",
+      "associatedTeamsCount": "{count, plural, one {# team} other {# teams}}",
+      "playersCountLabel": "{count, plural, one {# player} other {# players}}",
+      "noTeams": "You don't belong to any team yet.",
+      "playersCount": "players",
+      "position": "position",
+      "wins": "wins",
+      "season": "season",
+      "viewRound": "View Round",
+      "events": "Events"
+    },
+    "menu": {
+      "notifications": "Notifications",
+      "notificationsSub": "Manage alerts",
+      "security": "Security",
+      "securitySub": "Passkeys and sessions",
+      "editProfile": "Edit profile",
+      "editProfileSub": "Name, photo, and contacts",
+      "proPlan": "Pro Plan",
+      "proPlanSub": "3/3 teams · €5/month",
+      "logout": "Log out",
+      "logoutTitle": "Log out?",
+      "logoutDescription": "You'll be signed out of JogaBola. You can sign back in whenever you like.",
+      "logoutAction": "Log out",
+      "logoutCancel": "Cancel"
+    },
+    "notificationsSheet": {
+      "title": "Notifications",
+      "push": "PUSH",
+      "email": "EMAIL",
+      "presence": "Presence confirmations",
+      "presenceSub": "When someone confirms or declines",
+      "chat": "Chat messages",
+      "chatSub": "New messages in events",
+      "results": "Published results",
+      "resultsSub": "When a game ends",
+      "payments": "Payments",
+      "paymentsSub": "Receipts received / overdue",
+      "notices": "Manager notices",
+      "noticesSub": "Event notices wall"
+    },
+    "editProfileSheet": {
+      "title": "Edit profile",
+      "fullName": "FULL NAME",
+      "email": "EMAIL",
+      "phone": "PHONE",
+      "verified": "Verified",
+      "verifiedAthlete": "Verified athlete",
+      "verifiedAthleteDesc": "Email confirmed and approved by manager"
+    },
+    "securitySheet": {
+      "title": "Security",
+      "tabs": {
+        "passkeys": "Passkeys",
+        "sessions": "Sessions",
+        "twoFactor": "2FA"
+      },
+      "deviceActive": "active",
+      "addedOn": "Added on {date}",
+      "remove": "Remove",
+      "currentSession": "Current",
+      "twoFactor": {
+        "title": "Two-Factor Authentication",
+        "description": "Set up an additional PIN code for extra account protection."
+      }
+    }
+  },
+  "searchResults": {
+    "back": "Back",
+    "eventTypes": {
+      "grupo": "Group",
+      "partida": "Match",
+      "treino": "Training"
+    },
+    "loading": "Searching events...",
+    "noResults": "No results found",
+    "noResultsDescription": "Try adjusting the search filters",
+    "organizedBy": "Organized by",
+    "participants": "participants",
+    "resultsFound": "{count} {count, plural, =1 {result found} other {results found}}",
+    "searchPrompt": "Refine the search by location, date, and game style before opening an event.",
+    "title": "Search results"
+  },
+  "settingsPage": {
+    "fields": {
+      "pushNotifications": "Push Notifications",
+      "pushNotificationsHelp": "Receive alerts about new matches, squad calls, and payments."
+    },
+    "header": {
+      "description": "Personalize your experience on JogaBola Arena and manage your notifications.",
+      "eyebrow": "Settings",
+      "title": "Preferences"
+    },
+    "messages": {
+      "error": "Error saving settings. Please try again.",
+      "success": "Settings saved successfully!"
+    },
+    "sections": {
+      "language": {
+        "description": "Choose the language you prefer to use on the platform.",
+        "title": "Interface Language"
+      },
+      "notifications": {
+        "description": "Manage how and when you want to receive team alerts.",
+        "title": "Notifications"
+      }
+    }
+  },
+  "sidebar": {
+    "activeTeams": "Active Teams",
+    "activeUntil": "Active until {date}",
+    "clubAdmin": "Club Admin",
+    "clubPage": "Club Page",
+    "clubSettings": "Club Settings",
+    "dashboard": "Dashboard",
+    "finances": "Finances",
+    "fixtures": "Fixtures",
+    "manageBilling": "Manage Billing",
+    "management": "Management",
+    "proPlan": "Pro Plan",
+    "statCenter": "Stat Center"
+  },
+  "timer": {
+    "auth": {
+      "login": "Login",
+      "loginFailed": "Login failed. Please try again.",
+      "loginSync": "Login / Sync",
+      "logout": "Logout",
+      "logoutConfirm": "Are you sure you want to log out?"
+    },
+    "controls": {
+      "finished": "Finished",
+      "pause": "Pause",
+      "start": "Start"
+    },
+    "events": {
+      "assignPlayer": "Assign Player",
+      "empty": "No events recorded yet.",
+      "hint": "Tap time to edit • Tap row for player",
+      "title": "Match Events"
+    },
+    "match": {
+      "controls": {
+        "card": "Card",
+        "confirmEnd": "Confirm end of match",
+        "confirmEndShort": "Confirm? End",
+        "confirmRestart": "Confirm match restart",
+        "endMatch": "End match",
+        "endNow": "End match now",
+        "goal": "Goal",
+        "logCardForTeam": "Record card for {team}",
+        "logGoalForTeam": "Record goal for {team}",
+        "nextPeriod": "Next period",
+        "pause": "Pause",
+        "restart": "Restart",
+        "resume": "Resume",
+        "start": "Start",
+        "yes": "Yes?"
+      },
+      "goalSheet": {
+        "assist": "Assist (optional)",
+        "register": "Record goal",
+        "scorer": "Scorer",
+        "selectScorer": "Select scorer",
+        "title": "Goal · {team}",
+        "unassigned": "No scorer"
+      },
+      "playerPicker": {
+        "addPlaceholder": "Add player…",
+        "addPlayer": "Add player",
+        "emptyPlaceholder": "Player name (optional)"
+      },
+      "timeline": {
+        "cardForTeam": "Card · {team}",
+        "emptyDescription": "Record goals and cards during the match.",
+        "emptyTitle": "No events yet",
+        "goalForTeam": "Goal · {team}",
+        "removeEvent": "Remove event",
+        "removeLatestGoal": "Remove the latest goal from this row"
+      }
+    },
+    "settings": {
+      "gameParts": {
+        "extraTime": "Extra Time",
+        "firstHalf": "1st Half",
+        "secondHalf": "2nd Half",
+        "training": "Training"
+      },
+      "loop": "Loop",
+      "matchFormat": "Match Format",
+      "modeDescriptions": {
+        "countDown": "Timer counts down to 00:00 and plays a sound.",
+        "countUp": "Timer counts up from 00:00.",
+        "loop": "Timer counts down, plays a sound, and resets. User must start next round manually."
+      },
+      "partDurations": "Part Durations (Minutes)",
+      "progressive": "Progressive",
+      "regressive": "Regressive",
+      "saveChanges": "Save Changes",
+      "teamA": "Team A (Home)",
+      "teamB": "Team B (Away)",
+      "teamColorPicker": "Choose team color for {team}",
+      "teamCustomization": "Team Customization",
+      "teamName": "Team Name",
+      "testSound": "Test Sound",
+      "timerEndSound": "Timer End Sound",
+      "timerMode": "Timer Mode",
+      "title": "Match Settings"
+    }
+  },
+  "timerShared": {
+    "cta": "Run your team on JogaBola",
+    "ctaHint": "Call-ups, stats and rankings — free."
+  },
+  "onboarding": {
+    "badge": {
+      "soon": "Soon",
+      "selected": "Selected"
+    },
+    "header": {
+      "eyebrow": "WELCOME TO",
+      "welcome": "Welcome to {appName}",
+      "greeting": "Hello, {name}!",
+      "description": "Before you start, tell us how your journey will be:"
+    },
+    "roles": {
+      "coach": {
+        "title": "Coach",
+        "description": "Manage your team, schedule matches and invite athletes.",
+        "features": [
+          "Create and manage teams",
+          "Schedule matches and events",
+          "Invite and manage athletes",
+          "Control payments"
+        ],
+        "eyebrow": "Team management"
+      },
+      "athlete": {
+        "title": "Athlete",
+        "description": "Join teams, confirm attendance and manage your player profile.",
+        "features": [
+          "Athlete profile",
+          "Confirm attendance in matches",
+          "Match history",
+          "View statistics"
+        ],
+        "eyebrow": "On the pitch"
+      },
+      "referee": {
+        "eyebrow": "Official match",
+        "title": "Referee",
+        "description": "Control the match, validate incidents, and keep the game organized.",
+        "features": [
+          "Manage clock and score",
+          "Log cards and incidents",
+          "Validate attendance on pitch",
+          "Share the match report"
+        ]
+      },
+      "fan": {
+        "eyebrow": "FAN",
+        "title": "Fan",
+        "description": "Follow your team, see results and statistics.",
+        "features": []
+      }
+    },
+    "cta": {
+      "continue": "Continue",
+      "saving": "Saving..."
+    },
+    "footer": {
+      "changeLater": "You can change this later in settings."
+    },
+    "menu": {
+      "open": "Open menu",
+      "close": "Close menu",
+      "language": "Change language",
+      "logout": "Log out",
+      "loggingOut": "Logging out..."
+    },
+    "errors": {
+      "save": "Error saving preference. Please try again.",
+      "unexpected": "Unexpected error. Please try again.",
+      "surveySave": "Error saving answers. Please try again."
+    },
+    "survey": {
+      "eyebrow": "Tell us more",
+      "header": "Tell us more",
+      "tagline": "2 quick questions to improve your experience.",
+      "q1Label": "What is your main goal with JogaBola?",
+      "q1Hint": "Select up to 3",
+      "q2Label": "How would you describe your team today?",
+      "skip": "Skip for now",
+      "submit": "Continue",
+      "submitting": "Saving...",
+      "intentions": {
+        "organize_games": "Organize weekly matches",
+        "payments": "Simplify payments",
+        "grow_team": "Grow the squad",
+        "stats": "Track statistics",
+        "communication": "Communicate with athletes",
+        "competitions": "Play in competitions"
+      },
+      "context": {
+        "new_team": "I am creating a new team",
+        "casual": "Informal/recreational team",
+        "league": "Team in an organized league",
+        "migrated": "I used another app and migrated",
+        "manual": "I manage manually (Excel/WhatsApp)"
+      }
+    },
+    "defaultName": "Player"
+  },
+  "profileDangerZone": {
+    "title": "Danger Zone",
+    "description": "Critical actions for your account management.",
+    "delete": {
+      "title": "Delete Account",
+      "description": "Permanently delete your account and all associated data. This action cannot be undone.",
+      "button": "Delete Account",
+      "confirm": {
+        "title": "Are you absolutely sure?",
+        "description": "This will permanently delete your account and remove your data from our servers.",
+        "cancel": "Cancel",
+        "action": "Delete Permanently"
+      }
+    },
+    "transfer": {
+      "title": "Transfer Account",
+      "description": "Transfer your account to a new email address. You will need to confirm the change via email.",
+      "button": "Transfer Account",
+      "label": "New Email",
+      "placeholder": "new-email@example.com",
+      "confirm": {
+        "title": "Request Account Transfer",
+        "description": "An email will be sent to the new address to confirm the transfer.",
+        "cancel": "Cancel",
+        "action": "Send Request"
+      },
+      "success": "Transfer request sent! Please check the new email to confirm."
+    }
+  },
+  "validation": {
+    "VALIDATION_AMOUNT_REQUIRED": "Amount is required.",
+    "VALIDATION_CONFIRM_PASSWORD_REQUIRED": "Confirm your password.",
+    "VALIDATION_EMAIL_INVALID": "Invalid email.",
+    "VALIDATION_EMAIL_REQUIRED": "Email is required.",
+    "VALIDATION_LOCATION_REQUIRED": "Location is required.",
+    "VALIDATION_MATCH_SESSION_REQUIRED": "Match session is required.",
+    "VALIDATION_NAME_MIN": "Name must be at least 3 characters.",
+    "VALIDATION_NAME_REQUIRED": "Name is required.",
+    "VALIDATION_NOTES_TOO_LONG": "Notes are too long (max 500 characters).",
+    "VALIDATION_NOTE_TOO_LONG": "Note is too long (max 500 characters).",
+    "VALIDATION_OWNER_REQUIRED": "Owner is required.",
+    "VALIDATION_PASSWORDS_DONT_MATCH": "Passwords don't match.",
+    "VALIDATION_PASSWORD_COMPLEXITY": "Password must contain at least one uppercase letter, one lowercase letter, and one number.",
+    "VALIDATION_PASSWORD_MIN": "Password must be at least 8 characters.",
+    "VALIDATION_PASSWORD_REQUIRED": "Password is required.",
+    "VALIDATION_PAYMENT_PROOF_REQUIRED": "Payment proof is required.",
+    "VALIDATION_PAYMENT_REQUIRED": "Payment is required.",
+    "VALIDATION_PLAYER_REQUIRED": "Player is required.",
+    "VALIDATION_PROOF_URL_INVALID": "Proof URL is invalid.",
+    "VALIDATION_RESERVATION_REQUIRED": "Reservation is required.",
+    "VALIDATION_STARTS_AT_INVALID": "Start date is invalid.",
+    "VALIDATION_TEAM_NAME_TOO_SHORT": "Team name must be at least 2 characters.",
+    "VALIDATION_TEAM_REQUIRED": "Team is required.",
+    "VALIDATION_TEAM_SLUG_INVALID": "Team slug is invalid (lowercase letters, numbers, and hyphens only).",
+    "VALIDATION_TEAM_SLUG_TOO_SHORT": "Team slug must be at least 3 characters.",
+    "VALIDATION_TITLE_TOO_SHORT": "Title must be at least 3 characters."
+  },
+  "waitlist": {
+    "description": "We are currently in beta testing. Sign up to be among the first to enter when we open.",
+    "preferences": {
+      "earlyAccess": "Early access to new features",
+      "newsletter": "Subscribe to newsletter with tips and news",
+      "notifications": "Receive notifications about updates",
+      "title": "Communication Preferences"
+    },
+    "title": "Join the Waiting List",
+    "successTitle": "You are on the list!",
+    "successDescription": "We will let you know as soon as we open access.",
+    "backToHome": "Back to start",
+    "arena": "JogaBola Arena",
+    "namePlaceholder": "Your name",
+    "emailPlaceholder": "Your email",
+    "submitBtn": "Join the list",
+    "sessionActive": "Session active as <email>{email}</email>.",
+    "logout": "Log out",
+    "alreadyHaveAccess": "Already have access?",
+    "signIn": "Sign in",
+    "error": "Error registering."
+  },
+  "legal": {
+    "terms": {
+      "title": "Terms and Conditions",
+      "backHome": "Back to Home",
+      "lastUpdated": "Last updated: May 4, 2026",
+      "sections": [
+        {
+          "title": "1. Acceptance of Terms",
+          "body": "By accessing and using JogaBola, you agree to comply with these terms and conditions. If you do not agree with any part of these terms, you should not use our services."
+        },
+        {
+          "title": "2. Use of the Service",
+          "body": "JogaBola is a platform for organizing, managing, and participating in sports events. You may confirm attendance with an account or, when available, as an email-verified guest.",
+          "items": [
+            "Unauthorized commercial use is prohibited.",
+            "Spam, offensive content, and false information are prohibited.",
+            "You are responsible for the accuracy of the information you provide and for keeping your account secure."
+          ]
+        },
+        {
+          "title": "3. Event Registration",
+          "body": "When registering for an event, you confirm that the information provided is accurate and that you accept the rules set by the organizer. Verified accounts help manage attendance, payments, and participation history for future events."
+        },
+        {
+          "title": "4. Payments and Fees",
+          "body": "Some events may require payment. Payment, refund, or cancellation conditions are defined by the event organizer unless expressly stated otherwise."
+        },
+        {
+          "title": "5. Limitation of Liability",
+          "body": "JogaBola is not liable for damages, injuries, cancellations, changes, or technical failures outside our control related to events organized through the platform."
+        }
+      ]
+    },
+    "privacy": {
+      "title": "Privacy Policy",
+      "subtitle": "Your privacy is our priority.",
+      "backHome": "Back to Home",
+      "cookieSettings": {
+        "title": "Cookie settings",
+        "description": "Review or withdraw your cookie consent at any time.",
+        "button": "Manage cookies"
+      },
+      "sections": [
+        {
+          "title": "Information We Collect",
+          "body": "We collect information to provide better services to all our users. This includes your name, email address, and event participation data."
+        },
+        {
+          "title": "How We Use Information",
+          "body": "We use the information collected to provide, maintain, protect, and improve our services, as well as to develop new services."
+        },
+        {
+          "title": "Information Sharing",
+          "body": "We do not share personal information with companies, organizations, or individuals outside of JogaBola, unless we have your consent or for legal reasons."
+        },
+        {
+          "title": "Data Security",
+          "body": "We work hard to protect JogaBola and our users from unauthorized access, alteration, disclosure, or destruction of information we hold."
+        }
+      ]
+    },
+    "disclaimer": {
+      "title": "Disclaimer"
+    },
+    "contact": {
+      "title": "Contact"
+    }
+  },
+  "athleteEventPublic": {
+    "back": "Back",
+    "share": "Share",
+    "copied": "Copied!",
+    "status": {
+      "scheduled": "Scheduled",
+      "ongoing": "Ongoing",
+      "completed": "Completed",
+      "cancelled": "Cancelled",
+      "confirmed": "Confirmed"
+    },
+    "labels": {
+      "date": "Date",
+      "location": "Location",
+      "price": "Price"
+    },
+    "countdown": "COUNTDOWN",
+    "countdownEnded": "Already happened",
+    "countdownUnits": {
+      "days": "DAYS",
+      "hours": "HOURS",
+      "minutes": "MINS",
+      "seconds": "SECS"
+    },
+    "eventNotFound": "Event not found",
+    "backToHome": "Back to Home",
+    "slots": "Slots",
+    "filledSlots": "Slots filled",
+    "slotsFull": "Slots full - you can join the waiting list",
+    "confirmed": "Confirmed",
+    "waitingList": "Waiting list",
+    "noOneConfirmed": "No one confirmed yet. Be the first!",
+    "loading": "Loading...",
+    "notes": "Notes",
+    "presenceConfirmed": "Attendance confirmed!",
+    "greetingWithName": "Hi, {name}",
+    "onConfirmedList": "You are on the confirmed list",
+    "joinWaitlist": "Join waiting list",
+    "confirmPresence": "Confirm attendance",
+    "eventCancelledAction": "Event cancelled",
+    "rosterOnlyNotice": "Roster-only event. Confirmation is validated by email.",
+    "rosterOnlyError": "This event is reserved for the roster.",
+    "cancelPresence": "Cancel attendance",
+    "cancelConfirm": {
+      "title": "Cancel attendance?",
+      "description": "You'll free up your spot in this match. If you already paid, contact the organiser about a refund.",
+      "action": "Cancel attendance",
+      "keep": "Keep attendance"
+    },
+    "hasAccount": "Have a Jogabola account? Sign in to manage your attendance.",
+    "login": "Sign in",
+    "register": "Create account",
+    "tabs": {
+      "squad": "Squad",
+      "location": "Location",
+      "payment": "Payment",
+      "chat": "Chat"
+    },
+    "type": {
+      "game": "Game",
+      "training": "Training"
+    },
+    "price": {
+      "free": "Free"
+    },
+    "payNow": "Pay now",
+    "paymentStatus": "Payment",
+    "paymentConfirmed": "Confirmed",
+    "paymentPending": "Pending"
+  },
+  "athleteRsvp": {
+    "back": "Back",
+    "resendCode": "Resend code",
+    "resendIn": "Resend in {seconds}s",
+    "fillNameEmail": "Fill in your name and email.",
+    "invalidCode": "Invalid code.",
+    "enterEmail": "Enter your email.",
+    "enterCode": "Enter the 6-digit code.",
+    "titles": {
+      "choose": "Confirm Attendance",
+      "loginEmail": "Sign in",
+      "loginOtp": "Verify email",
+      "guestInfo": "Confirm as Guest",
+      "guestOtp": "Verify email",
+      "payment": "Payment",
+      "success": "Attendance Confirmed!",
+      "welcomeBack": "Welcome back"
+    },
+    "welcomeBackGreeting": "Hello, {name}!",
+    "welcomeBackPrompt": "Do you want to confirm your presence for this match?",
+    "confirmWithEmail": "Confirm with my email",
+    "notMe": "Not me / Use another email",
+    "choosePrompt": "How do you want to confirm your attendance?",
+    "hasAccountOption": "I have a JogaBola account",
+    "hasAccountHint": "Attendance and payment history",
+    "continueAsGuest": "Continue as Guest",
+    "guestEmailHint": "Quick - we verify by email",
+    "noAccountPrefix": "Don't have an account?",
+    "createNow": "Create one now",
+    "freeSuffix": "- it is free",
+    "loginEmailHint": "Enter your email and we will send an access code.",
+    "receiveCode": "Receive code",
+    "codeSentTo": "Code sent to",
+    "loginAndConfirm": "Sign in and confirm",
+    "noAccount": "No account? No problem - we confirm via email.",
+    "receivePin": "Receive PIN",
+    "confirmPresence": "Confirm attendance",
+    "paymentReservedTitle": "Spot reserved!",
+    "paymentReservedSubtitle": "Secure your spot by paying now.",
+    "payLater": "Pay later",
+    "presenceConfirmed": "Attendance confirmed!",
+    "successGreetingWithName": "Hi, {name}! See you at the game!",
+    "successOnList": "You are on the list. See you at the game!",
+    "createAthleteAccount": "Create your athlete account",
+    "createAccountFree": "Access your attendance history, payments, and athlete profile. Free.",
+    "createFreeAccount": "Create free account",
+    "close": "Close",
+    "cashInstructions": "Pay the captain at the start of the game.",
+    "paymentNotes": "Payment via MBWay confirmed by the athlete",
+    "paymentMethodCard": {
+      "title": "How do you want to pay?",
+      "noMethods": "No payment method configured by the captain.",
+      "copy": "Copy",
+      "copied": "Copied!",
+      "status": {
+        "pending": "Waiting",
+        "paid": "Paid",
+        "rejected": "Rejected"
+      },
+      "actions": {
+        "pay": "Pay {amount}",
+        "sent": "I sent the payment",
+        "willPayCash": "I will pay in cash"
+      },
+      "methods": {
+        "stripe": {
+          "label": "Card",
+          "desc": "Debit or credit — immediate payment",
+          "info": "Pay with card immediately and securely via Stripe.",
+          "confirmMsg": "Payment confirmed — {amount}"
+        },
+        "mbway": {
+          "label": "MBWay",
+          "desc": "Transfer by phone",
+          "sendTo": "Send to",
+          "amount": "Amount",
+          "proofMsg": "Proof received — verifying",
+          "waitingMsg": "Waiting for captain's confirmation"
+        },
+        "cash": {
+          "label": "Cash",
+          "desc": "Pay in person",
+          "amount": "Amount",
+          "paidMsg": "Marked as paid by the captain"
+        },
+        "transfer": {
+          "label": "Transfer",
+          "desc": "Manual bank transfer",
+          "iban": "IBAN",
+          "holder": "Account holder",
+          "proofMsg": "Proof received — verifying",
+          "waitingMsg": "Waiting for manager's confirmation",
+          "waitingMsgNoProof": "Waiting for manager's confirmation"
+        }
+      }
+    },
+    "terms": {
+      "prefix": "By continuing, you accept the",
+      "terms": "Terms",
+      "and": "and",
+      "privacy": "Privacy"
+    },
+    "errors": {
+      "confirmAttendance": "Error confirming attendance",
+      "sendCode": "Error sending code.",
+      "sessionCreatedAttendanceFailed": "Session created but attendance confirmation failed. Try again.",
+      "rosterOnly": "This event is reserved for the squad.",
+      "rosterPriority": "Only roster members can confirm attendance until {hours}h before the game.",
+      "eventCancelled": "This event is cancelled.",
+      "hasFines": "You have pending fines. Settle your debts to confirm attendance.",
+      "processPayment": "Error processing payment.",
+      "resend": "Error resending.",
+      "resendPin": "Error resending PIN.",
+      "otpLocked": "Too many attempts. Try again in 15 minutes.",
+      "otpCooldown": "Wait one minute before requesting another PIN.",
+      "email": {
+        "RESEND_API_KEY_MISSING": "Email sending is not configured: RESEND_API_KEY is missing.",
+        "RESEND_API_KEY_INVALID": "The Resend API key is invalid. Check RESEND_API_KEY.",
+        "RESEND_FROM_INVALID": "The sender address is invalid. Fix EMAIL_FROM.",
+        "RESEND_DOMAIN_NOT_VERIFIED": "The sender domain is not verified in Resend yet.",
+        "RESEND_DEV_DOMAIN_RESTRICTED": "The resend.dev domain only sends to the email that owns the Resend account. Verify your own domain to email guests.",
+        "EMAIL_SEND_FAILED": "Could not send the PIN by email. Check the email or try again."
+      },
+      "loadPayment": "Error loading payment"
+    },
+    "namePlaceholder": "Full name",
+    "defaultName": "Athlete"
+  },
+  "contactPage": {
+    "backHome": "Back to home",
+    "title": "Talk to us",
+    "description": "Questions or suggestions? We are here to help your team get onto the pitch.",
+    "methods": {
+      "email": {
+        "label": "Email"
+      },
+      "instagram": {
+        "label": "Instagram"
+      },
+      "x": {
+        "label": "X"
+      }
+    }
+  },
+  "pricingPage": {
+    "eyebrow": "Plans",
+    "title": "Pricing for every stage of your team",
+    "subtitle": "Start free, move to Pro when your weekly game gets serious, and talk to us when you need a full operation.",
+    "recommended": "Recommended",
+    "limits": {
+      "teams": "Teams",
+      "players": "Players",
+      "events": "Events/mo"
+    },
+    "plans": {
+      "free": {
+        "badge": "Start",
+        "name": "Free",
+        "description": "For captains who want to leave WhatsApp chaos behind and organize their first games with less friction.",
+        "price": "€0",
+        "period": "/mo",
+        "cta": "Start free",
+        "features": [
+          "Up to 3 active teams",
+          "Up to 25 players per team",
+          "10 events per month",
+          "Attendance and waiting list",
+          "Basic payment tracking"
+        ]
+      },
+      "pro": {
+        "badge": "Most used",
+        "name": "Pro",
+        "description": "For recurring organizers who need more teams, payments, and weekly control.",
+        "price": "€9",
+        "period": "/mo",
+        "cta": "Join the Pro waitlist",
+        "features": [
+          "Up to 10 active teams",
+          "Up to 50 players per team",
+          "100 events per month",
+          "Payment proofs and validation",
+          "Advanced attendance management",
+          "Priority support"
+        ]
+      },
+      "elite": {
+        "badge": "Clubs",
+        "name": "Elite",
+        "description": "For clubs, academies, and communities managing many games, squads, and operations.",
+        "price": "Custom",
+        "period": "",
+        "cta": "Talk to us",
+        "features": [
+          "Practically unlimited teams",
+          "Practically unlimited players",
+          "Practically unlimited events",
+          "Assisted onboarding",
+          "Setup for clubs and communities",
+          "Dedicated guidance"
+        ]
+      }
+    },
+    "note": {
+      "title": "We are still in beta",
+      "description": "Pricing may evolve as we open more functionality. Early users will get priority access and initial conditions.",
+      "cta": "Questions? Talk to us"
+    }
+  },
+  "roadmapPage": {
+    "eyebrow": "Transparency",
+    "title": "Project Roadmap",
+    "subtitle": "Where we are and where we're going. Updated every sprint.",
+    "legend": {
+      "done": "Done",
+      "inProgress": "In progress",
+      "planned": "Planned",
+      "future": "Future"
+    },
+    "phases": [
+      {
+        "id": "mvp-core",
+        "label": "MVP · Core",
+        "period": "Q1-Q2 2026",
+        "status": "done",
+        "items": [
+          "Email OTP authentication",
+          "Team creation and management",
+          "Call-ups and attendance confirmation",
+          "Public event page (athlete view)",
+          "Payments and proof upload",
+          "Payment method configuration",
+          "Event calendar",
+          "Athlete profile",
+          "Transactional email system"
+        ]
+      },
+      {
+        "id": "freemium",
+        "label": "Freemium",
+        "period": "Q2 2026",
+        "status": "inProgress",
+        "items": [
+          "Free plan (up to 3 teams, 10 events/month)",
+          "Plans and pricing page",
+          "Upgrade to Pro plan",
+          "Billing infrastructure"
+        ]
+      },
+      {
+        "id": "pro-features",
+        "label": "Pro Features",
+        "period": "Q3 2026",
+        "status": "planned",
+        "items": [
+          "Advanced athlete statistics",
+          "Exportable financial reports",
+          "Google Calendar integration",
+          "Native push notifications",
+          "Integrated chat"
+        ]
+      },
+      {
+        "id": "elite",
+        "label": "Elite & Scale",
+        "period": "Q4 2026",
+        "status": "future",
+        "items": [
+          "Multi-tournament and leagues",
+          "Athlete scouting and networking",
+          "Public club page",
+          "Native mobile app (iOS + Android)",
+          "Public API for partners"
+        ]
+      }
+    ],
+    "cta": {
+      "title": "Want to follow along?",
+      "subtitle": "Join the waitlist and get first-hand updates.",
+      "button": "Join waitlist"
+    },
+    "backHome": "Back to home"
+  },
+  "paymentStatus": {
+    "pending": "Payment pending",
+    "paid_unverified": "Under review",
+    "review_required": "Needs review",
+    "approved": "Payment approved",
+    "rejected": "Payment rejected",
+    "refunded": "Refunded"
+  },
+  "manualMarkPaid": {
+    "title": "Mark as paid",
+    "athlete": "Athlete",
+    "method": "Payment method",
+    "note": "Note (optional)",
+    "notePlaceholder": "E.g. paid before the game via Revolut",
+    "confirm": "Confirm payment",
+    "methods": {
+      "cash": "Cash (in person)",
+      "mbway": "MBWay",
+      "transfer": "Bank transfer",
+      "other": "Other"
+    },
+    "errors": {
+      "registerPayment": "Error registering payment."
+    }
+  },
+  "paymentResult": {
+    "paid": {
+      "title": "Payment completed",
+      "subtitle": "{amount} · {eventTitle}",
+      "caption": "Proof sent to captain."
+    },
+    "paid_unverified": {
+      "title": "Awaiting confirmation",
+      "subtitle": "{amount} · {eventTitle}",
+      "caption": "The captain will validate your payment."
+    },
+    "failed": {
+      "title": "Payment failed",
+      "subtitle": "Try again or use another method.",
+      "caption": ""
+    },
+    "pending": {
+      "title": "Payment pending",
+      "subtitle": "{amount} · {eventTitle}",
+      "caption": "Complete the payment to confirm attendance."
+    },
+    "details": {
+      "from": "From",
+      "to": "To",
+      "method": "Method",
+      "total": "Total",
+      "date": "Payment Date"
+    },
+    "methods": {
+      "mbway": "MB Way",
+      "cash": "Cash",
+      "stripe": "Card",
+      "transfer": "Bank Transfer",
+      "unknown": "Other"
+    },
+    "backToEvent": "Back to event",
+    "tryAgain": "Try again",
+    "loadError": "Could not load payment.",
+    "proof": {
+      "submitError": "Error registering proof. Please try again.",
+      "successMessage": "Proof submitted successfully!",
+      "title": "Submit proof",
+      "imageAlt": "Proof preview",
+      "uploading": "Uploading...",
+      "registering": "Registering...",
+      "changeFile": "Click to change file",
+      "dropzone": "Click or drag the file",
+      "formats": "JPEG, PNG, WebP, PDF · max. 2 MB",
+      "invalidType": "Unsupported format. Use an image or PDF.",
+      "tooLarge": "File too large. Maximum 2 MB."
+    }
+  },
+  "videoDemo": {
+    "closeModal": "Close demo",
+    "intro": {
+      "tagline": "Manage your team. <highlight>Summon. Play.</highlight>"
+    },
+    "scenes": {
+      "journey": {
+        "eyebrow": "START HERE",
+        "title": "Choose your journey",
+        "subtitle": "Captain or Athlete — set up in seconds"
+      },
+      "team": {
+        "eyebrow": "SQUAD",
+        "title": "Manage your squad",
+        "subtitle": "All players in one place"
+      },
+      "convoca": {
+        "eyebrow": "CALL-UP",
+        "title": "Summon your team",
+        "subtitle": "Real-time presence tracking"
+      },
+      "create": {
+        "eyebrow": "EVENTS",
+        "title": "Schedule games easily",
+        "subtitle": "Create an event in under 1 minute"
+      },
+      "paid": {
+        "eyebrow": "PAYMENTS",
+        "title": "Integrated payments",
+        "subtitle": "MBWay, card, or cash"
+      }
+    },
+    "outro": {
+      "tagline": "The field calls you. Victory awaits."
+    },
+    "openLabel": "Watch demo · 0:42"
+  },
+  "loadingPage": {
+    "loading": "Loading..."
+  },
+  "passkeyPrompt": {
+    "title": "Enable Passkey",
+    "description": "Log in instantly next time — without waiting for email codes.",
+    "feature1Title": "One-tap login",
+    "feature1Sub": "FaceID, TouchID or PIN",
+    "feature2Title": "More secure",
+    "feature2Sub": "No passwords or codes",
+    "yes": "Enable now",
+    "no": "Don't link",
+    "skip": "Not now",
+    "success": "Passkey linked successfully!",
+    "error": "Could not link passkey."
+  },
+  "passkeyErrors": {
+    "unsupported": "This device or browser doesn't support passkeys.",
+    "insecureContext": "Passkeys require a secure connection (HTTPS). On mobile, open the app via an HTTPS domain or a secure tunnel — it won't work over a local IP on HTTP.",
+    "rpIdMismatch": "The passkey doesn't match this domain. Check the configuration (PASSKEY_RP_ID / NEXT_PUBLIC_APP_URL).",
+    "cancelled": "Operation cancelled. Please try again.",
+    "alreadyRegistered": "A passkey from this device is already linked to this account.",
+    "failed": "Could not link passkey."
+  },
+  "arenaEquipas": {
+    "status": {
+      "complete": "Squad complete",
+      "missing": "Need {count} more player(s)",
+      "overflow": "+{count} reserves",
+      "teams": "teams"
+    },
+    "format": {
+      "label": "Format",
+      "numTeams": "Number of teams"
+    },
+    "confirmed": {
+      "label": "Squad",
+      "empty": "No confirmed players yet"
+    },
+    "guests": {
+      "label": "Guests",
+      "edit": "Edit",
+      "addTitle": "Add guests",
+      "addSub": "People without an app account",
+      "addSubMissing": "Fill {count} spot(s) with outside players",
+      "addMore": "Add more guests",
+      "title": "Guests",
+      "infoText": "People <strong>without an app account</strong> who will play this game. Set a level so AI can balance better.",
+      "cancel": "Cancel",
+      "save": "Save {count} guests",
+      "guestNumberPlaceholder": "Guest {n}",
+      "levels": {
+        "beginner": {
+          "short": "Beg.",
+          "label": "Beginner"
+        },
+        "medium": {
+          "short": "Mid.",
+          "label": "Medium"
+        },
+        "good": {
+          "short": "Good",
+          "label": "Good"
+        }
+      }
+    },
+    "ai": {
+      "title": "AI Balancing",
+      "sub": "Fair teams in seconds",
+      "cta": "Generate {count} teams",
+      "ctaDisabled": "Need {count} more to start",
+      "generating": "Balancing teams…",
+      "generatingDesc": "Analysing history, ratings and format to create a fair match."
+    },
+    "result": {
+      "title": "Generated teams",
+      "balanced": "AI balanced {count} players",
+      "diffLabel": "Rating difference:",
+      "balanced_ok": "Balanced",
+      "balanced_ok_rough": "Reasonable",
+      "avgRating": "Avg. Rating",
+      "rebalance": "Rebalance",
+      "adjust": "Adjust",
+      "swapInstructions": "Tap 2 players to swap",
+      "swapPick": "Pick a player to swap with {name}"
+    }
+  },
+  "arenaRankings": {
+    "title": "Rankings",
+    "demoNotice": "Demo data — your real results will show up here soon.",
+    "tabs": {
+      "league": "League",
+      "scorers": "Top Scorers",
+      "assists": "Assists"
+    },
+    "table": {
+      "team": "Team",
+      "headers": {
+        "j": "G",
+        "v": "W",
+        "e": "D",
+        "d": "L",
+        "pts": "Pts"
+      },
+      "myTeamBadge": "YOU"
+    },
+    "stats": {
+      "goals": "goals",
+      "assists": "assists"
+    }
+  },
+  "arenaHistorical": {
+    "title": "History",
+    "demoNotice": "Demo data — your real results will show up here soon.",
+    "champion": "CHAMPION",
+    "sections": {
+      "seasons": "Seasons",
+      "recent": "Recent results"
+    },
+    "stats": {
+      "pos": "Pos",
+      "pts": "Pts",
+      "v": "W",
+      "e": "D",
+      "d": "L"
+    },
+    "seasonStatus": {
+      "active": "In progress",
+      "finished": "Finished"
+    }
+  },
+  "Tournament": {
+    "title": "Tournament",
+    "fallbackName": "Quick tournament",
+    "status": {
+      "setup": "Setup",
+      "running": "In progress",
+      "ended": "Finished"
+    },
+    "liveBar": {
+      "paused": "Paused",
+      "pendingFinish": "To finish",
+      "notStarted": "Not started",
+      "backToMatch": "Back to the live match"
+    },
+    "hub": {
+      "subtitle": "Winner stays, match after match",
+      "openTimer": "Timer",
+      "newTournament": "New tournament",
+      "saved": "Saved tournaments",
+      "loading": "Loading tournaments",
+      "teamCount": "{count, plural, one {# team} other {# teams}}",
+      "currentPair": "{teamA} vs {teamB}",
+      "emptyTitle": "No tournaments yet",
+      "emptyDescription": "Build 3 to 6 teams, set the rules and start playing.",
+      "emptyCta": "Create tournament",
+      "deleteTournament": "Delete {name}",
+      "confirmDeleteTournament": "Confirm deletion of {name}",
+      "deletingTournament": "Deleting {name}",
+      "deleteConfirm": "Sure?",
+      "deleting": "Deleting…",
+      "deleteError": "The tournament could not be deleted. Try again."
+    },
+    "setup": {
+      "title": "New tournament · {step}",
+      "steps": {
+        "teams": "Teams",
+        "rules": "Configuration",
+        "draw": "Draw"
+      },
+      "defaultTeam": "Team {number}",
+      "teamNamePlaceholder": "Team name",
+      "removeTeam": "Remove {name}",
+      "chooseColor": "Choose colour {color}",
+      "savedTeam": "{name} · {count, plural, one {# player} other {# players}}",
+      "playerPlaceholder": "Add player",
+      "addPlayer": "Add player",
+      "editPlayer": "Edit {name}",
+      "removePlayer": "Remove {name}",
+      "addTeam": "Add team",
+      "drawPlayersTitle": "Draw players",
+      "drawPlayersDescription": "Paste names separated by commas or lines. The draw distributes them across the teams.",
+      "drawPlaceholder": "Anna, Ben, Carla…",
+      "drawPlayers": "Distribute players",
+      "shuffleOrder": "Shuffle starting order",
+      "shuffleOrderDescription": "Sets the first match and the waiting order.",
+      "shuffleEnabled": "On",
+      "shuffleDisabled": "Off",
+      "startOrder": "Starting order",
+      "startOrderDescription": "The first two teams play now; the rest wait in this order.",
+      "startOrderShuffled": "The draw will set the order when you start.",
+      "startOrderPlays": "Plays",
+      "startOrderWaits": "Waits",
+      "startOrderMoveUp": "Move {name} up",
+      "startOrderMoveDown": "Move {name} down",
+      "modes": {
+        "always": {
+          "title": "Winner stays",
+          "description": "The winning team stays on the pitch."
+        },
+        "maxTwoInARow": {
+          "title": "Maximum 2 in a row",
+          "description": "After two wins, the winner takes a rest."
+        }
+      },
+      "matchDuration": "Time per match",
+      "minutesSuffix": "min",
+      "sound": "Sound + vibration",
+      "back": "Back",
+      "continue": "Continue",
+      "start": "Start tournament",
+      "saving": "Getting ready…",
+      "saveError": "The tournament could not be saved. Try again."
+    },
+    "view": {
+      "kicker": "Tournament on the pitch",
+      "fallbackName": "Quick tournament",
+      "back": "Back to tournaments",
+      "loading": "Loading tournament…",
+      "notFoundTitle": "Tournament not found",
+      "notFoundDescription": "This tournament no longer exists or is not saved on this device.",
+      "loadErrorTitle": "Could not load the tournament",
+      "loadErrorDescription": "There was a problem reading the saved data. Please try again.",
+      "invalidTitle": "Invalid tournament data",
+      "invalidDescription": "One of the teams in this match is no longer available. Return to tournaments to continue.",
+      "retry": "Try again",
+      "actionError": "The action could not be completed. Please try again.",
+      "currentMatch": "Current match",
+      "versus": "{teamA} versus {teamB}",
+      "versusShort": "vs",
+      "startMatch": "Start match",
+      "starting": "Starting…",
+      "queue": "Waiting queue",
+      "endTournament": "End tournament",
+      "ending": "Ending…",
+      "endedTitle": "Tournament finished",
+      "endedDescription": "The final standings are ready.",
+      "champion": {
+        "title": "Champion",
+        "topScorer": "Top scorer",
+        "share": "Share",
+        "copy": "Copy link",
+        "copied": "Copied!",
+        "newTournament": "New tournament",
+        "shareTitle": "JogaBola tournament result",
+        "unavailable": "Sharing this result is unavailable.",
+        "shareError": "The result could not be shared. Please try again.",
+        "copyError": "The link could not be copied. Please try again.",
+        "qrAria": "QR code to share the tournament result",
+        "unknownPlayer": "Player"
+      },
+      "standings": {
+        "title": "Standings",
+        "team": "Team",
+        "points": "Pts",
+        "goalDifference": "GD",
+        "played": "P"
+      }
+    },
+    "result": {
+      "invalidTitle": "Invalid or expired result",
+      "invalidDescription": "This result is no longer available. Open tournaments to start another one.",
+      "openTournaments": "Open tournaments",
+      "champion": "Champion",
+      "standings": "Final standings",
+      "teamFallback": "Team",
+      "points": "{count, plural, one {# pt} other {# pts}}",
+      "score": "{goalsFor}-{goalsAgainst}",
+      "scoreAria": "{goalsFor} goals scored and {goalsAgainst} conceded",
+      "topScorer": "Top scorer",
+      "goals": "{count, plural, one {# goal} other {# goals}}",
+      "createMine": "Create my tournament"
+    },
+    "match": {
+      "endedTitle": "Match finished",
+      "endedDescription": "The result has been recorded.",
+      "viewSummary": "View summary",
+      "continueTournament": "Continue tournament",
+      "continuing": "Continuing…",
+      "finalizeError": "The result could not be saved. Please try again.",
+      "decision": {
+        "title": "Draw — who won the decision?",
+        "description": "Decision goals do not count towards the result. Choose the winning team.",
+        "selectMethod": "First choose how the decision was made.",
+        "methods": {
+          "coin": "Odds or evens",
+          "penalties": "Penalties"
+        }
+      }
+    }
   }
 }

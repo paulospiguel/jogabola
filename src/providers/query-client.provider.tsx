@@ -1,11 +1,11 @@
 "use client";
 
-import { useState } from "react";
 import {
-  QueryClientProvider as TanstackProvider,
   QueryClient,
+  QueryClientProvider as TanstackProvider,
 } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+import { useState } from "react";
 
 const QueryClientProvider = ({ children }: { children: React.ReactNode }) => {
   const [queryClient] = useState(() => new QueryClient());
@@ -13,7 +13,7 @@ const QueryClientProvider = ({ children }: { children: React.ReactNode }) => {
   return (
     <TanstackProvider client={queryClient}>
       {children}
-      <ReactQueryDevtools initialIsOpen={false} />
+      <ReactQueryDevtools initialIsOpen={false} buttonPosition="top-left" />
     </TanstackProvider>
   );
 };

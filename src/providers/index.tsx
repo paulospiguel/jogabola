@@ -1,12 +1,11 @@
 "use client";
 
 import type { ReactNode } from "react";
-import Cookies from "@/components/cookies";
+import CookieConsent from "@/components/cookie-consent";
+import { Toaster } from "@/components/ui/toaster";
 import QueryClientProvider from "@/providers/query-client.provider";
 import { ThemeProvider } from "@/providers/theme.provider";
-import { Toaster } from "@/components/ui/toaster";
-import { Analytics } from "@vercel/analytics/react"
-
+import AnalyticsProvider from "./analytics";
 
 type ProviderProps = {
   children: ReactNode;
@@ -17,14 +16,16 @@ export function Providers({ children }: ProviderProps) {
     <QueryClientProvider>
       <ThemeProvider
         attribute="class"
-        defaultTheme="light"
-        enableSystem
+        defaultTheme="dark"
+        forcedTheme="dark"
+        enableSystem={false}
         disableTransitionOnChange
       >
-        {children}
-        <Cookies />
+        <AnalyticsProvider>
+          {children}
+          <CookieConsent />
+        </AnalyticsProvider>
         <Toaster />
-        <Analytics />
       </ThemeProvider>
     </QueryClientProvider>
   );

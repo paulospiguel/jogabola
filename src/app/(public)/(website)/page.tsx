@@ -1,542 +1,534 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
-import { useJourneyRedirect } from "@/hooks/use-journey-redirect";
 import { motion } from "framer-motion";
 import {
-  Calendar,
-  MessageSquare,
-  Play,
-  Shield,
-  Star,
-  Trophy,
+  ArrowRight,
+  CheckCircle2,
+  Receipt,
   Users,
+  Wallet,
+  Zap,
 } from "lucide-react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
+import { type ComponentType, useState } from "react";
+import { DemoModal } from "@/components/demo/demo-modal";
+import {
+  PhoneMockup,
+  type PhoneScreen,
+} from "@/components/landing/phone-mockup";
+import { Button } from "@/components/ui/button";
+import { useSession } from "@/lib/auth-client";
+import { cn } from "@/lib/utils";
+import { useAnalytics } from "@/providers/analytics";
 
-// Background Pattern Component - Gradiente do mockup
-const FieldPattern = () => {
+type Problem = {
+  title: string;
+  description: string;
+  resolution: string;
+};
+
+type Step = {
+  title: string;
+  description: string;
+};
+
+type Feature = Step & {
+  icon: ComponentType<{ className?: string }>;
+};
+
+type JourneyStep = Step & {
+  label: string;
+  screen: PhoneScreen;
+};
+
+const fadeUp = {
+  initial: false,
+  whileInView: { opacity: 1, y: 0 },
+  viewport: { once: true, amount: 0.2 },
+};
+
+const textStroke = (color = "rgba(245,247,250,.88)", width = 1.5) => ({
+  color: "transparent",
+  WebkitTextStroke: `${width}px ${color}`,
+});
+
+const meshStyle = {
+  backgroundImage: `
+    radial-gradient(circle at 15% 20%, rgba(124,255,79,.13) 0%, transparent 35%),
+    radial-gradient(circle at 85% 5%, rgba(56,189,248,.13) 0%, transparent 40%),
+    radial-gradient(circle at 90% 90%, rgba(124,255,79,.08) 0%, transparent 45%),
+    radial-gradient(circle at 5% 90%, rgba(245,158,11,.08) 0%, transparent 40%)
+  `,
+};
+
+const gridStyle = {
+  backgroundImage:
+    "linear-gradient(rgba(38,50,68,.35) 1px, transparent 1px), linear-gradient(90deg, rgba(38,50,68,.35) 1px, transparent 1px)",
+  backgroundSize: "80px 80px",
+  maskImage: "radial-gradient(circle at center, black 30%, transparent 80%)",
+  WebkitMaskImage:
+    "radial-gradient(circle at center, black 30%, transparent 80%)",
+};
+
+const MotionSection = ({
+  number,
+  label,
+  children,
+  className,
+}: {
+  number: string;
+  label: string;
+  children: React.ReactNode;
+  className?: string;
+}) => (
+  <section
+    className={cn(
+      "relative overflow-hidden border-t border-arena-border bg-[#06090D] px-5 py-20 md:px-10 lg:px-20 lg:py-35",
+      className,
+    )}
+  >
+    <div
+      aria-hidden="true"
+      className="pointer-events-none absolute top-24 right-6 hidden font-sora text-[220px] font-extrabold leading-none text-transparent opacity-70 lg:block"
+      style={{
+        WebkitTextStroke: "1px rgba(38,50,68,.95)",
+        letterSpacing: "-8px",
+      }}
+    >
+      {number}
+    </div>
+    <div className="relative mx-auto max-w-7xl">
+      <div className="mb-8 inline-flex items-center gap-3 rounded-full border border-arena-primary/35 bg-arena-primary/10 px-4 py-2">
+        <span className="size-1.5 rounded-full bg-arena-primary" />
+        <span className="text-[11px] font-extrabold tracking-[0.14em] text-arena-primary uppercase">
+          {number} · {label}
+        </span>
+      </div>
+      {children}
+    </div>
+  </section>
+);
+
+const SectionTitle = ({
+  children,
+  className,
+}: {
+  children: React.ReactNode;
+  className?: string;
+}) => (
+  <h2
+    className={cn(
+      "font-sora max-w-5xl text-5xl leading-[0.95] font-extrabold tracking-normal text-arena-text md:text-7xl lg:text-8xl",
+      className,
+    )}
+  >
+    {children}
+  </h2>
+);
+
+const HeroSection = () => {
+  const t = useTranslations("homePage.hero");
+  const headerT = useTranslations("header");
+  const { data: session } = useSession();
+  const { logEvent } = useAnalytics();
+
+  const ctaHref = session?.user ? "/arena" : "/auth";
+  const ctaLabel = session?.user ? t("goToArena") : headerT("launchJourney");
+
   return (
-    <div className="pointer-events-none absolute inset-0 overflow-hidden">
-      {/* Gradiente base: azul claro top-left para verde claro bottom-right */}
-      <div className="absolute inset-0 bg-gradient-to-br from-blue-100 via-cyan-50 to-emerald-100" />
+    <section className="relative min-h-screen overflow-hidden bg-[#06090D] px-5 pt-28 pb-10 md:px-10 lg:min-h-[680px] lg:px-20 lg:pt-20 lg:pb-8">
+      <div className="absolute inset-0" style={meshStyle} />
+      <div className="absolute inset-0 opacity-40" style={gridStyle} />
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute -bottom-8 -left-5 hidden font-sora text-[260px] leading-[0.8] font-extrabold whitespace-nowrap text-transparent opacity-60 lg:block"
+        style={{
+          WebkitTextStroke: "1px rgba(124,255,79,.14)",
+          letterSpacing: "-10px",
+        }}
+      >
+        jogabola
+      </div>
+
+      <div className="relative mx-auto max-w-7xl">
+        <div className="inline-flex items-center gap-3 rounded-full border border-arena-primary/40 bg-arena-bg/60 px-4 py-2 backdrop-blur-xl">
+          <span className="relative flex size-2">
+            <span className="absolute inline-flex size-2 animate-[pulseDot_1.8s_ease-in-out_infinite] rounded-full bg-arena-primary" />
+            <span className="relative inline-flex size-2 rounded-full bg-arena-primary" />
+          </span>
+          <span className="text-[11px] font-extrabold tracking-[0.14em] text-arena-primary uppercase">
+            {t("badge")}
+          </span>
+        </div>
+
+        <div className="mt-8 grid items-center gap-12 lg:mt-6 lg:grid-cols-[1.45fr_1fr]">
+          <motion.div
+            initial={false}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.75 }}
+          >
+            <h1 className="font-sora text-[60px] leading-[0.9] font-extrabold tracking-normal text-arena-text md:text-[96px] lg:text-[120px]">
+              <span>{t("headline.play")} </span>
+              <span className="italic" style={textStroke()}>
+                {t("headline.more")}
+              </span>
+              <br />
+              <span className="bg-linear-to-r from-arena-primary to-arena-info bg-clip-text text-transparent">
+                {t("headline.organize")}
+              </span>
+            </h1>
+            <p className="mt-8 max-w-xl text-base leading-8 text-arena-text-sec md:text-xl">
+              {t("description")}
+            </p>
+
+            <div className="mt-9 flex flex-wrap gap-3">
+              <Button
+                asChild
+                className="press rounded-full bg-arena-primary px-6 py-6 text-sm font-extrabold text-[#0B0F14] shadow-[0_0_32px_rgba(124,255,79,.45)] hover:bg-arena-primary/90"
+              >
+                <Link
+                  href={ctaHref}
+                  onClick={() =>
+                    logEvent("landing_cta_clicked", undefined, {
+                      destination: session?.user ? "arena" : "auth",
+                      location: "hero",
+                    })
+                  }
+                >
+                  {ctaLabel}
+                  <ArrowRight className="ml-2 size-4" />
+                </Link>
+              </Button>
+              <DemoModal
+                label={t("secondaryCta")}
+                className="press inline-flex items-center rounded-full border border-arena-border bg-arena-bg/60 px-6 py-3.5 text-sm font-bold text-arena-text backdrop-blur-xl hover:bg-arena-surface transition-colors"
+              />
+            </div>
+          </motion.div>
+
+          <motion.div
+            initial={false}
+            animate={{ opacity: 1, rotate: -4, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.2 }}
+            className="relative hidden justify-center lg:flex"
+          >
+            <div className="absolute top-16 left-1/2 size-[420px] -translate-x-1/2 rounded-full bg-arena-primary/25 blur-[36px]" />
+            <PhoneMockup scale={0.82} screen="team" className="relative z-10" />
+            <div className="absolute top-20 -left-8 z-20 rotate-[-6deg] rounded-[14px] border border-arena-primary/35 bg-arena-bg/80 px-4 py-3 shadow-2xl backdrop-blur-xl">
+              <div className="flex items-center gap-2 text-sm font-extrabold text-arena-text">
+                <CheckCircle2 className="size-4 text-arena-primary" />
+                {t("badgeConfirmed")}
+              </div>
+            </div>
+            <div className="absolute right-0 bottom-24 z-20 rotate-[4deg] rounded-[14px] border border-arena-border bg-arena-bg/85 px-5 py-4 shadow-2xl backdrop-blur-xl">
+              <div className="font-sora text-3xl font-extrabold text-arena-primary">
+                55€
+              </div>
+              <div className="text-xs font-bold text-arena-text-sec">
+                {t("badgePaid")}
+              </div>
+            </div>
+          </motion.div>
+        </div>
+      </div>
+    </section>
+  );
+};
+
+const Marquee = () => {
+  const t = useTranslations("homePage.marquee");
+  const items = t.raw("items") as string[];
+  const repeated = Array.from({ length: 4 }, (_, repeatIndex) =>
+    items.map(item => ({ item, repeatIndex })),
+  ).flat();
+
+  return (
+    <div className="overflow-hidden border-y border-arena-border bg-[#06090D] py-6">
+      <div className="flex w-max gap-12 whitespace-nowrap animate-[marqueeScroll_36s_linear_infinite]">
+        {repeated.map(({ item, repeatIndex }, index) => (
+          <div
+            key={`${repeatIndex}-${item}`}
+            className="flex items-center gap-12"
+          >
+            <span
+              className="font-sora text-2xl font-extrabold tracking-normal md:text-4xl"
+              style={
+                index % 2 ? textStroke("rgba(245,247,250,.7)", 1) : undefined
+              }
+            >
+              {item}
+            </span>
+            <span className="size-2 rounded-full bg-arena-primary" />
+          </div>
+        ))}
+      </div>
     </div>
   );
 };
 
-// Hero Section - Estilo Mockup Exato
-const HeroSection = () => {
-  const t = useTranslations();
-  const { redirectToJourney } = useJourneyRedirect();
+const ProblemsSection = () => {
+  const t = useTranslations("homePage.problems");
+  const problems = t.raw("items") as Problem[];
 
   return (
-    <section className="relative flex min-h-screen items-center overflow-hidden pt-20">
-      <FieldPattern />
-
-      {/* Container principal arredondado como no mockup */}
-      <div className="relative z-10 container mx-auto max-w-7xl px-4 py-12 md:px-6">
-        <div className="mx-auto max-w-6xl rounded-3xl bg-gradient-to-br from-blue-50/80 via-cyan-50/80 to-emerald-50/80 p-8 backdrop-blur-sm md:p-12 lg:p-16">
-          <div className="grid items-center gap-12 lg:grid-cols-2">
-            {/* Content - Lado Esquerdo */}
-            <motion.div
-              initial={{ opacity: 0, x: -50 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.8 }}
-              className="space-y-6"
-            >
-              {/* Badge Versão 2.0 - Verde claro como no mockup */}
-              <div className="inline-flex items-center rounded-full bg-emerald-100 px-4 py-1.5">
-                <span className="text-sm font-medium text-emerald-700">
-                  Versão 2.0
-                </span>
-              </div>
-
-              {/* Title - Texto escuro, sem gradiente */}
-              <h1 className="text-4xl leading-tight font-bold text-gray-900 md:text-5xl lg:text-6xl">
-                Pronto para gerenciar seu{" "}
-                <span className="text-gray-900">time dos sonhos?</span>
-              </h1>
-
-              {/* Subtitle */}
-              <p className="text-lg text-gray-700 md:text-xl">
-                Monte sua equipe profissional, defina táticas e domine o campo
-                digital.
-              </p>
-
-              {/* CTA Buttons */}
-              <div className="flex flex-col gap-4 pt-2 sm:flex-row">
-                <Button 
-                  onClick={redirectToJourney}
-                  className="rounded-lg bg-emerald-500 px-6 py-5 text-base font-medium text-white shadow-md hover:bg-emerald-600 md:px-8 md:py-6 md:text-lg"
-                >
-                  Iniciar Minha Jornada
-                </Button>
-                <Button
-                  variant="outline"
-                  className="group rounded-lg border-2 border-blue-300 bg-white px-6 py-5 text-base font-medium text-blue-500 hover:bg-blue-50 md:px-8 md:py-6 md:text-lg"
-                >
-                  <Play className="mr-2 h-5 w-5 fill-blue-500 transition-transform group-hover:scale-110" />
-                  Ver Demonstração
-                </Button>
-              </div>
-
-              {/* Trust indicators - Linha única */}
-              <div className="flex items-center space-x-4 pt-2 text-sm text-gray-600">
-                <span>Grátis para começar</span>
-                <span className="text-gray-400">|</span>
-                <span>Sem cartão</span>
-              </div>
-            </motion.div>
-
-            {/* Illustration - Lado Direito - Tablet 3D */}
-            <motion.div
-              initial={{ opacity: 0, scale: 0.8 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.8, delay: 0.2 }}
-              className="relative"
-            >
-              {/* Tablet Principal */}
-              <div className="relative mx-auto max-w-md">
-                {/* Tablet Frame */}
-                <div className="relative rounded-2xl bg-white p-3 shadow-2xl">
-                  {/* Screen */}
-                  <div className="aspect-[4/3] rounded-xl bg-gradient-to-br from-gray-50 to-gray-100 p-4">
-                    {/* Header do app */}
-                    <div className="mb-4 flex items-center justify-between">
-                      <h3 className="text-lg font-bold text-gray-900">
-                        JogaBola
-                      </h3>
-                      <div className="flex space-x-1">
-                        <div className="h-2 w-2 rounded-full bg-gray-300" />
-                        <div className="h-2 w-2 rounded-full bg-gray-300" />
-                        <div className="h-2 w-2 rounded-full bg-gray-300" />
-                      </div>
-                    </div>
-
-                    {/* Grid de cards/icons */}
-                    <div className="grid grid-cols-3 gap-3">
-                      {[...Array(6)].map((_, i) => (
-                        <div
-                          key={i}
-                          className="aspect-square rounded-lg bg-white shadow-sm"
-                        />
-                      ))}
-                    </div>
-                  </div>
-                </div>
-
-                {/* Elementos flutuantes conectados */}
-                {/* Profile Card 1 */}
-                <motion.div
-                  className="absolute top-8 -left-8 rounded-xl bg-white p-3 shadow-lg"
-                  animate={{
-                    y: [0, -8, 0],
-                    rotate: [-2, 2, -2],
-                  }}
-                  transition={{
-                    duration: 4,
-                    repeat: Infinity,
-                    ease: "easeInOut",
-                  }}
-                >
-                  <div className="flex items-center space-x-2">
-                    <div className="h-8 w-8 rounded-full bg-gradient-to-br from-blue-400 to-cyan-400" />
-                    <div className="h-2 w-12 rounded bg-gray-200" />
-                  </div>
-                </motion.div>
-
-                {/* Profile Card 2 */}
-                <motion.div
-                  className="absolute top-16 -right-6 rounded-xl bg-white p-3 shadow-lg"
-                  animate={{
-                    y: [0, 8, 0],
-                    rotate: [2, -2, 2],
-                  }}
-                  transition={{
-                    duration: 4,
-                    repeat: Infinity,
-                    ease: "easeInOut",
-                    delay: 1,
-                  }}
-                >
-                  <div className="flex items-center space-x-2">
-                    <div className="h-8 w-8 rounded-full bg-gradient-to-br from-emerald-400 to-green-400" />
-                    <div className="h-2 w-12 rounded bg-gray-200" />
-                  </div>
-                </motion.div>
-
-                {/* Document Icon */}
-                <motion.div
-                  className="absolute bottom-12 -left-4 rounded-lg bg-white p-2 shadow-lg"
-                  animate={{
-                    y: [0, -6, 0],
-                  }}
-                  transition={{
-                    duration: 3,
-                    repeat: Infinity,
-                    ease: "easeInOut",
-                    delay: 0.5,
-                  }}
-                >
-                  <div className="h-6 w-6 rounded bg-blue-100" />
-                </motion.div>
-
-                {/* Chart Icon */}
-                <motion.div
-                  className="absolute -right-4 bottom-8 rounded-lg bg-white p-2 shadow-lg"
-                  animate={{
-                    y: [0, 6, 0],
-                  }}
-                  transition={{
-                    duration: 3,
-                    repeat: Infinity,
-                    ease: "easeInOut",
-                    delay: 1.5,
-                  }}
-                >
-                  <div className="h-6 w-6 rounded bg-emerald-100" />
-                </motion.div>
-
-                {/* Linhas conectando elementos (glow effect) */}
-                <svg
-                  className="pointer-events-none absolute inset-0"
-                  viewBox="0 0 400 300"
-                >
-                  <line
-                    x1="50"
-                    y1="80"
-                    x2="120"
-                    y2="100"
-                    stroke="rgba(59, 130, 246, 0.3)"
-                    strokeWidth="2"
-                    strokeDasharray="4 4"
-                  />
-                  <line
-                    x1="320"
-                    y1="120"
-                    x2="280"
-                    y2="100"
-                    stroke="rgba(16, 185, 129, 0.3)"
-                    strokeWidth="2"
-                    strokeDasharray="4 4"
-                  />
-                  <circle
-                    cx="85"
-                    cy="85"
-                    r="3"
-                    fill="rgba(59, 130, 246, 0.5)"
-                    className="animate-pulse"
-                  />
-                  <circle
-                    cx="300"
-                    cy="110"
-                    r="3"
-                    fill="rgba(16, 185, 129, 0.5)"
-                    className="animate-pulse"
-                  />
-                </svg>
-              </div>
-            </motion.div>
-          </div>
-
-          {/* Scroll Indicator - Bottom Center */}
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 1, delay: 1 }}
-            className="absolute bottom-8 left-1/2 -translate-x-1/2"
+    <MotionSection number="01" label={t("kicker")}>
+      <SectionTitle>
+        {t("titlePrefix")}{" "}
+        <span
+          className="italic"
+          style={textStroke("rgba(245,247,250,.86)", 1.5)}
+        >
+          {t("titleStroke")}
+        </span>
+      </SectionTitle>
+      <div className="mt-14 grid gap-6 md:grid-cols-3">
+        {problems.map((problem, index) => (
+          <motion.article
+            key={problem.title}
+            {...fadeUp}
+            transition={{ duration: 0.5, delay: index * 0.1 }}
+            className="relative overflow-hidden rounded-[8px] border border-arena-border bg-arena-surface/90 p-7 backdrop-blur-md md:[transform:translateY(var(--lift))]"
+            style={{ "--lift": `${index * 20}px` } as React.CSSProperties}
           >
-            <motion.div
-              animate={{ y: [0, 8, 0] }}
-              transition={{
-                duration: 2,
-                repeat: Infinity,
-                ease: "easeInOut",
-              }}
-              className="flex h-10 w-10 items-center justify-center rounded-full bg-white/80 shadow-md backdrop-blur-sm"
+            <div
+              aria-hidden="true"
+              className="absolute -top-5 right-3 font-sora text-[110px] font-extrabold leading-none text-transparent opacity-40"
+              style={{ WebkitTextStroke: "1px rgba(124,255,79,.35)" }}
             >
-              <svg
-                width="20"
-                height="20"
-                viewBox="0 0 20 20"
-                fill="none"
-                className="text-gray-400"
-              >
-                <path
-                  d="M5 7.5L10 12.5L15 7.5"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-              </svg>
-            </motion.div>
-          </motion.div>
-        </div>
+              0{index + 1}
+            </div>
+            <h3 className="relative font-sora text-2xl font-extrabold text-arena-text">
+              {problem.title}
+            </h3>
+            <p className="relative mt-5 text-sm leading-7 text-arena-text-sec">
+              {problem.description}
+            </p>
+            <div className="relative mt-8 flex items-center gap-3 rounded-[8px] border border-arena-primary/25 bg-arena-primary/10 p-3 text-xs font-extrabold text-arena-primary">
+              <Zap className="size-4 shrink-0" />
+              {problem.resolution}
+            </div>
+          </motion.article>
+        ))}
       </div>
-    </section>
+    </MotionSection>
   );
 };
 
-// Demo Section
-const DemoSection = () => {
-  const t = useTranslations();
+const HowSection = () => {
+  const t = useTranslations("homePage.how");
+  const steps = t.raw("steps") as Step[];
 
   return (
-    <section className="bg-white py-20">
-      <div className="container mx-auto max-w-7xl px-4 md:px-6">
-        {/* Header */}
-        <div className="mb-12 text-center">
-          <h2 className="mb-4 text-4xl font-bold text-gray-900">
-            Demonstração do App
-          </h2>
-          <p className="mx-auto max-w-3xl text-xl text-gray-600">
-            Veja como é fácil gerenciar seu time e alcançar a vitória
-          </p>
-        </div>
-
-        {/* Stats */}
-        <div className="mb-12 grid gap-8 md:grid-cols-3">
-          <div className="text-center">
-            <div className="mb-2 flex items-center justify-center">
-              <Users className="mr-2 h-8 w-8 text-blue-500" />
-              <span className="text-3xl font-bold text-gray-900">10.000+</span>
-            </div>
-            <p className="text-gray-600">Jogadores ativos</p>
-          </div>
-          <div className="text-center">
-            <div className="mb-2 flex items-center justify-center">
-              <Trophy className="mr-2 h-8 w-8 text-yellow-500" />
-              <span className="text-3xl font-bold text-gray-900">500+</span>
-            </div>
-            <p className="text-gray-600">Campeonatos</p>
-          </div>
-          <div className="text-center">
-            <div className="mb-2 flex items-center justify-center">
-              <Star className="mr-2 h-8 w-8 text-emerald-500" />
-              <span className="text-3xl font-bold text-gray-900">4.9</span>
-            </div>
-            <p className="text-gray-600">Avaliação média</p>
-          </div>
-        </div>
-
-        {/* Device mockups */}
-        <div className="relative">
-          {/* Desktop */}
-          <div className="relative mx-auto max-w-4xl">
-            <div className="rounded-t-2xl bg-gray-900 px-4 py-2">
-              <div className="flex space-x-2">
-                <div className="h-3 w-3 rounded-full bg-red-500" />
-                <div className="h-3 w-3 rounded-full bg-yellow-500" />
-                <div className="h-3 w-3 rounded-full bg-green-500" />
-              </div>
-            </div>
-            <div className="rounded-b-2xl border-x-4 border-b-4 border-gray-900 bg-white p-8">
-              <div className="flex h-96 items-center justify-center rounded-xl bg-gradient-to-br from-gray-50 to-gray-100">
-                <Play className="h-16 w-16 text-gray-400" />
-              </div>
-            </div>
-          </div>
-
-          {/* Mobile mockups */}
+    <MotionSection number="02" label={t("kicker")}>
+      <SectionTitle>
+        {t("titlePrefix")}{" "}
+        <span className="bg-linear-to-r from-arena-primary to-arena-info bg-clip-text text-transparent">
+          {t("titleHighlight")}
+        </span>
+        {t("titleSuffix")}
+      </SectionTitle>
+      <div className="relative mt-16 grid gap-10 md:grid-cols-3">
+        <div className="absolute top-10 right-[16%] left-[16%] hidden h-px bg-linear-to-r from-transparent via-arena-primary/60 to-transparent md:block" />
+        {steps.map((step, index) => (
           <motion.div
-            initial={{ opacity: 0, x: -50 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.5 }}
-            className="absolute bottom-0 -left-8 w-48"
+            key={step.title}
+            {...fadeUp}
+            transition={{ duration: 0.5, delay: index * 0.1 }}
+            className="relative"
           >
-            <div className="rounded-3xl bg-gray-900 p-2">
-              <div className="h-80 rounded-2xl bg-white p-4">
-                <div className="h-full rounded-xl bg-gradient-to-br from-gray-50 to-gray-100" />
-              </div>
-            </div>
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0, x: 50 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.5 }}
-            className="absolute -right-8 bottom-0 w-48"
-          >
-            <div className="rounded-3xl bg-gray-900 p-2">
-              <div className="h-80 rounded-2xl bg-white p-4">
-                <div className="h-full rounded-xl bg-gradient-to-br from-gray-50 to-gray-100" />
-              </div>
-            </div>
-          </motion.div>
-        </div>
-      </div>
-    </section>
-  );
-};
-
-// Testimonials Section
-const TestimonialsSection = () => {
-  const testimonials = [
-    {
-      name: "João Silva",
-      role: "Treinador",
-      rating: 5,
-      text: "Melhor plataforma para gerenciar meu time!",
-      avatar: "👨‍💼",
-    },
-    {
-      name: "Maria Costa",
-      role: "Capitã",
-      rating: 5,
-      text: "Agilidade e organização em um só lugar!",
-      avatar: "👩‍💼",
-    },
-    {
-      name: "Pedro Santos",
-      role: "Jogador",
-      rating: 5,
-      text: "Mais tempo para focar no jogo!",
-      avatar: "👨‍💼",
-    },
-  ];
-
-  return (
-    <section className="bg-gray-50 py-20">
-      <div className="container mx-auto max-w-7xl px-4 md:px-6">
-        <div className="mb-12 text-center">
-          <h2 className="mb-4 text-4xl font-bold text-gray-900">
-            Prova Social - Histórias de Sucesso
-          </h2>
-        </div>
-
-        <div className="grid gap-8 md:grid-cols-3">
-          {testimonials.map((testimonial, index) => (
-            <motion.div
-              key={index}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: index * 0.1 }}
-              className="rounded-2xl bg-white p-6 shadow-lg"
+            <div
+              className={cn(
+                "mb-6 flex size-20 items-center justify-center rounded-full border font-sora text-2xl font-extrabold",
+                index === 0
+                  ? "border-arena-primary bg-arena-primary text-[#0B0F14] shadow-[0_0_34px_rgba(124,255,79,.4)]"
+                  : "border-arena-border bg-arena-surface text-arena-text",
+              )}
             >
-              <div className="mb-4 flex items-center space-x-1">
-                {[...Array(testimonial.rating)].map((_, i) => (
-                  <Star
-                    key={i}
-                    className="h-5 w-5 fill-current text-yellow-500"
-                  />
-                ))}
-              </div>
-              <p className="mb-4 text-gray-600">"{testimonial.text}"</p>
-              <div className="flex items-center space-x-3">
-                <div className="text-3xl">{testimonial.avatar}</div>
-                <div>
-                  <div className="font-semibold text-gray-900">
-                    {testimonial.name}
-                  </div>
-                  <div className="text-sm text-gray-500">
-                    {testimonial.role}
-                  </div>
-                </div>
-              </div>
-            </motion.div>
-          ))}
-        </div>
+              0{index + 1}
+            </div>
+            <h3 className="font-sora text-3xl font-extrabold text-arena-text">
+              {step.title}
+            </h3>
+            <p className="mt-4 max-w-sm text-sm leading-7 text-arena-text-sec">
+              {step.description}
+            </p>
+          </motion.div>
+        ))}
       </div>
-    </section>
+    </MotionSection>
   );
 };
 
-// Features Section
 const FeaturesSection = () => {
-  const features = [
-    {
-      icon: Users,
-      title: "Gestão de Jogadores",
-      description: "Perfis, estatísticas e disponibilidade",
-    },
-    {
-      icon: Calendar,
-      title: "Agenda Centralizada",
-      description: "Treinos e jogos organizados",
-    },
-    {
-      icon: Trophy,
-      title: "Organização de Campeonatos",
-      description: "Crie e gerencie torneios",
-    },
-    {
-      icon: MessageSquare,
-      title: "Comunicação",
-      description: "Chat integrado com o time",
-    },
-    {
-      icon: Shield,
-      title: "Controle de Acesso",
-      description: "Diferentes níveis de permissão",
-    },
-    {
-      icon: Star,
-      title: "Análise de Desempenho",
-      description: "Estatísticas detalhadas",
-    },
-  ];
+  const t = useTranslations("homePage.mvp");
+  const icons = [Users, CheckCircle2, Wallet, Receipt];
+  const features = (t.raw("items") as Step[]).map((item, index) => ({
+    ...item,
+    icon: icons[index],
+  })) as Feature[];
 
   return (
-    <section className="bg-white py-20">
-      <div className="container mx-auto max-w-7xl px-4 md:px-6">
-        <div className="mb-12 text-center">
-          <h2 className="mb-4 text-4xl font-bold text-gray-900">
-            Recursos Completos
-          </h2>
-        </div>
-
-        <div className="grid gap-6 md:grid-cols-3">
-          {features.map((feature, index) => (
-            <motion.div
-              key={index}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: index * 0.1 }}
-              className="rounded-2xl border border-gray-100 bg-gradient-to-br from-gray-50 to-white p-6 transition-shadow hover:shadow-lg"
-            >
-              <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-blue-100 to-cyan-100">
-                <feature.icon className="h-6 w-6 text-blue-600" />
-              </div>
-              <h3 className="mb-2 text-xl font-semibold text-gray-900">
-                {feature.title}
-              </h3>
-              <p className="text-gray-600">{feature.description}</p>
-            </motion.div>
-          ))}
-        </div>
+    <MotionSection number="03" label={t("kicker")}>
+      <div className="grid gap-10 lg:grid-cols-[1.15fr_.85fr]">
+        <SectionTitle>
+          {t("title")}{" "}
+          <span className="text-arena-primary">{t("titleAccent")}</span>
+        </SectionTitle>
+        <p className="max-w-lg self-end text-base leading-8 text-arena-text-sec md:text-lg">
+          {t("body")}
+        </p>
       </div>
-    </section>
+      <div className="mt-16 grid gap-5 md:grid-cols-2 lg:grid-cols-4">
+        {features.map((feature, index) => (
+          <motion.article
+            key={feature.title}
+            {...fadeUp}
+            transition={{ duration: 0.5, delay: index * 0.08 }}
+            className="group relative overflow-hidden rounded-[8px] border border-arena-border bg-linear-to-br from-arena-surface to-arena-bg-sec p-6"
+          >
+            <div className="absolute -top-10 -right-10 size-28 rounded-full bg-arena-primary/12 blur-2xl transition group-hover:bg-arena-primary/20" />
+            <div className="relative mb-8 flex size-11 items-center justify-center rounded-[8px] bg-arena-primary text-[#0B0F14] shadow-[0_0_24px_rgba(124,255,79,.35)]">
+              <feature.icon className="size-6" />
+            </div>
+            <div className="relative mb-5 flex items-center gap-3 text-xs font-extrabold text-arena-primary">
+              {String(index + 1).padStart(2, "0")}/04
+              <span className="h-px flex-1 bg-arena-primary/35" />
+            </div>
+            <h3 className="relative text-xl font-extrabold text-arena-text">
+              {feature.title}
+            </h3>
+            <p className="relative mt-4 text-sm leading-7 text-arena-text-sec">
+              {feature.description}
+            </p>
+          </motion.article>
+        ))}
+      </div>
+    </MotionSection>
   );
 };
 
-// CTA Section
-const CTASection = () => {
-  const { redirectToJourney } = useJourneyRedirect();
-  
+const JourneySection = () => {
+  const t = useTranslations("homePage.journey");
+  const screens: PhoneScreen[] = ["journey", "create", "convoca", "paid"];
+  const rotations = ["-6deg", "-2deg", "2deg", "6deg"];
+  const steps = (t.raw("steps") as Omit<JourneyStep, "screen">[]).map(
+    (item, index) => ({ ...item, screen: screens[index] }),
+  ) as JourneyStep[];
+
   return (
-    <section className="bg-gradient-to-br from-gray-900 to-gray-800 py-20">
-      <div className="container mx-auto max-w-7xl px-4 text-center md:px-6">
-        <h2 className="mb-4 text-4xl font-bold text-white">
-          Pronto para começar?
-        </h2>
-        <p className="mx-auto mb-8 max-w-2xl text-xl text-gray-300">
-          Junte-se a milhares de times que já estão revolucionando sua gestão
+    <MotionSection number="04" label={t("kicker")}>
+      <div className="grid gap-8 lg:grid-cols-[1fr_.75fr]">
+        <SectionTitle>{t("title")}</SectionTitle>
+        <p className="max-w-lg self-end text-base leading-8 text-arena-text-sec md:text-lg">
+          {t("body")}
         </p>
-        <div className="flex flex-col justify-center gap-4 sm:flex-row">
-          <Button 
-            onClick={redirectToJourney}
-            className="bg-gradient-to-r from-emerald-500 to-green-500 px-8 py-6 text-lg text-white hover:from-emerald-600 hover:to-green-600"
+      </div>
+      <div className="mt-16 grid gap-12 md:grid-cols-2 xl:grid-cols-4">
+        {steps.map((step, index) => (
+          <motion.div
+            key={step.label}
+            {...fadeUp}
+            transition={{ duration: 0.5, delay: index * 0.08 }}
+            className="relative flex flex-col items-center"
           >
-            Criar Conta Grátis
-          </Button>
-          <Button
-            variant="outline"
-            className="border-2 border-white px-8 py-6 text-lg text-white hover:bg-white hover:text-gray-900"
-          >
-            Falar com Vendas
-          </Button>
+            {index < steps.length - 1 && (
+              <ArrowRight className="absolute top-40 -right-8 hidden size-7 text-arena-primary/65 xl:block" />
+            )}
+            <div style={{ transform: `rotate(${rotations[index]})` }}>
+              <PhoneMockup
+                scale={0.62}
+                screen={step.screen}
+                className={
+                  index === steps.length - 1
+                    ? "drop-shadow-[0_0_24px_rgba(124,255,79,.55)]"
+                    : undefined
+                }
+              />
+            </div>
+            <div className="mt-8 w-full text-center">
+              <span className="rounded-full border border-arena-primary/25 bg-arena-primary/15 px-3 py-1 text-[10px] font-extrabold tracking-[0.16em] text-arena-primary uppercase">
+                {step.label}
+              </span>
+              <h3 className="mt-4 text-lg font-extrabold text-arena-text">
+                {step.title}
+              </h3>
+              <p className="mx-auto mt-2 max-w-[230px] text-sm leading-6 text-arena-text-sec">
+                {step.description}
+              </p>
+            </div>
+          </motion.div>
+        ))}
+      </div>
+    </MotionSection>
+  );
+};
+
+const FinalCta = () => {
+  const t = useTranslations("homePage.finalCta");
+  const [email, setEmail] = useState("");
+  const router = useRouter();
+  const { logEvent } = useAnalytics();
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    logEvent("landing_cta_clicked", undefined, {
+      destination: "waitlist",
+      location: "final_form",
+    });
+    if (email) {
+      router.push(`/waitlist?email=${encodeURIComponent(email)}`);
+    } else {
+      router.push("/waitlist");
+    }
+  };
+
+  return (
+    <section className="relative overflow-hidden border-t border-arena-border bg-[#06090D] px-5 py-24 md:px-10 lg:px-20 lg:py-35">
+      <div className="absolute inset-0" style={meshStyle} />
+      <div className="absolute inset-0 opacity-35" style={gridStyle} />
+      <div className="relative mx-auto max-w-6xl text-center">
+        <div className="inline-flex rounded-full border border-arena-primary/35 bg-arena-primary/10 px-4 py-2 text-[11px] font-extrabold tracking-[0.14em] text-arena-primary uppercase">
+          {t("badge")}
         </div>
+        <h2 className="mx-auto mt-8 max-w-5xl font-sora text-5xl leading-[0.95] font-extrabold tracking-normal text-arena-text md:text-8xl lg:text-[144px]">
+          {t("headline")}{" "}
+          <span className="bg-linear-to-r from-arena-primary to-arena-info bg-clip-text text-transparent">
+            {t("headlineAccent")}
+          </span>
+        </h2>
+        <form
+          onSubmit={handleSubmit}
+          className="mx-auto mt-12 flex max-w-2xl flex-col gap-3 rounded-[18px] border border-arena-primary/30 bg-arena-bg/55 p-3 shadow-[0_0_60px_rgba(124,255,79,.14)] backdrop-blur-xl sm:flex-row"
+        >
+          <input
+            type="email"
+            value={email}
+            onChange={e => setEmail(e.target.value)}
+            aria-label={t("emailLabel")}
+            placeholder={t("emailPlaceholder")}
+            className="min-h-13 flex-1 bg-transparent px-4 text-arena-text placeholder:text-arena-text-muted focus-visible:outline-none"
+          />
+          <Button
+            type="submit"
+            className="press rounded-xl bg-arena-primary px-6 py-6 font-extrabold text-[#0B0F14] shadow-[0_0_28px_rgba(124,255,79,.45)] hover:bg-arena-primary/90"
+          >
+            {t("cta")}
+          </Button>
+        </form>
+        <Link
+          href="/auth"
+          onClick={() =>
+            logEvent("landing_cta_clicked", undefined, {
+              destination: "auth",
+              location: "final_link",
+            })
+          }
+          className="press mt-7 inline-flex text-sm font-bold text-arena-text-sec transition-colors hover:text-arena-text"
+        >
+          {t("link")}
+        </Link>
       </div>
     </section>
   );
@@ -544,12 +536,14 @@ const CTASection = () => {
 
 export default function Home() {
   return (
-    <main className="relative">
+    <main className="overflow-hidden bg-[#06090D] text-arena-text">
       <HeroSection />
-      <DemoSection />
-      <TestimonialsSection />
+      <Marquee />
+      <ProblemsSection />
+      <HowSection />
       <FeaturesSection />
-      <CTASection />
+      <JourneySection />
+      <FinalCta />
     </main>
   );
 }

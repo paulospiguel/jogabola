@@ -1,4 +1,4 @@
-import { GraduationCap, School, TypeIcon, Handshake } from "lucide-react";
+import type { TypeIcon } from "lucide-react";
 
 const menuHome = {
   header: [
@@ -7,59 +7,17 @@ const menuHome = {
       href: "/",
       icon: null,
     },
-    {
-      label: "menu.ecosystem",
-      href: "/ecosystem",
-      icon: null,
-    },
-    {
-      label: "menu.community",
-      href: "/community",
-      icon: null,
-    },
-    {
-      label: "menu.marketplace",
-      href: "marketplace",
-      isExternal: true,
-      icon: null,
-    },
-    {
-      label: "menu.academy",
-      href: "/academy",
-      icon: GraduationCap,
-    },
-    {
-      label: "menu.howItWorks",
-      href: "/how-it-works",
-      isNew: true,
-      icon: null,
-    },
   ],
   footer: [
     {
-      label: "menu.about",
-      href: "/about",
-      icon: null,
-    },
-    {
-      label: "menu.contact",
-      href: "/contact",
+      label: "menu.home",
+      href: "/",
       icon: null,
     },
     {
       label: "menu.privacyAndTerms",
-      href: "/privacy-and-terms",
+      href: "/",
       icon: null,
-    },
-    {
-      label: "menu.academy",
-      href: "/academy",
-      icon: GraduationCap,
-    },
-    {
-      label: "menu.becomePartner",
-      href: "/become-partner",
-      icon: Handshake,
     },
   ],
 } as {

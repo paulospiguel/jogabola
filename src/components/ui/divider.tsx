@@ -1,7 +1,7 @@
-import * as React from "react";
 import { cva } from "class-variance-authority";
+import * as React from "react";
 
-import { cn } from "@/utils";
+import { cn } from "@/lib/utils";
 
 type DividerOrientation = "horizontal" | "vertical";
 
@@ -22,7 +22,7 @@ const dividerVariants = cva(
     defaultVariants: {
       orientation: "horizontal",
     },
-  }
+  },
 );
 
 const Divider = React.forwardRef<HTMLDivElement, DividerProps>(
@@ -34,7 +34,7 @@ const Divider = React.forwardRef<HTMLDivElement, DividerProps>(
     >
       {props.text}
     </div>
-  )
+  ),
 );
 
 Divider.displayName = "Divider";

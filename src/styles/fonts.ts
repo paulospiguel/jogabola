@@ -1,4 +1,10 @@
-import { Fira_Sans, Inter, Concert_One, Bebas_Neue } from "next/font/google";
+import {
+  Bebas_Neue,
+  Concert_One,
+  Fira_Sans,
+  Inter,
+  Sora,
+} from "next/font/google";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 const fontBody = Fira_Sans({
@@ -23,6 +29,12 @@ const bebasNeue = Bebas_Neue({
   variable: "--font-bebas-neue",
 });
 
-export const fonts = [consertOne, inter, fontBody, firaSans, bebasNeue]
+const sora = Sora({
+  subsets: ["latin"],
+  weight: ["700", "800"],
+  variable: "--font-sora",
+});
+
+export const fonts = [consertOne, inter, fontBody, firaSans, bebasNeue, sora]
   .map(font => font.variable)
   .join(" ");

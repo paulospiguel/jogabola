@@ -1,145 +1,145 @@
-import { cn } from "@/utils";
+"use client";
+
+import { Instagram } from "lucide-react";
 import Link from "next/link";
+import { useTranslations } from "next-intl";
+import { APP } from "@/constants/app";
+import { useHeaderButtons } from "@/hooks/use-header-buttons";
+import { useSession } from "@/lib/auth-client";
+import { cn } from "@/lib/utils";
+import { XTwitter } from "./icons";
 import { Logo } from "./logo";
-import { DiscordIcon, Instagram, XTwitter } from "./icons";
-import { getTranslations } from "next-intl/server";
-import { COMPANY, TRANSLATION_KEYS } from "@/constants/app";
-import menuHome from "@/constants/menu-home";
 
 type FooterProps = {
   className?: string;
 };
 
-export default async function Footer({ className }: FooterProps) {
-  const t = await getTranslations();
+export default function Footer({ className }: FooterProps) {
+  const { data: session } = useSession();
+  const { buttons, isLoading } = useHeaderButtons();
+  const t = useTranslations("footer");
+  const translation = useTranslations();
+
   const currentYear = new Date().getFullYear();
+
+  const logoHref =
+    session?.user?.id && !isLoading && buttons.length > 0 && buttons[0].href
+      ? buttons[0].href
+      : "/";
+
+  const footerLinks = [
+    {
+      title: t("columns.product"),
+      links: [
+        { label: t("links.features"), href: "/#funcionalidades" },
+        { label: t("links.plans"), href: "/pricing" },
+        { label: t("links.roadmap"), href: "/roadmap" },
+        { label: t("links.timer"), href: "/timer" },
+      ],
+    },
+    {
+      title: t("columns.institutional"),
+      links: [
+        { label: t("links.about"), href: "/#sobre" },
+        { label: t("links.contact"), href: "/contact" },
+      ],
+    },
+    {
+      title: t("columns.legal"),
+      links: [
+        { label: t("links.terms"), href: "/terms" },
+        { label: t("links.privacy"), href: "/privacy" },
+        { label: t("links.disclaimer"), href: "/disclaimer" },
+      ],
+    },
+  ];
+
+  const socialLinks = [
+    { icon: Instagram, href: APP.SOCIAL.INSTAGRAM, label: "Instagram" },
+    { icon: XTwitter, href: APP.SOCIAL.TWITTER, label: "XTwitter" },
+    // { icon: MessageSquare, href: APP.SOCIAL.DISCORD, label: "Discord" },
+  ];
 
   return (
     <footer
       className={cn(
-        "relative bg-gradient-to-br from-slate-50 via-emerald-50/30 to-teal-50/50 dark:from-slate-900 dark:via-emerald-900/20 dark:to-teal-900/30",
+        "relative overflow-hidden border-t border-arena-border bg-[linear-gradient(180deg,#06090D_0%,#0B0F14_100%)] pt-20 pb-10",
         className,
       )}
     >
-      {/* Decorative background elements */}
-      <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute top-0 left-1/4 h-32 w-32 rounded-full bg-gradient-to-r from-emerald-200/20 to-teal-200/15 blur-2xl" />
-        <div className="absolute right-1/3 bottom-0 h-40 w-40 rounded-full bg-gradient-to-r from-teal-300/15 to-emerald-300/10 blur-3xl" />
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute right-0 -bottom-12 left-0 hidden text-center font-sora text-[260px] leading-none font-extrabold text-transparent opacity-70 lg:block xl:text-[320px]"
+        style={{
+          WebkitTextStroke: "1px rgba(38,50,68,.9)",
+          letterSpacing: "-12px",
+        }}
+      >
+        jogabola
       </div>
-
-      <div className="relative mx-auto px-4 py-12 sm:px-6 lg:px-8 lg:py-20">
-        {/* Back to top button */}
-        <div className="absolute end-4 top-4 sm:end-6 sm:top-6 lg:end-8 lg:top-8">
-          <a
-            className="inline-block rounded-full bg-gradient-to-r from-emerald-500 to-teal-600 p-3 text-white shadow-lg transition-all duration-300 hover:scale-110 hover:shadow-emerald-500/30 sm:p-4"
-            href="#MainContent"
-          >
-            <span className="sr-only">Back to top</span>
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="h-5 w-5"
-              viewBox="0 0 20 20"
-              fill="currentColor"
-            >
-              <title>button up</title>
-              <path
-                fillRule="evenodd"
-                d="M14.707 12.707a1 1 0 01-1.414 0L10 9.414l-3.293 3.293a1 1 0 01-1.414-1.414l4-4a1 1 0 011.414 0l4 4a1 1 0 010 1.414z"
-                clipRule="evenodd"
-              />
-            </svg>
-          </a>
-        </div>
-
-        <div className="lg:flex lg:items-end lg:justify-between">
-          <div className="max-w-md">
-            <div className="flex justify-center lg:justify-start">
-              <Logo size="small" />
+      <div className="relative z-10 container mx-auto max-w-7xl px-4 md:px-6">
+        <div className="mb-20 grid gap-16 lg:grid-cols-12">
+          <div className="space-y-8 lg:col-span-5">
+            <div className="flex items-center gap-3">
+              <Logo variant="white" className="h-16 w-28" href={logoHref} />
             </div>
-
-            <p className="mx-auto mt-6 text-center leading-relaxed text-slate-600 lg:text-left dark:text-slate-300">
-              {t(TRANSLATION_KEYS.COMPANY.DESCRIPTION)}
+            <p className="max-w-sm text-base leading-8 text-white/62">
+              {t("description")}
             </p>
-
-            {/* Social links for mobile */}
-            <div className="mt-6 flex justify-center gap-4 lg:hidden">
-              <Link
-                href={COMPANY.SOCIAL.INSTAGRAM}
-                target="_blank"
-                className="rounded-full bg-gradient-to-r from-emerald-500/10 to-teal-500/10 p-3 transition-all duration-300 hover:scale-110 hover:from-emerald-500/20 hover:to-teal-500/20"
-              >
-                <Instagram className="h-5 w-5 text-emerald-600 dark:text-emerald-400" />
-              </Link>
-              <Link
-                href={COMPANY.SOCIAL.DISCORD}
-                target="_blank"
-                className="rounded-full bg-gradient-to-r from-emerald-500/10 to-teal-500/10 p-3 transition-all duration-300 hover:scale-110 hover:from-emerald-500/20 hover:to-teal-500/20"
-              >
-                <DiscordIcon className="h-5 w-5 text-emerald-600 dark:text-emerald-400" />
-              </Link>
-              <Link
-                href={COMPANY.SOCIAL.TWITTER}
-                target="_blank"
-                className="rounded-full bg-gradient-to-r from-emerald-500/10 to-teal-500/10 p-3 transition-all duration-300 hover:scale-110 hover:from-emerald-500/20 hover:to-teal-500/20"
-              >
-                <XTwitter className="h-5 w-5 text-emerald-600 dark:text-emerald-400" />
-              </Link>
+            <div className="flex gap-4">
+              {socialLinks.map(social => (
+                <a
+                  key={social.label}
+                  href={social.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex h-12 w-12 items-center justify-center rounded-2xl border border-white/8 bg-white/4 text-white/55 transition-colors duration-300 hover:border-neon-primary/25 hover:text-neon-primary active:scale-95"
+                  aria-label={social.label}
+                >
+                  <social.icon className="h-6 w-6" />
+                </a>
+              ))}
             </div>
           </div>
 
-          {/* Navigation links */}
-          <div className="mt-12 lg:mt-0">
-            <ul className="flex flex-wrap justify-center gap-6 md:gap-8 lg:justify-end lg:gap-12">
-              {menuHome.footer.map(item => {
-                return (
-                  <li key={item.label}>
-                    <Link
-                      href={item.href}
-                      className="group flex items-center gap-2 text-sm font-medium text-slate-600 transition-all duration-300 hover:text-emerald-600 dark:text-slate-300 dark:hover:text-emerald-400"
-                    >
-                      {item.icon && (
-                        <item.icon className="h-5 w-5 transition-transform group-hover:scale-110" />
-                      )}
-                      {t(item.label)}
-                    </Link>
-                  </li>
-                );
-              })}
-            </ul>
+          <div className="grid grid-cols-2 gap-8 sm:grid-cols-3 lg:col-span-7">
+            {footerLinks.map(column => (
+              <div key={column.title} className="space-y-8">
+                <h4 className="text-xs font-bold tracking-[0.2em] text-white/38 uppercase">
+                  {column.title}
+                </h4>
+                <ul className="space-y-4">
+                  {column.links.map(link => (
+                    <li key={link.href}>
+                      <Link
+                        href={link.href}
+                        className="text-sm font-medium text-white/58 transition-colors hover:text-white"
+                      >
+                        {link.label}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))}
           </div>
         </div>
 
-        {/* Bottom section */}
-        <div className="mt-12 border-t border-slate-200/60 pt-8 dark:border-slate-700/60">
-          <div className="flex flex-col items-center justify-between gap-6 sm:flex-row">
-            <p className="text-center text-sm text-slate-500 sm:text-left dark:text-slate-400">
-              {`Copyright © ${currentYear}. | ${COMPANY.LEGAL_NAME} - ${t("common.rights")}`}
-            </p>
-
-            {/* Social links for desktop */}
-            <div className="hidden gap-4 lg:flex">
-              <Link
-                href={COMPANY.SOCIAL.INSTAGRAM}
-                target="_blank"
-                className="rounded-full bg-gradient-to-r from-emerald-500/10 to-teal-500/10 p-3 transition-all duration-300 hover:scale-110 hover:from-emerald-500/20 hover:to-teal-500/20"
-              >
-                <Instagram className="h-5 w-5 text-emerald-600 dark:text-emerald-400" />
-              </Link>
-              <Link
-                href={COMPANY.SOCIAL.DISCORD}
-                target="_blank"
-                className="rounded-full bg-gradient-to-r from-emerald-500/10 to-teal-500/10 p-3 transition-all duration-300 hover:scale-110 hover:from-emerald-500/20 hover:to-teal-500/20"
-              >
-                <DiscordIcon className="h-5 w-5 text-emerald-600 dark:text-emerald-400" />
-              </Link>
-              <Link
-                href={COMPANY.SOCIAL.TWITTER}
-                target="_blank"
-                className="rounded-full bg-gradient-to-r from-emerald-500/10 to-teal-500/10 p-3 transition-all duration-300 hover:scale-110 hover:from-emerald-500/20 hover:to-teal-500/20"
-              >
-                <XTwitter className="h-5 w-5 text-emerald-600 dark:text-emerald-400" />
-              </Link>
-            </div>
+        <div className="flex flex-col items-center justify-between gap-8 border-t border-white/8 pt-10 md:flex-row">
+          <p className="text-sm font-medium text-white/40">
+            {t("copyright", {
+              year: currentYear,
+              company: translation(APP.COMPANY.NAME),
+            })}
+          </p>
+          <div className="flex items-center gap-8">
+            <span className="flex items-center gap-3 text-[10px] font-black tracking-[0.25em] text-white/36 uppercase">
+              <span className="relative flex h-3 w-3">
+                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-neon-primary opacity-75" />
+                <span className="relative inline-flex h-3 w-3 rounded-full bg-neon-primary" />
+              </span>
+              {t("systems")}
+            </span>
           </div>
         </div>
       </div>

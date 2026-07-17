@@ -3,38 +3,36 @@ import { z } from "zod";
 export const loginSchema = z.object({
   email: z
     .string()
-    .min(1, "O email é obrigatório")
-    .email("Email inválido"),
+    .min(1, "VALIDATION_EMAIL_REQUIRED")
+    .email("VALIDATION_EMAIL_INVALID"),
   password: z
     .string()
-    .min(1, "A palavra-passe é obrigatória")
-    .min(8, "A palavra-passe deve ter no mínimo 8 caracteres"),
+    .min(1, "VALIDATION_PASSWORD_REQUIRED")
+    .min(8, "VALIDATION_PASSWORD_MIN"),
 });
 
 export const registerSchema = z
   .object({
     name: z
       .string()
-      .min(1, "O nome é obrigatório")
-      .min(3, "O nome deve ter no mínimo 3 caracteres"),
+      .min(1, "VALIDATION_NAME_REQUIRED")
+      .min(3, "VALIDATION_NAME_MIN"),
     email: z
       .string()
-      .min(1, "O email é obrigatório")
-      .email("Email inválido"),
+      .min(1, "VALIDATION_EMAIL_REQUIRED")
+      .email("VALIDATION_EMAIL_INVALID"),
     password: z
       .string()
-      .min(1, "A palavra-passe é obrigatória")
-      .min(8, "A palavra-passe deve ter no mínimo 8 caracteres")
+      .min(1, "VALIDATION_PASSWORD_REQUIRED")
+      .min(8, "VALIDATION_PASSWORD_MIN")
       .regex(
         /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/,
-        "A palavra-passe deve conter pelo menos uma letra maiúscula, uma minúscula e um número"
+        "VALIDATION_PASSWORD_COMPLEXITY",
       ),
-    confirmPassword: z
-      .string()
-      .min(1, "Confirma a tua palavra-passe"),
+    confirmPassword: z.string().min(1, "VALIDATION_CONFIRM_PASSWORD_REQUIRED"),
   })
-  .refine((data) => data.password === data.confirmPassword, {
-    message: "As palavras-passe não coincidem",
+  .refine(data => data.password === data.confirmPassword, {
+    message: "VALIDATION_PASSWORDS_DONT_MATCH",
     path: ["confirmPassword"],
   });
 

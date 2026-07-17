@@ -11,7 +11,7 @@ const withBundleAnalyzer = bundleAnalyzer({
 const nextConfig: NextConfig = {
   poweredByHeader: false,
   reactStrictMode: true,
-  serverComponentsExternalPackages: ["postgres"],
+  serverExternalPackages: ["postgres"],
   images: {
     remotePatterns: [
       {
@@ -20,9 +20,7 @@ const nextConfig: NextConfig = {
       },
     ],
   },
-  eslint: {
-    ignoreDuringBuilds: true,
-  },
+
   // typescript: {
   //   ignoreBuildErrors: true,
   // },
@@ -36,6 +34,8 @@ const nextConfig: NextConfig = {
     },
   },
 
+  skipTrailingSlashRedirect: true,
+
   async headers() {
     return [
       {
@@ -44,18 +44,6 @@ const nextConfig: NextConfig = {
           {
             key: "X-Frame-Options",
             value: "DENY",
-          },
-          {
-            key: "Access-Control-Allow-Origin",
-            value: "*",
-          },
-          {
-            key: "Access-Control-Allow-Methods",
-            value: "GET, POST, PUT, DELETE, OPTIONS",
-          },
-          {
-            key: "Access-Control-Allow-Headers",
-            value: "X-Requested-With, Content-Type, Authorization",
           },
         ],
       },

@@ -1,5 +1,5 @@
-import { cn } from "@/lib/utils";
 import { cva, type VariantProps } from "class-variance-authority";
+import { cn } from "@/lib/utils";
 
 const variantsText = cva("max-w-prose text-slate-700 dark:text-slate-300", {
   variants: {

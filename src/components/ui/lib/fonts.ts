@@ -1,4 +1,4 @@
-import { Fira_Sans, Inter, Concert_One } from "next/font/google";
+import { Concert_One, Fira_Sans, Inter } from "next/font/google";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 const fontBody = Fira_Sans({
@@ -18,5 +18,5 @@ const firaSans = Fira_Sans({
 });
 
 export const fonts = [consertOne, inter, fontBody, firaSans]
-  .map((font) => font.variable)
+  .map(font => font.variable)
   .join(" ");
