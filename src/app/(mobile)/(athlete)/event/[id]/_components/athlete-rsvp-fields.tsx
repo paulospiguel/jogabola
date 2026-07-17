@@ -139,7 +139,11 @@ function useResendTimer() {
     };
   }, [start]);
 
-  return { seconds: Math.max(0, seconds), canResend: seconds <= 0, restart: start };
+  return {
+    seconds: Math.max(0, seconds),
+    canResend: seconds <= 0,
+    restart: start,
+  };
 }
 
 export function ResendTimer({

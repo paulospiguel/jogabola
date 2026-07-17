@@ -70,8 +70,8 @@ export async function ensureDeadlineReminders(athleteId: string) {
       ),
     );
 
-  for (const event of upcomingEvents) {
-    if (!event.paymentDeadlineHours || !event.startsAt) continue;
+  const promises = upcomingEvents.map(async event => {
+    if (!event.paymentDeadlineHours || !event.startsAt) return;
 
     const deadlineAt = new Date(
       event.startsAt.getTime() - event.paymentDeadlineHours * 60 * 60 * 1000,
@@ -102,5 +102,7 @@ export async function ensureDeadlineReminders(athleteId: string) {
         });
       }
     }
-  }
+  });
+
+  await Promise.all(promises);
 }

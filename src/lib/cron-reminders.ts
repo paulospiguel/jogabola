@@ -1,10 +1,9 @@
 import { and, eq } from "drizzle-orm";
-import { sendNotification } from "@/lib/notifications";
-
 import { db } from "@/db/client";
 import { attendance } from "@/db/schema";
 import { user } from "@/db/schema/users";
 import { sendEventReminder } from "@/lib/email";
+import { sendNotification } from "@/lib/notifications";
 
 /**
  * Envia lembretes de evento (e-mail + notificação in-app) para todos os

@@ -73,10 +73,13 @@ function StatsigRuntime({
     });
   }
 
-  const lifecycle =
-    lifecycleState.client === client
-      ? lifecycleState.controller
-      : new AnalyticsLifecycleController(client);
+  const lifecycle = useMemo(
+    () =>
+      lifecycleState.client === client
+        ? lifecycleState.controller
+        : new AnalyticsLifecycleController(client),
+    [client, lifecycleState],
+  );
 
   useEffect(() => {
     onClientChange(client);

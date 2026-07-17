@@ -79,9 +79,9 @@ export function usePayment(paymentId: number | null) {
     refetchOnWindowFocus: true,
     queryFn: async () => {
       if (!paymentId) return null;
-      const { 
-        getPaymentById } = await import("@/ac
-      tions/payments/payments.actions");
+      const { getPaymentById } = await import(
+        "@/actions/payments/payments.actions"
+      );
       const res = await getPaymentById(paymentId);
       if (!res.success) {
         throw new Error(res.error);

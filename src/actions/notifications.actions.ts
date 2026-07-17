@@ -8,9 +8,9 @@ import { getAuthUser } from "@/lib/action-helpers";
 
 // Re-exported for backwards compat — these are pure server helpers, not HTTP endpoints
 export {
-  sendNotification,
-  notifyPaymentValidationRequired,
   ensureDeadlineReminders,
+  notifyPaymentValidationRequired,
+  sendNotification,
 } from "@/lib/notifications";
 
 export async function getNotifications() {
@@ -69,4 +69,3 @@ export async function markAllAsRead() {
   revalidatePath("/arena/notifications");
   return { success: true as const };
 }
-

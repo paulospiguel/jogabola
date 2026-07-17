@@ -51,8 +51,7 @@ export const upsertAttendance = withAuthAction(
 
 export async function getAttendanceForMatchSession(matchSessionId: number) {
   const userAuth = await getAuthUser();
-  if (!userAuth)
-    return { success: false as const, error: "UNAUTHORIZED" };
+  if (!userAuth) return { success: false as const, error: "UNAUTHORIZED" };
 
   const rows = await db
     .select()
@@ -63,8 +62,7 @@ export async function getAttendanceForMatchSession(matchSessionId: number) {
 
 export async function getEventAttendanceWithUsers(eventId: number) {
   const userAuth = await getAuthUser();
-  if (!userAuth)
-    return { success: false as const, error: "UNAUTHORIZED" };
+  if (!userAuth) return { success: false as const, error: "UNAUTHORIZED" };
 
   const records = await db
     .select({
@@ -169,8 +167,7 @@ function mapPaymentToEventStatus(
  * position (from team membership) and payment-derived status. Real data. */
 export async function getEventRoster(eventId: number) {
   const userAuth = await getAuthUser();
-  if (!userAuth)
-    return { success: false as const, error: "UNAUTHORIZED" };
+  if (!userAuth) return { success: false as const, error: "UNAUTHORIZED" };
 
   const records = await db
     .select({
@@ -425,8 +422,7 @@ export async function getUserEventAttendanceStatus(
 
 export async function getPlayerHistory(playerId: string, teamId: number) {
   const userAuth = await getAuthUser();
-  if (!userAuth)
-    return { success: false as const, error: "UNAUTHORIZED" };
+  if (!userAuth) return { success: false as const, error: "UNAUTHORIZED" };
 
   try {
     // 1. Find the player (registered or guest)
