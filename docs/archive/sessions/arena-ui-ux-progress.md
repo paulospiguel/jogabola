@@ -5,7 +5,7 @@
 
 # Arena UI/UX Improvements - Progress Ledger
 
-Plan: docs/superpowers/plans/2026-07-16-arena-ui-ux-improvements.md
+Plan: [2026-07-16-arena-ui-ux-improvements.md](../plans/completed/2026-07-16-arena-ui-ux-improvements.md)
 Worktree: .worktrees/arena-ui-ux (branch arena-ui-ux-improvements)
 Base HEAD before Task 1: 1e9f181
 

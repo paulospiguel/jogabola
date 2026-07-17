@@ -17,7 +17,7 @@
 - **Priority**: P2
 - **Effort**: M
 - **Risk**: LOW
-- **Depends on**: plans/001-verification-baseline.md (test infra). Coordinate with plans/002 if both touch `guest-rsvp.actions.ts` — apply this plan after 002.
+- **Depends on**: [001-verification-baseline.md](001-verification-baseline.md) (test infra). Coordinate with [002-server-action-auth-hardening.md](002-server-action-auth-hardening.md) if both touch `guest-rsvp.actions.ts` — apply this plan after 002.
 - **Category**: security
 - **Planned at**: commit `d57f784`, 2026-07-11
 

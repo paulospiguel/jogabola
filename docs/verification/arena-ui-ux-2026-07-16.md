@@ -1,6 +1,6 @@
 # Verificação — Arena UI/UX Improvements (Tasks 11–12)
 
-> Referente a `docs/superpowers/plans/2026-07-16-arena-ui-ux-improvements.md`, Task 11 (Refinamento visual, performance e responsividade) e Task 12 (Verificação final contra a especificação, `docs/superpowers/specs/2026-07-16-arena-ui-ux-improvements-design.md`).
+> Referente ao plano [Arena UI/UX Improvements](../archive/plans/completed/2026-07-16-arena-ui-ux-improvements.md), Task 11 (Refinamento visual, performance e responsividade) e Task 12 (Verificação final contra a [especificação](../superpowers/specs/2026-07-16-arena-ui-ux-improvements-design.md)).
 
 ## 0. Ruído visual (Step 1)
 

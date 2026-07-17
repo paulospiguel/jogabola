@@ -1383,7 +1383,7 @@ git commit -m "[PR9] polish v3 auth and onboarding"
 
 **Files:**
 - Modify: `DESIGN.md`
-- Modify: `docs/superpowers/plans/2026-05-23-v3-interface-flow-improvements.md` if implementation discoveries require updating this plan.
+- Modify: `docs/archive/plans/needs-review/2026-05-23-v3-interface-flow-improvements.md` if a fresh review approves execution and implementation discoveries require updating this plan.
 
 - [ ] **Step 1: Update `DESIGN.md` v3 flow map**
 
@@ -1455,7 +1455,7 @@ Expected:
 - [ ] **Step 6: Commit**
 
 ```bash
-git add DESIGN.md docs/superpowers/plans/2026-05-23-v3-interface-flow-improvements.md
+git add DESIGN.md docs/archive/plans/needs-review/2026-05-23-v3-interface-flow-improvements.md
 git commit -m "[PR9] document v3 interface flow mapping"
 ```
 

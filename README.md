@@ -56,7 +56,8 @@ A aplicação fica disponível em `http://localhost:3000`.
 | [`CONTEXT.md`](CONTEXT.md) | Glossário de domínio e convenções de código. |
 | [`DESIGN.md`](DESIGN.md) | Sistema visual, tokens, componentes e microinterações. |
 | [`docs/adr/`](docs/adr/) | Registos das decisões de arquitetura. |
-| [`docs/superpowers/plans/`](docs/superpowers/plans/) | Planos de implementação pendentes e históricos. |
+| [`docs/superpowers/plans/README.md`](docs/superpowers/plans/README.md) | Índice canónico dos planos de implementação revistos e accionáveis. |
+| [`docs/archive/`](docs/archive/) | Documentação histórica, planos classificados e registos preservados. |
 
 ## Environment variables
 

@@ -30,10 +30,11 @@ Next.js 16 (App Router, `next dev --turbo`) · React 19 · TypeScript · pnpm ·
 | `CONTEXT.md` | Glossário de domínio (Convocatória, MatchSession, Racha/Payment...) e convenções de código |
 | `DESIGN.md` | Design system — tokens, tipografia, componentes, microinterações |
 | `docs/adr/` | Decisões de arquitetura registadas |
-| `docs/superpowers/plans/` | Planos de implementação pendentes/históricos |
+| `docs/superpowers/plans/README.md` | Índice canónico dos planos de implementação revistos e accionáveis |
+| `docs/archive/` | Documentação histórica, planos classificados e registos preservados |
 
 ## Workflow de agentes
-O fluxo canónico deste repositório é o **Superpowers** (brainstorming → writing-plans → executing-plans → verification-before-completion). Planos vivem em `docs/superpowers/plans/`. Não usar o pipeline GSD (`/gsd:*`) neste repositório.
+O fluxo canónico deste repositório é o **Superpowers** (brainstorming → writing-plans → executing-plans → verification-before-completion). Começar sempre pelo índice `docs/superpowers/plans/README.md`; apenas planos revistos e accionáveis permanecem ao lado desse índice. `docs/archive/` conserva documentação histórica e não é uma fila de execução. Não usar o pipeline GSD (`/gsd:*`) neste repositório.
 
 A skill `dev-coder` (`.agents/skills/dev-coder/`) é o standard de implementação por omissão: arquitetura, regras de TypeScript/React, Server Actions, e tokens visuais Arena.
 
