@@ -262,3 +262,78 @@ Create one square JogaBola amateur-football brand icon matching the supplied ref
 - Confirmado por `rg` (ver `.superpowers/sdd/task-7-report.md`) que não existiam consumidores reais de `getPositionEmoji` nem do campo `emoji` de `constants/positions.ts` em todo o `src/`.
 - Nenhum ficheiro `.tsx` foi alterado.
 - Nenhuma imagem foi gerada.
+
+---
+
+## 6. Task 8 — geração e aprovação (execução real)
+
+### 6.1 Step 1 — inspeção das referências
+
+Inspecionadas as seis imagens listadas na secção 4.4 (`jb-game.png`, `jb-training.png`, `jb-manager.png`, `jb-money.png`, `jb-challenge.png`, `jb-other.png`, todas em `src/assets/images/`). Nenhuma passa a grelha de qualidade definida na secção 4.1:
+
+| Ficheiro | Dimensões reais | Alpha | Estilo |
+|---|---|---|---|
+| `jb-game.png` | 768×868 | sim | contorno grosso, fundo transparente — família A |
+| `jb-challenge.png` | 768×868 | sim (parcial) | contorno grosso, fundo transparente — família A |
+| `jb-training.png` | 768×868 | **não** (fundo branco opaco) | contorno fino, fundo branco — família B |
+| `jb-other.png` | 768×868 | **não** (fundo branco opaco) | contorno fino, fundo branco — família B |
+| `jb-money.png` | 768×868 | **não** (fundo branco opaco) | contorno fino, fundo branco — família B |
+| `jb-manager.png` | 375×375 | sim | clip-art semi-realista, estilo totalmente diferente das restantes |
+
+**Inconsistências registadas:** (1) nenhum ficheiro é 1024×1024 conforme a especificação da secção 4.1; (2) existem duas famílias de estilo distintas e incompatíveis entre si (contorno grosso/transparente vs. contorno fino/fundo branco); (3) `jb-manager.png` não pertence a nenhuma das duas famílias. Decisão: nenhum dos três candidatos `reuse-if-passes-grid` (`game`/`training`/`other`) passa a grelha — todos os cinco assets de tipo de evento (`game`, `training`, `friendly`, `meeting`, `other`) foram gerados de novo para garantir um conjunto visualmente consistente, em vez de misturar ativos antigos inconsistentes com os dois novos. Decisão aprovada com o utilizador antes da geração.
+
+### 6.2 Step 2 — geração
+
+**Desvio de ferramenta registado:** o plano nomeia "GPT Images" como gerador; esse serviço não estava disponível neste ambiente. Confirmado com o utilizador, a geração foi feita via **FLUX.2 [pro]** (skill `flux-imagegen`, BFL API), fornecendo o mesmo prompt-base da secção 4.2 com o `{subject}` preenchido por ícone. A API FLUX não devolve canal alpha nativo (fundo sempre opaco, apesar do prompt pedir "transparent background") — o fundo branco foi removido localmente após a geração com ImageMagick (`-fuzz 6% -transparent white`), não com nenhum serviço de remoção de fundo pago (tentativa inicial via Higgsfield falhou por falta de créditos na conta). Verificado por amostragem de pixel (`identify -format '%[pixel:p{x,y}]'`) que o canto e o fundo interior do hexágono ficam `srgba(0,0,0,0)` e que a arte (troféu, apito, etc.) mantém alpha`=1` e cor original — sem halo nem perda de detalhe.
+
+Subjects usados (mapeados ao `EVENT_TYPE_META` existente em `create-event-dialog.utils.ts`):
+
+| Subject | Prompt subject usado |
+|---|---|
+| `game` | "a golden championship trophy with a football beside it, celebrating a competitive match" |
+| `training` | "a football training cone next to a coach's whistle with motion lines, drill practice" |
+| `friendly` | "two hands shaking warmly over a football, a friendly casual match" |
+| `meeting` | "a speech bubble with three dots next to a small football team huddle icon, team meeting" |
+| `other` | "a location pin marker with a small football beside it, miscellaneous calendar event" |
+
+### 6.3 Step 3 — aprovação visual
+
+Apresentadas as 5 variantes lado a lado (300px) e a 56px (teste de legibilidade real) num artifact HTML (`arena-brand-review.html`, montagem com checkerboard a confirmar transparência real por amostragem de pixel, não apenas visual). Utilizador aprovou as 5 variantes sem pedir regeneração.
+
+| Subject | Estado | Aprovado em | Ficheiro escolhido |
+|---|---|---|---|
+| `game` | `approved` | 2026-07-17 | `src/assets/images/branding/jb-game.png` |
+| `training` | `approved` | 2026-07-17 | `src/assets/images/branding/jb-training.png` |
+| `friendly` | `approved` | 2026-07-17 | `src/assets/images/branding/jb-friendly.png` |
+| `meeting` | `approved` | 2026-07-17 | `src/assets/images/branding/jb-meeting.png` |
+| `other` | `approved` | 2026-07-17 | `src/assets/images/branding/jb-other.png` |
+
+Nota: `meeting` e `other` são visualmente mais ocupados a 56px (mais elementos compostos) do que `game`/`training`/`friendly`, mas ainda legíveis — aprovados nesse estado pelo utilizador sem pedido de simplificação.
+
+### 6.4 Step 4 — exports finais
+
+Fonte PNG 1024×1024 com alpha mantida (`jb-*.png`); exports WebP gerados via `cwebp` (`-q 88 -resize 256 256` para `@1x`, `-q 90 -resize 512 512` para `@2x`) **apenas** após a aprovação da secção 6.3. Verificado com `identify -format '%f %wx%h %[channels]\n' src/assets/images/branding/*`:
+
+```
+jb-friendly.png 1024x1024 srgba
+jb-friendly@1x.webp 256x256 srgba
+jb-friendly@2x.webp 512x512 srgba
+jb-game.png 1024x1024 srgba
+jb-game@1x.webp 256x256 srgba
+jb-game@2x.webp 512x512 srgba
+jb-meeting.png 1024x1024 srgba
+jb-meeting@1x.webp 256x256 srgba
+jb-meeting@2x.webp 512x512 srgba
+jb-other.png 1024x1024 srgba
+jb-other@1x.webp 256x256 srgba
+jb-other@2x.webp 512x512 srgba
+jb-training.png 1024x1024 srgba
+jb-training@1x.webp 256x256 srgba
+jb-training@2x.webp 512x512 srgba
+```
+
+Todos os 15 ficheiros (5 subjects × 3 formatos) confirmam 4 canais (`srgba`, alpha preservado nos exports WebP) e as dimensões esperadas.
+
+### 6.5 Nota para a Task 9
+
+Os novos assets vivem em `src/assets/images/branding/` (diretório novo desta task), distinto de `src/assets/images/` onde ficam os `jb-*.png` antigos (agora supersedidos para os cinco subjects de tipo de evento, mas não apagados — `jb-manager.png`, `jb-money.png` e `jb-challenge.png` continuam sem consumidor e fora do âmbito deste plano, ver secção 3). A Task 9 deve importar de `src/assets/images/branding/jb-{game,training,friendly,meeting,other}.png` (ou os exports WebP, conforme o padrão `next/image` já usado no resto do projeto), não dos ficheiros antigos em `src/assets/images/`.
