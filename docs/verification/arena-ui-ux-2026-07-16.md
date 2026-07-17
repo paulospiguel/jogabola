@@ -163,6 +163,14 @@ Cobre "Critérios de sucesso" e "Limites mensuráveis" do spec (`docs/superpower
 
 **Estado:** plano substancialmente completo e verificado, com uma limitação explícita e documentada, não uma falha silenciosa.
 
+### Revisão final de branch (após esta task)
+
+Dispatched um code-reviewer sobre o branch completo (15 commits, base→HEAD). Achado Important real e corrigido de imediato: o header desktop do dashboard (`arena-dashboard.tsx`) mostrava os CTAs "Adicionar jogador"/"Criar evento" apenas com `hidden md:inline-flex`, sem gate em `activeTeamCanManage` — ao contrário de todas as superfícies irmãs (eventos, plantel, ações do cockpit no empty state), que já filtravam corretamente. Um membro `coach`/`player` a ≥768px veria os dois CTAs de mutação, violando diretamente a regra de papéis do spec. Corrigido envolvendo o bloco em `{activeTeamCanManage && (...)}` — commit `9be4836`. `pnpm ts-check` e `pnpm test` (386/386) revalidados após a correção.
+
+Nota do revisor, relevante para o item bloqueado da secção 1: este bug é precisamente o tipo de falha que a verificação em runtime com sessão `player` (ainda bloqueada) teria apanhado visualmente — os testes unitários do mapper não o cobrem porque o header não passa pelo `buildCockpitActions`. A mitigação real é que a mutação em si continua bloqueada no servidor (`canManageTeam`), pelo que o risco era de correção de UI, não de escalada de privilégio — mas reforça que o item da secção 1 continua a merecer prioridade antes de fechar o plano por completo.
+
+Achados Minor não corrigidos (registados, não bloqueiam): `hasBackgroundError`/`isRefreshing` (Task 2) são computados e testados mas nenhum consumidor os lê atualmente — falhas de refetch em segundo plano com dados antigos ficam silenciosas visualmente (os dados não se perdem, só não há indicador); o teste de paridade de locales é unidirecional (chaves extra em en/es/fr não seriam apanhadas, embora não exista nenhuma hoje).
+
 **Concluído e verificado:**
 - Todas as 11 tasks de implementação (1–11) commitadas, cada uma com revisão de tarefa própria (spec compliance + qualidade) — clean em todas.
 - Suite completa (lint/ts-check/test/build) verde, reexecutada fresca nesta task.
