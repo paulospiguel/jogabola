@@ -15,6 +15,50 @@ export interface RosterGroup {
   playerIds: string[];
 }
 
+/**
+ * A single query's state, in the minimal shape `deriveSquadQueryState`
+ * needs. Mirrors the subset of TanStack Query's `UseQueryResult` this
+ * screen cares about (same contract as `use-dashboard.ts`'s
+ * `RawQuerySnapshot`), so the composition logic below stays
+ * framework-free and unit-testable without rendering a real query.
+ */
+export interface RawQuerySnapshot<T> {
+  data: T | undefined;
+  isLoading: boolean;
+  isFetching: boolean;
+  error: unknown;
+  refetch: () => void;
+}
+
+export interface SquadSectionState {
+  players: SquadPlayer[];
+  isInitialLoading: boolean;
+  isFetching: boolean;
+  error: unknown;
+  refetch: () => void;
+}
+
+/**
+ * Pure state-derivation for the Plantel roster query. Never converts an
+ * error response into an empty array: `players` only falls back to `[]`
+ * when the query genuinely has nothing yet (still loading, or disabled),
+ * so a background refetch failure leaves the previous roster in place
+ * instead of blanking the screen. Callers pass the result straight to
+ * `deriveQueryViewState` to render loading/error/empty/success
+ * independently of the header/search bar, which stay mounted regardless.
+ */
+export function deriveSquadQueryState(
+  snapshot: RawQuerySnapshot<SquadPlayer[]>,
+): SquadSectionState {
+  return {
+    players: snapshot.data ?? [],
+    isInitialLoading: snapshot.isLoading,
+    isFetching: snapshot.isFetching,
+    error: snapshot.error,
+    refetch: snapshot.refetch,
+  };
+}
+
 const FILTERS: { key: SquadFilterKey; labelKey: string }[] = [
   { key: "all", labelKey: "filters.all" },
   { key: "confirmed", labelKey: "filters.confirmed" },
@@ -58,9 +102,27 @@ export function useSquadClientState() {
   const [isSendingEmail, startEmailTransition] = useTransition();
   const [emailUsage, setEmailUsage] = useState(0);
 
-  const { players, activeTeamId, isLoading } = useSquad();
-  const { planTier } = useTeams();
+  const {
+    players: rawPlayers,
+    activeTeamId,
+    isLoading,
+    isFetching,
+    error,
+    refetch,
+  } = useSquad();
+  const { planTier, activeTeamCanManage } = useTeams();
   const emailLimit = emailLimitFor(planTier);
+
+  const squadState = deriveSquadQueryState({
+    data: rawPlayers,
+    isLoading,
+    isFetching,
+    error,
+    refetch: () => {
+      void refetch();
+    },
+  });
+  const players = squadState.players;
   const filters = FILTERS.map(({ key, labelKey }) => ({
     key,
     label: t(labelKey),
@@ -195,6 +257,7 @@ export function useSquadClientState() {
   }
 
   return {
+    activeTeamCanManage,
     activeTeamId,
     closeGroupSheet,
     editingGroupId,
@@ -211,7 +274,6 @@ export function useSquadClientState() {
     groupOpen,
     groups,
     groupSelection,
-    isLoading,
     isSendingEmail,
     openCreateGroup,
     openEditGroup,
@@ -228,6 +290,7 @@ export function useSquadClientState() {
     setSearch,
     setShowAdd,
     showAdd,
+    squadState,
     toggleGroupPlayer,
   };
 }

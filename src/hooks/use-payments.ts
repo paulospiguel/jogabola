@@ -43,7 +43,7 @@ export type PaymentDetail = {
 export function usePayments() {
   const { activeTeamId } = useTeams();
 
-  const { data, isLoading, error, refetch } = useQuery({
+  const { data, isLoading, isFetching, error, refetch } = useQuery({
     queryKey: ["payments", activeTeamId],
     enabled: !!activeTeamId,
     queryFn: async (): Promise<Payment[]> => {
@@ -64,6 +64,7 @@ export function usePayments() {
   return {
     payments: data ?? [],
     isLoading,
+    isFetching,
     error,
     refetch,
   };

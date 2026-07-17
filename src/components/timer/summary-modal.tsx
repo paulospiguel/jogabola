@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Check, Copy, Home, Plus, Share2 } from "lucide-react";
+import { Check, CircleDot, Copy, Home, Plus, Share2 } from "lucide-react";
 import { useMemo, useState } from "react";
 import QRCode from "react-qr-code";
 import { BottomSheet } from "@/components/arena/bottom-sheet";
@@ -119,7 +119,10 @@ export function SummaryModal({
                   <span className="w-8 font-mono text-xs text-arena-text-muted">
                     {formatMinute(g.atSec)}
                   </span>
-                  <span>⚽</span>
+                  <CircleDot
+                    size={14}
+                    className="shrink-0 text-arena-text-muted"
+                  />
                   <span className="font-semibold text-arena-text">
                     {p?.name ?? "Golo"}
                   </span>

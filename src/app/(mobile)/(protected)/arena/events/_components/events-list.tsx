@@ -18,12 +18,18 @@ import { useMemo, useState } from "react";
 import { JbAvatar } from "@/components/arena/avatar";
 import { CreateEventSheet } from "@/components/arena/create-event-sheet";
 import { Cta } from "@/components/arena/cta";
+import { ArenaEmptyState } from "@/components/arena/empty-state";
+import {
+  ArenaQueryError,
+  deriveQueryViewState,
+} from "@/components/arena/query-state";
 import { Button } from "@/components/ui/button";
 import { useEventAttendance } from "@/hooks/use-event-attendance";
 import { useEvents } from "@/hooks/use-events";
 import { useTeams } from "@/hooks/use-teams";
 import { cn } from "@/lib/utils";
 import type { EventStatus, EventView } from "@/types/events";
+import { partitionEventsByDate } from "../_utils/events-view";
 
 interface EventsListProps {
   upcoming: EventView[];
@@ -286,35 +292,110 @@ function HeroStats({ eventId }: { eventId: number }) {
   );
 }
 
+/**
+ * Structural loading placeholder for the events list's initial fetch.
+ * Mirrors `DashboardSkeleton`'s `animate-pulse` + `bg-arena-surface-el`
+ * convention (established in Task 3) rather than the unused `.jb-skeleton`
+ * CSS shimmer, so both skeletons in the app read as one visual language.
+ */
+function EventsListSkeleton() {
+  return (
+    <div className="jb-dashboard-grid" aria-hidden="true">
+      <section className="jb-stack min-w-0">
+        <div className="h-3 w-28 animate-pulse rounded-full bg-arena-surface-el" />
+        <div className="jb-hero-card">
+          <div className="mb-3 h-4 w-24 animate-pulse rounded-full bg-arena-surface-el" />
+          <div className="mb-3 h-5 w-2/3 animate-pulse rounded-lg bg-arena-surface-el" />
+          <div className="flex flex-wrap gap-3">
+            <div className="h-3 w-16 animate-pulse rounded-full bg-arena-surface-el" />
+            <div className="h-3 w-16 animate-pulse rounded-full bg-arena-surface-el" />
+            <div className="h-3 w-20 animate-pulse rounded-full bg-arena-surface-el" />
+          </div>
+        </div>
+        <div className="jb-stat-grid">
+          {[0, 1, 2].map(i => (
+            <div
+              className="jb-card h-16 animate-pulse"
+              key={`hero-stat-${i}`}
+            />
+          ))}
+        </div>
+      </section>
+
+      <aside className="jb-stack min-w-0">
+        <section>
+          <div className="mb-2 h-3 w-24 animate-pulse rounded-full bg-arena-surface-el" />
+          <div className="jb-stack">
+            {[0, 1].map(i => (
+              <div
+                className="jb-card h-14 animate-pulse"
+                key={`week-row-${i}`}
+              />
+            ))}
+          </div>
+        </section>
+
+        <section>
+          <div className="mb-2 h-3 w-16 animate-pulse rounded-full bg-arena-surface-el" />
+          <div className="jb-stack">
+            {[0, 1, 2].map(i => (
+              <div
+                className="jb-card h-14 animate-pulse"
+                key={`past-row-${i}`}
+              />
+            ))}
+          </div>
+        </section>
+      </aside>
+    </div>
+  );
+}
+
 export function EventsList({ upcoming, past }: EventsListProps) {
   const t = useTranslations("arenaEvents");
   const [sheet, setSheet] = useState(false);
   const [activeIndex, setActiveIndex] = useState(0);
   const queryClient = useQueryClient();
-  const { activeTeamId } = useTeams();
-  const { events } = useEvents({
+  const { activeTeamId, activeTeamCanManage } = useTeams();
+  const {
+    events,
+    isLoading: eventsLoading,
+    isRefetching: eventsRefetching,
+    error: eventsError,
+    refetch: refetchEvents,
+  } = useEvents({
     upcomingOnly: false,
     limit: 50,
     enabled: Boolean(activeTeamId),
   });
 
-  const { visibleUpcoming, visiblePast } = useMemo(() => {
-    const source = activeTeamId ? events : [...upcoming, ...past];
-    const now = new Date();
-    const byDateAsc = (a: EventView, b: EventView) =>
-      new Date(a.startDate).getTime() - new Date(b.startDate).getTime();
-    const byDateDesc = (a: EventView, b: EventView) =>
-      new Date(b.startDate).getTime() - new Date(a.startDate).getTime();
+  // Server-rendered snapshot (from the page's initial fetch). Used only
+  // while the client-scoped query hasn't settled yet — either there's no
+  // active team, or its first fetch is still in flight — so switching to
+  // the client query never flashes the list to blank. Once the query
+  // settles (`!eventsLoading`), `events` is trusted as-is, including a
+  // genuinely empty array: that's the real "this team has zero events"
+  // answer, and must not keep showing stale fallback content forever.
+  const fallbackEvents = useMemo(
+    () => [...upcoming, ...past],
+    [upcoming, past],
+  );
+  const hasSettledQueryData = Boolean(activeTeamId) && !eventsLoading;
+  const sourceEvents = hasSettledQueryData ? events : fallbackEvents;
 
-    return {
-      visibleUpcoming: source
-        .filter(event => new Date(event.startDate) >= now)
-        .sort(byDateAsc),
-      visiblePast: source
-        .filter(event => new Date(event.startDate) < now)
-        .sort(byDateDesc),
-    };
-  }, [activeTeamId, events, upcoming, past]);
+  const hasContent = sourceEvents.length > 0;
+  const eventsViewState = deriveQueryViewState({
+    hasData: hasContent,
+    isInitialLoading:
+      Boolean(activeTeamId) && eventsLoading && fallbackEvents.length === 0,
+    isFetching: Boolean(activeTeamId) && (eventsLoading || eventsRefetching),
+    error: activeTeamId ? eventsError : null,
+  });
+
+  const { upcoming: visibleUpcoming, past: visiblePast } = useMemo(
+    () => partitionEventsByDate(sourceEvents, new Date()),
+    [sourceEvents],
+  );
 
   const safeIndex = visibleUpcoming[activeIndex] ? activeIndex : 0;
   const featured = visibleUpcoming[safeIndex] ?? null;
@@ -330,8 +411,6 @@ export function EventsList({ upcoming, past }: EventsListProps) {
       return next;
     });
   };
-
-  const hasEvents = visibleUpcoming.length > 0 || visiblePast.length > 0;
 
   return (
     <>
@@ -366,43 +445,31 @@ export function EventsList({ upcoming, past }: EventsListProps) {
               >
                 <Calendar size={18} strokeWidth={2} />
               </Link>
-              <Button
-                onClick={() => setSheet(true)}
-                className="press hidden h-11 items-center gap-1.5 rounded-xl bg-arena-primary px-4 text-xs font-black text-[#0B0F14] shadow-[0_0_24px_rgba(124,255,79,0.18)] transition-all hover:bg-arena-primary/95 md:flex"
-              >
-                <Plus size={13} strokeWidth={3} />
-                <span>{t("actions.create")}</span>
-              </Button>
+              {activeTeamCanManage && (
+                <Button
+                  onClick={() => setSheet(true)}
+                  className="press hidden h-11 items-center gap-1.5 rounded-xl bg-arena-primary px-4 text-xs font-black text-[#0B0F14] shadow-[0_0_24px_rgba(124,255,79,0.18)] transition-all hover:bg-arena-primary/95 md:flex"
+                >
+                  <Plus size={13} strokeWidth={3} />
+                  <span>{t("actions.create")}</span>
+                </Button>
+              )}
             </div>
           </header>
 
-          {!hasEvents ? (
-            <div className="jb-card mx-auto grid place-items-center px-6 py-14 text-center">
-              <div className="mb-4 grid size-14 place-items-center rounded-[18px] border border-arena-border bg-arena-surface">
-                <Calendar
-                  size={24}
-                  className="text-arena-text-muted"
-                  strokeWidth={1.5}
-                />
-              </div>
-              <div className="text-[15px] font-semibold text-arena-text">
-                {t("empty.title")}
-              </div>
-              <div className="mt-1 text-sm text-arena-text-muted">
-                {t("empty.subtitle")}
-              </div>
-              <Cta
-                variant="primary"
-                size="sm"
-                className="mt-5"
-                onClick={() => setSheet(true)}
-              >
-                {t("actions.createEvent")}
-              </Cta>
-            </div>
+          {eventsViewState.status === "loading" ? (
+            <EventsListSkeleton />
+          ) : eventsViewState.status === "error" ? (
+            <ArenaQueryError
+              title={t("empty.errorTitle")}
+              description={t("empty.errorDescription")}
+              retryLabel={t("actions.retry")}
+              onRetry={() => void refetchEvents()}
+              isRetrying={eventsRefetching}
+            />
           ) : (
-            <div className="jb-dashboard-grid">
-              <section className="jb-stack">
+            <div className="jb-dashboard-grid min-w-0">
+              <section className="jb-stack min-w-0 w-full">
                 <div className="jb-section-label">
                   {t("sections.upcomingEvents")}
                 </div>
@@ -419,37 +486,52 @@ export function EventsList({ upcoming, past }: EventsListProps) {
                     <HeroStats eventId={featured.id} />
                   </>
                 ) : (
-                  <div className="jb-hero-card flex flex-col items-center justify-center gap-3 py-10 text-center">
-                    <div className="flex size-12 items-center justify-center rounded-2xl bg-arena-surface-el">
-                      <Calendar className="size-6 text-arena-primary/60" />
-                    </div>
-                    <p className="text-sm font-semibold text-arena-text-sec">
-                      {t("hero.noEvents")}
-                    </p>
-                    <Cta
-                      variant="primary"
-                      size="sm"
-                      onClick={() => setSheet(true)}
-                    >
-                      <Plus size={14} />
-                      {t("actions.createEvent")}
-                    </Cta>
-                  </div>
+                  <ArenaEmptyState
+                    icon={Calendar}
+                    title={t("empty.title")}
+                    description={
+                      activeTeamCanManage
+                        ? t("empty.subtitle")
+                        : t("hero.noEventsMemberDescription")
+                    }
+                    action={
+                      activeTeamCanManage ? (
+                        <Cta
+                          variant="primary"
+                          size="sm"
+                          onClick={() => setSheet(true)}
+                        >
+                          <Plus size={14} />
+                          {t("actions.createEvent")}
+                        </Cta>
+                      ) : (
+                        <Link href="/arena/calendar" className="jb-action">
+                          <Calendar size={14} />
+                          {t("actions.viewCalendar")}
+                        </Link>
+                      )
+                    }
+                  />
                 )}
 
-                <Cta
-                  variant="primary"
-                  size="md"
-                  fullWidth
-                  className="md:hidden"
-                  onClick={() => setSheet(true)}
-                >
-                  <Plus size={16} strokeWidth={2.5} />
-                  {t("actions.createEvent")}
-                </Cta>
+                {activeTeamCanManage && (
+                  <Cta
+                    variant="primary"
+                    size="md"
+                    fullWidth
+                    className="md:hidden"
+                    onClick={() => setSheet(true)}
+                  >
+                    <Plus size={16} strokeWidth={2.5} />
+                    {t("actions.createEvent")}
+                  </Cta>
+                )}
               </section>
 
-              <aside className="jb-stack">
+              {/* "Esta semana" and "Anteriores" always render, independently
+                  of whether "Próximos" has an active/featured event — an
+                  empty upcoming section must never hide the team's history. */}
+              <aside className="jb-stack min-w-0 w-full">
                 <section>
                   <div className="jb-section-label">
                     {t("sections.thisWeek")}

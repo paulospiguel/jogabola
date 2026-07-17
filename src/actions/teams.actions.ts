@@ -16,6 +16,7 @@ import { trackServerEvent } from "@/lib/analytics-server";
 import { sendEmail } from "@/lib/email";
 import { canCreateTeam, normalizePlanTier } from "@/lib/plan-limits";
 import { userCanAccessTeam, userIsTeamOwner } from "@/lib/team-access";
+import { buildAccessibleTeamSummaries } from "@/lib/team-capabilities";
 import {
   addPlayerToRosterSchema,
   addTeamMemberSchema,
@@ -255,17 +256,19 @@ export const getMyTeams = withAuthAction(z.any(), async user => {
       ownerId: teams.ownerId,
       createdAt: teams.createdAt,
       updatedAt: teams.updatedAt,
+      role: teamMembers.role,
     })
     .from(teamMembers)
     .innerJoin(teams, eq(teamMembers.teamId, teams.id))
     .where(eq(teamMembers.playerId, user.id))
     .orderBy(teams.name);
 
-  const myTeams = Array.from(
-    new Map(
-      [...ownedTeams, ...memberTeams].map(team => [team.id, team]),
-    ).values(),
-  ).sort((a, b) => a.name.localeCompare(b.name));
+  // `canManage` here is presentation-only (drives which cockpit actions the
+  // client renders). Every mutation must keep authorizing server-side via
+  // canManageTeam/userIsTeamOwner — never trust this flag from the client.
+  const myTeams = buildAccessibleTeamSummaries(ownedTeams, memberTeams).sort(
+    (a, b) => a.name.localeCompare(b.name),
+  );
 
   return { success: true, data: myTeams };
 });

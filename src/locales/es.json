@@ -405,6 +405,13 @@
         "label": "Otro"
       }
     },
+    "typeOptions": {
+      "game": { "alt": "Icono de partido" },
+      "training": { "alt": "Icono de entrenamiento" },
+      "friendly": { "alt": "Icono de amistoso" },
+      "meeting": { "alt": "Icono de reunión" },
+      "other": { "alt": "Icono de otro tipo de evento" }
+    },
     "final": {
       "stepsInfo": "Los jugadores reciben una notificación y pueden confirmar/rechazar directamente.",
       "sendCallup": "Enviar Convocatoria",
@@ -458,6 +465,21 @@
       "event": "Evento",
       "player": "Jugador"
     },
+    "cockpit": {
+      "noEventManagerTitle": "Crea tu próxima convocatoria",
+      "noEventManagerDescription": "Todavía no tienes ningún evento programado. Crea un partido o entrenamiento para empezar a convocar.",
+      "noEventMemberTitle": "Sin eventos programados",
+      "noEventMemberDescription": "Tu equipo aún no tiene ningún evento. Consulta la plantilla mientras tanto.",
+      "createEvent": "Crear evento",
+      "addPlayer": "Añadir jugador",
+      "viewSquad": "Ver plantilla",
+      "openTimer": "Cronómetro",
+      "eventsErrorTitle": "No se pudieron cargar los eventos",
+      "eventsErrorDescription": "Comprueba tu conexión e inténtalo de nuevo.",
+      "squadErrorTitle": "No se pudo cargar la plantilla",
+      "squadErrorDescription": "Comprueba tu conexión e inténtalo de nuevo.",
+      "retry": "Intentar de nuevo"
+    },
     "defaultUser": "Usuario",
     "hero": {
       "nextMatch": "Próximo Partido",
@@ -498,6 +520,7 @@
     "actions": {
       "cancel": "Cancelar Asistencia",
       "confirm": "Confirmar Asistencia",
+      "timer": "Abrir Cronómetro",
       "cancelled": "Evento cancelado",
       "cancelConfirm": {
         "title": "¿Cancelar asistencia?",
@@ -661,9 +684,12 @@
     "actions": {
       "create": "Crear",
       "createEvent": "Crear evento",
+      "retry": "Intentar de nuevo",
       "viewCalendar": "Calendario"
     },
     "empty": {
+      "errorDescription": "Comprueba tu conexión e inténtalo de nuevo.",
+      "errorTitle": "No se pudieron cargar los eventos",
       "noPast": "Sin historial aún.",
       "subtitle": "Crea el primer evento de tu equipo.",
       "title": "Sin eventos"
@@ -674,7 +700,7 @@
       "view": "Ver",
       "nextEvent": "Evento siguiente",
       "prevEvent": "Evento anterior",
-      "noEvents": "No hay eventos próximos. ¡Crea uno!"
+      "noEventsMemberDescription": "Tu equipo aún no tiene eventos programados. Consulta el calendario para novedades."
     },
     "stats": {
       "confirmed": "Confirmados",
@@ -995,7 +1021,8 @@
       "uploadProof": "Cargar Comprobantes",
       "setMethods": "Métodos de Pago",
       "autoValidate": "Auto-validación",
-      "relevant": "Otras Acciones"
+      "relevant": "Otras Acciones",
+      "retry": "Intentar de nuevo"
     },
     "noPayments": "Ningún pago encontrado",
     "noPaymentsSub": "No se encontraron registros de pago correspondientes en este filtro.",
@@ -1060,7 +1087,11 @@
       "creditCard": "Tarjeta de crédito"
     },
     "markRefund": "Reembolso",
-    "markCredit": "Dejar como Crédito"
+    "markCredit": "Dejar como Crédito",
+    "empty": {
+      "errorTitle": "No se pudieron cargar los pagos",
+      "errorDescription": "Comprueba tu conexión e inténtalo de nuevo."
+    }
   },
   "arenaBadges": {
     "new": "Nuevo",
@@ -1096,7 +1127,8 @@
     },
     "actions": {
       "add": "Añadir",
-      "addPlayer": "Añadir jugador"
+      "addPlayer": "Añadir jugador",
+      "retry": "Intentar de nuevo"
     },
     "filters": {
       "all": "Todos",
@@ -1162,12 +1194,19 @@
       "remove": "Quitar co-capitán",
       "removeDesc": "Revocar permisos de gestión. Vuelve a ser jugador.",
       "removeLabel": "Quitar"
+    },
+    "empty": {
+      "title": "Aún no hay jugadores en la plantilla",
+      "subtitle": "Añade el primer jugador para empezar a gestionar las convocatorias.",
+      "errorTitle": "No se pudo cargar la plantilla",
+      "errorDescription": "Comprueba tu conexión e inténtalo de nuevo."
     }
   },
   "common": {
     "accept": "Aceptar",
     "actions": "Acciones",
     "back": "Volver",
+    "betaLabel": "Beta",
     "cancel": "Cancelar",
     "city": "Ciudad",
     "close": "Cerrar",

@@ -405,6 +405,13 @@
         "label": "Outro"
       }
     },
+    "typeOptions": {
+      "game": { "alt": "Ícone de jogo" },
+      "training": { "alt": "Ícone de treino" },
+      "friendly": { "alt": "Ícone de particular" },
+      "meeting": { "alt": "Ícone de reunião" },
+      "other": { "alt": "Ícone de outro tipo de evento" }
+    },
     "final": {
       "stepsInfo": "Os jogadores recebem notificação e podem confirmar/recusar diretamente.",
       "sendCallup": "Enviar Convocatória",
@@ -453,13 +460,28 @@
   },
   "arenaDashboard": {
     "actions": {
-      "createEvent": "Criar Evento",
+      "createEvent": "Criar evento",
       "event": "Evento",
       "player": "Jogador"
     },
+    "cockpit": {
+      "noEventManagerTitle": "Cria a próxima convocatória",
+      "noEventManagerDescription": "Ainda não tens nenhum evento agendado. Cria um jogo ou treino para começar a convocar.",
+      "noEventMemberTitle": "Sem eventos agendados",
+      "noEventMemberDescription": "A equipa ainda não tem nenhum evento marcado. Consulta o plantel enquanto esperas.",
+      "createEvent": "Criar evento",
+      "addPlayer": "Adicionar jogador",
+      "viewSquad": "Ver plantel",
+      "openTimer": "Cronómetro",
+      "eventsErrorTitle": "Não foi possível carregar os eventos",
+      "eventsErrorDescription": "Verifica a tua ligação e tenta novamente.",
+      "squadErrorTitle": "Não foi possível carregar o plantel",
+      "squadErrorDescription": "Verifica a tua ligação e tenta novamente.",
+      "retry": "Tentar novamente"
+    },
     "defaultUser": "Utilizador",
     "hero": {
-      "nextMatch": "Próximo Jogo",
+      "nextMatch": "Próximo jogo",
       "nextEvent": "Próximo evento",
       "prevEvent": "Evento anterior",
       "noEvents": "Sem eventos próximos. Cria um!",
@@ -491,13 +513,14 @@
       "reserves": "Reservas",
       "new": "Novos"
     },
-    "add-player": "Adicionar Jogador",
-    "create-event": "Criar Evento"
+    "add-player": "Adicionar jogador",
+    "create-event": "Criar evento"
   },
   "arenaEventDetail": {
     "actions": {
       "cancel": "Cancelar Presença",
       "confirm": "Confirmar Presença",
+      "timer": "Abrir Cronómetro",
       "cancelled": "Evento cancelado",
       "cancelConfirm": {
         "title": "Cancelar presença?",
@@ -661,20 +684,23 @@
     "actions": {
       "create": "Criar",
       "createEvent": "Criar evento",
+      "retry": "Tentar novamente",
       "viewCalendar": "Calendário"
     },
     "empty": {
+      "errorDescription": "Verifica a tua ligação e tenta novamente.",
+      "errorTitle": "Não foi possível carregar os eventos",
       "noPast": "Sem histórico ainda.",
       "subtitle": "Cria o primeiro evento da tua equipa.",
       "title": "Sem eventos"
     },
     "kicker": "Agenda",
     "hero": {
-      "nextMatch": "Próximo Jogo",
+      "nextMatch": "Próximo jogo",
       "view": "Ver",
       "nextEvent": "Evento seguinte",
       "prevEvent": "Evento anterior",
-      "noEvents": "Sem eventos próximos. Cria um!"
+      "noEventsMemberDescription": "A equipa ainda não tem eventos agendados. Consulta o calendário para novidades."
     },
     "stats": {
       "confirmed": "Confirmados",
@@ -704,14 +730,14 @@
       "completed": "✓ Concluído"
     },
     "dangerZone": "Zona de Perigo",
-    "deleteEvent": "Excluir Evento",
+    "deleteEvent": "Eliminar evento",
     "deleteWarningTitle": "Tem a certeza?",
     "deleteWarningDesc": "Esta ação não pode ser desfeita. Todos os jogadores confirmados serão notificados do cancelamento.",
-    "cannotDeletePaidEvent": "Este evento tem pagamentos associados. Por questões de integridade financeira, não é possível excluí-lo. Deseja cancelar o evento em vez disso?",
-    "cancelEventInstead": "Cancelar Evento",
-    "eventDeleted": "Evento excluído com sucesso",
-    "deleteError": "Erro ao excluir o evento",
-    "cancelWarningTitle": "Cancelar Evento",
+    "cannotDeletePaidEvent": "Este evento tem pagamentos associados. Por questões de integridade financeira, não é possível eliminá-lo. Deseja cancelar o evento em vez disso?",
+    "cancelEventInstead": "Cancelar evento",
+    "eventDeleted": "Evento eliminado com sucesso",
+    "deleteError": "Erro ao eliminar o evento",
+    "cancelWarningTitle": "Cancelar evento",
     "cancelWarningDesc": "O evento passará ao estado cancelado. As vagas ficarão indisponíveis e os pagamentos poderão ser geridos."
   },
   "arenaNav": {
@@ -723,7 +749,7 @@
     "notifications": "Notificações",
     "payments": "Cobranças",
     "profile": "Perfil",
-    "settings": "Configurações",
+    "settings": "Definições",
     "timer": "Cronómetro",
     "signOut": "Sair",
     "teamSwitcher": {
@@ -1042,7 +1068,8 @@
       "uploadProof": "Carregar Comprovativos",
       "setMethods": "Métodos de Pagamento",
       "autoValidate": "Auto-validação",
-      "relevant": "Outras Ações"
+      "relevant": "Outras Ações",
+      "retry": "Tentar novamente"
     },
     "status": {
       "pending": "Pendente",
@@ -1060,7 +1087,11 @@
       "validating": "Pago - aguarda validação"
     },
     "markRefund": "Devolver (Estorno)",
-    "markCredit": "Deixar em Crédito"
+    "markCredit": "Deixar em Crédito",
+    "empty": {
+      "errorTitle": "Não foi possível carregar os pagamentos",
+      "errorDescription": "Verifica a tua ligação e tenta novamente."
+    }
   },
   "arenaBadges": {
     "new": "Novo",
@@ -1096,7 +1127,8 @@
     },
     "actions": {
       "add": "Adicionar",
-      "addPlayer": "Adicionar jogador"
+      "addPlayer": "Adicionar jogador",
+      "retry": "Tentar novamente"
     },
     "filters": {
       "all": "Todos",
@@ -1162,12 +1194,19 @@
       "remove": "Remover co-capitão",
       "removeDesc": "Revogar permissões de gestão. Fica como jogador.",
       "removeLabel": "Remover"
+    },
+    "empty": {
+      "title": "Ainda não há jogadores no plantel",
+      "subtitle": "Adiciona o primeiro jogador para começares a gerir convocatórias.",
+      "errorTitle": "Não foi possível carregar o plantel",
+      "errorDescription": "Verifica a tua ligação e tenta novamente."
     }
   },
   "common": {
     "accept": "Aceitar",
     "actions": "Ações",
     "back": "Voltar",
+    "betaLabel": "Beta",
     "cancel": "Cancelar",
     "city": "Cidade",
     "close": "Fechar",
@@ -2275,7 +2314,7 @@
     "tabs": {
       "activities": "Atividades",
       "overview": "Visão geral",
-      "settings": "Configurações",
+      "settings": "Definições",
       "teams": "Minhas equipas"
     },
     "dashboard": {

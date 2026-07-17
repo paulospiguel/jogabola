@@ -5,7 +5,6 @@ export interface PositionConfig {
   value: string;
   label: string;
   icon: LucideIcon;
-  emoji?: string;
 }
 
 // Mapeamento de posições com ícones e traduções
@@ -14,31 +13,26 @@ export const POSITIONS: Record<string, PositionConfig> = {
     value: "goalkeeper",
     label: "Guarda-Redes",
     icon: Shield,
-    emoji: "🥅",
   },
   defender: {
     value: "defender",
     label: "Defesa",
     icon: Shield,
-    emoji: "🛡️",
   },
   midfielder: {
     value: "midfielder",
     label: "Médio",
     icon: Target,
-    emoji: "⚙️",
   },
   forward: {
     value: "forward",
     label: "Avançado",
     icon: Goal,
-    emoji: "⚡",
   },
   versatile: {
     value: "versatile",
     label: "Polivalente",
     icon: Star,
-    emoji: "⭐",
   },
 };
 
@@ -60,10 +54,4 @@ export function getPositionLabel(positionValue?: string): string {
 export function getPositionIcon(positionValue?: string): LucideIcon | null {
   const config = getPositionConfig(positionValue);
   return config?.icon || null;
-}
-
-// Função helper para obter o emoji
-export function getPositionEmoji(positionValue?: string): string {
-  const config = getPositionConfig(positionValue);
-  return config?.emoji || "⚽";
 }

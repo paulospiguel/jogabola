@@ -1,4 +1,11 @@
 import { addDays, addMonths, addWeeks, format } from "date-fns";
+import type { LucideIcon } from "lucide-react";
+import type { StaticImageData } from "next/image";
+import jbFriendly from "@/assets/images/branding/jb-friendly.png";
+import jbGame from "@/assets/images/branding/jb-game.png";
+import jbMeeting from "@/assets/images/branding/jb-meeting.png";
+import jbOther from "@/assets/images/branding/jb-other.png";
+import jbTraining from "@/assets/images/branding/jb-training.png";
 import type {
   ConfirmationMode,
   CreateEventFormValues,
@@ -6,37 +13,53 @@ import type {
   RecurrenceType,
 } from "@/components/shared/events/create-event-dialog.types";
 
+export type EventTypeVisual =
+  | { kind: "brand"; image: StaticImageData; altKey: string }
+  | { kind: "icon"; icon: LucideIcon };
+
 export type EventTypeMeta = {
   labelKey: string;
   descriptionKey: string;
-  emoji: string;
+  visual: EventTypeVisual;
 };
 
 export const EVENT_TYPE_META: Record<CreateEventType, EventTypeMeta> = {
   game: {
     labelKey: "typeOptions.game.label",
     descriptionKey: "typeOptions.game.description",
-    emoji: "🏆",
+    visual: { kind: "brand", image: jbGame, altKey: "typeOptions.game.alt" },
   },
   training: {
     labelKey: "typeOptions.training.label",
     descriptionKey: "typeOptions.training.description",
-    emoji: "🏋️",
+    visual: {
+      kind: "brand",
+      image: jbTraining,
+      altKey: "typeOptions.training.alt",
+    },
   },
   friendly: {
     labelKey: "typeOptions.friendly.label",
     descriptionKey: "typeOptions.friendly.description",
-    emoji: "🤝",
+    visual: {
+      kind: "brand",
+      image: jbFriendly,
+      altKey: "typeOptions.friendly.alt",
+    },
   },
   meeting: {
     labelKey: "typeOptions.meeting.label",
     descriptionKey: "typeOptions.meeting.description",
-    emoji: "🗣️",
+    visual: {
+      kind: "brand",
+      image: jbMeeting,
+      altKey: "typeOptions.meeting.alt",
+    },
   },
   other: {
     labelKey: "typeOptions.other.label",
     descriptionKey: "typeOptions.other.description",
-    emoji: "📌",
+    visual: { kind: "brand", image: jbOther, altKey: "typeOptions.other.alt" },
   },
 };
 

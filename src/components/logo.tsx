@@ -65,6 +65,7 @@ export const Logo: React.FC<LogoProps> = ({
         src={logotipo}
         alt={t(APP.COMPANY.NAME)}
         fill
+        sizes="(max-width: 768px) 40vw, 200px"
         className="object-contain"
       />
       <span className="sr-only">
@@ -95,7 +96,7 @@ export const Logo: React.FC<LogoProps> = ({
               : "-right-4 top-3 px-2 py-0.5 text-[10px]",
           )}
         >
-          Beta
+          {t("common.betaLabel")}
         </span>
       )}
     </Link>

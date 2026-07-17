@@ -1,7 +1,8 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Check, Loader2, Share, X } from "lucide-react";
+import { Check, Loader2, Share, Timer, X } from "lucide-react";
+import Link from "next/link";
 import type { useTranslations } from "next-intl";
 import {
   AlertDialog,
@@ -55,6 +56,14 @@ export function EventActionBar({
       >
         <Share className="w-5 h-5 text-arena-text-sec" strokeWidth={1.8} />
       </Button>
+
+      <Link
+        href="/timer"
+        aria-label={t("actions.timer")}
+        className="press w-12 h-12 bg-arena-surface border border-arena-border hover:bg-arena-surface-el flex items-center justify-center shrink-0 rounded-xl no-underline"
+      >
+        <Timer className="w-5 h-5 text-arena-text-sec" strokeWidth={1.8} />
+      </Link>
 
       {isConfirmed ? (
         <AlertDialog>

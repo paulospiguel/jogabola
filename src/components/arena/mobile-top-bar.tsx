@@ -25,7 +25,7 @@ export function MobileTopBar() {
         />
 
         {/* Unified Selector de Equipa */}
-        <div className="shrink-0 min-w-0 m-auto">
+        <div className="min-w-0 m-auto">
           <TeamSwitcher variant="header" />
         </div>
       </div>
@@ -34,7 +34,7 @@ export function MobileTopBar() {
         <Link
           href="/arena/notifications"
           aria-label={t("notifications")}
-          className="press relative flex h-10 w-10 items-center justify-center rounded-xl border border-arena-border bg-arena-surface text-arena-text-sec transition-all duration-200 hover:bg-arena-surface-el hover:text-arena-text"
+          className="press relative flex min-h-11 min-w-11 items-center justify-center rounded-xl border border-arena-border bg-arena-surface text-arena-text-sec transition-all duration-200 hover:bg-arena-surface-el hover:text-arena-text"
         >
           <Bell aria-hidden="true" size={20} strokeWidth={1.7} />
           {unreadCount > 0 && (
@@ -43,7 +43,10 @@ export function MobileTopBar() {
             </span>
           )}
         </Link>
-        <UserMenu onlyAvatar />
+        <UserMenu
+          className="press flex min-h-11 min-w-11 items-center justify-center"
+          onlyAvatar
+        />
       </div>
     </header>
   );

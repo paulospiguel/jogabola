@@ -5,6 +5,7 @@ import { useTranslations } from "next-intl";
 import { MetricCard } from "@/components/arena/metric-card";
 import { PaymentSettingsSheet } from "@/components/arena/payment-settings-sheet";
 import { ProofReviewSheet } from "@/components/arena/proof-review-sheet";
+import { deriveQueryViewState } from "@/components/arena/query-state";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { cn } from "@/lib/utils";
 import { AiProTab } from "./_components/ai-pro-tab";
@@ -15,6 +16,26 @@ import {
   usePaymentsPageState,
 } from "./_hooks/use-payments-page-state";
 
+/**
+ * Placeholder matching `MetricCard`'s footprint (`min-h-[92px]`,
+ * `rounded-[14px]`, `border-arena-border`, `bg-arena-surface/70`) so the
+ * strip doesn't jump size while its real value is still unknown. Used
+ * whenever the payments query hasn't settled with real data yet — during
+ * the initial fetch, or after an error with nothing to show — so a
+ * counter never renders "0" as if it were a trustworthy answer.
+ */
+function MetricCardSkeleton() {
+  return (
+    <div
+      className="flex min-h-[92px] min-w-0 flex-col justify-between rounded-[14px] border border-arena-border bg-arena-surface/70 p-3"
+      aria-hidden="true"
+    >
+      <div className="h-3 w-16 animate-pulse rounded-full bg-arena-surface-el" />
+      <div className="h-6 w-10 animate-pulse rounded-lg bg-arena-surface-el" />
+    </div>
+  );
+}
+
 export default function PaymentsPage() {
   const t = useTranslations("arenaPayments");
   const badgeT = useTranslations("arenaBadges");
@@ -23,19 +44,32 @@ export default function PaymentsPage() {
     activeTab,
     activeTeamId,
     filteredPayments,
-    isLoading,
-    refetch,
-    refetchSettings,
+    paymentsState,
     selectedProofPayment,
     setActiveFilter,
     setActiveTab,
     setSelectedProofPayment,
     setShowSettings,
-    settings,
+    settingsState,
     showSettings,
     statusCounts,
     totals,
   } = usePaymentsPageState();
+
+  // Metrics (header total + strip) are derived straight from `payments`,
+  // so they must follow the same loading/error/empty/success precedence as
+  // the list itself — a genuine zero (`empty`/`success`) is a trustworthy
+  // "€0,00", but `loading`/`error` never render a number at all, so a
+  // skeleton is never mistaken for "no payments yet".
+  const paymentsViewState = deriveQueryViewState({
+    hasData: paymentsState.payments.length > 0,
+    isInitialLoading: paymentsState.isInitialLoading,
+    isFetching: paymentsState.isFetching,
+    error: paymentsState.error,
+  });
+  const metricsReady =
+    paymentsViewState.status === "empty" ||
+    paymentsViewState.status === "success";
 
   return (
     <div className="jb-page">
@@ -44,36 +78,53 @@ export default function PaymentsPage() {
         <header className="jb-topbar flex gap-2 ">
           <div>
             <div className="jb-kicker">{t("kicker")}</div>
-            <strong className="font-sora text-3xl font-black tracking-tight text-arena-text">
-              €{totals.received.toFixed(2).replace(".", ",")}
-              <span className="text-xs font-semibold text-arena-text-muted ml-1.5">
-                / €{totals.expected.toFixed(2).replace(".", ",")}{" "}
-                {t("stats.received")}
-              </span>
-            </strong>
+            {metricsReady ? (
+              <strong className="font-sora text-3xl font-black tracking-tight text-arena-text">
+                €{totals.received.toFixed(2).replace(".", ",")}
+                <span className="text-xs font-semibold text-arena-text-muted ml-1.5">
+                  / €{totals.expected.toFixed(2).replace(".", ",")}{" "}
+                  {t("stats.received")}
+                </span>
+              </strong>
+            ) : (
+              <div
+                className="mt-1 h-8 w-44 animate-pulse rounded-lg bg-arena-surface-el"
+                aria-hidden="true"
+              />
+            )}
           </div>
         </header>
 
         {/* Dynamic Metric Cards Strip */}
         <div className="grid grid-cols-3 gap-2 mt-4">
-          <MetricCard
-            label={t("stats.toValidate").toUpperCase()}
-            value={statusCounts.validating}
-            tone="warning"
-            icon={Clock}
-          />
-          <MetricCard
-            label={t("stats.overdue").toUpperCase()}
-            value={statusCounts.pending}
-            tone="danger"
-            icon={AlertCircle}
-          />
-          <MetricCard
-            label={t("stats.paid").toUpperCase()}
-            value={statusCounts.confirmed}
-            tone="success"
-            icon={CheckCircleIcon}
-          />
+          {metricsReady ? (
+            <>
+              <MetricCard
+                label={t("stats.toValidate").toUpperCase()}
+                value={statusCounts.validating}
+                tone="warning"
+                icon={Clock}
+              />
+              <MetricCard
+                label={t("stats.overdue").toUpperCase()}
+                value={statusCounts.pending}
+                tone="danger"
+                icon={AlertCircle}
+              />
+              <MetricCard
+                label={t("stats.paid").toUpperCase()}
+                value={statusCounts.confirmed}
+                tone="success"
+                icon={CheckCircleIcon}
+              />
+            </>
+          ) : (
+            <>
+              <MetricCardSkeleton />
+              <MetricCardSkeleton />
+              <MetricCardSkeleton />
+            </>
+          )}
         </div>
 
         <Tabs
@@ -121,8 +172,8 @@ export default function PaymentsPage() {
               activeFilter={activeFilter}
               badgeT={badgeT}
               filteredPayments={filteredPayments}
-              isLoading={isLoading}
               onSelectProofPayment={setSelectedProofPayment}
+              paymentsState={paymentsState}
               setActiveFilter={setActiveFilter}
               t={t}
             />
@@ -131,7 +182,7 @@ export default function PaymentsPage() {
           <TabsContent value="methods" className="mt-0 outline-none">
             <PaymentMethodsTab
               onConfigure={() => setShowSettings(true)}
-              settings={settings}
+              settings={settingsState.settings}
               t={t}
             />
           </TabsContent>
@@ -148,7 +199,7 @@ export default function PaymentsPage() {
           payment={selectedProofPayment}
           onClose={() => setSelectedProofPayment(null)}
           onSuccess={() => {
-            refetch();
+            paymentsState.refetch();
           }}
         />
       )}
@@ -158,23 +209,26 @@ export default function PaymentsPage() {
         <PaymentSettingsSheet
           teamId={activeTeamId}
           initial={
-            settings
+            settingsState.settings
               ? {
-                  stripeEnabled: settings.stripeEnabled,
-                  mbwayEnabled: settings.mbwayEnabled,
-                  mbwayPhone: settings.mbwayPhone ?? undefined,
-                  mbwayName: settings.mbwayName ?? undefined,
-                  cashEnabled: settings.cashEnabled,
-                  cashInstructions: settings.cashInstructions ?? undefined,
-                  transferEnabled: settings.transferEnabled,
-                  transferIban: settings.transferIban ?? undefined,
-                  transferName: settings.transferName ?? undefined,
+                  stripeEnabled: settingsState.settings.stripeEnabled,
+                  mbwayEnabled: settingsState.settings.mbwayEnabled,
+                  mbwayPhone: settingsState.settings.mbwayPhone ?? undefined,
+                  mbwayName: settingsState.settings.mbwayName ?? undefined,
+                  cashEnabled: settingsState.settings.cashEnabled,
+                  cashInstructions:
+                    settingsState.settings.cashInstructions ?? undefined,
+                  transferEnabled: settingsState.settings.transferEnabled,
+                  transferIban:
+                    settingsState.settings.transferIban ?? undefined,
+                  transferName:
+                    settingsState.settings.transferName ?? undefined,
                 }
               : undefined
           }
           onClose={() => setShowSettings(false)}
           onSaved={() => {
-            refetchSettings();
+            settingsState.refetch();
           }}
         />
       )}

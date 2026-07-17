@@ -405,6 +405,13 @@
         "label": "Autre"
       }
     },
+    "typeOptions": {
+      "game": { "alt": "Icône de match" },
+      "training": { "alt": "Icône d'entraînement" },
+      "friendly": { "alt": "Icône de match amical" },
+      "meeting": { "alt": "Icône de réunion" },
+      "other": { "alt": "Icône d'autre type d'événement" }
+    },
     "final": {
       "stepsInfo": "Les joueurs reçoivent une notification et peuvent confirmer/refuser directement.",
       "sendCallup": "Envoyer la Convocation",
@@ -458,6 +465,21 @@
       "event": "Événement",
       "player": "Joueur"
     },
+    "cockpit": {
+      "noEventManagerTitle": "Crée ta prochaine convocation",
+      "noEventManagerDescription": "Tu n'as encore aucun événement prévu. Crée un match ou un entraînement pour commencer à convoquer.",
+      "noEventMemberTitle": "Aucun événement prévu",
+      "noEventMemberDescription": "Ton équipe n'a pas encore d'événement. Consulte l'effectif en attendant.",
+      "createEvent": "Créer un événement",
+      "addPlayer": "Ajouter un joueur",
+      "viewSquad": "Voir l'effectif",
+      "openTimer": "Chronomètre",
+      "eventsErrorTitle": "Impossible de charger les événements",
+      "eventsErrorDescription": "Vérifie ta connexion et réessaie.",
+      "squadErrorTitle": "Impossible de charger l'effectif",
+      "squadErrorDescription": "Vérifie ta connexion et réessaie.",
+      "retry": "Réessayer"
+    },
     "defaultUser": "Utilisateur",
     "hero": {
       "nextMatch": "Prochain Match",
@@ -498,6 +520,7 @@
     "actions": {
       "cancel": "Annuler la présence",
       "confirm": "Confirmer la présence",
+      "timer": "Ouvrir le chronomètre",
       "cancelled": "Événement annulé",
       "cancelConfirm": {
         "title": "Annuler la présence ?",
@@ -661,9 +684,12 @@
     "actions": {
       "create": "Créer",
       "createEvent": "Créer un événement",
+      "retry": "Réessayer",
       "viewCalendar": "Calendrier"
     },
     "empty": {
+      "errorDescription": "Vérifiez votre connexion et réessayez.",
+      "errorTitle": "Impossible de charger les événements",
       "noPast": "Aucun historique pour le moment.",
       "subtitle": "Créez le premier événement de votre équipe.",
       "title": "Aucun événement"
@@ -674,7 +700,7 @@
       "view": "Voir",
       "nextEvent": "Événement suivant",
       "prevEvent": "Événement précédent",
-      "noEvents": "Aucun événement à venir. Créez-en un !"
+      "noEventsMemberDescription": "Votre équipe n'a pas encore d'événements programmés. Consultez le calendrier pour les nouveautés."
     },
     "stats": {
       "confirmed": "Confirmés",
@@ -995,7 +1021,8 @@
       "uploadProof": "Charger des Preuves",
       "setMethods": "Méthodes de Paiement",
       "autoValidate": "Validation automatique",
-      "relevant": "Autres Actions"
+      "relevant": "Autres Actions",
+      "retry": "Réessayer"
     },
     "noPayments": "Aucun paiement trouvé",
     "noPaymentsSub": "Aucun enregistrement de paiement correspondant trouvé dans ce filtre.",
@@ -1060,7 +1087,11 @@
       "creditCard": "Carte de crédit"
     },
     "markRefund": "Rembourser",
-    "markCredit": "Convertir en Crédit"
+    "markCredit": "Convertir en Crédit",
+    "empty": {
+      "errorTitle": "Impossible de charger les paiements",
+      "errorDescription": "Vérifiez votre connexion et réessayez."
+    }
   },
   "arenaBadges": {
     "new": "Nouveau",
@@ -1096,7 +1127,8 @@
     },
     "actions": {
       "add": "Ajouter",
-      "addPlayer": "Ajouter un joueur"
+      "addPlayer": "Ajouter un joueur",
+      "retry": "Réessayer"
     },
     "filters": {
       "all": "Tous",
@@ -1162,12 +1194,19 @@
       "remove": "Retirer co-capitaine",
       "removeDesc": "Révoquer les permissions de gestion. Redevient joueur.",
       "removeLabel": "Retirer"
+    },
+    "empty": {
+      "title": "Aucun joueur dans l'effectif pour l'instant",
+      "subtitle": "Ajoutez le premier joueur pour commencer à gérer les convocations.",
+      "errorTitle": "Impossible de charger l'effectif",
+      "errorDescription": "Vérifiez votre connexion et réessayez."
     }
   },
   "common": {
     "accept": "Accepter",
     "actions": "Actions",
     "back": "Retour",
+    "betaLabel": "Bêta",
     "cancel": "Annuler",
     "city": "Ville",
     "close": "Fermer",

@@ -1,54 +1,13 @@
 "use client";
 
-import {
-  Calendar,
-  Lock,
-  Shield,
-  Timer,
-  User,
-  Users,
-  Wallet,
-} from "lucide-react";
+import { Lock } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { useDevice } from "@/hooks/use-device";
 import { cn } from "@/lib/utils";
+import { BOTTOM_NAV_ITEMS, isBottomNavItemActive } from "./bottom-nav-items";
 import { useTeamGate } from "./team-gate-context";
-
-const ITEMS = [
-  { href: "/arena", icon: Shield, labelKey: "dashboard", requiresTeam: false },
-  {
-    href: "/arena/squads",
-    icon: Users,
-    labelKey: "squads",
-    requiresTeam: true,
-  },
-  {
-    href: "/arena/events",
-    icon: Calendar,
-    labelKey: "events",
-    requiresTeam: true,
-  },
-  {
-    href: "/arena/payments",
-    icon: Wallet,
-    labelKey: "payments",
-    requiresTeam: true,
-  },
-  {
-    href: "/timer",
-    icon: Timer,
-    labelKey: "timer",
-    requiresTeam: false,
-  },
-  {
-    href: "/arena/profile",
-    icon: User,
-    labelKey: "profile",
-    requiresTeam: false,
-  },
-];
 
 export function BottomNav() {
   const pathname = usePathname();
@@ -62,10 +21,8 @@ export function BottomNav() {
 
   return (
     <nav className="fixed right-0 bottom-0 left-0 z-50 flex h-[72px] items-center justify-around border-arena-border border-t bg-arena-bg-sec px-0.5 pb-2">
-      {ITEMS.map(item => {
-        const isActive =
-          pathname === item.href ||
-          (item.href !== "/arena" && pathname.startsWith(item.href));
+      {BOTTOM_NAV_ITEMS.map(item => {
+        const isActive = isBottomNavItemActive(item.href, pathname);
         const isLocked = isCaptainWithoutTeam && item.requiresTeam;
         const Icon = item.icon;
 
@@ -75,7 +32,7 @@ export function BottomNav() {
               key={item.href}
               type="button"
               onClick={() => requireTeam()}
-              className="relative flex min-w-0 flex-1 flex-col items-center gap-0.5 pt-2 opacity-35"
+              className="press relative flex min-h-11 min-w-11 flex-1 flex-col items-center justify-center gap-0.5 opacity-35"
             >
               <div className="relative">
                 <Icon
@@ -99,7 +56,7 @@ export function BottomNav() {
           <Link
             key={item.href}
             href={item.href}
-            className="relative flex min-w-0 flex-1 flex-col items-center gap-0.5 pt-2 no-underline"
+            className="press relative flex min-h-11 min-w-11 flex-1 flex-col items-center justify-center gap-0.5 no-underline"
           >
             <Icon
               size={19}

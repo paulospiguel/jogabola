@@ -405,6 +405,13 @@
         "label": "Other"
       }
     },
+    "typeOptions": {
+      "game": { "alt": "Match icon" },
+      "training": { "alt": "Training icon" },
+      "friendly": { "alt": "Friendly match icon" },
+      "meeting": { "alt": "Meeting icon" },
+      "other": { "alt": "Other event type icon" }
+    },
     "final": {
       "stepsInfo": "Players receive a notification and can confirm/decline directly.",
       "sendCallup": "Send Callup",
@@ -458,6 +465,21 @@
       "event": "Event",
       "player": "Player"
     },
+    "cockpit": {
+      "noEventManagerTitle": "Create your next call-up",
+      "noEventManagerDescription": "You don't have any events scheduled yet. Create a match or training session to start calling up players.",
+      "noEventMemberTitle": "No events scheduled",
+      "noEventMemberDescription": "Your team doesn't have any events yet. Check the squad in the meantime.",
+      "createEvent": "Create event",
+      "addPlayer": "Add player",
+      "viewSquad": "View squad",
+      "openTimer": "Timer",
+      "eventsErrorTitle": "Couldn't load events",
+      "eventsErrorDescription": "Check your connection and try again.",
+      "squadErrorTitle": "Couldn't load the squad",
+      "squadErrorDescription": "Check your connection and try again.",
+      "retry": "Try again"
+    },
     "defaultUser": "User",
     "hero": {
       "nextMatch": "Next Match",
@@ -498,6 +520,7 @@
     "actions": {
       "cancel": "Cancel Attendance",
       "confirm": "Confirm Attendance",
+      "timer": "Open Timer",
       "cancelled": "Event cancelled",
       "cancelConfirm": {
         "title": "Cancel attendance?",
@@ -661,9 +684,12 @@
     "actions": {
       "create": "Create",
       "createEvent": "Create event",
+      "retry": "Try again",
       "viewCalendar": "Calendar"
     },
     "empty": {
+      "errorDescription": "Check your connection and try again.",
+      "errorTitle": "We couldn't load your events",
       "noPast": "No history yet.",
       "subtitle": "Create your team's first event.",
       "title": "No events"
@@ -674,7 +700,7 @@
       "view": "View",
       "nextEvent": "Next event",
       "prevEvent": "Previous event",
-      "noEvents": "No upcoming events. Create one!"
+      "noEventsMemberDescription": "Your team doesn't have any scheduled events yet. Check the calendar for updates."
     },
     "stats": {
       "confirmed": "Confirmed",
@@ -1057,10 +1083,15 @@
       "uploadProof": "Upload Proofs",
       "setMethods": "Payment Methods",
       "autoValidate": "Auto-validation",
-      "relevant": "Other Actions"
+      "relevant": "Other Actions",
+      "retry": "Try again"
     },
     "markRefund": "Refund",
-    "markCredit": "Convert to Credit"
+    "markCredit": "Convert to Credit",
+    "empty": {
+      "errorTitle": "We couldn't load the payments",
+      "errorDescription": "Check your connection and try again."
+    }
   },
   "arenaBadges": {
     "new": "New",
@@ -1096,7 +1127,8 @@
     },
     "actions": {
       "add": "Add",
-      "addPlayer": "Add player"
+      "addPlayer": "Add player",
+      "retry": "Try again"
     },
     "filters": {
       "all": "All",
@@ -1162,12 +1194,19 @@
       "remove": "Remove co-captain",
       "removeDesc": "Revoke management permissions. Reverts to player.",
       "removeLabel": "Remove"
+    },
+    "empty": {
+      "title": "No players in the roster yet",
+      "subtitle": "Add your first player to start managing call-ups.",
+      "errorTitle": "We couldn't load the roster",
+      "errorDescription": "Check your connection and try again."
     }
   },
   "common": {
     "accept": "Accept",
     "actions": "Actions",
     "back": "Back",
+    "betaLabel": "Beta",
     "cancel": "Cancel",
     "city": "City",
     "close": "Close",
