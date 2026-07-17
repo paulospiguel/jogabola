@@ -92,7 +92,6 @@ export function PasskeyPromptGate({
     }, 1500);
   }
 
-
   function handleSkip() {
     sessionStorage.setItem(`jogabola-passkey-prompt-skipped-${userId}`, "true");
     setIsOpen(false);

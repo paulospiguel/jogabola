@@ -198,10 +198,7 @@ export async function sendPaymentRemindersCron(): Promise<{
       // Check if player has a paid reservation (status 'confirmed' or 'approved')
       const paidReservation = await db.query.matchReservations.findFirst({
         where: (mr, { and, eq }) =>
-          and(
-            eq(mr.matchSessionId, event.id),
-            eq(mr.playerId, playerId),
-          ),
+          and(eq(mr.matchSessionId, event.id), eq(mr.playerId, playerId)),
         columns: { id: true, status: true },
       });
 
@@ -218,10 +215,7 @@ export async function sendPaymentRemindersCron(): Promise<{
       // Idempotency: check if reminder already sent for this event
       const existingReminder = await db.query.notifications.findFirst({
         where: (n, { and, eq }) =>
-          and(
-            eq(n.userId, playerId),
-            eq(n.type, "payment_deadline_reminder"),
-          ),
+          and(eq(n.userId, playerId), eq(n.type, "payment_deadline_reminder")),
         columns: { id: true, metadata: true },
       });
 
