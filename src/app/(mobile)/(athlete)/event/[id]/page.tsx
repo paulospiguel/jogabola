@@ -1,11 +1,10 @@
 import { ArrowLeft } from "lucide-react";
-import { headers } from "next/headers";
 import Link from "next/link";
 import { getTranslations } from "next-intl/server";
 import { getUserEventAttendanceStatus } from "@/actions/attendance.actions";
 import { getEvent } from "@/actions/match-sessions.actions";
 import { Logo } from "@/components/logo";
-import { auth } from "@/lib/auth";
+import { getCachedSession } from "@/lib/get-session";
 import { AthleteEventDetail } from "./_components/athlete-event-detail";
 
 interface Params {
@@ -19,10 +18,8 @@ export default async function AthleteEventPage({ params }: Params) {
   const eventIdOrSlug = id;
 
   try {
-    const h = await headers();
-
     const [session, eventResult] = await Promise.all([
-      auth.api.getSession({ headers: h }),
+      getCachedSession(),
       getEvent(eventIdOrSlug),
     ]);
 

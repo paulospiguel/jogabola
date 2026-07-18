@@ -1,6 +1,5 @@
-import { headers } from "next/headers";
 import { redirect } from "next/navigation";
-import { auth } from "@/lib/auth";
+import { getCachedSession } from "@/lib/get-session";
 import { isTesterEmail } from "@/lib/notion";
 
 export default async function ProtectedLayout({
@@ -8,11 +7,7 @@ export default async function ProtectedLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const headerStore = await headers();
-
-  const session = await auth.api.getSession({
-    headers: headerStore,
-  });
+  const session = await getCachedSession();
 
   if (!session) {
     redirect("/auth");

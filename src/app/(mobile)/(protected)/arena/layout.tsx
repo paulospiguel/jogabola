@@ -1,5 +1,4 @@
 import { eq } from "drizzle-orm";
-import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 import { BottomNav } from "@/components/arena/bottom-nav";
@@ -11,14 +10,14 @@ import { TeamGateProvider } from "@/components/arena/team-gate-context";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import { db } from "@/db/client";
 import * as schema from "@/db/schema";
-import { auth } from "@/lib/auth";
+import { getCachedSession } from "@/lib/get-session";
 
 export default async function ArenaLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const session = await auth.api.getSession({ headers: await headers() });
+  const session = await getCachedSession();
   const user = session?.user;
   const sessionData = session?.session;
 

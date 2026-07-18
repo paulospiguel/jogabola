@@ -1,12 +1,11 @@
-import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 import { UserMenu } from "@/components/arena/user-menu";
-import { auth } from "@/lib/auth";
+import { getCachedSession } from "@/lib/get-session";
 import { SettingsForm } from "./_components/settings-form";
 
 export default async function ArenaSettingsPage() {
-  const session = await auth.api.getSession({ headers: await headers() });
+  const session = await getCachedSession();
 
   if (!session?.user) {
     redirect("/auth");
