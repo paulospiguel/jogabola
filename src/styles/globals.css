@@ -788,3 +788,14 @@
     opacity: 0.4;
   }
 }
+
+/* Screen-to-screen fade for arena route changes (template.tsx) */
+.jb-screen-fade {
+  animation: fadeIn 0.18s ease-out;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .jb-screen-fade {
+    animation: none;
+  }
+}
