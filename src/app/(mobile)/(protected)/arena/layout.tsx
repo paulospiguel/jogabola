@@ -32,22 +32,21 @@ export default async function ArenaLayout({
   const role: string | null = user?.role ?? null;
   let hasTeam = Boolean(sessionData?.teamId);
 
-  if (!hasTeam && user?.id) {
-    const membership = await db.query.teamMembers.findFirst({
-      where: eq(schema.teamMembers.playerId, user.id),
-    });
-    if (membership) {
-      hasTeam = true;
-    }
-  }
-
-  let hasPasskey = false;
-  if (user?.id) {
-    const passkeyRecord = await db.query.passkey.findFirst({
+  const [membership, passkeyRecord] = await Promise.all([
+    hasTeam
+      ? Promise.resolve(null)
+      : db.query.teamMembers.findFirst({
+          where: eq(schema.teamMembers.playerId, user.id),
+        }),
+    db.query.passkey.findFirst({
       where: eq(schema.passkey.userId, user.id),
-    });
-    hasPasskey = Boolean(passkeyRecord);
+    }),
+  ]);
+
+  if (membership) {
+    hasTeam = true;
   }
+  const hasPasskey = Boolean(passkeyRecord);
 
   const t = await getTranslations("passkeyPrompt");
   const passkeyTranslations = {
