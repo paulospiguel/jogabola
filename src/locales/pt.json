@@ -2697,7 +2697,7 @@
     "VALIDATION_TITLE_TOO_SHORT": "O título deve ter pelo menos 3 caracteres."
   },
   "waitlist": {
-    "description": "Estamos em fase de testes. Regista-te para seres dos primeiros a entrar quando abrirmos.",
+    "description": "Estamos em fase de testes. Regista-te para seres um dos primeiros a entrar quando abrirmos.",
     "preferences": {
       "earlyAccess": "Acesso antecipado a novas funcionalidades",
       "newsletter": "Subscrever newsletter com dicas e novidades",
