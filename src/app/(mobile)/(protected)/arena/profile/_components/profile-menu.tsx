@@ -21,13 +21,13 @@ interface ProfileMenuProps {
   onOpenSheet: (sheet: ActiveSheet) => void;
 }
 
+async function handleLogout() {
+  await signOut();
+  window.location.href = "/";
+}
+
 export function ProfileMenu({ onOpenSheet }: ProfileMenuProps) {
   const t = useTranslations("profilePage");
-
-  const handleLogout = async () => {
-    await signOut();
-    window.location.href = "/";
-  };
 
   return (
     <>

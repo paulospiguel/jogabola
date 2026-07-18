@@ -1,6 +1,6 @@
 # Arena — Inventário de assets de branding e emojis
 
-> Task 7 do plano `docs/superpowers/plans/2026-07-16-arena-ui-ux-improvements.md`.
+> Task 7 do plano [Arena UI/UX Improvements](../archive/plans/completed/2026-07-16-arena-ui-ux-improvements.md).
 > Este documento é apenas inventário e contrato — não introduz nem gera imagens novas (isso é a Task 8, com gate humano) e não altera UI (isso é a Task 9).
 
 ## 1. Metodologia

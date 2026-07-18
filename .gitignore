@@ -53,6 +53,9 @@ packages/email/public
 storybook-static
 tailwind.css
 
+# agent runtime / caches
+.superpowers/
+
 # Supabase
 .branches
 .temp
@@ -66,9 +69,26 @@ bun.lockb
 .playwright-cli
 .gemini
 .antigravitycli
-.agents
-.claude
+.agents/*
+!.agents/skills/
+.agents/skills/*
+!.agents/skills/dev-coder/
+!.agents/skills/dev-coder/**
+!.agents/skills/react-doctor/
+!.agents/skills/react-doctor/**
+!.agents/skills/builder-business/
+!.agents/skills/builder-business/**
+!.agents/skills/integration-nextjs-app-router/
+!.agents/skills/integration-nextjs-app-router/**
+.claude/*
 !.claude/napkin.md
+!.claude/skills
+!.claude/skills/
+.claude/skills/*
+!.claude/skills/dev-coder
+!.claude/skills/react-doctor
+!.claude/skills/builder-business
+!.claude/skills/integration-nextjs-app-router
 .codex
 !.codex/napkin.md
 .env.local

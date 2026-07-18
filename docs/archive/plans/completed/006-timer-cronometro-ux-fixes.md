@@ -134,7 +134,7 @@ Two items from the initial QA writeup do not hold up under source review and are
 | Dev server (manual QA) | `pnpm dev` then open `/timer` | — |
 | Production check (Step 7 correction re-verify) | `pnpm build && pnpm start` | no dev "N" badge at 390px width |
 
-No test harness currently covers `src/components/timer` (confirmed absent from `plans/001-verification-baseline.md` scope, which explicitly lists "the timer module internals" as not audited). This plan does not add one — see Maintenance notes.
+No test harness currently covers `src/components/timer` (confirmed absent from [001-verification-baseline.md](001-verification-baseline.md), whose scope explicitly lists "the timer module internals" as not audited). This plan does not add one — see Maintenance notes.
 
 ## Scope
 

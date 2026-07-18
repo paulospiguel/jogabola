@@ -32,6 +32,7 @@ Este documento define a linguagem ubíqua e as regras de negócio da plataforma 
 ### Identidade & Sessão
 - **Utilizador Fantasma** (`Ghost User`): Registo de utilizador criado automaticamente a partir de um email de convidado para preservar histórico (pagamentos, golos) sem exigir password.
 - **Identificação por Email**: Estratégia de reconhecimento global onde o email serve de chave única para unificar o Atleta em diferentes Equipas e Convocatórias.
+- **Passkey**: Método de login via WebAuthn (biometria/PIN do dispositivo), sem password. Login usa UI condicional (autofill nativo do browser), não um botão dedicado. Ver [ADR 0003](docs/adr/0003-passkey-login-conditional-ui.md).
 
 ## Convenções de Código
 

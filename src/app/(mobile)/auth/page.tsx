@@ -100,6 +100,37 @@ export default function LoginPage() {
     router.push(callbackURL);
   }, [callbackURL, data?.user?.id, router]);
 
+  const conditionalPasskeyArmed = useRef(false);
+
+  // biome-ignore lint/correctness/useExhaustiveDependencies: run once on mount, reads latest values via closure intentionally
+  useEffect(() => {
+    if (conditionalPasskeyArmed.current) return;
+    if (typeof window === "undefined") return;
+    const canConditionalUI =
+      window.PublicKeyCredential?.isConditionalMediationAvailable;
+    if (!canConditionalUI) return;
+
+    conditionalPasskeyArmed.current = true;
+
+    canConditionalUI().then(async available => {
+      if (!available) return;
+      try {
+        const result = await signIn.passkey({ autoFill: true });
+        if (result?.data) {
+          trackAuthStarted("passkey");
+          if (analyticsAllowed) {
+            logEvent("login_completed", undefined, { method: "passkey" });
+          }
+          window.location.href = callbackURL;
+        }
+      } catch {
+        // Conditional requests are routinely cancelled (user types,
+        // navigates, or no matching credential exists). Silent by design —
+        // this is a passive listener, not a user-initiated action.
+      }
+    });
+  }, []);
+
   const emailForm = useForm<EmailInput>({
     resolver: zodResolver(emailSchema),
     defaultValues: { email: collectedEmail },
@@ -306,25 +337,6 @@ export default function LoginPage() {
                     <button
                       className="group relative flex h-14 w-full items-center justify-center rounded-2xl border border-arena-border bg-arena-bg-sec/50 transition-all hover:border-arena-primary/30 hover:bg-arena-surface-el active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-60"
                       disabled={loading || socialLoading !== null}
-                      onClick={handlePasskeyLogin}
-                      type="button"
-                    >
-                      {socialLoading === "passkey" ? (
-                        <Loader2 className="h-5 w-5 animate-spin text-arena-text-muted" />
-                      ) : (
-                        <div className="flex items-center gap-2">
-                          <Fingerprint className="h-6 w-6 text-arena-primary" />
-                          <p className="text-sm font-bold tracking-wider uppercase">
-                            {t("passkeyLogin")}
-                          </p>
-                        </div>
-                      )}
-                      <div className="absolute inset-0 rounded-2xl bg-arena-primary/5 opacity-0 transition-opacity group-hover:opacity-100" />
-                    </button>
-
-                    <button
-                      className="group relative flex h-14 w-full items-center justify-center rounded-2xl border border-arena-border bg-arena-bg-sec/50 transition-all hover:border-arena-primary/30 hover:bg-arena-surface-el active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-60"
-                      disabled={loading || socialLoading !== null}
                       onClick={handleGoogleLogin}
                       type="button"
                     >
@@ -341,6 +353,20 @@ export default function LoginPage() {
                       <div className="absolute inset-0 rounded-2xl bg-arena-primary/5 opacity-0 transition-opacity group-hover:opacity-100" />
                     </button>
                   </div>
+
+                  <button
+                    className="press flex w-full items-center justify-center gap-1.5 text-xs font-bold tracking-wider text-arena-text-muted uppercase transition-colors hover:text-arena-primary disabled:cursor-not-allowed disabled:opacity-60"
+                    disabled={loading || socialLoading !== null}
+                    onClick={handlePasskeyLogin}
+                    type="button"
+                  >
+                    {socialLoading === "passkey" ? (
+                      <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                    ) : (
+                      <Fingerprint className="h-3.5 w-3.5" />
+                    )}
+                    {t("passkeyLogin")}
+                  </button>
 
                   <div className="relative flex items-center py-2">
                     <div className="flex-grow border-t border-arena-border"></div>
@@ -364,7 +390,7 @@ export default function LoginPage() {
                       <div className="relative group">
                         <input
                           {...emailForm.register("email")}
-                          autoComplete="email"
+                          autoComplete="username webauthn"
                           className="h-[52px] w-full rounded-2xl border border-arena-border bg-arena-bg-sec/50 px-5 text-sm tracking-wide text-arena-text placeholder:text-arena-text-muted transition-all focus:border-arena-primary focus:bg-arena-bg-sec focus:ring-4 focus:ring-arena-primary/10 outline-none"
                           id="email"
                           placeholder={t("emailPlaceholder")}

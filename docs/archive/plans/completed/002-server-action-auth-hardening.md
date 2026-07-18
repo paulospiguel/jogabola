@@ -17,7 +17,7 @@
 - **Priority**: P1
 - **Effort**: M
 - **Risk**: MED
-- **Depends on**: plans/001-verification-baseline.md
+- **Depends on**: [001-verification-baseline.md](001-verification-baseline.md)
 - **Category**: security
 - **Planned at**: commit `d57f784`, 2026-07-11
 
