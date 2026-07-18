@@ -1,8 +1,9 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import {
   Calendar,
+  ChevronLeft,
   Clock,
   Compass,
   List,
@@ -174,7 +175,7 @@ export function EventDetail({
     <motion.div
       className={cn(
         "flex flex-col relative",
-        activeTab === "chat" ? "h-screen" : "min-h-screen pb-20",
+        "min-h-screen pb-20",
       )}
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
@@ -316,25 +317,7 @@ export function EventDetail({
           />
         </TabsContent>
 
-        <TabsContent
-          value="chat"
-          className="flex flex-col flex-1 min-h-0 overflow-hidden outline-none focus-visible:ring-0 focus-visible:outline-none"
-        >
-          <EventChatTab
-            chatMessages={chatMessages}
-            chatEndRef={chatEndRef}
-            inputMessage={inputMessage}
-            onInputChange={setInputMessage}
-            onSend={handleSendMessage}
-            onDeleteMessage={handleDeleteMessage}
-            onCensorMessage={handleCensorMessage}
-            onRequestValidate={() => setActiveTab("roster")}
-            canChat={canChat}
-            isCaptain={canEdit}
-            sending={sending}
-            t={t}
-          />
-        </TabsContent>
+
       </Tabs>
 
       {activeTab !== "chat" && (
@@ -363,6 +346,61 @@ export function EventDetail({
       {_isEditing && (
         <EditEventSheet event={event} onClose={() => setIsEditing(false)} />
       )}
+
+      <AnimatePresence>
+        {activeTab === "chat" && (
+          <motion.div
+            initial={{ y: "100%" }}
+            animate={{ y: 0 }}
+            exit={{ y: "100%" }}
+            transition={{ type: "spring", damping: 25, stiffness: 200 }}
+            className="fixed inset-0 z-[100] bg-arena-bg flex flex-col pt-[env(safe-area-inset-top)] pb-[env(safe-area-inset-bottom)]"
+          >
+            <style>{`
+              #arena-bottom-nav {
+                display: none !important;
+              }
+            `}</style>
+
+            {/* Custom chat header */}
+            <div className="flex items-center gap-3 px-4 py-3 border-b border-arena-border bg-arena-surface shrink-0">
+              <Button
+                variant="ghost"
+                onClick={() => setActiveTab("roster")}
+                className="w-10 h-10 rounded-full text-arena-text-sec hover:text-arena-text hover:bg-arena-surface-el -ml-2 p-0 flex items-center justify-center shrink-0"
+              >
+                <ChevronLeft size={24} />
+              </Button>
+              <div className="flex items-center gap-2.5 min-w-0">
+                <div className="w-10 h-10 rounded-full bg-[#00f0ff]/10 flex items-center justify-center border border-[#00f0ff]/20 shrink-0">
+                  <MessageSquare className="w-5 h-5 text-[#00f0ff]" />
+                </div>
+                <div className="truncate">
+                  <h2 className="text-[15px] font-bold text-arena-text truncate">{event.title}</h2>
+                  <p className="text-[11px] text-arena-text-sec font-medium uppercase tracking-wider">
+                    {t("tabs.chat")}
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <EventChatTab
+              chatMessages={chatMessages}
+              chatEndRef={chatEndRef}
+              inputMessage={inputMessage}
+              onInputChange={setInputMessage}
+              onSend={handleSendMessage}
+              onDeleteMessage={handleDeleteMessage}
+              onCensorMessage={handleCensorMessage}
+              onRequestValidate={() => setActiveTab("roster")}
+              canChat={canChat}
+              isCaptain={canEdit}
+              sending={sending}
+              t={t}
+            />
+          </motion.div>
+        )}
+      </AnimatePresence>
     </motion.div>
   );
 }

@@ -20,7 +20,7 @@ export function BottomNav() {
   if (!isMobile) return null;
 
   return (
-    <nav className="fixed right-0 bottom-0 left-0 z-50 flex h-[72px] items-center justify-around border-arena-border border-t bg-arena-bg-sec px-0.5 pb-2">
+    <nav id="arena-bottom-nav" className="fixed right-0 bottom-0 left-0 z-50 flex h-[72px] items-center justify-around border-arena-border border-t bg-arena-bg-sec px-0.5 pb-2">
       {BOTTOM_NAV_ITEMS.map(item => {
         const isActive = isBottomNavItemActive(item.href, pathname);
         const isLocked = isCaptainWithoutTeam && item.requiresTeam;

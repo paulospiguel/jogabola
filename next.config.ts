@@ -21,9 +21,6 @@ const nextConfig: NextConfig = {
     ],
   },
 
-  // typescript: {
-  //   ignoreBuildErrors: true,
-  // },
   turbopack: {
     resolveExtensions: [".mdx", ".tsx", ".ts", ".jsx", ".js", ".mjs", ".json"],
     rules: {
@@ -35,6 +32,8 @@ const nextConfig: NextConfig = {
   },
 
   skipTrailingSlashRedirect: true,
+
+  allowedDevOrigins: ["192.168.1.152"],
 
   async headers() {
     return [
