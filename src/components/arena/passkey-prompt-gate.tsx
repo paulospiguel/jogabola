@@ -39,6 +39,18 @@ interface PasskeyPromptGateProps {
   };
 }
 
+const MAX_PROMPT_ATTEMPTS = 3;
+
+function refusedKey(userId: string) {
+  return `jogabola-passkey-prompt-refused-${userId}`;
+}
+function skippedKey(userId: string) {
+  return `jogabola-passkey-prompt-skipped-${userId}`;
+}
+function countKey(userId: string) {
+  return `jogabola-passkey-prompt-count-${userId}`;
+}
+
 export function PasskeyPromptGate({
   hasPasskey,
   userId,
@@ -59,20 +71,25 @@ export function PasskeyPromptGate({
   useEffect(() => {
     if (!mounted || hasPasskey) return;
 
-    const refused = localStorage.getItem(
-      `jogabola-passkey-prompt-refused-${userId}`,
-    );
-    const skipped = sessionStorage.getItem(
-      `jogabola-passkey-prompt-skipped-${userId}`,
-    );
+    const refused = localStorage.getItem(refusedKey(userId));
+    const skipped = sessionStorage.getItem(skippedKey(userId));
+    const attempts = Number(localStorage.getItem(countKey(userId)) || "0");
 
-    if (!refused && !skipped) {
-      // Pequeno delay para uma experiência de transição suave ao carregar a página
-      const timer = setTimeout(() => {
-        setIsOpen(true);
-      }, 800);
-      return () => clearTimeout(timer);
+    if (refused || skipped) return;
+
+    if (attempts >= MAX_PROMPT_ATTEMPTS) {
+      // Já perguntámos as vezes suficientes — parar de incomodar e
+      // deixar o registo disponível em Perfil > Segurança a partir daqui.
+      localStorage.setItem(refusedKey(userId), "true");
+      return;
     }
+
+    // Pequeno delay para uma experiência de transição suave ao carregar a página
+    const timer = setTimeout(() => {
+      localStorage.setItem(countKey(userId), String(attempts + 1));
+      setIsOpen(true);
+    }, 800);
+    return () => clearTimeout(timer);
   }, [mounted, hasPasskey, userId]);
 
   if (!mounted) return null;
@@ -93,7 +110,12 @@ export function PasskeyPromptGate({
   }
 
   function handleSkip() {
-    sessionStorage.setItem(`jogabola-passkey-prompt-skipped-${userId}`, "true");
+    sessionStorage.setItem(skippedKey(userId), "true");
+    setIsOpen(false);
+  }
+
+  function handleRefuseForever() {
+    localStorage.setItem(refusedKey(userId), "true");
     setIsOpen(false);
   }
 
@@ -192,6 +214,14 @@ export function PasskeyPromptGate({
             onClick={handleSkip}
           >
             {translations.skip}
+          </button>
+
+          <button
+            className="w-full text-center mt-1 text-arena-text-muted hover:text-arena-text-sec text-xs font-medium transition-colors cursor-pointer outline-none bg-transparent border-none py-1 press btn-press"
+            disabled={status === "adding" || status === "success"}
+            onClick={handleRefuseForever}
+          >
+            {translations.no}
           </button>
         </DialogFooter>
       </DialogContent>

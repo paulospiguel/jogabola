@@ -9,16 +9,24 @@ import {
   Wallet,
   Zap,
 } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
-import { type ComponentType, useState } from "react";
+import { type ComponentType, useRef, useState } from "react";
+import pitchNightImage from "@/assets/og/pitch-night.jpg";
 import { DemoModal } from "@/components/demo/demo-modal";
 import {
   PhoneMockup,
   type PhoneScreen,
 } from "@/components/landing/phone-mockup";
 import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { useSession } from "@/lib/auth-client";
 import { cn } from "@/lib/utils";
 import { useAnalytics } from "@/providers/analytics";
@@ -138,9 +146,18 @@ const HeroSection = () => {
   const ctaLabel = session?.user ? t("goToArena") : headerT("launchJourney");
 
   return (
-    <section className="relative min-h-screen overflow-hidden bg-[#06090D] px-5 pt-28 pb-10 md:px-10 lg:min-h-[680px] lg:px-20 lg:pt-20 lg:pb-8">
-      <div className="absolute inset-0" style={meshStyle} />
-      <div className="absolute inset-0 opacity-40" style={gridStyle} />
+    <section className="relative overflow-hidden bg-[#06090D] px-5 pt-28 pb-14 md:px-10 lg:min-h-[680px] lg:px-20 lg:pt-20 lg:pb-8">
+      <Image
+        src={pitchNightImage}
+        alt=""
+        fill
+        priority
+        sizes="100vw"
+        className="object-cover object-[65%_30%] lg:object-[75%_center]"
+      />
+      <div className="absolute inset-0 bg-gradient-to-b from-[#06090D] via-[#06090D]/68 to-[#06090D]" />
+      <div className="absolute inset-0 hidden bg-gradient-to-r from-[#06090D] via-[#06090D]/55 to-transparent lg:block" />
+      <div className="absolute inset-0 opacity-25" style={gridStyle} />
       <div
         aria-hidden="true"
         className="pointer-events-none absolute -bottom-8 -left-5 hidden font-sora text-[260px] leading-[0.8] font-extrabold whitespace-nowrap text-transparent opacity-60 lg:block"
@@ -175,7 +192,7 @@ const HeroSection = () => {
                 {t("headline.more")}
               </span>
               <br />
-              <span className="bg-linear-to-r from-arena-primary to-arena-info bg-clip-text text-transparent">
+              <span className="text-arena-primary">
                 {t("headline.organize")}
               </span>
             </h1>
@@ -210,20 +227,29 @@ const HeroSection = () => {
 
           <motion.div
             initial={false}
-            animate={{ opacity: 1, rotate: -4, y: 0 }}
+            animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.2 }}
-            className="relative hidden justify-center lg:flex"
+            className="relative mt-4 flex justify-center lg:mt-0 lg:rotate-[-4deg]"
           >
-            <div className="absolute top-16 left-1/2 size-[420px] -translate-x-1/2 rounded-full bg-arena-primary/25 blur-[36px]" />
-            <PhoneMockup scale={0.82} screen="team" className="relative z-10" />
-            <div className="absolute top-20 -left-8 z-20 rotate-[-6deg] rounded-[14px] border border-arena-primary/35 bg-arena-bg/80 px-4 py-3 shadow-2xl backdrop-blur-xl">
-              <div className="flex items-center gap-2 text-sm font-extrabold text-arena-text">
+            <div className="absolute top-10 left-1/2 size-[300px] -translate-x-1/2 rounded-full bg-arena-primary/25 blur-[36px] lg:top-16 lg:size-[420px]" />
+            <PhoneMockup
+              scale={0.62}
+              screen="team"
+              className="relative z-10 lg:hidden"
+            />
+            <PhoneMockup
+              scale={0.82}
+              screen="team"
+              className="relative z-10 hidden lg:block"
+            />
+            <div className="absolute top-8 left-2 z-20 rotate-[-6deg] rounded-[14px] border border-arena-primary/35 bg-arena-bg/80 px-3 py-2.5 shadow-2xl backdrop-blur-xl sm:left-[16%] lg:top-20 lg:-left-8 lg:px-4 lg:py-3">
+              <div className="flex items-center gap-2 text-xs font-extrabold text-arena-text lg:text-sm">
                 <CheckCircle2 className="size-4 text-arena-primary" />
                 {t("badgeConfirmed")}
               </div>
             </div>
-            <div className="absolute right-0 bottom-24 z-20 rotate-[4deg] rounded-[14px] border border-arena-border bg-arena-bg/85 px-5 py-4 shadow-2xl backdrop-blur-xl">
-              <div className="font-sora text-3xl font-extrabold text-arena-primary">
+            <div className="absolute right-2 bottom-14 z-20 rotate-[4deg] rounded-[14px] border border-arena-border bg-arena-bg/85 px-4 py-3 shadow-2xl backdrop-blur-xl sm:right-[16%] lg:right-0 lg:bottom-24 lg:px-5 lg:py-4">
+              <div className="font-sora text-2xl font-extrabold text-arena-primary lg:text-3xl">
                 55€
               </div>
               <div className="text-xs font-bold text-arena-text-sec">
@@ -324,9 +350,7 @@ const HowSection = () => {
     <MotionSection number="02" label={t("kicker")}>
       <SectionTitle>
         {t("titlePrefix")}{" "}
-        <span className="bg-linear-to-r from-arena-primary to-arena-info bg-clip-text text-transparent">
-          {t("titleHighlight")}
-        </span>
+        <span className="text-arena-primary">{t("titleHighlight")}</span>
         {t("titleSuffix")}
       </SectionTitle>
       <div className="relative mt-16 grid gap-10 md:grid-cols-3">
@@ -380,26 +404,28 @@ const FeaturesSection = () => {
           {t("body")}
         </p>
       </div>
-      <div className="mt-16 grid gap-5 md:grid-cols-2 lg:grid-cols-4">
+      <div className="mt-14 border-y border-arena-border">
         {features.map((feature, index) => (
           <motion.article
             key={feature.title}
             {...fadeUp}
             transition={{ duration: 0.5, delay: index * 0.08 }}
-            className="group relative overflow-hidden rounded-[8px] border border-arena-border bg-linear-to-br from-arena-surface to-arena-bg-sec p-6"
+            className="grid grid-cols-[auto_1fr] items-start gap-x-5 gap-y-2 border-b border-arena-border px-1 py-7 transition-colors last:border-b-0 hover:bg-arena-surface/60 md:grid-cols-[110px_1fr_1.1fr] md:items-center md:gap-x-10 md:py-9"
           >
-            <div className="absolute -top-10 -right-10 size-28 rounded-full bg-arena-primary/12 blur-2xl transition group-hover:bg-arena-primary/20" />
-            <div className="relative mb-8 flex size-11 items-center justify-center rounded-[8px] bg-arena-primary text-[#0B0F14] shadow-[0_0_24px_rgba(124,255,79,.35)]">
-              <feature.icon className="size-6" />
+            <span
+              aria-hidden="true"
+              className="font-sora text-3xl leading-none font-extrabold text-transparent md:text-5xl"
+              style={{ WebkitTextStroke: "1.5px rgba(124,255,79,.5)" }}
+            >
+              0{index + 1}
+            </span>
+            <div className="flex items-center gap-3">
+              <feature.icon className="size-5 shrink-0 text-arena-primary" />
+              <h3 className="font-sora text-xl font-extrabold text-arena-text md:text-2xl">
+                {feature.title}
+              </h3>
             </div>
-            <div className="relative mb-5 flex items-center gap-3 text-xs font-extrabold text-arena-primary">
-              {String(index + 1).padStart(2, "0")}/04
-              <span className="h-px flex-1 bg-arena-primary/35" />
-            </div>
-            <h3 className="relative text-xl font-extrabold text-arena-text">
-              {feature.title}
-            </h3>
-            <p className="relative mt-4 text-sm leading-7 text-arena-text-sec">
+            <p className="col-span-2 text-sm leading-7 text-arena-text-sec md:col-span-1 md:col-start-3">
               {feature.description}
             </p>
           </motion.article>
@@ -411,11 +437,33 @@ const FeaturesSection = () => {
 
 const JourneySection = () => {
   const t = useTranslations("homePage.journey");
+  const commonT = useTranslations("common");
   const screens: PhoneScreen[] = ["journey", "create", "convoca", "paid"];
   const rotations = ["-6deg", "-2deg", "2deg", "6deg"];
   const steps = (t.raw("steps") as Omit<JourneyStep, "screen">[]).map(
     (item, index) => ({ ...item, screen: screens[index] }),
   ) as JourneyStep[];
+
+  const trackRef = useRef<HTMLDivElement>(null);
+  const [activeIndex, setActiveIndex] = useState(0);
+  const [zoomIndex, setZoomIndex] = useState<number | null>(null);
+
+  const handleTrackScroll = () => {
+    const track = trackRef.current;
+    if (!track) return;
+    const cardWidth = track.scrollWidth / steps.length;
+    const index = Math.round(track.scrollLeft / cardWidth);
+    setActiveIndex(Math.min(Math.max(index, 0), steps.length - 1));
+  };
+
+  const scrollToIndex = (index: number) => {
+    const track = trackRef.current;
+    if (!track) return;
+    const cardWidth = track.scrollWidth / steps.length;
+    track.scrollTo({ left: cardWidth * index, behavior: "smooth" });
+  };
+
+  const zoomedStep = zoomIndex !== null ? steps[zoomIndex] : null;
 
   return (
     <MotionSection number="04" label={t("kicker")}>
@@ -425,27 +473,47 @@ const JourneySection = () => {
           {t("body")}
         </p>
       </div>
-      <div className="mt-16 grid gap-12 md:grid-cols-2 xl:grid-cols-4">
+      <div
+        ref={trackRef}
+        onScroll={handleTrackScroll}
+        className="-mx-5 mt-16 flex snap-x snap-mandatory gap-5 overflow-x-auto px-5 pb-4 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden md:mx-0 md:grid md:snap-none md:grid-cols-2 md:gap-12 md:overflow-visible md:px-0 md:pb-0 xl:grid-cols-4"
+      >
         {steps.map((step, index) => (
           <motion.div
             key={step.label}
             {...fadeUp}
             transition={{ duration: 0.5, delay: index * 0.08 }}
-            className="relative flex flex-col items-center"
+            className="relative flex w-[64vw] max-w-[250px] shrink-0 snap-center flex-col items-center md:w-auto md:max-w-none md:shrink"
           >
             {index < steps.length - 1 && (
               <ArrowRight className="absolute top-40 -right-8 hidden size-7 text-arena-primary/65 xl:block" />
             )}
-            <div style={{ transform: `rotate(${rotations[index]})` }}>
-              <PhoneMockup
-                scale={0.62}
-                screen={step.screen}
-                className={
-                  index === steps.length - 1
-                    ? "drop-shadow-[0_0_24px_rgba(124,255,79,.55)]"
-                    : undefined
+            {/* biome-ignore lint/a11y/useSemanticElements: can't be a <button> — PhoneMockup renders its own internal <button>, and buttons can't nest */}
+            <div
+              role="button"
+              tabIndex={0}
+              onClick={() => setZoomIndex(index)}
+              onKeyDown={event => {
+                if (event.key === "Enter" || event.key === " ") {
+                  event.preventDefault();
+                  setZoomIndex(index);
                 }
-              />
+              }}
+              aria-label={commonT("zoomImage", { label: step.title })}
+              className="press cursor-zoom-in rounded-[24px] outline-none focus-visible:ring-2 focus-visible:ring-arena-primary/60"
+              style={{ transform: `rotate(${rotations[index]})` }}
+            >
+              <div inert>
+                <PhoneMockup
+                  scale={0.62}
+                  screen={step.screen}
+                  className={
+                    index === steps.length - 1
+                      ? "drop-shadow-[0_0_24px_rgba(124,255,79,.55)]"
+                      : undefined
+                  }
+                />
+              </div>
             </div>
             <div className="mt-8 w-full text-center">
               <span className="rounded-full border border-arena-primary/25 bg-arena-primary/15 px-3 py-1 text-[10px] font-extrabold tracking-[0.16em] text-arena-primary uppercase">
@@ -461,6 +529,77 @@ const JourneySection = () => {
           </motion.div>
         ))}
       </div>
+
+      <div className="mt-6 flex items-center justify-center gap-2 md:hidden">
+        {steps.map((step, index) => (
+          <button
+            key={step.label}
+            type="button"
+            onClick={() => scrollToIndex(index)}
+            aria-label={commonT("goToStep", { number: index + 1 })}
+            className={cn(
+              "press h-2 rounded-full transition-all duration-300",
+              index === activeIndex
+                ? "w-6 bg-arena-primary"
+                : "w-2 bg-arena-border",
+            )}
+          />
+        ))}
+      </div>
+
+      <Dialog
+        open={zoomIndex !== null}
+        onOpenChange={open => !open && setZoomIndex(null)}
+      >
+        <DialogContent className="flex max-h-[85vh] max-w-sm flex-col items-center overflow-y-auto border-arena-border bg-[#06090D]/98 p-6 sm:rounded-[28px]">
+          {zoomedStep && (
+            <>
+              <DialogTitle className="sr-only">{zoomedStep.title}</DialogTitle>
+              <DialogDescription className="sr-only">
+                {zoomedStep.description}
+              </DialogDescription>
+              <span className="rounded-full border border-arena-primary/25 bg-arena-primary/15 px-3 py-1 text-[10px] font-extrabold tracking-[0.16em] text-arena-primary uppercase">
+                {zoomedStep.label}
+              </span>
+              <PhoneMockup
+                scale={0.68}
+                screen={zoomedStep.screen}
+                className="mt-6"
+              />
+              <h3 className="mt-6 text-xl font-extrabold text-arena-text">
+                {zoomedStep.title}
+              </h3>
+              <p className="mt-2 max-w-[280px] text-center text-sm leading-6 text-arena-text-sec">
+                {zoomedStep.description}
+              </p>
+              <div className="mt-6 flex items-center gap-4">
+                <button
+                  type="button"
+                  onClick={() =>
+                    setZoomIndex(
+                      prev => ((prev ?? 0) - 1 + steps.length) % steps.length,
+                    )
+                  }
+                  aria-label={commonT("previousSlide")}
+                  className="press flex size-11 items-center justify-center rounded-full border border-arena-border bg-arena-surface text-arena-text hover:border-arena-primary/40"
+                >
+                  <ArrowRight className="size-4 rotate-180" />
+                </button>
+                <button
+                  type="button"
+                  onClick={() =>
+                    setZoomIndex(prev => ((prev ?? 0) + 1) % steps.length)
+                  }
+                  aria-label={commonT("nextSlide")}
+                  className="press flex size-11 items-center justify-center rounded-full border border-arena-border bg-arena-surface text-arena-text hover:border-arena-primary/40"
+                >
+                  <ArrowRight className="size-4" />
+                </button>
+              </div>
+            </>
+          )}
+        </DialogContent>
+      </Dialog>
     </MotionSection>
   );
 };
@@ -494,9 +633,7 @@ const FinalCta = () => {
         </div>
         <h2 className="mx-auto mt-8 max-w-5xl font-sora text-5xl leading-[0.95] font-extrabold tracking-normal text-arena-text md:text-8xl lg:text-[144px]">
           {t("headline")}{" "}
-          <span className="bg-linear-to-r from-arena-primary to-arena-info bg-clip-text text-transparent">
-            {t("headlineAccent")}
-          </span>
+          <span className="text-arena-primary">{t("headlineAccent")}</span>
         </h2>
         <form
           onSubmit={handleSubmit}

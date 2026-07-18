@@ -1231,6 +1231,8 @@
     "email": "Courrier électronique",
     "error": "Erreur",
     "finish": "Terminer",
+    "goToStep": "Aller à l'étape {number}",
+    "zoomImage": "Agrandir : {label}",
     "home": "Accueil",
     "hour": "Heure",
     "inDevelopment": "En Développement",
