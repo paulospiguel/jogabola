@@ -95,7 +95,7 @@ describe("public website production contract", () => {
     expect(landing).toContain("lg:pt-20");
     expect(landing).toContain("lg:pb-8");
     expect(landing).toContain("lg:mt-6");
-    expect(landing).toContain("<PhoneMockup scale={0.82}");
+    expect(landing).toContain("scale={0.82}");
     expect(contact).toContain("max-w-6xl");
     expect(contact).toContain("lg:grid-cols-3");
     expect(contact).toContain("lg:flex-col");

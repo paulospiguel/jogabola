@@ -65,15 +65,20 @@ export default function Header() {
     >
       <div
         className={cn(
-          "mx-auto flex w-full max-w-7xl items-center justify-between rounded-[28px] border px-5 py-3 transition-all duration-300 md:px-6",
+          "mx-auto flex w-full max-w-7xl items-center justify-between rounded-[28px] border px-4 py-2 transition-all duration-300 md:px-6 md:py-2.5",
           isScrolled
-            ? "border-white/10 bg-[#0a0b1e]/80 shadow-[0_18px_45px_-28px_rgba(2,167,255,0.35)] backdrop-blur-xl"
-            : "border-transparent bg-transparent",
+            ? "border-arena-border bg-[#06090D]/85 shadow-[0_18px_45px_-28px_rgba(124,255,79,0.25)] backdrop-blur-xl"
+            : "border-arena-border/40 bg-arena-bg/40 backdrop-blur-md md:border-transparent md:bg-transparent md:backdrop-blur-none",
         )}
       >
         <div className="flex items-center space-x-6">
           <div className="flex items-center space-x-2">
-            <Logo size="small" isAnimate href={logoHref} />
+            <Logo
+              size="small"
+              isAnimate
+              href={logoHref}
+              className="h-11 w-16 shrink-0 md:h-12 md:w-20"
+            />
           </div>
 
           {!isHome && <Navbar className="hidden md:flex" />}
@@ -152,7 +157,7 @@ export default function Header() {
             </SheetTrigger>
             <SheetContent
               side={"right"}
-              className="border-border-default bg-[#0a0b1e]/96 text-text-primary h-screen w-full max-w-sm border-l shadow-[0_25px_60px_-40px_rgba(2,167,255,0.35)] backdrop-blur-xl"
+              className="border-arena-border bg-[#06090D]/95 text-text-primary h-screen w-full max-w-sm border-l shadow-[0_25px_60px_-40px_rgba(124,255,79,0.25)] backdrop-blur-xl"
             >
               <div className="border-border-default flex items-center justify-between border-b pb-4">
                 <SheetTitle className="text-xl font-semibold text-white">
