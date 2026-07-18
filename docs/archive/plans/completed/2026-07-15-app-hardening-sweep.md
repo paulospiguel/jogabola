@@ -427,7 +427,7 @@ pnpm dev                      # http://localhost:3000
 | `CONTEXT.md` | Glossário de domínio + convenções de código |
 | `DESIGN.md` | Design system |
 | `docs/adr/` | Decisões de arquitetura |
-| `docs/superpowers/plans/` | Planos de implementação |
+| `docs/superpowers/plans/README.md` | Índice canónico dos planos de implementação |
 ```
 
 Then fill an **Environment variables** section by listing every var present in `.env.example` with a one-line purpose derived from usage (`grep -rln "<VAR>" src | head -1` per var). No values, ever.
