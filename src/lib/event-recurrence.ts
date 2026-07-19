@@ -55,7 +55,7 @@ export function generateRecurringOccurrences({
 
 export type ValidateRangeResult =
   | { success: true }
-  | { success: false; error: "END_BEFORE_START" | "RANGE_TOO_LONG" };
+  | { success: false; error: "END_BEFORE_START" | "TOO_LONG" };
 
 export function validateEventRange(
   start: Date,
@@ -66,7 +66,7 @@ export function validateEventRange(
   }
 
   if (differenceInCalendarDays(end, start) > MAX_RANGE_DAYS) {
-    return { success: false, error: "RANGE_TOO_LONG" };
+    return { success: false, error: "TOO_LONG" };
   }
 
   return { success: true };

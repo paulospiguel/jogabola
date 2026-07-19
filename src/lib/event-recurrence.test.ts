@@ -135,7 +135,7 @@ describe("validateEventRange", () => {
 
     expect(validateEventRange(start, end)).toEqual({
       success: false,
-      error: "RANGE_TOO_LONG",
+      error: "TOO_LONG",
     });
   });
 });
