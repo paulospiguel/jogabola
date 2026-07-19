@@ -229,30 +229,30 @@ export async function createEvent(input: {
   }
 
   const invitedPlayers = input.invitedPlayers ?? [];
-  for (const createdEvent of events) {
-    for (const player of invitedPlayers) {
-      if (player.isVerified) {
-        await db
-          .insert(attendance)
-          .values({
-            matchSessionId: createdEvent.id,
-            playerId: player.id,
-            status: "pending",
-          })
-          .onConflictDoUpdate({
-            target: [attendance.matchSessionId, attendance.playerId],
-            set: { status: "pending", updatedAt: new Date() },
-          });
-      } else {
-        await db.insert(attendance).values({
-          matchSessionId: createdEvent.id,
-          guestName: player.name,
-          guestEmail: player.email ?? null,
-          status: "pending",
-        });
-      }
-    }
-  }
+  await Promise.all(
+    events.flatMap(createdEvent =>
+      invitedPlayers.map(player =>
+        player.isVerified
+          ? db
+              .insert(attendance)
+              .values({
+                matchSessionId: createdEvent.id,
+                playerId: player.id,
+                status: "pending",
+              })
+              .onConflictDoUpdate({
+                target: [attendance.matchSessionId, attendance.playerId],
+                set: { status: "pending", updatedAt: new Date() },
+              })
+          : db.insert(attendance).values({
+              matchSessionId: createdEvent.id,
+              guestName: player.name,
+              guestEmail: player.email ?? null,
+              status: "pending",
+            }),
+      ),
+    ),
+  );
 
   await trackServerEvent(authUser.id, "event_created", {
     event_id: event.id,
