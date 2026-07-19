@@ -315,7 +315,12 @@
     "errors": {
       "FORBIDDEN": "No tienes permiso para crear un evento en este equipo.",
       "UNAUTHORIZED": "Debes iniciar sesión para crear un evento.",
-      "TEAM_NOT_FOUND": "No hay ningún equipo disponible para este evento."
+      "TEAM_NOT_FOUND": "No hay ningún equipo disponible para este evento.",
+      "RECURRENCE_END_BEFORE_START": "La fecha de fin de la serie debe ser posterior a la primera fecha.",
+      "RECURRENCE_TOO_MANY_OCCURRENCES": "Ese intervalo generaría demasiados partidos. Elige una fecha de fin más cercana.",
+      "RANGE_END_BEFORE_START": "La fecha de fin debe ser posterior a la fecha de inicio.",
+      "RANGE_TOO_LONG": "El intervalo no puede superar los 90 días.",
+      "VALIDATION_RECURRENCE_END_REQUIRED": "Elige hasta cuándo se repite el evento."
     },
     "info": "Tras crear el evento, puedes añadir jugadores y gestionar la convocatoria desde la página del evento.",
     "access": {
@@ -347,7 +352,16 @@
       "recurrence": "Modalidad",
       "fee": "Cuota de participación",
       "private": "Evento privado",
-      "privateSub": "Abierto a todos los convocados"
+      "privateSub": "Abierto a todos los convocados",
+      "scheduleType": "Tipo de agenda",
+      "until": "Hasta",
+      "repeatUntil": "Repite hasta",
+      "firstDate": "Primera fecha"
+    },
+    "scheduleType": {
+      "fixed": "Fecha fija",
+      "range": "Intervalo de fechas",
+      "recurring": "Recurrente"
     },
     "payment": {
       "section": "Pago",
@@ -377,12 +391,15 @@
       "time": "Ej: 18h00",
       "training": "Ej: Entrenamiento Técnico",
       "date": "Ej: Sáb, 26 Abr",
-      "fee": "€ 0 — gratis"
+      "fee": "€ 0 — gratis",
+      "selectEndDate": "Seleccionar fecha"
     },
     "confirm": {
       "noDate": "Sin fecha definida",
       "noTime": "Sin hora definida",
-      "noPlayers": "Sin atletas convocados aún."
+      "noPlayers": "Sin atletas convocados aún.",
+      "rangeSummary": "{start} → {end}",
+      "recurringSummary": "{frequency}, hasta {end} · se crearán {count, plural, =1 {# partido} other {# partidos}}"
     },
     "playersCount": "{count} jugadores",
     "steps": ["Tipo de evento", "Detalles", "Convocar", "Confirmar"],
@@ -422,6 +439,9 @@
       "confirm": {
         "rosterTitle": "Atletas Convocados"
       }
+    },
+    "edit": {
+      "partOfSeries": "Parte de una serie {frequency}"
     }
   },
   "arenaCreateTeam": {
@@ -690,6 +710,9 @@
       "createEvent": "Crear evento",
       "retry": "Intentar de nuevo",
       "viewCalendar": "Calendario"
+    },
+    "badges": {
+      "recurring": "Recurrente"
     },
     "empty": {
       "errorDescription": "Comprueba tu conexión e inténtalo de nuevo.",
