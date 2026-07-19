@@ -30,6 +30,8 @@ export type EventView = {
   language: string | null;
   images: string[];
   status: EventStatus;
+  recurrence: string;
+  recurrenceGroupId: string | null;
   createdAt: Date;
   updatedAt: Date;
 };
