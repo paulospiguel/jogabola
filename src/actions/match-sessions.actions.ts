@@ -143,6 +143,13 @@ export async function createEvent(input: {
   let events: (typeof matchSessions.$inferSelect)[];
 
   if (input.recurrenceFrequency) {
+    if (input.endDate) {
+      return {
+        success: false as const,
+        error: { code: "VALIDATION_RECURRENCE_AND_RANGE_EXCLUSIVE" },
+      };
+    }
+
     if (!input.recurrenceEndDate) {
       return {
         success: false as const,

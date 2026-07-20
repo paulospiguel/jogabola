@@ -320,7 +320,8 @@
       "RECURRENCE_TOO_MANY_OCCURRENCES": "That range would create too many matches. Choose an earlier end date.",
       "RANGE_END_BEFORE_START": "The end date must be after the start date.",
       "RANGE_TOO_LONG": "The range can't be longer than 90 days.",
-      "VALIDATION_RECURRENCE_END_REQUIRED": "Choose when the event stops repeating."
+      "VALIDATION_RECURRENCE_END_REQUIRED": "Choose when the event stops repeating.",
+      "VALIDATION_RECURRENCE_AND_RANGE_EXCLUSIVE": "An event can't be both recurring and a date range at the same time."
     },
     "info": "After creating the event, you can add players and manage the squad call from the event page.",
     "access": {

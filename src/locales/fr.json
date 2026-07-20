@@ -320,7 +320,8 @@
       "RECURRENCE_TOO_MANY_OCCURRENCES": "Cette plage créerait trop de matchs. Choisissez une date de fin plus proche.",
       "RANGE_END_BEFORE_START": "La date de fin doit être après la date de début.",
       "RANGE_TOO_LONG": "La plage ne peut pas dépasser 90 jours.",
-      "VALIDATION_RECURRENCE_END_REQUIRED": "Choisissez jusqu'à quand l'événement se répète."
+      "VALIDATION_RECURRENCE_END_REQUIRED": "Choisissez jusqu'à quand l'événement se répète.",
+      "VALIDATION_RECURRENCE_AND_RANGE_EXCLUSIVE": "Un événement ne peut pas être à la fois récurrent et sur une plage de dates."
     },
     "info": "Après avoir créé l'événement, vous pouvez ajouter des joueurs et gérer la convocation à partir de la page de l'événement.",
     "access": {

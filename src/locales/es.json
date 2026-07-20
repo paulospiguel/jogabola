@@ -320,7 +320,8 @@
       "RECURRENCE_TOO_MANY_OCCURRENCES": "Ese intervalo generaría demasiados partidos. Elige una fecha de fin más cercana.",
       "RANGE_END_BEFORE_START": "La fecha de fin debe ser posterior a la fecha de inicio.",
       "RANGE_TOO_LONG": "El intervalo no puede superar los 90 días.",
-      "VALIDATION_RECURRENCE_END_REQUIRED": "Elige hasta cuándo se repite el evento."
+      "VALIDATION_RECURRENCE_END_REQUIRED": "Elige hasta cuándo se repite el evento.",
+      "VALIDATION_RECURRENCE_AND_RANGE_EXCLUSIVE": "Un evento no puede ser recurrente y tener un intervalo de fechas al mismo tiempo."
     },
     "info": "Tras crear el evento, puedes añadir jugadores y gestionar la convocatoria desde la página del evento.",
     "access": {
