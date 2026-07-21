@@ -315,7 +315,13 @@
     "errors": {
       "FORBIDDEN": "You do not have permission to create an event for this team.",
       "UNAUTHORIZED": "You must be signed in to create an event.",
-      "TEAM_NOT_FOUND": "No team is available for this event."
+      "TEAM_NOT_FOUND": "No team is available for this event.",
+      "RECURRENCE_END_BEFORE_START": "The series end date must be after the first date.",
+      "RECURRENCE_TOO_MANY_OCCURRENCES": "That range would create too many matches. Choose an earlier end date.",
+      "RANGE_END_BEFORE_START": "The end date must be after the start date.",
+      "RANGE_TOO_LONG": "The range can't be longer than 90 days.",
+      "VALIDATION_RECURRENCE_END_REQUIRED": "Choose when the event stops repeating.",
+      "VALIDATION_RECURRENCE_AND_RANGE_EXCLUSIVE": "An event can't be both recurring and a date range at the same time."
     },
     "info": "After creating the event, you can add players and manage the squad call from the event page.",
     "access": {
@@ -347,7 +353,16 @@
       "recurrence": "Recurrence",
       "fee": "Participation fee",
       "private": "Private event",
-      "privateSub": "Open to all invitees"
+      "privateSub": "Open to all invitees",
+      "scheduleType": "Schedule type",
+      "until": "Until",
+      "repeatUntil": "Repeat until",
+      "firstDate": "First date"
+    },
+    "scheduleType": {
+      "fixed": "Fixed date",
+      "range": "Date range",
+      "recurring": "Recurring"
     },
     "payment": {
       "section": "Payment",
@@ -377,12 +392,15 @@
       "time": "Ex: 18h00",
       "training": "Ex: Technical Training",
       "date": "Ex: Sat, 26 Apr",
-      "fee": "€ 0 — free"
+      "fee": "€ 0 — free",
+      "selectEndDate": "Select date"
     },
     "confirm": {
       "noDate": "No date set",
       "noTime": "No time set",
-      "noPlayers": "No players called up yet."
+      "noPlayers": "No players called up yet.",
+      "rangeSummary": "{start} → {end}",
+      "recurringSummary": "{frequency}, until {end} · {count, plural, =1 {# match} other {# matches}} will be created"
     },
     "playersCount": "{count} players",
     "steps": ["Event Type", "Details", "Invite", "Confirm"],
@@ -422,6 +440,9 @@
       "confirm": {
         "rosterTitle": "Called-Up Players"
       }
+    },
+    "edit": {
+      "partOfSeries": "Part of a {frequency} series"
     }
   },
   "arenaCreateTeam": {
@@ -690,6 +711,9 @@
       "createEvent": "Create event",
       "retry": "Try again",
       "viewCalendar": "Calendar"
+    },
+    "badges": {
+      "recurring": "Recurring"
     },
     "empty": {
       "errorDescription": "Check your connection and try again.",

@@ -46,6 +46,7 @@ interface EventDetailProps {
     startDate: Date | string;
     status: EventStatus;
     recurrence: string;
+    recurrenceGroupId: string | null;
     teamId: number;
     maxParticipants?: string | null;
     priceCents?: number;
