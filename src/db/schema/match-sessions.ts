@@ -23,6 +23,7 @@ export const matchSessions = pgTable("match_sessions", {
   capacity: integer("capacity"),
   status: text("status").notNull().default("scheduled"), // "scheduled" | "confirmed" | "cancelled"
   recurrence: text("recurrence").notNull().default("once"), // "once", "weekly", "monthly"
+  recurrenceGroupId: text("recurrence_group_id"), // links rows generated from the same recurring series
   priceCents: integer("price_cents").default(0),
   currency: text("currency").notNull().default("EUR"),
   paymentRequired: boolean("payment_required").notNull().default(false),

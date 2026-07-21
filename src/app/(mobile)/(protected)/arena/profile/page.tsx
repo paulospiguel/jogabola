@@ -1,14 +1,13 @@
 import { eq, inArray, sql } from "drizzle-orm";
-import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { getMyRating } from "@/actions/player-ratings.actions";
 import { db } from "@/db/client";
 import * as schema from "@/db/schema";
-import { auth } from "@/lib/auth";
+import { getCachedSession } from "@/lib/get-session";
 import { ProfileContainer } from "./_components/profile-container";
 
 export default async function ArenaProfilePage() {
-  const session = await auth.api.getSession({ headers: await headers() });
+  const session = await getCachedSession();
 
   if (!session?.user) {
     redirect("/auth");

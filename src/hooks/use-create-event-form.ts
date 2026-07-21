@@ -6,6 +6,10 @@ import { createEvent, updateEvent } from "@/actions/match-sessions.actions";
 import type { CreateEventFormState } from "@/components/arena/create-event-form-types";
 import { useSquad } from "@/hooks/use-squad";
 import { useTeamPaymentSettings } from "@/hooks/use-team-payment-settings";
+import {
+  generateRecurringOccurrences,
+  validateEventRange,
+} from "@/lib/event-recurrence";
 
 interface UseCreateEventFormOptions {
   teamId?: number;
@@ -64,6 +68,9 @@ export function useCreateEventForm({
             ? new Date(eventToEdit.startDate)
             : eventToEdit.startDate,
         maxPlayers: eventToEdit.maxParticipants || "14",
+        scheduleType: "fixed",
+        endDate: null,
+        recurrenceEndDate: null,
         recurrence:
           eventToEdit.recurrence === "weekly" ||
           eventToEdit.recurrence === "monthly"
@@ -86,6 +93,9 @@ export function useCreateEventForm({
       location: "",
       startDate: defaultDate(),
       maxPlayers: "14",
+      scheduleType: "fixed",
+      endDate: null,
+      recurrenceEndDate: null,
       recurrence: "once",
       priceCents: 0,
       paymentRequired: false,
@@ -138,11 +148,26 @@ export function useCreateEventForm({
     v: CreateEventFormState[K],
   ) => setForm(f => ({ ...f, [k]: v }));
 
+  const scheduleValid =
+    !form.startDate || form.location.trim().length === 0
+      ? false
+      : form.scheduleType === "range"
+        ? !!form.endDate &&
+          validateEventRange(form.startDate, form.endDate).success
+        : form.scheduleType === "recurring"
+          ? !!form.recurrenceEndDate &&
+            generateRecurringOccurrences({
+              start: form.startDate,
+              frequency: form.recurrence === "monthly" ? "monthly" : "weekly",
+              endDate: form.recurrenceEndDate,
+            }).success
+          : true;
+
   const canAdvance =
     step === 0
       ? form.title.trim().length > 0 && !!form.type
       : step === 1
-        ? !!form.startDate && form.location.trim().length > 0
+        ? scheduleValid
         : true;
 
   function handleFeeChange(e: React.ChangeEvent<HTMLInputElement>) {
@@ -195,9 +220,22 @@ export function useCreateEventForm({
           type: form.type === "other" ? "challenge" : form.type,
           location: form.location || "",
           startDate: form.startDate || new Date(),
+          endDate:
+            form.scheduleType === "range"
+              ? (form.endDate ?? undefined)
+              : undefined,
           maxParticipants: form.maxPlayers,
           isPublic: true,
-          recurrence: form.recurrence,
+          recurrence:
+            form.scheduleType === "recurring" ? form.recurrence : "once",
+          recurrenceFrequency:
+            form.scheduleType === "recurring" && form.recurrence !== "once"
+              ? form.recurrence
+              : undefined,
+          recurrenceEndDate:
+            form.scheduleType === "recurring"
+              ? (form.recurrenceEndDate ?? undefined)
+              : undefined,
           teamId,
           priceCents: form.priceCents,
           paymentRequired: form.paymentRequired,

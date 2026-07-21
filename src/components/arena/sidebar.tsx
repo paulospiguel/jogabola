@@ -6,12 +6,13 @@ import {
   ChevronsLeft,
   ChevronsRight,
   Lock,
+  type LucideIcon,
   Shield,
   Timer,
   Users,
   Wallet,
 } from "lucide-react";
-import Link from "next/link";
+import Link, { useLinkStatus } from "next/link";
 import { usePathname } from "next/navigation";
 import { useTranslations } from "next-intl";
 import {
@@ -152,35 +153,22 @@ export function ArenaSidebar() {
                           href={item.href}
                           className="flex items-center gap-3 group-data-[collapsible=icon]:gap-0 group-data-[collapsible=icon]:justify-center w-full"
                         >
-                          <div className="relative flex items-center justify-center">
-                            <Icon
-                              className={cn(
-                                "size-[18px] shrink-0",
-                                isActive ? "stroke-[2.5px]" : "stroke-[1.8px]",
-                              )}
-                            />
-                            {item.href === "/arena/notifications" &&
+                          <SidebarNavLinkContent
+                            icon={Icon}
+                            isActive={isActive}
+                            label={t(item.labelKey)}
+                            collapsed={state === "collapsed"}
+                            showDot={
+                              item.href === "/arena/notifications" &&
                               unreadCount > 0 &&
-                              state === "collapsed" && (
-                                <span className="absolute -top-1 -right-1 flex h-2 w-2 rounded-full bg-arena-primary shadow-[0_0_6px_rgba(124,255,79,0.5)] animate-pulse" />
-                              )}
-                          </div>
-                          <span
-                            className={cn(
-                              "font-semibold transition-opacity duration-200 flex flex-1 items-center justify-between",
                               state === "collapsed"
-                                ? "opacity-0 w-0 pointer-events-none"
-                                : "opacity-100",
-                            )}
-                          >
-                            <span>{t(item.labelKey)}</span>
-                            {item.href === "/arena/notifications" &&
-                              unreadCount > 0 && (
-                                <span className="flex h-5 min-w-[20px] items-center justify-center rounded-full bg-arena-primary px-1.5 text-[10px] font-black text-arena-bg shadow-[0_0_8px_rgba(124,255,79,0.3)] animate-pulse ml-2 shrink-0">
-                                  {unreadCount}
-                                </span>
-                              )}
-                          </span>
+                            }
+                            badgeCount={
+                              item.href === "/arena/notifications"
+                                ? unreadCount
+                                : 0
+                            }
+                          />
                         </Link>
                       )}
                     </SidebarMenuButton>
@@ -230,5 +218,53 @@ export function ArenaSidebar() {
       </SidebarFooter>
       <SidebarRail />
     </Sidebar>
+  );
+}
+
+function SidebarNavLinkContent({
+  icon: Icon,
+  isActive,
+  label,
+  collapsed,
+  showDot,
+  badgeCount,
+}: {
+  icon: LucideIcon;
+  isActive: boolean;
+  label: string;
+  collapsed: boolean;
+  showDot: boolean;
+  badgeCount: number;
+}) {
+  const { pending } = useLinkStatus();
+
+  return (
+    <>
+      <div className="relative flex items-center justify-center">
+        <Icon
+          className={cn(
+            "size-[18px] shrink-0",
+            isActive ? "stroke-[2.5px]" : "stroke-[1.8px]",
+            pending && "animate-pulse text-arena-primary",
+          )}
+        />
+        {showDot && (
+          <span className="absolute -top-1 -right-1 flex h-2 w-2 rounded-full bg-arena-primary shadow-[0_0_6px_rgba(124,255,79,0.5)] animate-pulse" />
+        )}
+      </div>
+      <span
+        className={cn(
+          "font-semibold transition-opacity duration-200 flex flex-1 items-center justify-between",
+          collapsed ? "opacity-0 w-0 pointer-events-none" : "opacity-100",
+        )}
+      >
+        <span>{label}</span>
+        {badgeCount > 0 && (
+          <span className="flex h-5 min-w-[20px] items-center justify-center rounded-full bg-arena-primary px-1.5 text-[10px] font-black text-arena-bg shadow-[0_0_8px_rgba(124,255,79,0.3)] animate-pulse ml-2 shrink-0">
+            {badgeCount}
+          </span>
+        )}
+      </span>
+    </>
   );
 }

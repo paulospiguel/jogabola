@@ -18,6 +18,11 @@ import {
 import { getAuthUser, withAction } from "@/lib/action-helpers";
 import { trackServerEvent } from "@/lib/analytics-server";
 import {
+  generateRecurringOccurrences,
+  type RecurrenceFrequency,
+  validateEventRange,
+} from "@/lib/event-recurrence";
+import {
   canManageTeam,
   getAccessibleTeamIds,
   userCanAccessTeam,
@@ -68,6 +73,8 @@ export async function createEvent(input: {
   isPublic?: boolean;
   organizerId?: string;
   recurrence?: string;
+  recurrenceFrequency?: RecurrenceFrequency;
+  recurrenceEndDate?: Date;
   teamId?: number;
   priceCents?: number;
   paymentRequired?: boolean;
@@ -111,32 +118,95 @@ export async function createEvent(input: {
     teamId = created.id;
   }
 
-  const eventIdRandom = crypto.randomUUID().split("-")[0];
-  const dateStr = format(input.startDate, "yyyy-MM-dd");
-  const baseSlug = slugify(`${input.title}-${dateStr}-${eventIdRandom}`);
+  function buildSlug(startsAt: Date) {
+    const eventIdRandom = crypto.randomUUID().split("-")[0];
+    const dateStr = format(startsAt, "yyyy-MM-dd");
+    return slugify(`${input.title}-${dateStr}-${eventIdRandom}`);
+  }
 
-  const [event] = await db
-    .insert(matchSessions)
-    .values({
-      teamId,
-      title: input.title,
-      slug: baseSlug,
-      location: input.location,
-      startsAt: input.startDate,
-      endsAt: input.endDate,
-      capacity: input.maxParticipants
-        ? Number.parseInt(input.maxParticipants, 10)
-        : null,
-      recurrence: input.recurrence || "once",
-      currency: "EUR",
-      priceCents: input.priceCents ?? 0,
-      paymentRequired: input.paymentRequired ?? false,
-      paymentDeadlineHours: input.paymentDeadlineHours ?? null,
-      rosterOnly: input.rosterOnly ?? false,
-      rosterPriorityHours: input.rosterPriorityHours ?? 0,
-      transferRequiresProof: input.transferRequiresProof ?? true,
-    })
-    .returning();
+  const baseValues = {
+    teamId,
+    title: input.title,
+    location: input.location,
+    capacity: input.maxParticipants
+      ? Number.parseInt(input.maxParticipants, 10)
+      : null,
+    currency: "EUR",
+    priceCents: input.priceCents ?? 0,
+    paymentRequired: input.paymentRequired ?? false,
+    paymentDeadlineHours: input.paymentDeadlineHours ?? null,
+    rosterOnly: input.rosterOnly ?? false,
+    rosterPriorityHours: input.rosterPriorityHours ?? 0,
+    transferRequiresProof: input.transferRequiresProof ?? true,
+  };
+
+  let events: (typeof matchSessions.$inferSelect)[];
+
+  if (input.recurrenceFrequency) {
+    if (input.endDate) {
+      return {
+        success: false as const,
+        error: { code: "VALIDATION_RECURRENCE_AND_RANGE_EXCLUSIVE" },
+      };
+    }
+
+    if (!input.recurrenceEndDate) {
+      return {
+        success: false as const,
+        error: { code: "VALIDATION_RECURRENCE_END_REQUIRED" },
+      };
+    }
+
+    const occurrences = generateRecurringOccurrences({
+      start: input.startDate,
+      frequency: input.recurrenceFrequency,
+      endDate: input.recurrenceEndDate,
+    });
+
+    if (!occurrences.success) {
+      return {
+        success: false as const,
+        error: { code: `RECURRENCE_${occurrences.error}` },
+      };
+    }
+
+    const recurrenceGroupId = crypto.randomUUID();
+    events = await db
+      .insert(matchSessions)
+      .values(
+        occurrences.occurrences.map(startsAt => ({
+          ...baseValues,
+          slug: buildSlug(startsAt),
+          startsAt,
+          recurrence: input.recurrenceFrequency,
+          recurrenceGroupId,
+        })),
+      )
+      .returning();
+  } else {
+    if (input.endDate) {
+      const rangeCheck = validateEventRange(input.startDate, input.endDate);
+      if (!rangeCheck.success) {
+        return {
+          success: false as const,
+          error: { code: `RANGE_${rangeCheck.error}` },
+        };
+      }
+    }
+
+    events = await db
+      .insert(matchSessions)
+      .values({
+        ...baseValues,
+        slug: buildSlug(input.startDate),
+        startsAt: input.startDate,
+        endsAt: input.endDate,
+        recurrence: input.recurrence || "once",
+      })
+      .returning();
+  }
+
+  const [event] = events;
 
   if (
     input.priceCents &&
@@ -166,28 +236,30 @@ export async function createEvent(input: {
   }
 
   const invitedPlayers = input.invitedPlayers ?? [];
-  for (const player of invitedPlayers) {
-    if (player.isVerified) {
-      await db
-        .insert(attendance)
-        .values({
-          matchSessionId: event.id,
-          playerId: player.id,
-          status: "pending",
-        })
-        .onConflictDoUpdate({
-          target: [attendance.matchSessionId, attendance.playerId],
-          set: { status: "pending", updatedAt: new Date() },
-        });
-    } else {
-      await db.insert(attendance).values({
-        matchSessionId: event.id,
-        guestName: player.name,
-        guestEmail: player.email ?? null,
-        status: "pending",
-      });
-    }
-  }
+  await Promise.all(
+    events.flatMap(createdEvent =>
+      invitedPlayers.map(player =>
+        player.isVerified
+          ? db
+              .insert(attendance)
+              .values({
+                matchSessionId: createdEvent.id,
+                playerId: player.id,
+                status: "pending",
+              })
+              .onConflictDoUpdate({
+                target: [attendance.matchSessionId, attendance.playerId],
+                set: { status: "pending", updatedAt: new Date() },
+              })
+          : db.insert(attendance).values({
+              matchSessionId: createdEvent.id,
+              guestName: player.name,
+              guestEmail: player.email ?? null,
+              status: "pending",
+            }),
+      ),
+    ),
+  );
 
   await trackServerEvent(authUser.id, "event_created", {
     event_id: event.id,
@@ -195,10 +267,14 @@ export async function createEvent(input: {
     payment_required: input.paymentRequired ?? false,
     roster_only: input.rosterOnly ?? false,
     price_cents: input.priceCents ?? 0,
+    is_recurring: Boolean(input.recurrenceFrequency),
+    occurrence_count: events.length,
   });
 
   revalidatePath("/arena/events");
-  revalidatePath(`/event/${event.id}`);
+  for (const createdEvent of events) {
+    revalidatePath(`/event/${createdEvent.id}`);
+  }
   return { success: true as const, data: toEventView(event) };
 }
 
@@ -493,6 +569,7 @@ function toEventView(event: typeof matchSessions.$inferSelect) {
     images: [] as string[],
     status: toEventStatus(event.status),
     recurrence: event.recurrence,
+    recurrenceGroupId: event.recurrenceGroupId,
     transferRequiresProof: event.transferRequiresProof,
     createdAt: event.createdAt ?? new Date(),
     updatedAt: event.updatedAt ?? new Date(),

@@ -1,4 +1,3 @@
-import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 import {
@@ -8,7 +7,7 @@ import {
 import { getEventMessages } from "@/actions/event-chat.actions";
 import { getEvent } from "@/actions/match-sessions.actions";
 import { LockedTeamProvider } from "@/components/arena/locked-team-context";
-import { auth } from "@/lib/auth";
+import { getCachedSession } from "@/lib/get-session";
 import { userCanAccessTeam, userIsTeamOwner } from "@/lib/team-access";
 import { EventDetail } from "./_components/event-detail";
 
@@ -22,7 +21,7 @@ export default async function ArenaEventDetailPage({ params }: Params) {
   const eventIdOrSlug = id;
   const t = await getTranslations("arenaEvents");
 
-  const session = await auth.api.getSession({ headers: await headers() });
+  const session = await getCachedSession();
   const user = session?.user;
 
   // Fetch event first so we have the slug and id

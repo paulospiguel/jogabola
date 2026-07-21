@@ -1,7 +1,7 @@
 "use client";
 
-import { Lock } from "lucide-react";
-import Link from "next/link";
+import { Lock, type LucideIcon } from "lucide-react";
+import Link, { useLinkStatus } from "next/link";
 import { usePathname } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { useDevice } from "@/hooks/use-device";
@@ -20,7 +20,7 @@ export function BottomNav() {
   if (!isMobile) return null;
 
   return (
-    <nav className="fixed right-0 bottom-0 left-0 z-50 flex h-[72px] items-center justify-around border-arena-border border-t bg-arena-bg-sec px-0.5 pb-2">
+    <nav id="arena-bottom-nav" className="fixed right-0 bottom-0 left-0 z-50 flex h-[72px] items-center justify-around border-arena-border border-t bg-arena-bg-sec px-0.5 pb-2">
       {BOTTOM_NAV_ITEMS.map(item => {
         const isActive = isBottomNavItemActive(item.href, pathname);
         const isLocked = isCaptainWithoutTeam && item.requiresTeam;
@@ -58,26 +58,50 @@ export function BottomNav() {
             href={item.href}
             className="press relative flex min-h-11 min-w-11 flex-1 flex-col items-center justify-center gap-0.5 no-underline"
           >
-            <Icon
-              size={19}
-              strokeWidth={isActive ? 2 : 1.7}
-              className={cn(
-                isActive ? "text-arena-primary" : "text-arena-text-muted",
-              )}
+            <BottomNavLinkContent
+              icon={item.icon}
+              isActive={isActive}
+              label={t(item.labelKey)}
             />
-            <span
-              className={cn(
-                "max-w-full truncate text-[9px]",
-                isActive
-                  ? "font-bold text-arena-primary"
-                  : "font-medium text-arena-text-muted",
-              )}
-            >
-              {t(item.labelKey)}
-            </span>
           </Link>
         );
       })}
     </nav>
+  );
+}
+
+function BottomNavLinkContent({
+  icon: Icon,
+  isActive,
+  label,
+}: {
+  icon: LucideIcon;
+  isActive: boolean;
+  label: string;
+}) {
+  const { pending } = useLinkStatus();
+
+  return (
+    <>
+      <Icon
+        size={19}
+        strokeWidth={isActive ? 2 : 1.7}
+        className={cn(
+          isActive ? "text-arena-primary" : "text-arena-text-muted",
+          pending && "animate-pulse text-arena-primary",
+        )}
+      />
+      <span
+        className={cn(
+          "max-w-full truncate text-[9px]",
+          isActive
+            ? "font-bold text-arena-primary"
+            : "font-medium text-arena-text-muted",
+          pending && "text-arena-primary",
+        )}
+      >
+        {label}
+      </span>
+    </>
   );
 }

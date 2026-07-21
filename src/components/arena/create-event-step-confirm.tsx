@@ -8,19 +8,60 @@ import {
   Clock,
   Compass,
   MapPin,
+  Repeat,
   Shield,
 } from "lucide-react";
 import type { useTranslations } from "next-intl";
+import { generateRecurringOccurrences } from "@/lib/event-recurrence";
 import { cn } from "@/lib/utils";
 import { getAvatarColor } from "./create-event-avatar-color";
 import type { CreateEventFormState } from "./create-event-form-types";
 
 interface CreateEventStepConfirmProps {
-  form: Pick<CreateEventFormState, "type" | "title" | "startDate" | "location">;
+  form: Pick<
+    CreateEventFormState,
+    | "type"
+    | "title"
+    | "startDate"
+    | "location"
+    | "scheduleType"
+    | "endDate"
+    | "recurrence"
+    | "recurrenceEndDate"
+  >;
   rosterPlayers: { id: string; name: string }[];
   selectedPlayerIds: string[];
   error: string | null;
   t: ReturnType<typeof useTranslations<"arenaCreateEvent">>;
+}
+
+function getScheduleSummary(
+  form: CreateEventStepConfirmProps["form"],
+  t: CreateEventStepConfirmProps["t"],
+) {
+  if (form.scheduleType === "range" && form.startDate && form.endDate) {
+    const start = format(form.startDate, "d MMM", { locale: pt });
+    const end = format(form.endDate, "d MMM, HH'h'mm", { locale: pt });
+    return t("confirm.rangeSummary", { start, end });
+  }
+
+  if (
+    form.scheduleType === "recurring" &&
+    form.startDate &&
+    form.recurrenceEndDate
+  ) {
+    const frequency = t(`recurrence.${form.recurrence}`);
+    const end = format(form.recurrenceEndDate, "d MMM", { locale: pt });
+    const result = generateRecurringOccurrences({
+      start: form.startDate,
+      frequency: form.recurrence === "monthly" ? "monthly" : "weekly",
+      endDate: form.recurrenceEndDate,
+    });
+    const count = result.success ? result.occurrences.length : 0;
+    return t("confirm.recurringSummary", { frequency, end, count });
+  }
+
+  return null;
 }
 
 export function CreateEventStepConfirm({
@@ -30,6 +71,8 @@ export function CreateEventStepConfirm({
   error,
   t,
 }: CreateEventStepConfirmProps) {
+  const scheduleSummary = getScheduleSummary(form, t);
+
   return (
     <div className="flex flex-col gap-4">
       {/* Event briefing card */}
@@ -91,6 +134,12 @@ export function CreateEventStepConfirm({
               {form.location || t("placeholders.location")}
             </span>
           </div>
+          {scheduleSummary && (
+            <div className="flex items-center gap-2 text-[11px] text-arena-primary font-semibold">
+              <Repeat size={12} className="text-arena-primary" />
+              <span>{scheduleSummary}</span>
+            </div>
+          )}
         </div>
       </div>
 

@@ -2,7 +2,6 @@
 
 import { Users } from "lucide-react";
 import type { useTranslations } from "next-intl";
-import { EventDatePicker } from "@/components/ui/event-date-picker";
 import { cn } from "@/lib/utils";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
@@ -17,11 +16,19 @@ import type {
   CreateEventFormState,
   SetFormField,
 } from "./create-event-form-types";
+import { ScheduleTypeFields } from "./create-event-schedule-type-fields";
 
 interface CreateEventStepDetailsProps {
   form: Pick<
     CreateEventFormState,
-    "startDate" | "location" | "maxPlayers" | "rosterOnly"
+    | "startDate"
+    | "location"
+    | "maxPlayers"
+    | "rosterOnly"
+    | "scheduleType"
+    | "endDate"
+    | "recurrence"
+    | "recurrenceEndDate"
   >;
   inputFee: string;
   set: SetFormField;
@@ -42,20 +49,7 @@ export function CreateEventStepDetails({
 }: CreateEventStepDetailsProps) {
   return (
     <div className="flex flex-col gap-4">
-      <div>
-        <Label
-          className="mb-1.5 text-xs font-bold text-arena-text-sec block px-0.5"
-          htmlFor="event-date-picker"
-        >
-          {t("labels.date")} & {t("labels.time")}
-        </Label>
-        <EventDatePicker
-          id="event-date-picker"
-          value={form.startDate}
-          onChange={date => set("startDate", date)}
-          placeholder={t("placeholders.selectDateTime")}
-        />
-      </div>
+      <ScheduleTypeFields form={form} set={set} t={t} />
 
       <div>
         <Label

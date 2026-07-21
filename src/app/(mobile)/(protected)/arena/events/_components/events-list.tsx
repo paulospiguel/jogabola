@@ -9,6 +9,7 @@ import {
   Clock,
   MapPin,
   Plus,
+  Repeat,
   Trophy,
   Zap,
 } from "lucide-react";
@@ -64,6 +65,16 @@ function EventStatusBadge({ status }: { status: EventStatus }) {
       )}
     >
       {t(cfg.label)}
+    </span>
+  );
+}
+
+function RecurringBadge() {
+  const t = useTranslations("arenaEvents");
+  return (
+    <span className="inline-flex shrink-0 items-center gap-1 rounded-lg border border-arena-primary/25 bg-arena-primary/10 px-2 py-[3px] text-[10px] font-bold uppercase leading-none tracking-[0.4px] text-arena-primary">
+      <Repeat size={10} strokeWidth={2.5} />
+      {t("badges.recurring")}
     </span>
   );
 }
@@ -133,7 +144,10 @@ function EventRowItem({ event }: { event: EventView }) {
           {formatRowDateTime(event, locale)}
         </span>
       </span>
-      <EventStatusBadge status={event.status} />
+      <span className="flex shrink-0 items-center gap-1.5">
+        {event.recurrenceGroupId && <RecurringBadge />}
+        <EventStatusBadge status={event.status} />
+      </span>
     </Link>
   );
 }
@@ -177,6 +191,7 @@ function HeroCard({
               {position}/{total}
             </span>
           )}
+          {event.recurrenceGroupId && <RecurringBadge />}
           <EventStatusBadge status={event.status} />
         </div>
       </div>
