@@ -1,11 +1,10 @@
-import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { getMyRating } from "@/actions/player-ratings.actions";
-import { auth } from "@/lib/auth";
+import { getCachedSession } from "@/lib/get-session";
 import { SelfAssessmentClient } from "./_components/self-assessment-client";
 
 export default async function SelfAssessmentPage() {
-  const session = await auth.api.getSession({ headers: await headers() });
+  const session = await getCachedSession();
 
   if (!session?.user) {
     redirect("/auth");

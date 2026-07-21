@@ -1,11 +1,10 @@
-import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { getNotifications } from "@/actions/notifications.actions";
-import { auth } from "@/lib/auth";
+import { getCachedSession } from "@/lib/get-session";
 import { NotificationsList } from "./_components/notifications-list";
 
 export default async function ArenaNotificationsPage() {
-  const session = await auth.api.getSession({ headers: await headers() });
+  const session = await getCachedSession();
 
   if (!session?.user) {
     redirect("/auth");

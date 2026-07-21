@@ -1,5 +1,4 @@
 import { eq } from "drizzle-orm";
-import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 import { BottomNav } from "@/components/arena/bottom-nav";
@@ -11,14 +10,14 @@ import { TeamGateProvider } from "@/components/arena/team-gate-context";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import { db } from "@/db/client";
 import * as schema from "@/db/schema";
-import { auth } from "@/lib/auth";
+import { getCachedSession } from "@/lib/get-session";
 
 export default async function ArenaLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const session = await auth.api.getSession({ headers: await headers() });
+  const session = await getCachedSession();
   const user = session?.user;
   const sessionData = session?.session;
 
@@ -33,22 +32,21 @@ export default async function ArenaLayout({
   const role: string | null = user?.role ?? null;
   let hasTeam = Boolean(sessionData?.teamId);
 
-  if (!hasTeam && user?.id) {
-    const membership = await db.query.teamMembers.findFirst({
-      where: eq(schema.teamMembers.playerId, user.id),
-    });
-    if (membership) {
-      hasTeam = true;
-    }
-  }
-
-  let hasPasskey = false;
-  if (user?.id) {
-    const passkeyRecord = await db.query.passkey.findFirst({
+  const [membership, passkeyRecord] = await Promise.all([
+    hasTeam
+      ? Promise.resolve(null)
+      : db.query.teamMembers.findFirst({
+          where: eq(schema.teamMembers.playerId, user.id),
+        }),
+    db.query.passkey.findFirst({
       where: eq(schema.passkey.userId, user.id),
-    });
-    hasPasskey = Boolean(passkeyRecord);
+    }),
+  ]);
+
+  if (membership) {
+    hasTeam = true;
   }
+  const hasPasskey = Boolean(passkeyRecord);
 
   const t = await getTranslations("passkeyPrompt");
   const passkeyTranslations = {

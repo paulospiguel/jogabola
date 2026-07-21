@@ -1,13 +1,12 @@
-import { headers } from "next/headers";
 import { redirect } from "next/navigation";
-import { auth } from "@/lib/auth";
+import { getCachedSession } from "@/lib/get-session";
 
 export default async function OnboardingLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const session = await auth.api.getSession({ headers: await headers() });
+  const session = await getCachedSession();
   const user = session?.user as { onboardingCompleted?: boolean } | undefined;
 
   if (user?.onboardingCompleted) {

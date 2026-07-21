@@ -5,6 +5,7 @@ import {
   ChevronUp,
   CreditCard,
   Loader2,
+  Repeat,
   Users,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
@@ -46,6 +47,7 @@ interface EditEventSheetProps {
     startDate: Date | string;
     status: EventStatus;
     recurrence: string;
+    recurrenceGroupId: string | null;
     priceCents?: number;
     paymentRequired?: boolean;
     paymentDeadlineHours?: number | null;
@@ -68,7 +70,6 @@ export function EditEventSheet({ event, onClose }: EditEventSheetProps) {
   const [form, setForm] = useState({
     startDate: new Date(event.startDate),
     status: event.status || "scheduled",
-    recurrence: event.recurrence || "once",
     priceCents: event.priceCents ?? 0,
     paymentRequired: event.paymentRequired ?? false,
     paymentDeadlineHours: event.paymentDeadlineHours?.toString() ?? "",
@@ -145,7 +146,6 @@ export function EditEventSheet({ event, onClose }: EditEventSheetProps) {
     const res = await updateEvent(event.id, {
       startDate: form.startDate,
       status: form.status,
-      recurrence: form.recurrence,
       priceCents: form.priceCents,
       paymentRequired: form.paymentRequired,
       paymentDeadlineHours:
@@ -185,22 +185,14 @@ export function EditEventSheet({ event, onClose }: EditEventSheetProps) {
           />
         </div>
 
-        <div>
-          <Label className={labelClass}>{t("labels.recurrence")}</Label>
-          <Select
-            value={form.recurrence}
-            onValueChange={v => set("recurrence", v)}
-          >
-            <SelectTrigger className="h-11 w-full rounded-xl border-arena-border bg-arena-surface text-sm text-arena-text">
-              <SelectValue placeholder={t("labels.recurrence")} />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="once">{t("recurrence.once")}</SelectItem>
-              <SelectItem value="weekly">{t("recurrence.weekly")}</SelectItem>
-              <SelectItem value="monthly">{t("recurrence.monthly")}</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
+        {event.recurrenceGroupId && (
+          <div className="flex items-center gap-2 rounded-xl border border-arena-border bg-arena-surface px-4 py-3 text-[13px] font-semibold text-arena-text-sec">
+            <Repeat size={15} className="text-arena-primary shrink-0" />
+            {t("edit.partOfSeries", {
+              frequency: t(`recurrence.${event.recurrence}`),
+            })}
+          </div>
+        )}
 
         <div>
           <Label className={labelClass}>{tEvents("statusLabel")}</Label>

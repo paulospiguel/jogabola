@@ -15,6 +15,7 @@ Apenas planos revistos, accionáveis e prontos para execução permanecem neste 
 | Estado | Data | Título | Dependências | Caminho actual |
 | --- | --- | --- | --- | --- |
 | Active | 2026-07-17 | Repository and Agent Structure Consolidation | — | [Plano](2026-07-17-repository-agent-structure.md) |
+| Active | 2026-07-18 | Fluid Page Transitions — skeletons, pending nav, latência SSR | — | [Plano](2026-07-18-fluid-page-transitions.md) |
 
 ## Completed
 

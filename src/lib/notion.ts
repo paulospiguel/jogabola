@@ -27,43 +27,72 @@ function getWaitlistDataSourceId() {
   return id;
 }
 
-let testerCache: { emails: Set<string>; expiresAt: number } | null = null;
+export function createTesterChecker(
+  fetchTesterEmails: () => Promise<Set<string>>,
+  ttlMs = 5 * 60 * 1000,
+) {
+  let cache: { emails: Set<string>; expiresAt: number } | null = null;
+  let refreshing: Promise<void> | null = null;
 
-export async function isTesterEmail(email: string): Promise<boolean> {
-  const now = Date.now();
-
-  if (!testerCache || now > testerCache.expiresAt) {
-    try {
-      const notion = getNotionClient();
-      const dataSourceId = getWaitlistDataSourceId();
-      const response = await notion.dataSources.query({
-        data_source_id: dataSourceId,
-        filter: {
-          or: TESTER_TYPES.map(type => ({
-            property: "Type",
-            select: { equals: type },
-          })),
-        },
-      });
-      const emails = new Set<string>();
-      for (const page of response.results) {
-        if (!isFullPage(page)) continue;
-
-        const emailProperty = page.properties.Email;
-        if (emailProperty?.type === "email" && emailProperty.email) {
-          emails.add(emailProperty.email.toLowerCase().trim());
-        }
-      }
-
-      testerCache = { emails, expiresAt: now + 5 * 60 * 1000 };
-    } catch (err) {
-      console.error("[notion] failed to fetch testers:", err);
-      return process.env.NODE_ENV !== "production";
+  function refresh(): Promise<void> {
+    if (!refreshing) {
+      refreshing = fetchTesterEmails()
+        .then(emails => {
+          cache = { emails, expiresAt: Date.now() + ttlMs };
+        })
+        .finally(() => {
+          refreshing = null;
+        });
     }
+    return refreshing;
   }
 
-  return testerCache?.emails.has(email.toLowerCase().trim());
+  return async function isTester(email: string): Promise<boolean> {
+    const normalized = email.toLowerCase().trim();
+
+    if (!cache) {
+      try {
+        await refresh();
+      } catch (err) {
+        console.error("[notion] failed to fetch testers:", err);
+        return process.env.NODE_ENV !== "production";
+      }
+    } else if (Date.now() > cache.expiresAt) {
+      // stale-while-revalidate: answer from stale cache, refresh in background
+      refresh().catch(err => {
+        console.error("[notion] background tester refresh failed:", err);
+      });
+    }
+
+    return cache?.emails.has(normalized) ?? false;
+  };
 }
+
+async function fetchTesterEmails(): Promise<Set<string>> {
+  const notion = getNotionClient();
+  const dataSourceId = getWaitlistDataSourceId();
+  const response = await notion.dataSources.query({
+    data_source_id: dataSourceId,
+    filter: {
+      or: TESTER_TYPES.map(type => ({
+        property: "Type",
+        select: { equals: type },
+      })),
+    },
+  });
+  const emails = new Set<string>();
+  for (const page of response.results) {
+    if (!isFullPage(page)) continue;
+
+    const emailProperty = page.properties.Email;
+    if (emailProperty?.type === "email" && emailProperty.email) {
+      emails.add(emailProperty.email.toLowerCase().trim());
+    }
+  }
+  return emails;
+}
+
+export const isTesterEmail = createTesterChecker(fetchTesterEmails);
 
 export async function addToWaitlist(
   name: string,
