@@ -1,10 +1,62 @@
 services:
   postgres:
-    container_name: ${DB_CONTAINER_NAME:-jogabola_database}
-    image: postgres
-    restart: always
+    image: postgres:17-alpine
     environment:
-      - POSTGRES_USER=${DB_USER:-jogabola}
-      - POSTGRES_PASSWORD=${DB_PASSWORD:-jogabola}
+      POSTGRES_USER: jogabola
+      POSTGRES_PASSWORD: jogabola-local-only
+      POSTGRES_DB: jogabola
     ports:
-      - 5432:5432
+      - "127.0.0.1:${JOGABOLA_LOCAL_POSTGRES_PORT:-5432}:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U jogabola -d jogabola"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  mailpit:
+    image: axllent/mailpit:v1.27.11
+    ports:
+      - "127.0.0.1:1025:1025"
+      - "127.0.0.1:8025:8025"
+
+  app:
+    build:
+      context: .
+      target: development
+    depends_on:
+      postgres:
+        condition: service_healthy
+      mailpit:
+        condition: service_started
+    environment:
+      NODE_ENV: development
+      DATABASE_URL: postgresql://jogabola:jogabola-local-only@postgres:5432/jogabola
+      BETTER_AUTH_SECRET: ${JOGABOLA_LOCAL_AUTH_SECRET:-jogabola-local-only-secret-do-not-use-in-production}
+      NEXT_PUBLIC_URL: http://localhost:3000
+      NEXT_PUBLIC_APP_URL: http://localhost:3000
+      TRUSTED_ORIGINS: http://localhost:3000,http://127.0.0.1:3000
+      APP_LAUNCHED: "true"
+      RESEND_API_KEY: ""
+      SMTP_HOST: mailpit
+      SMTP_PORT: 1025
+      SMTP_SECURE: "false"
+      EMAIL_FROM: JogaBola Local <noreply@jogabola.local>
+      OPENROUTER_API_KEY: ${OPENROUTER_API_KEY:-}
+      OPENROUTER_MODEL: ${OPENROUTER_MODEL:-}
+    ports:
+      - "127.0.0.1:3000:3000"
+    volumes:
+      - ./src:/app/src
+      - ./public:/app/public
+      - ./types:/app/types
+      - ./next.config.ts:/app/next.config.ts:ro
+      - ./tsconfig.json:/app/tsconfig.json:ro
+      - ./postcss.config.mjs:/app/postcss.config.mjs:ro
+      - app_next_cache:/app/.next
+    command: sh -c "pnpm db:local-setup && pnpm dev --hostname 0.0.0.0"
+
+volumes:
+  postgres_data:
+  app_next_cache:

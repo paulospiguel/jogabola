@@ -174,7 +174,11 @@ export async function requestGuestOTP(
       expiresAt,
     });
 
-    if (!process.env.RESEND_API_KEY && process.env.NODE_ENV !== "production") {
+    if (
+      !process.env.RESEND_API_KEY &&
+      !process.env.SMTP_HOST &&
+      process.env.NODE_ENV !== "production"
+    ) {
       console.log(`[guest-rsvp:otp] ${normalizedEmail} -> ${otp}`);
       return { success: true };
     }

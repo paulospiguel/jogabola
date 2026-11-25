@@ -2,6 +2,8 @@
 
 Validação manual mínima antes de promover uma versão do JogaBola para produção. Executar os cenários em mobile e desktop, registar evidências e bloquear a release quando existir uma falha crítica ou alta sem mitigação aceite.
 
+Esta checklist continua a ser a verificação manual de release. A revisão pelos especialistas de QA descritos em [`docs/agents/qa-subagents.md`](../agents/qa-subagents.md) e a auditoria `/impeccable audit` ajudam na validação de engenharia, mas não substituem a execução UAT em mobile e desktop.
+
 ## Pré-condições
 
 - [ ] Ambiente candidato usa a mesma configuração e migrações previstas para produção.

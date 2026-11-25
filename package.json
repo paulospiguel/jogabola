@@ -13,6 +13,7 @@
     "ts-check": "npx tsc --noEmit",
     "start": "next start",
     "db:push": "drizzle-kit push --config ./src/db/drizzle.config.ts",
+    "db:local-setup": "node ./scripts/prepare-local-db.mjs",
     "db:studio": "drizzle-kit studio --config ./src/db/drizzle.config.ts",
     "db:migration": "drizzle-kit migrate --config ./src/db/drizzle.config.ts",
     "db:generate": "drizzle-kit generate --config ./src/db/drizzle.config.ts",

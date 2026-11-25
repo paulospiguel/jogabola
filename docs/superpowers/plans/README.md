@@ -16,6 +16,7 @@ Apenas planos revistos, accionáveis e prontos para execução permanecem neste 
 | --- | --- | --- | --- | --- |
 | Active | 2026-07-17 | Repository and Agent Structure Consolidation | — | [Plano](2026-07-17-repository-agent-structure.md) |
 | Active | 2026-07-18 | Fluid Page Transitions — skeletons, pending nav, latência SSR | — | [Plano](2026-07-18-fluid-page-transitions.md) |
+| Active | 2026-11-25 | Preparação local e reestruturação AI Club OS | Base local antes das migrações de domínio | [Plano](2026-11-25-ai-club-os.md) |
 
 ## Completed
 

@@ -1,3 +1,5 @@
+import { render } from "@react-email/components";
+import nodemailer from "nodemailer";
 import * as React from "react";
 import { Resend } from "resend";
 import { AttendanceConfirmedEmail } from "@/components/emails/attendance-confirmed-email";
@@ -7,7 +9,24 @@ import { GuestRsvpOtpEmail } from "@/components/emails/guest-rsvp-otp-email";
 import { PaymentProofRequestEmail } from "@/components/emails/payment-proof-request-email";
 import { WelcomeEmail } from "@/components/emails/welcome-email";
 
-const resend = new Resend(process.env.RESEND_API_KEY);
+const resend = process.env.RESEND_API_KEY
+  ? new Resend(process.env.RESEND_API_KEY)
+  : undefined;
+const smtpTransport = process.env.SMTP_HOST
+  ? nodemailer.createTransport({
+      host: process.env.SMTP_HOST,
+      port: Number(process.env.SMTP_PORT || 1025),
+      secure: process.env.SMTP_SECURE === "true",
+      ...(process.env.SMTP_USER && process.env.SMTP_PASSWORD
+        ? {
+            auth: {
+              user: process.env.SMTP_USER,
+              pass: process.env.SMTP_PASSWORD,
+            },
+          }
+        : {}),
+    })
+  : undefined;
 
 const FROM_EMAIL =
   process.env.EMAIL_FROM ||
@@ -23,7 +42,11 @@ export type EmailDeliveryErrorCode =
   | "EMAIL_SEND_FAILED";
 
 function isDev() {
-  return process.env.NODE_ENV !== "production" && !process.env.RESEND_API_KEY;
+  return (
+    process.env.NODE_ENV !== "production" &&
+    !process.env.RESEND_API_KEY &&
+    !smtpTransport
+  );
 }
 
 function errorText(error: unknown) {
@@ -108,7 +131,23 @@ async function send({
     return { success: true as const };
   }
 
-  if (!process.env.RESEND_API_KEY) {
+  if (!process.env.RESEND_API_KEY && smtpTransport) {
+    try {
+      await smtpTransport.sendMail({
+        from: FROM_EMAIL,
+        to,
+        subject,
+        html: await render(react),
+      });
+      console.info("[email:smtp] captured locally:", { to });
+      return { success: true as const };
+    } catch (error) {
+      console.error("[email:smtp] send failed:", normalizeEmailError(error));
+      return { success: false as const, error };
+    }
+  }
+
+  if (!resend) {
     const error = new Error("RESEND_API_KEY is not configured");
     console.error("[email] send failed:", error.message);
     return { success: false as const, error };
@@ -278,7 +317,23 @@ export async function sendEmail({
     return { success: true };
   }
 
-  if (!process.env.RESEND_API_KEY) {
+  if (!process.env.RESEND_API_KEY && smtpTransport) {
+    try {
+      await smtpTransport.sendMail({
+        from: FROM_EMAIL,
+        to,
+        subject,
+        html: react ? await render(react) : (html ?? ""),
+      });
+      console.info("[email:smtp] captured locally:", { to });
+      return { success: true };
+    } catch (error) {
+      console.error("[email:smtp] send failed:", normalizeEmailError(error));
+      return { success: false, error };
+    }
+  }
+
+  if (!resend) {
     const error = new Error("RESEND_API_KEY is not configured");
     console.error("[email] sendEmail failed:", error.message);
     return { success: false, error };
@@ -289,7 +344,7 @@ export async function sendEmail({
       ? { from: FROM_EMAIL, to, subject, react }
       : { from: FROM_EMAIL, to, subject, html: html ?? "" };
     const response = await resend.emails.send(
-      payload as Parameters<typeof resend.emails.send>[0],
+      payload as Parameters<NonNullable<typeof resend>["emails"]["send"]>[0],
     );
     if (response.error) {
       console.error(

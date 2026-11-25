@@ -52,5 +52,9 @@ Usar `needs-triage`, `needs-info`, `ready-for-agent`, `ready-for-human` e `wontf
 
 Repositório single-context com `CONTEXT.md` e ADRs globais em `docs/adr/`. Ver `docs/agents/domain.md`.
 
+### Especialistas de QA
+
+Em alterações não triviais, usa os agentes de QA quando a análise puder decorrer de forma independente: `qa-integration-database` para Server Actions, autenticação, Drizzle/Postgres e integrações externas; `qa-journeys-ui` para percursos completos, interface responsiva, acessibilidade e localização. Se a alteração abranger ambas as áreas, atribui um âmbito distinto a cada agente e consolida as evidências antes de reportar. Por omissão, são revisores sem escrita e não podem delegar trabalho. Ver `docs/agents/qa-subagents.md` para escolher os agentes e seguir as regras de segurança e passagem de resultados.
+
 ## Verificação
 `pnpm lint` · `pnpm ts-check` · `pnpm test` · `pnpm build`

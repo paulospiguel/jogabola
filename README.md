@@ -16,19 +16,27 @@ O JogaBola é uma plataforma de gestão de equipas de futebol amador: convocató
 - Cloudflare R2 para armazenamento de ficheiros
 - Vercel para alojamento e tarefas cron
 
-## Começar
+## Começar localmente
+
+Executar na raiz do repositório com Docker Compose.
 
 ```bash
-pnpm install
-docker compose up -d
-cp .env.example .env # preencher valores
-# Em .env, usar DATABASE_URL=postgresql://jogabola:jogabola@localhost:5432/jogabola
-# e preencher BETTER_AUTH_SECRET com o resultado de: openssl rand -base64 32
-pnpm db:migration
-pnpm dev
+docker compose up --build -d
+docker compose logs -f app
 ```
 
-A aplicação fica disponível em `http://localhost:3000`.
+Abrir [JogaBola](http://localhost:3000) e entrar com um endereço de teste. O código de acesso chega à [caixa de correio local](http://localhost:8025). A aplicação, PostgreSQL e a captura de email podem arrancar sem credenciais de serviços externos. O primeiro build precisa de ligação à Internet para obter imagens e dependências.
+
+Com Node 22 disponível no host, `node scripts/smoke-local.mjs` cria um atleta sintético, obtém o código no Mailpit e confirma a sessão autenticada. Usar `docker compose down` para parar e conservar o volume PostgreSQL.
+
+O chat em tempo real usa Ably e o envio de comprovativos usa armazenamento compatível com S3 (R2 em produção). Estas integrações são opcionais para o arranque e para o teste de autenticação. A inferência real dos agentes também usa rede e requer configuração explícita do OpenRouter.
+
+A preparação de bases vazias parte do esquema Drizzle atual. O histórico SQL existente ainda precisa de reconciliação antes de atualizar bases com dados. O plano de implementação documenta essa etapa e os critérios de aceitação.
+
+- [Ambiente local e execução no host](docs/development/local-setup.md)
+- [Plano da reestruturação e sequência de trabalho](docs/superpowers/plans/2026-11-25-ai-club-os.md)
+- [Configuração do OpenRouter e execução do agente local](docs/agents/openrouter.md)
+- [Subagentes de QA e critérios de revisão](docs/agents/qa-subagents.md)
 
 ## Scripts
 
@@ -42,6 +50,7 @@ A aplicação fica disponível em `http://localhost:3000`.
 | `pnpm test:watch` | Executa os testes em modo interativo com Vitest. |
 | `pnpm ts-check` | Verifica os tipos TypeScript sem emitir ficheiros. |
 | `pnpm start` | Inicia a build de produção do Next.js. |
+| `pnpm db:local-setup` | Prepara uma base local vazia ou verifica os marcadores de compatibilidade numa base existente. |
 | `pnpm db:push` | Sincroniza diretamente o schema Drizzle com a base de dados. |
 | `pnpm db:studio` | Abre o Drizzle Studio. |
 | `pnpm db:migration` | Aplica as migrações Drizzle pendentes. |
