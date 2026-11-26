@@ -93,12 +93,12 @@ export function JoinClubOptions({
                 <li key={club.id}>
                   <Cta
                     size="md"
-                    className="btn-press w-full"
+                    className="btn-press h-auto min-h-11 w-full py-2.5"
                     disabled={join.isPending}
                     aria-busy={pending}
                     onClick={() => join.mutate(club.id)}
                   >
-                    <span className="truncate">
+                    <span className="min-w-0 text-balance break-words text-center leading-snug">
                       {pending
                         ? t("joining")
                         : t("joinCta", { club: club.name })}

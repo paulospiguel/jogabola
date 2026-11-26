@@ -305,7 +305,7 @@ export function FixtureForm({
                 : undefined
             }
           >
-            <div className="flex min-w-0 gap-2">
+            <div className="flex min-w-0 flex-col gap-2 sm:flex-row">
               <select
                 ref={opponentSelectRef}
                 id={ids.opponentId}
@@ -340,7 +340,7 @@ export function FixtureForm({
                   onClick={() => setCreatingOpponent(true)}
                   className={cn(
                     CLUB_LINK_BUTTON_CLASS,
-                    "h-11 shrink-0 rounded-[10px] border border-arena-primary/30 bg-arena-primary/5 px-3 text-xs text-arena-primary hover:border-arena-primary/50 md:h-10",
+                    "h-11 shrink-0 self-start rounded-[10px] border border-arena-primary/30 bg-arena-primary/5 px-3 text-xs text-arena-primary hover:border-arena-primary/50 sm:self-auto md:h-10",
                   )}
                 >
                   <Plus size={14} strokeWidth={2.4} aria-hidden="true" />

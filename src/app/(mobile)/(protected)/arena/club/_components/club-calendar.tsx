@@ -51,7 +51,7 @@ function FilterChips({
             aria-pressed={active}
             onClick={() => onChange(option.id)}
             className={cn(
-              "jb-chip btn-press min-h-11 transition md:min-h-9-transform active:scale-[0.97] focus-visible:outline-2 focus-visible:outline-arena-primary",
+              "jb-chip btn-press min-h-11 transition-transform active:scale-[0.97] md:min-h-9 focus-visible:outline-2 focus-visible:outline-arena-primary",
               active && "jb-chip-active",
             )}
           >
