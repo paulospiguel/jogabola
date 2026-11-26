@@ -62,9 +62,9 @@ As bases vazias arrancam com as migrações atuais através de `db:local-setup`.
 | Ficheiro | Conteúdo |
 | --- | --- |
 | [`AGENTS.md`](AGENTS.md) | Instruções canónicas do projeto para agentes e contribuidores. |
-| [`PRODUCT.md`](PRODUCT.md) | Intenção do produto, utilizadores e princípios. |
-| [`CONTEXT.md`](CONTEXT.md) | Glossário de domínio e convenções de código. |
-| [`DESIGN.md`](DESIGN.md) | Sistema visual, tokens, componentes e microinterações. |
+| [`PRODUCT.md`](.agents/context/PRODUCT.md) | Intenção do produto, utilizadores e princípios. |
+| [`CONTEXT.md`](.agents/context/CONTEXT.md) | Glossário de domínio e convenções de código. |
+| [`DESIGN.md`](.agents/context/DESIGN.md) | Sistema visual, tokens, componentes e microinterações. |
 | [`docs/agents/harness-context.md`](docs/agents/harness-context.md) | Contexto partilhado para Codex, Claude Code e Antigravity. |
 | [`docs/adr/`](docs/adr/) | Registos das decisões de arquitetura. |
 | [`docs/superpowers/plans/README.md`](docs/superpowers/plans/README.md) | Índice canónico dos planos de implementação revistos e accionáveis. |

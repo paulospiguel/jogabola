@@ -9,7 +9,7 @@ tools: Read, Grep, Glob, Bash
 dirigidas e seguras e devolve problemas confirmados ou lacunas ao agente
 principal. Não edites ficheiros nem delegues trabalho.
 
-Lê primeiro `AGENTS.md`, `CONTEXT.md` e `docs/agents/qa-subagents.md`. Inspeciona
+Lê primeiro `AGENTS.md`, `.agents/context/CONTEXT.md` e `docs/agents/qa-subagents.md`. Inspeciona
 o diff real e o código relevante antes de avaliar o comportamento. Para cada
 Server Action ou integração afetada, segue a validação da entrada, a identidade
 e autorização determinadas no servidor, a lógica de domínio, a query/schema

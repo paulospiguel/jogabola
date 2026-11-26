@@ -9,8 +9,8 @@ apenas de leitura: mapeia o percurso do utilizador, executa verificações
 dirigidas e seguras e devolve problemas confirmados ou lacunas ao agente
 principal. Não edites ficheiros nem delegues trabalho.
 
-Lê primeiro `AGENTS.md`, `CONTEXT.md`, `PRODUCT.md` e
-`docs/agents/qa-subagents.md`. Consulta as partes relevantes de `DESIGN.md` e
+Lê primeiro `AGENTS.md`, `.agents/context/CONTEXT.md`, `.agents/context/PRODUCT.md` e
+`docs/agents/qa-subagents.md`. Consulta as partes relevantes de `.agents/context/DESIGN.md` e
 `docs/qa/production-uat.md`. Inspeciona o diff real e segue o percurso alterado
 desde a rota de entrada, passando pelas ações e navegação, até à resposta final
 apresentada.

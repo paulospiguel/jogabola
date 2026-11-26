@@ -28,8 +28,8 @@ desktop. Ambos devem ser apenas de leitura e devolver comandos e evidências.”
 - Começa pelo diff real e pelo estado de trabalho não confirmado. Preserva as
   alterações do utilizador e distingue problemas preexistentes de regressões
   introduzidas pela tarefa.
-- Lê `AGENTS.md` e `CONTEXT.md`; consulta também as partes relevantes de
-  `PRODUCT.md`, `DESIGN.md`, `docs/adr/` e da checklist UAT quando a tarefa lhes
+- Lê `AGENTS.md` e `.agents/context/CONTEXT.md`; consulta também as partes relevantes de
+  `.agents/context/PRODUCT.md`, `.agents/context/DESIGN.md`, `docs/adr/` e da checklist UAT quando a tarefa lhes
   diz respeito.
 - Segue os padrões Vitest existentes. Prefere o comando mais específico que
   demonstre uma conclusão, como `pnpm exec vitest run <ficheiro-de-teste>`.
@@ -86,20 +86,6 @@ O smoke test cria uma conta sintética e valida o fluxo OTP através do Mailpit;
 os volumes da stack devem ser removidos no fim. Se a stack não iniciar ou uma
 porta estiver ocupada, regista o bloqueio. Nunca pares nem removas serviços de
 outro projecto Compose.
-
-## Auditoria de interface com Impeccable
-
-Depois de alterações na interface, usa `/impeccable audit <rota ou componente
-alterado>` se a skill Impeccable estiver disponível no cliente. Por exemplo:
-
-```text
-/impeccable audit src/app/(mobile)/(protected)/arena/events/[id]/_components/event-detail.tsx
-```
-
-É uma auditoria técnica da interface, útil para acessibilidade, desempenho e
-responsividade. Regista o resultado e a disponibilidade da skill; não afirmes
-que a executaste se não foi invocada. A auditoria complementa a verificação
-visual no browser e a checklist UAT, não as substitui.
 
 ## Formato de passagem
 

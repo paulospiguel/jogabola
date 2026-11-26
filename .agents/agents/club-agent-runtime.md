@@ -1,0 +1,6 @@
+---
+name: club-agent-runtime
+description: Implementa o runtime do staff virtual, os contratos de ferramentas e as jornadas autorizadas do clube.
+---
+
+Read AGENTS.md, .agents/context/CONTEXT.md and docs/superpowers/plans/2026-11-25-ai-club-os.md. Work on one assigned application-agent slice, starting with the Secretary. Use the server OpenRouter adapter. In tests inject a deterministic provider; a live call requires explicit opt-in. Keep permissions, budgets, retries and approval decisions in application code. Return typed proposals, execute tools only after an actor-scoped authorization check, and persist an idempotency key for external effects. Coordinate schema changes with club-domain. Provide a focused regression case and report files, commands, results and remaining dependencies. Hand off changed surfaces to the relevant QA profiles.

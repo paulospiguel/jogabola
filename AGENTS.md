@@ -1,6 +1,6 @@
 # JOGABOLA — Project Instructions
 
-> Instruções comuns e ponto de entrada para Codex, Claude Code e Antigravity. `CLAUDE.md` e `GEMINI.md` são symlinks para este ficheiro — edita só aqui, sem copiar as mesmas regras para cada ferramenta.
+> Instruções comuns e ponto de entrada único e agnóstico para agentes de IA. Todos os ficheiros de contexto, agentes, skills e regras vivem em `.agents/` — edita só aqui e nas fontes canónicas referenciadas.
 
 ## What this project is
 **JogaBola** — plataforma de gestão de equipas de futebol amador. Convocatórias, plantel, estatísticas, chat por evento, rankings, histórico de época.
@@ -36,20 +36,26 @@ Next.js 16 (App Router, `next dev --turbo`) · React 19 · TypeScript · pnpm ·
 ## Documentação — ler antes de codificar
 | Ficheiro | Conteúdo |
 |---|---|
-| `PRODUCT.md` | Intenção de produto, utilizadores, princípios |
-| `CONTEXT.md` | Glossário de domínio (Convocatória, MatchSession, Racha/Payment...) e convenções de código |
-| `DESIGN.md` | Design system — tokens, tipografia, componentes, microinterações |
-| `docs/agents/harness-context.md` | Como Codex, Claude Code e Antigravity consomem o contexto partilhado |
+| `.agents/context/PRODUCT.md` | Intenção de produto, utilizadores, princípios |
+| `.agents/context/CONTEXT.md` | Glossário de domínio (Convocatória, MatchSession, Racha/Payment...) e convenções de código |
+| `.agents/context/DESIGN.md` | Design system — tokens, tipografia, componentes, microinterações |
+| `.agents/agents/` | Definições canónicas dos agentes especializados |
+| `.agents/skills/` | Skills do projecto (`builder-business`, `dev-coder`) |
+| `.agents/rules/` | Regras de activação e encaminhamento para as fontes canónicas |
+| `docs/agents/harness-context.md` | Como os clientes de IA consomem o contexto partilhado |
 | `docs/adr/` | Decisões de arquitetura registadas |
 | `docs/superpowers/plans/README.md` | Índice canónico dos planos de implementação revistos e accionáveis |
 | `docs/archive/` | Documentação histórica, planos classificados e registos preservados |
 
-Antes de uma alteração de produto, lê `PRODUCT.md` e `CONTEXT.md`; consulta o ADR e o plano activo da área. Usa `docs/agents/harness-context.md` para saber onde manter instruções partilhadas ou específicas de uma ferramenta. Não peças ao utilizador para repetir contexto já documentado.
+Antes de uma alteração de produto, lê `.agents/context/PRODUCT.md` e `.agents/context/CONTEXT.md`; consulta o ADR e o plano activo da área. Usa `docs/agents/harness-context.md` para saber onde manter instruções partilhadas. Não peças ao utilizador para repetir contexto já documentado.
 
 ## Workflow de agentes
 O fluxo canónico deste repositório é o **Superpowers** (brainstorming → writing-plans → executing-plans → verification-before-completion). Começar sempre pelo índice `docs/superpowers/plans/README.md`; apenas planos revistos e accionáveis permanecem ao lado desse índice. `docs/archive/` conserva documentação histórica e não é uma fila de execução. Não usar o pipeline GSD (`/gsd:*`) neste repositório.
 
-A skill `dev-coder` (`.agents/skills/dev-coder/`) é o standard de implementação por omissão: arquitetura, regras de TypeScript/React, Server Actions, e tokens visuais Arena.
+A estrutura de agentes e skills é agnóstica e centralizada em `.agents/`:
+- `.agents/agents/` — definições canónicas dos agentes especializados (`club-agent-runtime`, `club-domain`, `qa-integration-database`, `qa-journeys-ui`).
+- `.agents/skills/` — skills do projecto (`builder-business`, `dev-coder`). A skill `dev-coder` (`.agents/skills/dev-coder/`) é o standard de implementação por omissão: arquitetura, regras de TypeScript/React, Server Actions, e tokens visuais Arena.
+- `.agents/rules/` — adaptadores de activação para as fontes canónicas.
 
 ## Agent skills
 
@@ -63,7 +69,7 @@ Usar `needs-triage`, `needs-info`, `ready-for-agent`, `ready-for-human` e `wontf
 
 ### Domain docs
 
-Repositório single-context com `CONTEXT.md` e ADRs globais em `docs/adr/`. Ver `docs/agents/domain.md`.
+Repositório single-context com `.agents/context/CONTEXT.md` e ADRs globais em `docs/adr/`. Ver `docs/agents/domain.md`.
 
 ### Especialistas de QA
 
