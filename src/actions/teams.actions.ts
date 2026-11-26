@@ -1,6 +1,7 @@
 "use server";
 
 import { and, eq, inArray, isNull, sql } from "drizzle-orm";
+import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import { db } from "@/db/client";
 import {
@@ -109,6 +110,10 @@ export const createTeam = withAuthAction(
       team_id: team.id,
       plan_tier: planTier,
     });
+
+    // The arena layout derives the team gate on the server; refresh it so
+    // client navigation stops prompting the captain to create a team.
+    revalidatePath("/arena", "layout");
 
     return { success: true, data: team };
   },
@@ -287,6 +292,7 @@ export const switchActiveTeam = withAuthAction(
       .where(eq(session.userId, user.id));
 
     await trackServerEvent(user.id, "team_switched", { team_id: teamId });
+    revalidatePath("/arena", "layout");
 
     return { success: true, data: { teamId } };
   },
