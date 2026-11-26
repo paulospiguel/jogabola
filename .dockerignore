@@ -1,6 +1,9 @@
 .git
 .next
 node_modules
+.pnpm-store
+.worktrees
+.playwright-cli
 coverage
 dist
 build
