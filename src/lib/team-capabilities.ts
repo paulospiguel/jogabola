@@ -10,7 +10,9 @@ import type { TeamRole } from "@/types/teams";
  * Every actual mutation must keep calling `canManageTeam`/`userIsTeamOwner`
  * server-side — never trust this value from the client.
  */
-export const MANAGEMENT_ROLES = ["owner", "manager"] as const;
+// Ownership is authoritative only through `teams.owner_id`. A roster row with
+// role "owner" (e.g. left behind after an ownership change) grants nothing.
+export const MANAGEMENT_ROLES = ["manager"] as const;
 
 export function isManagementRole(role: string): boolean {
   return (MANAGEMENT_ROLES as readonly string[]).includes(role);

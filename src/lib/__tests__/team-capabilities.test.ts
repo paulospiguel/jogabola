@@ -6,9 +6,12 @@ import {
 } from "../team-capabilities";
 
 describe("isManagementRole", () => {
-  it("treats owner and manager as management roles", () => {
-    expect(isManagementRole("owner")).toBe(true);
+  it("treats only manager memberships as management roles", () => {
     expect(isManagementRole("manager")).toBe(true);
+  });
+
+  it("does not let a roster 'owner' row substitute teams.owner_id", () => {
+    expect(isManagementRole("owner")).toBe(false);
   });
 
   it("does not treat coach or player as management roles", () => {
@@ -17,7 +20,7 @@ describe("isManagementRole", () => {
   });
 
   it("matches the MANAGEMENT_ROLES allowlist used by canManageTeam", () => {
-    expect(MANAGEMENT_ROLES).toEqual(["owner", "manager"]);
+    expect(MANAGEMENT_ROLES).toEqual(["manager"]);
   });
 });
 

@@ -10,6 +10,7 @@ const mocks = vi.hoisted(() => ({
   userCanAccessTeam: vi.fn(),
   userFindFirst: vi.fn(),
   userIsTeamOwner: vi.fn(),
+  sendEmail: vi.fn(),
 }));
 
 vi.mock("@/db/client", () => ({
@@ -33,11 +34,10 @@ vi.mock("@/lib/team-access", () => ({
   userIsTeamOwner: mocks.userIsTeamOwner,
 }));
 vi.mock("@/lib/analytics-server", () => ({ trackServerEvent: vi.fn() }));
-vi.mock("@/lib/email", () => ({ sendEmail: vi.fn() }));
+vi.mock("@/lib/email", () => ({ sendEmail: mocks.sendEmail }));
 
-const { addPlayerToRoster, addTeamMember } = await import(
-  "@/actions/teams.actions"
-);
+const { addPlayerToRoster, addTeamMember, sendRosterPlayerEmail } =
+  await import("@/actions/teams.actions");
 
 function signIn(id = "user-1") {
   mocks.getSession.mockResolvedValue({
@@ -188,5 +188,37 @@ describe("addPlayerToRoster authorization", () => {
     expect(values).toHaveBeenCalledWith(
       expect.objectContaining({ role: "player", playerId: "player-9" }),
     );
+  });
+});
+
+describe("sendRosterPlayerEmail authorization", () => {
+  const input = {
+    teamId: 7,
+    playerId: "player-9",
+    subject: "Jogo de sábado",
+    message: "Confirma a tua presença.",
+  };
+
+  it("rejects a roster player who cannot manage the team", async () => {
+    signIn("player-1");
+    mocks.userCanAccessTeam.mockResolvedValue(true);
+    mocks.canManageTeam.mockResolvedValue(false);
+
+    await expect(sendRosterPlayerEmail(input)).resolves.toEqual({
+      success: false,
+      error: { code: "FORBIDDEN" },
+    });
+    expect(mocks.sendEmail).not.toHaveBeenCalled();
+  });
+
+  it("hides teams the user cannot access", async () => {
+    signIn("stranger");
+    mocks.userCanAccessTeam.mockResolvedValue(false);
+
+    await expect(sendRosterPlayerEmail(input)).resolves.toEqual({
+      success: false,
+      error: { code: "TEAM_NOT_FOUND" },
+    });
+    expect(mocks.sendEmail).not.toHaveBeenCalled();
   });
 });

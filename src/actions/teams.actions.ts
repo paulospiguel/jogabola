@@ -596,6 +596,10 @@ export const sendRosterPlayerEmail = withAuthAction(
     if (!canAccessTeam) {
       return { success: false, error: { code: "TEAM_NOT_FOUND" } };
     }
+    // Free-text emails sent on JogaBola's behalf: managers only.
+    if (!(await canManageTeam(user.id, teamId))) {
+      return { success: false, error: { code: "FORBIDDEN" } };
+    }
 
     const [registered] = await db
       .select({

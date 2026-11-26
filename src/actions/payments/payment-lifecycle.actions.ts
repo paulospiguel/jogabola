@@ -24,37 +24,48 @@ const updatePaymentStatusSchema = z.object({
 });
 
 export const createPayment = withAction(createPaymentSchema, async data => {
-  const { guestAccessToken, ...paymentData } = data;
-  if (!(await canActOnReservation(data.matchReservationId, guestAccessToken))) {
+  const { guestAccessToken, matchReservationId, method } = data;
+  if (!(await canActOnReservation(matchReservationId, guestAccessToken))) {
     return { success: false, error: { code: "FORBIDDEN" } };
   }
 
-  let initialStatus:
-    | typeof PAYMENT_STATUS.PENDING
-    | typeof PAYMENT_STATUS.PAID_UNVERIFIED = PAYMENT_STATUS.PENDING;
+  // Amount and currency always come from the persisted callup, never from
+  // the client: an athlete must not be able to register a lower price.
+  const matchSessionRow = await db
+    .select({
+      priceCents: matchSessions.priceCents,
+      currency: matchSessions.currency,
+      transferRequiresProof: matchSessions.transferRequiresProof,
+    })
+    .from(matchReservations)
+    .innerJoin(
+      matchSessions,
+      eq(matchSessions.id, matchReservations.matchSessionId),
+    )
+    .where(eq(matchReservations.id, matchReservationId))
+    .limit(1)
+    .then(rows => rows[0]);
 
-  if (data.method === "transfer") {
-    const matchSessionRow = await db
-      .select({
-        transferRequiresProof: matchSessions.transferRequiresProof,
-      })
-      .from(matchReservations)
-      .innerJoin(
-        matchSessions,
-        eq(matchSessions.id, matchReservations.matchSessionId),
-      )
-      .where(eq(matchReservations.id, data.matchReservationId))
-      .limit(1)
-      .then(rows => rows[0]);
-
-    if (matchSessionRow && !matchSessionRow.transferRequiresProof) {
-      initialStatus = PAYMENT_STATUS.PAID_UNVERIFIED;
-    }
+  if (!matchSessionRow?.priceCents || matchSessionRow.priceCents <= 0) {
+    return { success: false, error: { code: "PAYMENT_NOT_REQUIRED" } };
   }
+
+  const initialStatus:
+    | typeof PAYMENT_STATUS.PENDING
+    | typeof PAYMENT_STATUS.PAID_UNVERIFIED =
+    method === "transfer" && !matchSessionRow.transferRequiresProof
+      ? PAYMENT_STATUS.PAID_UNVERIFIED
+      : PAYMENT_STATUS.PENDING;
 
   const [payment] = await db
     .insert(payments)
-    .values({ ...paymentData, status: initialStatus })
+    .values({
+      matchReservationId,
+      method,
+      amountCents: matchSessionRow.priceCents,
+      currency: matchSessionRow.currency ?? "EUR",
+      status: initialStatus,
+    })
     .returning();
   return { success: true, data: payment };
 });

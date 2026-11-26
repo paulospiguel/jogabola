@@ -5,16 +5,21 @@ import { z } from "zod";
 import { db } from "@/db/client";
 import { teamPaymentSettings } from "@/db/schema";
 import { withAuthAction } from "@/lib/action-helpers";
-import { userCanAccessTeam } from "@/lib/team-access";
+import { userCanAccessTeam, userIsTeamOwner } from "@/lib/team-access";
 import { upsertTeamPaymentSettingsSchema } from "@/schemas/payments.schema";
 import type { TeamPaymentConfig } from "@/types/payments";
 
 export const upsertTeamPaymentSettings = withAuthAction(
   upsertTeamPaymentSettingsSchema,
   async (user, data) => {
+    // Payment destination (IBAN, MB WAY, Stripe account) is owner-only:
+    // a roster member must never be able to redirect the team's payments.
     const canAccessTeam = await userCanAccessTeam(user.id, data.teamId);
     if (!canAccessTeam) {
       return { success: false, error: { code: "TEAM_NOT_FOUND" } };
+    }
+    if (!(await userIsTeamOwner(user.id, data.teamId))) {
+      return { success: false, error: { code: "FORBIDDEN" } };
     }
 
     const existing = await db.query.teamPaymentSettings.findFirst({
@@ -61,9 +66,33 @@ export const getPublicTeamPaymentSettings = withAction(
     const settings = await db.query.teamPaymentSettings.findFirst({
       where: eq(teamPaymentSettings.teamId, teamId),
     });
-    return { success: true as const, data: settings ?? null };
+    return { success: true as const, data: toPublicPaymentSettings(settings) };
   },
 );
+
+/**
+ * Public (guest-facing) view of the payment settings: only the fields an
+ * athlete needs to pay, and only for enabled methods. Internal ids and
+ * timestamps never leave the server, and details of disabled methods are
+ * not exposed.
+ */
+function toPublicPaymentSettings(
+  settings: typeof teamPaymentSettings.$inferSelect | undefined,
+) {
+  if (!settings) return null;
+  return {
+    stripeEnabled: settings.stripeEnabled,
+    stripeAccountId: settings.stripeEnabled ? settings.stripeAccountId : null,
+    mbwayEnabled: settings.mbwayEnabled,
+    mbwayPhone: settings.mbwayEnabled ? settings.mbwayPhone : null,
+    mbwayName: settings.mbwayEnabled ? settings.mbwayName : null,
+    cashEnabled: settings.cashEnabled,
+    cashInstructions: settings.cashEnabled ? settings.cashInstructions : null,
+    transferEnabled: settings.transferEnabled,
+    transferIban: settings.transferEnabled ? settings.transferIban : null,
+    transferName: settings.transferEnabled ? settings.transferName : null,
+  };
+}
 
 // eslint-disable-next-line server-auth-actions
 // eslint-disable-next-line react-doctor/server-auth-actions
