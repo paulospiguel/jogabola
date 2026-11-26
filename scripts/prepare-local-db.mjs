@@ -15,7 +15,13 @@ if (!databaseUrl) {
 }
 
 const hostname = new URL(databaseUrl).hostname.toLowerCase();
-const localHosts = new Set(["localhost", "127.0.0.1", "::1", "[::1]", "postgres"]);
+const localHosts = new Set([
+  "localhost",
+  "127.0.0.1",
+  "::1",
+  "[::1]",
+  "postgres",
+]);
 if (!localHosts.has(hostname)) {
   throw new Error(
     `Refusing local schema setup for non-local database host: ${hostname}`,
@@ -23,7 +29,8 @@ if (!localHosts.has(hostname)) {
 }
 
 const sql = postgres(databaseUrl, {
-  ssl: process.env.DATABASE_SSL?.toLowerCase() === "require" ? "require" : false,
+  ssl:
+    process.env.DATABASE_SSL?.toLowerCase() === "require" ? "require" : false,
   max: 1,
   connect_timeout: 10,
 });
@@ -49,14 +56,18 @@ async function findMissingColumns() {
     WHERE table_schema = 'public'
   `;
   const actual = new Set(
-    columns.map(({ table_name, column_name }) => `${table_name}.${column_name}`),
+    columns.map(
+      ({ table_name, column_name }) => `${table_name}.${column_name}`,
+    ),
   );
   return requiredColumns.filter(column => !actual.has(column));
 }
 
+let locked = false;
 try {
   // Serialize first-run bootstraps so concurrent app starts cannot both see an empty schema.
   await sql`SELECT pg_advisory_lock(61742, 911)`;
+  locked = true;
 
   const tables = await sql`
     SELECT tablename
@@ -66,16 +77,16 @@ try {
   `;
 
   if (tables.length === 0) {
-    console.info("Empty local database found; creating the current Drizzle schema.");
-    const result = spawnSync(
-      "pnpm",
-      ["exec", "drizzle-kit", "push", "--config", "./src/db/drizzle.config.ts"],
-      { stdio: "inherit" },
+    console.info(
+      "Empty local database found; applying the Drizzle migrations.",
     );
+    const result = spawnSync("pnpm", ["db:migration"], { stdio: "inherit" });
 
     if (result.error) throw result.error;
     if (result.status !== 0) {
-      throw new Error(`Drizzle schema bootstrap exited with status ${result.status ?? "unknown"}.`);
+      throw new Error(
+        `Drizzle schema bootstrap exited with status ${result.status ?? "unknown"}.`,
+      );
     }
   }
 
@@ -85,7 +96,7 @@ try {
       [
         "The local database is not compatible with the current application schema.",
         `Missing required columns: ${missingColumns.join(", ")}.`,
-        "No changes were applied to an existing database. Review and apply a migration or schema update explicitly.",
+        "No changes were applied to an existing database. Review and run pnpm db:migration explicitly.",
       ].join(" "),
     );
   }
@@ -94,10 +105,13 @@ try {
     console.info("Current Drizzle schema is ready.");
   } else {
     console.info(
-      `Existing local schema is compatible; skipped push across ${tables.length} public table(s).`,
+      `Existing local schema is compatible; checked ${tables.length} public table(s).`,
     );
   }
 } finally {
-  await sql`SELECT pg_advisory_unlock(61742, 911)`;
-  await sql.end({ timeout: 5 });
+  try {
+    if (locked) await sql`SELECT pg_advisory_unlock(61742, 911)`;
+  } finally {
+    await sql.end({ timeout: 5 });
+  }
 }
