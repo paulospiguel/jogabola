@@ -1151,7 +1151,8 @@
       "coach": "Treinador",
       "player": "Jogador",
       "guest": "Convidado",
-      "co-captain": "Co-capitão"
+      "co-captain": "Co-capitão",
+      "staff": "Staff"
     },
     "actions": {
       "add": "Adicionar",

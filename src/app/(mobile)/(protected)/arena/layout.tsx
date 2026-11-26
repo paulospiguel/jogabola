@@ -11,6 +11,7 @@ import { SidebarProvider } from "@/components/ui/sidebar";
 import { db } from "@/db/client";
 import * as schema from "@/db/schema";
 import { getCachedSession } from "@/lib/get-session";
+import { getAccessibleTeamIds } from "@/lib/team-authz";
 
 export default async function ArenaLayout({
   children,
@@ -19,7 +20,6 @@ export default async function ArenaLayout({
 }) {
   const session = await getCachedSession();
   const user = session?.user;
-  const sessionData = session?.session;
 
   if (!user) {
     redirect("/auth");
@@ -30,22 +30,15 @@ export default async function ArenaLayout({
   }
 
   const role: string | null = user?.role ?? null;
-  let hasTeam = Boolean(sessionData?.teamId);
-
-  const [membership, passkeyRecord] = await Promise.all([
-    hasTeam
-      ? Promise.resolve(null)
-      : db.query.teamMembers.findFirst({
-          where: eq(schema.teamMembers.playerId, user.id),
-        }),
+  // Owner (even without a roster row), staff or athlete all count.
+  const [accessibleTeamIds, passkeyRecord] = await Promise.all([
+    getAccessibleTeamIds(user.id),
     db.query.passkey.findFirst({
       where: eq(schema.passkey.userId, user.id),
     }),
   ]);
 
-  if (membership) {
-    hasTeam = true;
-  }
+  const hasTeam = accessibleTeamIds.length > 0;
   const hasPasskey = Boolean(passkeyRecord);
 
   const t = await getTranslations("passkeyPrompt");

@@ -9,11 +9,11 @@ import { useSession } from "@/lib/auth-client";
 type MyTeamsResult = Awaited<ReturnType<typeof getMyTeams>>;
 
 /**
- * DTO shape returned by `getMyTeams`: each team the user can access,
- * annotated with their real role and a presentation-only `canManage` flag.
- * `canManage` drives which cockpit actions render — it must never be used
- * to gate a mutation, only the server-side canManageTeam/userIsTeamOwner
- * checks may do that.
+ * DTO shape returned by `getMyTeams`: each team the user can access
+ * (owned ∪ staff ∪ roster), annotated with `isOwner`, `isAthlete`,
+ * `staffTitle`, `permissions`, `membershipRole` and a presentation-only
+ * `canManage` flag. These drive which actions render — they must never gate
+ * a mutation; only server-side `can()` / `isTeamOwner()` checks may do that.
  */
 export type TeamSummary = Extract<
   MyTeamsResult,

@@ -1,1 +1,1 @@
-export type TeamRole = "owner" | "manager" | "coach" | "player";
+export type TeamRole = "owner" | "staff" | "player";

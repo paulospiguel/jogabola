@@ -87,7 +87,7 @@ export function selectSecondaryEvents<E extends DashboardEvent>(
 /**
  * Derives which cockpit actions to show. `canManage` here is
  * presentation-only — every mutation still needs server-side authorization
- * via canManageTeam/userIsTeamOwner.
+ * via can()/isTeamOwner() from @/lib/team-authz.
  */
 export function buildCockpitActions(
   input: CockpitActionInput,

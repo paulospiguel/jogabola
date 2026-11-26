@@ -1151,7 +1151,8 @@
       "coach": "Coach",
       "player": "Player",
       "guest": "Guest",
-      "co-captain": "Co-captain"
+      "co-captain": "Co-captain",
+      "staff": "Staff"
     },
     "actions": {
       "add": "Add",

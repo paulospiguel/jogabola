@@ -105,7 +105,7 @@ export function ProfileTeams({ teams }: ProfileTeamsProps) {
                       <span
                         className={cn(
                           "text-[9px] uppercase font-bold px-1.5 py-0.25 rounded",
-                          team.role === "manager"
+                          team.role !== "player"
                             ? "bg-arena-primary/15 text-arena-primary border border-arena-primary/20"
                             : "bg-arena-info/15 text-arena-info border border-arena-info/20",
                         )}

@@ -12,15 +12,15 @@ import {
   teams,
   user as userTable,
 } from "@/db/schema";
-import { withAction, withAuthAction } from "@/lib/action-helpers";
+import { withAuthAction } from "@/lib/action-helpers";
 import { trackServerEvent } from "@/lib/analytics-server";
 import { sendEmail } from "@/lib/email";
 import { canCreateTeam, normalizePlanTier } from "@/lib/plan-limits";
-import { userCanAccessTeam, userIsTeamOwner } from "@/lib/team-access";
-import { buildAccessibleTeamSummaries } from "@/lib/team-capabilities";
+import { insertRosterMember } from "@/lib/roster";
+import { can, canViewTeam, getTeamAccess, isTeamOwner } from "@/lib/team-authz";
+import { listMyTeamSummaries } from "@/lib/team-summaries";
 import {
   addPlayerToRosterSchema,
-  addTeamMemberSchema,
   createTeamSchema,
   removePlayerFromRosterSchema,
   setCoCaptainSchema,
@@ -119,22 +119,6 @@ export const createTeam = withAuthAction(
   },
 );
 
-export const addTeamMember = withAction(addTeamMemberSchema, async data => {
-  const [member] = await db
-    .insert(teamMembers)
-    .values(data)
-    .onConflictDoUpdate({
-      target: [teamMembers.teamId, teamMembers.playerId],
-      set: {
-        role: data.role,
-        status: data.status || "new",
-        updatedAt: new Date(),
-      },
-    })
-    .returning();
-  return { success: true, data: member };
-});
-
 export const addPlayerToRoster = withAuthAction(
   addPlayerToRosterSchema,
   async (user, data) => {
@@ -145,9 +129,8 @@ export const addPlayerToRoster = withAuthAction(
       return { success: false, error: { code: "TEAM_REQUIRED" } };
     }
 
-    const canAccessTeam = await userCanAccessTeam(user.id, teamId);
-    if (!canAccessTeam) {
-      return { success: false, error: { code: "TEAM_NOT_FOUND" } };
+    if (!(await can(user.id, teamId, "roster.manage"))) {
+      return { success: false, error: { code: "FORBIDDEN" } };
     }
 
     // 1. Check if user already exists in the platform
@@ -171,17 +154,9 @@ export const addPlayerToRoster = withAuthAction(
         };
       }
 
-      // Add as team member with "new" status
-      const [_member] = await db
-        .insert(teamMembers)
-        .values({
-          teamId,
-          playerId: existingUser.id,
-          role: data.admin ? "manager" : "player",
-          position: data.position,
-          status: "new",
-        })
-        .returning();
+      // Add to the roster with "new" status. Management is never granted
+      // here — staff is promoted separately by the owner.
+      await insertRosterMember(teamId, existingUser.id, data.position);
 
       await trackServerEvent(user.id, "player_invited", {
         team_id: teamId,
@@ -243,45 +218,17 @@ export const addPlayerToRoster = withAuthAction(
 );
 
 export const getMyTeams = withAuthAction(z.any(), async user => {
-  const ownedTeams = await db
-    .select()
-    .from(teams)
-    .where(eq(teams.ownerId, user.id))
-    .orderBy(teams.name);
-
-  const memberTeams = await db
-    .select({
-      id: teams.id,
-      name: teams.name,
-      slug: teams.slug,
-      location: teams.location,
-      description: teams.description,
-      category: teams.category,
-      homeGround: teams.homeGround,
-      ownerId: teams.ownerId,
-      createdAt: teams.createdAt,
-      updatedAt: teams.updatedAt,
-      role: teamMembers.role,
-    })
-    .from(teamMembers)
-    .innerJoin(teams, eq(teamMembers.teamId, teams.id))
-    .where(eq(teamMembers.playerId, user.id))
-    .orderBy(teams.name);
-
-  // `canManage` here is presentation-only (drives which cockpit actions the
-  // client renders). Every mutation must keep authorizing server-side via
-  // canManageTeam/userIsTeamOwner — never trust this flag from the client.
-  const myTeams = buildAccessibleTeamSummaries(ownedTeams, memberTeams).sort(
-    (a, b) => a.name.localeCompare(b.name),
-  );
-
+  // Owned ∪ staff ∪ roster. `canManage`, `permissions` and `membershipRole`
+  // are presentation-only: every mutation authorizes server-side via
+  // `can()` / `isTeamOwner()` — never trust these flags from the client.
+  const myTeams = await listMyTeamSummaries(user.id);
   return { success: true, data: myTeams };
 });
 
 export const switchActiveTeam = withAuthAction(
   z.object({ teamId: z.number() }),
   async (user, { teamId }) => {
-    const canAccessTeam = await userCanAccessTeam(user.id, teamId);
+    const canAccessTeam = await canViewTeam(user.id, teamId);
     if (!canAccessTeam) {
       return { success: false, error: { code: "TEAM_NOT_FOUND" } };
     }
@@ -301,16 +248,19 @@ export const switchActiveTeam = withAuthAction(
 export const removePlayerFromRoster = withAuthAction(
   removePlayerFromRosterSchema,
   async (user, { teamId, playerId }) => {
-    const team = await db.query.teams.findFirst({
-      where: and(eq(teams.id, teamId), eq(teams.ownerId, user.id)),
-    });
-
-    if (!team) {
-      return { success: false, error: { code: "TEAM_NOT_FOUND" } };
+    if (!(await can(user.id, teamId, "roster.manage"))) {
+      return { success: false, error: { code: "FORBIDDEN" } };
     }
 
-    if (team.ownerId === playerId) {
-      return { success: false, error: { code: "CANNOT_REMOVE_OWNER" } };
+    // Only the owner removes the owner or a staff member from the roster
+    // (and nobody removes the owner); everyone can leave via
+    // setMyAthleteStatus. Removal never demotes: `team_staff` is untouched.
+    const target = await getTeamAccess(playerId, teamId);
+    if (target.isOwner) {
+      return { success: false, error: { code: "CANNOT_MODIFY_OWNER" } };
+    }
+    if (target.staff && !(await isTeamOwner(user.id, teamId))) {
+      return { success: false, error: { code: "FORBIDDEN" } };
     }
 
     const member = await db.query.teamMembers.findFirst({
@@ -362,7 +312,7 @@ export const removePlayerFromRoster = withAuthAction(
 export const getTeamSquad = withAuthAction(
   z.object({ teamId: z.number() }),
   async (user, { teamId }) => {
-    const canAccessTeam = await userCanAccessTeam(user.id, teamId);
+    const canAccessTeam = await canViewTeam(user.id, teamId);
     if (!canAccessTeam) {
       return { success: false, error: { code: "TEAM_NOT_FOUND" } };
     }
@@ -436,7 +386,7 @@ export const getTeamSquad = withAuthAction(
 export const getAthleteProfile = withAuthAction(
   z.object({ playerId: z.string(), teamId: z.number() }),
   async (user, { playerId, teamId }) => {
-    const canAccessTeam = await userCanAccessTeam(user.id, teamId);
+    const canAccessTeam = await canViewTeam(user.id, teamId);
     if (!canAccessTeam) {
       return { success: false, error: { code: "TEAM_NOT_FOUND" } };
     }
@@ -559,9 +509,8 @@ export const sendRosterPlayerEmail = withAuthAction(
     message: z.string().min(5).max(2000),
   }),
   async (user, { teamId, playerId, subject, message }) => {
-    const canAccessTeam = await userCanAccessTeam(user.id, teamId);
-    if (!canAccessTeam) {
-      return { success: false, error: { code: "TEAM_NOT_FOUND" } };
+    if (!(await can(user.id, teamId, "roster.manage"))) {
+      return { success: false, error: { code: "FORBIDDEN" } };
     }
 
     const [registered] = await db
@@ -617,7 +566,7 @@ export const setCoCaptain = withAuthAction(
   setCoCaptainSchema,
   async (user, { teamId, playerId, makeCoCaptain }) => {
     // Only the owner can promote/demote co-captains.
-    const isOwner = await userIsTeamOwner(user.id, teamId);
+    const isOwner = await isTeamOwner(user.id, teamId);
     if (!isOwner) {
       return { success: false, error: { code: "FORBIDDEN" } };
     }
