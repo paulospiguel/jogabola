@@ -15,7 +15,7 @@ import {
   teams,
   user,
 } from "@/db/schema";
-import { getAuthUser, withAction } from "@/lib/action-helpers";
+import { getAuthUser } from "@/lib/action-helpers";
 import { trackServerEvent } from "@/lib/analytics-server";
 import {
   generateRecurringOccurrences,
@@ -24,10 +24,6 @@ import {
 } from "@/lib/event-recurrence";
 import { can, canViewTeam, getAccessibleTeamIds } from "@/lib/team-authz";
 import { slugify } from "@/lib/utils";
-import {
-  createMatchReservationSchema,
-  createMatchSessionSchema,
-} from "@/schemas/match-sessions.schema";
 import type { EventStatus } from "@/types/events";
 
 function toEventStatus(status: string): EventStatus {
@@ -35,28 +31,6 @@ function toEventStatus(status: string): EventStatus {
   if (status === "cancelled" || status === "canceled") return "cancelled";
   return "scheduled";
 }
-
-export const createMatchSession = withAction(
-  createMatchSessionSchema,
-  async data => {
-    const [matchSession] = await db
-      .insert(matchSessions)
-      .values(data)
-      .returning();
-    return { success: true, data: matchSession };
-  },
-);
-
-export const createMatchReservation = withAction(
-  createMatchReservationSchema,
-  async data => {
-    const [reservation] = await db
-      .insert(matchReservations)
-      .values(data)
-      .returning();
-    return { success: true, data: reservation };
-  },
-);
 
 export async function createEvent(input: {
   title: string;
@@ -101,10 +75,15 @@ export async function createEvent(input: {
   }
 
   if (!teamId) {
+    // Fallback: first accessible team where the user manages events. A
+    // roster-only team is skipped (never FORBIDDEN); with none, a team is
+    // auto-created below.
     const accessibleTeamIds = await getAccessibleTeamIds(authUser.id);
-    teamId = accessibleTeamIds[0] ?? null;
-    if (teamId && !(await can(authUser.id, teamId, "events.manage"))) {
-      return { success: false as const, error: { code: "FORBIDDEN" } };
+    for (const candidateId of accessibleTeamIds) {
+      if (await can(authUser.id, candidateId, "events.manage")) {
+        teamId = candidateId;
+        break;
+      }
     }
   }
 
