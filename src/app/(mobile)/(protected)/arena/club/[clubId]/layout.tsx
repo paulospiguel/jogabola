@@ -41,7 +41,7 @@ export default async function ClubLayout({
             action={
               <Link
                 href="/arena/club"
-                className="btn-press inline-flex h-9 items-center rounded-[10px] border border-arena-border bg-arena-surface px-4 text-xs font-bold text-arena-text-sec transition-transform active:scale-[0.97] hover:bg-arena-surface-el"
+                className="btn-press inline-flex h-11 items-center md:h-9 rounded-[10px] border border-arena-border bg-arena-surface px-4 text-xs font-bold text-arena-text-sec transition-transform active:scale-[0.97] hover:bg-arena-surface-el"
               >
                 {t("backToClub")}
               </Link>

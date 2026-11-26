@@ -22,11 +22,17 @@ import { ClubFormAlert, ClubQueryProblem, ClubSkeletonRows } from "./club-ui";
 
 interface LinkCallupSheetProps {
   fixture: FixtureDto;
+  /** Called on a successful link, before the fixture cache is updated. */
+  onLinked?: () => void;
   onClose: () => void;
 }
 
 /** Picks a callup of the fixture's team and links it (owner only, server-checked). */
-export function LinkCallupSheet({ fixture, onClose }: LinkCallupSheetProps) {
+export function LinkCallupSheet({
+  fixture,
+  onLinked,
+  onClose,
+}: LinkCallupSheetProps) {
   const t = useTranslations("arenaClubCalendar.link");
   const messages = useClubMessages();
   const format = useFormatter();
@@ -52,6 +58,7 @@ export function LinkCallupSheet({ fixture, onClose }: LinkCallupSheetProps) {
         await linkMatchSession({ fixtureId: fixture.id, matchSessionId }),
       ),
     onSuccess: async updated => {
+      onLinked?.();
       queryClient.setQueryData(clubCalendarKeys.fixture(updated.id), updated);
       await invalidate(updated.clubId);
       onClose();

@@ -109,7 +109,7 @@ export function CatalogPanel({
               onClick={onCreate}
               className={cn(
                 CLUB_LINK_BUTTON_CLASS,
-                "h-9 rounded-[10px] bg-arena-primary px-4 text-xs text-arena-bg hover:bg-arena-primary/90",
+                "h-11 rounded-[10px] bg-arena-primary px-4 md:h-9 text-xs text-arena-bg hover:bg-arena-primary/90",
               )}
             >
               <Plus size={14} strokeWidth={2.4} aria-hidden="true" />
@@ -192,7 +192,7 @@ export function CatalogPanel({
             onClick={onCreate}
             className={cn(
               CLUB_LINK_BUTTON_CLASS,
-              "h-9 rounded-[10px] border border-arena-primary/30 bg-arena-primary/5 px-3 text-xs text-arena-primary hover:border-arena-primary/50",
+              "h-11 rounded-[10px] border border-arena-primary/30 md:h-9 bg-arena-primary/5 px-3 text-xs text-arena-primary hover:border-arena-primary/50",
             )}
           >
             <Plus size={14} strokeWidth={2.4} aria-hidden="true" />

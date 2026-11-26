@@ -136,7 +136,7 @@ export function ClubEntry() {
             href="/arena"
             className={cn(
               CLUB_LINK_BUTTON_CLASS,
-              "h-11 rounded-[10px] border border-arena-border bg-arena-surface px-4 text-xs text-arena-text-sec hover:bg-arena-surface-el",
+              "h-11 rounded-[10px] border border-arena-border bg-arena-surface px-4 md:h-9 text-xs text-arena-text-sec hover:bg-arena-surface-el",
             )}
           >
             {t("backToDashboard")}

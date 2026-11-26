@@ -76,6 +76,7 @@ export function ClubSettings() {
       )}
 
       <SegmentedControl
+        buttonClassName="h-11 md:h-9"
         ariaLabel={t("tabsLabel")}
         value={tab}
         onChange={setTab}

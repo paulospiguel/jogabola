@@ -3704,7 +3704,7 @@
     "fixture": {
       "linkedBadge": "Callup",
       "versus": "{team} vs {opponent}",
-      "rowLabel": "{competition}: {team} against {opponent}, at {hour}"
+      "rowLabel": "{competition}: {team} vs {opponent}, {day} at {hour}, season {season}{linked, select, yes {, with callup} other {, no callup}}"
     },
     "aside": {
       "label": "Calendar summary",

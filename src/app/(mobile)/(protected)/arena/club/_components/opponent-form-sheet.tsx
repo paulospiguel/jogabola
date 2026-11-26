@@ -2,7 +2,7 @@
 
 import { useMutation } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
-import { useId, useState } from "react";
+import { useId, useRef, useState } from "react";
 import { createOpponent, updateOpponent } from "@/actions/clubs.actions";
 import { BottomSheet } from "@/components/arena/bottom-sheet";
 import { Cta } from "@/components/arena/cta";
@@ -40,6 +40,7 @@ export function OpponentFormSheet({
   const messages = useClubMessages();
   const invalidate = useInvalidateClub();
   const nameId = useId();
+  const nameRef = useRef<HTMLInputElement | null>(null);
   const [name, setName] = useState(opponent?.name ?? "");
   const [nameError, setNameError] = useState<string | undefined>();
   const [formError, setFormError] = useState("");
@@ -92,6 +93,7 @@ export function OpponentFormSheet({
   return (
     <BottomSheet
       onClose={onClose}
+      initialFocusRef={nameRef}
       title={opponent ? t("editTitle") : t("createTitle")}
     >
       <form onSubmit={handleSubmit} noValidate className="flex flex-col gap-4">
@@ -107,8 +109,7 @@ export function OpponentFormSheet({
             value={name}
             maxLength={80}
             placeholder={t("namePlaceholder")}
-            // biome-ignore lint/a11y/noAutofocus: first field of a modal sheet the user just opened
-            autoFocus
+            ref={nameRef}
             onChange={event => setName(event.target.value)}
             {...fieldAria(nameId, nameError, t("nameHint"))}
           />

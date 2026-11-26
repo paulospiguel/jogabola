@@ -72,7 +72,7 @@ export function ClubShell({ children }: { children: React.ReactNode }) {
                 href={tab.href}
                 aria-current={active ? "page" : undefined}
                 className={cn(
-                  "btn-press -mb-px flex min-h-11 items-center gap-1.5 border-b-2 px-3 text-[13px] font-semibold transition-colors duration-150 active:scale-[0.97] focus-visible:outline-2 focus-visible:outline-arena-primary",
+                  "btn-press -mb-px flex h-11 items-center gap-1.5 border-b-2 px-3 text-[13px] font-semibold transition-colors duration-150 active:scale-[0.97] focus-visible:outline-2 focus-visible:outline-arena-primary",
                   active
                     ? "border-arena-primary text-arena-primary"
                     : "border-transparent text-arena-text-muted hover:text-arena-text",

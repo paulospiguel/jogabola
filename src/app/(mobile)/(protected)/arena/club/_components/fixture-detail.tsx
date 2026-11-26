@@ -13,7 +13,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { useFormatter, useTranslations } from "next-intl";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { unlinkMatchSession } from "@/actions/fixtures.actions";
 import { Cta } from "@/components/arena/cta";
 import { cn } from "@/lib/utils";
@@ -73,11 +73,23 @@ function CallupPanel({ fixture }: { fixture: FixtureDto }) {
   const [linking, setLinking] = useState(false);
   const [unlinking, setUnlinking] = useState(false);
   const callupQuery = useCallup(fixture.linkedMatchSessionId);
+  // After linking or unlinking, the button that opened the sheet is gone;
+  // move focus to the main action of the new state instead of losing it.
+  const openCallupRef = useRef<HTMLAnchorElement | null>(null);
+  const linkButtonRef = useRef<HTMLButtonElement | null>(null);
+  const focusAfterChange = useRef(false);
+  const linkedState = fixture.linkedMatchSessionId !== null;
+  useEffect(() => {
+    if (!focusAfterChange.current) return;
+    focusAfterChange.current = false;
+    (linkedState ? openCallupRef : linkButtonRef).current?.focus();
+  }, [linkedState]);
 
   const unlink = useMutation({
     mutationFn: async () =>
       unwrapClubResult(await unlinkMatchSession({ fixtureId: fixture.id })),
     onSuccess: async updated => {
+      focusAfterChange.current = true;
       queryClient.setQueryData(clubCalendarKeys.fixture(updated.id), updated);
       await invalidate(updated.clubId);
       setUnlinking(false);
@@ -107,6 +119,7 @@ function CallupPanel({ fixture }: { fixture: FixtureDto }) {
           </p>
           {fixture.canManage && (
             <Cta
+              ref={linkButtonRef}
               size="md"
               className="btn-press self-start"
               onClick={() => setLinking(true)}
@@ -152,10 +165,11 @@ function CallupPanel({ fixture }: { fixture: FixtureDto }) {
           )}
           <div className="flex flex-wrap gap-2">
             <Link
+              ref={openCallupRef}
               href={`/arena/events/${linkedId}`}
               className={cn(
                 CLUB_LINK_BUTTON_CLASS,
-                "h-10 rounded-[12px] bg-arena-primary px-4 text-sm text-arena-bg hover:bg-arena-primary/90",
+                "h-11 rounded-[12px] bg-arena-primary px-4 text-sm md:h-10 text-arena-bg hover:bg-arena-primary/90",
               )}
             >
               <ExternalLink size={15} strokeWidth={2.2} aria-hidden="true" />
@@ -165,7 +179,7 @@ function CallupPanel({ fixture }: { fixture: FixtureDto }) {
               <Cta
                 variant="secondary"
                 size="md"
-                className="btn-press h-10"
+                className="btn-press md:h-10"
                 onClick={() => setUnlinking(true)}
               >
                 <Link2Off
@@ -182,7 +196,13 @@ function CallupPanel({ fixture }: { fixture: FixtureDto }) {
       )}
 
       {linking && (
-        <LinkCallupSheet fixture={fixture} onClose={() => setLinking(false)} />
+        <LinkCallupSheet
+          fixture={fixture}
+          onLinked={() => {
+            focusAfterChange.current = true;
+          }}
+          onClose={() => setLinking(false)}
+        />
       )}
       {unlinking && (
         <ConfirmSheet
@@ -302,7 +322,7 @@ export function FixtureDetail({ fixtureId }: { fixtureId: number | null }) {
         href={calendarHref}
         className={cn(
           CLUB_LINK_BUTTON_CLASS,
-          "self-start rounded-[10px] px-2 py-1.5 text-xs text-arena-text-sec hover:text-arena-text",
+          "h-11 self-start rounded-[10px] px-2 text-xs md:h-9 text-arena-text-sec hover:text-arena-text",
         )}
       >
         <ArrowLeft size={15} aria-hidden="true" />

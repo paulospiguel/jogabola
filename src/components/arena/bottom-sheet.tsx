@@ -2,7 +2,7 @@
 
 import { X } from "lucide-react";
 import { useTranslations } from "next-intl";
-import { useEffect, useRef } from "react";
+import { useEffect, useId, useRef } from "react";
 import { createPortal } from "react-dom";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -22,6 +22,12 @@ interface BottomSheetProps {
   title?: string;
   noPad?: boolean;
   hideClose?: boolean;
+  /**
+   * Element focused when the sheet opens (e.g. the first form field).
+   * Without it the dialog container takes focus. Either way, focus returns
+   * to the element that opened the sheet when it closes.
+   */
+  initialFocusRef?: React.RefObject<HTMLElement | null>;
   children: React.ReactNode;
 }
 
@@ -30,10 +36,13 @@ export function BottomSheet({
   title,
   noPad,
   hideClose,
+  initialFocusRef,
   children,
 }: BottomSheetProps) {
   const t = useTranslations("common");
+  const titleId = useId();
   const dialogRef = useRef<HTMLDivElement | null>(null);
+  const initialFocusTarget = useRef(initialFocusRef);
   const onCloseRef = useRef(onClose);
   useEffect(() => {
     onCloseRef.current = onClose;
@@ -48,7 +57,9 @@ export function BottomSheet({
         ? document.activeElement
         : null;
 
-    dialog.focus({ preventScroll: true });
+    // Read once on open: refs are attached before effects run.
+    const initial = initialFocusTarget.current?.current;
+    (initial?.isConnected ? initial : dialog).focus({ preventScroll: true });
 
     function handleKeyDown(event: KeyboardEvent) {
       const openDialogs = document.querySelectorAll<HTMLElement>(
@@ -102,6 +113,7 @@ export function BottomSheet({
     <div
       ref={dialogRef}
       aria-modal="true"
+      aria-labelledby={title ? titleId : undefined}
       role="dialog"
       className="fixed inset-0 z-[9999] flex flex-col justify-end bg-[#04070A]/75 backdrop-blur-sm animate-[fadeIn_.15s_ease] sm:justify-center sm:items-center sm:p-6"
       onKeyDown={event => {
@@ -122,7 +134,9 @@ export function BottomSheet({
 
         {title && (
           <div className="flex items-center justify-between border-arena-border border-b px-5 pt-3 pb-2.5">
-            <span className="text-base font-bold text-arena-text">{title}</span>
+            <span id={titleId} className="text-base font-bold text-arena-text">
+              {title}
+            </span>
             {!hideClose && (
               <Button
                 className="size-[30px] min-h-0 min-w-0 rounded-[9px] border border-arena-border bg-arena-surface text-arena-text-sec hover:bg-arena-surface-el"

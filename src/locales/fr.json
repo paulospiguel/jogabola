@@ -3704,7 +3704,7 @@
     "fixture": {
       "linkedBadge": "Convocation",
       "versus": "{team} vs {opponent}",
-      "rowLabel": "{competition} : {team} contre {opponent}, à {hour}"
+      "rowLabel": "{competition} : {team} contre {opponent}, {day} à {hour}, saison {season}{linked, select, yes {, avec convocation} other {, sans convocation}}"
     },
     "aside": {
       "label": "Résumé du calendrier",

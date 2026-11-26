@@ -14,6 +14,8 @@ type SegmentedControlProps<T extends string> = {
   onChange: (value: T) => void;
   ariaLabel: string;
   className?: string;
+  /** Extra classes for each option, e.g. a taller touch target on mobile. */
+  buttonClassName?: string;
 };
 
 export function SegmentedControl<T extends string>({
@@ -22,6 +24,7 @@ export function SegmentedControl<T extends string>({
   onChange,
   ariaLabel,
   className,
+  buttonClassName,
 }: SegmentedControlProps<T>) {
   return (
     <fieldset
@@ -43,6 +46,7 @@ export function SegmentedControl<T extends string>({
               active
                 ? "border-arena-primary/60 bg-arena-primary/15 text-arena-primary"
                 : "border-arena-border bg-arena-surface text-arena-text-sec hover:bg-arena-surface-el hover:text-arena-text",
+              buttonClassName,
             )}
             key={option.id}
             onClick={() => onChange(option.id)}

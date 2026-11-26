@@ -45,7 +45,15 @@ function FixtureRow({
         team: fixture.team.name,
         opponent: fixture.opponent.name,
         competition: fixture.competitionName,
+        day: format.dateTime(new Date(fixture.startsAt), {
+          weekday: "long",
+          day: "numeric",
+          month: "long",
+          timeZone: CLUB_CALENDAR_TIME_ZONE,
+        }),
         hour: time,
+        season: fixture.season.name,
+        linked: fixture.linkedMatchSessionId !== null ? "yes" : "no",
       })}
     >
       <span className="flex w-14 shrink-0 flex-col items-center justify-center rounded-[10px] border border-arena-border bg-arena-surface-el py-2 font-[family-name:var(--font-sora)] text-[15px] font-extrabold text-arena-text">

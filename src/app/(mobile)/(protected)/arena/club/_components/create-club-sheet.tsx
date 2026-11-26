@@ -3,7 +3,7 @@
 import { useMutation } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
-import { useId, useState } from "react";
+import { useId, useRef, useState } from "react";
 import { createClubWithTeam } from "@/actions/clubs.actions";
 import { BottomSheet } from "@/components/arena/bottom-sheet";
 import { Cta } from "@/components/arena/cta";
@@ -41,6 +41,7 @@ export function CreateClubSheet({
   const router = useRouter();
   const invalidate = useInvalidateClub();
   const nameId = useId();
+  const nameRef = useRef<HTMLInputElement | null>(null);
   const [name, setName] = useState(teamName);
   const [localError, setLocalError] = useState<string | undefined>();
 
@@ -80,7 +81,7 @@ export function CreateClubSheet({
   }
 
   return (
-    <BottomSheet onClose={onClose} title={t("title")}>
+    <BottomSheet onClose={onClose} initialFocusRef={nameRef} title={t("title")}>
       <form
         className="flex flex-col gap-4 overflow-y-auto"
         onSubmit={handleSubmit}
@@ -104,8 +105,7 @@ export function CreateClubSheet({
             value={name}
             maxLength={NAME_MAX}
             autoComplete="organization"
-            // biome-ignore lint/a11y/noAutofocus: first field of a modal sheet the user just opened
-            autoFocus
+            ref={nameRef}
             onChange={event => setName(event.target.value)}
             {...fieldAria(nameId, nameError, t("nameHint"))}
           />

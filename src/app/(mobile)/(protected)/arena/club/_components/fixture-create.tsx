@@ -25,7 +25,7 @@ import { SeasonFormSheet } from "./season-form-sheet";
 
 const SECONDARY_LINK = cn(
   CLUB_LINK_BUTTON_CLASS,
-  "h-9 rounded-[10px] border border-arena-border bg-arena-surface px-4 text-xs text-arena-text-sec hover:bg-arena-surface-el",
+  "h-11 rounded-[10px] border border-arena-border md:h-9 bg-arena-surface px-4 text-xs text-arena-text-sec hover:bg-arena-surface-el",
 );
 
 /** "Novo jogo": checks presentation-level prerequisites, then shows the form. */
@@ -122,7 +122,7 @@ export function FixtureCreate() {
           aria-label={t("backToCalendar")}
           className={cn(
             CLUB_LINK_BUTTON_CLASS,
-            "size-9 rounded-[10px] border border-arena-border bg-arena-surface text-arena-text-sec hover:bg-arena-surface-el",
+            "size-11 shrink-0 rounded-[10px] border md:size-9 border-arena-border bg-arena-surface text-arena-text-sec hover:bg-arena-surface-el",
           )}
         >
           <ArrowLeft size={16} aria-hidden="true" />

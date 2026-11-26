@@ -2,7 +2,7 @@
 
 import { useMutation } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
-import { useId, useState } from "react";
+import { useId, useRef, useState } from "react";
 import { createSeason, updateSeason } from "@/actions/clubs.actions";
 import { BottomSheet } from "@/components/arena/bottom-sheet";
 import { Cta } from "@/components/arena/cta";
@@ -42,6 +42,7 @@ export function SeasonFormSheet({
   const messages = useClubMessages();
   const invalidate = useInvalidateClub();
   const baseId = useId();
+  const nameRef = useRef<HTMLInputElement | null>(null);
   const ids: Record<SeasonField, string> = {
     name: `${baseId}-name`,
     startsOn: `${baseId}-starts`,
@@ -123,6 +124,7 @@ export function SeasonFormSheet({
   return (
     <BottomSheet
       onClose={onClose}
+      initialFocusRef={nameRef}
       title={season ? t("editTitle") : t("createTitle")}
     >
       <form
@@ -142,8 +144,7 @@ export function SeasonFormSheet({
             value={name}
             maxLength={80}
             placeholder={t("namePlaceholder")}
-            // biome-ignore lint/a11y/noAutofocus: first field of a modal sheet the user just opened
-            autoFocus
+            ref={nameRef}
             onChange={event => setName(event.target.value)}
             {...fieldAria(ids.name, errors.name, t("nameHint"))}
           />

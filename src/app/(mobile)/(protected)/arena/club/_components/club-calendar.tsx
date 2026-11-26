@@ -51,7 +51,7 @@ function FilterChips({
             aria-pressed={active}
             onClick={() => onChange(option.id)}
             className={cn(
-              "jb-chip btn-press min-h-9 transition-transform active:scale-[0.97] focus-visible:outline-2 focus-visible:outline-arena-primary",
+              "jb-chip btn-press min-h-11 transition md:min-h-9-transform active:scale-[0.97] focus-visible:outline-2 focus-visible:outline-arena-primary",
               active && "jb-chip-active",
             )}
           >
@@ -90,7 +90,7 @@ export function ClubCalendar() {
       href={newFixtureHref}
       className={cn(
         CLUB_LINK_BUTTON_CLASS,
-        "h-9 rounded-[10px] bg-arena-primary px-4 text-xs text-arena-bg hover:bg-arena-primary/90",
+        "h-11 rounded-[10px] bg-arena-primary px-4 md:h-9 text-xs text-arena-bg hover:bg-arena-primary/90",
       )}
     >
       <CalendarPlus size={14} strokeWidth={2.2} aria-hidden="true" />
@@ -137,7 +137,7 @@ export function ClubCalendar() {
               }}
               className={cn(
                 CLUB_LINK_BUTTON_CLASS,
-                "h-9 rounded-[10px] border border-arena-border bg-arena-surface px-4 text-xs text-arena-text-sec hover:bg-arena-surface-el",
+                "h-11 rounded-[10px] border border-arena-border md:h-9 bg-arena-surface px-4 text-xs text-arena-text-sec hover:bg-arena-surface-el",
               )}
             >
               {t("clearFilters")}
@@ -160,6 +160,7 @@ export function ClubCalendar() {
         </h2>
         <div className="mb-3 flex flex-col gap-2.5">
           <SegmentedControl
+            buttonClassName="h-11 md:h-9"
             ariaLabel={t("scopeLabel")}
             value={scope}
             onChange={setScope}
