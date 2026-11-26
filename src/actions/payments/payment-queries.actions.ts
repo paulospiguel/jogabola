@@ -16,7 +16,7 @@ import { withAuthAction } from "@/lib/action-helpers";
 import { auth } from "@/lib/auth";
 import { toUiPaymentStatus } from "@/lib/payment-status";
 import { classifyErrorSafely } from "@/lib/safe-error";
-import { userCanAccessTeam } from "@/lib/team-access";
+import { canManageTeam, userCanAccessTeam } from "@/lib/team-access";
 
 export const getTeamPayments = withAuthAction(
   z.object({ teamId: z.number() }),
@@ -25,6 +25,10 @@ export const getTeamPayments = withAuthAction(
     if (!canAccessTeam) {
       return { success: false, error: { code: "TEAM_NOT_FOUND" } };
     }
+
+    // Data minimisation: managers see the whole team's payments; any other
+    // roster member only sees their own, never teammates' names or emails.
+    const canManage = await canManageTeam(currentUser.id, teamId);
 
     const rawPayments = await db
       .select({
@@ -55,7 +59,14 @@ export const getTeamPayments = withAuthAction(
       )
       .innerJoin(user, eq(matchReservations.playerId, user.id))
       .leftJoin(paymentProofs, eq(paymentProofs.paymentId, payments.id))
-      .where(eq(matchSessions.teamId, teamId))
+      .where(
+        canManage
+          ? eq(matchSessions.teamId, teamId)
+          : and(
+              eq(matchSessions.teamId, teamId),
+              eq(matchReservations.playerId, currentUser.id),
+            ),
+      )
       .orderBy(desc(payments.createdAt));
 
     const formattedPayments = rawPayments.map(p => ({
