@@ -21,6 +21,28 @@ JogaBola is the operational backbone for amateur football teams in Portugal — 
 
 Success looks like: a Capitão who can create and close an event end-to-end in under two minutes, and an Atleta who opens the app once before the game and once after payment, and feels their team's history growing.
 
+## Strategic Direction — AI Club OS
+
+JogaBola is evolving from team-management software into the operational platform for amateur clubs and teams, with virtual AI staff embedded in useful workflows. AI supports the existing product; it is not a generic chatbot that replaces the team's tools or the organizer's judgement.
+
+### First validated workflow
+
+The first cycle focuses on a Secretary for a senior team. The coach or organizer asks for availability for a match. The Secretary prepares the request, interprets each athlete's response, and surfaces confirmations and unresolved answers. Start with synthetic data for two clubs. Measure time saved, duplicate requests, and manual corrections before expanding the pilot.
+
+The human remains responsible for decisions and outbound communication. Clear replies can update attendance only through an authorized action. Ambiguous replies require clarification. The organizer reviews a message before it is sent to the squad.
+
+### Business guardrails
+
+- An AI staff member has its own identity and an explicit club/team scope; it never acts as the human who requested the task.
+- Authorization is checked on the server for every read and action. A club's private data is not visible to another club.
+- Each action is attributable, auditable, safe to retry, and subject to cost/token limits. Revocation blocks future actions; exhausted quotas block inference.
+- Preserve existing recreational events, team history, and member workflows while adding clubs, seasons, and competitive fixtures incrementally.
+- Validate the Secretary before expanding to an Analyst. Consider voice only after pilot evidence and an explicit consent/retention decision.
+
+### Architecture direction
+
+Build the first cycle in the existing Next.js, Drizzle, and PostgreSQL application, with local development through Docker Compose and server-side text inference through OpenRouter. Prefer a vertical slice over new infrastructure. Defer a hosted worker, voice, and vector database until measured requirements justify them. The active implementation sequence and acceptance criteria live in `docs/superpowers/plans/2026-11-25-ai-club-os.md`.
+
 ## Brand Personality
 
 **Três palavras:** Eficiente. Desportivo. Sólido.
