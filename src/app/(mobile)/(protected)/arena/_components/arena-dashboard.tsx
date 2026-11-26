@@ -7,6 +7,7 @@ import {
   ChevronLeft,
   ChevronRight,
   Clock,
+  Flag,
   History,
   MapPin,
   Plus,
@@ -617,6 +618,39 @@ export function ArenaDashboard({ userId }: ArenaDashboardProps) {
                   </Link>
                 </div>
               </section>
+
+              {/* Club: competitive calendar (ADR 0004) */}
+              {FEATURES.clubCalendar && (
+                <section>
+                  <div className="jb-section-label">{t("sections.club")}</div>
+                  <Link
+                    href="/arena/club"
+                    className="btn-press jb-card jb-list-row transition-[transform,border-color,background-color] duration-150 hover:border-arena-primary/45 hover:bg-arena-surface-el active:scale-[0.97]"
+                  >
+                    <span className="jb-icon-tile border border-arena-primary/30 bg-arena-primary/[0.08]">
+                      <Flag
+                        size={20}
+                        strokeWidth={1.7}
+                        className="text-arena-primary"
+                        aria-hidden="true"
+                      />
+                    </span>
+                    <span className="min-w-0 flex-1">
+                      <span className="block truncate text-sm font-semibold text-arena-text">
+                        {t("sections.club")}
+                      </span>
+                      <span className="mt-0.5 block text-[11px] text-arena-text-muted">
+                        {t("sections.clubSub")}
+                      </span>
+                    </span>
+                    <ChevronRight
+                      size={16}
+                      className="text-arena-text-muted"
+                      aria-hidden="true"
+                    />
+                  </Link>
+                </section>
+              )}
 
               {/* Discover cards */}
               {viewModel.showDiscover && (

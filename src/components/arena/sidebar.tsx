@@ -5,6 +5,7 @@ import {
   Calendar,
   ChevronsLeft,
   ChevronsRight,
+  Flag,
   Lock,
   type LucideIcon,
   Shield,
@@ -30,6 +31,7 @@ import {
 } from "@/components/ui/sidebar";
 import { RELEASE } from "@/constants/app";
 import { useUnreadNotificationsCount } from "@/hooks/use-notifications";
+import { FEATURES } from "@/lib/features";
 import { cn } from "@/lib/utils";
 import { Logo } from "../logo";
 import { useTeamGate } from "./team-gate-context";
@@ -50,6 +52,16 @@ const ITEMS = [
     labelKey: "squads",
     requiresTeam: true,
   },
+  ...(FEATURES.clubCalendar
+    ? [
+        {
+          href: "/arena/club",
+          icon: Flag,
+          labelKey: "club",
+          requiresTeam: true,
+        },
+      ]
+    : []),
   {
     href: "/arena/notifications",
     icon: Bell,
