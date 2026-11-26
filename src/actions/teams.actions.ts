@@ -11,11 +11,15 @@ import {
   teams,
   user as userTable,
 } from "@/db/schema";
-import { withAction, withAuthAction } from "@/lib/action-helpers";
+import { withAuthAction } from "@/lib/action-helpers";
 import { trackServerEvent } from "@/lib/analytics-server";
 import { sendEmail } from "@/lib/email";
 import { canCreateTeam, normalizePlanTier } from "@/lib/plan-limits";
-import { userCanAccessTeam, userIsTeamOwner } from "@/lib/team-access";
+import {
+  canManageTeam,
+  userCanAccessTeam,
+  userIsTeamOwner,
+} from "@/lib/team-access";
 import { buildAccessibleTeamSummaries } from "@/lib/team-capabilities";
 import {
   addPlayerToRosterSchema,
@@ -114,21 +118,47 @@ export const createTeam = withAuthAction(
   },
 );
 
-export const addTeamMember = withAction(addTeamMemberSchema, async data => {
-  const [member] = await db
-    .insert(teamMembers)
-    .values(data)
-    .onConflictDoUpdate({
-      target: [teamMembers.teamId, teamMembers.playerId],
-      set: {
-        role: data.role,
-        status: data.status || "new",
-        updatedAt: new Date(),
-      },
-    })
-    .returning();
-  return { success: true, data: member };
-});
+/**
+ * Low-level roster write. Only the registered team owner (`teams.owner_id`)
+ * may create or change roster links here; the `owner` role is reserved for
+ * `createTeam` and the owner's own row can never be rewritten.
+ */
+export const addTeamMember = withAuthAction(
+  addTeamMemberSchema,
+  async (user, data) => {
+    if (data.role === "owner") {
+      return { success: false, error: { code: "FORBIDDEN" } };
+    }
+
+    const team = await db.query.teams.findFirst({
+      columns: { ownerId: true },
+      where: eq(teams.id, data.teamId),
+    });
+    if (!team) {
+      return { success: false, error: { code: "TEAM_NOT_FOUND" } };
+    }
+    if (team.ownerId !== user.id) {
+      return { success: false, error: { code: "FORBIDDEN" } };
+    }
+    if (data.playerId === team.ownerId) {
+      return { success: false, error: { code: "CANNOT_MODIFY_OWNER" } };
+    }
+
+    const [member] = await db
+      .insert(teamMembers)
+      .values(data)
+      .onConflictDoUpdate({
+        target: [teamMembers.teamId, teamMembers.playerId],
+        set: {
+          role: data.role,
+          status: data.status || "new",
+          updatedAt: new Date(),
+        },
+      })
+      .returning();
+    return { success: true, data: member };
+  },
+);
 
 export const addPlayerToRoster = withAuthAction(
   addPlayerToRosterSchema,
@@ -143,6 +173,15 @@ export const addPlayerToRoster = withAuthAction(
     const canAccessTeam = await userCanAccessTeam(user.id, teamId);
     if (!canAccessTeam) {
       return { success: false, error: { code: "TEAM_NOT_FOUND" } };
+    }
+
+    // Roster writes need management authorization; granting the co-captain
+    // ("manager") role stays owner-only, as in setCoCaptain.
+    const canManage = data.admin
+      ? await userIsTeamOwner(user.id, teamId)
+      : await canManageTeam(user.id, teamId);
+    if (!canManage) {
+      return { success: false, error: { code: "FORBIDDEN" } };
     }
 
     // 1. Check if user already exists in the platform
