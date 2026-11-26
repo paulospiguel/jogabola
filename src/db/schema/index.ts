@@ -8,5 +8,6 @@ export * from "./notifications";
 export * from "./payments";
 export * from "./player-ratings";
 export * from "./team-payment-settings";
+export * from "./team-staff";
 export * from "./teams";
 export * from "./users";
