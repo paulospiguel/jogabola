@@ -4,13 +4,13 @@ Data: 2026-11-26
 
 ## Estado
 
-Proposto. A aceitação deste ADR e do [ADR 0005](0005-club-calendar-authorization.md) precede as alterações de schema e autorização da etapa 2.
+Aceite em 2026-11-26, juntamente com o [ADR 0005](0005-club-calendar-authorization.md). Substitui a parte do [ADR 0001](0001-defer-external-league-model.md) que adiava épocas e jogos contra adversários externos.
 
 ## Contexto
 
 O [ADR 0001](0001-defer-external-league-model.md) adiou o modelo de liga externa. As convocatórias atuais associam uma equipa a um evento e sustentam reservas, pagamentos, recorrência e partilha com convidados. O primeiro ciclo do AI Club OS precisa de identificar o adversário e a época de um jogo antes de preparar pedidos de disponibilidade.
 
-## Decisão proposta
+## Decisão
 
 - O clube agrega equipas. A ligação `teams.club_id` é opcional e começa vazia nas equipas existentes. A adesão ao clube acontece de forma explícita, segundo o ADR 0005.
 - Cada época e cada adversário pertence a um clube. O adversário é um registo local com nome próprio, que pode representar uma equipa sem conta na aplicação. A competição é identificada pelo nome no jogo durante o piloto.

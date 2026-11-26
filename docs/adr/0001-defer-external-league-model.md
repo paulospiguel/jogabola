@@ -4,7 +4,10 @@ Date: 2026-05-28
 
 ## Status
 
-Accepted
+Accepted. Partially superseded on 2026-11-26 by
+[ADR 0004](0004-competitive-calendar.md): the deferral of seasons and fixtures
+against external opponents no longer applies. The deferral of league tables,
+standings, results and competition statistics remains in force.
 
 ## Context
 

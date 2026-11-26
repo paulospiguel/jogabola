@@ -4,13 +4,13 @@ Data: 2026-11-26
 
 ## Estado
 
-Proposto. A aceitação deste ADR precede a implementação das permissões da etapa 2.
+Aceite em 2026-11-26.
 
 ## Contexto
 
 O controlo atual é por equipa. O capitão é proprietário da equipa e o co-capitão tem o papel `manager`. A leitura de uma convocatória também suporta o acesso por link para convidados. Os dados do calendário competitivo exigem uma verificação própria no servidor.
 
-## Decisão proposta
+## Decisão
 
 O clube tem membros com papel `admin` ou `member` e um único vínculo por utilizador e clube. O PostgreSQL aplica ambas as restrições. A criação de um clube atribui ao criador a primeira administração. Para o piloto, a criação do clube e a associação da primeira equipa decorrem na mesma transação, a pedido de quem já é proprietário dessa equipa. A associação posterior de uma equipa exige que o interveniente seja administrador do clube de destino e proprietário da equipa. A equipa tem de estar livre, com essa condição verificada na escrita para impedir associações em simultâneo. A atribuição e remoção dos restantes vínculos do piloto usam dados sintéticos. O fluxo de convites ao clube terá decisão própria antes de alargar o piloto.
 
