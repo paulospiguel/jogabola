@@ -27,8 +27,32 @@ function readLocale(locale: string) {
     arenaClubCalendar: {
       errors: Record<string, string>;
       roles: Record<string, string>;
-    };
+    } & Record<string, unknown>;
+    arenaNav: Record<string, unknown>;
+    arenaDashboard: { sections: Record<string, unknown> };
   };
+}
+
+/** Dotted paths of every string leaf, for cross-locale parity checks. */
+function leafPaths(value: unknown, prefix = ""): string[] {
+  if (typeof value === "string") return [prefix];
+  if (!value || typeof value !== "object") return [`${prefix}:<invalid>`];
+  return Object.entries(value).flatMap(([key, child]) =>
+    leafPaths(child, prefix ? `${prefix}.${key}` : key),
+  );
+}
+
+function placeholders(text: string) {
+  return Array.from(text.matchAll(/\{(\w+)\}/g), match => match[1]).sort();
+}
+
+function leafAt(value: unknown, path: string): string {
+  return path
+    .split(".")
+    .reduce<unknown>(
+      (node, key) => (node as Record<string, unknown>)[key],
+      value,
+    ) as string;
 }
 
 describe("club calendar locale contract", () => {
@@ -48,8 +72,35 @@ describe("club calendar locale contract", () => {
     }
   });
 
+  it.each(
+    LOCALES.filter(locale => locale !== "pt"),
+  )("%s has the same club calendar UI keys and placeholders as pt", locale => {
+    const pt = readLocale("pt");
+    const other = readLocale(locale);
+    const ptPaths = leafPaths(pt.arenaClubCalendar).sort();
+    expect(leafPaths(other.arenaClubCalendar).sort()).toEqual(ptPaths);
+    for (const path of ptPaths) {
+      expect(
+        placeholders(leafAt(other.arenaClubCalendar, path)),
+        `${locale}.arenaClubCalendar.${path}`,
+      ).toEqual(placeholders(leafAt(pt.arenaClubCalendar, path)));
+    }
+    expect(other.arenaNav.club).toEqual(expect.any(String));
+    expect(other.arenaDashboard.sections.club).toEqual(expect.any(String));
+    expect(other.arenaDashboard.sections.clubSub).toEqual(expect.any(String));
+  });
+
   it("keeps PT-PT wording", () => {
-    const pt = JSON.stringify(readLocale("pt").arenaClubCalendar);
-    expect(pt).not.toMatch(/\b(você|gerenci\w*|time)\b/i);
+    const messages = readLocale("pt");
+    // Values only: keys such as `time` are code identifiers, not copy.
+    const pt = [
+      ...leafPaths(messages.arenaClubCalendar).map(path =>
+        leafAt(messages.arenaClubCalendar, path),
+      ),
+      messages.arenaNav.club,
+      messages.arenaDashboard.sections.club,
+      messages.arenaDashboard.sections.clubSub,
+    ].join("\n");
+    expect(pt).not.toMatch(/\b(você|gerenci\w*|time|aplicativo)\b/i);
   });
 });
