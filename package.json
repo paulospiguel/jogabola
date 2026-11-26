@@ -48,7 +48,7 @@
     "@react-email/components": "^1.0.12",
     "@remotion/media": "^4.0.487",
     "@remotion/player": "^4.0.487",
-    "@statsig/react-bindings": "^3.33.3",
+    "@statsig/react-bindings": "^3.33.8",
     "@statsig/statsig-node-core": "^0.19.8",
     "@tanstack/react-query": "^5.101.2",
     "@tanstack/react-query-devtools": "^5.101.2",
