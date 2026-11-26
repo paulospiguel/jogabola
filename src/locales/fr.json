@@ -2715,6 +2715,15 @@
     }
   },
   "validation": {
+    "VALIDATION_CLUB_REQUIRED": "Le club est obligatoire.",
+    "VALIDATION_SEASON_REQUIRED": "La saison est obligatoire.",
+    "VALIDATION_OPPONENT_REQUIRED": "L’adversaire est obligatoire.",
+    "VALIDATION_FIXTURE_REQUIRED": "Le match est obligatoire.",
+    "VALIDATION_CLUB_CALENDAR_NAME_TOO_SHORT": "Le nom doit comporter au moins 2 caractères.",
+    "VALIDATION_CLUB_CALENDAR_NAME_TOO_LONG": "Le nom ne peut pas dépasser 80 caractères.",
+    "VALIDATION_DATE_INVALID": "La date n’est pas valide.",
+    "VALIDATION_SEASON_RANGE_INVALID": "La date de fin doit être égale ou postérieure à la date de début.",
+    "VALIDATION_DATE_RANGE_INVALID": "La fin de l’intervalle doit être égale ou postérieure à son début.",
     "VALIDATION_AMOUNT_REQUIRED": "Le montant est obligatoire.",
     "VALIDATION_CONFIRM_PASSWORD_REQUIRED": "Confirmez votre mot de passe.",
     "VALIDATION_EMAIL_INVALID": "Email invalide.",
@@ -3588,6 +3597,32 @@
           "penalties": "Tirs au but"
         }
       }
+    }
+  },
+  "arenaClubCalendar": {
+    "roles": {
+      "admin": "Administrateur",
+      "member": "Membre"
+    },
+    "errors": {
+      "UNAUTHORIZED": "Connectez-vous pour continuer.",
+      "VALIDATION_ERROR": "Vérifiez les champs signalés.",
+      "CLUB_NOT_FOUND": "Club introuvable.",
+      "FORBIDDEN": "Vous n’avez pas l’autorisation d’effectuer cette action.",
+      "TEAM_NOT_FOUND": "Équipe introuvable.",
+      "TEAM_NOT_IN_CLUB": "Cette équipe n’appartient encore à aucun club.",
+      "TEAM_ALREADY_IN_CLUB": "Cette équipe appartient déjà à un club.",
+      "SEASON_NOT_FOUND": "Saison introuvable.",
+      "SEASON_NAME_TAKEN": "Une saison portant ce nom existe déjà dans le club.",
+      "SEASON_IN_USE": "Cette saison a des matchs associés et ne peut pas être supprimée.",
+      "OPPONENT_NOT_FOUND": "Adversaire introuvable.",
+      "OPPONENT_NAME_TAKEN": "Un adversaire portant ce nom existe déjà dans le club.",
+      "OPPONENT_IN_USE": "Cet adversaire a des matchs associés et ne peut pas être supprimé.",
+      "FIXTURE_NOT_FOUND": "Match introuvable.",
+      "MATCH_SESSION_NOT_FOUND": "Convocation introuvable pour cette équipe.",
+      "FIXTURE_ALREADY_LINKED": "Ce match est déjà associé à une convocation.",
+      "MATCH_SESSION_ALREADY_LINKED": "Cette convocation est déjà associée à un autre match.",
+      "UNKNOWN_ERROR": "Impossible de terminer l’opération. Réessayez."
     }
   }
 }

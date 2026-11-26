@@ -2715,6 +2715,15 @@
     }
   },
   "validation": {
+    "VALIDATION_CLUB_REQUIRED": "Club is required.",
+    "VALIDATION_SEASON_REQUIRED": "Season is required.",
+    "VALIDATION_OPPONENT_REQUIRED": "Opponent is required.",
+    "VALIDATION_FIXTURE_REQUIRED": "Match is required.",
+    "VALIDATION_CLUB_CALENDAR_NAME_TOO_SHORT": "The name must have at least 2 characters.",
+    "VALIDATION_CLUB_CALENDAR_NAME_TOO_LONG": "The name cannot exceed 80 characters.",
+    "VALIDATION_DATE_INVALID": "The date is invalid.",
+    "VALIDATION_SEASON_RANGE_INVALID": "The end date must be on or after the start date.",
+    "VALIDATION_DATE_RANGE_INVALID": "The end of the range must be on or after its start.",
     "VALIDATION_AMOUNT_REQUIRED": "Amount is required.",
     "VALIDATION_CONFIRM_PASSWORD_REQUIRED": "Confirm your password.",
     "VALIDATION_EMAIL_INVALID": "Invalid email.",
@@ -3588,6 +3597,32 @@
           "penalties": "Penalties"
         }
       }
+    }
+  },
+  "arenaClubCalendar": {
+    "roles": {
+      "admin": "Administrator",
+      "member": "Member"
+    },
+    "errors": {
+      "UNAUTHORIZED": "Sign in to continue.",
+      "VALIDATION_ERROR": "Check the highlighted fields.",
+      "CLUB_NOT_FOUND": "Club not found.",
+      "FORBIDDEN": "You don't have permission for this action.",
+      "TEAM_NOT_FOUND": "Team not found.",
+      "TEAM_NOT_IN_CLUB": "This team is not part of a club yet.",
+      "TEAM_ALREADY_IN_CLUB": "This team already belongs to a club.",
+      "SEASON_NOT_FOUND": "Season not found.",
+      "SEASON_NAME_TAKEN": "A season with this name already exists in the club.",
+      "SEASON_IN_USE": "This season has matches and cannot be deleted.",
+      "OPPONENT_NOT_FOUND": "Opponent not found.",
+      "OPPONENT_NAME_TAKEN": "An opponent with this name already exists in the club.",
+      "OPPONENT_IN_USE": "This opponent has matches and cannot be deleted.",
+      "FIXTURE_NOT_FOUND": "Match not found.",
+      "MATCH_SESSION_NOT_FOUND": "Call-up not found for this team.",
+      "FIXTURE_ALREADY_LINKED": "This match is already linked to a call-up.",
+      "MATCH_SESSION_ALREADY_LINKED": "This call-up is already linked to another match.",
+      "UNKNOWN_ERROR": "Could not complete the operation. Please try again."
     }
   }
 }

@@ -2715,6 +2715,15 @@
     }
   },
   "validation": {
+    "VALIDATION_CLUB_REQUIRED": "El club es obligatorio.",
+    "VALIDATION_SEASON_REQUIRED": "La temporada es obligatoria.",
+    "VALIDATION_OPPONENT_REQUIRED": "El rival es obligatorio.",
+    "VALIDATION_FIXTURE_REQUIRED": "El partido es obligatorio.",
+    "VALIDATION_CLUB_CALENDAR_NAME_TOO_SHORT": "El nombre debe tener al menos 2 caracteres.",
+    "VALIDATION_CLUB_CALENDAR_NAME_TOO_LONG": "El nombre no puede superar los 80 caracteres.",
+    "VALIDATION_DATE_INVALID": "La fecha no es válida.",
+    "VALIDATION_SEASON_RANGE_INVALID": "La fecha de fin debe ser igual o posterior a la de inicio.",
+    "VALIDATION_DATE_RANGE_INVALID": "El final del intervalo debe ser igual o posterior al inicio.",
     "VALIDATION_AMOUNT_REQUIRED": "El monto es obligatorio.",
     "VALIDATION_CONFIRM_PASSWORD_REQUIRED": "Confirma tu contraseña.",
     "VALIDATION_EMAIL_INVALID": "Correo electrónico inválido.",
@@ -3588,6 +3597,32 @@
           "penalties": "Penaltis"
         }
       }
+    }
+  },
+  "arenaClubCalendar": {
+    "roles": {
+      "admin": "Administrador",
+      "member": "Miembro"
+    },
+    "errors": {
+      "UNAUTHORIZED": "Inicia sesión para continuar.",
+      "VALIDATION_ERROR": "Revisa los campos marcados.",
+      "CLUB_NOT_FOUND": "Club no encontrado.",
+      "FORBIDDEN": "No tienes permiso para esta acción.",
+      "TEAM_NOT_FOUND": "Equipo no encontrado.",
+      "TEAM_NOT_IN_CLUB": "Este equipo aún no pertenece a un club.",
+      "TEAM_ALREADY_IN_CLUB": "Este equipo ya pertenece a un club.",
+      "SEASON_NOT_FOUND": "Temporada no encontrada.",
+      "SEASON_NAME_TAKEN": "Ya existe una temporada con este nombre en el club.",
+      "SEASON_IN_USE": "Esta temporada tiene partidos asociados y no se puede eliminar.",
+      "OPPONENT_NOT_FOUND": "Rival no encontrado.",
+      "OPPONENT_NAME_TAKEN": "Ya existe un rival con este nombre en el club.",
+      "OPPONENT_IN_USE": "Este rival tiene partidos asociados y no se puede eliminar.",
+      "FIXTURE_NOT_FOUND": "Partido no encontrado.",
+      "MATCH_SESSION_NOT_FOUND": "Convocatoria no encontrada en este equipo.",
+      "FIXTURE_ALREADY_LINKED": "Este partido ya está asociado a una convocatoria.",
+      "MATCH_SESSION_ALREADY_LINKED": "Esta convocatoria ya está asociada a otro partido.",
+      "UNKNOWN_ERROR": "No se pudo completar la operación. Inténtalo de nuevo."
     }
   }
 }

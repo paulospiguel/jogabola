@@ -2695,6 +2695,15 @@
     }
   },
   "validation": {
+    "VALIDATION_CLUB_REQUIRED": "O clube é obrigatório.",
+    "VALIDATION_SEASON_REQUIRED": "A época é obrigatória.",
+    "VALIDATION_OPPONENT_REQUIRED": "O adversário é obrigatório.",
+    "VALIDATION_FIXTURE_REQUIRED": "O jogo é obrigatório.",
+    "VALIDATION_CLUB_CALENDAR_NAME_TOO_SHORT": "O nome deve ter pelo menos 2 caracteres.",
+    "VALIDATION_CLUB_CALENDAR_NAME_TOO_LONG": "O nome não pode ter mais de 80 caracteres.",
+    "VALIDATION_DATE_INVALID": "A data é inválida.",
+    "VALIDATION_SEASON_RANGE_INVALID": "A data de fim tem de ser igual ou posterior à data de início.",
+    "VALIDATION_DATE_RANGE_INVALID": "O fim do intervalo tem de ser igual ou posterior ao início.",
     "VALIDATION_AMOUNT_REQUIRED": "O montante é obrigatório.",
     "VALIDATION_CONFIRM_PASSWORD_REQUIRED": "Confirma a tua palavra-passe.",
     "VALIDATION_EMAIL_INVALID": "Email inválido.",
@@ -3588,6 +3597,32 @@
           "penalties": "Penáltis"
         }
       }
+    }
+  },
+  "arenaClubCalendar": {
+    "roles": {
+      "admin": "Administrador",
+      "member": "Membro"
+    },
+    "errors": {
+      "UNAUTHORIZED": "Inicia sessão para continuar.",
+      "VALIDATION_ERROR": "Revê os campos assinalados.",
+      "CLUB_NOT_FOUND": "Clube não encontrado.",
+      "FORBIDDEN": "Não tens permissão para esta ação.",
+      "TEAM_NOT_FOUND": "Equipa não encontrada.",
+      "TEAM_NOT_IN_CLUB": "Esta equipa ainda não pertence a um clube.",
+      "TEAM_ALREADY_IN_CLUB": "Esta equipa já pertence a um clube.",
+      "SEASON_NOT_FOUND": "Época não encontrada.",
+      "SEASON_NAME_TAKEN": "Já existe uma época com este nome no clube.",
+      "SEASON_IN_USE": "Esta época tem jogos associados e não pode ser removida.",
+      "OPPONENT_NOT_FOUND": "Adversário não encontrado.",
+      "OPPONENT_NAME_TAKEN": "Já existe um adversário com este nome no clube.",
+      "OPPONENT_IN_USE": "Este adversário tem jogos associados e não pode ser removido.",
+      "FIXTURE_NOT_FOUND": "Jogo não encontrado.",
+      "MATCH_SESSION_NOT_FOUND": "Convocatória não encontrada nesta equipa.",
+      "FIXTURE_ALREADY_LINKED": "Este jogo já está associado a uma convocatória.",
+      "MATCH_SESSION_ALREADY_LINKED": "Esta convocatória já está associada a outro jogo.",
+      "UNKNOWN_ERROR": "Não foi possível concluir a operação. Tenta novamente."
     }
   }
 }
