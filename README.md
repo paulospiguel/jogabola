@@ -31,9 +31,10 @@ Com Node 22 disponível no host, `node scripts/smoke-local.mjs` cria um atleta s
 
 O chat em tempo real usa Ably e o envio de comprovativos usa armazenamento compatível com S3 (R2 em produção). Estas integrações são opcionais para o arranque e para o teste de autenticação. A inferência real dos agentes também usa rede e requer configuração explícita do OpenRouter.
 
-A preparação de bases vazias parte do esquema Drizzle atual. O histórico SQL existente ainda precisa de reconciliação antes de atualizar bases com dados. O plano de implementação documenta essa etapa e os critérios de aceitação.
+As bases vazias arrancam com as migrações atuais através de `db:local-setup`. Para uma base já povoada, ensaia primeiro a atualização numa cópia e aplica-a explicitamente com `pnpm db:migration`.
 
 - [Ambiente local e execução no host](docs/development/local-setup.md)
+- [GitHub Actions e revisão do Copilot](docs/development/github-ci.md)
 - [Plano da reestruturação e sequência de trabalho](docs/superpowers/plans/2026-11-25-ai-club-os.md)
 - [Configuração do OpenRouter e execução do agente local](docs/agents/openrouter.md)
 - [Subagentes de QA e critérios de revisão](docs/agents/qa-subagents.md)
@@ -50,8 +51,8 @@ A preparação de bases vazias parte do esquema Drizzle atual. O histórico SQL 
 | `pnpm test:watch` | Executa os testes em modo interativo com Vitest. |
 | `pnpm ts-check` | Verifica os tipos TypeScript sem emitir ficheiros. |
 | `pnpm start` | Inicia a build de produção do Next.js. |
-| `pnpm db:local-setup` | Prepara uma base local vazia ou verifica os marcadores de compatibilidade numa base existente. |
-| `pnpm db:push` | Sincroniza diretamente o schema Drizzle com a base de dados. |
+| `pnpm db:local-setup` | Aplica as migrações numa base local vazia ou verifica as colunas necessárias ao arranque. |
+| `pnpm db:push` | Sincroniza diretamente o schema Drizzle numa base descartável de desenvolvimento. |
 | `pnpm db:studio` | Abre o Drizzle Studio. |
 | `pnpm db:migration` | Aplica as migrações Drizzle pendentes. |
 | `pnpm db:generate` | Gera migrações Drizzle a partir do schema. |

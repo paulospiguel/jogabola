@@ -6,22 +6,44 @@ on:
     branches:
       - master
       - "releases/**"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.event_name }}-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   verify:
     runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      NEXT_TELEMETRY_DISABLED: "1"
     steps:
-      - uses: actions/checkout@v4
-      - uses: pnpm/action-setup@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+      - uses: pnpm/action-setup@73e46992e05b19abd31f2f3c20e0e7370d762115 # v6
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
         with:
           node-version: 22
           cache: pnpm
-      - run: pnpm install --frozen-lockfile
-      - run: pnpm lint
-      - run: pnpm ts-check
-      - run: pnpm test
-      - run: pnpm build
+      - name: Install locked dependencies
+        run: pnpm install --frozen-lockfile
+      - name: Lint
+        run: pnpm lint
+      - name: TypeScript
+        run: pnpm ts-check
+      - name: Validate migration metadata
+        run: pnpm exec drizzle-kit check --config ./src/db/drizzle.config.ts
+        env:
+          DATABASE_URL: postgresql://ci:ci@127.0.0.1:5432/jogabola_ci
+      - name: Run unit tests
+        run: pnpm test
+      - name: Build Next.js
+        run: pnpm build
         env:
           # Non-sensitive placeholders used only to validate the production build.
           DATABASE_URL: postgresql://ci:ci@127.0.0.1:5432/jogabola_ci
