@@ -239,6 +239,30 @@ async function assertClubCalendarConstraints(sql) {
   const [opponentB] =
     await sql`INSERT INTO opponents (club_id, name) VALUES (${clubB.id}, 'Adversário B') RETURNING id`;
 
+  // Season and opponent names are unique per club regardless of case, and
+  // the same name stays free in another club.
+  await assert.rejects(
+    sql`INSERT INTO seasons (club_id, name) VALUES (${clubA.id}, '2026/27')`,
+    { code: "23505", constraint_name: "seasons_club_name_ci_unique" },
+  );
+  await sql`INSERT INTO seasons (club_id, name) VALUES (${clubA.id}, 'Torneio Verão')`;
+  await assert.rejects(
+    sql`INSERT INTO seasons (club_id, name) VALUES (${clubA.id}, 'TORNEIO verão')`,
+    { code: "23505", constraint_name: "seasons_club_name_ci_unique" },
+  );
+  await sql`DELETE FROM seasons WHERE club_id = ${clubA.id} AND name = 'Torneio Verão'`;
+  await assert.rejects(
+    sql`INSERT INTO opponents (club_id, name) VALUES (${clubA.id}, 'ADVERSÁRIO a')`,
+    { code: "23505", constraint_name: "opponents_club_name_ci_unique" },
+  );
+  const [spareOpponent] =
+    await sql`INSERT INTO opponents (club_id, name) VALUES (${clubA.id}, 'adversário b') RETURNING id`;
+  await assert.rejects(
+    sql`UPDATE opponents SET name = 'Adversário A' WHERE id = ${spareOpponent.id}`,
+    { code: "23505", constraint_name: "opponents_club_name_ci_unique" },
+  );
+  await sql`DELETE FROM opponents WHERE id = ${spareOpponent.id}`;
+
   const insertFixture = (
     tx,
     { clubId, teamId, seasonId = seasonA.id, opponentId = opponentA.id },

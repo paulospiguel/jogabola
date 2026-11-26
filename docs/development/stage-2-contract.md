@@ -44,6 +44,8 @@ Contrato entre o backend da etapa 2 ([ADR 0004](../adr/0004-competitive-calendar
 
 `updateSeason` substitui `startsOn`/`endsOn`: omitir um campo grava `null`.
 
+Os nomes de épocas e de adversários são únicos por clube sem distinguir maiúsculas de minúsculas (índices únicos em `(club_id, lower(name))`): "Sub-19" e "sub-19" devolvem `*_NAME_TAKEN`.
+
 ## Ações — `src/actions/fixtures.actions.ts`
 
 | Ação | Entrada | `data` | Erros de domínio |

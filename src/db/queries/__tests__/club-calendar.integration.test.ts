@@ -297,6 +297,43 @@ describe.skipIf(!enabled)("club calendar authorization (PostgreSQL)", () => {
       success: false,
       error: { code: "OPPONENT_NAME_TAKEN" },
     });
+    // Uniqueness ignores letter case, on create and on rename.
+    await expect(
+      calendar.createOpponent(db, U.capA, {
+        clubId: ids.clubA,
+        name: "ADVERSÁRIO a",
+      }),
+    ).resolves.toEqual({
+      success: false,
+      error: { code: "OPPONENT_NAME_TAKEN" },
+    });
+    const spareSeason = unwrap(
+      await calendar.createSeason(db, U.capA, {
+        clubId: ids.clubA,
+        name: "Torneio Verão",
+      }),
+    );
+    await expect(
+      calendar.updateSeason(db, U.capA, {
+        seasonId: spareSeason.id,
+        name: "2026/27",
+      }),
+    ).resolves.toEqual({
+      success: false,
+      error: { code: "SEASON_NAME_TAKEN" },
+    });
+    await expect(
+      calendar.createSeason(db, U.capA, {
+        clubId: ids.clubA,
+        name: "torneio VERÃO",
+      }),
+    ).resolves.toEqual({
+      success: false,
+      error: { code: "SEASON_NAME_TAKEN" },
+    });
+    unwrap(
+      await calendar.deleteSeason(db, U.capA, { seasonId: spareSeason.id }),
+    );
     // Another club's admin cannot see or change club A's rows.
     await expect(
       calendar.updateSeason(db, U.capB, { seasonId: ids.seasonA, name: "Z" }),

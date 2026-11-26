@@ -8,6 +8,7 @@ import {
   text,
   timestamp,
   unique,
+  uniqueIndex,
 } from "drizzle-orm/pg-core";
 import { user } from "./users";
 
@@ -69,7 +70,12 @@ export const seasons = pgTable(
   table => [
     // Target of the composite fixture FK that keeps seasons inside the club.
     unique("seasons_id_club_unique").on(table.id, table.clubId),
-    unique("seasons_club_name_unique").on(table.clubId, table.name),
+    // Names are unique per club regardless of letter case: "Sub-19" and
+    // "sub-19" collide.
+    uniqueIndex("seasons_club_name_ci_unique").on(
+      table.clubId,
+      sql`lower(${table.name})`,
+    ),
     check(
       "seasons_dates_check",
       sql`${table.endsOn} IS NULL OR ${table.startsOn} IS NULL OR ${table.endsOn} >= ${table.startsOn}`,
@@ -95,6 +101,9 @@ export const opponents = pgTable(
   table => [
     // Target of the composite fixture FK that keeps opponents inside the club.
     unique("opponents_id_club_unique").on(table.id, table.clubId),
-    unique("opponents_club_name_unique").on(table.clubId, table.name),
+    uniqueIndex("opponents_club_name_ci_unique").on(
+      table.clubId,
+      sql`lower(${table.name})`,
+    ),
   ],
 );

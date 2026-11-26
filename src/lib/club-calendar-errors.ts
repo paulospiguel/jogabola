@@ -71,8 +71,8 @@ const CONSTRAINT_ERRORS: Record<string, ClubCalendarErrorCode> = {
     CLUB_CALENDAR_ERROR.FIXTURE_ALREADY_LINKED,
   fixture_match_sessions_match_session_unique:
     CLUB_CALENDAR_ERROR.MATCH_SESSION_ALREADY_LINKED,
-  seasons_club_name_unique: CLUB_CALENDAR_ERROR.SEASON_NAME_TAKEN,
-  opponents_club_name_unique: CLUB_CALENDAR_ERROR.OPPONENT_NAME_TAKEN,
+  seasons_club_name_ci_unique: CLUB_CALENDAR_ERROR.SEASON_NAME_TAKEN,
+  opponents_club_name_ci_unique: CLUB_CALENDAR_ERROR.OPPONENT_NAME_TAKEN,
 };
 
 // The same FK names mean "in use" when the referenced row is being deleted.

@@ -55,8 +55,8 @@ describe("toClubCalendarErrorCode", () => {
       "fixture_match_sessions_fixture_unique",
       "FIXTURE_ALREADY_LINKED",
     ],
-    ["23505", "seasons_club_name_unique", "SEASON_NAME_TAKEN"],
-    ["23505", "opponents_club_name_unique", "OPPONENT_NAME_TAKEN"],
+    ["23505", "seasons_club_name_ci_unique", "SEASON_NAME_TAKEN"],
+    ["23505", "opponents_club_name_ci_unique", "OPPONENT_NAME_TAKEN"],
   ])("maps %s on %s to %s", (code, constraint, expected) => {
     expect(toClubCalendarErrorCode(drizzleError(code, constraint))).toBe(
       expected,
