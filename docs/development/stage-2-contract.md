@@ -98,6 +98,20 @@ Disponíveis em `pt.json`, `en.json`, `es.json` e `fr.json`:
 
 Os textos de ecrã (títulos, botões, estados vazios) ficam a cargo da frente de UI, no mesmo namespace `arenaClubCalendar`, nas quatro línguas.
 
+## Interface (frente UI)
+
+Rotas autenticadas na Arena, atrás de `FEATURES.clubCalendar`:
+
+| Rota | Conteúdo |
+| --- | --- |
+| `/arena/club` | Escolhe o clube da equipa ativa; sem clube, estado vazio com "Criar clube" para o proprietário. |
+| `/arena/club/[clubId]` | Calendário: próximos/anteriores, filtros de época e equipa, agrupado por dia em `Europe/Lisbon`. |
+| `/arena/club/[clubId]/fixtures/new` | Novo jogo, com convocatória opcional da mesma equipa. |
+| `/arena/club/[clubId]/fixtures/[fixtureId]` | Detalhe, associar/desassociar convocatória, ligação à convocatória. |
+| `/arena/club/[clubId]/settings` | Épocas e adversários; escrita só para administradores, `*_IN_USE` mostrado como "Em uso". |
+
+O layout do clube valida a pertença com `listMyClubs` no servidor; um clube desconhecido ou alheio mostra o mesmo "Clube não encontrado". Como as ações não fazem `revalidatePath`, a UI invalida as queries TanStack após cada mutação e faz `router.refresh()` depois de criar o clube. O clube ainda não tem fuso próprio: a UI usa `Europe/Lisbon` para ler e gravar horas.
+
 ## Fora deste contrato
 
 - Editar ou apagar jogos, desassociar equipas de clubes, convites e gestão de membros do clube, transferência de administração. No piloto, os membros adicionais são criados com dados sintéticos (ADR 0005).

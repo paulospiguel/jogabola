@@ -71,3 +71,38 @@ A bateria de integração das Server Actions de clubes e calendário usa a mesma
 ```bash
 JOGABOLA_TEST_DATABASE_URL=postgresql://<utilizador>:<palavra-passe>@localhost:5432/postgres pnpm test
 ```
+
+## Login local sem Mailpit
+
+Sem Mailpit, arranca a aplicação com `SMTP_HOST` vazio. Com `RESEND_API_KEY` também vazio e fora de produção, o Better Auth escreve o código no log do servidor em vez de enviar email:
+
+```bash
+SMTP_HOST= pnpm dev
+# no log: [auth:email-otp] capitao.a@jogabola.test -> 123456
+```
+
+Em alternativa, lê o código pendente diretamente da base local. O script recusa hosts que não sejam locais e `NODE_ENV=production`, e só lê o que o Better Auth guardou; a autenticação de produção não muda.
+
+```bash
+node scripts/local-otp.mjs capitao.a@jogabola.test             # código pedido no ecrã /auth
+node scripts/local-otp.mjs capitao.a@jogabola.test --request   # pede o código à app local e imprime-o
+```
+
+## Dados sintéticos do calendário de clubes (etapa 2)
+
+```bash
+node scripts/seed-club-calendar.mjs
+```
+
+Cria dois clubes, equipas, épocas, adversários, jogos e convocatórias, e um utilizador por papel de QA (`@jogabola.test`). Voltar a executar substitui os dados anteriores do seed; os IDs mudam e são impressos no fim. Recusa hosts que não sejam locais.
+
+| Email | Papel |
+| --- | --- |
+| `capitao.a@jogabola.test` | Dono das equipas Leões da Tapada (A e B), administrador do clube A |
+| `atleta.a@jogabola.test` | Plantel do clube A, membro do clube: só leitura |
+| `cocapitao.a@jogabola.test` | Papel `manager` no plantel, membro do clube A: lê, não cria jogos |
+| `capitao.livre@jogabola.test` | Dono do Bairro Alto FC sem clube: estado vazio e "Criar clube" |
+| `capitao.b@jogabola.test` | Dono dos Dragões do Restelo, administrador do clube B |
+| `membro.b@jogabola.test` | Membro do clube B: não vê nada do clube A |
+
+A área fica em `/arena/club` (sidebar no desktop, cartão "Clube" no início em mobile).
