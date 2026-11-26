@@ -115,6 +115,16 @@ async function seedArenaData(sql) {
   await sql`INSERT INTO teams (name, slug, owner_id) VALUES ('Equipa de teste', 'equipa-teste', 'captain-test')`;
   await sql`INSERT INTO team_members (team_id, player_id, role) VALUES (1, 'captain-test', 'captain')`;
   await sql`
+    INSERT INTO "user" (id, name, email) VALUES
+      ('manager-test', 'Co-capitão Teste', 'manager@example.test'),
+      ('athlete-test', 'Atleta Teste', 'athlete@example.test')
+  `;
+  await sql`
+    INSERT INTO team_members (team_id, player_id, role) VALUES
+      (1, 'manager-test', 'manager'),
+      (1, 'athlete-test', 'player')
+  `;
+  await sql`
     INSERT INTO match_sessions (team_id, title, location, starts_at)
     VALUES (1, 'Jogo de teste', 'Lisboa', '2026-11-25 19:00:00')
   `;
@@ -123,6 +133,49 @@ async function seedArenaData(sql) {
     INSERT INTO payments (match_reservation_id, amount_cents, method, status, marked_by_user_id, manual_note)
     VALUES (1, 700, 'cash', 'paid', 'captain-test', 'Referência preservada')
   `;
+}
+
+const LEGACY_MANAGER_PERMISSIONS = [
+  "events.manage",
+  "attendance.manage",
+  "payments.manage",
+  "communication.manage",
+  "roster.manage",
+];
+
+// The staff migration demotes every team_members role to 'player'; nothing else changes.
+function expectStaffMigration(rows) {
+  return {
+    ...rows,
+    team_members: rows.team_members.map(({ row }) => ({
+      row: { ...row, role: "player" },
+    })),
+  };
+}
+
+async function assertStaffMigrated(sql) {
+  const staff = await sql`
+    SELECT team_id, user_id, title, permissions, created_by FROM team_staff ORDER BY id
+  `;
+  assert.deepEqual(Array.from(staff), [
+    {
+      team_id: 1,
+      user_id: "manager-test",
+      title: "other",
+      permissions: LEGACY_MANAGER_PERMISSIONS,
+      created_by: "captain-test",
+    },
+  ]);
+  const members =
+    await sql`SELECT player_id, role FROM team_members WHERE team_id = 1 ORDER BY player_id`;
+  assert.deepEqual(
+    members.map(member => member.player_id),
+    ["athlete-test", "captain-test", "manager-test"],
+  );
+  assert.ok(members.every(member => member.role === "player"));
+  const [{ count }] =
+    await sql`SELECT count(*)::int FROM team_staff WHERE user_id = 'captain-test'`;
+  assert.equal(count, 0);
 }
 
 async function assertPreserved(sql, before) {
@@ -197,6 +250,12 @@ try {
       column => column.column_name === "recurrence_group_id",
     ),
   );
+  for (const table of ["team_staff", "team_staff_events"]) {
+    assert.ok(
+      canonical.columns.some(column => column.table_name === table),
+      table,
+    );
+  }
   await seedArenaData(fresh.sql);
   console.info("Fresh database, simultaneous application and journal: passed.");
 
@@ -214,7 +273,8 @@ try {
   await command(pushed, "db:migration");
   await assertAppliedMigrations(pushed.sql);
   assert.deepEqual(await readCatalog(pushed.sql), canonical);
-  await assertPreserved(pushed.sql, pushedRows);
+  await assertPreserved(pushed.sql, expectStaffMigration(pushedRows));
+  await assertStaffMigrated(pushed.sql);
   console.info("Existing Stage 0 schema without a migration journal: passed.");
 
   const legacy = await makeDatabase("legacy");
@@ -255,7 +315,8 @@ try {
     migratedCatalog.indexes.filter(row => canonicalTables.has(row.table_name)),
     canonical.indexes,
   );
-  await assertPreserved(legacy.sql, legacyRows);
+  await assertPreserved(legacy.sql, expectStaffMigration(legacyRows));
+  await assertStaffMigrated(legacy.sql);
   assert.deepEqual(
     await legacy.sql`SELECT * FROM drizzle.__drizzle_migrations`,
     legacyHistory,
