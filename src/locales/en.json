@@ -2752,7 +2752,11 @@
     "VALIDATION_TEAM_REQUIRED": "Team is required.",
     "VALIDATION_TEAM_SLUG_INVALID": "Team slug is invalid (lowercase letters, numbers, and hyphens only).",
     "VALIDATION_TEAM_SLUG_TOO_SHORT": "Team slug must be at least 3 characters.",
-    "VALIDATION_TITLE_TOO_SHORT": "Title must be at least 3 characters."
+    "VALIDATION_TITLE_TOO_SHORT": "Title must be at least 3 characters.",
+    "VALIDATION_FIXTURE_DATE_REQUIRED": "Choose the fixture date.",
+    "VALIDATION_FIXTURE_TIME_REQUIRED": "Choose the kick-off time.",
+    "VALIDATION_FIXTURE_TIME_INVALID": "The time is invalid.",
+    "VALIDATION_FIXTURE_TIME_NONEXISTENT": "This time does not exist on that day because of the clock change. Choose another."
   },
   "waitlist": {
     "description": "We are currently in beta testing. Sign up to be among the first to enter when we open.",
@@ -3650,25 +3654,34 @@
       "backToClub": "Back to Club"
     },
     "entry": {
-      "kicker": "Competition",
+      "kicker": "Club",
       "title": "Club",
       "createTitle": "Create your team's club",
-      "createDescription": "Add {team} to a club to organise seasons, opponents and the official fixture calendar.",
+      "createDescription": "Add the team {team} to a club to organise seasons, opponents and the official fixture calendar.",
       "createCta": "Create club",
       "noTeamTitle": "You have no team yet",
       "noTeamDescription": "Create or join a team to access the club calendar.",
       "notOwnerTitle": "This team has no club yet",
       "notOwnerDescription": "Only the team captain can create the club. Ask them to do it.",
-      "backToDashboard": "Back to home"
+      "backToDashboard": "Back to home",
+      "joinTitle": "The team {team} has no club yet",
+      "joinDescription": "Add it to a club you already run or create a new club.",
+      "joinLegend": "Clubs you run",
+      "joinCta": "Join {club}",
+      "joining": "Joining…",
+      "createNewCta": "Create a new club",
+      "myClubsLabel": "Your clubs",
+      "openClub": "Open {club}"
     },
     "createClub": {
       "title": "Create club",
-      "description": "{team} joins the new club and you become its administrator.",
+      "description": "The team {team} joins the new club and you become its administrator.",
       "nameLabel": "Club name",
       "nameHint": "Between 2 and 80 characters.",
       "cancel": "Cancel",
       "submit": "Create club",
-      "submitting": "Creating…"
+      "submitting": "Creating…",
+      "seasonNote": "We create the {season} season (July to June) right away so you can schedule the first fixture."
     },
     "calendar": {
       "heading": "Fixture calendar",
@@ -3731,7 +3744,13 @@
       "timeZoneNote": "Date and time are saved in the {zone} time zone.",
       "cancel": "Cancel",
       "submit": "Schedule fixture",
-      "submitting": "Scheduling…"
+      "submitting": "Scheduling…",
+      "missingSeasonTitle": "No season yet",
+      "missingSeasonAdmin": "Create the season to schedule the first fixture. It takes seconds.",
+      "createSeasonCta": "Create season",
+      "newOpponent": "New opponent",
+      "opponentEmpty": "No opponents yet",
+      "opponentEmptyHint": "Create the first opponent right here."
     },
     "link": {
       "title": "Link callup",

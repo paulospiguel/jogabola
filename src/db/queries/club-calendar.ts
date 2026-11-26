@@ -29,6 +29,7 @@ import {
   ClubCalendarError,
   toClubCalendarErrorCode,
 } from "@/lib/club-calendar-errors";
+import { currentFootballSeason } from "@/lib/club-season";
 import { classifyErrorSafely } from "@/lib/safe-error";
 import type {
   AttachTeamToClubInput,
@@ -183,12 +184,22 @@ async function lockOwnedTeam(
 
 // ─── Clubs ───────────────────────────────────────────────────────────────
 
+/**
+ * Creates the club, makes the caller its admin, attaches the team and opens
+ * the current football season (July–June), all in one transaction, so the
+ * captain can mark the first fixture without visiting the settings.
+ */
 export function createClubWithTeam(
   db: ClubCalendarDb,
   userId: string,
   input: CreateClubWithTeamInput,
+  options: { now?: Date } = {},
 ): Promise<
-  ActionResult<{ club: { id: number; name: string }; teamId: number }>
+  ActionResult<{
+    club: { id: number; name: string };
+    teamId: number;
+    season: SeasonDto;
+  }>
 > {
   return run("write", () =>
     db.transaction(async tx => {
@@ -207,7 +218,12 @@ export function createClubWithTeam(
         .update(teams)
         .set({ clubId: club.id, updatedAt: new Date() })
         .where(eq(teams.id, team.id));
-      return { club, teamId: team.id };
+      const current = currentFootballSeason(options.now);
+      const [season] = await tx
+        .insert(seasons)
+        .values({ clubId: club.id, ...current })
+        .returning(seasonColumns);
+      return { club, teamId: team.id, season };
     }),
   );
 }

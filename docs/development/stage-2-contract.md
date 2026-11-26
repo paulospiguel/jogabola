@@ -29,7 +29,7 @@ Contrato entre o backend da etapa 2 ([ADR 0004](../adr/0004-competitive-calendar
 
 | Ação | Entrada | `data` em caso de sucesso | Erros de domínio |
 | --- | --- | --- | --- |
-| `createClubWithTeam` | `{ name: string(2–80), teamId }` | `{ club: { id, name }, teamId }` | `TEAM_NOT_FOUND`, `FORBIDDEN`, `TEAM_ALREADY_IN_CLUB` |
+| `createClubWithTeam` | `{ name: string(2–80), teamId }` | `{ club: { id, name }, teamId, season: SeasonDto }` | `TEAM_NOT_FOUND`, `FORBIDDEN`, `TEAM_ALREADY_IN_CLUB` |
 | `attachTeamToClub` | `{ clubId, teamId }` | `{ clubId, teamId }` | `CLUB_NOT_FOUND`, `FORBIDDEN`, `TEAM_NOT_FOUND`, `TEAM_ALREADY_IN_CLUB` |
 | `listMyClubs` | nenhuma | `ClubSummary[]` | — |
 | `listAttachableTeams` | nenhuma | `{ id, name }[]` (equipas próprias sem clube) | — |
@@ -41,6 +41,8 @@ Contrato entre o backend da etapa 2 ([ADR 0004](../adr/0004-competitive-calendar
 | `createOpponent` | `{ clubId, name }` | `OpponentDto` | `CLUB_NOT_FOUND`, `FORBIDDEN`, `OPPONENT_NAME_TAKEN` |
 | `updateOpponent` | `{ opponentId, name }` | `OpponentDto` | `OPPONENT_NOT_FOUND`, `FORBIDDEN`, `OPPONENT_NAME_TAKEN` |
 | `deleteOpponent` | `{ opponentId }` | `{ id }` | `OPPONENT_NOT_FOUND`, `FORBIDDEN`, `OPPONENT_IN_USE` |
+
+`createClubWithTeam` abre na mesma transação a época de futebol em curso (julho a junho, no fuso `Europe/Lisbon`), por exemplo `2026/27` de `2026-07-01` a `2027-06-30`, para o capitão poder marcar o primeiro jogo sem passar pelas definições.
 
 `updateSeason` substitui `startsOn`/`endsOn`: omitir um campo grava `null`.
 

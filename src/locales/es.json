@@ -2752,7 +2752,11 @@
     "VALIDATION_TEAM_REQUIRED": "El equipo es obligatorio.",
     "VALIDATION_TEAM_SLUG_INVALID": "El slug del equipo es inválido (solo letras minúsculas, números y guiones).",
     "VALIDATION_TEAM_SLUG_TOO_SHORT": "El slug del equipo debe tener al menos 3 caracteres.",
-    "VALIDATION_TITLE_TOO_SHORT": "El título debe tener al menos 3 caracteres."
+    "VALIDATION_TITLE_TOO_SHORT": "El título debe tener al menos 3 caracteres.",
+    "VALIDATION_FIXTURE_DATE_REQUIRED": "Elige la fecha del partido.",
+    "VALIDATION_FIXTURE_TIME_REQUIRED": "Elige la hora de inicio.",
+    "VALIDATION_FIXTURE_TIME_INVALID": "La hora no es válida.",
+    "VALIDATION_FIXTURE_TIME_NONEXISTENT": "Esta hora no existe ese día por el cambio de hora. Elige otra."
   },
   "waitlist": {
     "description": "Estamos en fase de pruebas. Regístrate para ser de los primeros en ingresar cuando abramos.",
@@ -3650,25 +3654,34 @@
       "backToClub": "Volver al Club"
     },
     "entry": {
-      "kicker": "Competición",
+      "kicker": "Club",
       "title": "Club",
       "createTitle": "Crea el club de tu equipo",
-      "createDescription": "Une a {team} a un club para organizar temporadas, rivales y el calendario de partidos oficiales.",
+      "createDescription": "Une el equipo {team} a un club para organizar temporadas, rivales y el calendario de partidos oficiales.",
       "createCta": "Crear club",
       "noTeamTitle": "Aún no tienes equipo",
       "noTeamDescription": "Crea o únete a un equipo para acceder al calendario del club.",
       "notOwnerTitle": "Este equipo aún no tiene club",
       "notOwnerDescription": "Solo el capitán del equipo puede crear el club. Pídeselo.",
-      "backToDashboard": "Volver al inicio"
+      "backToDashboard": "Volver al inicio",
+      "joinTitle": "El equipo {team} aún no tiene club",
+      "joinDescription": "Únelo a un club que ya administras o crea un club nuevo.",
+      "joinLegend": "Clubes que administras",
+      "joinCta": "Unir al club {club}",
+      "joining": "Uniendo…",
+      "createNewCta": "Crear club nuevo",
+      "myClubsLabel": "Tus clubes",
+      "openClub": "Abrir {club}"
     },
     "createClub": {
       "title": "Crear club",
-      "description": "{team} queda asociado al nuevo club y pasas a ser su administrador.",
+      "description": "El equipo {team} queda asociado al nuevo club y pasas a ser su administrador.",
       "nameLabel": "Nombre del club",
       "nameHint": "Entre 2 y 80 caracteres.",
       "cancel": "Cancelar",
       "submit": "Crear club",
-      "submitting": "Creando…"
+      "submitting": "Creando…",
+      "seasonNote": "Creamos ya la temporada {season} (julio a junio) para que programes el primer partido."
     },
     "calendar": {
       "heading": "Calendario de partidos",
@@ -3731,7 +3744,13 @@
       "timeZoneNote": "La fecha y la hora se guardan en la zona {zone}.",
       "cancel": "Cancelar",
       "submit": "Programar partido",
-      "submitting": "Programando…"
+      "submitting": "Programando…",
+      "missingSeasonTitle": "Falta la temporada",
+      "missingSeasonAdmin": "Crea la temporada para programar el primer partido. Son segundos.",
+      "createSeasonCta": "Crear temporada",
+      "newOpponent": "Nuevo rival",
+      "opponentEmpty": "Aún no hay rivales",
+      "opponentEmptyHint": "Crea el primer rival aquí mismo."
     },
     "link": {
       "title": "Asociar convocatoria",

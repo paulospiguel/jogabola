@@ -26,12 +26,14 @@ import {
 interface OpponentFormSheetProps {
   clubId: number;
   opponent: OpponentDto | null;
+  onSaved?: (opponent: OpponentDto) => void;
   onClose: () => void;
 }
 
 export function OpponentFormSheet({
   clubId,
   opponent,
+  onSaved,
   onClose,
 }: OpponentFormSheetProps) {
   const t = useTranslations("arenaClubCalendar.opponents");
@@ -49,8 +51,9 @@ export function OpponentFormSheet({
           ? await updateOpponent({ opponentId: opponent.id, name: value })
           : await createOpponent({ clubId, name: value }),
       ),
-    onSuccess: async () => {
+    onSuccess: async saved => {
       await invalidate(clubId);
+      onSaved?.(saved);
       onClose();
     },
     onError: error => {

@@ -1,9 +1,12 @@
 "use client";
 
-import { ArrowLeft, ListChecks, Lock } from "lucide-react";
+import { ArrowLeft, CalendarRange, ListChecks, Lock } from "lucide-react";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
+import { useState } from "react";
+import { Cta } from "@/components/arena/cta";
 import { ArenaEmptyState } from "@/components/arena/empty-state";
+import { currentFootballSeason } from "@/lib/club-season";
 import { cn } from "@/lib/utils";
 import {
   useClubFixtures,
@@ -18,6 +21,7 @@ import {
   ClubSkeletonRows,
 } from "./club-ui";
 import { FixtureForm } from "./fixture-form";
+import { SeasonFormSheet } from "./season-form-sheet";
 
 const SECONDARY_LINK = cn(
   CLUB_LINK_BUTTON_CLASS,
@@ -32,6 +36,9 @@ export function FixtureCreate() {
   const opponentsQuery = useClubOpponents(club.id);
   const fixturesQuery = useClubFixtures(club.id);
   const calendarHref = `/arena/club/${club.id}`;
+  const [creatingSeason, setCreatingSeason] = useState(false);
+  const hasSeasons = Boolean(seasonsQuery.data?.length);
+  const hasOpponents = Boolean(opponentsQuery.data?.length);
 
   let body: React.ReactNode;
   if (!canCreateFixtures) {
@@ -61,37 +68,45 @@ export function FixtureCreate() {
         backHref={calendarHref}
       />
     );
-  } else if (!seasonsQuery.data?.length || !opponentsQuery.data?.length) {
+  } else if (isAdmin && !hasSeasons) {
+    // Clubs open their first season on creation; this covers a club whose
+    // seasons were all removed. The fix is one tap away, never a dead end.
+    body = (
+      <ArenaEmptyState
+        icon={CalendarRange}
+        title={t("missingSeasonTitle")}
+        description={t("missingSeasonAdmin")}
+        action={
+          <Cta
+            size="md"
+            className="btn-press"
+            onClick={() => setCreatingSeason(true)}
+          >
+            {t("createSeasonCta")}
+          </Cta>
+        }
+      />
+    );
+  } else if (!isAdmin && (!hasSeasons || !hasOpponents)) {
     body = (
       <ArenaEmptyState
         icon={ListChecks}
         title={t("missingSetupTitle")}
-        description={isAdmin ? t("missingSetupAdmin") : t("missingSetupMember")}
+        description={t("missingSetupMember")}
         action={
-          isAdmin ? (
-            <Link
-              href={`/arena/club/${club.id}/settings`}
-              className={cn(
-                CLUB_LINK_BUTTON_CLASS,
-                "h-9 rounded-[10px] bg-arena-primary px-4 text-xs text-arena-bg hover:bg-arena-primary/90",
-              )}
-            >
-              {t("goToSettings")}
-            </Link>
-          ) : (
-            <Link href={calendarHref} className={SECONDARY_LINK}>
-              {t("backToCalendar")}
-            </Link>
-          )
+          <Link href={calendarHref} className={SECONDARY_LINK}>
+            {t("backToCalendar")}
+          </Link>
         }
       />
     );
   } else {
     body = (
       <FixtureForm
-        seasons={seasonsQuery.data}
-        opponents={opponentsQuery.data}
+        seasons={seasonsQuery.data ?? []}
+        opponents={opponentsQuery.data ?? []}
         fixtures={fixturesQuery.data ?? []}
+        canCreateOpponent={isAdmin}
       />
     );
   }
@@ -120,6 +135,14 @@ export function FixtureCreate() {
         </h2>
       </div>
       {body}
+      {creatingSeason && (
+        <SeasonFormSheet
+          clubId={club.id}
+          season={null}
+          defaults={currentFootballSeason()}
+          onClose={() => setCreatingSeason(false)}
+        />
+      )}
     </section>
   );
 }

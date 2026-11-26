@@ -4,6 +4,8 @@
  */
 export interface ClubEntryClub {
   id: number;
+  name: string;
+  role: "admin" | "member";
   ownedTeams: { id: number }[];
 }
 
@@ -13,9 +15,22 @@ export interface ClubEntryTeam {
   ownerId: string;
 }
 
+export interface ClubLink {
+  id: number;
+  name: string;
+}
+
 export type ClubEntryDecision =
   | { kind: "club"; clubId: number }
-  | { kind: "create"; teamId: number; teamName: string }
+  | {
+      kind: "create";
+      teamId: number;
+      teamName: string;
+      /** Clubs the caller administers: the free team can join one of them. */
+      joinableClubs: ClubLink[];
+      /** Every club the caller belongs to, to open it instead. */
+      myClubs: ClubLink[];
+    }
   | { kind: "none"; reason: "noTeam" | "notOwner" };
 
 export function decideClubEntry({
@@ -37,6 +52,10 @@ export function decideClubEntry({
         kind: "create",
         teamId: activeTeam.id,
         teamName: activeTeam.name,
+        joinableClubs: clubs
+          .filter(club => club.role === "admin")
+          .map(({ id, name }) => ({ id, name })),
+        myClubs: clubs.map(({ id, name }) => ({ id, name })),
       };
     }
   }

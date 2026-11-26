@@ -25,12 +25,17 @@ type SeasonField = "name" | "startsOn" | "endsOn";
 interface SeasonFormSheetProps {
   clubId: number;
   season: SeasonDto | null;
+  /** Prefill for a new season (e.g. the current football season). */
+  defaults?: { name: string; startsOn: string; endsOn: string };
+  onSaved?: (season: SeasonDto) => void;
   onClose: () => void;
 }
 
 export function SeasonFormSheet({
   clubId,
   season,
+  defaults,
+  onSaved,
   onClose,
 }: SeasonFormSheetProps) {
   const t = useTranslations("arenaClubCalendar.seasons");
@@ -42,9 +47,13 @@ export function SeasonFormSheet({
     startsOn: `${baseId}-starts`,
     endsOn: `${baseId}-ends`,
   };
-  const [name, setName] = useState(season?.name ?? "");
-  const [startsOn, setStartsOn] = useState(season?.startsOn ?? "");
-  const [endsOn, setEndsOn] = useState(season?.endsOn ?? "");
+  const [name, setName] = useState(season?.name ?? defaults?.name ?? "");
+  const [startsOn, setStartsOn] = useState(
+    season?.startsOn ?? defaults?.startsOn ?? "",
+  );
+  const [endsOn, setEndsOn] = useState(
+    season?.endsOn ?? defaults?.endsOn ?? "",
+  );
   const [errors, setErrors] = useState<Partial<Record<SeasonField, string>>>(
     {},
   );
@@ -63,8 +72,9 @@ export function SeasonFormSheet({
           : await createSeason({ clubId, ...fields }),
       );
     },
-    onSuccess: async () => {
+    onSuccess: async saved => {
       await invalidate(clubId);
+      onSaved?.(saved);
       onClose();
     },
     onError: error => {

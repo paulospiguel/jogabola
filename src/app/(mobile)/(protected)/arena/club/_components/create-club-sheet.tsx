@@ -7,6 +7,7 @@ import { useId, useState } from "react";
 import { createClubWithTeam } from "@/actions/clubs.actions";
 import { BottomSheet } from "@/components/arena/bottom-sheet";
 import { Cta } from "@/components/arena/cta";
+import { currentFootballSeason } from "@/lib/club-season";
 import { useInvalidateClub } from "../_hooks/use-club-calendar";
 import { useClubMessages } from "../_hooks/use-club-messages";
 import {
@@ -87,6 +88,9 @@ export function CreateClubSheet({
       >
         <p className="text-xs leading-5 text-arena-text-muted">
           {t("description", { team: teamName })}
+        </p>
+        <p className="rounded-[10px] border border-arena-border bg-arena-surface px-3 py-2 text-xs leading-5 text-arena-text-sec">
+          {t("seasonNote", { season: currentFootballSeason().name })}
         </p>
         <ClubField
           id={nameId}

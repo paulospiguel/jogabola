@@ -10,7 +10,7 @@ import { ArenaEmptyState } from "@/components/arena/empty-state";
 import { useTeams } from "@/hooks/use-teams";
 import { useSession } from "@/lib/auth-client";
 import { cn } from "@/lib/utils";
-import { useMyClubs } from "../_hooks/use-club-calendar";
+import { useAttachableTeams, useMyClubs } from "../_hooks/use-club-calendar";
 import { clubErrorCode } from "../_utils/club-action-error";
 import { decideClubEntry } from "../_utils/club-entry";
 import {
@@ -19,6 +19,7 @@ import {
   ClubSkeletonRows,
 } from "./club-ui";
 import { CreateClubSheet } from "./create-club-sheet";
+import { JoinClubOptions, MyClubLinks } from "./join-club-options";
 
 /**
  * "Clube" entry point. Opens the club of the active team, offers the team
@@ -56,6 +57,16 @@ export function ClubEntry() {
           userId: sessionData?.user?.id ?? null,
         });
 
+  const canOfferJoin =
+    decision?.kind === "create" && decision.joinableClubs.length > 0;
+  // The server confirms the team is still free before offering to join.
+  const attachableQuery = useAttachableTeams(canOfferJoin);
+  const joinableClubs =
+    decision?.kind === "create" &&
+    attachableQuery.data?.some(team => team.id === decision.teamId)
+      ? decision.joinableClubs
+      : [];
+
   const targetClubId = decision?.kind === "club" ? decision.clubId : null;
   useEffect(() => {
     if (targetClubId) router.replace(`/arena/club/${targetClubId}`);
@@ -70,8 +81,22 @@ export function ClubEntry() {
         isRetrying={clubsQuery.isFetching}
       />
     );
-  } else if (!decision || decision.kind === "club") {
+  } else if (
+    !decision ||
+    decision.kind === "club" ||
+    (canOfferJoin && attachableQuery.isLoading)
+  ) {
     body = <ClubSkeletonRows rows={3} />;
+  } else if (decision.kind === "create" && joinableClubs.length > 0) {
+    body = (
+      <JoinClubOptions
+        teamId={decision.teamId}
+        teamName={decision.teamName}
+        joinableClubs={joinableClubs}
+        myClubs={decision.myClubs}
+        onCreate={() => setCreating(true)}
+      />
+    );
   } else if (decision.kind === "create") {
     body = (
       <ArenaEmptyState
@@ -80,13 +105,16 @@ export function ClubEntry() {
         description={t("createDescription", { team: decision.teamName })}
         className="py-10"
         action={
-          <Cta
-            size="md"
-            className="btn-press"
-            onClick={() => setCreating(true)}
-          >
-            {t("createCta")}
-          </Cta>
+          <div className="flex flex-col items-center gap-4">
+            <Cta
+              size="md"
+              className="btn-press"
+              onClick={() => setCreating(true)}
+            >
+              {t("createCta")}
+            </Cta>
+            <MyClubLinks clubs={decision.myClubs} />
+          </div>
         }
       />
     );
@@ -108,7 +136,7 @@ export function ClubEntry() {
             href="/arena"
             className={cn(
               CLUB_LINK_BUTTON_CLASS,
-              "h-9 rounded-[10px] border border-arena-border bg-arena-surface px-4 text-xs text-arena-text-sec hover:bg-arena-surface-el",
+              "h-11 rounded-[10px] border border-arena-border bg-arena-surface px-4 text-xs text-arena-text-sec hover:bg-arena-surface-el",
             )}
           >
             {t("backToDashboard")}

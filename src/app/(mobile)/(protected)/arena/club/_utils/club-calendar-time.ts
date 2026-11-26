@@ -104,6 +104,34 @@ export function zonedWallTimeToUtc(
   return new Date(instant);
 }
 
+export type WallTimeProblem =
+  | "dateMissing"
+  | "dateInvalid"
+  | "timeMissing"
+  | "timeInvalid"
+  | "nonexistent";
+
+/**
+ * Like `zonedWallTimeToUtc`, but says which part is wrong so the form can
+ * point at the date or the time field, and tell a daylight-saving gap apart
+ * from a malformed value.
+ */
+export function parseWallTime(
+  date: string,
+  time: string,
+  timeZone: string = CLUB_CALENDAR_TIME_ZONE,
+): { instant: Date } | { problem: WallTimeProblem } {
+  if (!date) return { problem: "dateMissing" };
+  // Noon never falls in a DST gap, so it validates the calendar day alone.
+  if (!zonedWallTimeToUtc(date, "12:00", timeZone)) {
+    return { problem: "dateInvalid" };
+  }
+  if (!time) return { problem: "timeMissing" };
+  if (!TIME_PATTERN.test(time)) return { problem: "timeInvalid" };
+  const instant = zonedWallTimeToUtc(date, time, timeZone);
+  return instant ? { instant } : { problem: "nonexistent" };
+}
+
 function pad(value: number) {
   return String(value).padStart(2, "0");
 }

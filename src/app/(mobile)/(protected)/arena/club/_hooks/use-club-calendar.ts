@@ -2,6 +2,7 @@
 
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import {
+  listAttachableTeams,
   listClubOpponents,
   listClubSeasons,
   listMyClubs,
@@ -21,6 +22,7 @@ export type { ClubSummary, FixtureDto, OpponentDto, SeasonDto };
 export const clubCalendarKeys = {
   all: ["club-calendar"] as const,
   myClubs: () => [...clubCalendarKeys.all, "my-clubs"] as const,
+  attachableTeams: () => [...clubCalendarKeys.all, "attachable-teams"] as const,
   club: (clubId: number) => [...clubCalendarKeys.all, "club", clubId] as const,
   fixtures: (clubId: number) =>
     [...clubCalendarKeys.club(clubId), "fixtures"] as const,
@@ -50,6 +52,17 @@ export function useMyClubs() {
   return useQuery({
     queryKey: clubCalendarKeys.myClubs(),
     queryFn: async () => unwrapClubResult(await listMyClubs({})),
+    staleTime: STALE_TIME,
+    retry: retryOnce,
+  });
+}
+
+/** Teams the caller owns that are not in any club (server-derived). */
+export function useAttachableTeams(enabled: boolean) {
+  return useQuery({
+    queryKey: clubCalendarKeys.attachableTeams(),
+    enabled,
+    queryFn: async () => unwrapClubResult(await listAttachableTeams({})),
     staleTime: STALE_TIME,
     retry: retryOnce,
   });

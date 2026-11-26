@@ -17,6 +17,8 @@ const adminUrl = process.env.JOGABOLA_TEST_DATABASE_URL;
 const localHosts = new Set(["localhost", "127.0.0.1", "[::1]", "postgres"]);
 const enabled = Boolean(adminUrl && localHosts.has(new URL(adminUrl).hostname));
 
+const CREATED_AT = new Date("2026-11-26T12:00:00Z");
+
 const U = {
   capA: "it-cap-a",
   athleteA: "it-athlete-a",
@@ -147,19 +149,33 @@ describe.skipIf(!enabled)("club calendar authorization (PostgreSQL)", () => {
     ).resolves.toEqual({ success: false, error: { code: "TEAM_NOT_FOUND" } });
 
     const created = unwrap(
-      await calendar.createClubWithTeam(db, U.capA, {
-        name: "Clube A",
-        teamId: ids.teamA,
-      }),
+      await calendar.createClubWithTeam(
+        db,
+        U.capA,
+        { name: "Clube A", teamId: ids.teamA },
+        { now: CREATED_AT },
+      ),
     );
     ids.clubA = created.club.id;
+    // The current football season is opened together with the club.
+    expect(created.season).toEqual({
+      id: expect.any(Number),
+      clubId: ids.clubA,
+      name: "2026/27",
+      startsOn: "2026-07-01",
+      endsOn: "2027-06-30",
+    });
+    ids.seasonA = created.season.id;
     const createdB = unwrap(
-      await calendar.createClubWithTeam(db, U.capB, {
-        name: "Clube B",
-        teamId: ids.teamB,
-      }),
+      await calendar.createClubWithTeam(
+        db,
+        U.capB,
+        { name: "Clube B", teamId: ids.teamB },
+        { now: CREATED_AT },
+      ),
     );
     ids.clubB = createdB.club.id;
+    ids.seasonB = createdB.season.id;
 
     await expect(
       calendar.createClubWithTeam(db, U.capA, {
@@ -174,6 +190,11 @@ describe.skipIf(!enabled)("club calendar authorization (PostgreSQL)", () => {
       { count: number }[]
     >`SELECT count(*)::int FROM clubs`;
     expect(count).toBe(2);
+    // A refused creation leaves no season behind either.
+    const [{ count: seasonCount }] = await client<
+      { count: number }[]
+    >`SELECT count(*)::int FROM seasons`;
+    expect(seasonCount).toBe(2);
 
     const clubs = unwrap(await calendar.listMyClubs(db, U.capA));
     expect(clubs).toEqual([
@@ -249,20 +270,6 @@ describe.skipIf(!enabled)("club calendar authorization (PostgreSQL)", () => {
   });
 
   it("lets only club admins manage seasons and opponents", async () => {
-    ids.seasonA = unwrap(
-      await calendar.createSeason(db, U.capA, {
-        clubId: ids.clubA,
-        name: "2026/27",
-        startsOn: "2026-09-01",
-        endsOn: "2027-06-30",
-      }),
-    ).id;
-    ids.seasonB = unwrap(
-      await calendar.createSeason(db, U.capB, {
-        clubId: ids.clubB,
-        name: "2026/27",
-      }),
-    ).id;
     ids.opponentA = unwrap(
       await calendar.createOpponent(db, U.adminA2, {
         clubId: ids.clubA,
@@ -359,7 +366,7 @@ describe.skipIf(!enabled)("club calendar authorization (PostgreSQL)", () => {
         id: ids.seasonA,
         clubId: ids.clubA,
         name: "2026/27",
-        startsOn: "2026-09-01",
+        startsOn: "2026-07-01",
         endsOn: "2027-06-30",
       },
     ]);

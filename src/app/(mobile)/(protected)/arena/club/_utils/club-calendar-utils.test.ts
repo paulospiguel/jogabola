@@ -6,6 +6,7 @@ import {
   unwrapClubResult,
 } from "./club-action-error";
 import {
+  parseWallTime,
   zonedDateKey,
   zonedInputValues,
   zonedWallTimeToUtc,
@@ -112,6 +113,34 @@ describe("calendar view", () => {
   });
 });
 
+describe("parseWallTime", () => {
+  it("returns the instant for a valid date and time", () => {
+    const result = parseWallTime("2026-12-06", "15:00", TZ);
+    expect("instant" in result && result.instant.toISOString()).toBe(
+      "2026-12-06T15:00:00.000Z",
+    );
+  });
+
+  it("reports the date and the time separately", () => {
+    expect(parseWallTime("", "15:00", TZ)).toEqual({ problem: "dateMissing" });
+    expect(parseWallTime("2026-02-30", "15:00", TZ)).toEqual({
+      problem: "dateInvalid",
+    });
+    expect(parseWallTime("2026-12-06", "", TZ)).toEqual({
+      problem: "timeMissing",
+    });
+    expect(parseWallTime("2026-12-06", "25:00", TZ)).toEqual({
+      problem: "timeInvalid",
+    });
+  });
+
+  it("flags a local time skipped by the daylight-saving jump", () => {
+    expect(parseWallTime("2026-03-29", "01:30", TZ)).toEqual({
+      problem: "nonexistent",
+    });
+  });
+});
+
 describe("decideClubEntry", () => {
   const team = { id: 7, name: "Leões", ownerId: "u1" };
 
@@ -119,8 +148,8 @@ describe("decideClubEntry", () => {
     expect(
       decideClubEntry({
         clubs: [
-          { id: 1, ownedTeams: [] },
-          { id: 2, ownedTeams: [{ id: 7 }] },
+          { id: 1, name: "Um", role: "admin", ownedTeams: [] },
+          { id: 2, name: "Dois", role: "member", ownedTeams: [{ id: 7 }] },
         ],
         activeTeam: team,
         userId: "u1",
@@ -131,13 +160,41 @@ describe("decideClubEntry", () => {
   it("offers to create a club for a free owned team", () => {
     expect(
       decideClubEntry({ clubs: [], activeTeam: team, userId: "u1" }),
-    ).toEqual({ kind: "create", teamId: 7, teamName: "Leões" });
+    ).toEqual({
+      kind: "create",
+      teamId: 7,
+      teamName: "Leões",
+      joinableClubs: [],
+      myClubs: [],
+    });
+  });
+
+  it("offers the clubs the owner administers to a free owned team", () => {
+    expect(
+      decideClubEntry({
+        clubs: [
+          { id: 3, name: "Atlético", role: "admin", ownedTeams: [{ id: 9 }] },
+          { id: 4, name: "Bairro", role: "member", ownedTeams: [] },
+        ],
+        activeTeam: team,
+        userId: "u1",
+      }),
+    ).toEqual({
+      kind: "create",
+      teamId: 7,
+      teamName: "Leões",
+      joinableClubs: [{ id: 3, name: "Atlético" }],
+      myClubs: [
+        { id: 3, name: "Atlético" },
+        { id: 4, name: "Bairro" },
+      ],
+    });
   });
 
   it("falls back to the first club for a member who does not own the team", () => {
     expect(
       decideClubEntry({
-        clubs: [{ id: 5, ownedTeams: [] }],
+        clubs: [{ id: 5, name: "Cinco", role: "member", ownedTeams: [] }],
         activeTeam: team,
         userId: "u2",
       }),
