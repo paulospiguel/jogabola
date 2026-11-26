@@ -19,6 +19,12 @@ O [ADR 0001](0001-defer-external-league-model.md) adiou o modelo de liga externa
 - O PostgreSQL garante a coerência das associações com chaves estrangeiras compostas para equipa, época e adversário dentro do clube. A tabela de ligação referencia o jogo e a convocatória pela mesma equipa. Os pares referenciados têm uma restrição de unicidade e as colunas da tabela de ligação são obrigatórias. Ao apagar uma convocatória, o PostgreSQL remove a ligação e conserva o jogo. Criar um jogo com uma ligação é uma operação atómica.
 - A eliminação definitiva da equipa segue o ciclo de vida atual, incluindo a eliminação em cascata quando se elimina a conta do capitão. Os jogos dessa equipa são removidos juntamente com ela. Clube, épocas, adversários e jogos de outras equipas são preservados. Uma equipa com jogos fica vinculada ao mesmo clube. A remoção de uma época ou adversário em uso é recusada.
 
+## Notas de implementação
+
+- A vinculação da equipa ao clube usa uma chave estrangeira composta `fixtures (team_id, club_id) → teams (id, club_id)` com `ON DELETE CASCADE ON UPDATE RESTRICT`, em vez de um trigger. Como `teams.club_id` faz parte da chave referenciada, o PostgreSQL recusa limpá-la ou alterá-la enquanto houver jogos. A eliminação da equipa remove os seus jogos.
+- Época e adversário usam o mesmo padrão com `ON DELETE RESTRICT`. O PostgreSQL reporta estas recusas com SQLSTATE `23503`.
+- A ligação `fixture_match_sessions` referencia `fixtures (id, team_id)` e `match_sessions (id, team_id)`, com unicidade por jogo e por convocatória e `ON DELETE CASCADE` nas duas chaves.
+
 ## Consequências
 
 A migração acrescenta o modelo de calendário sem atribuir clubes a dados históricos. O novo percurso de criação de jogo pode ser validado ao lado do percurso de criação de convocatória atual. O calendário competitivo e a convocatória têm datas próprias. Uma alteração num registo não altera automaticamente o outro.

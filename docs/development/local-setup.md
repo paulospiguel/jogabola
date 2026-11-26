@@ -65,3 +65,9 @@ Para repetir os testes, usa um servidor PostgreSQL local descartável e uma role
 ```bash
 node scripts/test-db-migrations.mjs
 ```
+
+A bateria de integração das Server Actions de clubes e calendário usa a mesma variável e também cria e remove uma base própria. Sem a variável, os testes ficam marcados como ignorados.
+
+```bash
+JOGABOLA_TEST_DATABASE_URL=postgresql://<utilizador>:<palavra-passe>@localhost:5432/postgres pnpm test
+```
