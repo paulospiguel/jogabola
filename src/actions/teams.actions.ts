@@ -95,12 +95,8 @@ export const createTeam = withAuthAction(
       .values({ ...data, ownerId: user.id })
       .returning();
 
-    await db.insert(teamMembers).values({
-      teamId: team.id,
-      playerId: user.id,
-      role: "owner",
-    });
-
+    // Ownership lives in `teams.owner_id`; the owner joins the roster only
+    // by opting in (`setMyAthleteStatus`).
     await db
       .update(session)
       .set({ teamId: team.id, updatedAt: new Date() })
