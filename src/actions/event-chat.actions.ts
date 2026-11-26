@@ -8,7 +8,6 @@ import {
   matchReservations,
   matchSessions,
   payments,
-  teams,
   user,
 } from "@/db/schema";
 import {
@@ -17,6 +16,7 @@ import {
   getAblyRest,
 } from "@/lib/ably";
 import { getAuthUser } from "@/lib/action-helpers";
+import { can } from "@/lib/team-authz";
 
 export interface ChatMessage {
   id: number;
@@ -28,8 +28,8 @@ export interface ChatMessage {
   censoredAt?: string | null;
 }
 
-/** Access rule: the team captain (owner) always; otherwise the user must have
- * confirmed attendance AND (when the event requires payment) an approved
+/** Access rule: the team owner or staff with `events.manage` always; otherwise
+ * the user must have confirmed attendance AND (when the event requires payment) an approved
  * payment. Pending/unpaid/reserve see only the blurred teaser. */
 export async function canParticipateInChat(
   eventId: number,
@@ -44,11 +44,8 @@ export async function canParticipateInChat(
   });
   if (!event) return false;
 
-  const team = await db.query.teams.findFirst({
-    columns: { ownerId: true },
-    where: eq(teams.id, event.teamId),
-  });
-  if (team?.ownerId === userId) return true;
+  // Owner or staff who manage events always have access.
+  if (await can(userId, event.teamId, "events.manage")) return true;
 
   const confirmed = await db
     .select({ id: attendance.id })
@@ -87,19 +84,17 @@ export async function canParticipateInChat(
   return paid.length > 0;
 }
 
-/** Returns the teamId owner (captain) for a given event. */
-async function getEventCaptain(eventId: number): Promise<string | null> {
+/** Chat moderation: team owner or staff with `events.manage` on the event team. */
+async function canModerateEventChat(
+  eventId: number,
+  userId: string,
+): Promise<boolean> {
   const event = await db.query.matchSessions.findFirst({
     columns: { teamId: true },
     where: eq(matchSessions.id, eventId),
   });
-  if (!event) return null;
-
-  const team = await db.query.teams.findFirst({
-    columns: { ownerId: true },
-    where: eq(teams.id, event.teamId),
-  });
-  return team?.ownerId ?? null;
+  if (!event) return false;
+  return can(userId, event.teamId, "events.manage");
 }
 
 export async function getEventMessages(eventId: number) {
@@ -240,8 +235,7 @@ export async function censorMessage(messageId: number) {
     return { success: false as const, error: { code: "NOT_FOUND" } };
   }
 
-  const captainId = await getEventCaptain(msg.matchSessionId);
-  if (captainId !== authUser.id) {
+  if (!(await canModerateEventChat(msg.matchSessionId, authUser.id))) {
     return { success: false as const, error: { code: "FORBIDDEN" } };
   }
 
@@ -268,8 +262,7 @@ export async function uncensorMessage(messageId: number) {
     return { success: false as const, error: { code: "NOT_FOUND" } };
   }
 
-  const captainId = await getEventCaptain(msg.matchSessionId);
-  if (captainId !== authUser.id) {
+  if (!(await canModerateEventChat(msg.matchSessionId, authUser.id))) {
     return { success: false as const, error: { code: "FORBIDDEN" } };
   }
 

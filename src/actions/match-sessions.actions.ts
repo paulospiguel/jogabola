@@ -22,11 +22,7 @@ import {
   type RecurrenceFrequency,
   validateEventRange,
 } from "@/lib/event-recurrence";
-import {
-  canManageTeam,
-  getAccessibleTeamIds,
-  userCanAccessTeam,
-} from "@/lib/team-access";
+import { can, canViewTeam, getAccessibleTeamIds } from "@/lib/team-authz";
 import { slugify } from "@/lib/utils";
 import {
   createMatchReservationSchema,
@@ -98,7 +94,7 @@ export async function createEvent(input: {
 
   let teamId = input.teamId ?? authUser.teamId ?? null;
   if (teamId) {
-    const canAccessTeam = await canManageTeam(authUser.id, teamId);
+    const canAccessTeam = await can(authUser.id, teamId, "events.manage");
     if (!canAccessTeam) {
       return { success: false as const, error: { code: "FORBIDDEN" } };
     }
@@ -107,6 +103,9 @@ export async function createEvent(input: {
   if (!teamId) {
     const accessibleTeamIds = await getAccessibleTeamIds(authUser.id);
     teamId = accessibleTeamIds[0] ?? null;
+    if (teamId && !(await can(authUser.id, teamId, "events.manage"))) {
+      return { success: false as const, error: { code: "FORBIDDEN" } };
+    }
   }
 
   if (!teamId) {
@@ -321,7 +320,11 @@ export async function updateEvent(
     return { success: false as const, error: { code: "EVENT_NOT_FOUND" } };
   }
 
-  const canAccessTeam = await canManageTeam(authUser.id, existingEvent.teamId);
+  const canAccessTeam = await can(
+    authUser.id,
+    existingEvent.teamId,
+    "events.manage",
+  );
   if (!canAccessTeam) {
     return { success: false as const, error: { code: "FORBIDDEN" } };
   }
@@ -414,7 +417,7 @@ export async function getCalendarEvents(
   }
 
   if (authUser && resolvedTeamId) {
-    const canAccessTeam = await userCanAccessTeam(authUser.id, resolvedTeamId);
+    const canAccessTeam = await canViewTeam(authUser.id, resolvedTeamId);
     if (!canAccessTeam) {
       return { success: false as const, error: { code: "TEAM_NOT_FOUND" } };
     }
@@ -461,7 +464,7 @@ export async function getEvents(options?: {
   }
 
   if (authUser && resolvedTeamId) {
-    const canAccessTeam = await userCanAccessTeam(
+    const canAccessTeam = await canViewTeam(
       authUser.id,
       Number(resolvedTeamId),
     );
@@ -488,7 +491,7 @@ export async function getLastEventSquad(teamId: number) {
     return { success: false as const, error: { code: "UNAUTHORIZED" } };
   }
 
-  const canAccess = await userCanAccessTeam(authUser.id, teamId);
+  const canAccess = await canViewTeam(authUser.id, teamId);
   if (!canAccess) {
     return { success: false as const, error: { code: "TEAM_NOT_FOUND" } };
   }
@@ -622,7 +625,11 @@ export async function deleteEvent(eventId: number) {
     return { success: false as const, error: { code: "EVENT_NOT_FOUND" } };
   }
 
-  const canAccessTeam = await canManageTeam(authUser.id, existingEvent.teamId);
+  const canAccessTeam = await can(
+    authUser.id,
+    existingEvent.teamId,
+    "events.manage",
+  );
   if (!canAccessTeam) {
     return { success: false as const, error: { code: "FORBIDDEN" } };
   }

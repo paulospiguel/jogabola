@@ -1,6 +1,11 @@
 "use server";
 
+import { eq } from "drizzle-orm";
+import { db } from "@/db/client";
+import { matchSessions } from "@/db/schema";
+import { getAuthUser } from "@/lib/action-helpers";
 import { DEFAULT_RATING } from "@/lib/self-assessment";
+import { can } from "@/lib/team-authz";
 import { getEventAttendanceWithUsers } from "./attendance.actions";
 import { getRatingsForUsers } from "./player-ratings.actions";
 
@@ -21,12 +26,27 @@ export interface BalancerGuest {
   rating: number;
 }
 
-// eslint-disable-next-line server-auth-actions
-// eslint-disable-next-line react-doctor/server-auth-actions
 export async function balanceTeamsWithAI(
   eventId: number,
   guests: BalancerGuest[],
 ) {
+  const authUser = await getAuthUser();
+  if (!authUser) {
+    return { success: false as const, error: { code: "UNAUTHORIZED" } };
+  }
+
+  // teamId comes from the persisted event, never from client input.
+  const event = await db.query.matchSessions.findFirst({
+    columns: { teamId: true },
+    where: eq(matchSessions.id, eventId),
+  });
+  if (!event) {
+    return { success: false as const, error: { code: "EVENT_NOT_FOUND" } };
+  }
+  if (!(await can(authUser.id, event.teamId, "match.manage"))) {
+    return { success: false as const, error: { code: "FORBIDDEN" } };
+  }
+
   try {
     // 1. Get current attendance
     const attendanceResult = await getEventAttendanceWithUsers(eventId);

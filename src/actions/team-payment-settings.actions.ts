@@ -5,16 +5,16 @@ import { z } from "zod";
 import { db } from "@/db/client";
 import { teamPaymentSettings } from "@/db/schema";
 import { withAuthAction } from "@/lib/action-helpers";
-import { userCanAccessTeam } from "@/lib/team-access";
+import { can, canViewTeam } from "@/lib/team-authz";
 import { upsertTeamPaymentSettingsSchema } from "@/schemas/payments.schema";
 import type { TeamPaymentConfig } from "@/types/payments";
 
 export const upsertTeamPaymentSettings = withAuthAction(
   upsertTeamPaymentSettingsSchema,
   async (user, data) => {
-    const canAccessTeam = await userCanAccessTeam(user.id, data.teamId);
-    if (!canAccessTeam) {
-      return { success: false, error: { code: "TEAM_NOT_FOUND" } };
+    const canManage = await can(user.id, data.teamId, "payments.manage");
+    if (!canManage) {
+      return { success: false, error: { code: "FORBIDDEN" } };
     }
 
     const existing = await db.query.teamPaymentSettings.findFirst({
@@ -41,7 +41,7 @@ export const upsertTeamPaymentSettings = withAuthAction(
 export const getTeamPaymentSettings = withAuthAction(
   z.object({ teamId: z.number() }),
   async (user, { teamId }) => {
-    const canAccessTeam = await userCanAccessTeam(user.id, teamId);
+    const canAccessTeam = await canViewTeam(user.id, teamId);
     if (!canAccessTeam) {
       return { success: false, error: { code: "TEAM_NOT_FOUND" } };
     }

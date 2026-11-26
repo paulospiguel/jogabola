@@ -16,12 +16,12 @@ import { withAuthAction } from "@/lib/action-helpers";
 import { auth } from "@/lib/auth";
 import { toUiPaymentStatus } from "@/lib/payment-status";
 import { classifyErrorSafely } from "@/lib/safe-error";
-import { userCanAccessTeam } from "@/lib/team-access";
+import { can, canViewTeam } from "@/lib/team-authz";
 
 export const getTeamPayments = withAuthAction(
   z.object({ teamId: z.number() }),
   async (currentUser, { teamId }) => {
-    const canAccessTeam = await userCanAccessTeam(currentUser.id, teamId);
+    const canAccessTeam = await canViewTeam(currentUser.id, teamId);
     if (!canAccessTeam) {
       return { success: false, error: { code: "TEAM_NOT_FOUND" } };
     }
@@ -120,7 +120,7 @@ export async function getPaymentById(paymentId: number): Promise<
         currency: payments.currency,
         payerName: user.name,
         payerId: matchReservations.playerId,
-        teamOwnerId: teams.ownerId,
+        teamId: teams.id,
         teamName: teams.name,
         eventTitle: matchSessions.title,
         eventId: matchSessions.id,
@@ -145,12 +145,11 @@ export async function getPaymentById(paymentId: number): Promise<
       return { success: false, error: "Pagamento não encontrado" };
     }
 
-    // If authenticated, verify ownership: must be payer or team owner
+    // If authenticated: must be the payer or someone who manages team payments
     if (session?.user?.id) {
       const userId = session.user.id;
       const isPayer = row.payerId === userId;
-      const isTeamOwner = row.teamOwnerId === userId;
-      if (!isPayer && !isTeamOwner) {
+      if (!isPayer && !(await can(userId, row.teamId, "payments.manage"))) {
         return { success: false, error: "Sem permissão" };
       }
     }

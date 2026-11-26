@@ -18,7 +18,7 @@ import { auth } from "@/lib/auth";
 import { userBelongsToTeamRoster } from "@/lib/event-roster-access";
 import { hasPendingFines } from "@/lib/fines";
 import { classifyErrorSafely } from "@/lib/safe-error";
-import { canManageTeam } from "@/lib/team-access";
+import { can } from "@/lib/team-authz";
 import { upsertAttendanceSchema } from "@/schemas/attendance.schema";
 
 function isCancelledEventStatus(status: string | null | undefined) {
@@ -33,7 +33,10 @@ export const upsertAttendance = withAuthAction(
         columns: { teamId: true },
         where: eq(matchSessions.id, data.matchSessionId),
       });
-      if (!event || !(await canManageTeam(currentUser.id, event.teamId))) {
+      if (
+        !event ||
+        !(await can(currentUser.id, event.teamId, "attendance.manage"))
+      ) {
         return { success: false, error: { code: "FORBIDDEN" } };
       }
     }
@@ -494,7 +497,7 @@ export async function managerUpdateParticipantStatus(
       return { success: false as const, error: "Evento não encontrado" };
     }
 
-    if (!(await canManageTeam(session.user.id, event.teamId))) {
+    if (!(await can(session.user.id, event.teamId, "attendance.manage"))) {
       return {
         success: false as const,
         error: "Sem permissão para gerir este evento",
@@ -552,7 +555,7 @@ export async function managerRemoveParticipant(
       return { success: false as const, error: "Evento não encontrado" };
     }
 
-    if (!(await canManageTeam(session.user.id, event.teamId))) {
+    if (!(await can(session.user.id, event.teamId, "attendance.manage"))) {
       return {
         success: false as const,
         error: "Sem permissão para gerir este evento",
@@ -603,7 +606,7 @@ export async function managerBlockParticipant(
       return { success: false as const, error: "Evento não encontrado" };
     }
 
-    if (!(await canManageTeam(session.user.id, event.teamId))) {
+    if (!(await can(session.user.id, event.teamId, "attendance.manage"))) {
       return {
         success: false as const,
         error: "Sem permissão para gerir este evento",

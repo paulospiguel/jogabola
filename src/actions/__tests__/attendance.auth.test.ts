@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 const mocks = vi.hoisted(() => ({
-  canManageTeam: vi.fn(),
+  can: vi.fn(),
   getSession: vi.fn(),
   insert: vi.fn(),
   matchSessionFindFirst: vi.fn(),
@@ -19,8 +19,8 @@ vi.mock("@/lib/auth", () => ({
   auth: { api: { getSession: mocks.getSession } },
 }));
 vi.mock("next/headers", () => ({ headers: async () => new Headers() }));
-vi.mock("@/lib/team-access", () => ({
-  canManageTeam: mocks.canManageTeam,
+vi.mock("@/lib/team-authz", () => ({
+  can: mocks.can,
 }));
 vi.mock("@/lib/event-roster-access", () => ({
   userBelongsToTeamRoster: vi.fn(),
@@ -77,7 +77,7 @@ describe("attendance authorization", () => {
       user: { id: "user-1", name: "User", email: "user@example.com" },
     });
     mocks.matchSessionFindFirst.mockResolvedValue({ teamId: 2 });
-    mocks.canManageTeam.mockResolvedValue(false);
+    mocks.can.mockResolvedValue(false);
 
     const result = await upsertAttendance({
       matchSessionId: 4,
@@ -90,6 +90,7 @@ describe("attendance authorization", () => {
       error: { code: "FORBIDDEN" },
     });
     expect(mocks.insert).not.toHaveBeenCalled();
+    expect(mocks.can).toHaveBeenCalledWith("user-1", 2, "attendance.manage");
   });
 
   it("rejects managerRemoveParticipant for a non-manager", async () => {
@@ -98,12 +99,13 @@ describe("attendance authorization", () => {
       user: { id: "user-1", name: "User", email: "user@example.com" },
     });
     mocks.matchSessionFindFirst.mockResolvedValue({ teamId: 2 });
-    mocks.canManageTeam.mockResolvedValue(false);
+    mocks.can.mockResolvedValue(false);
 
     const result = await managerRemoveParticipant(4, "user-2");
 
     expect(result.success).toBe(false);
     expect(result.error).toContain("Sem permissão");
+    expect(mocks.can).toHaveBeenCalledWith("user-1", 2, "attendance.manage");
   });
 
   it("rejects managerBlockParticipant for a non-manager", async () => {
@@ -115,11 +117,12 @@ describe("attendance authorization", () => {
       teamId: 2,
       priceCents: 500,
     });
-    mocks.canManageTeam.mockResolvedValue(false);
+    mocks.can.mockResolvedValue(false);
 
     const result = await managerBlockParticipant(4, "user-2");
 
     expect(result.success).toBe(false);
     expect(result.error).toContain("Sem permissão");
+    expect(mocks.can).toHaveBeenCalledWith("user-1", 2, "attendance.manage");
   });
 });

@@ -12,7 +12,7 @@ import { trackServerEvent } from "@/lib/analytics-server";
 import { auth } from "@/lib/auth";
 import { canActOnReservation } from "@/lib/reservation-access";
 import { classifyErrorSafely } from "@/lib/safe-error";
-import { canManageTeam } from "@/lib/team-access";
+import { can } from "@/lib/team-authz";
 import { createPaymentSchema } from "@/schemas/payments.schema";
 
 const updatePaymentStatusSchema = z.object({
@@ -84,9 +84,10 @@ export const updatePaymentStatus = withAuthAction(
       return { success: false, error: { code: "PAYMENT_NOT_FOUND" } };
     }
 
-    const canAccessTeam = await canManageTeam(
+    const canAccessTeam = await can(
       currentUser.id,
       paymentRow.teamId,
+      "payments.manage",
     );
     if (!canAccessTeam) {
       return { success: false, error: { code: "FORBIDDEN" } };
@@ -142,7 +143,11 @@ export async function markPaymentManually(
       return { success: false as const, error: "Evento não encontrado" };
     }
 
-    const canAccess = await canManageTeam(managerId, matchSession.teamId);
+    const canAccess = await can(
+      managerId,
+      matchSession.teamId,
+      "payments.manage",
+    );
     if (!canAccess) {
       return { success: false as const, error: "Sem permissão" };
     }
@@ -243,7 +248,7 @@ async function updatePaymentStatusByOwner(paymentId: number, status: string) {
   if (!row)
     return { success: false as const, error: "Pagamento não encontrado" };
 
-  const canAccess = await canManageTeam(userId, row.teamId);
+  const canAccess = await can(userId, row.teamId, "payments.manage");
   if (!canAccess) return { success: false as const, error: "Sem permissão" };
 
   await db
