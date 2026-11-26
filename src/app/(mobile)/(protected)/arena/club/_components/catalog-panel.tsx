@@ -23,6 +23,8 @@ export interface CatalogItem {
   id: number;
   name: string;
   sub?: string;
+  /** Fixtures using the item (admins only); `null`/absent when unknown. */
+  usage?: number | null;
 }
 
 interface CatalogPanelProps {
@@ -127,54 +129,80 @@ export function CatalogPanel({
         initial={reduceMotion ? false : "initial"}
         animate="animate"
       >
-        {items.map(item => (
-          <motion.li
-            key={item.id}
-            variants={CLUB_STAGGER.item}
-            className="jb-card flex min-h-14 items-center gap-2 py-1.5 pr-1.5 pl-3.5"
-          >
-            <div className="min-w-0 flex-1">
-              <div className="flex items-center gap-2">
-                <span className="truncate text-sm font-semibold text-arena-text">
-                  {item.name}
-                </span>
-                {inUse.has(item.id) && (
-                  <span className="shrink-0 rounded-[4px] border border-arena-warning/35 bg-arena-warning/10 px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-[0.5px] text-arena-warning">
-                    {tCommon("inUse")}
+        {items.map(item => {
+          const usage = item.usage ?? null;
+          const locked = (usage ?? 0) > 0 || inUse.has(item.id);
+          return (
+            <motion.li
+              key={item.id}
+              variants={CLUB_STAGGER.item}
+              className="jb-card flex min-h-14 items-center gap-2 py-1.5 pr-1.5 pl-3.5"
+            >
+              <div className="min-w-0 flex-1">
+                <div className="flex items-center gap-2">
+                  <span className="truncate text-sm font-semibold text-arena-text">
+                    {item.name}
                   </span>
+                  {locked && (
+                    <span className="shrink-0 rounded-[4px] border border-arena-warning/35 bg-arena-warning/10 px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-[0.5px] text-arena-warning">
+                      {tCommon("inUse")}
+                    </span>
+                  )}
+                </div>
+                {(item.sub || usage !== null) && (
+                  <div className="truncate text-[11px] text-arena-text-muted">
+                    {[
+                      item.sub,
+                      usage !== null
+                        ? tCommon("usage", { count: usage })
+                        : null,
+                    ]
+                      .filter(Boolean)
+                      .join(" · ")}
+                  </div>
                 )}
               </div>
-              {item.sub && (
-                <div className="truncate text-[11px] text-arena-text-muted">
-                  {item.sub}
-                </div>
+              {canManage && (
+                <>
+                  <button
+                    type="button"
+                    className={cn(ICON_BUTTON, "hover:text-arena-text")}
+                    aria-label={tCommon("edit", { name: item.name })}
+                    onClick={() => onEdit(item.id)}
+                  >
+                    <Pencil size={15} strokeWidth={1.9} aria-hidden="true" />
+                  </button>
+                  <button
+                    type="button"
+                    className={cn(
+                      ICON_BUTTON,
+                      "hover:text-arena-danger disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:bg-transparent disabled:hover:text-arena-text-muted",
+                    )}
+                    // RESTRICT on the server is the real guard; this only
+                    // avoids offering a delete that would be refused.
+                    disabled={locked}
+                    aria-label={
+                      locked
+                        ? tCommon("deleteLocked", { name: item.name })
+                        : tCommon("delete", { name: item.name })
+                    }
+                    title={
+                      locked
+                        ? tCommon("deleteLocked", { name: item.name })
+                        : undefined
+                    }
+                    onClick={() => {
+                      removal.reset();
+                      setDeleting(item);
+                    }}
+                  >
+                    <Trash2 size={15} strokeWidth={1.9} aria-hidden="true" />
+                  </button>
+                </>
               )}
-            </div>
-            {canManage && (
-              <>
-                <button
-                  type="button"
-                  className={cn(ICON_BUTTON, "hover:text-arena-text")}
-                  aria-label={tCommon("edit", { name: item.name })}
-                  onClick={() => onEdit(item.id)}
-                >
-                  <Pencil size={15} strokeWidth={1.9} aria-hidden="true" />
-                </button>
-                <button
-                  type="button"
-                  className={cn(ICON_BUTTON, "hover:text-arena-danger")}
-                  aria-label={tCommon("delete", { name: item.name })}
-                  onClick={() => {
-                    removal.reset();
-                    setDeleting(item);
-                  }}
-                >
-                  <Trash2 size={15} strokeWidth={1.9} aria-hidden="true" />
-                </button>
-              </>
-            )}
-          </motion.li>
-        ))}
+            </motion.li>
+          );
+        })}
       </motion.ul>
     );
   }

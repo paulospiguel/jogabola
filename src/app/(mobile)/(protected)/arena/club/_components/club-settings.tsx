@@ -97,6 +97,7 @@ export function ClubSettings() {
             id: s.id,
             name: s.name,
             sub: seasonSub(s),
+            usage: s.fixtureCount,
           }))}
           isLoading={seasonsQuery.isLoading}
           isFetching={seasonsQuery.isFetching}
@@ -113,7 +114,11 @@ export function ClubSettings() {
           clubId={club.id}
           icon={Swords}
           className={cn(tab !== "opponents" && "hidden md:block")}
-          items={opponentsQuery.data?.map(o => ({ id: o.id, name: o.name }))}
+          items={opponentsQuery.data?.map(o => ({
+            id: o.id,
+            name: o.name,
+            usage: o.fixtureCount,
+          }))}
           isLoading={opponentsQuery.isLoading}
           isFetching={opponentsQuery.isFetching}
           error={opponentsQuery.error}

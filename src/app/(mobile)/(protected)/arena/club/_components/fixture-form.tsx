@@ -59,6 +59,18 @@ const FIELD_ORDER: FieldName[] = [
   "matchSessionId",
 ];
 
+/** The shared name codes read better with the field they refer to. */
+const COMPETITION_CODES: Record<string, string> = {
+  VALIDATION_CLUB_CALENDAR_NAME_TOO_SHORT:
+    "VALIDATION_COMPETITION_NAME_TOO_SHORT",
+  VALIDATION_CLUB_CALENDAR_NAME_TOO_LONG:
+    "VALIDATION_COMPETITION_NAME_TOO_LONG",
+};
+
+function fieldCode(field: FieldName, code: string) {
+  return field === "competitionName" ? (COMPETITION_CODES[code] ?? code) : code;
+}
+
 /** Which field a wall-time problem belongs to, and its validation code. */
 const WALL_TIME_ERRORS: Record<
   WallTimeProblem,
@@ -152,7 +164,7 @@ export function FixtureForm({
         const next: FieldErrors = {};
         for (const name of FIELD_ORDER) {
           const code = error.fieldErrors[name]?.[0];
-          if (code) next[name] = messages.field(code);
+          if (code) next[name] = messages.field(fieldCode(name, code));
         }
         showErrors(next, messages.error("VALIDATION_ERROR"));
         return;
@@ -178,11 +190,11 @@ export function FixtureForm({
     const competition = competitionName.trim();
     if (competition.length < 2)
       next.competitionName = messages.field(
-        "VALIDATION_CLUB_CALENDAR_NAME_TOO_SHORT",
+        "VALIDATION_COMPETITION_NAME_TOO_SHORT",
       );
     else if (competition.length > 80)
       next.competitionName = messages.field(
-        "VALIDATION_CLUB_CALENDAR_NAME_TOO_LONG",
+        "VALIDATION_COMPETITION_NAME_TOO_LONG",
       );
     const wallTime = parseWallTime(date, time, CLUB_CALENDAR_TIME_ZONE);
     const startsAt = "instant" in wallTime ? wallTime.instant : null;

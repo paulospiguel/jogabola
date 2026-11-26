@@ -21,7 +21,7 @@ export function ClubCalendarAside({
 }: ClubCalendarAsideProps) {
   const t = useTranslations("arenaClubCalendar.aside");
   const format = useFormatter();
-  const { club } = useClub();
+  const { club, canCreateFixtures } = useClub();
   const next = upcoming[0];
   const linkedUpcoming = upcoming.filter(
     f => f.linkedMatchSessionId !== null,
@@ -88,10 +88,12 @@ export function ClubCalendarAside({
           <Clock size={13} strokeWidth={2} aria-hidden="true" />
           {t("timeZone", { zone: CLUB_CALENDAR_TIME_ZONE })}
         </p>
-        <p className="flex items-center gap-2">
-          <Link2 size={13} strokeWidth={2} aria-hidden="true" />
-          {t("linkHint")}
-        </p>
+        {canCreateFixtures && (
+          <p className="flex items-center gap-2">
+            <Link2 size={13} strokeWidth={2} aria-hidden="true" />
+            {t("linkHint")}
+          </p>
+        )}
       </div>
     </aside>
   );

@@ -2756,7 +2756,9 @@
     "VALIDATION_FIXTURE_DATE_REQUIRED": "Elige la fecha del partido.",
     "VALIDATION_FIXTURE_TIME_REQUIRED": "Elige la hora de inicio.",
     "VALIDATION_FIXTURE_TIME_INVALID": "La hora no es válida.",
-    "VALIDATION_FIXTURE_TIME_NONEXISTENT": "Esta hora no existe ese día por el cambio de hora. Elige otra."
+    "VALIDATION_FIXTURE_TIME_NONEXISTENT": "Esta hora no existe ese día por el cambio de hora. Elige otra.",
+    "VALIDATION_COMPETITION_NAME_TOO_SHORT": "Escribe el nombre de la competición (al menos 2 caracteres).",
+    "VALIDATION_COMPETITION_NAME_TOO_LONG": "El nombre de la competición no puede superar los 80 caracteres."
   },
   "waitlist": {
     "description": "Estamos en fase de pruebas. Regístrate para ser de los primeros en ingresar cuando abramos.",
@@ -3698,8 +3700,9 @@
       "emptyReadOnly": "Los partidos aparecerán aquí cuando el capitán los programe.",
       "noUpcomingTitle": "Sin partidos programados",
       "noPastTitle": "Aún no hay partidos anteriores",
-      "noFilteredDescription": "Ningún partido coincide con los filtros elegidos.",
-      "clearFilters": "Quitar filtros"
+      "noFilteredDescription": "Prueba otra temporada o equipo, o limpia los filtros.",
+      "clearFilters": "Quitar filtros",
+      "noFilteredTitle": "Ningún partido con estos filtros"
     },
     "fixture": {
       "linkedBadge": "Convocatoria",
@@ -3711,7 +3714,7 @@
       "nextFixture": "Próximo partido",
       "vs": "vs",
       "upcoming": "Próximos",
-      "linked": "Convocados",
+      "linked": "Con convocatoria",
       "total": "Total",
       "timeZone": "Horas en la zona {zone}.",
       "linkHint": "Asocia una convocatoria para gestionar la asistencia del partido."
@@ -3795,7 +3798,9 @@
       "delete": "Eliminar {name}",
       "deleteConfirm": "Eliminar",
       "deleting": "Eliminando…",
-      "cancel": "Cancelar"
+      "cancel": "Cancelar",
+      "usage": "{count, plural, =0 {Sin partidos} one {# partido} other {# partidos}}",
+      "deleteLocked": "{name} se usa en partidos y no se puede eliminar"
     },
     "seasons": {
       "title": "Temporadas",

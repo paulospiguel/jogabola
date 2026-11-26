@@ -60,8 +60,8 @@ function FixtureRow({
         {time}
       </span>
       <span className="min-w-0 flex-1">
-        <span className="flex min-w-0 items-center gap-1.5">
-          <span className="truncate text-[10px] font-bold uppercase tracking-[0.6px] text-arena-primary">
+        <span className="flex min-w-0 flex-wrap items-center gap-x-1.5 gap-y-0.5">
+          <span className="min-w-0 break-words text-[10px] font-bold uppercase tracking-[0.6px] text-arena-primary">
             {fixture.competitionName}
           </span>
           {fixture.linkedMatchSessionId !== null && <LinkedCallupBadge />}

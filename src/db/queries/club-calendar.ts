@@ -86,6 +86,15 @@ export interface OpponentDto {
   name: string;
 }
 
+/**
+ * Catalog rows as listed: `fixtureCount` is the number of fixtures using the
+ * row, for club admins only (who manage and delete them); `null` for other
+ * members, since club membership alone does not grant access to other
+ * teams' fixtures (ADR 0005).
+ */
+export type SeasonListItem = SeasonDto & { fixtureCount: number | null };
+export type OpponentListItem = OpponentDto & { fixtureCount: number | null };
+
 /** Calendar-only view of a fixture. No match-session or roster data. */
 export interface FixtureDto {
   id: number;
@@ -300,12 +309,20 @@ async function isClubMember(
   userId: string,
   clubId: number,
 ): Promise<boolean> {
+  return (await clubRole(db, userId, clubId)) !== null;
+}
+
+async function clubRole(
+  db: Executor,
+  userId: string,
+  clubId: number,
+): Promise<ClubMemberRole | null> {
   const [membership] = await db
-    .select({ id: clubMembers.id })
+    .select({ role: clubMembers.role })
     .from(clubMembers)
     .where(and(eq(clubMembers.clubId, clubId), eq(clubMembers.userId, userId)))
     .limit(1);
-  return Boolean(membership);
+  return membership?.role ?? null;
 }
 
 // ─── Seasons ─────────────────────────────────────────────────────────────
@@ -322,16 +339,26 @@ export async function listClubSeasons(
   db: ClubCalendarDb,
   userId: string,
   input: ClubScopeInput,
-): Promise<ActionResult<SeasonDto[]>> {
-  if (!(await isClubMember(db, userId, input.clubId))) {
-    return { success: false, error: { code: E.CLUB_NOT_FOUND } };
-  }
+): Promise<ActionResult<SeasonListItem[]>> {
+  const role = await clubRole(db, userId, input.clubId);
+  if (!role) return { success: false, error: { code: E.CLUB_NOT_FOUND } };
   const rows = await db
-    .select(seasonColumns)
+    .select({
+      ...seasonColumns,
+      // Qualified by hand: Drizzle renders bare column names here, which the
+      // correlated subquery would resolve against "fixtures".
+      fixtureCount: sql<number>`(SELECT count(*)::int FROM "fixtures" AS "usage" WHERE "usage"."season_id" = "seasons"."id")`,
+    })
     .from(seasons)
     .where(eq(seasons.clubId, input.clubId))
     .orderBy(sql`${seasons.startsOn} DESC NULLS LAST`, asc(seasons.name));
-  return { success: true, data: rows };
+  return {
+    success: true,
+    data: rows.map(row => ({
+      ...row,
+      fixtureCount: role === "admin" ? row.fixtureCount : null,
+    })),
+  };
 }
 
 export function createSeason(
@@ -419,16 +446,24 @@ export async function listClubOpponents(
   db: ClubCalendarDb,
   userId: string,
   input: ClubScopeInput,
-): Promise<ActionResult<OpponentDto[]>> {
-  if (!(await isClubMember(db, userId, input.clubId))) {
-    return { success: false, error: { code: E.CLUB_NOT_FOUND } };
-  }
+): Promise<ActionResult<OpponentListItem[]>> {
+  const role = await clubRole(db, userId, input.clubId);
+  if (!role) return { success: false, error: { code: E.CLUB_NOT_FOUND } };
   const rows = await db
-    .select(opponentColumns)
+    .select({
+      ...opponentColumns,
+      fixtureCount: sql<number>`(SELECT count(*)::int FROM "fixtures" AS "usage" WHERE "usage"."opponent_id" = "opponents"."id")`,
+    })
     .from(opponents)
     .where(eq(opponents.clubId, input.clubId))
     .orderBy(asc(opponents.name));
-  return { success: true, data: rows };
+  return {
+    success: true,
+    data: rows.map(row => ({
+      ...row,
+      fixtureCount: role === "admin" ? row.fixtureCount : null,
+    })),
+  };
 }
 
 export function createOpponent(

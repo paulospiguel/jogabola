@@ -33,16 +33,18 @@ Contrato entre o backend da etapa 2 ([ADR 0004](../adr/0004-competitive-calendar
 | `attachTeamToClub` | `{ clubId, teamId }` | `{ clubId, teamId }` | `CLUB_NOT_FOUND`, `FORBIDDEN`, `TEAM_NOT_FOUND`, `TEAM_ALREADY_IN_CLUB` |
 | `listMyClubs` | nenhuma | `ClubSummary[]` | — |
 | `listAttachableTeams` | nenhuma | `{ id, name }[]` (equipas próprias sem clube) | — |
-| `listClubSeasons` | `{ clubId }` | `SeasonDto[]` (mais recente primeiro) | `CLUB_NOT_FOUND` |
+| `listClubSeasons` | `{ clubId }` | `(SeasonDto & { fixtureCount })[]` (mais recente primeiro) | `CLUB_NOT_FOUND` |
 | `createSeason` | `{ clubId, name, startsOn?, endsOn? }` | `SeasonDto` | `CLUB_NOT_FOUND`, `FORBIDDEN`, `SEASON_NAME_TAKEN` |
 | `updateSeason` | `{ seasonId, name, startsOn?, endsOn? }` | `SeasonDto` | `SEASON_NOT_FOUND`, `FORBIDDEN`, `SEASON_NAME_TAKEN` |
 | `deleteSeason` | `{ seasonId }` | `{ id }` | `SEASON_NOT_FOUND`, `FORBIDDEN`, `SEASON_IN_USE` |
-| `listClubOpponents` | `{ clubId }` | `OpponentDto[]` (por nome) | `CLUB_NOT_FOUND` |
+| `listClubOpponents` | `{ clubId }` | `(OpponentDto & { fixtureCount })[]` (por nome) | `CLUB_NOT_FOUND` |
 | `createOpponent` | `{ clubId, name }` | `OpponentDto` | `CLUB_NOT_FOUND`, `FORBIDDEN`, `OPPONENT_NAME_TAKEN` |
 | `updateOpponent` | `{ opponentId, name }` | `OpponentDto` | `OPPONENT_NOT_FOUND`, `FORBIDDEN`, `OPPONENT_NAME_TAKEN` |
 | `deleteOpponent` | `{ opponentId }` | `{ id }` | `OPPONENT_NOT_FOUND`, `FORBIDDEN`, `OPPONENT_IN_USE` |
 
 `createClubWithTeam` abre na mesma transação a época de futebol em curso (julho a junho, no fuso `Europe/Lisbon`), por exemplo `2026/27` de `2026-07-01` a `2027-06-30`, para o capitão poder marcar o primeiro jogo sem passar pelas definições.
+
+`fixtureCount` é o número de jogos que usam a época ou o adversário, só para administradores do clube (para membros é `null`, porque a pertença ao clube não dá acesso aos jogos de outras equipas). A UI usa-o para desativar "Remover"; o servidor mantém o `RESTRICT`.
 
 `updateSeason` substitui `startsOn`/`endsOn`: omitir um campo grava `null`.
 

@@ -125,7 +125,11 @@ export function ClubCalendar() {
     content = (
       <ArenaEmptyState
         icon={CalendarX2}
-        title={t(scope === "upcoming" ? "noUpcomingTitle" : "noPastTitle")}
+        title={
+          hasFilters
+            ? t("noFilteredTitle")
+            : t(scope === "upcoming" ? "noUpcomingTitle" : "noPastTitle")
+        }
         description={hasFilters ? t("noFilteredDescription") : undefined}
         action={
           hasFilters ? (
@@ -153,7 +157,13 @@ export function ClubCalendar() {
   }
 
   return (
-    <div className="grid gap-5 md:grid-cols-[minmax(0,1fr)_300px] md:items-start lg:grid-cols-[minmax(0,1fr)_340px]">
+    <div
+      className={cn(
+        "grid gap-5 md:grid-cols-[minmax(0,1fr)_300px] md:items-start lg:grid-cols-[minmax(0,1fr)_340px]",
+        // Keep the last rows clear of the mobile floating button.
+        canCreateFixtures && "pb-24 md:pb-0",
+      )}
+    >
       <section aria-labelledby="club-calendar-heading" className="min-w-0">
         <h2 id="club-calendar-heading" className="sr-only">
           {t("heading")}

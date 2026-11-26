@@ -34,7 +34,6 @@ import {
   ClubSkeletonRows,
 } from "./club-ui";
 import { ConfirmSheet } from "./confirm-sheet";
-import { LinkedCallupBadge } from "./fixture-list";
 import { LinkCallupSheet } from "./link-callup-sheet";
 
 function DetailItem({
@@ -109,7 +108,6 @@ function CallupPanel({ fixture }: { fixture: FixtureDto }) {
           <Link2 size={15} strokeWidth={2} aria-hidden="true" />
           {t("callupTitle")}
         </h3>
-        {linkedId !== null && <LinkedCallupBadge />}
       </div>
 
       {linkedId === null ? (

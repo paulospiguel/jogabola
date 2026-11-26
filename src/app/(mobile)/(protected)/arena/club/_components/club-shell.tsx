@@ -35,12 +35,16 @@ export function ClubShell({ children }: { children: React.ReactNode }) {
               <Flag size={20} strokeWidth={1.7} aria-hidden="true" />
             </span>
             <div className="min-w-0">
-              <div className="jb-kicker">{t("kicker")}</div>
+              {/* The role badge sits on the kicker line so it never takes
+                  width from the club name. */}
+              <div className="flex items-center gap-2">
+                <span className="jb-kicker">{t("kicker")}</span>
+                <span className="shrink-0 rounded-[4px] border border-arena-info/35 bg-arena-info/10 px-1.5 py-px text-[9px] font-bold uppercase leading-[14px] tracking-[0.5px] text-arena-info">
+                  {t(`roles.${club.role}`)}
+                </span>
+              </div>
               <h1 className="jb-title line-clamp-2 break-words">{club.name}</h1>
             </div>
-            <span className="shrink-0 self-start rounded-[4px] border border-arena-info/35 bg-arena-info/10 px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-[0.5px] text-arena-info">
-              {t(`roles.${club.role}`)}
-            </span>
           </div>
           {canCreateFixtures && (
             <Link

@@ -2756,7 +2756,9 @@
     "VALIDATION_FIXTURE_DATE_REQUIRED": "Choose the fixture date.",
     "VALIDATION_FIXTURE_TIME_REQUIRED": "Choose the kick-off time.",
     "VALIDATION_FIXTURE_TIME_INVALID": "The time is invalid.",
-    "VALIDATION_FIXTURE_TIME_NONEXISTENT": "This time does not exist on that day because of the clock change. Choose another."
+    "VALIDATION_FIXTURE_TIME_NONEXISTENT": "This time does not exist on that day because of the clock change. Choose another.",
+    "VALIDATION_COMPETITION_NAME_TOO_SHORT": "Enter the competition name (at least 2 characters).",
+    "VALIDATION_COMPETITION_NAME_TOO_LONG": "The competition name cannot exceed 80 characters."
   },
   "waitlist": {
     "description": "We are currently in beta testing. Sign up to be among the first to enter when we open.",
@@ -3698,8 +3700,9 @@
       "emptyReadOnly": "Fixtures show up here once the captain schedules them.",
       "noUpcomingTitle": "No upcoming fixtures",
       "noPastTitle": "No past fixtures yet",
-      "noFilteredDescription": "No fixture matches the selected filters.",
-      "clearFilters": "Clear filters"
+      "noFilteredDescription": "Try another season or team, or clear the filters.",
+      "clearFilters": "Clear filters",
+      "noFilteredTitle": "No fixtures match these filters"
     },
     "fixture": {
       "linkedBadge": "Callup",
@@ -3795,7 +3798,9 @@
       "delete": "Remove {name}",
       "deleteConfirm": "Remove",
       "deleting": "Removing…",
-      "cancel": "Cancel"
+      "cancel": "Cancel",
+      "usage": "{count, plural, =0 {No fixtures} one {# fixture} other {# fixtures}}",
+      "deleteLocked": "{name} is used by fixtures and cannot be removed"
     },
     "seasons": {
       "title": "Seasons",

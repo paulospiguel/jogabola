@@ -368,6 +368,8 @@ describe.skipIf(!enabled)("club calendar authorization (PostgreSQL)", () => {
         name: "2026/27",
         startsOn: "2026-07-01",
         endsOn: "2027-06-30",
+        // Usage counts are for club admins only.
+        fixtureCount: null,
       },
     ]);
   });
@@ -594,6 +596,30 @@ describe.skipIf(!enabled)("club calendar authorization (PostgreSQL)", () => {
         name: "Pré-época",
       }),
     );
+    // Admins see how many fixtures use each row; members do not.
+    const [{ count: seasonUsage }] = await client<{ count: number }[]>`
+      SELECT count(*)::int FROM fixtures WHERE season_id = ${ids.seasonA}
+    `;
+    expect(seasonUsage).toBeGreaterThan(0);
+    const adminSeasons = unwrap(
+      await calendar.listClubSeasons(db, U.capA, { clubId: ids.clubA }),
+    );
+    expect(adminSeasons).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({ id: ids.seasonA, fixtureCount: seasonUsage }),
+        expect.objectContaining({ id: spare.id, fixtureCount: 0 }),
+      ]),
+    );
+    const adminOpponents = unwrap(
+      await calendar.listClubOpponents(db, U.adminA2, { clubId: ids.clubA }),
+    );
+    expect(
+      adminOpponents.find(o => o.id === ids.opponentA)?.fixtureCount,
+    ).toBeGreaterThan(0);
+    const memberOpponents = unwrap(
+      await calendar.listClubOpponents(db, U.athleteA, { clubId: ids.clubA }),
+    );
+    expect(memberOpponents.every(o => o.fixtureCount === null)).toBe(true);
     unwrap(await calendar.deleteSeason(db, U.capA, { seasonId: spare.id }));
   });
 

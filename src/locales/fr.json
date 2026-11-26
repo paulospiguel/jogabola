@@ -2756,7 +2756,9 @@
     "VALIDATION_FIXTURE_DATE_REQUIRED": "Choisissez la date du match.",
     "VALIDATION_FIXTURE_TIME_REQUIRED": "Choisissez l’heure du coup d’envoi.",
     "VALIDATION_FIXTURE_TIME_INVALID": "L’heure n’est pas valide.",
-    "VALIDATION_FIXTURE_TIME_NONEXISTENT": "Cette heure n’existe pas ce jour-là à cause du changement d’heure. Choisissez-en une autre."
+    "VALIDATION_FIXTURE_TIME_NONEXISTENT": "Cette heure n’existe pas ce jour-là à cause du changement d’heure. Choisissez-en une autre.",
+    "VALIDATION_COMPETITION_NAME_TOO_SHORT": "Saisissez le nom de la compétition (au moins 2 caractères).",
+    "VALIDATION_COMPETITION_NAME_TOO_LONG": "Le nom de la compétition ne peut pas dépasser 80 caractères."
   },
   "waitlist": {
     "description": "Nous sommes actuellement en phase de test bêta. Inscrivez-vous pour être parmi les premiers à entrer lorsque nous ouvrirons.",
@@ -3698,8 +3700,9 @@
       "emptyReadOnly": "Les matchs apparaîtront ici dès que le capitaine les programmera.",
       "noUpcomingTitle": "Aucun match programmé",
       "noPastTitle": "Pas encore de matchs passés",
-      "noFilteredDescription": "Aucun match ne correspond aux filtres choisis.",
-      "clearFilters": "Effacer les filtres"
+      "noFilteredDescription": "Essayez une autre saison ou équipe, ou effacez les filtres.",
+      "clearFilters": "Effacer les filtres",
+      "noFilteredTitle": "Aucun match avec ces filtres"
     },
     "fixture": {
       "linkedBadge": "Convocation",
@@ -3711,7 +3714,7 @@
       "nextFixture": "Prochain match",
       "vs": "vs",
       "upcoming": "À venir",
-      "linked": "Convoqués",
+      "linked": "Avec convocation",
       "total": "Total",
       "timeZone": "Heures dans le fuseau {zone}.",
       "linkHint": "Associez une convocation pour gérer les présences du match."
@@ -3795,7 +3798,9 @@
       "delete": "Supprimer {name}",
       "deleteConfirm": "Supprimer",
       "deleting": "Suppression…",
-      "cancel": "Annuler"
+      "cancel": "Annuler",
+      "usage": "{count, plural, =0 {Aucun match} one {# match} other {# matchs}}",
+      "deleteLocked": "{name} est utilisé par des matchs et ne peut pas être supprimé"
     },
     "seasons": {
       "title": "Saisons",
