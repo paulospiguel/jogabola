@@ -174,10 +174,7 @@ export function EventDetail({
 
   return (
     <motion.div
-      className={cn(
-        "flex flex-col relative",
-        "min-h-screen pb-20",
-      )}
+      className={cn("flex flex-col relative", "min-h-screen pb-20")}
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.22 }}
@@ -317,8 +314,6 @@ export function EventDetail({
             t={t}
           />
         </TabsContent>
-
-
       </Tabs>
 
       {activeTab !== "chat" && (
@@ -377,7 +372,9 @@ export function EventDetail({
                   <MessageSquare className="w-5 h-5 text-[#00f0ff]" />
                 </div>
                 <div className="truncate">
-                  <h2 className="text-[15px] font-bold text-arena-text truncate">{event.title}</h2>
+                  <h2 className="text-[15px] font-bold text-arena-text truncate">
+                    {event.title}
+                  </h2>
                   <p className="text-[11px] text-arena-text-sec font-medium uppercase tracking-wider">
                     {t("tabs.chat")}
                   </p>

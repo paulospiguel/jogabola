@@ -13,10 +13,28 @@ const globalForDb = globalThis as {
   postgresClient?: ReturnType<typeof postgres>;
 };
 
+function getDatabaseSsl(url: string): false | "require" {
+  try {
+    const hostname = new URL(url).hostname.toLowerCase();
+    const localHosts = new Set([
+      "localhost",
+      "127.0.0.1",
+      "::1",
+      "[::1]",
+      "postgres",
+    ]);
+    return process.env.NODE_ENV !== "production" && localHosts.has(hostname)
+      ? false
+      : "require";
+  } catch {
+    return "require";
+  }
+}
+
 const client =
   globalForDb.postgresClient ??
   postgres(databaseUrl, {
-    ssl: "require",
+    ssl: getDatabaseSsl(databaseUrl),
     max: 1,
     idle_timeout: 20,
   });

@@ -89,8 +89,12 @@ bun.lockb
 !.claude/skills/react-doctor
 !.claude/skills/builder-business
 !.claude/skills/integration-nextjs-app-router
-.codex
+!.claude/agents/
+!.claude/agents/**
+.codex/*
 !.codex/napkin.md
+!.codex/agents/
+!.codex/agents/**
 .env.local
 
 /plans

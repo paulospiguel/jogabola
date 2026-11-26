@@ -1,0 +1,48 @@
+name: Local stack
+on:
+  pull_request:
+    paths:
+      - 'docker-compose.yml'
+      - 'Dockerfile*'
+      - '.dockerignore'
+      - '.github/workflows/local-stack.yml'
+      - 'scripts/**'
+      - 'src/db/**'
+      - 'src/lib/auth*'
+      - 'src/lib/auth/**'
+      - 'src/lib/email*'
+      - 'src/actions/auth-otp.actions.ts'
+      - 'package.json'
+      - 'pnpm-lock.yaml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  smoke:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Start development stack
+        run: docker compose up --build -d
+      - name: Wait for the auth API
+        run: curl --fail --silent --retry 40 --retry-delay 3 --retry-all-errors --max-time 60 http://localhost:3000/api/auth/get-session
+      - name: Sign in with a local email
+        run: node scripts/smoke-local.mjs
+      - name: Confirm data survives container recreation
+        run: |
+          docker compose down
+          docker compose up -d --wait postgres
+          count=$(docker compose exec -T postgres psql -U jogabola -d jogabola -Atc 'SELECT count(*) FROM "user"')
+          test "$count" -eq 1
+      - name: Inspect service status on failure
+        if: failure()
+        run: docker compose ps --all
+      - name: Remove the ephemeral CI stack
+        if: always()
+        run: docker compose down --volumes
