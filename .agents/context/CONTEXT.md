@@ -17,9 +17,11 @@ Os conceitos seguintes orientam o produto. Os detalhes de schema e autorização
 - **Execução de agente** (`Agent Run`): registo atribuível de uma tarefa, incluindo estado, acções, custo e resultado, para permitir auditoria e controlo de repetição.
 
 ### Organização & Logística
-- **Capitão / Organizador**: Utilizador responsável pela gestão de uma Equipa e criação de Convocatórias.
+- **Dono** (`teams.owner_id`): Utilizador único que detém a Equipa e gere tudo, incluindo staff, privilégios, transferência, eliminação e faturação. Não precisa de ser Atleta: entra no Plantel só se quiser. Substitui o antigo "Capitão / Organizador". Ver [ADR 0006](docs/adr/0006-team-staff-and-roster.md).
+- **Staff** (`team_staff`): Membro com cargo (`coach`, `director`, `finance`, `secretary`, `other`) e privilégios atribuídos pelo Dono. Vê tudo da Equipa e só altera o que os seus privilégios permitem. É promovido a partir do Plantel e pode ser Atleta ao mesmo tempo.
+- **Transferência de equipa** (`TeamOwnershipTransfer`): Pedido do Dono para passar a Equipa a um membro ou a um email. O destinatário aceita por link com token num prazo de 7 dias. O Dono antigo perde os privilégios e só fica no Plantel se já era Atleta.
 - **Equipa** (`Team`): Grupo estável de jogadores (ex: "Amigos do Bairro").
-- **Plantel** (`Roster`): Conjunto de Atletas associados a uma Equipa.
+- **Plantel** (`Roster`): Conjunto de Atletas associados a uma Equipa (`team_members`). Só atletas; a gestão vive em `teams.owner_id` e `team_staff`.
 - **Atleta**: Um utilizador ou convidado que faz parte do Plantel de uma Equipa.
 - **Convocatória** (`MatchSession`): Um evento desportivo (Jogo, Treino) com data, local e limite de vagas.
 - **Confirmação** (`Attendance` / `Reservation`): Ato de um Atleta garantir a sua vaga numa Convocatória.
