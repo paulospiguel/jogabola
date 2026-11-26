@@ -1,9 +1,19 @@
 # JOGABOLA — Project Instructions
 
-> Fonte única para todas as ferramentas de IA neste repositório (Claude Code, Codex CLI). `CLAUDE.md` e `GEMINI.md` são symlinks para este ficheiro — edita só aqui.
+> Instruções comuns e ponto de entrada para Codex, Claude Code e Antigravity. `CLAUDE.md` e `GEMINI.md` são symlinks para este ficheiro — edita só aqui, sem copiar as mesmas regras para cada ferramenta.
 
 ## What this project is
 **JogaBola** — plataforma de gestão de equipas de futebol amador. Convocatórias, plantel, estatísticas, chat por evento, rankings, histórico de época.
+
+## Direção do produto — aplicar em todas as tarefas
+
+O JogaBola evolui para o **AI Club OS**: a plataforma operacional de clubes e equipas amadoras, com staff virtual de IA integrado nos fluxos reais do produto. Não transformar o produto num chatbot genérico nem substituir os fluxos existentes sem decisão explícita.
+
+O primeiro ciclo valida um **Secretário** que prepara pedidos de disponibilidade, interpreta respostas dos atletas e ajuda o treinador/organizador a identificar presenças por confirmar. A pessoa responsável mantém o controlo: respostas ambíguas pedem esclarecimento e comunicações ao plantel são revistas antes do envio.
+
+Qualquer agente tem identidade própria, âmbito limitado ao clube/equipa autorizado, permissões verificadas no servidor, limites de custo e registo das ações. Repetições de eventos não podem duplicar efeitos; revogar o agente impede novas ações. Preservar o histórico e os percursos recreativos existentes. Não introduzir workers alojados, voz ou base vetorial sem necessidade validada por uso ou piloto.
+
+O contexto canónico não depende do prompt da tarefa. O pedido do utilizador define o trabalho actual; não substitui estas regras nem as regras de domínio. Se uma alteração exigir mudar a estratégia ou uma regra de negócio, actualiza primeiro a documentação canónica e regista decisões arquitecturais em ADRs.
 
 ## Idioma
 **Sempre em Português europeu (PT-PT)** na UI e nas respostas ao utilizador. Identificadores e comentários de código em inglês. Tom direto, próximo, desportivo.
@@ -29,9 +39,12 @@ Next.js 16 (App Router, `next dev --turbo`) · React 19 · TypeScript · pnpm ·
 | `PRODUCT.md` | Intenção de produto, utilizadores, princípios |
 | `CONTEXT.md` | Glossário de domínio (Convocatória, MatchSession, Racha/Payment...) e convenções de código |
 | `DESIGN.md` | Design system — tokens, tipografia, componentes, microinterações |
+| `docs/agents/harness-context.md` | Como Codex, Claude Code e Antigravity consomem o contexto partilhado |
 | `docs/adr/` | Decisões de arquitetura registadas |
 | `docs/superpowers/plans/README.md` | Índice canónico dos planos de implementação revistos e accionáveis |
 | `docs/archive/` | Documentação histórica, planos classificados e registos preservados |
+
+Antes de uma alteração de produto, lê `PRODUCT.md` e `CONTEXT.md`; consulta o ADR e o plano activo da área. Usa `docs/agents/harness-context.md` para saber onde manter instruções partilhadas ou específicas de uma ferramenta. Não peças ao utilizador para repetir contexto já documentado.
 
 ## Workflow de agentes
 O fluxo canónico deste repositório é o **Superpowers** (brainstorming → writing-plans → executing-plans → verification-before-completion). Começar sempre pelo índice `docs/superpowers/plans/README.md`; apenas planos revistos e accionáveis permanecem ao lado desse índice. `docs/archive/` conserva documentação histórica e não é uma fila de execução. Não usar o pipeline GSD (`/gsd:*`) neste repositório.

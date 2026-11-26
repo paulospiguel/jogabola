@@ -71,6 +71,8 @@ bun.lockb
 .antigravitycli
 .agents/*
 !.agents/skills/
+!.agents/rules/
+!.agents/rules/**
 .agents/skills/*
 !.agents/skills/dev-coder/
 !.agents/skills/dev-coder/**

@@ -4,6 +4,18 @@ Este documento define a linguagem ubíqua e as regras de negócio da plataforma 
 
 ## Glossário
 
+### AI Club OS — conceitos em introdução
+
+Os conceitos seguintes orientam o produto. Os detalhes de schema e autorização só ficam fechados pelos ADRs previstos no plano AI Club OS; não presumir que estas entidades ou papéis já estão implementados.
+
+- **Clube** (`Club`): âmbito organizacional que agrega equipas e dados privados. O isolamento entre clubes é obrigatório em todas as leituras e mutações no servidor.
+- **Época** (`Season`): período desportivo usado para organizar a actividade de um clube ou equipa.
+- **Jogo competitivo** (`Fixture`): jogo associado a uma competição, época e adversário. Deve coexistir com as convocatórias recreativas actuais; a associação ao modelo existente é incremental.
+- **Staff virtual** (`Virtual Staff`): capacidade de IA atribuída a um clube/equipa, com identidade, âmbito, permissões, orçamento e estado revogável próprios.
+- **Secretário** (`Secretary`): primeiro staff virtual em validação. Prepara pedidos de disponibilidade, interpreta respostas e destaca pendências; não decide por conta própria quando há ambiguidade.
+- **Proposta de acção** (`Action Proposal`): resultado tipado que o agente apresenta à aplicação. A aplicação valida identidade, autorização e âmbito antes de executar qualquer mutação.
+- **Execução de agente** (`Agent Run`): registo atribuível de uma tarefa, incluindo estado, acções, custo e resultado, para permitir auditoria e controlo de repetição.
+
 ### Organização & Logística
 - **Capitão / Organizador**: Utilizador responsável pela gestão de uma Equipa e criação de Convocatórias.
 - **Equipa** (`Team`): Grupo estável de jogadores (ex: "Amigos do Bairro").
@@ -72,3 +84,14 @@ feature/
 2. **Prioridade de Vagas**: Membros do Plantel têm prioridade sobre Convidados até X horas antes do evento (configurável).
 3. **Validação de Pagamento**: O Capitão deve validar manualmente (ou via IA) os Comprovativos de pagamento para fechar o Racha de uma Convocatória.
 4. **Identidade Persistente**: Um Atleta que participe como convidado em vários eventos é unificado pelo seu email. Ao introduzir o email num novo evento, o sistema recupera o seu perfil (fantasma ou real) via validação de PIN (OTP).
+
+## Invariantes para funcionalidades de IA e multi-clube
+
+1. **Âmbito no servidor**: cada consulta ou mutação valida sessão, papel e acesso ao clube/equipa no servidor; um `clubId` recebido do cliente não é prova de autorização.
+2. **Agente separado do utilizador**: uma acção executada por staff virtual regista a identidade do agente e o utilizador que a pediu ou aprovou. Nunca falsificar autoria humana.
+3. **Controlo humano**: respostas ambíguas não alteram presenças. Uma comunicação dirigida ao plantel requer revisão do treinador/organizador autorizado antes do envio.
+4. **Repetição segura**: entrega duplicada do mesmo evento ou retry não pode duplicar mensagens, presenças ou outros efeitos externos.
+5. **Custo e revogação**: respeitar orçamento/quota do agente; sem saldo, não executar inferência. Um agente revogado não pode iniciar novas acções.
+6. **Compatibilidade histórica**: novas entidades de clube, época e competição não podem apagar nem reinterpretar silenciosamente o histórico recreativo existente.
+
+Estas invariantes descrevem a direcção aprovada do produto. Os mecanismos técnicos específicos — incluindo outbox, retries, estados e desenho das permissões — têm de ser detalhados e aprovados nos ADRs antes da implementação da etapa correspondente.
