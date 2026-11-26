@@ -139,6 +139,22 @@ async function assertPreserved(sql, before) {
   }
 }
 
+async function assertRowsKept(sql, before) {
+  // Historical rows must survive the Stage 2 checks, which add rows of their own.
+  for (const [table, rows] of Object.entries(before)) {
+    const after = await sql`SELECT to_jsonb(t) AS row FROM ${sql(table)} AS t`;
+    const byId = new Map(after.map(({ row }) => [row.id, row]));
+    for (const { row } of rows) {
+      const current = byId.get(row.id);
+      assert.ok(current, `${table} ${row.id}`);
+      const preserved = Object.fromEntries(
+        Object.keys(row).map(key => [key, current[key]]),
+      );
+      assert.deepEqual(preserved, row, table);
+    }
+  }
+}
+
 async function readRows(sql, tables) {
   const rows = await Promise.all(
     tables.map(async table => [
@@ -165,6 +181,196 @@ async function assertRejectedMigration(database, error) {
   const [{ journal }] =
     await sql`SELECT to_regnamespace('jogabola_migrations') AS journal`;
   assert.equal(journal, null);
+}
+
+async function assertClubCalendarConstraints(sql) {
+  // Stage 2 (ADR 0004 "Verificação"), exercised directly in PostgreSQL.
+  const [{ count: attachedTeams }] =
+    await sql`SELECT count(*)::int FROM teams WHERE club_id IS NOT NULL`;
+  assert.equal(attachedTeams, 0, "existing teams must keep club_id NULL");
+
+  await sql`
+    INSERT INTO "user" (id, name, email) VALUES
+      ('club-a-captain', 'Capitão A', 'club-a-captain@example.test'),
+      ('club-a-second', 'Capitão A2', 'club-a-second@example.test'),
+      ('club-b-captain', 'Capitão B', 'club-b-captain@example.test')
+  `;
+  const [clubA] =
+    await sql`INSERT INTO clubs (name, created_by) VALUES ('Clube A', 'club-a-captain') RETURNING id`;
+  const [clubB] =
+    await sql`INSERT INTO clubs (name, created_by) VALUES ('Clube B', 'club-b-captain') RETURNING id`;
+  await sql`
+    INSERT INTO club_members (club_id, user_id, role) VALUES
+      (${clubA.id}, 'club-a-captain', 'admin'),
+      (${clubA.id}, 'club-a-second', 'member'),
+      (${clubB.id}, 'club-b-captain', 'admin')
+  `;
+  await assert.rejects(
+    sql`INSERT INTO club_members (club_id, user_id, role) VALUES (${clubA.id}, 'club-a-captain', 'member')`,
+    { code: "23505" },
+  );
+  await assert.rejects(
+    sql`INSERT INTO club_members (club_id, user_id, role) VALUES (${clubB.id}, 'club-a-captain', 'owner')`,
+    { code: "23514" },
+  );
+
+  const insertTeam = (slug, ownerId, clubId) => sql`
+    INSERT INTO teams (name, slug, owner_id, club_id)
+    VALUES (${slug}, ${slug}, ${ownerId}, ${clubId}) RETURNING id
+  `;
+  const [teamA] = await insertTeam("club-a-team", "club-a-captain", clubA.id);
+  const [teamA2] = await insertTeam("club-a-team-2", "club-a-second", clubA.id);
+  const [teamB] = await insertTeam("club-b-team", "club-b-captain", clubB.id);
+  const [freeTeam] = await insertTeam("free-team", "club-a-captain", null);
+  const insertSession = teamId => sql`
+    INSERT INTO match_sessions (team_id, title, location, starts_at)
+    VALUES (${teamId}, 'Convocatória', 'Lisboa', '2026-12-05 10:00:00') RETURNING id
+  `;
+  const [sessionA] = await insertSession(teamA.id);
+  const [sessionA2] = await insertSession(teamA.id);
+  const [sessionB] = await insertSession(teamB.id);
+
+  const [seasonA] =
+    await sql`INSERT INTO seasons (club_id, name) VALUES (${clubA.id}, '2026/27') RETURNING id`;
+  const [seasonB] =
+    await sql`INSERT INTO seasons (club_id, name) VALUES (${clubB.id}, '2026/27') RETURNING id`;
+  const [opponentA] =
+    await sql`INSERT INTO opponents (club_id, name) VALUES (${clubA.id}, 'Adversário A') RETURNING id`;
+  const [opponentB] =
+    await sql`INSERT INTO opponents (club_id, name) VALUES (${clubB.id}, 'Adversário B') RETURNING id`;
+
+  const insertFixture = (
+    tx,
+    { clubId, teamId, seasonId = seasonA.id, opponentId = opponentA.id },
+  ) => tx`
+    INSERT INTO fixtures (club_id, team_id, season_id, opponent_id, competition_name, starts_at, created_by)
+    VALUES (${clubId}, ${teamId}, ${seasonId}, ${opponentId}, 'Distrital', '2026-12-06T15:00:00+00:00', 'club-a-captain')
+    RETURNING id, team_id
+  `;
+  const link = (tx, fixture, matchSessionId) => tx`
+    INSERT INTO fixture_match_sessions (fixture_id, team_id, match_session_id)
+    VALUES (${fixture.id}, ${fixture.team_id}, ${matchSessionId})
+  `;
+
+  // Cross-club season, opponent and team, and a team outside any club.
+  for (const values of [
+    { clubId: clubA.id, teamId: teamA.id, seasonId: seasonB.id },
+    { clubId: clubA.id, teamId: teamA.id, opponentId: opponentB.id },
+    { clubId: clubA.id, teamId: teamB.id },
+    { clubId: clubA.id, teamId: freeTeam.id },
+  ]) {
+    await assert.rejects(insertFixture(sql, values), { code: "23503" });
+  }
+
+  const [standalone] = await insertFixture(sql, {
+    clubId: clubA.id,
+    teamId: teamA.id,
+  });
+  const [linked] = await insertFixture(sql, {
+    clubId: clubA.id,
+    teamId: teamA.id,
+  });
+  await link(sql, linked, sessionA.id);
+  const [otherTeamFixture] = await insertFixture(sql, {
+    clubId: clubA.id,
+    teamId: teamA2.id,
+  });
+  // Another team's match session, a second link to the same match session
+  // and a second link for the same fixture are all rejected.
+  await assert.rejects(link(sql, standalone, sessionB.id), { code: "23503" });
+  await assert.rejects(
+    sql`INSERT INTO fixture_match_sessions (fixture_id, team_id, match_session_id)
+      VALUES (${standalone.id}, ${teamB.id}, ${sessionB.id})`,
+    { code: "23503" },
+  );
+  await assert.rejects(link(sql, standalone, sessionA.id), { code: "23505" });
+  await assert.rejects(link(sql, linked, sessionA2.id), { code: "23505" });
+
+  // A refused link during atomic creation leaves no residual fixture.
+  const [{ count: fixturesBefore }] =
+    await sql`SELECT count(*)::int FROM fixtures`;
+  await assert.rejects(
+    sql.begin(async tx => {
+      const [created] = await insertFixture(tx, {
+        clubId: clubA.id,
+        teamId: teamA.id,
+      });
+      await link(tx, created, sessionB.id);
+    }),
+    { code: "23503" },
+  );
+  const [{ count: fixturesAfter }] =
+    await sql`SELECT count(*)::int FROM fixtures`;
+  assert.equal(fixturesAfter, fixturesBefore);
+
+  // A team with fixtures stays bound to its club; a free team can move.
+  await assert.rejects(
+    sql`UPDATE teams SET club_id = NULL WHERE id = ${teamA.id}`,
+    { code: "23503", constraint_name: "fixtures_team_club_fk" },
+  );
+  await assert.rejects(
+    sql`UPDATE teams SET club_id = ${clubB.id} WHERE id = ${teamA.id}`,
+    { code: "23503", constraint_name: "fixtures_team_club_fk" },
+  );
+  await sql`UPDATE teams SET club_id = ${clubA.id} WHERE id = ${freeTeam.id}`;
+  await sql`UPDATE teams SET club_id = NULL WHERE id = ${freeTeam.id}`;
+
+  // Seasons and opponents in use cannot be deleted.
+  // PostgreSQL reports RESTRICT violations with SQLSTATE 23503.
+  await assert.rejects(sql`DELETE FROM seasons WHERE id = ${seasonA.id}`, {
+    code: "23503",
+    constraint_name: "fixtures_season_club_fk",
+  });
+  await assert.rejects(sql`DELETE FROM opponents WHERE id = ${opponentA.id}`, {
+    code: "23503",
+    constraint_name: "fixtures_opponent_club_fk",
+  });
+  await sql`DELETE FROM seasons WHERE id = ${seasonB.id}`;
+
+  // Deleting the match session removes the link and keeps the fixture.
+  await sql`DELETE FROM match_sessions WHERE id = ${sessionA.id}`;
+  const [{ count: remainingLinks }] =
+    await sql`SELECT count(*)::int FROM fixture_match_sessions WHERE fixture_id = ${linked.id}`;
+  assert.equal(remainingLinks, 0);
+  const [{ count: keptFixture }] =
+    await sql`SELECT count(*)::int FROM fixtures WHERE id = ${linked.id}`;
+  assert.equal(keptFixture, 1);
+  await link(sql, linked, sessionA2.id);
+
+  // Deleting the captain's account removes their teams and fixtures and
+  // keeps the club, its seasons, opponents and other teams' fixtures.
+  await sql`DELETE FROM "user" WHERE id = 'club-a-captain'`;
+  const [{ count: captainTeams }] =
+    await sql`SELECT count(*)::int FROM teams WHERE id IN (${teamA.id}, ${freeTeam.id})`;
+  assert.equal(captainTeams, 0);
+  const [{ count: captainFixtures }] =
+    await sql`SELECT count(*)::int FROM fixtures WHERE team_id = ${teamA.id}`;
+  assert.equal(captainFixtures, 0);
+  const [{ count: captainLinks }] =
+    await sql`SELECT count(*)::int FROM fixture_match_sessions WHERE team_id = ${teamA.id}`;
+  assert.equal(captainLinks, 0);
+  const [kept] = await sql`
+    SELECT
+      (SELECT count(*)::int FROM clubs WHERE id = ${clubA.id}) AS clubs,
+      (SELECT count(*)::int FROM seasons WHERE id = ${seasonA.id}) AS seasons,
+      (SELECT count(*)::int FROM opponents WHERE id = ${opponentA.id}) AS opponents,
+      (SELECT count(*)::int FROM fixtures WHERE id = ${otherTeamFixture.id}) AS fixtures,
+      (SELECT count(*)::int FROM club_members WHERE club_id = ${clubA.id}) AS members,
+      (SELECT created_by FROM clubs WHERE id = ${clubA.id}) AS club_created_by,
+      (SELECT created_by FROM fixtures WHERE id = ${otherTeamFixture.id}) AS fixture_created_by
+  `;
+  assert.deepEqual(
+    { ...kept },
+    {
+      clubs: 1,
+      seasons: 1,
+      opponents: 1,
+      fixtures: 1,
+      members: 1,
+      club_created_by: null,
+      fixture_created_by: null,
+    },
+  );
 }
 
 const trackedTables = [
@@ -199,6 +405,8 @@ try {
   );
   await seedArenaData(fresh.sql);
   console.info("Fresh database, simultaneous application and journal: passed.");
+  await assertClubCalendarConstraints(fresh.sql);
+  console.info("Club calendar constraints on a fresh database: passed.");
 
   const pushed = await makeDatabase("pushed");
   // Model an unjournaled Stage 0 push, without adopting subsequent schema additions.
@@ -275,6 +483,9 @@ try {
   console.info(
     "Historical Arena upgrade, repeat, data, constraints and legacy journal: passed.",
   );
+  await assertClubCalendarConstraints(legacy.sql);
+  await assertRowsKept(legacy.sql, legacyRows);
+  console.info("Club calendar constraints after the Arena upgrade: passed.");
 
   const conflict = await makeDatabase("conflict");
   await loadLegacyArena(conflict.sql);

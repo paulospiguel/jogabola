@@ -8,6 +8,13 @@
       "when": 1795636879025,
       "tag": "0000_arena_baseline",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1795702762999,
+      "tag": "0001_club_calendar",
+      "breakpoints": true
     }
   ]
 }

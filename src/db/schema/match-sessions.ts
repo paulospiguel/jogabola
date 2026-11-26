@@ -5,37 +5,48 @@ import {
   serial,
   text,
   timestamp,
+  unique,
   uniqueIndex,
 } from "drizzle-orm/pg-core";
 import { teams } from "./teams";
 import { user } from "./users";
 
-export const matchSessions = pgTable("match_sessions", {
-  id: serial("id").primaryKey(),
-  teamId: integer("team_id")
-    .notNull()
-    .references(() => teams.id, { onDelete: "cascade" }),
-  title: text("title").notNull(),
-  slug: text("slug").unique(),
-  location: text("location").notNull(),
-  startsAt: timestamp("starts_at").notNull(),
-  endsAt: timestamp("ends_at"),
-  capacity: integer("capacity"),
-  status: text("status").notNull().default("scheduled"), // "scheduled" | "confirmed" | "cancelled"
-  recurrence: text("recurrence").notNull().default("once"), // "once", "weekly", "monthly"
-  recurrenceGroupId: text("recurrence_group_id"), // links rows generated from the same recurring series
-  priceCents: integer("price_cents").default(0),
-  currency: text("currency").notNull().default("EUR"),
-  paymentRequired: boolean("payment_required").notNull().default(false),
-  paymentDeadlineHours: integer("payment_deadline_hours"),
-  rosterOnly: boolean("roster_only").notNull().default(false),
-  rosterPriorityHours: integer("roster_priority_hours").default(0),
-  transferRequiresProof: boolean("transfer_requires_proof")
-    .notNull()
-    .default(true),
-  createdAt: timestamp("created_at").defaultNow(),
-  updatedAt: timestamp("updated_at").defaultNow(),
-});
+export const matchSessions = pgTable(
+  "match_sessions",
+  {
+    id: serial("id").primaryKey(),
+    teamId: integer("team_id")
+      .notNull()
+      .references(() => teams.id, { onDelete: "cascade" }),
+    title: text("title").notNull(),
+    slug: text("slug").unique(),
+    location: text("location").notNull(),
+    startsAt: timestamp("starts_at").notNull(),
+    endsAt: timestamp("ends_at"),
+    capacity: integer("capacity"),
+    status: text("status").notNull().default("scheduled"), // "scheduled" | "confirmed" | "cancelled"
+    recurrence: text("recurrence").notNull().default("once"), // "once", "weekly", "monthly"
+    recurrenceGroupId: text("recurrence_group_id"), // links rows generated from the same recurring series
+    priceCents: integer("price_cents").default(0),
+    currency: text("currency").notNull().default("EUR"),
+    paymentRequired: boolean("payment_required").notNull().default(false),
+    paymentDeadlineHours: integer("payment_deadline_hours"),
+    rosterOnly: boolean("roster_only").notNull().default(false),
+    rosterPriorityHours: integer("roster_priority_hours").default(0),
+    transferRequiresProof: boolean("transfer_requires_proof")
+      .notNull()
+      .default(true),
+    createdAt: timestamp("created_at").defaultNow(),
+    updatedAt: timestamp("updated_at").defaultNow(),
+  },
+  table => ({
+    // Target of the composite FK that keeps fixture links within one team.
+    idTeamUnique: unique("match_sessions_id_team_unique").on(
+      table.id,
+      table.teamId,
+    ),
+  }),
+);
 
 export const matchReservations = pgTable(
   "match_reservations",

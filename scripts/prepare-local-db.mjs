@@ -37,6 +37,7 @@ const sql = postgres(databaseUrl, {
 
 const requiredColumns = [
   "account_transfer_requests.user_id",
+  "club_members.role",
   "event_messages.deleted_at",
   "event_messages.censored_at",
   "guest_event_otp.attempts",
@@ -46,6 +47,7 @@ const requiredColumns = [
   "passkey.aaguid",
   "player_ratings.overall",
   "team_payment_settings.team_id",
+  "teams.club_id",
   "user.plan_tier",
 ];
 
