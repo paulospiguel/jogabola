@@ -15,7 +15,7 @@ import {
   teams,
   user,
 } from "@/db/schema";
-import { getAuthUser, withAction } from "@/lib/action-helpers";
+import { getAuthUser, withAuthAction } from "@/lib/action-helpers";
 import { trackServerEvent } from "@/lib/analytics-server";
 import {
   generateRecurringOccurrences,
@@ -40,9 +40,15 @@ function toEventStatus(status: string): EventStatus {
   return "scheduled";
 }
 
-export const createMatchSession = withAction(
+// Both actions are authenticated security boundaries: the team scope comes
+// from persisted rows (the requested team, or the match session's team) and
+// writes require team management rights, like createEvent and attendance.
+export const createMatchSession = withAuthAction(
   createMatchSessionSchema,
-  async data => {
+  async (currentUser, data) => {
+    if (!(await canManageTeam(currentUser.id, data.teamId))) {
+      return { success: false, error: { code: "FORBIDDEN" } };
+    }
     const [matchSession] = await db
       .insert(matchSessions)
       .values(data)
@@ -51,9 +57,17 @@ export const createMatchSession = withAction(
   },
 );
 
-export const createMatchReservation = withAction(
+export const createMatchReservation = withAuthAction(
   createMatchReservationSchema,
-  async data => {
+  async (currentUser, data) => {
+    const session = await db.query.matchSessions.findFirst({
+      columns: { teamId: true },
+      where: eq(matchSessions.id, data.matchSessionId),
+    });
+    // An unknown match session answers like a forbidden one.
+    if (!session || !(await canManageTeam(currentUser.id, session.teamId))) {
+      return { success: false, error: { code: "FORBIDDEN" } };
+    }
     const [reservation] = await db
       .insert(matchReservations)
       .values(data)
