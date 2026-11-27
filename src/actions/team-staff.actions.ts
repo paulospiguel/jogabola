@@ -5,7 +5,7 @@ import { revalidatePath } from "next/cache";
 import { db } from "@/db/client";
 import { teamMembers, teamStaff, teams, user as userTable } from "@/db/schema";
 import { withAuthAction } from "@/lib/action-helpers";
-import { recordStaffEvent } from "@/lib/staff-audit";
+import { type DbExecutor, recordStaffEvent } from "@/lib/staff-audit";
 import {
   isStaffPermission,
   isStaffTitle,
@@ -49,6 +49,24 @@ async function requireOwner(
 
 function refreshArena() {
   revalidatePath("/arena", "layout");
+}
+
+/**
+ * Re-reads `teams.owner_id` inside the mutation's transaction with a share
+ * lock, so an ownership transfer that commits after the pre-check cannot let
+ * the former owner finish an in-flight staff change.
+ */
+async function stillOwner(
+  tx: DbExecutor,
+  teamId: number,
+  userId: string,
+): Promise<boolean> {
+  const [team] = await tx
+    .select({ ownerId: teams.ownerId })
+    .from(teams)
+    .where(eq(teams.id, teamId))
+    .for("share");
+  return team?.ownerId === userId;
 }
 
 const sameList = (a: readonly string[], b: readonly string[]) =>
@@ -123,7 +141,10 @@ export const promoteToStaff = withAuthAction(
     if (target.isOwner) return fail("CANNOT_MODIFY_OWNER");
     if (!target.isAthlete) return fail("NOT_AN_ATHLETE");
 
-    await db.transaction(async tx => {
+    const result = await db.transaction(async tx => {
+      if (!(await stillOwner(tx, data.teamId, user.id))) {
+        return fail("FORBIDDEN");
+      }
       const inserted = await tx
         .insert(teamStaff)
         .values({
@@ -144,7 +165,9 @@ export const promoteToStaff = withAuthAction(
           payload: { title: data.title, permissions: data.permissions },
         });
       }
+      return null;
     });
+    if (result) return result;
 
     refreshArena();
     return { success: true, data: { userId: data.userId } };
@@ -162,6 +185,9 @@ export const updateStaffMember = withAuthAction(
     if (target.isOwner) return fail("CANNOT_MODIFY_OWNER");
 
     const result = await db.transaction(async tx => {
+      if (!(await stillOwner(tx, data.teamId, user.id))) {
+        return fail("FORBIDDEN");
+      }
       const [current] = await tx
         .select({ title: teamStaff.title, permissions: teamStaff.permissions })
         .from(teamStaff)
@@ -236,6 +262,9 @@ export const demoteStaff = withAuthAction(
     if (target.isOwner) return fail("CANNOT_MODIFY_OWNER");
 
     const result = await db.transaction(async tx => {
+      if (!(await stillOwner(tx, data.teamId, user.id))) {
+        return fail("FORBIDDEN");
+      }
       const [removed] = await tx
         .delete(teamStaff)
         .where(

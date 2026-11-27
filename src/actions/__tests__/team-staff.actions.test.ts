@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { teamMembers, teamStaff, teamStaffEvents } from "@/db/schema";
+import { teamMembers, teamStaff, teamStaffEvents, teams } from "@/db/schema";
 
 type Call = { method: string; args: unknown[] };
 type Op = { kind: string; table: unknown; calls: Call[] };
@@ -230,6 +230,7 @@ describe("promoteToStaff", () => {
 
   it("inserts a staff row and records a promoted event", async () => {
     accessFor({ actor: ownerAccess, target: athleteAccess });
+    mocks.results.select.push([{ ownerId: "actor" }]);
     queue(mocks.results.insert, teamStaff, [{ id: 1 }]);
 
     const result = await promoteToStaff(input);
@@ -257,6 +258,7 @@ describe("promoteToStaff", () => {
 
   it("is idempotent when called twice", async () => {
     accessFor({ actor: ownerAccess, target: athleteAccess });
+    mocks.results.select.push([{ ownerId: "actor" }], [{ ownerId: "actor" }]);
     queue(mocks.results.insert, teamStaff, [{ id: 1 }], []);
 
     const first = await promoteToStaff(input);
@@ -276,6 +278,7 @@ describe("promoteToStaff", () => {
 describe("demoteStaff", () => {
   it("deletes only the staff row and records demoted", async () => {
     accessFor({ actor: ownerAccess, target: staffAccess });
+    mocks.results.select.push([{ ownerId: "actor" }]);
     queue(mocks.results.delete, teamStaff, [
       { title: "coach", permissions: ["events.manage"] },
     ]);
@@ -291,6 +294,7 @@ describe("demoteStaff", () => {
 
   it("returns NOT_STAFF when the target is not staff", async () => {
     accessFor({ actor: ownerAccess, target: athleteAccess });
+    mocks.results.select.push([{ ownerId: "actor" }]);
     queue(mocks.results.delete, teamStaff, []);
 
     const result = await demoteStaff({ teamId: 7, userId: "target" });
@@ -326,9 +330,10 @@ describe("updateStaffMember", () => {
 
   it("records title_changed and permissions_changed with before/after", async () => {
     accessFor({ actor: ownerAccess, target: staffAccess });
-    mocks.results.select.push([
-      { title: "coach", permissions: ["events.manage"] },
-    ]);
+    mocks.results.select.push(
+      [{ ownerId: "actor" }],
+      [{ title: "coach", permissions: ["events.manage"] }],
+    );
 
     const result = await updateStaffMember({
       teamId: 7,
@@ -355,7 +360,7 @@ describe("updateStaffMember", () => {
 
   it("returns NOT_STAFF when the target has no staff row", async () => {
     accessFor({ actor: ownerAccess, target: athleteAccess });
-    mocks.results.select.push([]);
+    mocks.results.select.push([{ ownerId: "actor" }], []);
 
     const result = await updateStaffMember({
       teamId: 7,
@@ -458,5 +463,65 @@ describe("getTeamStaff", () => {
       permissions: ["events.manage"],
       isAthlete: false,
     });
+  });
+});
+
+describe("staff mutations after an ownership transfer", () => {
+  // getTeamAccess still says "owner" (read before the transfer committed),
+  // but the locked teams row now names someone else.
+  const transferred = () => {
+    accessFor({ actor: ownerAccess, target: staffAccess });
+    mocks.results.select.push([{ ownerId: "new-owner" }]);
+  };
+
+  function ownerLock() {
+    const [lock] = mocks.ops.filter(
+      op => op.kind === "select" && op.table === teams,
+    );
+    return lock?.calls.find(c => c.method === "for")?.args[0];
+  }
+
+  it("promoteToStaff aborts with FORBIDDEN", async () => {
+    transferred();
+    accessFor({ actor: ownerAccess, target: athleteAccess });
+
+    const result = await promoteToStaff({
+      teamId: 7,
+      userId: "target",
+      title: "coach",
+      permissions: ["events.manage"],
+    });
+
+    expect(result).toEqual({ success: false, error: { code: "FORBIDDEN" } });
+    expect(ownerLock()).toBe("share");
+    expect(opsOf("insert", teamStaff)).toHaveLength(0);
+    expect(eventTypes()).toEqual([]);
+    expect(mocks.revalidatePath).not.toHaveBeenCalled();
+  });
+
+  it("updateStaffMember aborts with FORBIDDEN", async () => {
+    transferred();
+
+    const result = await updateStaffMember({
+      teamId: 7,
+      userId: "target",
+      title: "finance",
+    });
+
+    expect(result).toEqual({ success: false, error: { code: "FORBIDDEN" } });
+    expect(ownerLock()).toBe("share");
+    expect(opsOf("update", teamStaff)).toHaveLength(0);
+    expect(eventTypes()).toEqual([]);
+  });
+
+  it("demoteStaff aborts with FORBIDDEN", async () => {
+    transferred();
+
+    const result = await demoteStaff({ teamId: 7, userId: "target" });
+
+    expect(result).toEqual({ success: false, error: { code: "FORBIDDEN" } });
+    expect(ownerLock()).toBe("share");
+    expect(opsOf("delete", teamStaff)).toHaveLength(0);
+    expect(eventTypes()).toEqual([]);
   });
 });
