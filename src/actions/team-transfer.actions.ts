@@ -14,11 +14,10 @@ import {
   user as userTable,
 } from "@/db/schema";
 import { withAuthAction, withAuthQuery } from "@/lib/action-helpers";
-import { sendEmail } from "@/lib/email";
+import { sendTeamTransferEmail } from "@/lib/email";
 import { canCreateTeam, normalizePlanTier } from "@/lib/plan-limits";
 import { type DbExecutor, recordStaffEvent } from "@/lib/staff-audit";
 import { getTeamAccess } from "@/lib/team-authz";
-import { getBaseURL } from "@/lib/utils";
 import {
   normalizeEmail,
   requestOwnershipTransferSchema,
@@ -69,15 +68,6 @@ function isUniqueViolation(error: unknown): boolean {
     code(error) === "23505" ||
     code((error as { cause?: unknown } | null)?.cause) === "23505"
   );
-}
-
-function escapeHtml(value: string) {
-  return value
-    .replaceAll("&", "&amp;")
-    .replaceAll("<", "&lt;")
-    .replaceAll(">", "&gt;")
-    .replaceAll('"', "&quot;")
-    .replaceAll("'", "&#039;");
 }
 
 const isStale = (row: TransferRow, now: Date) =>
@@ -494,16 +484,11 @@ export const requestOwnershipTransfer = withAuthAction(
     }
     if (!created.success) return created;
 
-    // Task 10 replaces this with the dedicated template.
-    const link = `${getBaseURL()}/transfer/${token}`;
-    await sendEmail({
-      to: recipientEmail,
-      subject: `Transferência da equipa ${team.name}`,
-      html: `
-        <p>${escapeHtml(user.name)} quer passar-te a gestão da equipa <strong>${escapeHtml(team.name)}</strong> no JogaBola.</p>
-        <p><a href="${link}">Ver pedido de transferência</a></p>
-        <p>O pedido expira a ${expiresAt.toLocaleDateString("pt-PT")}.</p>
-      `,
+    await sendTeamTransferEmail(recipientEmail, {
+      teamName: team.name,
+      fromName: user.name,
+      expiresAt,
+      token,
     });
 
     refreshArena();

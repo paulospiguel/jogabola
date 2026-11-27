@@ -3656,5 +3656,104 @@
       "save": "Enregistrer",
       "saving": "Enregistrement..."
     }
+  },
+  "teamTransfer": {
+    "entry": {
+      "title": "Transférer l'équipe",
+      "sub": "Confie la gestion de l'équipe à quelqu'un d'autre. Seul le propriétaire peut le faire.",
+      "cta": "Transférer l'équipe",
+      "pendingSub": "Demande en attente pour {recipient} · expire le {date}",
+      "view": "Voir la demande"
+    },
+    "sheet": {
+      "title": "Transférer l'équipe",
+      "description": "Choisis le nouveau propriétaire de l'équipe {team}.",
+      "recipientLabel": "Nouveau propriétaire",
+      "modeMember": "Membre",
+      "modeEmail": "Email",
+      "memberHint": "Athlètes de l'effectif et staff ayant un compte.",
+      "noMembersTitle": "Aucun membre avec un compte",
+      "noMembersSub": "Personne dans l'effectif ou le staff n'a encore de compte. Envoie la demande par email.",
+      "noMembersCta": "Utiliser l'email",
+      "emailLabel": "Email du nouveau propriétaire",
+      "emailPlaceholder": "nom@exemple.com",
+      "emailHint": "La personne recevra un email avec le lien pour accepter. Elle pourra créer un compte à ce moment-là.",
+      "warningPrivileges": "Tu vas perdre tous tes privilèges ; si tu n'es pas athlète, tu perds l'accès à l'équipe.",
+      "warningPayments": "Les moyens de paiement (MB WAY, virement, Stripe) sont désactivés jusqu'à ce que le nouveau propriétaire les configure.",
+      "confirmLabel": "Écris le nom de l'équipe pour confirmer",
+      "confirmHint": "Écris exactement : {team}",
+      "submit": "Envoyer la demande",
+      "submitting": "Envoi..."
+    },
+    "pending": {
+      "title": "Demande en attente",
+      "recipient": "Pour",
+      "expires": "Expire le {date}",
+      "note": "Le destinataire a reçu un email avec le lien pour accepter. Tant qu'il n'accepte pas, tu restes propriétaire.",
+      "cancel": "Annuler le transfert",
+      "cancelling": "Annulation..."
+    },
+    "feedback": {
+      "requested": "Demande envoyée à {recipient}.",
+      "cancelled": "Transfert annulé.",
+      "accepted": "Tu es maintenant propriétaire de l'équipe {team}.",
+      "declined": "Tu as refusé le transfert."
+    },
+    "card": {
+      "kicker": "Transfert d'équipe",
+      "title": "{from} veut te confier l'équipe {team}",
+      "expires": "Expire le {date}",
+      "accept": "Accepter",
+      "decline": "Refuser",
+      "accepting": "Acceptation...",
+      "declining": "Refus..."
+    },
+    "page": {
+      "kicker": "Transfert d'équipe",
+      "title": "Tu veux reprendre {team} ?",
+      "body": "{from} veut te confier la gestion de l'équipe {team}.",
+      "expires": "Expire le {date}",
+      "warning": "En acceptant, tu deviens propriétaire de l'équipe. Les moyens de paiement en ligne restent désactivés jusqu'à ce que tu les configures.",
+      "accept": "Accepter",
+      "decline": "Refuser",
+      "accepting": "Acceptation...",
+      "declining": "Refus...",
+      "goArena": "Aller à l'Arena",
+      "errorTitle": "Impossible d'ouvrir la demande",
+      "acceptedTitle": "L'équipe est à toi",
+      "acceptedSub": "Tu es maintenant propriétaire de l'équipe {team}. Vérifie les moyens de paiement avant le prochain match.",
+      "declinedTitle": "Transfert refusé",
+      "declinedSub": "Rien n'a changé dans l'équipe.",
+      "status": {
+        "accepted": {
+          "title": "Demande déjà acceptée",
+          "sub": "Ce transfert a déjà été effectué."
+        },
+        "cancelled": {
+          "title": "Demande annulée",
+          "sub": "Cette demande a été annulée ou refusée et n'est plus valable."
+        },
+        "expired": {
+          "title": "Demande expirée",
+          "sub": "Cette demande a dépassé son délai. Demande au propriétaire d'en envoyer une nouvelle."
+        }
+      }
+    },
+    "errors": {
+      "FORBIDDEN": "Seul le propriétaire de l'équipe peut faire cela.",
+      "TEAM_NAME_MISMATCH": "Le nom saisi ne correspond pas au nom de l'équipe.",
+      "TRANSFER_ALREADY_PENDING": "Une demande de transfert est déjà en attente pour cette équipe.",
+      "TRANSFER_NOT_FOUND": "Cette demande de transfert n'existe pas ou n'est plus valable.",
+      "TRANSFER_EXPIRED": "Cette demande de transfert a expiré.",
+      "TRANSFER_NOT_FOR_YOU": "Cette demande a été envoyée à un autre compte. Connecte-toi avec l'email qui a reçu l'invitation.",
+      "EMAIL_NOT_VERIFIED": "Confirme ton email avant d'accepter le transfert.",
+      "TEAM_LIMIT_REACHED": "Tu as atteint la limite d'équipes de ton plan. Passe à un plan supérieur pour accepter cette équipe.",
+      "CANNOT_TRANSFER_TO_SELF": "Tu ne peux pas te transférer l'équipe à toi-même.",
+      "RECIPIENT_NOT_MEMBER": "Cette personne ne fait plus partie de l'effectif ni du staff.",
+      "TEAM_NOT_FOUND": "Équipe introuvable.",
+      "VALIDATION_ERROR": "Vérifie les informations et réessaie.",
+      "UNAUTHORIZED": "Ta session a expiré. Reconnecte-toi.",
+      "UNKNOWN": "Une erreur s'est produite. Réessaie."
+    }
   }
 }

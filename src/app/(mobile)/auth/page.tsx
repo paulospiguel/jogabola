@@ -16,6 +16,7 @@ import { Logo } from "@/components/logo";
 import { APP } from "@/constants/app";
 import { useToast } from "@/hooks/use-toast-custom";
 import { signIn, useSession } from "@/lib/auth-client";
+import { getSafeRedirectPath } from "@/lib/safe-redirect";
 import { useAnalytics, useAnalyticsConsent } from "@/providers/analytics";
 import { AppVersion } from "./_components/app-version";
 
@@ -36,13 +37,6 @@ function defaultNameFromEmail(email: string, fallback: string) {
     ?.replace(/[._-]+/g, " ")
     .trim();
   return name || fallback;
-}
-
-function getSafeCallbackURL(value: string | null) {
-  if (!value || !value.startsWith("/") || value.startsWith("//")) {
-    return "/arena";
-  }
-  return value;
 }
 
 function getAuthOtpErrorMessage(
@@ -67,7 +61,10 @@ export default function LoginPage() {
   const { toast } = useToast();
   const { logEvent } = useAnalytics();
   const analyticsAllowed = useAnalyticsConsent();
-  const callbackURL = getSafeCallbackURL(searchParams.get("callbackURL"));
+  // `next` is the canonical param; `callbackURL` is kept for older links.
+  const callbackURL = getSafeRedirectPath(
+    searchParams.get("next") ?? searchParams.get("callbackURL"),
+  );
   const isRegisterMode = searchParams.get("mode") === "register";
 
   const [step, setStep] = useState<AuthStep>("email");

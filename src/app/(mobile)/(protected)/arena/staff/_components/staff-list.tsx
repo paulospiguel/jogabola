@@ -2,17 +2,29 @@
 
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { motion } from "framer-motion";
-import { ChevronRight, Crown, ShieldCheck, Users2 } from "lucide-react";
+import {
+  ArrowLeftRight,
+  ChevronRight,
+  Clock,
+  Crown,
+  ShieldCheck,
+  Users2,
+} from "lucide-react";
 import Link from "next/link";
-import { useTranslations } from "next-intl";
+import { useFormatter, useTranslations } from "next-intl";
 import { useMemo, useState } from "react";
 import {
   getTeamStaff,
   type TeamStaffEntry,
 } from "@/actions/team-staff.actions";
+import {
+  getPendingTransfer,
+  type PendingTransfer,
+} from "@/actions/team-transfer.actions";
 import { JbAvatar } from "@/components/arena/avatar";
 import { ArenaEmptyState } from "@/components/arena/empty-state";
 import { invalidateRosterQueries, permissionLabelKey } from "@/lib/staff-ui";
+import type { OwnerTransferData } from "@/lib/transfer-ui";
 import { cn } from "@/lib/utils";
 import {
   type StaffRow,
@@ -20,12 +32,15 @@ import {
   toStaffRows,
 } from "../_utils/staff-view";
 import { StaffMemberSheet } from "./staff-member-sheet";
+import { TransferTeamSheet } from "./transfer-team-sheet";
 
 interface StaffListProps {
   teamId: number;
   viewerId: string;
   viewerIsOwner: boolean;
   initialStaff: TeamStaffEntry[];
+  /** Owner-only transfer data; null for staff viewers. */
+  transfer: OwnerTransferData | null;
 }
 
 export function StaffList({
@@ -33,6 +48,7 @@ export function StaffList({
   viewerId,
   viewerIsOwner,
   initialStaff,
+  transfer,
 }: StaffListProps) {
   const t = useTranslations("teamStaff");
   const queryClient = useQueryClient();
@@ -106,6 +122,10 @@ export function StaffList({
           ))}
         </ul>
 
+        {viewerIsOwner && transfer && (
+          <TransferTeamEntry teamId={teamId} transfer={transfer} />
+        )}
+
         {!hasStaff && (
           <ArenaEmptyState
             className="mt-4"
@@ -135,6 +155,92 @@ export function StaffList({
         />
       )}
     </motion.div>
+  );
+}
+
+const transferQueryKey = (teamId: number) =>
+  ["team-transfer-pending", teamId] as const;
+
+/** Owner entry for "Transferir equipa", with the pending request summary. */
+function TransferTeamEntry({
+  teamId,
+  transfer,
+}: {
+  teamId: number;
+  transfer: OwnerTransferData;
+}) {
+  const t = useTranslations("teamTransfer");
+  const format = useFormatter();
+  const queryClient = useQueryClient();
+  const [open, setOpen] = useState(false);
+
+  const { data: pending } = useQuery({
+    queryKey: transferQueryKey(teamId),
+    queryFn: async (): Promise<PendingTransfer | null> => {
+      const result = await getPendingTransfer({ teamId });
+      if (!result.success) throw new Error(result.error.code);
+      return result.data;
+    },
+    initialData: transfer.initialPending,
+    staleTime: 30_000,
+  });
+
+  const refresh = async () => {
+    await queryClient.invalidateQueries({ queryKey: transferQueryKey(teamId) });
+  };
+
+  return (
+    <section className="mt-6 rounded-[14px] border border-arena-border bg-arena-surface p-4">
+      <div className="flex items-start gap-3">
+        <div className="flex size-10 shrink-0 items-center justify-center rounded-xl border border-arena-highlight/25 bg-arena-highlight/10 text-arena-highlight">
+          <ArrowLeftRight size={18} strokeWidth={2.2} aria-hidden="true" />
+        </div>
+        <div className="min-w-0 flex-1">
+          <h2 className="text-[14px] font-bold text-arena-text">
+            {t("entry.title")}
+          </h2>
+          {pending ? (
+            <p className="mt-0.5 flex items-start gap-1 text-[12px] text-arena-text-sec">
+              <Clock
+                aria-hidden="true"
+                className="mt-[3px] shrink-0"
+                size={11}
+                strokeWidth={2}
+              />
+              {t("entry.pendingSub", {
+                recipient: pending.toName ?? pending.toEmail ?? "",
+                date: format.dateTime(new Date(pending.expiresAt), {
+                  dateStyle: "long",
+                }),
+              })}
+            </p>
+          ) : (
+            <p className="mt-0.5 text-[12px] text-arena-text-muted">
+              {t("entry.sub")}
+            </p>
+          )}
+        </div>
+      </div>
+      <button
+        className="press btn-press mt-3 inline-flex h-9 w-full items-center justify-center gap-1.5 rounded-[10px] border border-arena-border bg-arena-surface-el px-4 text-xs font-bold text-arena-text transition-colors hover:border-arena-primary/30 hover:bg-arena-primary/5 md:w-auto"
+        onClick={() => setOpen(true)}
+        type="button"
+      >
+        <ArrowLeftRight size={14} strokeWidth={2.2} aria-hidden="true" />
+        {pending ? t("entry.view") : t("entry.cta")}
+      </button>
+
+      {open && (
+        <TransferTeamSheet
+          candidates={transfer.candidates}
+          onChanged={refresh}
+          onClose={() => setOpen(false)}
+          pending={pending}
+          teamId={teamId}
+          teamName={transfer.teamName}
+        />
+      )}
+    </section>
   );
 }
 

@@ -7,6 +7,7 @@ import { AuthOtpEmail } from "@/components/emails/auth-otp-email";
 import { EventReminderEmail } from "@/components/emails/event-reminder-email";
 import { GuestRsvpOtpEmail } from "@/components/emails/guest-rsvp-otp-email";
 import { PaymentProofRequestEmail } from "@/components/emails/payment-proof-request-email";
+import { TeamTransferEmail } from "@/components/emails/team-transfer-email";
 import { WelcomeEmail } from "@/components/emails/welcome-email";
 
 const resend = process.env.RESEND_API_KEY
@@ -297,6 +298,32 @@ export async function sendPaymentProofRequest(
     to,
     subject: `Comprovativo em falta — ${payment.eventTitle}`,
     react: React.createElement(PaymentProofRequestEmail, payment),
+  });
+}
+
+export async function sendTeamTransferEmail(
+  to: string,
+  transfer: {
+    teamName: string;
+    fromName: string;
+    expiresAt: Date;
+    token: string;
+  },
+) {
+  return send({
+    to,
+    subject: `Transferência da equipa ${transfer.teamName}`,
+    react: React.createElement(TeamTransferEmail, {
+      teamName: transfer.teamName,
+      fromName: transfer.fromName,
+      expiresAt: transfer.expiresAt.toLocaleDateString("pt-PT", {
+        day: "numeric",
+        month: "long",
+        year: "numeric",
+        timeZone: "Europe/Lisbon",
+      }),
+      token: transfer.token,
+    }),
   });
 }
 

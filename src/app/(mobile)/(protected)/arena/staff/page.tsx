@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 import { getTeamStaff } from "@/actions/team-staff.actions";
 import { getAuthUser } from "@/lib/action-helpers";
 import { listMyTeamSummaries } from "@/lib/team-summaries";
+import { loadOwnerTransferData } from "@/lib/team-transfer-candidates";
 import { StaffList } from "./_components/staff-list";
 
 /**
@@ -24,10 +25,20 @@ export default async function ArenaStaffPage() {
     entry => entry.title === "owner" && entry.userId === user.id,
   );
 
+  // Owner-only: candidates, team name and any pending request.
+  const transfer = viewerIsOwner
+    ? await loadOwnerTransferData(
+        teamId,
+        user.id,
+        result.data.map(({ userId, name, image }) => ({ userId, name, image })),
+      )
+    : null;
+
   return (
     <StaffList
       initialStaff={result.data}
       teamId={teamId}
+      transfer={transfer}
       viewerId={user.id}
       viewerIsOwner={viewerIsOwner}
     />

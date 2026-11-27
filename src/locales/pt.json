@@ -3656,5 +3656,104 @@
       "save": "Guardar alterações",
       "saving": "A guardar..."
     }
+  },
+  "teamTransfer": {
+    "entry": {
+      "title": "Transferir equipa",
+      "sub": "Passa a gestão da equipa a outra pessoa. Só o dono pode fazê-lo.",
+      "cta": "Transferir equipa",
+      "pendingSub": "Pedido pendente para {recipient} · expira a {date}",
+      "view": "Ver pedido"
+    },
+    "sheet": {
+      "title": "Transferir equipa",
+      "description": "Escolhe o novo dono da equipa {team}.",
+      "recipientLabel": "Novo dono",
+      "modeMember": "Membro",
+      "modeEmail": "Email",
+      "memberHint": "Atletas do plantel e staff com conta.",
+      "noMembersTitle": "Sem membros com conta",
+      "noMembersSub": "Ainda ninguém do plantel ou do staff tem conta. Envia o pedido por email.",
+      "noMembersCta": "Usar email",
+      "emailLabel": "Email do novo dono",
+      "emailPlaceholder": "nome@exemplo.com",
+      "emailHint": "A pessoa recebe um email com o link para aceitar. Pode criar conta nesse momento.",
+      "warningPrivileges": "Vais perder todos os privilégios; se não és atleta, perdes o acesso à equipa.",
+      "warningPayments": "Os métodos de pagamento (MB WAY, transferência, Stripe) ficam desativados até o novo dono os configurar.",
+      "confirmLabel": "Escreve o nome da equipa para confirmar",
+      "confirmHint": "Escreve exatamente: {team}",
+      "submit": "Enviar pedido",
+      "submitting": "A enviar..."
+    },
+    "pending": {
+      "title": "Pedido pendente",
+      "recipient": "Para",
+      "expires": "Expira a {date}",
+      "note": "O destinatário recebeu um email com o link para aceitar. Enquanto não aceitar, continuas a ser o dono.",
+      "cancel": "Cancelar transferência",
+      "cancelling": "A cancelar..."
+    },
+    "feedback": {
+      "requested": "Pedido enviado a {recipient}.",
+      "cancelled": "Transferência cancelada.",
+      "accepted": "Agora és o dono da equipa {team}.",
+      "declined": "Recusaste a transferência."
+    },
+    "card": {
+      "kicker": "Transferência de equipa",
+      "title": "{from} quer passar-te a equipa {team}",
+      "expires": "Expira a {date}",
+      "accept": "Aceitar",
+      "decline": "Recusar",
+      "accepting": "A aceitar...",
+      "declining": "A recusar..."
+    },
+    "page": {
+      "kicker": "Transferência de equipa",
+      "title": "Queres ficar com a {team}?",
+      "body": "{from} quer passar-te a gestão da equipa {team}.",
+      "expires": "Expira a {date}",
+      "warning": "Ao aceitar, passas a ser o dono da equipa. Os métodos de pagamento online ficam desativados até os configurares.",
+      "accept": "Aceitar",
+      "decline": "Recusar",
+      "accepting": "A aceitar...",
+      "declining": "A recusar...",
+      "goArena": "Ir para a Arena",
+      "errorTitle": "Não foi possível abrir o pedido",
+      "acceptedTitle": "A equipa é tua",
+      "acceptedSub": "Agora és o dono da equipa {team}. Revê os métodos de pagamento antes do próximo jogo.",
+      "declinedTitle": "Transferência recusada",
+      "declinedSub": "Nada mudou na equipa.",
+      "status": {
+        "accepted": {
+          "title": "Pedido já aceite",
+          "sub": "Esta transferência já foi concluída."
+        },
+        "cancelled": {
+          "title": "Pedido cancelado",
+          "sub": "Este pedido foi cancelado ou recusado e já não é válido."
+        },
+        "expired": {
+          "title": "Pedido expirado",
+          "sub": "Este pedido passou do prazo. Pede ao dono que envie um novo."
+        }
+      }
+    },
+    "errors": {
+      "FORBIDDEN": "Só o dono da equipa pode fazer isto.",
+      "TEAM_NAME_MISMATCH": "O nome escrito não corresponde ao nome da equipa.",
+      "TRANSFER_ALREADY_PENDING": "Já existe um pedido de transferência pendente para esta equipa.",
+      "TRANSFER_NOT_FOUND": "Este pedido de transferência não existe ou já não é válido.",
+      "TRANSFER_EXPIRED": "Este pedido de transferência expirou.",
+      "TRANSFER_NOT_FOR_YOU": "Este pedido foi enviado para outra conta. Entra com o email que recebeu o convite.",
+      "EMAIL_NOT_VERIFIED": "Confirma o teu email antes de aceitares a transferência.",
+      "TEAM_LIMIT_REACHED": "Chegaste ao limite de equipas do teu plano. Faz upgrade para aceitares esta equipa.",
+      "CANNOT_TRANSFER_TO_SELF": "Não podes transferir a equipa para ti próprio.",
+      "RECIPIENT_NOT_MEMBER": "Esta pessoa já não faz parte do plantel nem do staff.",
+      "TEAM_NOT_FOUND": "Equipa não encontrada.",
+      "VALIDATION_ERROR": "Verifica os dados e tenta de novo.",
+      "UNAUTHORIZED": "A tua sessão terminou. Entra de novo.",
+      "UNKNOWN": "Algo correu mal. Tenta de novo."
+    }
   }
 }

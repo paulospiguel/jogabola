@@ -26,6 +26,7 @@ import { CreateEventSheet } from "@/components/arena/create-event-sheet";
 import { CreateTeamSheet } from "@/components/arena/create-team-sheet";
 import { Cta } from "@/components/arena/cta";
 import { ArenaEmptyState } from "@/components/arena/empty-state";
+import { PendingTransferCards } from "@/components/arena/pending-transfer-card";
 import { PlayerRow } from "@/components/arena/player-row";
 import {
   ArenaQueryError,
@@ -235,7 +236,8 @@ export function ArenaDashboard({ userId }: ArenaDashboardProps) {
     return (
       <>
         {createTeamSheet}
-        <div className="flex h-screen flex-col items-center justify-center gap-4 bg-arena-bg text-arena-text-muted">
+        <div className="flex h-screen flex-col items-center justify-center gap-4 bg-arena-bg px-4 text-arena-text-muted">
+          <PendingTransferCards className="mb-4 w-full max-w-md" />
           <div className="flex size-14 items-center justify-center rounded-2xl bg-arena-surface-el">
             <Shield className="size-7 text-arena-primary" />
           </div>
@@ -350,6 +352,8 @@ export function ArenaDashboard({ userId }: ArenaDashboardProps) {
               </div>
             )}
           </header>
+
+          <PendingTransferCards className="mb-4" />
 
           <div className="jb-dashboard-grid">
             <section className="jb-stack">

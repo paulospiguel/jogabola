@@ -3656,5 +3656,104 @@
       "save": "Guardar cambios",
       "saving": "Guardando..."
     }
+  },
+  "teamTransfer": {
+    "entry": {
+      "title": "Transferir equipo",
+      "sub": "Pasa la gestión del equipo a otra persona. Solo el dueño puede hacerlo.",
+      "cta": "Transferir equipo",
+      "pendingSub": "Solicitud pendiente para {recipient} · caduca el {date}",
+      "view": "Ver solicitud"
+    },
+    "sheet": {
+      "title": "Transferir equipo",
+      "description": "Elige el nuevo dueño del equipo {team}.",
+      "recipientLabel": "Nuevo dueño",
+      "modeMember": "Miembro",
+      "modeEmail": "Email",
+      "memberHint": "Atletas de la plantilla y staff con cuenta.",
+      "noMembersTitle": "Sin miembros con cuenta",
+      "noMembersSub": "Nadie de la plantilla o del staff tiene cuenta todavía. Envía la solicitud por email.",
+      "noMembersCta": "Usar email",
+      "emailLabel": "Email del nuevo dueño",
+      "emailPlaceholder": "nombre@ejemplo.com",
+      "emailHint": "La persona recibirá un email con el enlace para aceptar. Puede crear cuenta en ese momento.",
+      "warningPrivileges": "Perderás todos los privilegios; si no eres atleta, perderás el acceso al equipo.",
+      "warningPayments": "Los métodos de pago (MB WAY, transferencia, Stripe) quedan desactivados hasta que el nuevo dueño los configure.",
+      "confirmLabel": "Escribe el nombre del equipo para confirmar",
+      "confirmHint": "Escribe exactamente: {team}",
+      "submit": "Enviar solicitud",
+      "submitting": "Enviando..."
+    },
+    "pending": {
+      "title": "Solicitud pendiente",
+      "recipient": "Para",
+      "expires": "Caduca el {date}",
+      "note": "El destinatario recibió un email con el enlace para aceptar. Mientras no acepte, sigues siendo el dueño.",
+      "cancel": "Cancelar transferencia",
+      "cancelling": "Cancelando..."
+    },
+    "feedback": {
+      "requested": "Solicitud enviada a {recipient}.",
+      "cancelled": "Transferencia cancelada.",
+      "accepted": "Ahora eres el dueño del equipo {team}.",
+      "declined": "Has rechazado la transferencia."
+    },
+    "card": {
+      "kicker": "Transferencia de equipo",
+      "title": "{from} quiere pasarte el equipo {team}",
+      "expires": "Caduca el {date}",
+      "accept": "Aceptar",
+      "decline": "Rechazar",
+      "accepting": "Aceptando...",
+      "declining": "Rechazando..."
+    },
+    "page": {
+      "kicker": "Transferencia de equipo",
+      "title": "¿Quieres quedarte con {team}?",
+      "body": "{from} quiere pasarte la gestión del equipo {team}.",
+      "expires": "Caduca el {date}",
+      "warning": "Si aceptas, pasas a ser el dueño del equipo. Los métodos de pago online quedan desactivados hasta que los configures.",
+      "accept": "Aceptar",
+      "decline": "Rechazar",
+      "accepting": "Aceptando...",
+      "declining": "Rechazando...",
+      "goArena": "Ir a la Arena",
+      "errorTitle": "No se pudo abrir la solicitud",
+      "acceptedTitle": "El equipo es tuyo",
+      "acceptedSub": "Ahora eres el dueño del equipo {team}. Revisa los métodos de pago antes del próximo partido.",
+      "declinedTitle": "Transferencia rechazada",
+      "declinedSub": "No ha cambiado nada en el equipo.",
+      "status": {
+        "accepted": {
+          "title": "Solicitud ya aceptada",
+          "sub": "Esta transferencia ya se completó."
+        },
+        "cancelled": {
+          "title": "Solicitud cancelada",
+          "sub": "Esta solicitud fue cancelada o rechazada y ya no es válida."
+        },
+        "expired": {
+          "title": "Solicitud caducada",
+          "sub": "Esta solicitud pasó del plazo. Pide al dueño que envíe una nueva."
+        }
+      }
+    },
+    "errors": {
+      "FORBIDDEN": "Solo el dueño del equipo puede hacer esto.",
+      "TEAM_NAME_MISMATCH": "El nombre escrito no coincide con el nombre del equipo.",
+      "TRANSFER_ALREADY_PENDING": "Ya hay una solicitud de transferencia pendiente para este equipo.",
+      "TRANSFER_NOT_FOUND": "Esta solicitud de transferencia no existe o ya no es válida.",
+      "TRANSFER_EXPIRED": "Esta solicitud de transferencia ha caducado.",
+      "TRANSFER_NOT_FOR_YOU": "Esta solicitud se envió a otra cuenta. Entra con el email que recibió la invitación.",
+      "EMAIL_NOT_VERIFIED": "Confirma tu email antes de aceptar la transferencia.",
+      "TEAM_LIMIT_REACHED": "Has llegado al límite de equipos de tu plan. Mejora tu plan para aceptar este equipo.",
+      "CANNOT_TRANSFER_TO_SELF": "No puedes transferirte el equipo a ti mismo.",
+      "RECIPIENT_NOT_MEMBER": "Esta persona ya no forma parte de la plantilla ni del staff.",
+      "TEAM_NOT_FOUND": "Equipo no encontrado.",
+      "VALIDATION_ERROR": "Revisa los datos e inténtalo de nuevo.",
+      "UNAUTHORIZED": "Tu sesión ha terminado. Vuelve a entrar.",
+      "UNKNOWN": "Algo salió mal. Inténtalo de nuevo."
+    }
   }
 }

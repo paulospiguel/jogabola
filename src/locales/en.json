@@ -3656,5 +3656,104 @@
       "save": "Save changes",
       "saving": "Saving..."
     }
+  },
+  "teamTransfer": {
+    "entry": {
+      "title": "Transfer team",
+      "sub": "Hand the team over to someone else. Only the owner can do this.",
+      "cta": "Transfer team",
+      "pendingSub": "Pending request for {recipient} · expires {date}",
+      "view": "View request"
+    },
+    "sheet": {
+      "title": "Transfer team",
+      "description": "Choose the new owner of {team}.",
+      "recipientLabel": "New owner",
+      "modeMember": "Member",
+      "modeEmail": "Email",
+      "memberHint": "Squad athletes and staff with an account.",
+      "noMembersTitle": "No members with an account",
+      "noMembersSub": "Nobody in the squad or staff has an account yet. Send the request by email.",
+      "noMembersCta": "Use email",
+      "emailLabel": "New owner's email",
+      "emailPlaceholder": "name@example.com",
+      "emailHint": "They'll get an email with a link to accept. They can sign up at that point.",
+      "warningPrivileges": "You'll lose all privileges; if you're not an athlete, you'll lose access to the team.",
+      "warningPayments": "Payment methods (MB WAY, bank transfer, Stripe) are turned off until the new owner sets them up.",
+      "confirmLabel": "Type the team name to confirm",
+      "confirmHint": "Type exactly: {team}",
+      "submit": "Send request",
+      "submitting": "Sending..."
+    },
+    "pending": {
+      "title": "Pending request",
+      "recipient": "To",
+      "expires": "Expires {date}",
+      "note": "The recipient got an email with a link to accept. Until they accept, you remain the owner.",
+      "cancel": "Cancel transfer",
+      "cancelling": "Cancelling..."
+    },
+    "feedback": {
+      "requested": "Request sent to {recipient}.",
+      "cancelled": "Transfer cancelled.",
+      "accepted": "You're now the owner of {team}.",
+      "declined": "You declined the transfer."
+    },
+    "card": {
+      "kicker": "Team transfer",
+      "title": "{from} wants to hand you {team}",
+      "expires": "Expires {date}",
+      "accept": "Accept",
+      "decline": "Decline",
+      "accepting": "Accepting...",
+      "declining": "Declining..."
+    },
+    "page": {
+      "kicker": "Team transfer",
+      "title": "Want to take over {team}?",
+      "body": "{from} wants to hand you the management of {team}.",
+      "expires": "Expires {date}",
+      "warning": "If you accept, you become the team owner. Online payment methods stay off until you set them up.",
+      "accept": "Accept",
+      "decline": "Decline",
+      "accepting": "Accepting...",
+      "declining": "Declining...",
+      "goArena": "Go to the Arena",
+      "errorTitle": "Couldn't open the request",
+      "acceptedTitle": "The team is yours",
+      "acceptedSub": "You're now the owner of {team}. Review the payment methods before the next match.",
+      "declinedTitle": "Transfer declined",
+      "declinedSub": "Nothing changed in the team.",
+      "status": {
+        "accepted": {
+          "title": "Request already accepted",
+          "sub": "This transfer has already been completed."
+        },
+        "cancelled": {
+          "title": "Request cancelled",
+          "sub": "This request was cancelled or declined and is no longer valid."
+        },
+        "expired": {
+          "title": "Request expired",
+          "sub": "This request is past its deadline. Ask the owner to send a new one."
+        }
+      }
+    },
+    "errors": {
+      "FORBIDDEN": "Only the team owner can do this.",
+      "TEAM_NAME_MISMATCH": "The name you typed doesn't match the team name.",
+      "TRANSFER_ALREADY_PENDING": "There's already a pending transfer request for this team.",
+      "TRANSFER_NOT_FOUND": "This transfer request doesn't exist or is no longer valid.",
+      "TRANSFER_EXPIRED": "This transfer request has expired.",
+      "TRANSFER_NOT_FOR_YOU": "This request was sent to another account. Sign in with the email that got the invite.",
+      "EMAIL_NOT_VERIFIED": "Verify your email before accepting the transfer.",
+      "TEAM_LIMIT_REACHED": "You've reached your plan's team limit. Upgrade to accept this team.",
+      "CANNOT_TRANSFER_TO_SELF": "You can't transfer the team to yourself.",
+      "RECIPIENT_NOT_MEMBER": "This person is no longer in the squad or staff.",
+      "TEAM_NOT_FOUND": "Team not found.",
+      "VALIDATION_ERROR": "Check the details and try again.",
+      "UNAUTHORIZED": "Your session has ended. Sign in again.",
+      "UNKNOWN": "Something went wrong. Try again."
+    }
   }
 }

@@ -76,7 +76,7 @@ const mocks = vi.hoisted(() => {
     getTeamAccess: vi.fn(),
     getSession: vi.fn(),
     revalidatePath: vi.fn(),
-    sendEmail: vi.fn(async () => ({ success: true })),
+    sendTeamTransferEmail: vi.fn(async () => ({ success: true })),
   };
 });
 
@@ -95,7 +95,9 @@ vi.mock("@/lib/team-authz", () => ({
   canViewTeam: vi.fn(),
   getAccessibleTeamIds: vi.fn(),
 }));
-vi.mock("@/lib/email", () => ({ sendEmail: mocks.sendEmail }));
+vi.mock("@/lib/email", () => ({
+  sendTeamTransferEmail: mocks.sendTeamTransferEmail,
+}));
 
 const {
   acceptOwnershipTransfer,
@@ -325,7 +327,7 @@ describe("requestOwnershipTransfer", () => {
       error: { code: "TRANSFER_ALREADY_PENDING" },
     });
     expect(opsOf("insert", T)).toHaveLength(0);
-    expect(mocks.sendEmail).not.toHaveBeenCalled();
+    expect(mocks.sendTeamTransferEmail).not.toHaveBeenCalled();
   });
 
   it("expires a stale pending request and creates a new one", async () => {
@@ -374,13 +376,20 @@ describe("requestOwnershipTransfer", () => {
     expect(values.tokenHash).toMatch(/^[0-9a-f]{64}$/);
     expect(values).not.toHaveProperty("token");
 
-    expect(mocks.sendEmail).toHaveBeenCalledTimes(1);
-    const [email] = mocks.sendEmail.mock.calls[0] as unknown as [
-      { to: string; html: string },
+    expect(mocks.sendTeamTransferEmail).toHaveBeenCalledTimes(1);
+    const [to, details] = mocks.sendTeamTransferEmail.mock
+      .calls[0] as unknown as [
+      string,
+      { teamName: string; fromName: string; expiresAt: Date; token: string },
     ];
-    expect(email.to).toBe("target@example.com");
-    const token = email.html.match(/\/transfer\/([A-Za-z0-9_-]+)/)?.[1];
-    expect(token).toBeDefined();
+    expect(to).toBe("target@example.com");
+    expect(details).toMatchObject({
+      teamName: "Os Craques",
+      fromName: "owner",
+    });
+    expect(details.expiresAt).toEqual(result.data.expiresAt);
+    const token = details.token;
+    expect(token).toMatch(/^[A-Za-z0-9_-]+$/);
     expect(Buffer.from(token as string, "base64url")).toHaveLength(32);
     expect(sha256(token as string)).toBe(values.tokenHash);
 
@@ -407,7 +416,7 @@ describe("requestOwnershipTransfer", () => {
       success: false,
       error: { code: "TRANSFER_ALREADY_PENDING" },
     });
-    expect(mocks.sendEmail).not.toHaveBeenCalled();
+    expect(mocks.sendTeamTransferEmail).not.toHaveBeenCalled();
     expect(mocks.revalidatePath).not.toHaveBeenCalled();
   });
 
@@ -427,10 +436,10 @@ describe("requestOwnershipTransfer", () => {
       toUserId: null,
       toEmail: "novo.dono@example.com",
     });
-    const [email] = mocks.sendEmail.mock.calls[0] as unknown as [
-      { to: string },
+    const [to] = mocks.sendTeamTransferEmail.mock.calls[0] as unknown as [
+      string,
     ];
-    expect(email.to).toBe("novo.dono@example.com");
+    expect(to).toBe("novo.dono@example.com");
   });
 });
 
