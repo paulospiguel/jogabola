@@ -15,6 +15,13 @@
       "when": 1795723663009,
       "tag": "0001_team_staff",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1795793267862,
+      "tag": "0002_team_ownership_transfers",
+      "breakpoints": true
     }
   ]
 }

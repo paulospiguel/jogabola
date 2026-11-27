@@ -220,6 +220,18 @@ async function assertRejectedMigration(database, error) {
   assert.equal(journal, null);
 }
 
+async function assertOnePendingTransfer(sql) {
+  const insert = (hash, status = "pending") => sql`
+    INSERT INTO team_ownership_transfers (team_id, from_user_id, to_email, token_hash, status, expires_at)
+    VALUES (1, 'captain-test', 'next@example.test', ${hash}, ${status}, now() + interval '7 days')
+  `;
+  await insert("hash-a");
+  await assert.rejects(insert("hash-b"), { code: "23505" });
+  await insert("hash-c", "cancelled");
+  await assert.rejects(insert("hash-d", "declined"), { code: "23514" });
+  await sql`DELETE FROM team_ownership_transfers`;
+}
+
 const trackedTables = [
   "user",
   "teams",
@@ -250,13 +262,27 @@ try {
       column => column.column_name === "recurrence_group_id",
     ),
   );
-  for (const table of ["team_staff", "team_staff_events"]) {
+  for (const table of [
+    "team_staff",
+    "team_staff_events",
+    "team_ownership_transfers",
+  ]) {
     assert.ok(
       canonical.columns.some(column => column.table_name === table),
       table,
     );
   }
+  assert.ok(
+    canonical.indexes.some(
+      index =>
+        index.indexname === "team_ownership_transfers_one_pending_idx" &&
+        /UNIQUE/.test(index.indexdef) &&
+        /WHERE \(status = 'pending'::text\)/.test(index.indexdef),
+    ),
+    "team_ownership_transfers_one_pending_idx",
+  );
   await seedArenaData(fresh.sql);
+  await assertOnePendingTransfer(fresh.sql);
   console.info("Fresh database, simultaneous application and journal: passed.");
 
   const pushed = await makeDatabase("pushed");

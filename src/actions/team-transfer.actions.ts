@@ -1,0 +1,657 @@
+"use server";
+
+import { createHash, randomBytes } from "node:crypto";
+import { and, eq, isNull, or, type SQL, sql } from "drizzle-orm";
+import { revalidatePath } from "next/cache";
+import { db } from "@/db/client";
+import {
+  session as sessionTable,
+  teamMembers,
+  teamOwnershipTransfers,
+  teamPaymentSettings,
+  teamStaff,
+  teams,
+  user as userTable,
+} from "@/db/schema";
+import { withAuthAction, withAuthQuery } from "@/lib/action-helpers";
+import { sendEmail } from "@/lib/email";
+import { canCreateTeam, normalizePlanTier } from "@/lib/plan-limits";
+import { type DbExecutor, recordStaffEvent } from "@/lib/staff-audit";
+import { getTeamAccess } from "@/lib/team-authz";
+import { getBaseURL } from "@/lib/utils";
+import {
+  normalizeEmail,
+  requestOwnershipTransferSchema,
+  teamTransferTeamSchema,
+  transferIdSchema,
+  transferTokenSchema,
+} from "@/schemas/team-transfer.schema";
+import type { ActionResult } from "@/types/common";
+
+const T = teamOwnershipTransfers;
+const TRANSFER_TTL_MS = 7 * 24 * 60 * 60 * 1000;
+
+type TransferRow = typeof teamOwnershipTransfers.$inferSelect;
+type Failure = Extract<ActionResult<never>, { success: false }>;
+type Caller = { id: string; email: string; emailVerified: boolean };
+
+export type PendingTransfer = {
+  transferId: number;
+  toUserId: string | null;
+  toName: string | null;
+  toEmail: string | null;
+  expiresAt: Date;
+};
+
+export type IncomingTransfer = {
+  transferId: number;
+  teamName: string;
+  fromName: string;
+  expiresAt: Date;
+};
+
+const fail = (code: string): Failure => ({ success: false, error: { code } });
+
+/** The token never leaves this module except inside the email link. */
+const hashToken = (token: string) =>
+  createHash("sha256").update(token).digest("hex");
+
+function refreshArena() {
+  revalidatePath("/arena", "layout");
+}
+
+function isUniqueViolation(error: unknown): boolean {
+  const code = (e: unknown) =>
+    typeof e === "object" && e !== null
+      ? (e as { code?: unknown }).code
+      : undefined;
+  return (
+    code(error) === "23505" ||
+    code((error as { cause?: unknown } | null)?.cause) === "23505"
+  );
+}
+
+function escapeHtml(value: string) {
+  return value
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#039;");
+}
+
+const isStale = (row: TransferRow, now: Date) =>
+  row.status === "pending" && row.expiresAt.getTime() <= now.getTime();
+
+/**
+ * Marks a pending, past-due request `expired` and records the event.
+ * Returns true when the row is (now) expired.
+ */
+async function expireIfStale(
+  tx: DbExecutor,
+  row: TransferRow,
+  now = new Date(),
+): Promise<boolean> {
+  if (!isStale(row, now)) return row.status === "expired";
+  const updated = await tx
+    .update(T)
+    .set({ status: "expired", resolvedAt: now })
+    .where(and(eq(T.id, row.id), eq(T.status, "pending")))
+    .returning({ id: T.id });
+  if (updated.length > 0) {
+    await recordStaffEvent(tx, {
+      teamId: row.teamId,
+      actorUserId: null,
+      subjectUserId: row.toUserId,
+      type: "ownership_transfer_expired",
+      payload: { transferId: row.id },
+    });
+  }
+  row.status = "expired";
+  return true;
+}
+
+/** Locks and expires each stale row; used by read paths. */
+async function expireStaleRows(rows: TransferRow[]) {
+  if (rows.length === 0) return;
+  await db.transaction(async tx => {
+    for (const stale of rows) {
+      const [locked] = await tx
+        .select()
+        .from(T)
+        .where(eq(T.id, stale.id))
+        .for("update");
+      if (locked) await expireIfStale(tx, locked);
+    }
+  });
+}
+
+/** Whether `caller` is the recipient of `row`; returns an error code otherwise. */
+function recipientError(row: TransferRow, caller: Caller): string | null {
+  if (row.fromUserId === caller.id) return "CANNOT_TRANSFER_TO_SELF";
+  if (row.toUserId) {
+    return row.toUserId === caller.id ? null : "TRANSFER_NOT_FOR_YOU";
+  }
+  if (!row.toEmail || normalizeEmail(caller.email) !== row.toEmail) {
+    return "TRANSFER_NOT_FOR_YOU";
+  }
+  return caller.emailVerified ? null : "EMAIL_NOT_VERIFIED";
+}
+
+type ResolveOutcome =
+  | { kind: "failure"; failure: Failure }
+  | { kind: "done"; row: TransferRow }
+  | { kind: "pending"; row: TransferRow; planTier: string | null };
+
+/**
+ * Shared front half of accept/decline, inside the caller's transaction:
+ * finds the request, checks the recipient, locks (user →) team → transfer,
+ * and resolves expiry. Lock order matches request/cancel and the staff
+ * mutations (team before transfer) so concurrent paths cannot deadlock.
+ */
+async function resolveForRecipient(
+  tx: DbExecutor,
+  where: SQL,
+  userId: string,
+  mode: "accept" | "decline",
+): Promise<ResolveOutcome> {
+  const [found] = await tx.select().from(T).where(where).limit(1);
+  if (!found) return { kind: "failure", failure: fail("TRANSFER_NOT_FOUND") };
+
+  const callerQuery = tx
+    .select({
+      email: userTable.email,
+      emailVerified: userTable.emailVerified,
+      planTier: userTable.planTier,
+    })
+    .from(userTable)
+    .where(eq(userTable.id, userId));
+  // Accept serializes on the recipient row so the owned-team count is stable.
+  const [caller] =
+    mode === "accept" ? await callerQuery.for("update") : await callerQuery;
+  if (!caller) return { kind: "failure", failure: fail("UNAUTHORIZED") };
+
+  const identity = { id: userId, ...caller };
+  const denied = recipientError(found, identity);
+  if (denied) return { kind: "failure", failure: fail(denied) };
+
+  let ownerId: string | null = null;
+  if (mode === "accept") {
+    const [team] = await tx
+      .select({ ownerId: teams.ownerId })
+      .from(teams)
+      .where(eq(teams.id, found.teamId))
+      .for("update");
+    if (!team) return { kind: "failure", failure: fail("TRANSFER_NOT_FOUND") };
+    ownerId = team.ownerId;
+  }
+
+  const [row] = await tx
+    .select()
+    .from(T)
+    .where(eq(T.id, found.id))
+    .for("update");
+  if (!row) return { kind: "failure", failure: fail("TRANSFER_NOT_FOUND") };
+  const deniedLocked = recipientError(row, identity);
+  if (deniedLocked) return { kind: "failure", failure: fail(deniedLocked) };
+
+  if (row.status === "accepted") {
+    return mode === "accept" && row.toUserId === userId
+      ? { kind: "done", row }
+      : { kind: "failure", failure: fail("TRANSFER_NOT_FOUND") };
+  }
+  if (await expireIfStale(tx, row)) {
+    return { kind: "failure", failure: fail("TRANSFER_EXPIRED") };
+  }
+  if (row.status !== "pending") {
+    return { kind: "failure", failure: fail("TRANSFER_NOT_FOUND") };
+  }
+  // The team changed hands outside this request: it no longer applies.
+  if (mode === "accept" && ownerId !== row.fromUserId) {
+    return { kind: "failure", failure: fail("TRANSFER_NOT_FOUND") };
+  }
+  return { kind: "pending", row, planTier: caller.planTier };
+}
+
+/** Accept core shared by the token and id paths. */
+async function acceptTransfer(
+  where: SQL,
+  userId: string,
+): Promise<ActionResult<{ teamId: number }>> {
+  const outcome = await db.transaction(
+    async (tx): Promise<ActionResult<{ teamId: number }>> => {
+      const resolved = await resolveForRecipient(tx, where, userId, "accept");
+      if (resolved.kind === "failure") return resolved.failure;
+      const { row } = resolved;
+      if (resolved.kind === "done") {
+        return { success: true, data: { teamId: row.teamId } };
+      }
+
+      const [{ teamCount }] = await tx
+        .select({ teamCount: sql<number>`count(*)::int` })
+        .from(teams)
+        .where(eq(teams.ownerId, userId));
+      if (!canCreateTeam(normalizePlanTier(resolved.planTier), teamCount)) {
+        return fail("TEAM_LIMIT_REACHED");
+      }
+
+      const now = new Date();
+      await tx
+        .update(teams)
+        .set({ ownerId: userId, updatedAt: now })
+        .where(eq(teams.id, row.teamId));
+
+      // The new owner is never staff; the old owner is not kept as staff.
+      await tx
+        .delete(teamStaff)
+        .where(
+          and(eq(teamStaff.teamId, row.teamId), eq(teamStaff.userId, userId)),
+        );
+      await tx
+        .delete(teamStaff)
+        .where(
+          and(
+            eq(teamStaff.teamId, row.teamId),
+            eq(teamStaff.userId, row.fromUserId),
+          ),
+        );
+
+      // Old owner keeps their roster row only if they had one; otherwise
+      // they lose access, so their sessions stop pointing at this team.
+      const [oldOwnerRoster] = await tx
+        .select({ id: teamMembers.id })
+        .from(teamMembers)
+        .where(
+          and(
+            eq(teamMembers.teamId, row.teamId),
+            eq(teamMembers.playerId, row.fromUserId),
+          ),
+        )
+        .limit(1);
+      if (!oldOwnerRoster) {
+        await tx
+          .update(sessionTable)
+          .set({ teamId: null })
+          .where(
+            and(
+              eq(sessionTable.userId, row.fromUserId),
+              eq(sessionTable.teamId, row.teamId),
+            ),
+          );
+      }
+
+      // Online payment methods stay configured but inactive until the new
+      // owner reviews them. Cash is untouched.
+      await tx
+        .update(teamPaymentSettings)
+        .set({
+          stripeEnabled: false,
+          mbwayEnabled: false,
+          transferEnabled: false,
+          updatedAt: now,
+        })
+        .where(eq(teamPaymentSettings.teamId, row.teamId));
+
+      await tx
+        .update(T)
+        .set({ status: "accepted", toUserId: userId, resolvedAt: now })
+        .where(and(eq(T.id, row.id), eq(T.status, "pending")))
+        .returning({ id: T.id });
+
+      await recordStaffEvent(tx, {
+        teamId: row.teamId,
+        actorUserId: userId,
+        subjectUserId: userId,
+        type: "ownership_transfer_accepted",
+        payload: { transferId: row.id, fromUserId: row.fromUserId },
+      });
+
+      return { success: true, data: { teamId: row.teamId } };
+    },
+  );
+
+  if (outcome.success) refreshArena();
+  return outcome;
+}
+
+/** Decline core shared by the token and id paths. */
+async function declineTransfer(
+  where: SQL,
+  userId: string,
+): Promise<ActionResult<{ declined: true }>> {
+  const outcome = await db.transaction(
+    async (tx): Promise<ActionResult<{ declined: true }>> => {
+      const resolved = await resolveForRecipient(tx, where, userId, "decline");
+      if (resolved.kind === "failure") return resolved.failure;
+      if (resolved.kind === "done") return fail("TRANSFER_NOT_FOUND");
+      const { row } = resolved;
+
+      await tx
+        .update(T)
+        .set({ status: "cancelled", resolvedAt: new Date() })
+        .where(and(eq(T.id, row.id), eq(T.status, "pending")));
+      await recordStaffEvent(tx, {
+        teamId: row.teamId,
+        actorUserId: userId,
+        subjectUserId: userId,
+        type: "ownership_transfer_cancelled",
+        payload: { transferId: row.id, reason: "declined" },
+      });
+      return { success: true, data: { declined: true } };
+    },
+  );
+
+  if (outcome.success) refreshArena();
+  return outcome;
+}
+
+/** Owner asks to hand the team to a roster/staff member or an email. */
+export const requestOwnershipTransfer = withAuthAction(
+  requestOwnershipTransferSchema,
+  async (
+    user,
+    data,
+  ): Promise<ActionResult<{ transferId: number; expiresAt: Date }>> => {
+    const access = await getTeamAccess(user.id, data.teamId);
+    if (!access.teamExists) return fail("TEAM_NOT_FOUND");
+    if (!access.isOwner) return fail("FORBIDDEN");
+
+    const [team] = await db
+      .select({ name: teams.name })
+      .from(teams)
+      .where(eq(teams.id, data.teamId))
+      .limit(1);
+    if (!team) return fail("TEAM_NOT_FOUND");
+    if (data.confirmTeamName.trim() !== team.name) {
+      return fail("TEAM_NAME_MISMATCH");
+    }
+
+    let toUserId: string | null = null;
+    let recipientEmail: string;
+    if (data.toUserId !== undefined) {
+      if (data.toUserId === user.id) return fail("CANNOT_TRANSFER_TO_SELF");
+      const target = await getTeamAccess(data.toUserId, data.teamId);
+      if (!target.isAthlete && target.staff === null) {
+        return fail("RECIPIENT_NOT_MEMBER");
+      }
+      const [recipient] = await db
+        .select({ email: userTable.email })
+        .from(userTable)
+        .where(eq(userTable.id, data.toUserId))
+        .limit(1);
+      if (!recipient) return fail("RECIPIENT_NOT_MEMBER");
+      toUserId = data.toUserId;
+      recipientEmail = normalizeEmail(recipient.email);
+    } else {
+      recipientEmail = normalizeEmail(data.toEmail ?? "");
+      if (recipientEmail === normalizeEmail(user.email)) {
+        return fail("CANNOT_TRANSFER_TO_SELF");
+      }
+    }
+
+    const token = randomBytes(32).toString("base64url");
+    const now = new Date();
+    const expiresAt = new Date(now.getTime() + TRANSFER_TTL_MS);
+
+    let created: ActionResult<{ transferId: number; expiresAt: Date }>;
+    try {
+      created = await db.transaction(async tx => {
+        const [locked] = await tx
+          .select({ ownerId: teams.ownerId })
+          .from(teams)
+          .where(eq(teams.id, data.teamId))
+          .for("update");
+        if (locked?.ownerId !== user.id) return fail("FORBIDDEN");
+
+        const [pending] = await tx
+          .select()
+          .from(T)
+          .where(and(eq(T.teamId, data.teamId), eq(T.status, "pending")))
+          .for("update");
+        if (pending && !(await expireIfStale(tx, pending, now))) {
+          return fail("TRANSFER_ALREADY_PENDING");
+        }
+
+        const [inserted] = await tx
+          .insert(T)
+          .values({
+            teamId: data.teamId,
+            fromUserId: user.id,
+            toUserId,
+            toEmail: toUserId ? null : recipientEmail,
+            tokenHash: hashToken(token),
+            status: "pending",
+            expiresAt,
+          })
+          .returning({ id: T.id });
+
+        await recordStaffEvent(tx, {
+          teamId: data.teamId,
+          actorUserId: user.id,
+          subjectUserId: toUserId,
+          type: "ownership_transfer_requested",
+          payload: {
+            transferId: inserted.id,
+            toEmail: toUserId ? null : recipientEmail,
+            expiresAt: expiresAt.toISOString(),
+          },
+        });
+        return { success: true, data: { transferId: inserted.id, expiresAt } };
+      });
+    } catch (error) {
+      if (isUniqueViolation(error)) return fail("TRANSFER_ALREADY_PENDING");
+      throw error;
+    }
+    if (!created.success) return created;
+
+    // Task 10 replaces this with the dedicated template.
+    const link = `${getBaseURL()}/transfer/${token}`;
+    await sendEmail({
+      to: recipientEmail,
+      subject: `Transferência da equipa ${team.name}`,
+      html: `
+        <p>${escapeHtml(user.name)} quer passar-te a gestão da equipa <strong>${escapeHtml(team.name)}</strong> no JogaBola.</p>
+        <p><a href="${link}">Ver pedido de transferência</a></p>
+        <p>O pedido expira a ${expiresAt.toLocaleDateString("pt-PT")}.</p>
+      `,
+    });
+
+    refreshArena();
+    return created;
+  },
+);
+
+/** Owner withdraws the pending request. */
+export const cancelOwnershipTransfer = withAuthAction(
+  teamTransferTeamSchema,
+  async (user, data): Promise<ActionResult<{ cancelled: true }>> => {
+    const access = await getTeamAccess(user.id, data.teamId);
+    if (!access.teamExists) return fail("TEAM_NOT_FOUND");
+    if (!access.isOwner) return fail("FORBIDDEN");
+
+    const outcome = await db.transaction(
+      async (tx): Promise<ActionResult<{ cancelled: true }>> => {
+        const [locked] = await tx
+          .select({ ownerId: teams.ownerId })
+          .from(teams)
+          .where(eq(teams.id, data.teamId))
+          .for("update");
+        if (locked?.ownerId !== user.id) return fail("FORBIDDEN");
+
+        const [pending] = await tx
+          .select()
+          .from(T)
+          .where(and(eq(T.teamId, data.teamId), eq(T.status, "pending")))
+          .for("update");
+        if (!pending) return fail("TRANSFER_NOT_FOUND");
+        if (await expireIfStale(tx, pending)) return fail("TRANSFER_EXPIRED");
+
+        await tx
+          .update(T)
+          .set({ status: "cancelled", resolvedAt: new Date() })
+          .where(eq(T.id, pending.id));
+        await recordStaffEvent(tx, {
+          teamId: data.teamId,
+          actorUserId: user.id,
+          subjectUserId: pending.toUserId,
+          type: "ownership_transfer_cancelled",
+          payload: { transferId: pending.id, reason: "cancelled" },
+        });
+        return { success: true, data: { cancelled: true } };
+      },
+    );
+
+    if (outcome.success) refreshArena();
+    return outcome;
+  },
+);
+
+export const acceptOwnershipTransfer = withAuthAction(
+  transferTokenSchema,
+  async (user, data) =>
+    acceptTransfer(eq(T.tokenHash, hashToken(data.token)), user.id),
+);
+
+export const acceptOwnershipTransferById = withAuthAction(
+  transferIdSchema,
+  async (user, data) => acceptTransfer(eq(T.id, data.transferId), user.id),
+);
+
+export const declineOwnershipTransfer = withAuthAction(
+  transferTokenSchema,
+  async (user, data) =>
+    declineTransfer(eq(T.tokenHash, hashToken(data.token)), user.id),
+);
+
+export const declineOwnershipTransferById = withAuthAction(
+  transferIdSchema,
+  async (user, data) => declineTransfer(eq(T.id, data.transferId), user.id),
+);
+
+/** Details for the token landing page; holding the token is the access. */
+export const getTransferByToken = withAuthAction(
+  transferTokenSchema,
+  async (
+    _user,
+    data,
+  ): Promise<
+    ActionResult<{
+      teamName: string;
+      fromName: string;
+      expiresAt: Date;
+      status: string;
+    }>
+  > => {
+    const [found] = await db
+      .select({
+        transfer: T,
+        teamName: teams.name,
+        fromName: userTable.name,
+      })
+      .from(T)
+      .innerJoin(teams, eq(teams.id, T.teamId))
+      .innerJoin(userTable, eq(userTable.id, T.fromUserId))
+      .where(eq(T.tokenHash, hashToken(data.token)))
+      .limit(1);
+    if (!found) return fail("TRANSFER_NOT_FOUND");
+
+    let status: string = found.transfer.status;
+    if (isStale(found.transfer, new Date())) {
+      await expireStaleRows([found.transfer]);
+      status = "expired";
+    }
+
+    return {
+      success: true,
+      data: {
+        teamName: found.teamName,
+        fromName: found.fromName,
+        expiresAt: found.transfer.expiresAt,
+        status,
+      },
+    };
+  },
+);
+
+/** Owner view of the team's pending request, if any. */
+export const getPendingTransfer = withAuthAction(
+  teamTransferTeamSchema,
+  async (user, data): Promise<ActionResult<PendingTransfer | null>> => {
+    const access = await getTeamAccess(user.id, data.teamId);
+    if (!access.teamExists) return fail("TEAM_NOT_FOUND");
+    if (!access.isOwner) return fail("FORBIDDEN");
+
+    const [found] = await db
+      .select({ transfer: T, toName: userTable.name })
+      .from(T)
+      .leftJoin(userTable, eq(userTable.id, T.toUserId))
+      .where(and(eq(T.teamId, data.teamId), eq(T.status, "pending")))
+      .limit(1);
+    if (!found) return { success: true, data: null };
+    if (isStale(found.transfer, new Date())) {
+      await expireStaleRows([found.transfer]);
+      return { success: true, data: null };
+    }
+
+    return {
+      success: true,
+      data: {
+        transferId: found.transfer.id,
+        toUserId: found.transfer.toUserId,
+        toName: found.toName ?? null,
+        toEmail: found.transfer.toEmail,
+        expiresAt: found.transfer.expiresAt,
+      },
+    };
+  },
+);
+
+/** Pending requests addressed to the caller (by id or verified email). */
+export const getMyIncomingTransfers = withAuthQuery(
+  async (user): Promise<ActionResult<IncomingTransfer[]>> => {
+    const [caller] = await db
+      .select({
+        email: userTable.email,
+        emailVerified: userTable.emailVerified,
+      })
+      .from(userTable)
+      .where(eq(userTable.id, user.id))
+      .limit(1);
+    if (!caller) return fail("UNAUTHORIZED");
+
+    const recipient = caller.emailVerified
+      ? or(
+          eq(T.toUserId, user.id),
+          and(isNull(T.toUserId), eq(T.toEmail, normalizeEmail(caller.email))),
+        )
+      : eq(T.toUserId, user.id);
+
+    const rows = await db
+      .select({
+        transfer: T,
+        teamName: teams.name,
+        fromName: userTable.name,
+      })
+      .from(T)
+      .innerJoin(teams, eq(teams.id, T.teamId))
+      .innerJoin(userTable, eq(userTable.id, T.fromUserId))
+      .where(and(eq(T.status, "pending"), recipient));
+
+    const now = new Date();
+    const fresh = rows.filter(row => !isStale(row.transfer, now));
+    const stale = rows.filter(row => isStale(row.transfer, now));
+    await expireStaleRows(stale.map(row => row.transfer));
+
+    return {
+      success: true,
+      data: fresh
+        .filter(row => row.transfer.fromUserId !== user.id)
+        .map(row => ({
+          transferId: row.transfer.id,
+          teamName: row.teamName,
+          fromName: row.fromName,
+          expiresAt: row.transfer.expiresAt,
+        })),
+    };
+  },
+);
