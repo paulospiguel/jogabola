@@ -8,6 +8,24 @@ import {
   type StaffTitle,
 } from "@/lib/staff-permissions";
 
+/** Minimal react-query surface, so this module stays framework-light. */
+interface QueryInvalidator {
+  invalidateQueries: (filters: { queryKey: readonly unknown[] }) => unknown;
+}
+
+/** Roster (Plantel) query keys refreshed after an athlete opt-in/out. */
+export const ROSTER_QUERY_KEYS = [["squad"], ["dashboard", "squad"]] as const;
+
+export async function invalidateRosterQueries(
+  queryClient: QueryInvalidator,
+): Promise<void> {
+  await Promise.all(
+    ROSTER_QUERY_KEYS.map(queryKey =>
+      queryClient.invalidateQueries({ queryKey }),
+    ),
+  );
+}
+
 export type StaffAction = "promote" | "demote" | null;
 
 export interface StaffActionTarget {

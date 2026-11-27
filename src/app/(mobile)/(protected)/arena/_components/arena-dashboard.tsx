@@ -221,13 +221,20 @@ export function ArenaDashboard({ userId }: ArenaDashboardProps) {
     });
   }, [carouselEvents.length]);
 
+  // Rendered as the FIRST child of every branch below so React keeps the
+  // same instance when the dashboard switches branch (e.g. the first team is
+  // created and becomes active): remounting would drop the post-create
+  // athlete prompt state.
+  const createTeamSheet =
+    sheet === "create-team" ? (
+      <CreateTeamSheet onClose={() => setSheet(null)} />
+    ) : null;
+
   // No team selected / manager has no teams yet
   if (!activeTeamId || !activeTeam) {
     return (
       <>
-        {sheet === "create-team" && (
-          <CreateTeamSheet onClose={() => setSheet(null)} />
-        )}
+        {createTeamSheet}
         <div className="flex h-screen flex-col items-center justify-center gap-4 bg-arena-bg text-arena-text-muted">
           <div className="flex size-14 items-center justify-center rounded-2xl bg-arena-surface-el">
             <Shield className="size-7 text-arena-primary" />
@@ -257,7 +264,12 @@ export function ArenaDashboard({ userId }: ArenaDashboardProps) {
   // still fetching. The Arena layout keeps sidebar/topbar/bottom nav
   // mounted around this component regardless.
   if (eventsState.isInitialLoading || squadState.isInitialLoading) {
-    return <DashboardSkeleton />;
+    return (
+      <>
+        {createTeamSheet}
+        <DashboardSkeleton />
+      </>
+    );
   }
 
   const eventsViewState = deriveQueryViewState({
@@ -279,6 +291,7 @@ export function ArenaDashboard({ userId }: ArenaDashboardProps) {
 
   return (
     <>
+      {createTeamSheet}
       {sheet === "create-event" && (
         <CreateEventSheet
           onClose={() => setSheet(null)}
@@ -296,9 +309,6 @@ export function ArenaDashboard({ userId }: ArenaDashboardProps) {
           teamId={activeTeamId}
           onClose={() => setSheet(null)}
         />
-      )}
-      {sheet === "create-team" && (
-        <CreateTeamSheet onClose={() => setSheet(null)} />
       )}
 
       <motion.div

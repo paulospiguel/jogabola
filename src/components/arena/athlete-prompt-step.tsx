@@ -1,12 +1,13 @@
 "use client";
 
+import { useQueryClient } from "@tanstack/react-query";
 import { Check, Loader2, Shield, Shirt } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useState } from "react";
 import { setMyAthleteStatus } from "@/actions/team-staff.actions";
 import { useTeams } from "@/hooks/use-teams";
 import { useToast } from "@/hooks/use-toast-custom";
-import { staffErrorKey } from "@/lib/staff-ui";
+import { invalidateRosterQueries, staffErrorKey } from "@/lib/staff-ui";
 import { Button } from "../ui/button";
 import { BottomSheet } from "./bottom-sheet";
 
@@ -26,13 +27,16 @@ export function AthletePromptStep({
   const tStaff = useTranslations("teamStaff");
   const { toast } = useToast();
   const { refetch } = useTeams();
+  const queryClient = useQueryClient();
   const [joining, setJoining] = useState(false);
 
   const handleJoinRoster = async () => {
     setJoining(true);
     try {
       const result = await setMyAthleteStatus({ teamId, isAthlete: true });
-      if (result.success) await refetch();
+      if (result.success) {
+        await Promise.all([refetch(), invalidateRosterQueries(queryClient)]);
+      }
       // The choice can be retried from the profile toggle.
       else toast.error(tStaff(staffErrorKey(result.error.code)));
     } catch {

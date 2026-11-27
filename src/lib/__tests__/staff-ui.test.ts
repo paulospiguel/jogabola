@@ -4,6 +4,7 @@ import { describe, expect, it } from "vitest";
 import { STAFF_PERMISSIONS, STAFF_TITLES } from "@/lib/staff-permissions";
 import {
   getStaffAction,
+  invalidateRosterQueries,
   permissionLabelKey,
   staffErrorKey,
   togglePermission,
@@ -82,5 +83,15 @@ describe("teamStaff locale coverage", () => {
         messages.teamStaff.permissions[permissionLabelKey(permission)],
       ).toBeTypeOf("string");
     }
+  });
+});
+
+describe("invalidateRosterQueries", () => {
+  it("invalidates the squad and dashboard squad queries", async () => {
+    const calls: unknown[] = [];
+    await invalidateRosterQueries({
+      invalidateQueries: filters => calls.push(filters.queryKey),
+    });
+    expect(calls).toEqual([["squad"], ["dashboard", "squad"]]);
   });
 });

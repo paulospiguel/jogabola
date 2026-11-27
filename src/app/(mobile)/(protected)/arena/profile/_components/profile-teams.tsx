@@ -1,5 +1,6 @@
 "use client";
 
+import { useQueryClient } from "@tanstack/react-query";
 import { AnimatePresence, motion } from "framer-motion";
 import {
   Calendar,
@@ -17,7 +18,7 @@ import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { useTeams } from "@/hooks/use-teams";
 import { useToast } from "@/hooks/use-toast-custom";
-import { staffErrorKey } from "@/lib/staff-ui";
+import { invalidateRosterQueries, staffErrorKey } from "@/lib/staff-ui";
 import { cn } from "@/lib/utils";
 
 interface TeamEntry {
@@ -42,6 +43,7 @@ export function ProfileTeams({ teams }: ProfileTeamsProps) {
   const tStaff = useTranslations("teamStaff");
   const { toast } = useToast();
   const { refetch } = useTeams();
+  const queryClient = useQueryClient();
   const [expandedId, setExpandedId] = useState<number | null>(null);
   // Optimistic athlete status per team, rolled back on error.
   const [athleteOverrides, setAthleteOverrides] = useState<
@@ -67,8 +69,9 @@ export function ProfileTeams({ teams }: ProfileTeamsProps) {
     let failed = false;
     try {
       const result = await setMyAthleteStatus({ teamId: team.id, isAthlete });
-      if (result.success) await refetch();
-      else {
+      if (result.success) {
+        await Promise.all([refetch(), invalidateRosterQueries(queryClient)]);
+      } else {
         failed = true;
         errorCode = result.error.code;
       }
