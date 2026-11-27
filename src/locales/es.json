@@ -781,7 +781,8 @@
       "upgradePlan": "Mejorar plan",
       "lockedToTeam": "Equipo del evento"
     },
-    "teams": "Equipos"
+    "teams": "Equipos",
+    "staff": "Staff"
   },
   "arenaPage": {
     "activeTeams": {
@@ -3610,11 +3611,13 @@
     },
     "demoteDialog": {
       "title": "¿Quitar del staff?",
-      "description": "{name} pierde el cargo y los privilegios de gestión. Sigue en la plantilla."
+      "description": "{name} pierde el cargo y los privilegios de gestión. Sigue en la plantilla.",
+      "descriptionNotAthlete": "{name} pierde el cargo y los privilegios de gestión. Como no está en la plantilla, pierde el acceso al equipo."
     },
     "feedback": {
       "promoted": "{name} ya forma parte del staff.",
-      "demoted": "{name} ya no forma parte del staff."
+      "demoted": "{name} ya no forma parte del staff.",
+      "updated": "Staff de {name} actualizado."
     },
     "errors": {
       "FORBIDDEN": "No tienes permiso para esta acción.",
@@ -3624,6 +3627,34 @@
       "NOT_STAFF": "Esta persona ya no forma parte del staff.",
       "VALIDATION_ERROR": "Los datos enviados no son válidos.",
       "UNKNOWN_ERROR": "Algo salió mal. Inténtalo de nuevo."
+    },
+    "page": {
+      "title": "Staff",
+      "subOwner": "Quién te ayuda a gestionar el equipo y qué puede hacer cada uno.",
+      "subStaff": "Quién gestiona el equipo contigo. Solo el dueño cambia cargos y privilegios.",
+      "count": "{count, plural, =1 {# persona} other {# personas}}"
+    },
+    "list": {
+      "you": "(tú)",
+      "athlete": "Atleta",
+      "allPermissions": "Todos los privilegios",
+      "noPermissions": "Sin privilegios",
+      "editAria": "Editar a {name}"
+    },
+    "empty": {
+      "title": "Aún no tienes staff",
+      "sub": "Asciende atletas de la plantilla a staff para compartir la gestión del equipo.",
+      "cta": "Ver plantilla"
+    },
+    "editSheet": {
+      "title": "Editar staff",
+      "description": "Cambia el cargo y los privilegios de {name}.",
+      "isAthlete": "También es atleta de la plantilla",
+      "notAthlete": "No está en la plantilla",
+      "permissionsHint": "Cambiar el cargo no cambia los privilegios. Usa la sugerencia para restablecerlos.",
+      "applyPreset": "Aplicar sugerencia",
+      "save": "Guardar cambios",
+      "saving": "Guardando..."
     }
   }
 }

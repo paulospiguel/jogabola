@@ -9,6 +9,7 @@ import {
   players,
   session,
   teamMembers,
+  teamStaff,
   teams,
   user as userTable,
 } from "@/db/schema";
@@ -17,7 +18,7 @@ import { trackServerEvent } from "@/lib/analytics-server";
 import { sendEmail } from "@/lib/email";
 import { canCreateTeam, normalizePlanTier } from "@/lib/plan-limits";
 import { insertRosterMember } from "@/lib/roster";
-import type { StaffTitle } from "@/lib/staff-permissions";
+import { isStaffTitle, type StaffTitle } from "@/lib/staff-permissions";
 import { can, canViewTeam, getTeamAccess, isTeamOwner } from "@/lib/team-authz";
 import { listMyTeamSummaries } from "@/lib/team-summaries";
 import {
@@ -43,6 +44,12 @@ export interface SquadMember {
   games: number | null;
   /** Overall da auto-avaliação (1–10), null se o atleta ainda não se avaliou. */
   selfRating: number | null;
+}
+
+/** Roster row as listed in the Plantel, with the member's staff title. */
+export interface SquadListMember extends SquadMember {
+  /** Staff title when this registered athlete is also team staff. */
+  staffTitle: StaffTitle | null;
 }
 
 /** Athlete profile plus the target's team role (owner / staff title). */
@@ -366,6 +373,19 @@ export const getTeamSquad = withAuthAction(
       : [];
     const ratingMap = new Map(ratingRows.map(r => [r.userId, r]));
 
+    // Staff titles for the badge: one query per team, no per-member lookup.
+    const staffRows = await db
+      .select({ userId: teamStaff.userId, title: teamStaff.title })
+      .from(teamStaff)
+      .where(eq(teamStaff.teamId, teamId));
+    const staffTitleMap = new Map<string, StaffTitle>(
+      staffRows.map(row => [
+        row.userId,
+        isStaffTitle(row.title) ? row.title : "other",
+      ]),
+    );
+    const registeredIds = new Set(memberIds);
+
     // Stats reais de jogo (goals/assists/rating/games) serão calculados na
     // Fase 2. Por agora retornamos null para não mostrar valores falsos na UI.
     const formattedSquad = squad.map(member => {
@@ -374,6 +394,9 @@ export const getTeamSquad = withAuthAction(
         ...member,
         position: member.position ?? selfAssessment?.primaryPosition ?? null,
         selfRating: selfAssessment?.overall ?? null,
+        staffTitle: registeredIds.has(member.id)
+          ? (staffTitleMap.get(member.id) ?? null)
+          : null,
         goals: null,
         assists: null,
         rating: null,
@@ -381,7 +404,7 @@ export const getTeamSquad = withAuthAction(
       };
     });
 
-    return { success: true, data: formattedSquad as SquadMember[] };
+    return { success: true, data: formattedSquad as SquadListMember[] };
   },
 );
 

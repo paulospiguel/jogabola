@@ -781,7 +781,8 @@
       "upgradePlan": "Mettre à niveau",
       "lockedToTeam": "Équipe de l'événement"
     },
-    "teams": "Équipes"
+    "teams": "Équipes",
+    "staff": "Staff"
   },
   "arenaPage": {
     "activeTeams": {
@@ -3610,11 +3611,13 @@
     },
     "demoteDialog": {
       "title": "Retirer du staff ?",
-      "description": "{name} perd son rôle et ses privilèges de gestion. Reste dans l'effectif."
+      "description": "{name} perd son rôle et ses privilèges de gestion. Reste dans l'effectif.",
+      "descriptionNotAthlete": "{name} perd son rôle et ses privilèges de gestion. N'étant pas dans l'effectif, il perd l'accès à l'équipe."
     },
     "feedback": {
       "promoted": "{name} fait désormais partie du staff.",
-      "demoted": "{name} ne fait plus partie du staff."
+      "demoted": "{name} ne fait plus partie du staff.",
+      "updated": "Staff de {name} mis à jour."
     },
     "errors": {
       "FORBIDDEN": "Vous n'avez pas la permission pour cette action.",
@@ -3624,6 +3627,34 @@
       "NOT_STAFF": "Cette personne ne fait plus partie du staff.",
       "VALIDATION_ERROR": "Les données envoyées ne sont pas valides.",
       "UNKNOWN_ERROR": "Une erreur est survenue. Réessayez."
+    },
+    "page": {
+      "title": "Staff",
+      "subOwner": "Qui t'aide à gérer l'équipe et ce que chacun peut faire.",
+      "subStaff": "Qui gère l'équipe avec toi. Seul le propriétaire modifie les rôles et privilèges.",
+      "count": "{count, plural, =1 {# personne} other {# personnes}}"
+    },
+    "list": {
+      "you": "(toi)",
+      "athlete": "Athlète",
+      "allPermissions": "Tous les privilèges",
+      "noPermissions": "Aucun privilège",
+      "editAria": "Modifier {name}"
+    },
+    "empty": {
+      "title": "Tu n'as pas encore de staff",
+      "sub": "Promeus des athlètes de l'effectif au staff pour partager la gestion de l'équipe.",
+      "cta": "Voir l'effectif"
+    },
+    "editSheet": {
+      "title": "Modifier le staff",
+      "description": "Modifie le rôle et les privilèges de {name}.",
+      "isAthlete": "Aussi athlète de l'effectif",
+      "notAthlete": "Pas dans l'effectif",
+      "permissionsHint": "Changer le rôle ne modifie pas les privilèges. Utilise la suggestion pour les rétablir.",
+      "applyPreset": "Appliquer la suggestion",
+      "save": "Enregistrer",
+      "saving": "Enregistrement..."
     }
   }
 }

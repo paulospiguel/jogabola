@@ -781,7 +781,8 @@
       "upgradePlan": "Upgrade plan",
       "lockedToTeam": "Event team"
     },
-    "teams": "Teams"
+    "teams": "Teams",
+    "staff": "Staff"
   },
   "arenaPage": {
     "activeTeams": {
@@ -3610,11 +3611,13 @@
     },
     "demoteDialog": {
       "title": "Remove from staff?",
-      "description": "{name} loses the title and management privileges. Stays in the squad."
+      "description": "{name} loses the title and management privileges. Stays in the squad.",
+      "descriptionNotAthlete": "{name} loses the title and management privileges. Since they are not in the squad, they lose access to the team."
     },
     "feedback": {
       "promoted": "{name} is now part of the staff.",
-      "demoted": "{name} is no longer part of the staff."
+      "demoted": "{name} is no longer part of the staff.",
+      "updated": "{name}'s staff role updated."
     },
     "errors": {
       "FORBIDDEN": "You don't have permission for this action.",
@@ -3624,6 +3627,34 @@
       "NOT_STAFF": "This person is no longer part of the staff.",
       "VALIDATION_ERROR": "The submitted data is not valid.",
       "UNKNOWN_ERROR": "Something went wrong. Please try again."
+    },
+    "page": {
+      "title": "Staff",
+      "subOwner": "Who helps you run the team and what each person can do.",
+      "subStaff": "Who runs the team with you. Only the owner changes titles and privileges.",
+      "count": "{count, plural, =1 {# person} other {# people}}"
+    },
+    "list": {
+      "you": "(you)",
+      "athlete": "Athlete",
+      "allPermissions": "All privileges",
+      "noPermissions": "No privileges",
+      "editAria": "Edit {name}"
+    },
+    "empty": {
+      "title": "You have no staff yet",
+      "sub": "Promote squad athletes to staff to share team management.",
+      "cta": "View squad"
+    },
+    "editSheet": {
+      "title": "Edit staff",
+      "description": "Change {name}'s title and privileges.",
+      "isAthlete": "Also a squad athlete",
+      "notAthlete": "Not in the squad",
+      "permissionsHint": "Changing the title keeps the privileges. Use the suggestion to reset them.",
+      "applyPreset": "Apply suggestion",
+      "save": "Save changes",
+      "saving": "Saving..."
     }
   }
 }

@@ -36,6 +36,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { useTeams } from "@/hooks/use-teams";
+import { canManagePayments } from "@/lib/staff-ui";
 import { cn } from "@/lib/utils";
 import type { EventStatus } from "@/types/events";
 import { BottomSheet } from "./bottom-sheet";
@@ -66,6 +68,12 @@ export function EditEventSheet({ event, onClose }: EditEventSheetProps) {
   const t = useTranslations("arenaCreateEvent");
   const tEvents = useTranslations("arenaEvents");
   const tCommon = useTranslations("common");
+  const { myTeams } = useTeams();
+  // Team payment settings (MB WAY) need payments.manage; the server skips
+  // those writes for anyone else, so the section is hidden for them.
+  const canEditPaymentSettings = canManagePayments(
+    myTeams.find(team => team.id === event.teamId) ?? null,
+  );
 
   const [form, setForm] = useState({
     startDate: new Date(event.startDate),
@@ -153,8 +161,9 @@ export function EditEventSheet({ event, onClose }: EditEventSheetProps) {
           ? Number.parseInt(form.paymentDeadlineHours, 10)
           : null,
       rosterOnly: form.rosterOnly,
-      mbwayEnabled: form.mbwayEnabled,
-      mbwayPhone: form.mbwayPhone,
+      ...(canEditPaymentSettings
+        ? { mbwayEnabled: form.mbwayEnabled, mbwayPhone: form.mbwayPhone }
+        : {}),
       transferRequiresProof: form.transferRequiresProof,
     });
     setSaving(false);
@@ -263,43 +272,45 @@ export function EditEventSheet({ event, onClose }: EditEventSheetProps) {
               {/* MBWay Config */}
               {form.priceCents > 0 && (
                 <div className="flex flex-col gap-3 pt-2">
-                  <button
-                    type="button"
-                    onClick={() => set("mbwayEnabled", !form.mbwayEnabled)}
-                    className={cn(
-                      "flex items-center justify-between rounded-xl border px-4 py-3 text-left transition-colors",
-                      form.mbwayEnabled
-                        ? "border-arena-primary/40 bg-arena-primary/5"
-                        : "border-arena-border bg-arena-bg",
-                    )}
-                  >
-                    <div>
-                      <p className="text-[13px] font-semibold text-arena-text">
-                        {t("payment.acceptMbway")}
-                      </p>
-                      <p className="text-[11px] text-arena-text-muted">
-                        {t("payment.acceptMbwayHint")}
-                      </p>
-                    </div>
-                    <div
+                  {canEditPaymentSettings && (
+                    <button
+                      type="button"
+                      onClick={() => set("mbwayEnabled", !form.mbwayEnabled)}
                       className={cn(
-                        "h-5 w-9 rounded-full transition-colors",
+                        "flex items-center justify-between rounded-xl border px-4 py-3 text-left transition-colors",
                         form.mbwayEnabled
-                          ? "bg-arena-primary"
-                          : "bg-arena-border",
+                          ? "border-arena-primary/40 bg-arena-primary/5"
+                          : "border-arena-border bg-arena-bg",
                       )}
                     >
+                      <div>
+                        <p className="text-[13px] font-semibold text-arena-text">
+                          {t("payment.acceptMbway")}
+                        </p>
+                        <p className="text-[11px] text-arena-text-muted">
+                          {t("payment.acceptMbwayHint")}
+                        </p>
+                      </div>
                       <div
                         className={cn(
-                          "mt-0.5 h-4 w-4 rounded-full bg-white shadow transition-transform",
+                          "h-5 w-9 rounded-full transition-colors",
                           form.mbwayEnabled
-                            ? "translate-x-4 ml-0.5"
-                            : "translate-x-0.5",
+                            ? "bg-arena-primary"
+                            : "bg-arena-border",
                         )}
-                      />
-                    </div>
-                  </button>
-                  {form.mbwayEnabled && (
+                      >
+                        <div
+                          className={cn(
+                            "mt-0.5 h-4 w-4 rounded-full bg-white shadow transition-transform",
+                            form.mbwayEnabled
+                              ? "translate-x-4 ml-0.5"
+                              : "translate-x-0.5",
+                          )}
+                        />
+                      </div>
+                    </button>
+                  )}
+                  {canEditPaymentSettings && form.mbwayEnabled && (
                     <div>
                       <Label className={labelClass} htmlFor="edit-mbway-phone">
                         {t("payment.mbwayPhone")}

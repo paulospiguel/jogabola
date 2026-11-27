@@ -48,6 +48,17 @@ export function getStaffAction(
   return target.isRegistered ? "promote" : null;
 }
 
+/**
+ * Presentation gate for team payment settings (MB WAY, etc.). The server
+ * skips payment-settings writes for anyone else, so the UI hides them.
+ */
+export function canManagePayments(
+  team: { isOwner: boolean; permissions: readonly StaffPermission[] } | null,
+): boolean {
+  if (!team) return false;
+  return team.isOwner || team.permissions.includes("payments.manage");
+}
+
 /** Locale key segment for a permission (`events.manage` → `events`). */
 export function permissionLabelKey(permission: StaffPermission): string {
   return permission.split(".")[0];

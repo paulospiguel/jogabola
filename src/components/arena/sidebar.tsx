@@ -8,6 +8,7 @@ import {
   Lock,
   type LucideIcon,
   Shield,
+  ShieldCheck,
   Timer,
   Users,
   Wallet,
@@ -30,11 +31,19 @@ import {
 } from "@/components/ui/sidebar";
 import { RELEASE } from "@/constants/app";
 import { useUnreadNotificationsCount } from "@/hooks/use-notifications";
+import { useTeams } from "@/hooks/use-teams";
 import { cn } from "@/lib/utils";
 import { Logo } from "../logo";
 import { useTeamGate } from "./team-gate-context";
 import { TeamSwitcher } from "./team-switcher";
 import { UserMenu } from "./user-menu";
+
+const STAFF_ITEM = {
+  href: "/arena/staff",
+  icon: ShieldCheck,
+  labelKey: "staff",
+  requiresTeam: true,
+};
 
 const ITEMS = [
   { href: "/arena", icon: Shield, labelKey: "dashboard", requiresTeam: false },
@@ -50,6 +59,7 @@ const ITEMS = [
     labelKey: "squads",
     requiresTeam: true,
   },
+  STAFF_ITEM,
   {
     href: "/arena/notifications",
     icon: Bell,
@@ -77,7 +87,16 @@ export function ArenaSidebar() {
   const { requireTeam, hasTeam, role } = useTeamGate();
   const { unreadCount } = useUnreadNotificationsCount();
 
+  const { activeTeam } = useTeams();
+
   const isCaptainWithoutTeam = role === "captain" && !hasTeam;
+  // Presentation only: the staff page re-checks access server-side.
+  const showStaff = Boolean(
+    activeTeam && (activeTeam.isOwner || activeTeam.staffTitle !== null),
+  );
+  const items = showStaff
+    ? ITEMS
+    : ITEMS.filter(item => item.href !== STAFF_ITEM.href);
 
   return (
     <Sidebar collapsible="icon" className="border-arena-border border-r">
@@ -102,7 +121,7 @@ export function ArenaSidebar() {
         <SidebarGroup className="group-data-[collapsible=icon]:p-0">
           <SidebarGroupContent>
             <SidebarMenu className="gap-1.5 group-data-[collapsible=icon]:gap-2">
-              {ITEMS.map(item => {
+              {items.map(item => {
                 const isActive =
                   pathname === item.href ||
                   (item.href !== "/arena" && pathname.startsWith(item.href));

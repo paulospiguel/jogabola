@@ -1,32 +1,18 @@
 "use client";
 
-import { Check, Loader2, ShieldCheck } from "lucide-react";
+import { Loader2, ShieldCheck } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useState } from "react";
 import { promoteToStaff } from "@/actions/team-staff.actions";
 import {
-  STAFF_PERMISSIONS,
-  STAFF_TITLES,
   type StaffPermission,
   type StaffTitle,
   TITLE_PRESETS,
 } from "@/lib/staff-permissions";
-import {
-  permissionLabelKey,
-  staffErrorKey,
-  togglePermission,
-} from "@/lib/staff-ui";
-import { cn } from "@/lib/utils";
+import { staffErrorKey } from "@/lib/staff-ui";
 import { Button } from "../ui/button";
-import { Label } from "../ui/label";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "../ui/select";
 import { BottomSheet } from "./bottom-sheet";
+import { StaffPermissionChips, StaffTitleSelect } from "./staff-fields";
 
 interface PromoteStaffSheetProps {
   teamId: number;
@@ -37,7 +23,6 @@ interface PromoteStaffSheetProps {
 }
 
 const DEFAULT_TITLE: StaffTitle = "coach";
-const labelClass = "mb-1.5 block text-xs font-semibold text-arena-text-sec";
 
 export function PromoteStaffSheet({
   teamId,
@@ -54,8 +39,7 @@ export function PromoteStaffSheet({
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const handleTitleChange = (value: string) => {
-    const next = value as StaffTitle;
+  const handleTitleChange = (next: StaffTitle) => {
     setTitle(next);
     setPermissions([...TITLE_PRESETS[next]]);
   };
@@ -97,60 +81,18 @@ export function PromoteStaffSheet({
         </div>
 
         <div className="mb-5">
-          <Label className={labelClass} htmlFor="staff-title">
-            {t("promoteSheet.titleLabel")}
-          </Label>
-          <Select onValueChange={handleTitleChange} value={title}>
-            <SelectTrigger
-              className="h-11 w-full rounded-xl border border-arena-border bg-arena-surface px-3 text-sm text-arena-text focus-visible:border-arena-primary/50 focus-visible:ring-1 focus-visible:ring-arena-primary/30 focus-visible:ring-offset-0"
-              id="staff-title"
-            >
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent className="z-[10000] border-arena-border bg-arena-bg-sec text-arena-text">
-              {STAFF_TITLES.map(option => (
-                <SelectItem key={option} value={option}>
-                  {t(`titles.${option}`)}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+          <StaffTitleSelect
+            id="staff-title"
+            onChange={handleTitleChange}
+            value={title}
+          />
         </div>
 
-        <fieldset>
-          <legend className={labelClass}>
-            {t("promoteSheet.permissionsLabel")}
-          </legend>
-          <p className="mb-3 text-[11px] text-arena-text-muted">
-            {t("promoteSheet.permissionsHint")}
-          </p>
-          <div className="flex flex-wrap gap-2">
-            {STAFF_PERMISSIONS.map(permission => {
-              const active = permissions.includes(permission);
-              return (
-                <button
-                  key={permission}
-                  aria-pressed={active}
-                  className={cn(
-                    "press inline-flex h-9 items-center gap-1.5 rounded-full border px-3 text-[12px] font-semibold transition-colors",
-                    active
-                      ? "border-arena-primary/40 bg-arena-primary/15 text-arena-primary"
-                      : "border-arena-border bg-arena-surface text-arena-text-sec hover:bg-arena-surface-el",
-                  )}
-                  onClick={() =>
-                    setPermissions(current =>
-                      togglePermission(current, permission),
-                    )
-                  }
-                  type="button"
-                >
-                  {active && <Check size={12} strokeWidth={2.5} />}
-                  {t(`permissions.${permissionLabelKey(permission)}`)}
-                </button>
-              );
-            })}
-          </div>
-        </fieldset>
+        <StaffPermissionChips
+          hint={t("promoteSheet.permissionsHint")}
+          onChange={setPermissions}
+          value={permissions}
+        />
 
         {error && (
           <div

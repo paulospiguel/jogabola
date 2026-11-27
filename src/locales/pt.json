@@ -781,7 +781,8 @@
       "upgradePlan": "Atualizar plano",
       "lockedToTeam": "Equipa do evento"
     },
-    "teams": "Equipas"
+    "teams": "Equipas",
+    "staff": "Staff"
   },
   "arenaPage": {
     "activeTeams": {
@@ -3610,11 +3611,13 @@
     },
     "demoteDialog": {
       "title": "Remover do staff?",
-      "description": "{name} perde o cargo e os privilégios de gestão. Continua no plantel."
+      "description": "{name} perde o cargo e os privilégios de gestão. Continua no plantel.",
+      "descriptionNotAthlete": "{name} perde o cargo e os privilégios de gestão. Como não está no plantel, perde o acesso à equipa."
     },
     "feedback": {
       "promoted": "{name} faz agora parte do staff.",
-      "demoted": "{name} já não faz parte do staff."
+      "demoted": "{name} já não faz parte do staff.",
+      "updated": "Staff de {name} atualizado."
     },
     "errors": {
       "FORBIDDEN": "Não tens permissão para esta ação.",
@@ -3624,6 +3627,34 @@
       "NOT_STAFF": "Esta pessoa já não faz parte do staff.",
       "VALIDATION_ERROR": "Os dados enviados não são válidos.",
       "UNKNOWN_ERROR": "Algo correu mal. Tenta novamente."
+    },
+    "page": {
+      "title": "Staff",
+      "subOwner": "Quem te ajuda a gerir a equipa e o que cada um pode fazer.",
+      "subStaff": "Quem gere a equipa contigo. Só o dono altera cargos e privilégios.",
+      "count": "{count, plural, =1 {# pessoa} other {# pessoas}}"
+    },
+    "list": {
+      "you": "(tu)",
+      "athlete": "Atleta",
+      "allPermissions": "Todos os privilégios",
+      "noPermissions": "Sem privilégios",
+      "editAria": "Editar {name}"
+    },
+    "empty": {
+      "title": "Ainda não tens staff",
+      "sub": "Promove atletas do plantel a staff para partilhar a gestão da equipa.",
+      "cta": "Ver plantel"
+    },
+    "editSheet": {
+      "title": "Editar staff",
+      "description": "Altera o cargo e os privilégios de {name}.",
+      "isAthlete": "Também é atleta do plantel",
+      "notAthlete": "Não está no plantel",
+      "permissionsHint": "Mudar o cargo não altera os privilégios. Usa a sugestão para os repor.",
+      "applyPreset": "Aplicar sugestão",
+      "save": "Guardar alterações",
+      "saving": "A guardar..."
     }
   }
 }
