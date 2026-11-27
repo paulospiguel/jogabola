@@ -145,9 +145,22 @@ type ResolveOutcome =
 
 /**
  * Shared front half of accept/decline, inside the caller's transaction:
- * finds the request, checks the recipient, locks (user →) team → transfer,
- * and resolves expiry. Lock order matches request/cancel and the staff
- * mutations (team before transfer) so concurrent paths cannot deadlock.
+ * finds the request, checks the recipient, takes the locks and resolves
+ * expiry.
+ *
+ * Lock order (every path takes them in this order, so no cycle can form):
+ *   1. `teams` row — `FOR NO KEY UPDATE` in request/cancel/accept,
+ *      `FOR SHARE` in the staff mutations. These conflict with each other on
+ *      purpose (ownership changes serialize with owner-only mutations), but
+ *      neither conflicts with the `FOR KEY SHARE` that FK inserts referencing
+ *      the team take (owner_id is not a key column).
+ *   2. recipient `user` row — accept only, `FOR NO KEY UPDATE`, so the
+ *      owned-team count is stable across concurrent accepts by the same
+ *      recipient. It does not conflict with the `FOR KEY SHARE` taken by
+ *      inserts whose FK references that user (e.g. `team_staff_events`).
+ *   3. transfer row — `FOR UPDATE`.
+ * Decline takes only (3). Nothing takes (1) after (2) or (3), and the FK
+ * key-share locks taken by inserts never wait on (1) or (2).
  */
 async function resolveForRecipient(
   tx: DbExecutor,
@@ -158,17 +171,13 @@ async function resolveForRecipient(
   const [found] = await tx.select().from(T).where(where).limit(1);
   if (!found) return { kind: "failure", failure: fail("TRANSFER_NOT_FOUND") };
 
-  const callerQuery = tx
+  const [caller] = await tx
     .select({
       email: userTable.email,
       emailVerified: userTable.emailVerified,
-      planTier: userTable.planTier,
     })
     .from(userTable)
     .where(eq(userTable.id, userId));
-  // Accept serializes on the recipient row so the owned-team count is stable.
-  const [caller] =
-    mode === "accept" ? await callerQuery.for("update") : await callerQuery;
   if (!caller) return { kind: "failure", failure: fail("UNAUTHORIZED") };
 
   const identity = { id: userId, ...caller };
@@ -176,14 +185,23 @@ async function resolveForRecipient(
   if (denied) return { kind: "failure", failure: fail(denied) };
 
   let ownerId: string | null = null;
+  let planTier: string | null = null;
   if (mode === "accept") {
     const [team] = await tx
       .select({ ownerId: teams.ownerId })
       .from(teams)
       .where(eq(teams.id, found.teamId))
-      .for("update");
+      .for("no key update");
     if (!team) return { kind: "failure", failure: fail("TRANSFER_NOT_FOUND") };
     ownerId = team.ownerId;
+
+    const [recipient] = await tx
+      .select({ planTier: userTable.planTier })
+      .from(userTable)
+      .where(eq(userTable.id, userId))
+      .for("no key update");
+    if (!recipient) return { kind: "failure", failure: fail("UNAUTHORIZED") };
+    planTier = recipient.planTier;
   }
 
   const [row] = await tx
@@ -210,7 +228,29 @@ async function resolveForRecipient(
   if (mode === "accept" && ownerId !== row.fromUserId) {
     return { kind: "failure", failure: fail("TRANSFER_NOT_FOUND") };
   }
-  return { kind: "pending", row, planTier: caller.planTier };
+  return { kind: "pending", row, planTier };
+}
+
+/** Whether `userId` is still on the roster or staff of `teamId`. */
+async function isRosterOrStaff(
+  tx: DbExecutor,
+  teamId: number,
+  userId: string,
+): Promise<boolean> {
+  const [athlete] = await tx
+    .select({ id: teamMembers.id })
+    .from(teamMembers)
+    .where(
+      and(eq(teamMembers.teamId, teamId), eq(teamMembers.playerId, userId)),
+    )
+    .limit(1);
+  if (athlete) return true;
+  const [staff] = await tx
+    .select({ id: teamStaff.id })
+    .from(teamStaff)
+    .where(and(eq(teamStaff.teamId, teamId), eq(teamStaff.userId, userId)))
+    .limit(1);
+  return Boolean(staff);
 }
 
 /** Accept core shared by the token and id paths. */
@@ -225,6 +265,12 @@ async function acceptTransfer(
       const { row } = resolved;
       if (resolved.kind === "done") {
         return { success: true, data: { teamId: row.teamId } };
+      }
+
+      // A member-targeted request only applies while the recipient is
+      // still on the roster or staff; the request stays pending otherwise.
+      if (row.toUserId && !(await isRosterOrStaff(tx, row.teamId, userId))) {
+        return fail("RECIPIENT_NOT_MEMBER");
       }
 
       const [{ teamCount }] = await tx
@@ -292,11 +338,15 @@ async function acceptTransfer(
         })
         .where(eq(teamPaymentSettings.teamId, row.teamId));
 
-      await tx
+      const accepted = await tx
         .update(T)
         .set({ status: "accepted", toUserId: userId, resolvedAt: now })
         .where(and(eq(T.id, row.id), eq(T.status, "pending")))
         .returning({ id: T.id });
+      // Unreachable under the row lock; throwing rolls back every write above.
+      if (accepted.length !== 1) {
+        throw new Error("Ownership transfer changed state during accept");
+      }
 
       await recordStaffEvent(tx, {
         teamId: row.teamId,
@@ -400,7 +450,7 @@ export const requestOwnershipTransfer = withAuthAction(
           .select({ ownerId: teams.ownerId })
           .from(teams)
           .where(eq(teams.id, data.teamId))
-          .for("update");
+          .for("no key update");
         if (locked?.ownerId !== user.id) return fail("FORBIDDEN");
 
         const [pending] = await tx
@@ -475,7 +525,7 @@ export const cancelOwnershipTransfer = withAuthAction(
           .select({ ownerId: teams.ownerId })
           .from(teams)
           .where(eq(teams.id, data.teamId))
-          .for("update");
+          .for("no key update");
         if (locked?.ownerId !== user.id) return fail("FORBIDDEN");
 
         const [pending] = await tx

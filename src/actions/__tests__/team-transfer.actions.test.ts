@@ -385,10 +385,30 @@ describe("requestOwnershipTransfer", () => {
     expect(sha256(token as string)).toBe(values.tokenHash);
 
     expect(eventTypes()).toEqual(["ownership_transfer_requested"]);
+    const teamLock = opsOf("select", teams).find(op => lockOf(op));
+    expect(teamLock && lockOf(teamLock)).toBe("no key update");
     expect(
       JSON.stringify(argOf(opsOf("insert", teamStaffEvents)[0], "values")),
     ).not.toContain(token as string);
     expect(mocks.revalidatePath).toHaveBeenCalledWith("/arena", "layout");
+  });
+
+  it("maps a unique violation race to TRANSFER_ALREADY_PENDING", async () => {
+    accessFor({ owner: ownerAccess, target: athleteAccess });
+    queue("select", teams, [{ name: "Os Craques" }]);
+    queue("select", userTable, [{ email: "target@example.com" }]);
+    mocks.transaction.mockRejectedValueOnce(
+      Object.assign(new Error("duplicate key"), { code: "23505" }),
+    );
+
+    const result = await requestOwnershipTransfer(input);
+
+    expect(result).toEqual({
+      success: false,
+      error: { code: "TRANSFER_ALREADY_PENDING" },
+    });
+    expect(mocks.sendEmail).not.toHaveBeenCalled();
+    expect(mocks.revalidatePath).not.toHaveBeenCalled();
   });
 
   it("normalizes the recipient email", async () => {
@@ -433,6 +453,7 @@ describe("cancelOwnershipTransfer", () => {
     const result = await cancelOwnershipTransfer({ teamId: 7 });
 
     expect(result).toEqual({ success: true, data: { cancelled: true } });
+    expect(lockOf(opsOf("select", teams)[0])).toBe("no key update");
     expect(argOf(opsOf("update", T)[0], "set")).toMatchObject({
       status: "cancelled",
     });
@@ -461,9 +482,11 @@ describe("acceptOwnershipTransfer", () => {
   ) {
     const row = transferRow(overrides);
     queue("select", T, [row], [row]);
-    queue("select", userTable, [verified("target")]);
+    queue("select", userTable, [verified("target")], [{ planTier: "pro" }]);
     queue("select", teams, [{ ownerId: "owner" }], [{ teamCount: 0 }]);
-    queue("select", teamMembers, roster);
+    // Member-targeted requests first re-check the recipient's roster row.
+    if (row.toUserId) queue("select", teamMembers, [{ id: 2 }], roster);
+    else queue("select", teamMembers, roster);
     queue("update", T, [{ id: row.id }]);
   }
 
@@ -510,7 +533,7 @@ describe("acceptOwnershipTransfer", () => {
   it("marks an expired request expired", async () => {
     const row = transferRow({ expiresAt: PAST });
     queue("select", T, [row], [row]);
-    queue("select", userTable, [verified("target")]);
+    queue("select", userTable, [verified("target")], [{ planTier: "pro" }]);
     queue("select", teams, [{ ownerId: "owner" }]);
     queue("update", T, [{ id: 5 }]);
 
@@ -530,8 +553,9 @@ describe("acceptOwnershipTransfer", () => {
   it("refuses at the plan limit and leaves the request pending", async () => {
     const row = transferRow();
     queue("select", T, [row], [row]);
-    queue("select", userTable, [verified("target", { planTier: "free" })]);
+    queue("select", userTable, [verified("target")], [{ planTier: "free" }]);
     queue("select", teams, [{ ownerId: "owner" }], [{ teamCount: 99 }]);
+    queue("select", teamMembers, [{ id: 2 }]);
 
     const result = await acceptOwnershipTransfer({ token: TOKEN });
 
@@ -584,22 +608,62 @@ describe("acceptOwnershipTransfer", () => {
     expect(mocks.revalidatePath).toHaveBeenCalledWith("/arena", "layout");
   });
 
-  it("locks the transfer row and the team row FOR UPDATE", async () => {
+  it("locks team, then recipient, then transfer before changing owner", async () => {
     happyPath();
 
     await acceptOwnershipTransfer({ token: TOKEN });
 
-    const transferLocks = opsOf("select", T).map(lockOf);
-    expect(transferLocks).toContain("update");
     const teamLock = opsOf("select", teams)[0];
+    const userLock = opsOf("select", userTable).find(op => lockOf(op));
+    const transferLock = opsOf("select", T).find(op => lockOf(op));
     expect(teamLock.inTx).toBe(true);
-    expect(lockOf(teamLock)).toBe("update");
-    const teamUpdate = mocks.ops.indexOf(opsOf("update", teams)[0]);
-    const lockedTransfer = mocks.ops.findIndex(
-      op => op.kind === "select" && op.table === T && lockOf(op) === "update",
-    );
-    expect(lockedTransfer).toBeLessThan(teamUpdate);
-    expect(mocks.ops.indexOf(teamLock)).toBeLessThan(teamUpdate);
+    // NO KEY UPDATE: FK inserts (KEY SHARE) referencing the team/user are
+    // not blocked, so owner cancel / staff mutations cannot form a cycle.
+    expect(lockOf(teamLock)).toBe("no key update");
+    expect(userLock && lockOf(userLock)).toBe("no key update");
+    expect(transferLock && lockOf(transferLock)).toBe("update");
+    const at = (op: Op | undefined) => mocks.ops.indexOf(op as Op);
+    const teamUpdate = at(opsOf("update", teams)[0]);
+    expect(at(teamLock)).toBeLessThan(at(userLock));
+    expect(at(userLock)).toBeLessThan(at(transferLock));
+    expect(at(transferLock)).toBeLessThan(teamUpdate);
+  });
+
+  it("refuses when the recipient left the roster and staff", async () => {
+    const row = transferRow();
+    queue("select", T, [row], [row]);
+    queue("select", userTable, [verified("target")], [{ planTier: "pro" }]);
+    queue("select", teams, [{ ownerId: "owner" }]);
+
+    const result = await acceptOwnershipTransfer({ token: TOKEN });
+
+    expect(result).toEqual({
+      success: false,
+      error: { code: "RECIPIENT_NOT_MEMBER" },
+    });
+    expect(opsOf("select", teamStaff)).toHaveLength(1);
+    expect(opsOf("update", T)).toHaveLength(0);
+    expect(opsOf("update", teams)).toHaveLength(0);
+    expect(eventTypes()).toEqual([]);
+  });
+
+  it("accepts a recipient who is staff but not on the roster", async () => {
+    happyPath();
+    queue("select", teamMembers, [], [{ id: 1 }]);
+    queue("select", teamStaff, [{ id: 3 }]);
+
+    const result = await acceptOwnershipTransfer({ token: TOKEN });
+
+    expect(result).toEqual({ success: true, data: { teamId: 7 } });
+  });
+
+  it("rolls back when the accepted update does not hit exactly one row", async () => {
+    happyPath();
+    queue("update", T, []);
+
+    await expect(acceptOwnershipTransfer({ token: TOKEN })).rejects.toThrow();
+    expect(eventTypes()).toEqual([]);
+    expect(mocks.revalidatePath).not.toHaveBeenCalled();
   });
 
   it("clears the old owner's session team when they are not on the roster", async () => {
@@ -630,7 +694,7 @@ describe("acceptOwnershipTransfer", () => {
   it("is idempotent once accepted by the same recipient", async () => {
     const row = transferRow({ status: "accepted" });
     queue("select", T, [row], [row]);
-    queue("select", userTable, [verified("target")]);
+    queue("select", userTable, [verified("target")], [{ planTier: "pro" }]);
     queue("select", teams, [{ ownerId: "target" }]);
 
     const result = await acceptOwnershipTransfer({ token: TOKEN });
