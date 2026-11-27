@@ -175,7 +175,6 @@
       "captain": "Capitão",
       "coach": "Treinador",
       "owner": "Capitão",
-      "manager": "Co-capitão",
       "player": "Jogador"
     },
     "history": {
@@ -187,21 +186,6 @@
       "badge": "Em breve",
       "title": "Chat com atleta",
       "description": "Esta conversa vai ficar disponível numa próxima versão. Por agora, usa o email no card do atleta para comunicar diretamente."
-    },
-    "coCaptain": {
-      "promote": "Tornar co-capitão",
-      "promoteDesc": "Dar permissões de gestão (criar eventos, validar pagamentos).",
-      "promoteLabel": "Promover",
-      "remove": "Remover co-capitão",
-      "removeDesc": "Revogar permissões de gestão. Fica como jogador.",
-      "removeLabel": "Remover",
-      "errors": {
-        "FORBIDDEN": "Não tens permissão para esta ação.",
-        "TEAM_NOT_FOUND": "Não foi possível confirmar a equipa ativa.",
-        "CANNOT_MODIFY_OWNER": "Não é possível alterar o papel do dono da equipa.",
-        "PLAYER_NOT_IN_TEAM": "Este atleta já não pertence a este plantel.",
-        "UNKNOWN_ERROR": "Não foi possível atualizar o papel. Tenta novamente."
-      }
     },
     "notValidated": "Atleta não validado",
     "notValidatedDesc": "Este atleta ainda não criou uma conta no Jogabola. As estatísticas e o perfil completo estarão disponíveis após a validação.",
@@ -215,7 +199,8 @@
       "removing": "A remover...",
       "errors": {
         "TEAM_NOT_FOUND": "Não foi possível confirmar a equipa ativa.",
-        "CANNOT_REMOVE_OWNER": "Não é possível remover o dono da equipa do plantel.",
+        "FORBIDDEN": "Não tens permissão para remover este atleta.",
+        "CANNOT_MODIFY_OWNER": "Não é possível remover o dono da equipa do plantel.",
         "PLAYER_NOT_IN_TEAM": "Este atleta já não pertence a este plantel.",
         "UNKNOWN_ERROR": "Não foi possível remover o atleta. Tenta novamente."
       }
@@ -231,7 +216,6 @@
       "add": "Adicionar Jogador"
     },
     "labels": {
-      "admin": "Administrador",
       "email": "Email *",
       "fullName": "Nome completo *",
       "phone": "Telemóvel",
@@ -475,7 +459,13 @@
       "generic": "Erro ao criar equipa."
     },
     "limitReachedTitle": "Limite do plano gratuito",
-    "upgradeCta": "Ver planos"
+    "upgradeCta": "Ver planos",
+    "athletePrompt": {
+      "title": "Queres fazer parte do plantel de atletas?",
+      "sub": "Podes mudar isto mais tarde no teu perfil.",
+      "yes": "Sim, quero jogar",
+      "no": "Agora não"
+    }
   },
   "arenaNoTeamModal": {
     "title": "Cria uma equipa primeiro",
@@ -1147,11 +1137,9 @@
     "roles": {
       "owner": "Capitão",
       "admin": "Administrador",
-      "manager": "Gestor",
       "coach": "Treinador",
       "player": "Jogador",
       "guest": "Convidado",
-      "co-captain": "Co-capitão",
       "staff": "Staff"
     },
     "actions": {
@@ -1216,14 +1204,6 @@
     "notValidated": "Jogador não validado",
     "notValidatedDesc": "Este jogador ainda não criou a sua conta Jogabola. O perfil completo e as estatísticas estarão disponíveis após a validação.",
     "pendingValidation": "Validação em espera",
-    "coCaptain": {
-      "promote": "Tornar co-capitão",
-      "promoteDesc": "Dar permissões de gestão (criar eventos, validar pagamentos).",
-      "promoteLabel": "Promover",
-      "remove": "Remover co-capitão",
-      "removeDesc": "Revogar permissões de gestão. Fica como jogador.",
-      "removeLabel": "Remover"
-    },
     "empty": {
       "title": "Ainda não há jogadores no plantel",
       "subtitle": "Adiciona o primeiro jogador para começares a gerir convocatórias.",
@@ -2418,7 +2398,8 @@
         "title": "Autenticação de Dois Fatores",
         "description": "Configure um código PIN adicional de verificação para aumentar a proteção da sua conta."
       }
-    }
+    },
+    "athleteToggle": "Sou atleta nesta equipa"
   },
   "searchResults": {
     "back": "Voltar",
@@ -3589,6 +3570,60 @@
           "penalties": "Penáltis"
         }
       }
+    }
+  },
+  "teamStaff": {
+    "badge": "Staff",
+    "owner": "Dono",
+    "titles": {
+      "coach": "Treinador",
+      "director": "Diretor",
+      "finance": "Tesoureiro",
+      "secretary": "Secretário",
+      "other": "Outro"
+    },
+    "permissions": {
+      "events": "Gerir eventos",
+      "attendance": "Gerir presenças",
+      "roster": "Gerir plantel",
+      "payments": "Gerir pagamentos",
+      "communication": "Gerir comunicação",
+      "match": "Gerir jogo"
+    },
+    "actions": {
+      "promote": "Promover a staff",
+      "promoteDesc": "Dá um cargo e privilégios de gestão nesta equipa.",
+      "demote": "Remover do staff",
+      "demoteDesc": "Retira o cargo e os privilégios. Continua no plantel.",
+      "confirmPromote": "Promover",
+      "promoting": "A promover...",
+      "confirmDemote": "Remover do staff",
+      "demoting": "A remover...",
+      "cancel": "Cancelar"
+    },
+    "promoteSheet": {
+      "title": "Promover a staff",
+      "sub": "{name} passa a fazer parte do staff da equipa.",
+      "titleLabel": "Cargo",
+      "permissionsLabel": "Privilégios",
+      "permissionsHint": "Pré-preenchidos pelo cargo. Ajusta à vontade."
+    },
+    "demoteDialog": {
+      "title": "Remover do staff?",
+      "description": "{name} perde o cargo e os privilégios de gestão. Continua no plantel."
+    },
+    "feedback": {
+      "promoted": "{name} faz agora parte do staff.",
+      "demoted": "{name} já não faz parte do staff."
+    },
+    "errors": {
+      "FORBIDDEN": "Não tens permissão para esta ação.",
+      "TEAM_NOT_FOUND": "Não foi possível confirmar a equipa ativa.",
+      "NOT_AN_ATHLETE": "Só atletas do plantel podem ser promovidos a staff.",
+      "CANNOT_MODIFY_OWNER": "Não é possível alterar o dono da equipa.",
+      "NOT_STAFF": "Esta pessoa já não faz parte do staff.",
+      "VALIDATION_ERROR": "Os dados enviados não são válidos.",
+      "UNKNOWN_ERROR": "Algo correu mal. Tenta novamente."
     }
   }
 }

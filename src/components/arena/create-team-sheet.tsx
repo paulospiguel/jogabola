@@ -11,6 +11,7 @@ import { cn } from "@/lib/utils";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
+import { AthletePromptStep } from "./athlete-prompt-step";
 import { BottomSheet } from "./bottom-sheet";
 
 interface CreateTeamSheetProps {
@@ -42,7 +43,7 @@ export function CreateTeamSheet({ onClose }: CreateTeamSheetProps) {
     homeGround: "",
   });
   const [saving, setSaving] = useState(false);
-  const [done, setDone] = useState(false);
+  const [createdTeamId, setCreatedTeamId] = useState<number | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   const set = (k: keyof FormState, v: string) =>
@@ -102,29 +103,22 @@ export function CreateTeamSheet({ onClose }: CreateTeamSheetProps) {
     }
 
     if (result.data) {
-      setDone(true);
+      setCreatedTeamId(result.data.id);
       await refetch();
       // Force refresh the session cookie/data on the client
       await authClient.getSession();
       setActiveTeamId(result.data.id);
-      setTimeout(onClose, 2000);
     }
   };
 
-  /* ── Success state ─────────────────────────────────────────── */
-  if (done) {
+  /* ── Success state: ask whether the owner also plays ───────── */
+  if (createdTeamId !== null) {
     return (
-      <BottomSheet onClose={onClose}>
-        <div className="flex flex-col items-center gap-3.5 overflow-auto px-5 pt-8 pb-12 text-center">
-          <div className="flex size-16 items-center justify-center rounded-2xl bg-arena-primary/10 text-arena-primary">
-            <Shield size={32} />
-          </div>
-          <p className="text-lg font-bold text-arena-text">
-            {t("success", { name: form.name })}
-          </p>
-          <p className="text-sm text-arena-text-sec">{t("successSubtitle")}</p>
-        </div>
-      </BottomSheet>
+      <AthletePromptStep
+        onClose={onClose}
+        teamId={createdTeamId}
+        teamName={form.name}
+      />
     );
   }
 

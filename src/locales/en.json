@@ -175,7 +175,6 @@
       "captain": "Captain",
       "coach": "Coach",
       "owner": "Captain",
-      "manager": "Co-captain",
       "player": "Player"
     },
     "history": {
@@ -188,21 +187,6 @@
       "title": "Chat with athlete",
       "description": "This conversation will be available in a future version. For now, use the email on the athlete card to reach out directly."
     },
-    "coCaptain": {
-      "promote": "Make co-captain",
-      "promoteDesc": "Grant management permissions (create events, validate payments).",
-      "promoteLabel": "Promote",
-      "remove": "Remove co-captain",
-      "removeDesc": "Revoke management permissions. Reverts to player.",
-      "removeLabel": "Remove",
-      "errors": {
-        "FORBIDDEN": "You don't have permission for this action.",
-        "TEAM_NOT_FOUND": "Could not confirm the active team.",
-        "CANNOT_MODIFY_OWNER": "The team owner's role cannot be changed.",
-        "PLAYER_NOT_IN_TEAM": "This athlete is no longer part of this squad.",
-        "UNKNOWN_ERROR": "Could not update the role. Please try again."
-      }
-    },
     "removeDialog": {
       "title": "Remove from squad?",
       "description": "You are about to remove {name} from this squad.",
@@ -212,7 +196,8 @@
       "removing": "Removing...",
       "errors": {
         "TEAM_NOT_FOUND": "Could not confirm the active team.",
-        "CANNOT_REMOVE_OWNER": "The team owner cannot be removed from the squad.",
+        "FORBIDDEN": "You don't have permission to remove this athlete.",
+        "CANNOT_MODIFY_OWNER": "The team owner cannot be removed from the squad.",
         "PLAYER_NOT_IN_TEAM": "This athlete is no longer in this squad.",
         "UNKNOWN_ERROR": "Could not remove the athlete. Try again."
       }
@@ -231,7 +216,6 @@
       "add": "Add Player"
     },
     "labels": {
-      "admin": "Administrator",
       "email": "Email *",
       "fullName": "Full name *",
       "phone": "Phone",
@@ -475,7 +459,13 @@
       "generic": "Error creating team."
     },
     "limitReachedTitle": "Free plan limit",
-    "upgradeCta": "View plans"
+    "upgradeCta": "View plans",
+    "athletePrompt": {
+      "title": "Do you want to join the athlete squad?",
+      "sub": "You can change this later in your profile.",
+      "yes": "Yes, I want to play",
+      "no": "Not now"
+    }
   },
   "arenaNoTeamModal": {
     "title": "Create a team first",
@@ -1147,11 +1137,9 @@
     "roles": {
       "owner": "Captain",
       "admin": "Admin",
-      "manager": "Manager",
       "coach": "Coach",
       "player": "Player",
       "guest": "Guest",
-      "co-captain": "Co-captain",
       "staff": "Staff"
     },
     "actions": {
@@ -1216,14 +1204,6 @@
     "notValidated": "Unvalidated Player",
     "notValidatedDesc": "This player has not yet created their Jogabola account. The complete profile and statistics will be available after validation.",
     "pendingValidation": "Pending Validation",
-    "coCaptain": {
-      "promote": "Make co-captain",
-      "promoteDesc": "Grant management permissions (create events, validate payments).",
-      "promoteLabel": "Promote",
-      "remove": "Remove co-captain",
-      "removeDesc": "Revoke management permissions. Reverts to player.",
-      "removeLabel": "Remove"
-    },
     "empty": {
       "title": "No players in the roster yet",
       "subtitle": "Add your first player to start managing call-ups.",
@@ -2438,7 +2418,8 @@
         "title": "Two-Factor Authentication",
         "description": "Set up an additional PIN code for extra account protection."
       }
-    }
+    },
+    "athleteToggle": "I'm an athlete in this team"
   },
   "searchResults": {
     "back": "Back",
@@ -3589,6 +3570,60 @@
           "penalties": "Penalties"
         }
       }
+    }
+  },
+  "teamStaff": {
+    "badge": "Staff",
+    "owner": "Owner",
+    "titles": {
+      "coach": "Coach",
+      "director": "Director",
+      "finance": "Treasurer",
+      "secretary": "Secretary",
+      "other": "Other"
+    },
+    "permissions": {
+      "events": "Manage events",
+      "attendance": "Manage attendance",
+      "roster": "Manage squad",
+      "payments": "Manage payments",
+      "communication": "Manage communication",
+      "match": "Manage matches"
+    },
+    "actions": {
+      "promote": "Promote to staff",
+      "promoteDesc": "Give a title and management privileges in this team.",
+      "demote": "Remove from staff",
+      "demoteDesc": "Removes the title and privileges. Stays in the squad.",
+      "confirmPromote": "Promote",
+      "promoting": "Promoting...",
+      "confirmDemote": "Remove from staff",
+      "demoting": "Removing...",
+      "cancel": "Cancel"
+    },
+    "promoteSheet": {
+      "title": "Promote to staff",
+      "sub": "{name} joins the team's staff.",
+      "titleLabel": "Title",
+      "permissionsLabel": "Privileges",
+      "permissionsHint": "Pre-filled from the title. Adjust as you like."
+    },
+    "demoteDialog": {
+      "title": "Remove from staff?",
+      "description": "{name} loses the title and management privileges. Stays in the squad."
+    },
+    "feedback": {
+      "promoted": "{name} is now part of the staff.",
+      "demoted": "{name} is no longer part of the staff."
+    },
+    "errors": {
+      "FORBIDDEN": "You don't have permission for this action.",
+      "TEAM_NOT_FOUND": "Could not confirm the active team.",
+      "NOT_AN_ATHLETE": "Only squad athletes can be promoted to staff.",
+      "CANNOT_MODIFY_OWNER": "The team owner cannot be changed.",
+      "NOT_STAFF": "This person is no longer part of the staff.",
+      "VALIDATION_ERROR": "The submitted data is not valid.",
+      "UNKNOWN_ERROR": "Something went wrong. Please try again."
     }
   }
 }

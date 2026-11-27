@@ -175,7 +175,6 @@
       "captain": "Capitaine",
       "coach": "Entraîneur",
       "owner": "Capitaine",
-      "manager": "Co-capitaine",
       "player": "Joueur"
     },
     "history": {
@@ -188,21 +187,6 @@
       "title": "Chat avec l'athlète",
       "description": "Cette conversation sera disponible dans une prochaine version. Pour l'instant, utilise l'e-mail sur la carte de l'athlète pour communiquer directement."
     },
-    "coCaptain": {
-      "promote": "Nommer co-capitaine",
-      "promoteDesc": "Accorder les permissions de gestion (créer des événements, valider les paiements).",
-      "promoteLabel": "Promouvoir",
-      "remove": "Retirer co-capitaine",
-      "removeDesc": "Révoquer les permissions de gestion. Redevient joueur.",
-      "removeLabel": "Retirer",
-      "errors": {
-        "FORBIDDEN": "Tu n'as pas la permission pour cette action.",
-        "TEAM_NOT_FOUND": "Impossible de confirmer l'équipe active.",
-        "CANNOT_MODIFY_OWNER": "Le rôle du propriétaire de l'équipe ne peut pas être modifié.",
-        "PLAYER_NOT_IN_TEAM": "Cet athlète ne fait plus partie de cet effectif.",
-        "UNKNOWN_ERROR": "Impossible de mettre à jour le rôle. Réessaie."
-      }
-    },
     "removeDialog": {
       "title": "Retirer de l'effectif ?",
       "description": "Vous allez retirer {name} de cet effectif.",
@@ -212,7 +196,8 @@
       "removing": "Suppression...",
       "errors": {
         "TEAM_NOT_FOUND": "Impossible de confirmer l'équipe active.",
-        "CANNOT_REMOVE_OWNER": "Le propriétaire de l'équipe ne peut pas être retiré de l'effectif.",
+        "FORBIDDEN": "Vous n'avez pas la permission de retirer cet athlète.",
+        "CANNOT_MODIFY_OWNER": "Le propriétaire de l'équipe ne peut pas être retiré de l'effectif.",
         "PLAYER_NOT_IN_TEAM": "Cet athlète n'appartient plus à cet effectif.",
         "UNKNOWN_ERROR": "Impossible de retirer l'athlète. Réessayez."
       }
@@ -231,7 +216,6 @@
       "add": "Ajouter le joueur"
     },
     "labels": {
-      "admin": "Administrateur",
       "email": "Email *",
       "fullName": "Nom complet *",
       "phone": "Téléphone",
@@ -475,7 +459,13 @@
       "generic": "Erreur lors de la création de l'équipe."
     },
     "limitReachedTitle": "Limite du plan gratuit",
-    "upgradeCta": "Voir les plans"
+    "upgradeCta": "Voir les plans",
+    "athletePrompt": {
+      "title": "Voulez-vous faire partie de l'effectif des athlètes ?",
+      "sub": "Vous pourrez changer cela plus tard dans votre profil.",
+      "yes": "Oui, je veux jouer",
+      "no": "Pas maintenant"
+    }
   },
   "arenaNoTeamModal": {
     "title": "Créez une équipe d'abord",
@@ -1147,11 +1137,9 @@
     "roles": {
       "owner": "Capitaine",
       "admin": "Administrateur",
-      "manager": "Gestionnaire",
       "coach": "Entraîneur",
       "player": "Joueur",
       "guest": "Invité",
-      "co-captain": "Co-capitaine",
       "staff": "Staff"
     },
     "actions": {
@@ -1216,14 +1204,6 @@
     "notValidated": "Joueur non validé",
     "notValidatedDesc": "Ce joueur n'a pas encore créé son compte Jogabola. Le profil complet et les statistiques seront disponibles après validation.",
     "pendingValidation": "Validation en attente",
-    "coCaptain": {
-      "promote": "Nommer co-capitaine",
-      "promoteDesc": "Accorder des permissions de gestion (créer des événements, valider les paiements).",
-      "promoteLabel": "Promouvoir",
-      "remove": "Retirer co-capitaine",
-      "removeDesc": "Révoquer les permissions de gestion. Redevient joueur.",
-      "removeLabel": "Retirer"
-    },
     "empty": {
       "title": "Aucun joueur dans l'effectif pour l'instant",
       "subtitle": "Ajoutez le premier joueur pour commencer à gérer les convocations.",
@@ -2438,7 +2418,8 @@
         "title": "Authentification à Deux Facteurs",
         "description": "Configurez un code PIN supplémentaire pour renforcer la protection de votre compte."
       }
-    }
+    },
+    "athleteToggle": "Je suis athlète dans cette équipe"
   },
   "searchResults": {
     "back": "Retour",
@@ -3589,6 +3570,60 @@
           "penalties": "Tirs au but"
         }
       }
+    }
+  },
+  "teamStaff": {
+    "badge": "Staff",
+    "owner": "Propriétaire",
+    "titles": {
+      "coach": "Entraîneur",
+      "director": "Directeur",
+      "finance": "Trésorier",
+      "secretary": "Secrétaire",
+      "other": "Autre"
+    },
+    "permissions": {
+      "events": "Gérer les événements",
+      "attendance": "Gérer les présences",
+      "roster": "Gérer l'effectif",
+      "payments": "Gérer les paiements",
+      "communication": "Gérer la communication",
+      "match": "Gérer les matchs"
+    },
+    "actions": {
+      "promote": "Promouvoir au staff",
+      "promoteDesc": "Attribue un rôle et des privilèges de gestion dans cette équipe.",
+      "demote": "Retirer du staff",
+      "demoteDesc": "Retire le rôle et les privilèges. Reste dans l'effectif.",
+      "confirmPromote": "Promouvoir",
+      "promoting": "Promotion...",
+      "confirmDemote": "Retirer du staff",
+      "demoting": "Retrait...",
+      "cancel": "Annuler"
+    },
+    "promoteSheet": {
+      "title": "Promouvoir au staff",
+      "sub": "{name} rejoint le staff de l'équipe.",
+      "titleLabel": "Rôle",
+      "permissionsLabel": "Privilèges",
+      "permissionsHint": "Préremplis selon le rôle. Ajustez librement."
+    },
+    "demoteDialog": {
+      "title": "Retirer du staff ?",
+      "description": "{name} perd son rôle et ses privilèges de gestion. Reste dans l'effectif."
+    },
+    "feedback": {
+      "promoted": "{name} fait désormais partie du staff.",
+      "demoted": "{name} ne fait plus partie du staff."
+    },
+    "errors": {
+      "FORBIDDEN": "Vous n'avez pas la permission pour cette action.",
+      "TEAM_NOT_FOUND": "Impossible de confirmer l'équipe active.",
+      "NOT_AN_ATHLETE": "Seuls les athlètes de l'effectif peuvent être promus au staff.",
+      "CANNOT_MODIFY_OWNER": "Le propriétaire de l'équipe ne peut pas être modifié.",
+      "NOT_STAFF": "Cette personne ne fait plus partie du staff.",
+      "VALIDATION_ERROR": "Les données envoyées ne sont pas valides.",
+      "UNKNOWN_ERROR": "Une erreur est survenue. Réessayez."
     }
   }
 }

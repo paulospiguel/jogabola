@@ -27,6 +27,8 @@ interface ProfileContainerProps {
     slug: string;
     location: string | null;
     role: string;
+    isAthlete: boolean;
+    isOwnerOrStaff: boolean;
     memberCount: number;
   }>;
   passkeysCount: number;

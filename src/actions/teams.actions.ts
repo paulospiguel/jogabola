@@ -17,13 +17,13 @@ import { trackServerEvent } from "@/lib/analytics-server";
 import { sendEmail } from "@/lib/email";
 import { canCreateTeam, normalizePlanTier } from "@/lib/plan-limits";
 import { insertRosterMember } from "@/lib/roster";
+import type { StaffTitle } from "@/lib/staff-permissions";
 import { can, canViewTeam, getTeamAccess, isTeamOwner } from "@/lib/team-authz";
 import { listMyTeamSummaries } from "@/lib/team-summaries";
 import {
   addPlayerToRosterSchema,
   createTeamSchema,
   removePlayerFromRosterSchema,
-  setCoCaptainSchema,
 } from "@/schemas/teams.schema";
 
 export interface SquadMember {
@@ -43,6 +43,12 @@ export interface SquadMember {
   games: number | null;
   /** Overall da auto-avaliação (1–10), null se o atleta ainda não se avaliou. */
   selfRating: number | null;
+}
+
+/** Athlete profile plus the target's team role (owner / staff title). */
+export interface AthleteProfile extends SquadMember {
+  isTeamOwner: boolean;
+  staffTitle: StaffTitle | null;
 }
 
 function escapeHtml(value: string) {
@@ -407,19 +413,25 @@ export const getAthleteProfile = withAuthAction(
       .limit(1);
 
     if (athlete) {
-      const [selfAssessment] = await db
-        .select({
-          overall: playerRatings.overall,
-          primaryPosition: playerRatings.primaryPosition,
-        })
-        .from(playerRatings)
-        .where(eq(playerRatings.userId, playerId))
-        .limit(1);
+      const [selfAssessment, targetAccess] = await Promise.all([
+        db
+          .select({
+            overall: playerRatings.overall,
+            primaryPosition: playerRatings.primaryPosition,
+          })
+          .from(playerRatings)
+          .where(eq(playerRatings.userId, playerId))
+          .limit(1)
+          .then(rows => rows[0]),
+        getTeamAccess(playerId, teamId),
+      ]);
 
       return {
         success: true,
         data: {
           ...athlete,
+          isTeamOwner: targetAccess.isOwner,
+          staffTitle: targetAccess.staff?.title ?? null,
           isVerified: true,
           position: athlete.position ?? selfAssessment?.primaryPosition ?? null,
           selfRating: selfAssessment?.overall ?? null,
@@ -428,7 +440,7 @@ export const getAthleteProfile = withAuthAction(
           goals: null,
           assists: null,
           games: null,
-        } as SquadMember,
+        } as AthleteProfile,
       };
     }
 
@@ -468,7 +480,9 @@ export const getAthleteProfile = withAuthAction(
         goals: null,
         assists: null,
         games: null,
-      } as SquadMember,
+        isTeamOwner: false,
+        staffTitle: null,
+      } as AthleteProfile,
     };
   },
 );
@@ -555,52 +569,5 @@ export const sendRosterPlayerEmail = withAuthAction(
     }
 
     return { success: true, data: { sent: true } };
-  },
-);
-
-export const setCoCaptain = withAuthAction(
-  setCoCaptainSchema,
-  async (user, { teamId, playerId, makeCoCaptain }) => {
-    // Only the owner can promote/demote co-captains.
-    const isOwner = await isTeamOwner(user.id, teamId);
-    if (!isOwner) {
-      return { success: false, error: { code: "FORBIDDEN" } };
-    }
-
-    const team = await db.query.teams.findFirst({
-      columns: { ownerId: true },
-      where: eq(teams.id, teamId),
-    });
-    if (!team) {
-      return { success: false, error: { code: "TEAM_NOT_FOUND" } };
-    }
-
-    // Never modify the owner's own role.
-    if (team.ownerId === playerId) {
-      return { success: false, error: { code: "CANNOT_MODIFY_OWNER" } };
-    }
-
-    const member = await db.query.teamMembers.findFirst({
-      where: and(
-        eq(teamMembers.teamId, teamId),
-        eq(teamMembers.playerId, playerId),
-      ),
-    });
-    if (!member) {
-      return { success: false, error: { code: "PLAYER_NOT_IN_TEAM" } };
-    }
-
-    const [updated] = await db
-      .update(teamMembers)
-      .set({
-        role: makeCoCaptain ? "manager" : "player",
-        updatedAt: new Date(),
-      })
-      .where(
-        and(eq(teamMembers.teamId, teamId), eq(teamMembers.playerId, playerId)),
-      )
-      .returning();
-
-    return { success: true, data: updated };
   },
 );

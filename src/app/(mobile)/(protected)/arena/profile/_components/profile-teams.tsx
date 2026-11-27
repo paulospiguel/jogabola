@@ -6,12 +6,18 @@ import {
   ChevronDown,
   ChevronRight,
   Shield,
+  Shirt,
   Sliders,
 } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useState } from "react";
+import { setMyAthleteStatus } from "@/actions/team-staff.actions";
 import { avatarColor } from "@/components/arena/tokens";
 import { Button } from "@/components/ui/button";
+import { Switch } from "@/components/ui/switch";
+import { useTeams } from "@/hooks/use-teams";
+import { useToast } from "@/hooks/use-toast-custom";
+import { staffErrorKey } from "@/lib/staff-ui";
 import { cn } from "@/lib/utils";
 
 interface TeamEntry {
@@ -20,6 +26,9 @@ interface TeamEntry {
   slug: string;
   location: string | null;
   role: string;
+  isAthlete: boolean;
+  isOwnerOrStaff: boolean;
+  /** Roster (Plantel) rows only. */
   memberCount: number;
 }
 
@@ -30,7 +39,53 @@ interface ProfileTeamsProps {
 export function ProfileTeams({ teams }: ProfileTeamsProps) {
   const t = useTranslations("profilePage");
   const tSquad = useTranslations("arenaSquad");
+  const tStaff = useTranslations("teamStaff");
+  const { toast } = useToast();
+  const { refetch } = useTeams();
   const [expandedId, setExpandedId] = useState<number | null>(null);
+  // Optimistic athlete status per team, rolled back on error.
+  const [athleteOverrides, setAthleteOverrides] = useState<
+    Record<number, boolean>
+  >({});
+  const [pendingIds, setPendingIds] = useState<ReadonlySet<number>>(
+    () => new Set(),
+  );
+
+  const setPending = (teamId: number, pending: boolean) =>
+    setPendingIds(prev => {
+      const next = new Set(prev);
+      if (pending) next.add(teamId);
+      else next.delete(teamId);
+      return next;
+    });
+
+  const handleAthleteToggle = async (team: TeamEntry, isAthlete: boolean) => {
+    const previous = athleteOverrides[team.id];
+    setAthleteOverrides(prev => ({ ...prev, [team.id]: isAthlete }));
+    setPending(team.id, true);
+    let errorCode: string | undefined;
+    let failed = false;
+    try {
+      const result = await setMyAthleteStatus({ teamId: team.id, isAthlete });
+      if (result.success) await refetch();
+      else {
+        failed = true;
+        errorCode = result.error.code;
+      }
+    } catch {
+      failed = true;
+    } finally {
+      setPending(team.id, false);
+    }
+    if (!failed) return;
+    setAthleteOverrides(prev => {
+      const next = { ...prev };
+      if (previous === undefined) delete next[team.id];
+      else next[team.id] = previous;
+      return next;
+    });
+    toast.error(tStaff(staffErrorKey(errorCode)));
+  };
 
   const toggleExpand = (id: number) => {
     setExpandedId(prev => (prev === id ? null : id));
@@ -68,6 +123,11 @@ export function ProfileTeams({ teams }: ProfileTeamsProps) {
         {teams.map(team => {
           const color = avatarColor(team.id);
           const expanded = expandedId === team.id;
+          const isAthlete = athleteOverrides[team.id] ?? team.isAthlete;
+          const memberCount =
+            team.memberCount +
+            (isAthlete === team.isAthlete ? 0 : isAthlete ? 1 : -1);
+          const switchId = `athlete-toggle-${team.id}`;
           return (
             <div
               key={team.id}
@@ -118,7 +178,7 @@ export function ProfileTeams({ teams }: ProfileTeamsProps) {
                     <span className="text-xs text-arena-text-muted block mt-0.5 truncate">
                       {[
                         t("dashboard.playersCountLabel", {
-                          count: team.memberCount,
+                          count: memberCount,
                         }),
                         team.location,
                       ]
@@ -135,6 +195,31 @@ export function ProfileTeams({ teams }: ProfileTeamsProps) {
                   )}
                 </div>
               </button>
+
+              {team.isOwnerOrStaff && (
+                <div className="flex items-center justify-between gap-3 border-t border-arena-border/30 px-3.5 py-3">
+                  <label
+                    className="flex min-w-0 items-center gap-2.5 text-[13px] font-semibold text-arena-text-sec"
+                    htmlFor={switchId}
+                  >
+                    <Shirt
+                      className="shrink-0 text-arena-text-muted"
+                      size={16}
+                      strokeWidth={2}
+                    />
+                    <span className="truncate">{t("athleteToggle")}</span>
+                  </label>
+                  <Switch
+                    checked={isAthlete}
+                    className="press data-[state=checked]:border-arena-primary data-[state=checked]:bg-arena-primary"
+                    disabled={pendingIds.has(team.id)}
+                    id={switchId}
+                    onCheckedChange={checked =>
+                      handleAthleteToggle(team, checked)
+                    }
+                  />
+                </div>
+              )}
 
               <AnimatePresence initial={false}>
                 {expanded && (

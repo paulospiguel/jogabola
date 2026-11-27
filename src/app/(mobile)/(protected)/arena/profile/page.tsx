@@ -40,6 +40,9 @@ export default async function ArenaProfilePage() {
     slug: m.slug,
     location: m.location,
     role: m.membershipRole,
+    isAthlete: m.isAthlete,
+    isOwnerOrStaff: m.canManage,
+    // Roster (Plantel) rows only: owner/staff who don't play are not counted.
     memberCount: countByTeam.get(m.id) ?? 0,
   }));
 
