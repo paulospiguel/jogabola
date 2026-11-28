@@ -4,13 +4,13 @@ Data: 2026-11-26
 
 ## Estado
 
-Proposto. A aceitação deste ADR precede a implementação das permissões da etapa 2.
+Aceite em 2026-11-26.
 
 ## Contexto
 
-O controlo atual é por equipa. O capitão é proprietário da equipa e o co-capitão tem o papel `manager`. A leitura de uma convocatória também suporta o acesso por link para convidados. Os dados do calendário competitivo exigem uma verificação própria no servidor.
+O controlo atual é por equipa (ADR 0006). O capitão é o dono da equipa (`teams.owner_id`), o staff vive em `team_staff` com privilégios granulares (o co-capitão deixou de existir) e o plantel vive em `team_members`. A leitura de uma convocatória também suporta o acesso por link para convidados. Os dados do calendário competitivo exigem uma verificação própria no servidor.
 
-## Decisão proposta
+## Decisão
 
 O clube tem membros com papel `admin` ou `member` e um único vínculo por utilizador e clube. O PostgreSQL aplica ambas as restrições. A criação de um clube atribui ao criador a primeira administração. Para o piloto, a criação do clube e a associação da primeira equipa decorrem na mesma transação, a pedido de quem já é proprietário dessa equipa. A associação posterior de uma equipa exige que o interveniente seja administrador do clube de destino e proprietário da equipa. A equipa tem de estar livre, com essa condição verificada na escrita para impedir associações em simultâneo. A atribuição e remoção dos restantes vínculos do piloto usam dados sintéticos. O fluxo de convites ao clube terá decisão própria antes de alargar o piloto.
 
@@ -27,12 +27,12 @@ As leituras de jogos devolvem apenas os dados necessários ao calendário. Consu
 
 ## Consequências
 
-A pertença a um clube e o vínculo à equipa são verificados separadamente. O acesso de escrita do piloto usa a propriedade da equipa registada na base de dados. O co-capitão mantém as permissões recreativas atuais. Delegar-lhe a escrita competitiva exige rever as entradas legadas que podem atribuir papéis no plantel. A eliminação da conta remove a pertença ao clube e conserva os dados partilhados. A transferência de administração fica fora do piloto. Se sair o último administrador, as operações administrativas ficam indisponíveis até haver um fluxo de recuperação autorizado.
+A pertença a um clube e o vínculo à equipa são verificados separadamente. O acesso de escrita do piloto usa a propriedade da equipa registada na base de dados. O staff mantém os privilégios recreativos do ADR 0006 (`events.manage`, `roster.manage` e restantes). As ações competitivas ficam reservadas ao dono, sem interruptor, e delegá-las ao staff exige uma decisão própria. A leitura de jogos exige hoje ser dono ou atleta do plantel; ver staff que não joga fica por decidir. A eliminação da conta remove a pertença ao clube e conserva os dados partilhados. A transferência de administração fica fora do piloto. Se sair o último administrador, as operações administrativas ficam indisponíveis até haver um fluxo de recuperação autorizado.
 
 ## Verificação
 
 - Com dois clubes sintéticos, verificar que um membro do clube B recebe a mesma resposta para um jogo privado do clube A e para um identificador inexistente.
 - Verificar leitura pelo capitão e pelo atleta com vínculo ao clube e à equipa. Verificar recusa para um membro do mesmo clube sem acesso à equipa e para um membro da equipa cujo vínculo ao clube foi removido.
-- Verificar a criação pelo capitão vinculado ao clube e a recusa para atleta, co-capitão e administrador sem propriedade da equipa. Um papel `owner` gravado no plantel não substitui o proprietário registado em `teams.owner_id`.
+- Verificar a criação pelo capitão vinculado ao clube e a recusa para atleta, membro de staff e administrador sem propriedade da equipa. Um papel `owner` gravado no plantel não substitui o proprietário registado em `teams.owner_id`.
 - Verificar que um utilizador sem autorização de gestão não consegue criar nem alterar vínculos na equipa através das ações de plantel.
 - Verificar a gestão de uma convocatória recreativa pelo capitão e o acesso por link de convidado sem dados competitivos.

@@ -505,6 +505,27 @@
     color: #0b0f14;
   }
 
+  /* DESIGN.md microinteraction: every clickable scales to 0.97 on press. */
+  .press,
+  .btn-press {
+    transition-property:
+      transform, background-color, border-color, color, opacity;
+    transition-duration: 120ms;
+    transition-timing-function: ease;
+  }
+
+  .press:active,
+  .btn-press:active {
+    transform: scale(0.97);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .press:active,
+    .btn-press:active {
+      transform: none;
+    }
+  }
+
   .jb-dashboard-grid {
     display: grid;
     gap: 14px;

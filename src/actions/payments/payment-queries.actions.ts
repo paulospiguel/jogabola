@@ -26,6 +26,11 @@ export const getTeamPayments = withAuthAction(
       return { success: false, error: { code: "TEAM_NOT_FOUND" } };
     }
 
+    // Data minimisation: the owner and staff with `payments.manage` see the
+    // whole team's payments; any other roster member only sees their own,
+    // never teammates' names or emails.
+    const canManage = await can(currentUser.id, teamId, "payments.manage");
+
     const rawPayments = await db
       .select({
         id: payments.id,
@@ -55,7 +60,14 @@ export const getTeamPayments = withAuthAction(
       )
       .innerJoin(user, eq(matchReservations.playerId, user.id))
       .leftJoin(paymentProofs, eq(paymentProofs.paymentId, payments.id))
-      .where(eq(matchSessions.teamId, teamId))
+      .where(
+        canManage
+          ? eq(matchSessions.teamId, teamId)
+          : and(
+              eq(matchSessions.teamId, teamId),
+              eq(matchReservations.playerId, currentUser.id),
+            ),
+      )
       .orderBy(desc(payments.createdAt));
 
     const formattedPayments = rawPayments.map(p => ({

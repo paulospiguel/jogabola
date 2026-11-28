@@ -5,6 +5,7 @@ import {
   Calendar,
   ChevronsLeft,
   ChevronsRight,
+  Flag,
   Lock,
   type LucideIcon,
   ScanLine,
@@ -33,6 +34,7 @@ import {
 import { RELEASE } from "@/constants/app";
 import { useUnreadNotificationsCount } from "@/hooks/use-notifications";
 import { useTeams } from "@/hooks/use-teams";
+import { FEATURES } from "@/lib/features";
 import { cn } from "@/lib/utils";
 import { Logo } from "../logo";
 import { useTeamGate } from "./team-gate-context";
@@ -61,6 +63,16 @@ const ITEMS = [
     requiresTeam: true,
   },
   STAFF_ITEM,
+  ...(FEATURES.clubCalendar
+    ? [
+        {
+          href: "/arena/club",
+          icon: Flag,
+          labelKey: "club",
+          requiresTeam: true,
+        },
+      ]
+    : []),
   {
     href: "/arena/notifications",
     icon: Bell,

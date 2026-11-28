@@ -45,6 +45,12 @@ export const FEATURES = {
    * Off no MVP.
    */
   seasonHistory: false,
+
+  /**
+   * Área "Clube": calendário competitivo, épocas e adversários (ADR 0004/0005).
+   * On no piloto AI Club OS; autorização sempre verificada no servidor.
+   */
+  clubCalendar: true,
 } as const;
 
 export type FeatureKey = keyof typeof FEATURES;

@@ -4,13 +4,13 @@ Data: 2026-11-26
 
 ## Estado
 
-Proposto. A aceitação deste ADR e do [ADR 0005](0005-club-calendar-authorization.md) precede as alterações de schema e autorização da etapa 2.
+Aceite em 2026-11-26, juntamente com o [ADR 0005](0005-club-calendar-authorization.md). Substitui a parte do [ADR 0001](0001-defer-external-league-model.md) que adiava épocas e jogos contra adversários externos.
 
 ## Contexto
 
 O [ADR 0001](0001-defer-external-league-model.md) adiou o modelo de liga externa. As convocatórias atuais associam uma equipa a um evento e sustentam reservas, pagamentos, recorrência e partilha com convidados. O primeiro ciclo do AI Club OS precisa de identificar o adversário e a época de um jogo antes de preparar pedidos de disponibilidade.
 
-## Decisão proposta
+## Decisão
 
 - O clube agrega equipas. A ligação `teams.club_id` é opcional e começa vazia nas equipas existentes. A adesão ao clube acontece de forma explícita, segundo o ADR 0005.
 - Cada época e cada adversário pertence a um clube. O adversário é um registo local com nome próprio, que pode representar uma equipa sem conta na aplicação. A competição é identificada pelo nome no jogo durante o piloto.
@@ -18,6 +18,12 @@ O [ADR 0001](0001-defer-external-league-model.md) adiou o modelo de liga externa
 - Um jogo pode referenciar uma convocatória da mesma equipa. Uma tabela de ligação identifica o jogo, a equipa e a convocatória. A relação é opcional, com um máximo de uma ligação por jogo e por convocatória. Os fluxos existentes continuam a resolver as suas convocatórias pelos próprios identificadores e regras de acesso. A associação tem de ser deliberada, pois uma convocatória pode ter um link partilhável.
 - O PostgreSQL garante a coerência das associações com chaves estrangeiras compostas para equipa, época e adversário dentro do clube. A tabela de ligação referencia o jogo e a convocatória pela mesma equipa. Os pares referenciados têm uma restrição de unicidade e as colunas da tabela de ligação são obrigatórias. Ao apagar uma convocatória, o PostgreSQL remove a ligação e conserva o jogo. Criar um jogo com uma ligação é uma operação atómica.
 - A eliminação definitiva da equipa segue o ciclo de vida atual, incluindo a eliminação em cascata quando se elimina a conta do capitão. Os jogos dessa equipa são removidos juntamente com ela. Clube, épocas, adversários e jogos de outras equipas são preservados. Uma equipa com jogos fica vinculada ao mesmo clube. A remoção de uma época ou adversário em uso é recusada.
+
+## Notas de implementação
+
+- A vinculação da equipa ao clube usa uma chave estrangeira composta `fixtures (team_id, club_id) → teams (id, club_id)` com `ON DELETE CASCADE ON UPDATE RESTRICT`, em vez de um trigger. Como `teams.club_id` faz parte da chave referenciada, o PostgreSQL recusa limpá-la ou alterá-la enquanto houver jogos. A eliminação da equipa remove os seus jogos.
+- Época e adversário usam o mesmo padrão com `ON DELETE RESTRICT`. O PostgreSQL reporta estas recusas com SQLSTATE `23503`.
+- A ligação `fixture_match_sessions` referencia `fixtures (id, team_id)` e `match_sessions (id, team_id)`, com unicidade por jogo e por convocatória e `ON DELETE CASCADE` nas duas chaves.
 
 ## Consequências
 

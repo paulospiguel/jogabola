@@ -7,11 +7,14 @@ import { teamPaymentSettings } from "@/db/schema";
 import { withAction, withAuthAction } from "@/lib/action-helpers";
 import {
   decidePayoutUpdate,
+  type MaskedPayoutSettings,
   maskPayoutSettings,
 } from "@/lib/payout-reconfigure";
 import { can, canViewTeam, isTeamOwner } from "@/lib/team-authz";
 import { upsertTeamPaymentSettingsSchema } from "@/schemas/payments.schema";
 import type { TeamPaymentConfig } from "@/types/payments";
+
+type PaymentSettingsRow = typeof teamPaymentSettings.$inferSelect;
 
 export const upsertTeamPaymentSettings = withAuthAction(
   upsertTeamPaymentSettingsSchema,
@@ -82,9 +85,38 @@ export const getPublicTeamPaymentSettings = withAction(
     const settings = await db.query.teamPaymentSettings.findFirst({
       where: eq(teamPaymentSettings.teamId, teamId),
     });
-    return { success: true as const, data: maskPayoutSettings(settings) };
+    return {
+      success: true as const,
+      data: toPublicPaymentSettings(maskPayoutSettings(settings)),
+    };
   },
 );
+
+/**
+ * Public (guest-facing) view of the payment settings: only the fields an
+ * athlete needs to pay, and only for enabled methods. Internal ids and
+ * timestamps never leave the server, and details of disabled methods are
+ * not exposed. Runs on top of `maskPayoutSettings`, so a team that still
+ * has to reconfigure its payouts after a transfer exposes nothing (ADR 0006).
+ */
+function toPublicPaymentSettings(
+  settings: MaskedPayoutSettings<PaymentSettingsRow> | null,
+) {
+  if (!settings) return null;
+  return {
+    payoutReconfigureRequired: settings.payoutReconfigureRequired,
+    stripeEnabled: settings.stripeEnabled,
+    stripeAccountId: settings.stripeEnabled ? settings.stripeAccountId : null,
+    mbwayEnabled: settings.mbwayEnabled,
+    mbwayPhone: settings.mbwayEnabled ? settings.mbwayPhone : null,
+    mbwayName: settings.mbwayEnabled ? settings.mbwayName : null,
+    cashEnabled: settings.cashEnabled,
+    cashInstructions: settings.cashEnabled ? settings.cashInstructions : null,
+    transferEnabled: settings.transferEnabled,
+    transferIban: settings.transferEnabled ? settings.transferIban : null,
+    transferName: settings.transferEnabled ? settings.transferName : null,
+  };
+}
 
 // eslint-disable-next-line server-auth-actions
 // eslint-disable-next-line react-doctor/server-auth-actions
