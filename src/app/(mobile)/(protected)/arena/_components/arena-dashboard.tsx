@@ -157,17 +157,21 @@ export function ArenaDashboard({ userId }: ArenaDashboardProps) {
   const {
     activeTeamId,
     myTeams,
-    activeTeamCanManage,
+    activeTeam: activeTeamAccess,
+    activeTeamCan,
     events,
     squad,
     eventsState,
     squadState,
   } = useDashboardData();
 
+  const canCreateEvent = activeTeamCan("events.manage");
+  const canAddPlayer = activeTeamCan("roster.manage");
+
   const now = new Date();
   const viewModel = buildDashboardViewModel({
     hasTeam: !!activeTeamId,
-    canManageTeam: activeTeamCanManage,
+    access: activeTeamAccess,
     events,
     squadCount: squad.length,
     now,
@@ -329,26 +333,30 @@ export function ArenaDashboard({ userId }: ArenaDashboardProps) {
               </div>
             </div>
 
-            {activeTeamCanManage && (
+            {(canAddPlayer || canCreateEvent) && (
               <div className="flex items-center gap-2">
-                <Cta
-                  variant="secondary"
-                  size="sm"
-                  className="hidden md:inline-flex"
-                  onClick={() => setSheet("add-player")}
-                >
-                  <Users size={15} />
-                  {t("actions.player")}
-                </Cta>
-                <Cta
-                  variant="primary"
-                  size="sm"
-                  className="hidden md:inline-flex"
-                  onClick={() => setSheet("create-event")}
-                >
-                  <Plus size={15} />
-                  {t("actions.event")}
-                </Cta>
+                {canAddPlayer && (
+                  <Cta
+                    variant="secondary"
+                    size="sm"
+                    className="hidden md:inline-flex"
+                    onClick={() => setSheet("add-player")}
+                  >
+                    <Users size={15} />
+                    {t("actions.player")}
+                  </Cta>
+                )}
+                {canCreateEvent && (
+                  <Cta
+                    variant="primary"
+                    size="sm"
+                    className="hidden md:inline-flex"
+                    onClick={() => setSheet("create-event")}
+                  >
+                    <Plus size={15} />
+                    {t("actions.event")}
+                  </Cta>
+                )}
               </div>
             )}
           </header>
@@ -514,12 +522,12 @@ export function ArenaDashboard({ userId }: ArenaDashboardProps) {
                 <ArenaEmptyState
                   icon={Calendar}
                   title={
-                    activeTeamCanManage
+                    canCreateEvent
                       ? t("cockpit.noEventManagerTitle")
                       : t("cockpit.noEventMemberTitle")
                   }
                   description={
-                    activeTeamCanManage
+                    canCreateEvent
                       ? t("cockpit.noEventManagerDescription")
                       : t("cockpit.noEventMemberDescription")
                   }

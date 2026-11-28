@@ -40,7 +40,7 @@ export function toStaffRows(
   });
 }
 
-export const staffQueryKey = (teamId: number) => ["team-staff", teamId];
+export { staffQueryKey } from "@/lib/staff-ui";
 
 /** Same members regardless of order (permission lists are tiny). */
 export function sameMembers(a: readonly string[], b: readonly string[]) {

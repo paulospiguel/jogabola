@@ -5,6 +5,8 @@ import { useEffect } from "react";
 import { create } from "zustand";
 import type { getMyTeams } from "@/actions/teams.actions";
 import { useSession } from "@/lib/auth-client";
+import type { StaffPermission } from "@/lib/staff-permissions";
+import { canDo } from "@/lib/staff-ui";
 
 type MyTeamsResult = Awaited<ReturnType<typeof getMyTeams>>;
 
@@ -12,8 +14,10 @@ type MyTeamsResult = Awaited<ReturnType<typeof getMyTeams>>;
  * DTO shape returned by `getMyTeams`: each team the user can access
  * (owned ∪ staff ∪ roster), annotated with `isOwner`, `isAthlete`,
  * `staffTitle`, `permissions`, `membershipRole` and a presentation-only
- * `canManage` flag. These drive which actions render — they must never gate
- * a mutation; only server-side `can()` / `isTeamOwner()` checks may do that.
+ * `canManage` flag (owner or any staff; never use it to show a specific
+ * action — use `activeTeamCan(permission)`). These drive which actions
+ * render — they must never gate a mutation; only server-side `can()` /
+ * `isTeamOwner()` checks may do that.
  */
 export type TeamSummary = Extract<
   MyTeamsResult,
@@ -104,7 +108,9 @@ export function useTeams() {
     setActiveTeamId,
     myTeams: myTeams ?? [],
     activeTeam,
-    activeTeamCanManage: activeTeam?.canManage ?? false,
+    /** Presentation-only per-permission gate for the active team. */
+    activeTeamCan: (permission: StaffPermission) =>
+      canDo(activeTeam, permission),
     isLoading,
     refetch,
     planTier: planData?.planTier ?? "free",

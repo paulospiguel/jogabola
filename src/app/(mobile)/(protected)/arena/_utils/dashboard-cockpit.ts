@@ -3,6 +3,8 @@
  * No React/DB/hooks imports here — keep this deterministic and unit-testable.
  */
 
+import { canDo, type TeamCapabilities } from "@/lib/staff-ui";
+
 export type DashboardEventStatus = "scheduled" | "confirmed" | "cancelled";
 
 export interface DashboardEvent {
@@ -19,7 +21,8 @@ export type CockpitAction =
 
 export interface CockpitActionInput {
   hasTeam: boolean;
-  canManageTeam: boolean;
+  /** Active team's owner flag + permissions (presentation only). */
+  access: TeamCapabilities | null;
   activeEvent: DashboardEvent | null;
   squadCount: number;
 }
@@ -85,32 +88,36 @@ export function selectSecondaryEvents<E extends DashboardEvent>(
 }
 
 /**
- * Derives which cockpit actions to show. `canManage` here is
+ * Derives which cockpit actions to show, gated per permission
+ * (`events.manage` → create event, `roster.manage` → add player). This is
  * presentation-only — every mutation still needs server-side authorization
  * via can()/isTeamOwner() from @/lib/team-authz.
  */
 export function buildCockpitActions(
   input: CockpitActionInput,
 ): CockpitActions | null {
-  const { hasTeam, canManageTeam, activeEvent, squadCount } = input;
+  const { hasTeam, access, activeEvent, squadCount } = input;
 
   if (!hasTeam) return null;
 
+  const canCreateEvent = canDo(access, "events.manage");
+  const canAddPlayer = canDo(access, "roster.manage");
+
   const primary: CockpitAction = activeEvent
     ? { type: "view-event", eventId: activeEvent.id }
-    : canManageTeam
+    : canCreateEvent
       ? { type: "create-event" }
       : { type: "view-squad" };
 
   const secondary: CockpitAction[] =
-    canManageTeam && squadCount === 0 ? [{ type: "add-player" }] : [];
+    canAddPlayer && squadCount === 0 ? [{ type: "add-player" }] : [];
 
   return { primary, secondary };
 }
 
 export interface DashboardViewModelInput<E extends DashboardEvent> {
   hasTeam: boolean;
-  canManageTeam: boolean;
+  access: TeamCapabilities | null;
   events: E[];
   squadCount: number;
   now: Date;
@@ -161,7 +168,7 @@ export function buildDashboardViewModel<E extends DashboardEvent>(
 ): DashboardViewModel<E> {
   const {
     hasTeam,
-    canManageTeam,
+    access,
     events,
     squadCount,
     now,
@@ -173,7 +180,7 @@ export function buildDashboardViewModel<E extends DashboardEvent>(
   const secondaryEvents = selectSecondaryEvents(events, activeEvent, now);
   const actions = buildCockpitActions({
     hasTeam,
-    canManageTeam,
+    access,
     activeEvent,
     squadCount,
   });

@@ -229,7 +229,16 @@
     },
     "success": "{name} ajouté !",
     "successSubtitle": "Joueur enregistré dans l'effectif.",
-    "title": "Ajouter un joueur"
+    "title": "Ajouter un joueur",
+    "errors": {
+      "FORBIDDEN": "Vous n'avez pas la permission de gérer l'effectif de cette équipe.",
+      "TEAM_REQUIRED": "Choisissez une équipe avant d'ajouter des joueurs.",
+      "PLAYER_ALREADY_IN_TEAM": "Ce joueur fait déjà partie de l'effectif.",
+      "PLAYER_ALREADY_INVITED_TO_TEAM": "Ce joueur a déjà été invité dans cette équipe.",
+      "PLAYER_ALREADY_INVITED_ELSEWHERE": "Cet email a déjà une invitation en attente dans une autre équipe.",
+      "VALIDATION_ERROR": "Vérifiez les informations du joueur et réessayez.",
+      "UNKNOWN_ERROR": "Impossible d'ajouter le joueur. Réessayez."
+    }
   },
   "arenaCalendar": {
     "actions": {

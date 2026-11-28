@@ -110,7 +110,8 @@ export function useSquadClientState() {
     error,
     refetch,
   } = useSquad();
-  const { planTier, activeTeamCanManage } = useTeams();
+  const { planTier, activeTeamCan } = useTeams();
+  const canManageRoster = activeTeamCan("roster.manage");
   const emailLimit = emailLimitFor(planTier);
 
   const squadState = deriveSquadQueryState({
@@ -257,7 +258,7 @@ export function useSquadClientState() {
   }
 
   return {
-    activeTeamCanManage,
+    canManageRoster,
     activeTeamId,
     closeGroupSheet,
     editingGroupId,

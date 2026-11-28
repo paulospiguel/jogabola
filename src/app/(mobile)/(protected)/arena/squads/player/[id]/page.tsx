@@ -9,7 +9,7 @@ import Loading from "@/components/loading";
 import { Button } from "@/components/ui/button";
 import { useAthleteProfile } from "@/hooks/use-athlete-profile";
 import { useTeams } from "@/hooks/use-teams";
-import { getStaffAction } from "@/lib/staff-ui";
+import { canRemoveFromRoster, getStaffAction } from "@/lib/staff-ui";
 import { AthleteHistoryRow } from "./_components/athlete-history-row";
 import { RemoveFromRosterDialog } from "./_components/remove-from-roster-dialog";
 import { StaffAction } from "./_components/staff-action";
@@ -35,6 +35,12 @@ export default function AthleteProfilePage() {
         staffTitle,
       })
     : null;
+  const showRemove = athlete
+    ? canRemoveFromRoster(activeTeam, {
+        isTeamOwner: athlete.isTeamOwner,
+        staffTitle,
+      })
+    : false;
 
   const tr = (key: string, values?: Record<string, string | number>) =>
     t(`arenaAthleteProfile.${key}`, values);
@@ -196,16 +202,18 @@ export default function AthleteProfilePage() {
             </div>
           )}
 
-          {/* ── Remove action ─────────────────────────── */}
-          <div className="mt-8">
-            <RemoveFromRosterDialog
-              activeTeamId={activeTeamId}
-              playerId={athlete.id.toString()}
-              playerName={athlete.name}
-              onRemoved={() => router.push("/arena/squads")}
-              t={tr}
-            />
-          </div>
+          {/* ── Remove action (roster.manage, never the owner) ── */}
+          {showRemove && (
+            <div className="mt-8">
+              <RemoveFromRosterDialog
+                activeTeamId={activeTeamId}
+                playerId={athlete.id.toString()}
+                playerName={athlete.name}
+                onRemoved={() => router.push("/arena/squads")}
+                t={tr}
+              />
+            </div>
+          )}
         </div>
       </div>
     </div>

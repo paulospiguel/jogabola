@@ -18,7 +18,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast-custom";
 import type { StaffAction as StaffActionKind } from "@/lib/staff-ui";
-import { staffErrorKey } from "@/lib/staff-ui";
+import { invalidateStaffChange, staffErrorKey } from "@/lib/staff-ui";
 import { cn } from "@/lib/utils";
 
 interface StaffActionProps {
@@ -45,12 +45,7 @@ export function StaffAction({
 
   const isPromote = action === "promote";
 
-  const refresh = async () => {
-    await Promise.all([
-      queryClient.invalidateQueries({ queryKey: ["athlete-profile"] }),
-      queryClient.invalidateQueries({ queryKey: ["squad"] }),
-    ]);
-  };
+  const refresh = () => invalidateStaffChange(queryClient, teamId);
 
   const handlePromoted = async () => {
     setSheetOpen(false);

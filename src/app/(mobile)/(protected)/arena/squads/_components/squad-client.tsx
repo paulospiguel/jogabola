@@ -55,7 +55,7 @@ export function SquadClient({ userId }: { userId: string }) {
     activeTeam && (activeTeam.isOwner || activeTeam.staffTitle !== null),
   );
   const {
-    activeTeamCanManage,
+    canManageRoster,
     activeTeamId,
     closeGroupSheet,
     editingGroupId,
@@ -205,7 +205,7 @@ export function SquadClient({ userId }: { userId: string }) {
                 title={t("empty.title")}
                 description={t("empty.subtitle")}
                 action={
-                  activeTeamCanManage ? (
+                  canManageRoster ? (
                     <Cta
                       variant="primary"
                       size="sm"
@@ -230,13 +230,15 @@ export function SquadClient({ userId }: { userId: string }) {
                     {t("search.noResults")}
                   </p>
                 </div>
-                <Cta
-                  variant="primary"
-                  size="sm"
-                  onClick={() => setShowAdd(true)}
-                >
-                  {t("actions.addPlayer")}
-                </Cta>
+                {canManageRoster && (
+                  <Cta
+                    variant="primary"
+                    size="sm"
+                    onClick={() => setShowAdd(true)}
+                  >
+                    {t("actions.addPlayer")}
+                  </Cta>
+                )}
               </div>
             ) : (
               <>
@@ -260,14 +262,16 @@ export function SquadClient({ userId }: { userId: string }) {
       </motion.div>
 
       {/* FAB */}
-      <button
-        onClick={() => setShowAdd(true)}
-        className="fixed bottom-[90px] right-6 z-[100] flex size-[52px] items-center justify-center rounded-full bg-arena-primary text-arena-bg shadow-[0_4px_20px_color-mix(in_srgb,var(--color-arena-primary)_33%,transparent)] transition-all hover:bg-arena-primary/90 active:scale-[0.97] md:hidden"
-        type="button"
-        aria-label={t("actions.add")}
-      >
-        <Plus size={22} strokeWidth={2.5} />
-      </button>
+      {canManageRoster && (
+        <button
+          onClick={() => setShowAdd(true)}
+          className="press fixed bottom-[90px] right-6 z-[100] flex size-[52px] items-center justify-center rounded-full bg-arena-primary text-arena-bg shadow-[0_4px_20px_color-mix(in_srgb,var(--color-arena-primary)_33%,transparent)] transition-all hover:bg-arena-primary/90 active:scale-[0.97] md:hidden"
+          type="button"
+          aria-label={t("actions.add")}
+        >
+          <Plus size={22} strokeWidth={2.5} />
+        </button>
+      )}
     </>
   );
 }

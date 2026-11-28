@@ -229,7 +229,16 @@
     },
     "success": "¡{name} añadido!",
     "successSubtitle": "Jugador registrado en la plantilla.",
-    "title": "Añadir Jugador"
+    "title": "Añadir Jugador",
+    "errors": {
+      "FORBIDDEN": "No tienes permiso para gestionar la plantilla de este equipo.",
+      "TEAM_REQUIRED": "Elige un equipo antes de añadir jugadores.",
+      "PLAYER_ALREADY_IN_TEAM": "Este jugador ya forma parte de la plantilla.",
+      "PLAYER_ALREADY_INVITED_TO_TEAM": "Este jugador ya ha sido invitado a este equipo.",
+      "PLAYER_ALREADY_INVITED_ELSEWHERE": "Este email ya tiene una invitación pendiente en otro equipo.",
+      "VALIDATION_ERROR": "Revisa los datos del jugador e inténtalo de nuevo.",
+      "UNKNOWN_ERROR": "No se pudo añadir el jugador. Inténtalo de nuevo."
+    }
   },
   "arenaCalendar": {
     "actions": {

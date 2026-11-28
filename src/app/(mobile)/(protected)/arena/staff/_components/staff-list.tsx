@@ -23,7 +23,7 @@ import {
 } from "@/actions/team-transfer.actions";
 import { JbAvatar } from "@/components/arena/avatar";
 import { ArenaEmptyState } from "@/components/arena/empty-state";
-import { invalidateRosterQueries, permissionLabelKey } from "@/lib/staff-ui";
+import { invalidateStaffChange, permissionLabelKey } from "@/lib/staff-ui";
 import type { OwnerTransferData } from "@/lib/transfer-ui";
 import { cn } from "@/lib/utils";
 import {
@@ -72,13 +72,7 @@ export function StaffList({
   const selected = rows.find(row => row.userId === selectedId) ?? null;
   const hasStaff = rows.some(row => !row.isOwner);
 
-  const refresh = async () => {
-    await Promise.all([
-      queryClient.invalidateQueries({ queryKey: staffQueryKey(teamId) }),
-      queryClient.invalidateQueries({ queryKey: ["athlete-profile"] }),
-      invalidateRosterQueries(queryClient),
-    ]);
-  };
+  const refresh = () => invalidateStaffChange(queryClient, teamId);
 
   return (
     <motion.div

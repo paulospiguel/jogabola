@@ -229,7 +229,16 @@
     },
     "success": "{name} added!",
     "successSubtitle": "Player registered in the squad.",
-    "title": "Add Player"
+    "title": "Add Player",
+    "errors": {
+      "FORBIDDEN": "You don't have permission to manage this team's squad.",
+      "TEAM_REQUIRED": "Pick a team before adding players.",
+      "PLAYER_ALREADY_IN_TEAM": "This player is already in the squad.",
+      "PLAYER_ALREADY_INVITED_TO_TEAM": "This player has already been invited to this team.",
+      "PLAYER_ALREADY_INVITED_ELSEWHERE": "This email already has a pending invite to another team.",
+      "VALIDATION_ERROR": "Check the player's details and try again.",
+      "UNKNOWN_ERROR": "Couldn't add the player. Try again."
+    }
   },
   "arenaCalendar": {
     "actions": {

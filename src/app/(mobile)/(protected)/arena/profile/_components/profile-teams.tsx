@@ -18,7 +18,7 @@ import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { useTeams } from "@/hooks/use-teams";
 import { useToast } from "@/hooks/use-toast-custom";
-import { invalidateRosterQueries, staffErrorKey } from "@/lib/staff-ui";
+import { invalidateStaffChange, staffErrorKey } from "@/lib/staff-ui";
 import { cn } from "@/lib/utils";
 
 interface TeamEntry {
@@ -70,7 +70,10 @@ export function ProfileTeams({ teams }: ProfileTeamsProps) {
     try {
       const result = await setMyAthleteStatus({ teamId: team.id, isAthlete });
       if (result.success) {
-        await Promise.all([refetch(), invalidateRosterQueries(queryClient)]);
+        await Promise.all([
+          refetch(),
+          invalidateStaffChange(queryClient, team.id),
+        ]);
       } else {
         failed = true;
         errorCode = result.error.code;

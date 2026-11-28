@@ -3,6 +3,7 @@ import { Loader2, X } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useState } from "react";
 import { addPlayerToRoster } from "@/actions/teams.actions";
+import { addPlayerErrorKey } from "@/lib/staff-ui";
 import { cn } from "@/lib/utils";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
@@ -78,7 +79,7 @@ export function AddPlayerSheet({
       setDone(true);
       setTimeout(onClose, 2000);
     } else {
-      setError(result.error.message ?? result.error.code);
+      setError(t(addPlayerErrorKey(result.error.code)));
     }
   };
 
