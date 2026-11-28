@@ -56,7 +56,8 @@ Os cargos são rótulos e sugestões, sem poder próprio: `coach`, `director`, `
 - `team_staff`: `id`, `team_id` (FK, cascade), `user_id` (FK, cascade), `title`, `permissions text[] not null default '{}'`, `created_by`, `created_at`, `updated_at`. Único `(team_id, user_id)`. Uma constraint garante `permissions <@ ARRAY[...catálogo]`. O dono nunca tem linha.
 - `team_members` passa a significar só Plantel. A coluna `role` perde o significado de gestão e fica normalizada para `player`. A remoção da coluna fica para depois, para não partir leituras.
 - `team_staff_events`: registo só de inserções com `id`, `team_id`, `actor_user_id`, `subject_user_id`, `type`, `payload jsonb` e `created_at`. Tipos: `promoted`, `demoted`, `permissions_changed`, `title_changed`, `ownership_transfer_requested`, `ownership_transfer_cancelled`, `ownership_transfer_accepted`, `ownership_transfer_expired`, `athlete_opt_in`, `athlete_opt_out`.
-- `team_ownership_transfers`: `id`, `team_id`, `from_user_id`, `to_user_id` (nullable), `to_email` (normalizado), `token_hash`, `status` (`pending`, `accepted`, `cancelled`, `expired`), `expires_at` (criação + 7 dias), `created_at` e `resolved_at`. Um índice parcial único permite um só pedido `pending` por equipa.
+- `team_ownership_transfers`: `id`, `team_id`, `from_user_id`, `to_user_id` (nullable), `to_email` (normalizado), `token_hash`, `status` (`pending`, `accepted`, `cancelled`, `expired`), `expires_at` (criação + 7 dias), `created_at` e `resolved_at`. Um índice parcial único permite um só pedido `pending` por equipa. O token só existe no link do email: guardamos apenas o hash SHA-256 (`token_hash`). Não há estado `declined`: uma recusa fica `cancelled` e o evento regista `reason: "declined"`.
+- `team_payment_settings.payout_reconfigure_required_at` (timestamp, nullable): marcado no aceite de uma transferência; ver a regra de pagamentos abaixo.
 
 Rejeitámos uma linha por privilégio, por exigir mais escritas e leituras para seis privilégios, e uma coluna booleana por privilégio, por obrigar a uma migração a cada privilégio novo. Rejeitámos também uma coluna `is_athlete` em `team_members`, por manter a mistura entre gestão e Plantel.
 
@@ -104,9 +105,11 @@ Leituras e notificações hoje presas a `teams.owner_id`:
 - `setMyAthleteStatus`: o próprio utilizador entra ou sai do Plantel. Sair não apaga presenças, pagamentos nem estatísticas históricas.
 - `promoteToStaff`, `updateStaffMember` e `demoteStaff`: só o dono. Despromover remove a linha de `team_staff` e mantém o lugar no Plantel.
 - `requestOwnershipTransfer`: só o dono, para um membro ou para um email. Exige escrever o nome da equipa. Envia email com link de token e notificação na app se o destinatário tiver conta.
+  - Antes do lançamento (`APP_LAUNCHED !== "true"`), um destinatário por email tem de passar a mesma verificação de tester do layout `(protected)`. Caso contrário, devolve `RECIPIENT_NOT_ELIGIBLE`.
+  - Como só guardamos o hash, um email que não sai deixaria o pedido sem caminho de aceite. Se o envio falhar, o pedido acabado de criar passa a `cancelled` (evento `ownership_transfer_cancelled`, `reason: "email_failed"`) e a ação devolve `EMAIL_SEND_FAILED`, para o dono poder tentar de novo.
 - `cancelOwnershipTransfer`: só o dono.
-- `declineOwnershipTransfer`: o destinatário recusa.
-- `acceptOwnershipTransfer`: o utilizador autenticado tem de corresponder a `to_user_id` ou a `to_email` verificado.
+- `declineOwnershipTransfer`: o destinatário recusa. O pedido fica `cancelled` com `reason: "declined"`.
+- `acceptOwnershipTransfer` (por token) e `acceptOwnershipTransferById` (cartão na app): o utilizador autenticado tem de corresponder a `to_user_id` ou a `to_email` verificado. Antes do lançamento tem de passar a verificação de tester (`RECIPIENT_NOT_ELIGIBLE`); a página `/transfer/[token]` redireciona para `/waitlist`. Um pedido dirigido a um membro só é aceite enquanto o destinatário ainda estiver no Plantel ou no staff; caso contrário, `RECIPIENT_NOT_MEMBER` e o pedido continua `pending`.
 
 O aceite corre numa transação com bloqueio da linha do pedido:
 
@@ -114,8 +117,16 @@ O aceite corre numa transação com bloqueio da linha do pedido:
 2. Se o destinatário já atingiu o limite de equipas do seu plano (`canCreateTeam` sobre as equipas de que é dono), recusa com `TEAM_LIMIT_REACHED` e uma mensagem de upgrade. O pedido continua `pending` até expirar.
 3. Atribui `teams.owner_id` ao destinatário e remove a linha dele em `team_staff`, se existir.
 4. O dono antigo não fica no staff. Mantém a linha em `team_members` só se já era atleta.
-5. Desliga `stripeEnabled`, `mbwayEnabled` e `transferEnabled` em `team_payment_settings`. Os dados ficam guardados mas inativos até o novo dono os reconfigurar. `cashEnabled` mantém-se. Os comprovativos pendentes passam a notificar o novo dono e o staff com `payments.manage`.
+5. Desliga `stripeEnabled`, `mbwayEnabled` e `transferEnabled` em `team_payment_settings` e marca `payout_reconfigure_required_at`. Os dados ficam guardados mas inativos até o novo dono os reconfigurar. `cashEnabled` mantém-se. Os comprovativos pendentes passam a notificar o novo dono e o staff com `payments.manage`.
 6. Marca o pedido como `accepted` e regista o evento.
+
+Regra de pagamentos depois da transferência (enquanto `payout_reconfigure_required_at` estiver marcado):
+
+- Todas as leituras que chegam ao cliente (`getTeamPaymentSettings`, `getPublicTeamPaymentSettings`, `resolveTeamPaymentConfig`) devolvem os dados de MB WAY, transferência e Stripe como `null` e os métodos desativados. Os dados do dono antigo nunca saem do servidor.
+- `upsertTeamPaymentSettings` e o formulário de evento recusam ativar MB WAY, transferência ou Stripe com `PAYOUT_RECONFIGURE_REQUIRED`. Só o dono (`isTeamOwner`) pode reativar, e só enviando dados novos desse método: número e nome para MB WAY, IBAN e titular para transferência. O staff com `payments.manage` não pode reativar nem escrever dados novos.
+- O Stripe fica desativado enquanto a marca existir, porque a app não tem fluxo Connect para obter uma conta nova.
+- Campos de dados vazios não apagam os valores guardados.
+- Uma gravação do dono com dados novos limpa a marca por inteiro. Os dados antigos de um método que o dono não reconfigurou continuam guardados e desativados.
 
 Repetir o aceite é idempotente. A expiração é verificada na leitura e no aceite (`expires_at < now` passa a `expired`), sem worker. A transferência não altera o vínculo da equipa a um clube nem transfere a propriedade do clube.
 

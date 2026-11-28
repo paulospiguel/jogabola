@@ -158,19 +158,23 @@ Estas correções são também o pré-requisito do ADR 0005.
 - `promoteToStaff({ teamId, userId, title, permissions })`: só o dono; o alvo tem de ser atleta registado.
 - `updateStaffMember({ teamId, userId, title?, permissions? })`: só o dono.
 - `demoteStaff({ teamId, userId })`: só o dono; remove a linha de `team_staff`; o lugar no Plantel mantém-se.
-- `requestOwnershipTransfer({ teamId, toUserId? | toEmail, confirmTeamName })`: só o dono; `confirmTeamName` tem de coincidir; cria o pedido, envia email com link de token e notificação na app se o destinatário tiver conta.
+- `requestOwnershipTransfer({ teamId, toUserId? | toEmail, confirmTeamName })`: só o dono; `confirmTeamName` tem de coincidir; cria o pedido, envia email com link de token e notificação na app se o destinatário tiver conta. Só o hash SHA-256 do token é guardado. Antes do lançamento (`APP_LAUNCHED !== "true"`), um destinatário por email tem de passar a mesma verificação de tester do layout `(protected)`; caso contrário, `RECIPIENT_NOT_ELIGIBLE`. Se o email não sair, o pedido acabado de criar passa a `cancelled` (evento `ownership_transfer_cancelled` com `reason: "email_failed"`) e a ação devolve `EMAIL_SEND_FAILED`.
 - `cancelOwnershipTransfer({ teamId })`: só o dono.
-- `acceptOwnershipTransfer({ token })`: o utilizador autenticado tem de corresponder a `to_user_id` ou a `to_email` verificado. Numa transação com bloqueio da linha do pedido:
+- `acceptOwnershipTransfer({ token })` / `acceptOwnershipTransferById({ transferId })`: o utilizador autenticado tem de corresponder a `to_user_id` ou a `to_email` verificado. Antes do lançamento tem de passar a verificação de tester (`RECIPIENT_NOT_ELIGIBLE`; a página `/transfer/[token]` redireciona para `/waitlist`). Um pedido para um membro só é aceite enquanto o destinatário estiver no Plantel ou no staff (`RECIPIENT_NOT_MEMBER`). Numa transação com bloqueio da linha do pedido:
   1. Verifica `pending` e não expirado.
   2. `teams.owner_id` ← destinatário.
   3. Remove a linha de `team_staff` do destinatário, se existir (passa a dono).
   4. O dono antigo **não fica no staff**; a sua linha em `team_members` mantém-se só se já era atleta.
-  5. **Pagamentos:** desliga `stripeEnabled`, `mbwayEnabled` e `transferEnabled` em `team_payment_settings`. Os dados ficam guardados mas inativos até o novo dono os reconfigurar; o dinheiro (`cashEnabled`) mantém-se. Os comprovativos pendentes passam a notificar o novo dono e o staff com `payments.manage`.
+  5. **Pagamentos:** desliga `stripeEnabled`, `mbwayEnabled` e `transferEnabled` em `team_payment_settings` e marca `payout_reconfigure_required_at = now()`. Os dados ficam guardados mas inativos até o novo dono os reconfigurar; o dinheiro (`cashEnabled`) mantém-se. Os comprovativos pendentes passam a notificar o novo dono e o staff com `payments.manage`. Enquanto a marca existir:
+     - todas as leituras que chegam ao cliente (`getTeamPaymentSettings`, `getPublicTeamPaymentSettings`, `resolveTeamPaymentConfig` e páginas de evento/pagamento) devolvem os dados de MB WAY, transferência e Stripe como `null` e os métodos desativados;
+     - `upsertTeamPaymentSettings` e o formulário de evento (`createEvent`/`updateEvent`) recusam ativar MB WAY, transferência ou Stripe com `PAYOUT_RECONFIGURE_REQUIRED`, exceto ao **dono** (`isTeamOwner`) que envie dados novos desse método (MB WAY: número e nome; transferência: IBAN e titular). O Stripe fica desativado enquanto a marca existir, porque não há fluxo Connect na app. Campos de dados vazios não apagam os valores guardados;
+     - uma gravação do dono com dados novos limpa a marca por inteiro;
+     - a folha de definições mostra o aviso "Confirma os dados de pagamento da equipa" com os campos vazios.
   6. **Limite do plano:** se o destinatário já atingiu o limite de equipas do seu plano (`canCreateTeam` sobre as equipas de que é dono), o aceite é recusado com `TEAM_LIMIT_REACHED` e uma mensagem de upgrade. O pedido continua `pending` até expirar.
   7. `status = accepted`.
   8. Regista o evento.
   9. Repetir o aceite é idempotente.
-- `declineOwnershipTransfer({ token })`: o destinatário recusa.
+- `declineOwnershipTransfer({ token })`: o destinatário recusa. Fica guardado como `cancelled` com `reason: "declined"` no evento.
 - Expiração: tratada no momento da leitura/aceite (`expires_at < now` → `expired`). Não exige worker.
 
 Todas registam em `team_staff_events` e fazem `revalidatePath("/arena", "layout")`.

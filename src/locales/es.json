@@ -175,7 +175,7 @@
     "roles": {
       "captain": "Capitán",
       "coach": "Entrenador",
-      "owner": "Capitán",
+      "owner": "Dueño",
       "player": "Jugador"
     },
     "history": {
@@ -1153,7 +1153,7 @@
   },
   "arenaSquad": {
     "roles": {
-      "owner": "Capitán",
+      "owner": "Dueño",
       "admin": "Administrador",
       "coach": "Entrenador",
       "player": "Jugador",
