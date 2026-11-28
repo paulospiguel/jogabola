@@ -22,6 +22,7 @@ import {
   opponents,
   seasons,
   teamMembers,
+  teamStaff,
   teams,
 } from "@/db/schema";
 import {
@@ -153,19 +154,30 @@ async function requireClubAdmin(
   if (membership.role !== "admin") throw new ClubCalendarError(E.FORBIDDEN);
 }
 
+/**
+ * Whether the caller has a server-validated link to the team: a roster row
+ * (`team_members`) or a staff row (`team_staff`, ADR 0006). The registered
+ * owner is checked by callers through `teams.owner_id`.
+ */
 async function hasTeamLink(
   executor: Executor,
   userId: string,
   teamId: number,
 ): Promise<boolean> {
-  const [link] = await executor
+  const [roster] = await executor
     .select({ id: teamMembers.id })
     .from(teamMembers)
     .where(
       and(eq(teamMembers.teamId, teamId), eq(teamMembers.playerId, userId)),
     )
     .limit(1);
-  return Boolean(link);
+  if (roster) return true;
+  const [staff] = await executor
+    .select({ id: teamStaff.id })
+    .from(teamStaff)
+    .where(and(eq(teamStaff.teamId, teamId), eq(teamStaff.userId, userId)))
+    .limit(1);
+  return Boolean(staff);
 }
 
 /**
@@ -534,8 +546,9 @@ export function deleteOpponent(
 
 /**
  * ADR 0005 read rule: the caller is a member of the fixture's club AND has
- * a server-validated link to the fixture's team (registered owner or roster
- * row). Club membership alone never grants access to a team's fixtures.
+ * a server-validated link to the fixture's team (registered owner, roster
+ * row or `team_staff` row). Club membership alone never grants access to a
+ * team's fixtures. Staff read only; writes stay with the registered owner.
  */
 function readableFixture(executor: Executor, userId: string): SQL {
   const clubMembership = exists(
@@ -560,7 +573,21 @@ function readableFixture(executor: Executor, userId: string): SQL {
         ),
       ),
   );
-  return and(clubMembership, or(eq(teams.ownerId, userId), rosterLink)) as SQL;
+  const staffLink = exists(
+    executor
+      .select({ one: sql`1` })
+      .from(teamStaff)
+      .where(
+        and(
+          eq(teamStaff.teamId, fixtures.teamId),
+          eq(teamStaff.userId, userId),
+        ),
+      ),
+  );
+  return and(
+    clubMembership,
+    or(eq(teams.ownerId, userId), rosterLink, staffLink),
+  ) as SQL;
 }
 
 async function selectReadableFixtures(

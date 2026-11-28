@@ -16,7 +16,7 @@ O clube tem membros com papel `admin` ou `member` e um único vínculo por utili
 
 | Ação | Condição |
 | --- | --- |
-| Ler um jogo privado | Ser membro do clube e ter um vínculo à equipa do jogo validado pelo servidor. |
+| Ler um jogo privado | Ser membro do clube e ter um vínculo à equipa do jogo validado pelo servidor: proprietário (`teams.owner_id`), atleta do plantel (`team_members`) ou staff (`team_staff`). |
 | Criar um jogo ou associar uma convocatória | Ser membro do clube e proprietário da equipa. |
 | Gerir épocas e adversários do clube | Ser administrador do clube. |
 | Gerir uma convocatória | Aplicar as permissões atuais dessa operação na equipa. |
@@ -27,12 +27,12 @@ As leituras de jogos devolvem apenas os dados necessários ao calendário. Consu
 
 ## Consequências
 
-A pertença a um clube e o vínculo à equipa são verificados separadamente. O acesso de escrita do piloto usa a propriedade da equipa registada na base de dados. O staff mantém os privilégios recreativos do ADR 0006 (`events.manage`, `roster.manage` e restantes). As ações competitivas ficam reservadas ao dono, sem interruptor, e delegá-las ao staff exige uma decisão própria. A leitura de jogos exige hoje ser dono ou atleta do plantel; ver staff que não joga fica por decidir. A eliminação da conta remove a pertença ao clube e conserva os dados partilhados. A transferência de administração fica fora do piloto. A transferência de propriedade da equipa (ADR 0006) não altera `club_members`: o novo dono só lê e cria jogos depois de ser membro do clube, pelo fluxo de convites ainda por decidir, e o dono antigo mantém o vínculo ao clube sem as ações competitivas dessa equipa. Se sair o último administrador, as operações administrativas ficam indisponíveis até haver um fluxo de recuperação autorizado.
+A pertença a um clube e o vínculo à equipa são verificados separadamente. O acesso de escrita do piloto usa a propriedade da equipa registada na base de dados. O staff mantém os privilégios recreativos do ADR 0006 (`events.manage`, `roster.manage` e restantes). As ações competitivas ficam reservadas ao dono, sem interruptor, e delegá-las ao staff exige uma decisão própria. A leitura de jogos exige ser dono, atleta do plantel ou membro do staff da equipa, em linha com o ADR 0006, onde o staff vê tudo da equipa; o staff lê mas nunca escreve, e o staff que não joga deixou de ficar de fora. A eliminação da conta remove a pertença ao clube e conserva os dados partilhados. A transferência de administração fica fora do piloto. A transferência de propriedade da equipa (ADR 0006) não altera `club_members`: o novo dono só lê e cria jogos depois de ser membro do clube, pelo fluxo de convites ainda por decidir, e o dono antigo mantém o vínculo ao clube sem as ações competitivas dessa equipa. Se sair o último administrador, as operações administrativas ficam indisponíveis até haver um fluxo de recuperação autorizado.
 
 ## Verificação
 
 - Com dois clubes sintéticos, verificar que um membro do clube B recebe a mesma resposta para um jogo privado do clube A e para um identificador inexistente.
-- Verificar leitura pelo capitão e pelo atleta com vínculo ao clube e à equipa. Verificar recusa para um membro do mesmo clube sem acesso à equipa e para um membro da equipa cujo vínculo ao clube foi removido.
-- Verificar a criação pelo capitão vinculado ao clube e a recusa para atleta, membro de staff e administrador sem propriedade da equipa. Um papel `owner` gravado no plantel não substitui o proprietário registado em `teams.owner_id`.
+- Verificar leitura pelo capitão, pelo atleta e pelo staff (com ou sem linha no plantel) com vínculo ao clube e à equipa. Verificar recusa para um membro do mesmo clube sem acesso à equipa e para um membro da equipa cujo vínculo ao clube foi removido.
+- Verificar a criação pelo capitão vinculado ao clube e a recusa (`FORBIDDEN`) para atleta, membro de staff (mesmo sem linha no plantel) e administrador sem propriedade da equipa. Um papel `owner` gravado no plantel não substitui o proprietário registado em `teams.owner_id`.
 - Verificar que um utilizador sem autorização de gestão não consegue criar nem alterar vínculos na equipa através das ações de plantel.
 - Verificar a gestão de uma convocatória recreativa pelo capitão e o acesso por link de convidado sem dados competitivos.

@@ -25,6 +25,7 @@ const U = {
   athleteNoClub: "it-athlete-no-club",
   memberNoTeam: "it-member-no-team",
   staffA: "it-staff-a",
+  staffOnlyA: "it-staff-only-a",
   rosterOwnerA: "it-roster-owner-a",
   adminA2: "it-admin-a2",
   capB: "it-cap-b",
@@ -126,6 +127,11 @@ describe.skipIf(!enabled)("club calendar authorization (PostgreSQL)", () => {
       INSERT INTO team_staff (team_id, user_id, title, permissions)
       VALUES (${ids.teamA}, ${U.staffA}, 'coach', ARRAY['events.manage'])
     `;
+    // Staff member who is not on the roster: reads, never writes.
+    await client`
+      INSERT INTO team_staff (team_id, user_id, title, permissions)
+      VALUES (${ids.teamA}, ${U.staffOnlyA}, 'coach', ARRAY['events.manage'])
+    `;
     ids.sessionA = await insertSession(ids.teamA);
     ids.sessionA2 = await insertSession(ids.teamA);
     ids.sessionB = await insertSession(ids.teamB);
@@ -215,6 +221,7 @@ describe.skipIf(!enabled)("club calendar authorization (PostgreSQL)", () => {
     await addMember(ids.clubA, U.athleteNoClub, "member");
     await addMember(ids.clubA, U.memberNoTeam, "member");
     await addMember(ids.clubA, U.staffA, "member");
+    await addMember(ids.clubA, U.staffOnlyA, "member");
     await addMember(ids.clubA, U.rosterOwnerA, "member");
     await addMember(ids.clubA, U.adminA2, "admin");
     await addMember(ids.clubB, U.memberB, "member");
@@ -383,6 +390,7 @@ describe.skipIf(!enabled)("club calendar authorization (PostgreSQL)", () => {
     for (const userId of [
       U.athleteA,
       U.staffA,
+      U.staffOnlyA, // staff off the roster reads but never writes
       U.rosterOwnerA, // a roster "owner" role does not replace teams.owner_id
     ]) {
       await expect(
@@ -465,8 +473,8 @@ describe.skipIf(!enabled)("club calendar authorization (PostgreSQL)", () => {
     });
   });
 
-  it("reads fixtures with club membership and a team link only", async () => {
-    for (const userId of [U.capA, U.athleteA, U.staffA]) {
+  it("reads fixtures with club membership and a team link (owner, roster or staff) only", async () => {
+    for (const userId of [U.capA, U.athleteA, U.staffA, U.staffOnlyA]) {
       const fixture = unwrap(
         await calendar.getFixture(db, userId, { fixtureId: ids.fixtureA }),
       );
@@ -486,6 +494,15 @@ describe.skipIf(!enabled)("club calendar authorization (PostgreSQL)", () => {
       expect(fixture.startsAt).toBe("2026-12-06T15:00:00.000Z");
       expect(fixture.canManage).toBe(userId === U.capA);
     }
+
+    // Staff off the roster lists the team's fixtures too.
+    expect(
+      unwrap(
+        await calendar.listClubFixtures(db, U.staffOnlyA, {
+          clubId: ids.clubA,
+        }),
+      ).length,
+    ).toBeGreaterThan(0);
 
     // Same club, no access to the team.
     await expect(
@@ -534,6 +551,12 @@ describe.skipIf(!enabled)("club calendar authorization (PostgreSQL)", () => {
   it("links match sessions only for the team owner, one per side", async () => {
     await expect(
       calendar.linkMatchSession(db, U.staffA, {
+        fixtureId: ids.fixtureA,
+        matchSessionId: ids.sessionA2,
+      }),
+    ).resolves.toEqual({ success: false, error: { code: "FORBIDDEN" } });
+    await expect(
+      calendar.linkMatchSession(db, U.staffOnlyA, {
         fixtureId: ids.fixtureA,
         matchSessionId: ids.sessionA2,
       }),

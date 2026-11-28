@@ -19,8 +19,8 @@ Contrato entre o backend da etapa 2 ([ADR 0004](../adr/0004-competitive-calendar
 | Ação | Condição verificada no servidor |
 | --- | --- |
 | Ler épocas, adversários, lista de jogos do clube | Membro do clube (`admin` ou `member`). |
-| Ler um jogo | Membro do clube **e** vínculo à equipa do jogo (`teams.owner_id` ou linha em `team_members`). |
-| Criar jogo, associar/desassociar convocatória | Membro do clube **e** proprietário registado da equipa (`teams.owner_id`). Membros de staff (`team_staff`) e o papel `owner` no plantel não chegam. |
+| Ler um jogo | Membro do clube **e** vínculo à equipa do jogo (`teams.owner_id`, linha em `team_members` ou linha em `team_staff`). |
+| Criar jogo, associar/desassociar convocatória | Membro do clube **e** proprietário registado da equipa (`teams.owner_id`). Membros de staff (`team_staff`, que só leem) e o papel `owner` no plantel não chegam. |
 | Gerir épocas e adversários | Administrador do clube. |
 | Criar clube com equipa | Proprietário da equipa; a equipa tem de estar livre. Quem cria fica `admin`. |
 | Associar equipa a clube | Administrador do clube de destino **e** proprietário da equipa; equipa livre. |
