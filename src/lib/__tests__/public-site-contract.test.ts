@@ -21,8 +21,21 @@ function objectKeys(value: unknown): string[] {
 }
 
 describe("public website production contract", () => {
-  const publicFiles = [
+  const homeSectionFiles = [
     "src/app/(public)/(website)/page.tsx",
+    "src/app/(public)/(website)/_components/hero-section.tsx",
+    "src/app/(public)/(website)/_components/marquee-ticker.tsx",
+    "src/app/(public)/(website)/_components/impact-section.tsx",
+    "src/app/(public)/(website)/_components/product-showcase-section.tsx",
+    "src/app/(public)/(website)/_components/evolution-section.tsx",
+    "src/app/(public)/(website)/_components/club-evolution-map.tsx",
+    "src/app/(public)/(website)/_components/club-evolution-connectors.tsx",
+    "src/app/(public)/(website)/_components/plans-section.tsx",
+    "src/app/(public)/(website)/_components/guardrails-section.tsx",
+    "src/app/(public)/(website)/_components/final-cta-section.tsx",
+  ];
+  const publicFiles = [
+    ...homeSectionFiles,
     "src/app/(public)/(website)/contact/page.tsx",
     "src/app/(public)/(website)/pricing/page.tsx",
     "src/app/(public)/(website)/roadmap/page.tsx",
@@ -80,22 +93,26 @@ describe("public website production contract", () => {
   });
 
   it("omits unverified urgency and testimonial claims", () => {
-    const source = readSource("src/app/(public)/(website)/page.tsx");
+    const source = homeSectionFiles.map(readSource).join("\n");
 
     expect(source).not.toContain("TestimonialsSection");
     expect(source).not.toContain('t("tickerStrong")');
     expect(source).not.toContain('t("ticker")');
   });
 
-  it("keeps the public hero compact and the contact grid balanced", () => {
-    const landing = readSource("src/app/(public)/(website)/page.tsx");
+  it("keeps the public hero structured, progressive plans complete, and contact grid balanced", () => {
+    const hero = readSource(
+      "src/app/(public)/(website)/_components/hero-section.tsx",
+    );
+    const plans = readSource(
+      "src/app/(public)/(website)/_components/plans-section.tsx",
+    );
     const contact = readSource("src/app/(public)/(website)/contact/page.tsx");
 
-    expect(landing).toContain("lg:min-h-[680px]");
-    expect(landing).toContain("lg:pt-20");
-    expect(landing).toContain("lg:pb-8");
-    expect(landing).toContain("lg:mt-6");
-    expect(landing).toContain("scale={0.82}");
+    expect(hero).toContain("TacticalPitchCanvas");
+    expect(hero).toContain("DemoModal");
+    expect(plans).toContain("PLAN_ORDER");
+    expect(plans).toContain("/contact?plan=champion");
     expect(contact).toContain("max-w-6xl");
     expect(contact).toContain("lg:grid-cols-3");
     expect(contact).toContain("lg:flex-col");
@@ -105,7 +122,7 @@ describe("public website production contract", () => {
   });
 
   it("tracks only the missing consent-gated public funnel events", () => {
-    const landing = readSource("src/app/(public)/(website)/page.tsx");
+    const landing = homeSectionFiles.map(readSource).join("\n");
     const auth = readSource("src/app/(mobile)/auth/page.tsx");
 
     expect(landing).toContain('logEvent("landing_cta_clicked"');

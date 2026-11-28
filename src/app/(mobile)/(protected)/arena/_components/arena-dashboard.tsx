@@ -7,6 +7,7 @@ import {
   ChevronLeft,
   ChevronRight,
   Clock,
+  Flag,
   History,
   MapPin,
   Plus,
@@ -26,6 +27,7 @@ import { CreateEventSheet } from "@/components/arena/create-event-sheet";
 import { CreateTeamSheet } from "@/components/arena/create-team-sheet";
 import { Cta } from "@/components/arena/cta";
 import { ArenaEmptyState } from "@/components/arena/empty-state";
+import { PendingTransferCards } from "@/components/arena/pending-transfer-card";
 import { PlayerRow } from "@/components/arena/player-row";
 import {
   ArenaQueryError,
@@ -156,17 +158,21 @@ export function ArenaDashboard({ userId }: ArenaDashboardProps) {
   const {
     activeTeamId,
     myTeams,
-    activeTeamCanManage,
+    activeTeam: activeTeamAccess,
+    activeTeamCan,
     events,
     squad,
     eventsState,
     squadState,
   } = useDashboardData();
 
+  const canCreateEvent = activeTeamCan("events.manage");
+  const canAddPlayer = activeTeamCan("roster.manage");
+
   const now = new Date();
   const viewModel = buildDashboardViewModel({
     hasTeam: !!activeTeamId,
-    canManageTeam: activeTeamCanManage,
+    access: activeTeamAccess,
     events,
     squadCount: squad.length,
     now,
@@ -221,14 +227,22 @@ export function ArenaDashboard({ userId }: ArenaDashboardProps) {
     });
   }, [carouselEvents.length]);
 
+  // Rendered as the FIRST child of every branch below so React keeps the
+  // same instance when the dashboard switches branch (e.g. the first team is
+  // created and becomes active): remounting would drop the post-create
+  // athlete prompt state.
+  const createTeamSheet =
+    sheet === "create-team" ? (
+      <CreateTeamSheet onClose={() => setSheet(null)} />
+    ) : null;
+
   // No team selected / manager has no teams yet
   if (!activeTeamId || !activeTeam) {
     return (
       <>
-        {sheet === "create-team" && (
-          <CreateTeamSheet onClose={() => setSheet(null)} />
-        )}
-        <div className="flex h-screen flex-col items-center justify-center gap-4 bg-arena-bg text-arena-text-muted">
+        {createTeamSheet}
+        <div className="flex h-screen flex-col items-center justify-center gap-4 bg-arena-bg px-4 text-arena-text-muted">
+          <PendingTransferCards className="mb-4 w-full max-w-md" />
           <div className="flex size-14 items-center justify-center rounded-2xl bg-arena-surface-el">
             <Shield className="size-7 text-arena-primary" />
           </div>
@@ -257,7 +271,12 @@ export function ArenaDashboard({ userId }: ArenaDashboardProps) {
   // still fetching. The Arena layout keeps sidebar/topbar/bottom nav
   // mounted around this component regardless.
   if (eventsState.isInitialLoading || squadState.isInitialLoading) {
-    return <DashboardSkeleton />;
+    return (
+      <>
+        {createTeamSheet}
+        <DashboardSkeleton />
+      </>
+    );
   }
 
   const eventsViewState = deriveQueryViewState({
@@ -279,6 +298,7 @@ export function ArenaDashboard({ userId }: ArenaDashboardProps) {
 
   return (
     <>
+      {createTeamSheet}
       {sheet === "create-event" && (
         <CreateEventSheet
           onClose={() => setSheet(null)}
@@ -297,9 +317,6 @@ export function ArenaDashboard({ userId }: ArenaDashboardProps) {
           onClose={() => setSheet(null)}
         />
       )}
-      {sheet === "create-team" && (
-        <CreateTeamSheet onClose={() => setSheet(null)} />
-      )}
 
       <motion.div
         className="jb-page"
@@ -317,29 +334,35 @@ export function ArenaDashboard({ userId }: ArenaDashboardProps) {
               </div>
             </div>
 
-            {activeTeamCanManage && (
+            {(canAddPlayer || canCreateEvent) && (
               <div className="flex items-center gap-2">
-                <Cta
-                  variant="secondary"
-                  size="sm"
-                  className="hidden md:inline-flex"
-                  onClick={() => setSheet("add-player")}
-                >
-                  <Users size={15} />
-                  {t("actions.player")}
-                </Cta>
-                <Cta
-                  variant="primary"
-                  size="sm"
-                  className="hidden md:inline-flex"
-                  onClick={() => setSheet("create-event")}
-                >
-                  <Plus size={15} />
-                  {t("actions.event")}
-                </Cta>
+                {canAddPlayer && (
+                  <Cta
+                    variant="secondary"
+                    size="sm"
+                    className="hidden md:inline-flex"
+                    onClick={() => setSheet("add-player")}
+                  >
+                    <Users size={15} />
+                    {t("actions.player")}
+                  </Cta>
+                )}
+                {canCreateEvent && (
+                  <Cta
+                    variant="primary"
+                    size="sm"
+                    className="hidden md:inline-flex"
+                    onClick={() => setSheet("create-event")}
+                  >
+                    <Plus size={15} />
+                    {t("actions.event")}
+                  </Cta>
+                )}
               </div>
             )}
           </header>
+
+          <PendingTransferCards className="mb-4" />
 
           <div className="jb-dashboard-grid">
             <section className="jb-stack">
@@ -500,12 +523,12 @@ export function ArenaDashboard({ userId }: ArenaDashboardProps) {
                 <ArenaEmptyState
                   icon={Calendar}
                   title={
-                    activeTeamCanManage
+                    canCreateEvent
                       ? t("cockpit.noEventManagerTitle")
                       : t("cockpit.noEventMemberTitle")
                   }
                   description={
-                    activeTeamCanManage
+                    canCreateEvent
                       ? t("cockpit.noEventManagerDescription")
                       : t("cockpit.noEventMemberDescription")
                   }
@@ -617,6 +640,39 @@ export function ArenaDashboard({ userId }: ArenaDashboardProps) {
                   </Link>
                 </div>
               </section>
+
+              {/* Club: competitive calendar (ADR 0004) */}
+              {FEATURES.clubCalendar && (
+                <section>
+                  <div className="jb-section-label">{t("sections.club")}</div>
+                  <Link
+                    href="/arena/club"
+                    className="btn-press jb-card jb-list-row transition-[transform,border-color,background-color] duration-150 hover:border-arena-primary/45 hover:bg-arena-surface-el active:scale-[0.97]"
+                  >
+                    <span className="jb-icon-tile border border-arena-primary/30 bg-arena-primary/[0.08]">
+                      <Flag
+                        size={20}
+                        strokeWidth={1.7}
+                        className="text-arena-primary"
+                        aria-hidden="true"
+                      />
+                    </span>
+                    <span className="min-w-0 flex-1">
+                      <span className="block truncate text-sm font-semibold text-arena-text">
+                        {t("sections.club")}
+                      </span>
+                      <span className="mt-0.5 block text-[11px] text-arena-text-muted">
+                        {t("sections.clubSub")}
+                      </span>
+                    </span>
+                    <ChevronRight
+                      size={16}
+                      className="text-arena-text-muted"
+                      aria-hidden="true"
+                    />
+                  </Link>
+                </section>
+              )}
 
               {/* Discover cards */}
               {viewModel.showDiscover && (

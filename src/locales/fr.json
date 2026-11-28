@@ -132,7 +132,8 @@
         "RESEND_DOMAIN_NOT_VERIFIED": "Le domaine de l'expéditeur n'est pas encore vérifié dans Resend.",
         "RESEND_DEV_DOMAIN_RESTRICTED": "Le domaine resend.dev envoie uniquement à l'email propriétaire du compte Resend. Vérifiez votre propre domaine pour envoyer des codes.",
         "EMAIL_SEND_FAILED": "Impossible d'envoyer le code par email. Vérifiez l'email ou réessayez."
-      }
+      },
+      "loginSuccessTransfer": "Ouverture de la demande de transfert."
     },
     "validation": {
       "invalidEmail": "Email invalide",
@@ -174,8 +175,7 @@
     "roles": {
       "captain": "Capitaine",
       "coach": "Entraîneur",
-      "owner": "Capitaine",
-      "manager": "Co-capitaine",
+      "owner": "Propriétaire",
       "player": "Joueur"
     },
     "history": {
@@ -188,21 +188,6 @@
       "title": "Chat avec l'athlète",
       "description": "Cette conversation sera disponible dans une prochaine version. Pour l'instant, utilise l'e-mail sur la carte de l'athlète pour communiquer directement."
     },
-    "coCaptain": {
-      "promote": "Nommer co-capitaine",
-      "promoteDesc": "Accorder les permissions de gestion (créer des événements, valider les paiements).",
-      "promoteLabel": "Promouvoir",
-      "remove": "Retirer co-capitaine",
-      "removeDesc": "Révoquer les permissions de gestion. Redevient joueur.",
-      "removeLabel": "Retirer",
-      "errors": {
-        "FORBIDDEN": "Tu n'as pas la permission pour cette action.",
-        "TEAM_NOT_FOUND": "Impossible de confirmer l'équipe active.",
-        "CANNOT_MODIFY_OWNER": "Le rôle du propriétaire de l'équipe ne peut pas être modifié.",
-        "PLAYER_NOT_IN_TEAM": "Cet athlète ne fait plus partie de cet effectif.",
-        "UNKNOWN_ERROR": "Impossible de mettre à jour le rôle. Réessaie."
-      }
-    },
     "removeDialog": {
       "title": "Retirer de l'effectif ?",
       "description": "Vous allez retirer {name} de cet effectif.",
@@ -212,7 +197,8 @@
       "removing": "Suppression...",
       "errors": {
         "TEAM_NOT_FOUND": "Impossible de confirmer l'équipe active.",
-        "CANNOT_REMOVE_OWNER": "Le propriétaire de l'équipe ne peut pas être retiré de l'effectif.",
+        "FORBIDDEN": "Vous n'avez pas la permission de retirer cet athlète.",
+        "CANNOT_MODIFY_OWNER": "Le propriétaire de l'équipe ne peut pas être retiré de l'effectif.",
         "PLAYER_NOT_IN_TEAM": "Cet athlète n'appartient plus à cet effectif.",
         "UNKNOWN_ERROR": "Impossible de retirer l'athlète. Réessayez."
       }
@@ -231,7 +217,6 @@
       "add": "Ajouter le joueur"
     },
     "labels": {
-      "admin": "Administrateur",
       "email": "Email *",
       "fullName": "Nom complet *",
       "phone": "Téléphone",
@@ -245,7 +230,16 @@
     },
     "success": "{name} ajouté !",
     "successSubtitle": "Joueur enregistré dans l'effectif.",
-    "title": "Ajouter un joueur"
+    "title": "Ajouter un joueur",
+    "errors": {
+      "FORBIDDEN": "Vous n'avez pas la permission de gérer l'effectif de cette équipe.",
+      "TEAM_REQUIRED": "Choisissez une équipe avant d'ajouter des joueurs.",
+      "PLAYER_ALREADY_IN_TEAM": "Ce joueur fait déjà partie de l'effectif.",
+      "PLAYER_ALREADY_INVITED_TO_TEAM": "Ce joueur a déjà été invité dans cette équipe.",
+      "PLAYER_ALREADY_INVITED_ELSEWHERE": "Cet email a déjà une invitation en attente dans une autre équipe.",
+      "VALIDATION_ERROR": "Vérifiez les informations du joueur et réessayez.",
+      "UNKNOWN_ERROR": "Impossible d'ajouter le joueur. Réessayez."
+    }
   },
   "arenaCalendar": {
     "actions": {
@@ -321,7 +315,8 @@
       "RANGE_END_BEFORE_START": "La date de fin doit être après la date de début.",
       "RANGE_TOO_LONG": "La plage ne peut pas dépasser 90 jours.",
       "VALIDATION_RECURRENCE_END_REQUIRED": "Choisissez jusqu'à quand l'événement se répète.",
-      "VALIDATION_RECURRENCE_AND_RANGE_EXCLUSIVE": "Un événement ne peut pas être à la fois récurrent et sur une plage de dates."
+      "VALIDATION_RECURRENCE_AND_RANGE_EXCLUSIVE": "Un événement ne peut pas être à la fois récurrent et sur une plage de dates.",
+      "PAYOUT_RECONFIGURE_REQUIRED": "Confirmez d'abord les coordonnées de paiement de l'équipe dans Paiements. D'ici là, MB WAY ne peut pas être activé."
     },
     "info": "Après avoir créé l'événement, vous pouvez ajouter des joueurs et gérer la convocation à partir de la page de l'événement.",
     "access": {
@@ -425,11 +420,21 @@
       }
     },
     "typeOptions": {
-      "game": { "alt": "Icône de match" },
-      "training": { "alt": "Icône d'entraînement" },
-      "friendly": { "alt": "Icône de match amical" },
-      "meeting": { "alt": "Icône de réunion" },
-      "other": { "alt": "Icône d'autre type d'événement" }
+      "game": {
+        "alt": "Icône de match"
+      },
+      "training": {
+        "alt": "Icône d'entraînement"
+      },
+      "friendly": {
+        "alt": "Icône de match amical"
+      },
+      "meeting": {
+        "alt": "Icône de réunion"
+      },
+      "other": {
+        "alt": "Icône d'autre type d'événement"
+      }
     },
     "final": {
       "stepsInfo": "Les joueurs reçoivent une notification et peuvent confirmer/refuser directement.",
@@ -475,7 +480,14 @@
       "generic": "Erreur lors de la création de l'équipe."
     },
     "limitReachedTitle": "Limite du plan gratuit",
-    "upgradeCta": "Voir les plans"
+    "upgradeCta": "Voir les plans",
+    "athletePrompt": {
+      "title": "Voulez-vous faire partie de l'effectif des athlètes ?",
+      "sub": "Vous pourrez changer cela plus tard dans votre profil.",
+      "yes": "Oui, je veux jouer",
+      "no": "Pas maintenant"
+    },
+    "defaultTeamName": "Mon équipe"
   },
   "arenaNoTeamModal": {
     "title": "Créez une équipe d'abord",
@@ -520,6 +532,8 @@
       "title": "Aucune équipe sélectionnée"
     },
     "sections": {
+      "club": "Club",
+      "clubSub": "Calendrier · Saisons",
       "noSquad": "Aucun joueur dans l'effectif pour le moment.",
       "noWeekEvents": "Aucun événement programmé cette semaine.",
       "squad": "Effectif",
@@ -768,7 +782,96 @@
     "cancelWarningTitle": "Annuler l'Événement",
     "cancelWarningDesc": "L'événement sera marqué comme annulé. Les places ne seront plus disponibles."
   },
+  "matchSimulator": {
+    "playerCard": {
+      "defender": "Défenseur",
+      "midfielder": "Milieu",
+      "forward": "Attaquant",
+      "portrait": "Portrait du joueur {number}",
+      "trigger": "Joueur {number} · {team}",
+      "fictional": "Joueur fictif du simulateur",
+      "time": "Temps de jeu",
+      "team": "Équipe"
+    },
+    "title": "Simulateur de match 3D",
+    "description": "Teste des tactiques de football à 11 et à 7 avec des équipes fictives. Les résultats concernent le scénario simulé.",
+    "opponent": "Adversaire",
+    "profile": "Profil fictif",
+    "profiles": {
+      "balanced": "Équipe équilibrée",
+      "pressure": "Équipe de pressing",
+      "defensive": "Équipe défensive"
+    },
+    "style": "Style de jeu",
+    "styles": {
+      "balanced": "Équilibré",
+      "highPress": "Pressing haut",
+      "lowBlock": "Bloc bas"
+    },
+    "level": "Niveau {level} sur 5",
+    "parameters": "Pressing {pressing}/100 · Passe {passing}/100",
+    "lineup": "Équipe titulaire",
+    "formation": "Formation",
+    "position": "Poste",
+    "slot": "Poste {number}",
+    "keeper": "Gardien",
+    "starter": "Titulaire",
+    "player": "Joueur {number}",
+    "depth": "Avancée (m)",
+    "width": "Décalage latéral (m)",
+    "clearPositions": "Effacer les ajustements de position",
+    "applyPosition": "Ajuster le poste à cet instant",
+    "substitutions": "Remplacements",
+    "out": "Sort",
+    "in": "Entre",
+    "minute": "Minute",
+    "subNow": "Remplacer maintenant",
+    "schedule": "Programmer",
+    "remove": "Retirer",
+    "subEvent": "{minute}′ · {out} sort, {in} entre",
+    "invalidSub": "Cette modification crée un conflit avec un autre remplacement.",
+    "view": "Vue du terrain",
+    "views": {
+      "three": "Perspective 3D",
+      "top": "Caméra aérienne",
+      "two": "Vue 2D"
+    },
+    "fallback": "3D indisponible sur cet appareil. La vue 2D est active.",
+    "home": "Ton équipe",
+    "away": "Adversaire",
+    "timeline": "Chronologie",
+    "play": "Lecture",
+    "pause": "Pause",
+    "restart": "Recommencer",
+    "speed": "Vitesse",
+    "comparison": "Comparaison à {minutes} minutes",
+    "saveBaseline": "Enregistrer comme référence",
+    "metric": "Indicateur",
+    "baseline": "Référence",
+    "current": "Actuel",
+    "metrics": {
+      "score": "Score",
+      "shots": "Tirs",
+      "recovery": "Récupérations",
+      "leftSpace": "Possession adverse côté défensif gauche",
+      "rightSpace": "Possession adverse côté défensif droit",
+      "conceded": "Tirs concédés"
+    },
+    "highlights": "Actions récentes",
+    "noHighlights": "Lance le match pour voir les premières actions.",
+    "adjustment": "Poste ajusté pour le joueur {number}",
+    "events": {
+      "goal": "But · {team}",
+      "shot": "Tir · {team}",
+      "recovery": "Récupération · {team}"
+    },
+    "format": "Format",
+    "formatOption": "Football à {players}",
+    "formatReset": "Changer de format lance un nouveau scénario."
+  },
   "arenaNav": {
+    "simulator": "Simulateur",
+    "club": "Club",
     "collapse": "Réduire le menu",
     "dashboard": "Équipe",
     "events": "Événements",
@@ -791,7 +894,8 @@
       "upgradePlan": "Mettre à niveau",
       "lockedToTeam": "Équipe de l'événement"
     },
-    "teams": "Équipes"
+    "teams": "Équipes",
+    "staff": "Staff"
   },
   "arenaPage": {
     "activeTeams": {
@@ -1104,6 +1208,11 @@
         "title": "Stripe — Carte",
         "description": "Paiement automatique par carte",
         "info": "L'intégration avec Stripe sera configurée via le tableau de bord de l'équipe. Contactez le support pour plus d'informations."
+      },
+      "payoutReconfigure": {
+        "title": "Confirmez les coordonnées de paiement de l'équipe",
+        "sub": "L'équipe a changé de propriétaire. Pour réactiver MB WAY ou le virement, saisissez à nouveau le numéro et le nom, ou l'IBAN et le titulaire. Stripe reste désactivé pour l'instant.",
+        "error": "Seul le propriétaire de l'équipe peut réactiver ce moyen, avec de nouvelles coordonnées (MB WAY : numéro et nom ; virement : IBAN et titulaire)."
       }
     },
     "methods": {
@@ -1145,13 +1254,12 @@
   },
   "arenaSquad": {
     "roles": {
-      "owner": "Capitaine",
+      "owner": "Propriétaire",
       "admin": "Administrateur",
-      "manager": "Gestionnaire",
       "coach": "Entraîneur",
       "player": "Joueur",
       "guest": "Invité",
-      "co-captain": "Co-capitaine"
+      "staff": "Staff"
     },
     "actions": {
       "add": "Ajouter",
@@ -1215,14 +1323,6 @@
     "notValidated": "Joueur non validé",
     "notValidatedDesc": "Ce joueur n'a pas encore créé son compte Jogabola. Le profil complet et les statistiques seront disponibles après validation.",
     "pendingValidation": "Validation en attente",
-    "coCaptain": {
-      "promote": "Nommer co-capitaine",
-      "promoteDesc": "Accorder des permissions de gestion (créer des événements, valider les paiements).",
-      "promoteLabel": "Promouvoir",
-      "remove": "Retirer co-capitaine",
-      "removeDesc": "Révoquer les permissions de gestion. Redevient joueur.",
-      "removeLabel": "Retirer"
-    },
     "empty": {
       "title": "Aucun joueur dans l'effectif pour l'instant",
       "subtitle": "Ajoutez le premier joueur pour commencer à gérer les convocations.",
@@ -1658,28 +1758,89 @@
       "title": "Fonctionnalités Complètes"
     },
     "hero": {
-      "badge": "BÊTA · Accès anticipé",
+      "badge": "AI CLUB OS · ÉQUIPES AMATEURS",
       "titlePart1": "Ton match hebdomadaire,",
       "titlePart2": "organisé.",
       "titleHighlight": "Sans groupes WhatsApp.",
       "titlePart3": "Sans confusion.",
       "titlePart4": "Ton arena.",
-      "description": "Fini le chaos WhatsApp. Présences, paiements et justificatifs au même endroit pour les capitaines qui prennent le match hebdomadaire au sérieux.",
+      "description": "Une technologie de niveau professionnel pensée pour les gestionnaires solo, capitaines et clubs amateurs à petit budget. Convocations, partage des frais, historique et Secrétaire IA sous votre contrôle — commencez gratuitement.",
       "joinWaitlist": "Rejoins la liste d'attente",
       "signIn": "Se connecter",
-      "goToArena": "Aller à l'Arena",
+      "goToArena": "Ouvrir l'Arena",
       "startJourney": "Commencer le Voyage",
       "watchDemo": "Regarder la Démo",
       "headline": {
         "play": "Joue",
         "more": "plus.",
-        "organize": "Organise moins."
+        "organize": "Organise moins.",
+        "line1": "Gestion de grand",
+        "stroke": "club.",
+        "accent": "Pour vraies équipes."
       },
-      "secondaryCta": "Voir la démo · 0:42",
+      "secondaryCta": "Voir la démo",
       "tickerStrong": "+3 capitaines",
       "ticker": "ont rejoint la liste ces dernières 24h",
       "badgeConfirmed": "14 confirmés",
-      "badgePaid": "11/14 joueurs"
+      "badgePaid": "11/14 joueurs",
+      "primaryCta": "Commencer gratuitement",
+      "plansAnchor": "Voir les offres →",
+      "proofStrip": [
+        "0€ pour démarrer",
+        "< 2 min par convocation",
+        "IA sous contrôle humain",
+        "Mobile & Desktop"
+      ],
+      "commandCard": {
+        "eyebrow": "Centre Opérationnel",
+        "clubName": "Os Lobos FC · Sénior",
+        "liveTag": "En direct",
+        "tabsAriaLabel": "Explorer les modules de la plateforme",
+        "tabs": {
+          "convocation": "Convocation",
+          "racha": "Partage",
+          "secretary": "Secrétaire IA"
+        },
+        "convocation": {
+          "matchTitle": "Samedi · 21h00 · Terrain 2",
+          "matchMeta": "Gymnase Municipal · Liste d'attente automatique active",
+          "statConfirmed": "Confirmés",
+          "statWaitlist": "Attente",
+          "statPending": "En attente",
+          "footerNote": "La liste d'attente promeut le suivant automatiquement."
+        },
+        "racha": {
+          "collectedLabel": "Total validé du match",
+          "rows": [
+            {
+              "name": "Diogo Ferreira",
+              "amount": "5,00 €",
+              "status": "Payé",
+              "paid": true
+            },
+            {
+              "name": "Bruno Alves",
+              "amount": "5,00 €",
+              "status": "Reçu OK",
+              "paid": true
+            },
+            {
+              "name": "Ricardo Pinto",
+              "amount": "5,00 €",
+              "status": "En attente",
+              "paid": false
+            }
+          ]
+        },
+        "secretary": {
+          "agentLabel": "Staff Virtuel · Secrétaire",
+          "scopeLabel": "Périmètre : Os Lobos FC",
+          "summary": "12 joueurs ont confirmé leur disponibilité pour samedi. 2 n'ont pas encore répondu.",
+          "ambiguousTag": "Confirmation humaine requise",
+          "ambiguousDetail": "Tiago M a répondu « peut-être en retard » — statut conservé en attente jusqu'à clarification.",
+          "humanGate": "Brouillon prêt · Relisez avant d'envoyer à l'effectif"
+        }
+      }
     },
     "momentumStrip": {
       "item1": "Match programmé",
@@ -1803,12 +1964,12 @@
     "watchVideo": "Voir le vidéo",
     "marquee": {
       "items": [
-        "Sans WhatsApp",
-        "Convocations en secondes",
-        "Paiements sans stress",
-        "Justificatifs au bon endroit",
-        "Liste d’attente automatique",
-        "Samedis plus légers"
+        "Convocations en moins de 2 minutes",
+        "Partage des frais sans friction",
+        "Secrétaire IA sous contrôle humain",
+        "Chronomètre et mini-tournois",
+        "Historique de saison préservé",
+        "Conçu pour les budgets amateurs"
       ]
     },
     "how": {
@@ -1910,13 +2071,477 @@
       ]
     },
     "finalCta": {
-      "badge": "Accès anticipé · Places limitées",
-      "headline": "Sois parmi les premiers",
-      "headlineAccent": "à jouer.",
-      "emailLabel": "Email",
-      "emailPlaceholder": "ton-email@exemple.com",
-      "cta": "Rejoindre la liste",
-      "link": "Déjà accès ? Se connecter"
+      "badge": "Démarrez gratuitement · Évoluez à votre rythme",
+      "headline": "Le prochain match",
+      "headlineAccent": "commence organisé.",
+      "emailLabel": "Email pour l'accès prioritaire",
+      "emailPlaceholder": "vous@club.fr",
+      "cta": "Demander l'accès prioritaire",
+      "link": "Déjà inscrit ? Se connecter",
+      "subtitle": "Créez votre équipe en moins de deux minutes sur l'offre Gratuite, ou contactez-nous pour bâtir une offre Champion sur mesure.",
+      "startFreeCta": "Créer un compte gratuit",
+      "goToArena": "Ouvrir mon Arena",
+      "championCta": "Parler de l'offre Champion"
+    },
+    "nav": {
+      "impact": "Impact",
+      "product": "Produit",
+      "evolution": "Évolution",
+      "plans": "Tarifs"
+    },
+    "impact": {
+      "kicker": "Impact réel",
+      "titlePrefix": "Petit budget ne rime pas avec",
+      "titleAccent": "gestion improvisée.",
+      "subtitle": "Choisissez votre réalité actuelle et découvrez ce que la technologie débloque quand vous gérez sans secrétariat dédié.",
+      "selectorAriaLabel": "Choisir le profil d'équipe ou de club",
+      "startCta": "Essayer gratuitement avec mon équipe",
+      "profiles": {
+        "solo": {
+          "tabLabel": "Gestionnaire Solo",
+          "badge": "1 personne gère tout",
+          "recommendedTier": "Démarre en Gratuit (0€)",
+          "headline": "Organisez le match hebdomadaire sans perdre vos soirées sur WhatsApp.",
+          "summary": "Quand vous réservez le terrain, relancez 14 joueurs et avancez la location, chaque minute gagnée compte.",
+          "beforeTitle": "Sans JogaBola",
+          "beforeItems": [
+            "Listes copiées-collées 15 fois dans le groupe.",
+            "Désistements de dernière minute sans liste d'attente.",
+            "Location avancée sans visibilité claire sur qui a payé.",
+            "Aucun suivi des présences, buts ou régularité."
+          ],
+          "afterTitle": "Avec JogaBola",
+          "afterItems": [
+            "Lien unique de convocation avec liste d'attente automatique.",
+            "Partage clair par joueur, avec le suivi de qui a payé.",
+            "Invités inscrits en quelques secondes par email.",
+            "Chronomètre au bord du terrain et partage du score."
+          ],
+          "metrics": [
+            {
+              "value": "< 2 min",
+              "label": "Créer match"
+            },
+            {
+              "value": "0€",
+              "label": "Pour démarrer"
+            },
+            {
+              "value": "100%",
+              "label": "Comptes clairs"
+            }
+          ]
+        },
+        "weekly": {
+          "tabLabel": "Groupe Hebdo",
+          "badge": "15 à 35 joueurs",
+          "recommendedTier": "Évolue vers Basique / Amateur",
+          "headline": "Transformez votre match habituel en une vraie équipe structurée.",
+          "summary": "Protégez la priorité des titulaires face aux invités, sécurisez la trésorerie et bâtissez la mémoire du collectif.",
+          "beforeTitle": "Sans JogaBola",
+          "beforeItems": [
+            "Tableurs obsolètes et captures de virements perdues.",
+            "Invités prenant les places avant les membres réguliers.",
+            "Relances gênantes dans la conversation amicale.",
+            "Statistiques et souvenirs oubliés chaque mois."
+          ],
+          "afterTitle": "Avec JogaBola",
+          "afterItems": [
+            "Priorité automatique pour l'effectif avant les invités.",
+            "Validation des justificatifs et rappels ciblés en un clic.",
+            "Chat temps réel réservé aux participants confirmés.",
+            "Classements, notes et archives complètes de saison."
+          ],
+          "metrics": [
+            {
+              "value": "-4h",
+              "label": "Gagnées / sem"
+            },
+            {
+              "value": "3x",
+              "label": "Clôture rapide"
+            },
+            {
+              "value": "∞",
+              "label": "Mémoire club"
+            }
+          ]
+        },
+        "district": {
+          "tabLabel": "Club Local",
+          "badge": "Plusieurs équipes · Saisons",
+          "recommendedTier": "Amateur · Professionnel · Champion",
+          "headline": "L'organisation d'un grand club à budget associatif.",
+          "summary": "Centralisez effectifs, saisons, matchs officiels et un Secrétaire IA sécurisé côté serveur sans recruter d'administratif.",
+          "beforeTitle": "Sans JogaBola",
+          "beforeItems": [
+            "Coachs relançant les disponibilités dans des fils séparés.",
+            "Données du club éparpillées sur des téléphones privés.",
+            "Aucune vue globale sur les présences et cotisations.",
+            "Aucun appui pour trier les réponses avant convocation."
+          ],
+          "afterTitle": "Avec JogaBola",
+          "afterItems": [
+            "Isolation stricte par club vérifiée côté serveur.",
+            "Saisons et matchs officiels avec vos créneaux loisirs.",
+            "Secrétaire IA qui analyse les réponses et signale les doutes.",
+            "Validation humaine obligatoire avant tout envoi au groupe."
+          ],
+          "metrics": [
+            {
+              "value": "100%",
+              "label": "Isolation club"
+            },
+            {
+              "value": "1 clic",
+              "label": "Révoquer l'IA"
+            },
+            {
+              "value": "5",
+              "label": "Niveaux"
+            }
+          ]
+        }
+      }
+    },
+    "productShowcase": {
+      "kicker": "Au cœur du Produit",
+      "titlePrefix": "Voyez exactement ce qui",
+      "titleAccent": "vous attend à l'intérieur.",
+      "subtitle": "Zéro promesse vague. Explorez les écrans réels utilisés sur mobile au bord du terrain et sur ordinateur pour piloter la semaine.",
+      "tabsAriaLabel": "Modules de la plateforme JogaBola",
+      "modules": {
+        "convocations": {
+          "tag": "Opérations",
+          "title": "Convocations & Présences",
+          "subtitle": "Ouvrez un match avec date, terrain, plafond de places et priorité effectif. Confirmations et file d'attente en temps réel.",
+          "highlights": [
+            "Confirmation en un geste pour l'effectif et les invités.",
+            "La liste d'attente remplace automatiquement chaque désistement.",
+            "Mur d'annonces du capitaine distinct du chat de match."
+          ],
+          "outcomeLabel": "Pour ouvrir un match",
+          "outcomeValue": "< 2 min",
+          "ctaLabel": "Créer ma première convocation",
+          "ctaHref": "/auth"
+        },
+        "payments": {
+          "tag": "Finances",
+          "title": "Partage & Justificatifs",
+          "subtitle": "Répartissez le terrain avec clarté, recevez les justificatifs sur l'événement et clôturez les comptes sans gêne.",
+          "highlights": [
+            "Suivi clair des payés, reçus à valider et paiements en attente.",
+            "Rappels directs sans polluer la conversation du groupe.",
+            "Historique financier conservé par match et par saison."
+          ],
+          "outcomeLabel": "Clôture des comptes",
+          "outcomeValue": "Le jour même",
+          "ctaLabel": "Gérer mes frais gratuitement",
+          "ctaHref": "/auth"
+        },
+        "secretary": {
+          "tag": "AI Club OS",
+          "title": "Secrétaire Virtuel IA",
+          "subtitle": "Votre premier membre de staff virtuel. Prépare les demandes de disponibilité, interprète les réponses et identifie les retards.",
+          "highlights": [
+            "Les réponses claires mettent à jour la présence via action autorisée.",
+            "Les réponses ambiguës demandent confirmation — jamais d'erreur.",
+            "Relecture et approbation humaines avant tout envoi collectif."
+          ],
+          "outcomeLabel": "Contrôle d'envoi",
+          "outcomeValue": "100% humain",
+          "ctaLabel": "Voir les offres Secrétaire IA",
+          "ctaHref": "#planos"
+        },
+        "timer": {
+          "tag": "Bord du terrain",
+          "title": "Chronomètre & Mini-Tournois",
+          "subtitle": "Prêt à l'emploi sur le terrain. Gérez le chrono, notez les buts, équilibrez les équipes et animez vos mini-tournois.",
+          "highlights": [
+            "Utilisable sur mobile immédiatement, même sans compte.",
+            "Saisie rapide des buts, cartons et fil du match.",
+            "Score final prêt à partager avec toute l'équipe."
+          ],
+          "outcomeLabel": "Accès immédiat",
+          "outcomeValue": "Gratuit",
+          "ctaLabel": "Ouvrir le chronomètre",
+          "ctaHref": "/timer"
+        },
+        "roster": {
+          "tag": "Identité",
+          "title": "Effectif, Classements & Saisons",
+          "subtitle": "Votre équipe dépasse le simple fil de discussion pour bâtir une histoire durable : présences, buts, notes et saisons.",
+          "highlights": [
+            "Identité unifiée par email du premier match invité au statut régulier.",
+            "Rapports de match, assiduité et classements internes.",
+            "Prêt à évoluer du groupe amical au club multi-équipes."
+          ],
+          "outcomeLabel": "Pérennité des données",
+          "outcomeValue": "Historique intact",
+          "ctaLabel": "Créer mon équipe",
+          "ctaHref": "/auth"
+        }
+      }
+    },
+    "evolution": {
+      "kicker": "Vision de Progrès",
+      "titlePrefix": "Démarrez sur un match.",
+      "titleAccent": "Devenez un vrai club.",
+      "subtitle": "Suivez comment JogaBola grandit au rythme de votre projet — sans jamais perdre une présence, un paiement ni un but.",
+      "stagesAriaLabel": "Étapes d'évolution du club",
+      "orbitLabel": "Radar d'évolution du club",
+      "historyPreservedNote": "Tout votre historique loisir reste intact à chaque passage de niveau.",
+      "nextStageCta": "Étape suivante",
+      "comparePlansCta": "Comparer les 5 offres",
+      "stages": [
+        {
+          "step": "ÉTAPE 01",
+          "timeframe": "Jour 1",
+          "title": "Démarrage Solo",
+          "tierBadge": "Offre Gratuite",
+          "description": "Quittez le chaos WhatsApp en deux minutes. Créez l'équipe, ouvrez la convocation et partagez un seul lien.",
+          "unlocks": [
+            "Équipe et effectif jusqu'à 25 joueurs",
+            "Convocations avec liste d'attente",
+            "Suivi simple du partage de terrain",
+            "Chronomètre live et mini-tournois"
+          ],
+          "metricLabel": "Coût de départ",
+          "metricValue": "0€ / mois"
+        },
+        {
+          "step": "ÉTAPE 02",
+          "timeframe": "Mois 1",
+          "title": "Routine & Finances",
+          "tierBadge": "Offre Basique",
+          "description": "Votre match hebdomadaire devient fluide. Justificatifs validés en un clic, moins d'absences et historique consolidé.",
+          "unlocks": [
+            "Validation centralisée des justificatifs",
+            "Rappels de paiements et mur d'annonces",
+            "Chat temps réel pour les confirmés",
+            "Archives complètes et classements"
+          ],
+          "metricLabel": "Temps gagné",
+          "metricValue": "~4 heures / sem"
+        },
+        {
+          "step": "ÉTAPE 03",
+          "timeframe": "Saison 1",
+          "title": "Club Structuré",
+          "tierBadge": "Offre Amateur",
+          "description": "Le projet passe un cap : plusieurs équipes, saisons, calendrier compétitif et premiers flux du Secrétaire IA sous contrôle.",
+          "unlocks": [
+            "Jusqu'à 10 équipes et 50 joueurs par équipe",
+            "Saisons et calendrier compétitif",
+            "Équilibrage intelligent des équipes",
+            "Quota initial de Secrétaire IA validé par humain"
+          ],
+          "metricLabel": "Organisation",
+          "metricValue": "Jusqu'à 10 équipes"
+        },
+        {
+          "step": "ÉTAPE 04",
+          "timeframe": "Échelle",
+          "title": "AI Club OS Complet",
+          "tierBadge": "Professionnel & Champion",
+          "description": "Gestion complète de club ou d'académie : staff virtuel avec identité et budget dédiés, quotas étendus et modules sur mesure.",
+          "unlocks": [
+            "Pilotage centralisé de plusieurs effectifs",
+            "Quota étendu du Secrétaire IA et maîtrise des coûts",
+            "Rapports avancés de saison et d'assiduité",
+            "Onboarding accompagné et exclusivités Champion"
+          ],
+          "metricLabel": "Gouvernance",
+          "metricValue": "Enterprise Amateur"
+        }
+      ],
+      "map": {
+        "layers": {
+          "core": "Socle",
+          "routine": "Opérations",
+          "club": "Club",
+          "ai": "AI Club OS"
+        },
+        "status": {
+          "active": "Actif",
+          "consolidated": "Consolidé",
+          "locked": "Étape {code}"
+        },
+        "controls": {
+          "autoPlay": "Simuler l’évolution",
+          "pause": "Pause",
+          "previousStage": "Étape précédente",
+          "nextStage": "Étape suivante",
+          "clickToExplore": "Cliquez sur un module pour l’inspecter"
+        },
+        "telemetry": {
+          "teams": "Équipes",
+          "athletes": "Joueurs / éq.",
+          "aiWorkflow": "Flux IA",
+          "humanControl": "Contrôle humain",
+          "teamsUpTo": "Jusqu’à {count}",
+          "teamsScale": "{count}+ / club",
+          "athletesPerTeam": "Jusqu’à {count}",
+          "athletesScale": "{count}+ / éq.",
+          "aiModes": {
+            "manual": "Gestion directe",
+            "alerts": "Alertes auto",
+            "secretary": "Secrétaire IA",
+            "fullOs": "Staff IA + Audit"
+          }
+        },
+        "inspector": {
+          "builtOn": "S’appuie sur :",
+          "flowsTo": "Alimente :"
+        },
+        "nodes": {
+          "roster": {
+            "title": "Effectif de Base",
+            "badge": "Jusqu’à 25 joueurs",
+            "summary": "Profils unifiés par e-mail pour titulaires et invités, préservant présences et statistiques dès le premier match."
+          },
+          "callup": {
+            "title": "Convocation",
+            "badge": "Lien unique · RSVP",
+            "summary": "Ouverture du match en quelques secondes avec plafond de places, priorité effectif et liste d’attente automatique."
+          },
+          "split": {
+            "title": "Partage Terrain",
+            "badge": "Par match",
+            "summary": "Calcul automatique de la part de chaque participant sans tableur ni comptes manuels en fin de rencontre."
+          },
+          "history": {
+            "title": "Archives & Classements",
+            "badge": "Buts et présences",
+            "summary": "Rapports d’après-match, assiduité, buts et notes accumulés automatiquement semaine après semaine."
+          },
+          "chat": {
+            "title": "Chat & Mur",
+            "badge": "Temps réel",
+            "summary": "Mur d’annonces de l’organisateur et chat temps réel dédié exclusivement aux joueurs confirmés."
+          },
+          "payments": {
+            "title": "Justificatifs",
+            "badge": "Validation en 1 clic",
+            "summary": "Envoi du reçu par le joueur, relances des retards et clôture financière transparente du match."
+          },
+          "multiteam": {
+            "title": "Plus d'Équipes",
+            "badge": "Jusqu’à 10 équipes",
+            "summary": "Regroupez seniors, U23 ou vétérans sous un même club sans mélanger les effectifs ni perdre l’historique."
+          },
+          "fixtures": {
+            "title": "Saisons & Rencontres",
+            "badge": "Calendrier compétitif",
+            "summary": "Saisons, adversaires et matchs officiels reliés de manière optionnelle aux convocations de l’équipe."
+          },
+          "staff": {
+            "title": "Staff Technique",
+            "badge": "Permissions par rôle",
+            "summary": "Coachs, dirigeants et trésoriers avec droits définis par le propriétaire et transfert sécurisé."
+          },
+          "secretary": {
+            "title": "Secrétaire IA",
+            "badge": "Validation humaine",
+            "summary": "Prépare les demandes de disponibilité, interprète les réponses et signale les ambiguïtés — jamais d’envoi sans validation."
+          },
+          "governance": {
+            "title": "Staff IA Étendu",
+            "badge": "Quotas et révocation",
+            "summary": "Identité dédiée par agent, quotas étendus, plafonds de coût et révocation immédiate."
+          }
+        }
+      }
+    },
+    "guardrails": {
+      "kicker": "Confiance & Maîtrise",
+      "titlePrefix": "La technologie aide.",
+      "titleAccent": "Le capitaine décide.",
+      "subtitle": "AI Club OS repose sur une discipline opérationnelle pensée pour les vrais clubs : aucune boîte noire, aucun envoi imprévu.",
+      "items": [
+        {
+          "tag": "01 · Validation Humaine",
+          "title": "Vous approuvez chaque envoi",
+          "description": "Le Secrétaire prépare les messages et synthétise les réponses, mais rien ne part sans votre accord. Toute ambiguïté demande confirmation."
+        },
+        {
+          "tag": "02 · Sécurité",
+          "title": "Isolation stricte par club",
+          "description": "Chaque lecture et action vérifie session, rôle et périmètre côté serveur. Vos données privées restent invisibles aux autres clubs — dans tous les forfaits."
+        },
+        {
+          "tag": "03 · Prévisibilité",
+          "title": "Budgets et révocation immédiate",
+          "description": "Chaque agent virtuel possède son identité, son journal d'audit et son plafond d'usage. Révoquez l'accès en un geste."
+        },
+        {
+          "tag": "04 · Continuité",
+          "title": "Historique préservé",
+          "description": "Passez d'un groupe loisir en Gratuit à un club complet sans jamais perdre convocations, buts, paiements ni présences."
+        }
+      ]
+    },
+    "phoneMockup": {
+      "team": {
+        "eyebrow": "Équipe",
+        "nextMatch": "Prochain match",
+        "matchTime": "Samedi · 21h",
+        "venue": "Gymnase Municipal · Terrain 2",
+        "confirmedCount": "14 confirmés",
+        "stats": {
+          "confirmed": "Confirm.",
+          "pending": "Attente",
+          "paid": "Payés"
+        },
+        "roster": "Effectif",
+        "playersCount": "22 joueurs",
+        "athlete": "Joueur",
+        "pendingShort": "ATT",
+        "okShort": "OK"
+      },
+      "convoca": {
+        "eyebrow": "Convocation",
+        "confirmed": "Confirmés",
+        "squadLabel": "Effectif · 14 confirmés",
+        "activityTitle": "Activité · maintenant",
+        "activityItems": [
+          "Bruno A a confirmé sa présence",
+          "Tiago M a rejoint la liste d'attente",
+          "Diogo F a confirmé sa présence"
+        ]
+      },
+      "paid": {
+        "title": "Paiement validé",
+        "subtitle": "5,00 € · Match de samedi · Justificatif archivé.",
+        "from": "De",
+        "to": "Pour",
+        "method": "Méthode",
+        "total": "Total"
+      },
+      "secretary": {
+        "eyebrow": "AI Club OS",
+        "title": "Secrétaire IA",
+        "scopeBadge": "Relire",
+        "draftLabel": "Demande préparée",
+        "draftText": "« Samedi 21h au Terrain 2. Confirmes-tu avant vendredi 18h ? »",
+        "clearReplyLabel": "Confirmé par action autorisée",
+        "clearReplyText": "Diogo F : « Présent ! » → Confirmé",
+        "ambiguousLabel": "Ambiguïté détectée",
+        "ambiguousText": "Tiago M : « Selon le boulot » → Demander précision",
+        "approveCta": "Approuver et envoyer à l'équipe"
+      },
+      "timer": {
+        "eyebrow": "Bord du terrain",
+        "title": "Chrono & Buts",
+        "teamA": "Chasubles",
+        "teamB": "Sans chasuble",
+        "timelineLabel": "Fil du match",
+        "events": [
+          "11' · But de Diogo F (3-2)",
+          "08' · But de Bruno A (2-2)",
+          "04' · Carton jaune · Ricardo P"
+        ]
+      }
     }
   },
   "howItWorksPage": {
@@ -2215,10 +2840,22 @@
       "optional": "Optionnel"
     },
     "positions": {
-      "GK": { "label": "Gardien", "hint": "Tu protèges le but" },
-      "DEF": { "label": "Défenseur", "hint": "Tu stoppes l'attaque" },
-      "MID": { "label": "Milieu", "hint": "Tu relies le jeu" },
-      "FWD": { "label": "Attaquant", "hint": "Tu marques des buts" }
+      "GK": {
+        "label": "Gardien",
+        "hint": "Tu protèges le but"
+      },
+      "DEF": {
+        "label": "Défenseur",
+        "hint": "Tu stoppes l'attaque"
+      },
+      "MID": {
+        "label": "Milieu",
+        "hint": "Tu relies le jeu"
+      },
+      "FWD": {
+        "label": "Attaquant",
+        "hint": "Tu marques des buts"
+      }
     },
     "skill": {
       "eyebrow": "Compétence"
@@ -2437,7 +3074,8 @@
         "title": "Authentification à Deux Facteurs",
         "description": "Configurez un code PIN supplémentaire pour renforcer la protection de votre compte."
       }
-    }
+    },
+    "athleteToggle": "Je suis athlète dans cette équipe"
   },
   "searchResults": {
     "back": "Retour",
@@ -2715,6 +3353,15 @@
     }
   },
   "validation": {
+    "VALIDATION_CLUB_REQUIRED": "Le club est obligatoire.",
+    "VALIDATION_SEASON_REQUIRED": "La saison est obligatoire.",
+    "VALIDATION_OPPONENT_REQUIRED": "L’adversaire est obligatoire.",
+    "VALIDATION_FIXTURE_REQUIRED": "Le match est obligatoire.",
+    "VALIDATION_CLUB_CALENDAR_NAME_TOO_SHORT": "Le nom doit comporter au moins 2 caractères.",
+    "VALIDATION_CLUB_CALENDAR_NAME_TOO_LONG": "Le nom ne peut pas dépasser 80 caractères.",
+    "VALIDATION_DATE_INVALID": "La date n’est pas valide.",
+    "VALIDATION_SEASON_RANGE_INVALID": "La date de fin doit être égale ou postérieure à la date de début.",
+    "VALIDATION_DATE_RANGE_INVALID": "La fin de l’intervalle doit être égale ou postérieure à son début.",
     "VALIDATION_AMOUNT_REQUIRED": "Le montant est obligatoire.",
     "VALIDATION_CONFIRM_PASSWORD_REQUIRED": "Confirmez votre mot de passe.",
     "VALIDATION_EMAIL_INVALID": "Email invalide.",
@@ -2740,7 +3387,13 @@
     "VALIDATION_TEAM_REQUIRED": "L'équipe est obligatoire.",
     "VALIDATION_TEAM_SLUG_INVALID": "Le slug de l'équipe est invalide (lettres minuscules, chiffres et traits d'union uniquement).",
     "VALIDATION_TEAM_SLUG_TOO_SHORT": "Le slug de l'équipe doit contenir au moins 3 caractères.",
-    "VALIDATION_TITLE_TOO_SHORT": "Le titre doit contenir au moins 3 caractères."
+    "VALIDATION_TITLE_TOO_SHORT": "Le titre doit contenir au moins 3 caractères.",
+    "VALIDATION_FIXTURE_DATE_REQUIRED": "Choisissez la date du match.",
+    "VALIDATION_FIXTURE_TIME_REQUIRED": "Choisissez l’heure du coup d’envoi.",
+    "VALIDATION_FIXTURE_TIME_INVALID": "L’heure n’est pas valide.",
+    "VALIDATION_FIXTURE_TIME_NONEXISTENT": "Cette heure n’existe pas ce jour-là à cause du changement d’heure. Choisissez-en une autre.",
+    "VALIDATION_COMPETITION_NAME_TOO_SHORT": "Saisissez le nom de la compétition (au moins 2 caractères).",
+    "VALIDATION_COMPETITION_NAME_TOO_LONG": "Le nom de la compétition ne peut pas dépasser 80 caractères."
   },
   "waitlist": {
     "description": "Nous sommes actuellement en phase de test bêta. Inscrivez-vous pour être parmi les premiers à entrer lorsque nous ouvrirons.",
@@ -3047,68 +3700,107 @@
     }
   },
   "pricingPage": {
-    "eyebrow": "Plans",
-    "title": "Des tarifs pour chaque étape de ton équipe",
-    "subtitle": "Commence gratuitement, passe à Pro quand ton match hebdomadaire devient sérieux, et contacte-nous pour une opération complète.",
+    "eyebrow": "Offres évolutives",
+    "title": "Commencez gratuitement. Évoluez avec votre club.",
+    "homeTitlePrefix": "Commencez gratuit.",
+    "homeTitleAccent": "Grandissez à votre rythme.",
+    "subtitle": "Du gestionnaire solo d'un match du jeudi au club multi-équipes équipé d'un staff virtuel IA — passez au palier supérieur au bon moment.",
     "recommended": "Recommandé",
+    "billing": {
+      "monthly": "Mensuel",
+      "annual": "Annuel"
+    },
     "limits": {
       "teams": "Équipes",
       "players": "Joueurs",
-      "events": "Évén./mois"
+      "events": "Matchs/mois"
     },
     "plans": {
       "free": {
-        "badge": "Démarrer",
+        "badge": "Départ",
         "name": "Gratuit",
-        "description": "Pour les capitaines qui veulent quitter le chaos WhatsApp et organiser leurs premiers matchs sans friction.",
+        "description": "Pour les organisateurs solo et petits groupes qui quittent WhatsApp dès aujourd'hui à 0€.",
         "price": "0€",
         "period": "/mois",
         "cta": "Commencer gratuitement",
+        "aiSummary": "",
         "features": [
-          "Jusqu'à 3 équipes actives",
-          "Jusqu'à 25 joueurs par équipe",
-          "10 événements par mois",
-          "Présences et liste d'attente",
-          "Suivi de paiement basique"
+          "Jusqu'à 3 équipes actives et 25 joueurs par équipe",
+          "10 convocations par mois avec liste d'attente",
+          "Suivi essentiel des présences et partage manuel",
+          "Chronomètre de match et mini-tournois",
+          "Les invités confirment via le lien, sans créer de compte"
+        ]
+      },
+      "basic": {
+        "badge": "Routine",
+        "name": "Basique",
+        "description": "Pour les équipes hebdomadaires souhaitant des finances claires, des justificatifs et un historique durable.",
+        "price": "4,99€",
+        "period": "/mois",
+        "cta": "Demander l'accès Basique",
+        "aiSummary": "",
+        "features": [
+          "Tout l'essentiel de l'offre Gratuite",
+          "Validation des justificatifs et relances ciblées",
+          "Chat d'événement temps réel et mur d'annonces",
+          "Historique complet des matchs, buts et classements",
+          "Priorité configurable de l'effectif sur les invités"
+        ]
+      },
+      "amateur": {
+        "badge": "Compétitif",
+        "name": "Amateur",
+        "description": "Pour les équipes structurées gérant saisons, matchs compétitifs et premiers flux avec le Secrétaire IA.",
+        "price": "9,99€",
+        "period": "/mois",
+        "cta": "Demander l'accès Amateur",
+        "aiSummary": "Inclut Secrétaire IA initial (validation humaine)",
+        "features": [
+          "Tout le contenu de l'offre Basique",
+          "Saisons et calendrier compétitif (fixtures)",
+          "Secrétaire IA pour disponibilités et relances",
+          "Équilibrage intelligent des équipes et feuilles de match",
+          "Co-capitaines et permissions par équipe"
         ]
       },
       "pro": {
-        "badge": "Le plus utilisé",
-        "name": "Pro",
-        "description": "Pour les organisateurs réguliers qui ont besoin de plus d'équipes, de paiements et de contrôle hebdomadaire.",
-        "price": "9€",
+        "badge": "Clubs",
+        "name": "Professionnel",
+        "description": "Pour les clubs amateurs et académies multi-équipes ayant besoin d'un pilotage centralisé et d'un staff virtuel étendu.",
+        "price": "24,99€",
         "period": "/mois",
-        "cta": "Rejoindre la liste Pro",
+        "cta": "Demander l'accès Professionnel",
+        "aiSummary": "Quota étendu du Secrétaire IA",
         "features": [
-          "Jusqu'à 10 équipes actives",
-          "Jusqu'à 50 joueurs par équipe",
-          "100 événements par mois",
-          "Justificatifs et validation",
-          "Gestion avancée des présences",
-          "Support prioritaire"
+          "Tout le contenu de l'offre Amateur",
+          "Pilotage multi-équipes centralisé au club",
+          "Quota Secrétaire IA étendu et maîtrise des coûts",
+          "Rapports avancés de saison et d'assiduité",
+          "Support prioritaire pour coachs et dirigeants"
         ]
       },
-      "elite": {
-        "badge": "Clubs",
-        "name": "Elite",
-        "description": "Pour les clubs, académies et communautés qui gèrent beaucoup de matchs, d'effectifs et d'opérations.",
+      "champion": {
+        "badge": "Exclusif · Sur mesure",
+        "name": "Champion",
+        "description": "Pour les clubs, académies et ligues amateurs recherchant des fonctionnalités exclusives et un accompagnement dédié.",
         "price": "Sur devis",
-        "period": "",
+        "period": "· offre sur mesure",
         "cta": "Nous contacter",
+        "responseHint": "Réponse directe de l'équipe JogaBola",
+        "aiSummary": "Staff virtuel sur mesure",
         "features": [
-          "Équipes pratiquement illimitées",
-          "Joueurs pratiquement illimités",
-          "Événements pratiquement illimités",
-          "Onboarding assisté",
-          "Configuration pour clubs et communautés",
-          "Accompagnement dédié"
+          "Nombre d'équipes, joueurs et matchs sur mesure",
+          "Fonctionnalités exclusives et accès anticipé aux modules IA",
+          "Onboarding accompagné et reprise d'historique",
+          "Gouvernance et permissions dédiées au club"
         ]
       }
     },
     "note": {
-      "title": "Nous sommes encore en beta",
-      "description": "Les tarifs peuvent évoluer à mesure que nous ouvrons de nouvelles fonctionnalités. Les premiers utilisateurs auront un accès prioritaire et des conditions initiales.",
-      "cta": "Des questions ? Contacte-nous"
+      "title": "Sans engagement ni mauvaise surprise",
+      "description": "Démarrez gratuitement dès aujourd'hui. Les clubs pionniers bénéficient de conditions préférentielles et conservent 100% de leur historique.",
+      "cta": "Des questions ? Parlons-en"
     }
   },
   "roadmapPage": {
@@ -3286,7 +3978,7 @@
       "create": {
         "eyebrow": "ÉVÉNEMENTS",
         "title": "Planifiez des matchs facilement",
-        "subtitle": "Créez un événement en moins d'une minute"
+        "subtitle": "Créez un événement en moins de 2 minutes"
       },
       "paid": {
         "eyebrow": "PAIEMENTS",
@@ -3588,6 +4280,428 @@
           "penalties": "Tirs au but"
         }
       }
+    }
+  },
+  "teamStaff": {
+    "badge": "Staff",
+    "owner": "Propriétaire",
+    "titles": {
+      "coach": "Entraîneur",
+      "director": "Directeur",
+      "finance": "Trésorier",
+      "secretary": "Secrétaire",
+      "other": "Autre"
+    },
+    "permissions": {
+      "events": "Gérer les événements",
+      "attendance": "Gérer les présences",
+      "roster": "Gérer l'effectif",
+      "payments": "Gérer les paiements",
+      "communication": "Gérer la communication",
+      "match": "Gérer les matchs"
+    },
+    "actions": {
+      "promote": "Promouvoir au staff",
+      "promoteDesc": "Attribue un rôle et des privilèges de gestion dans cette équipe.",
+      "demote": "Retirer du staff",
+      "demoteDesc": "Retire le rôle et les privilèges. Reste dans l'effectif.",
+      "confirmPromote": "Promouvoir",
+      "promoting": "Promotion...",
+      "confirmDemote": "Retirer du staff",
+      "demoting": "Retrait...",
+      "cancel": "Annuler"
+    },
+    "promoteSheet": {
+      "title": "Promouvoir au staff",
+      "sub": "{name} rejoint le staff de l'équipe.",
+      "titleLabel": "Rôle",
+      "permissionsLabel": "Privilèges",
+      "permissionsHint": "Préremplis selon le rôle. Ajustez librement."
+    },
+    "demoteDialog": {
+      "title": "Retirer du staff ?",
+      "description": "{name} perd son rôle et ses privilèges de gestion. Reste dans l'effectif.",
+      "descriptionNotAthlete": "{name} perd son rôle et ses privilèges de gestion. N'étant pas dans l'effectif, il perd l'accès à l'équipe."
+    },
+    "feedback": {
+      "promoted": "{name} fait désormais partie du staff.",
+      "demoted": "{name} ne fait plus partie du staff.",
+      "updated": "Staff de {name} mis à jour."
+    },
+    "errors": {
+      "FORBIDDEN": "Vous n'avez pas la permission pour cette action.",
+      "TEAM_NOT_FOUND": "Impossible de confirmer l'équipe active.",
+      "NOT_AN_ATHLETE": "Seuls les athlètes de l'effectif peuvent être promus au staff.",
+      "CANNOT_MODIFY_OWNER": "Le propriétaire de l'équipe ne peut pas être modifié.",
+      "NOT_STAFF": "Cette personne ne fait plus partie du staff.",
+      "VALIDATION_ERROR": "Les données envoyées ne sont pas valides.",
+      "UNKNOWN_ERROR": "Une erreur est survenue. Réessayez."
+    },
+    "page": {
+      "title": "Staff",
+      "subOwner": "Qui t'aide à gérer l'équipe et ce que chacun peut faire.",
+      "subStaff": "Qui gère l'équipe avec toi. Seul le propriétaire modifie les rôles et privilèges.",
+      "count": "{count, plural, =1 {# personne} other {# personnes}}"
+    },
+    "list": {
+      "you": "(toi)",
+      "athlete": "Athlète",
+      "allPermissions": "Tous les privilèges",
+      "noPermissions": "Aucun privilège",
+      "editAria": "Modifier {name}"
+    },
+    "empty": {
+      "title": "Tu n'as pas encore de staff",
+      "sub": "Promeus des athlètes de l'effectif au staff pour partager la gestion de l'équipe.",
+      "cta": "Voir l'effectif"
+    },
+    "editSheet": {
+      "title": "Modifier le staff",
+      "description": "Modifie le rôle et les privilèges de {name}.",
+      "isAthlete": "Aussi athlète de l'effectif",
+      "notAthlete": "Pas dans l'effectif",
+      "permissionsHint": "Changer le rôle ne modifie pas les privilèges. Utilise la suggestion pour les rétablir.",
+      "applyPreset": "Appliquer la suggestion",
+      "save": "Enregistrer",
+      "saving": "Enregistrement..."
+    }
+  },
+  "teamTransfer": {
+    "entry": {
+      "title": "Transférer l'équipe",
+      "sub": "Confie la gestion de l'équipe à quelqu'un d'autre. Seul le propriétaire peut le faire.",
+      "cta": "Transférer l'équipe",
+      "pendingSub": "Demande en attente pour {recipient} · expire le {date}",
+      "view": "Voir la demande"
+    },
+    "sheet": {
+      "title": "Transférer l'équipe",
+      "description": "Choisis le nouveau propriétaire de l'équipe {team}.",
+      "recipientLabel": "Nouveau propriétaire",
+      "modeMember": "Membre",
+      "modeEmail": "Email",
+      "memberHint": "Athlètes de l'effectif et staff ayant un compte.",
+      "noMembersTitle": "Aucun membre avec un compte",
+      "noMembersSub": "Personne dans l'effectif ou le staff n'a encore de compte. Envoie la demande par email.",
+      "noMembersCta": "Utiliser l'email",
+      "emailLabel": "Email du nouveau propriétaire",
+      "emailPlaceholder": "nom@exemple.com",
+      "emailHint": "La personne recevra un email avec le lien pour accepter. Elle pourra créer un compte à ce moment-là.",
+      "warningPrivileges": "Tu vas perdre tous tes privilèges ; si tu n'es pas athlète, tu perds l'accès à l'équipe.",
+      "warningPayments": "Les moyens de paiement (MB WAY, virement, Stripe) sont désactivés jusqu'à ce que le nouveau propriétaire les configure.",
+      "confirmLabel": "Écris le nom de l'équipe pour confirmer",
+      "confirmHint": "Écris exactement : {team}",
+      "submit": "Envoyer la demande",
+      "submitting": "Envoi..."
+    },
+    "pending": {
+      "title": "Demande en attente",
+      "recipient": "Pour",
+      "expires": "Expire le {date}",
+      "note": "Le destinataire a reçu un email avec le lien pour accepter. Tant qu'il n'accepte pas, tu restes propriétaire.",
+      "cancel": "Annuler le transfert",
+      "cancelling": "Annulation..."
+    },
+    "feedback": {
+      "requested": "Demande envoyée à {recipient}.",
+      "cancelled": "Transfert annulé.",
+      "accepted": "Tu es maintenant propriétaire de l'équipe {team}.",
+      "declined": "Tu as refusé le transfert."
+    },
+    "card": {
+      "kicker": "Transfert d'équipe",
+      "title": "{from} veut te confier l'équipe {team}",
+      "expires": "Expire le {date}",
+      "accept": "Accepter",
+      "decline": "Refuser",
+      "accepting": "Acceptation...",
+      "declining": "Refus..."
+    },
+    "page": {
+      "kicker": "Transfert d'équipe",
+      "title": "Tu veux reprendre l'équipe {team} ?",
+      "body": "{from} veut te confier la gestion de l'équipe {team}.",
+      "expires": "Expire le {date}",
+      "warning": "En acceptant, tu deviens propriétaire de l'équipe. Les moyens de paiement en ligne restent désactivés jusqu'à ce que tu les configures.",
+      "accept": "Accepter",
+      "decline": "Refuser",
+      "accepting": "Acceptation...",
+      "declining": "Refus...",
+      "goArena": "Aller à l'Arena",
+      "errorTitle": "Impossible d'ouvrir la demande",
+      "acceptedTitle": "L'équipe est à toi",
+      "acceptedSub": "Tu es maintenant propriétaire de l'équipe {team}. Vérifie les moyens de paiement avant le prochain match.",
+      "declinedTitle": "Transfert refusé",
+      "declinedSub": "Rien n'a changé dans l'équipe.",
+      "status": {
+        "accepted": {
+          "title": "Demande déjà acceptée",
+          "sub": "Ce transfert a déjà été effectué."
+        },
+        "cancelled": {
+          "title": "Demande annulée",
+          "sub": "Cette demande a été annulée ou refusée et n'est plus valable."
+        },
+        "expired": {
+          "title": "Demande expirée",
+          "sub": "Cette demande a dépassé son délai. Demande au propriétaire d'en envoyer une nouvelle."
+        }
+      },
+      "switchAccount": "Se connecter avec un autre compte",
+      "switchingAccount": "Déconnexion..."
+    },
+    "errors": {
+      "FORBIDDEN": "Seul le propriétaire de l'équipe peut faire cela.",
+      "TEAM_NAME_MISMATCH": "Le nom saisi ne correspond pas au nom de l'équipe.",
+      "TRANSFER_ALREADY_PENDING": "Une demande de transfert est déjà en attente pour cette équipe.",
+      "TRANSFER_NOT_FOUND": "Cette demande de transfert n'existe pas ou n'est plus valable.",
+      "TRANSFER_EXPIRED": "Cette demande de transfert a expiré.",
+      "TRANSFER_NOT_FOR_YOU": "Cette demande a été envoyée à un autre compte. Connecte-toi avec l'email qui a reçu l'invitation.",
+      "EMAIL_NOT_VERIFIED": "Confirme ton email avant d'accepter le transfert.",
+      "TEAM_LIMIT_REACHED": "Tu as atteint la limite d'équipes de ton plan. Passe à un plan supérieur pour accepter cette équipe.",
+      "CANNOT_TRANSFER_TO_SELF": "Tu ne peux pas te transférer l'équipe à toi-même.",
+      "RECIPIENT_NOT_MEMBER": "Cette personne ne fait plus partie de l'effectif ni du staff.",
+      "TEAM_NOT_FOUND": "Équipe introuvable.",
+      "VALIDATION_ERROR": "Vérifie les informations et réessaie.",
+      "UNAUTHORIZED": "Ta session a expiré. Reconnecte-toi.",
+      "UNKNOWN": "Une erreur s'est produite. Réessaie.",
+      "RECIPIENT_NOT_ELIGIBLE": "Pendant la phase de test, seuls les comptes ayant accès à JogaBola peuvent recevoir une équipe.",
+      "EMAIL_SEND_FAILED": "Impossible d'envoyer l'email. La demande a été annulée ; réessaie."
+    }
+  },
+  "arenaClubCalendar": {
+    "roles": {
+      "admin": "Administrateur",
+      "member": "Membre"
+    },
+    "errors": {
+      "UNAUTHORIZED": "Connectez-vous pour continuer.",
+      "VALIDATION_ERROR": "Vérifiez les champs signalés.",
+      "CLUB_NOT_FOUND": "Club introuvable.",
+      "FORBIDDEN": "Vous n’avez pas l’autorisation d’effectuer cette action.",
+      "TEAM_NOT_FOUND": "Équipe introuvable.",
+      "TEAM_NOT_IN_CLUB": "Cette équipe n’appartient encore à aucun club.",
+      "TEAM_ALREADY_IN_CLUB": "Cette équipe appartient déjà à un club.",
+      "SEASON_NOT_FOUND": "Saison introuvable.",
+      "SEASON_NAME_TAKEN": "Une saison portant ce nom existe déjà dans le club.",
+      "SEASON_IN_USE": "Cette saison a des matchs associés et ne peut pas être supprimée.",
+      "OPPONENT_NOT_FOUND": "Adversaire introuvable.",
+      "OPPONENT_NAME_TAKEN": "Un adversaire portant ce nom existe déjà dans le club.",
+      "OPPONENT_IN_USE": "Cet adversaire a des matchs associés et ne peut pas être supprimé.",
+      "FIXTURE_NOT_FOUND": "Match introuvable.",
+      "MATCH_SESSION_NOT_FOUND": "Convocation introuvable pour cette équipe.",
+      "FIXTURE_ALREADY_LINKED": "Ce match est déjà associé à une convocation.",
+      "MATCH_SESSION_ALREADY_LINKED": "Cette convocation est déjà associée à un autre match.",
+      "UNKNOWN_ERROR": "Impossible de terminer l’opération. Réessayez."
+    },
+    "kicker": "Club",
+    "nav": {
+      "label": "Sections du club",
+      "calendar": "Calendrier",
+      "settings": "Saisons et adversaires"
+    },
+    "form": {
+      "optional": "facultatif"
+    },
+    "states": {
+      "backToCalendar": "Retour au calendrier",
+      "notFoundTitle": "Introuvable",
+      "notFoundDescription": "Cet élément n'existe pas ou vous n'y avez pas accès.",
+      "forbiddenTitle": "Accès refusé",
+      "forbiddenDescription": "Votre compte n'est pas autorisé à voir ceci.",
+      "errorTitle": "Chargement impossible",
+      "errorDescription": "Vérifiez la connexion et réessayez.",
+      "retry": "Réessayer",
+      "clubNotFoundTitle": "Club introuvable",
+      "clubNotFoundDescription": "Ce club n'existe pas ou vous n'en êtes pas membre.",
+      "backToClub": "Retour au Club"
+    },
+    "entry": {
+      "kicker": "Club",
+      "title": "Club",
+      "createTitle": "Créez le club de votre équipe",
+      "createDescription": "Rattachez l’équipe {team} à un club pour organiser les saisons, les adversaires et le calendrier des matchs officiels.",
+      "createCta": "Créer le club",
+      "noTeamTitle": "Vous n'avez pas encore d'équipe",
+      "noTeamDescription": "Créez ou rejoignez une équipe pour accéder au calendrier du club.",
+      "notOwnerTitle": "Cette équipe n'a pas encore de club",
+      "notOwnerDescription": "Seul le capitaine de l'équipe peut créer le club. Demandez-le-lui.",
+      "backToDashboard": "Retour à l'accueil",
+      "joinTitle": "L’équipe {team} n’a pas encore de club",
+      "joinDescription": "Rattachez-la à un club que vous administrez déjà ou créez un nouveau club.",
+      "joinLegend": "Clubs que vous administrez",
+      "joinCta": "Rejoindre {club}",
+      "joining": "Rattachement…",
+      "createNewCta": "Créer un nouveau club",
+      "myClubsLabel": "Vos clubs",
+      "openClub": "Ouvrir {club}"
+    },
+    "createClub": {
+      "title": "Créer le club",
+      "description": "L’équipe {team} rejoint le nouveau club et vous en devenez l’administrateur.",
+      "nameLabel": "Nom du club",
+      "nameHint": "Entre 2 et 80 caractères.",
+      "cancel": "Annuler",
+      "submit": "Créer le club",
+      "submitting": "Création…",
+      "seasonNote": "Nous créons tout de suite la saison {season} (juillet à juin) pour programmer le premier match."
+    },
+    "calendar": {
+      "heading": "Calendrier des matchs",
+      "newFixture": "Nouveau match",
+      "scopeLabel": "Afficher les matchs",
+      "upcoming": "À venir · {count}",
+      "past": "Passés · {count}",
+      "seasonFilter": "Filtrer par saison",
+      "allSeasons": "Toutes les saisons",
+      "teamFilter": "Filtrer par équipe",
+      "allTeams": "Toutes les équipes",
+      "emptyTitle": "Aucun match au calendrier",
+      "emptyDescription": "Programmez le premier match officiel de la saison.",
+      "emptyReadOnly": "Les matchs apparaîtront ici dès que le capitaine les programmera.",
+      "noUpcomingTitle": "Aucun match programmé",
+      "noPastTitle": "Pas encore de matchs passés",
+      "noFilteredDescription": "Essayez une autre saison ou équipe, ou effacez les filtres.",
+      "clearFilters": "Effacer les filtres",
+      "noFilteredTitle": "Aucun match avec ces filtres"
+    },
+    "fixture": {
+      "linkedBadge": "Convocation",
+      "versus": "{team} vs {opponent}",
+      "rowLabel": "{competition} : {team} contre {opponent}, {day} à {hour}, saison {season}{linked, select, yes {, avec convocation} other {, sans convocation}}"
+    },
+    "aside": {
+      "label": "Résumé du calendrier",
+      "nextFixture": "Prochain match",
+      "vs": "vs",
+      "upcoming": "À venir",
+      "linked": "Avec convocation",
+      "total": "Total",
+      "timeZone": "Heures dans le fuseau {zone}.",
+      "linkHint": "Associez une convocation pour gérer les présences du match."
+    },
+    "create": {
+      "title": "Nouveau match",
+      "backToCalendar": "Retour au calendrier",
+      "forbiddenTitle": "Seul le capitaine programme les matchs",
+      "forbiddenDescription": "Pour programmer des matchs, vous devez être le capitaine d'une équipe de ce club.",
+      "missingSetupTitle": "Le club n'est pas encore prêt",
+      "missingSetupAdmin": "Créez au moins une saison et un adversaire avant de programmer des matchs.",
+      "missingSetupMember": "Demandez à un administrateur du club de créer des saisons et des adversaires.",
+      "goToSettings": "Préparer saisons et adversaires",
+      "team": "Équipe",
+      "season": "Saison",
+      "opponent": "Adversaire",
+      "opponentPlaceholder": "Choisissez l'adversaire",
+      "competition": "Compétition",
+      "competitionHint": "Ex. : Championnat régional, Coupe.",
+      "competitionPlaceholder": "Nom de la compétition",
+      "date": "Date",
+      "time": "Heure du coup d'envoi",
+      "callup": "Convocation",
+      "callupLoading": "Chargement des convocations…",
+      "callupError": "Impossible de charger les convocations.",
+      "callupEmpty": "Cette équipe n'a pas de convocation libre.",
+      "callupHint": "Vous pouvez l'associer maintenant ou plus tard.",
+      "callupNone": "Sans convocation",
+      "callupOption": "{title} · {date}",
+      "timeZoneNote": "La date et l'heure sont enregistrées dans le fuseau {zone}.",
+      "cancel": "Annuler",
+      "submit": "Programmer le match",
+      "submitting": "Programmation…",
+      "missingSeasonTitle": "Aucune saison",
+      "missingSeasonAdmin": "Créez la saison pour programmer le premier match. Cela prend quelques secondes.",
+      "createSeasonCta": "Créer la saison",
+      "newOpponent": "Nouvel adversaire",
+      "opponentEmpty": "Aucun adversaire",
+      "opponentEmptyHint": "Créez le premier adversaire ici même."
+    },
+    "link": {
+      "title": "Associer une convocation",
+      "description": "Choisissez une convocation de {team}. Chaque convocation ne peut être liée qu'à un match.",
+      "legend": "Convocations disponibles",
+      "emptyTitle": "Aucune convocation libre",
+      "emptyDescription": "Créez une convocation pour {team} dans Événements, puis revenez ici.",
+      "cancel": "Annuler",
+      "submit": "Associer",
+      "submitting": "Association…"
+    },
+    "detail": {
+      "label": "Détail du match",
+      "backToCalendar": "Calendrier",
+      "vs": "vs",
+      "team": "Équipe",
+      "season": "Saison",
+      "competition": "Compétition",
+      "timeZoneNote": "Heure dans le fuseau {zone}.",
+      "callupTitle": "Convocation",
+      "notLinkedOwner": "Associez une convocation pour confirmer les présences et partager les frais.",
+      "notLinkedReadOnly": "Le capitaine n'a pas encore associé de convocation à ce match.",
+      "linkCta": "Associer une convocation",
+      "callupFallback": "Convocation n° {id}",
+      "openCallup": "Ouvrir la convocation",
+      "unlinkCta": "Dissocier",
+      "unlinkTitle": "Dissocier la convocation ?",
+      "unlinkDescription": "Le match et la convocation sont conservés. Seul le lien entre eux est supprimé.",
+      "unlinkConfirm": "Dissocier",
+      "unlinkPending": "Dissociation…",
+      "cancel": "Annuler"
+    },
+    "settings": {
+      "tabsLabel": "Afficher",
+      "seasonsTab": "Saisons",
+      "opponentsTab": "Adversaires",
+      "readOnlyNotice": "Seuls les administrateurs du club peuvent créer, modifier ou supprimer des saisons et des adversaires."
+    },
+    "catalog": {
+      "inUse": "Utilisé",
+      "edit": "Modifier {name}",
+      "delete": "Supprimer {name}",
+      "deleteConfirm": "Supprimer",
+      "deleting": "Suppression…",
+      "cancel": "Annuler",
+      "usage": "{count, plural, =0 {Aucun match} one {# match} other {# matchs}}",
+      "deleteLocked": "{name} est utilisé par des matchs et ne peut pas être supprimé"
+    },
+    "seasons": {
+      "title": "Saisons",
+      "create": "Nouvelle saison",
+      "createTitle": "Nouvelle saison",
+      "editTitle": "Modifier la saison",
+      "emptyTitle": "Aucune saison",
+      "emptyDescription": "Créez la saison en cours pour commencer à programmer des matchs.",
+      "emptyReadOnly": "Aucun administrateur du club n'a encore créé de saison.",
+      "deleteTitle": "Supprimer la saison ?",
+      "deleteDescription": "La saison {name} sera supprimée. Les saisons avec des matchs sont protégées.",
+      "name": "Nom",
+      "nameHint": "Ex. : 2026/27. Entre 2 et 80 caractères.",
+      "namePlaceholder": "2026/27",
+      "startsOn": "Début",
+      "endsOn": "Fin",
+      "cancel": "Annuler",
+      "save": "Enregistrer",
+      "saving": "Enregistrement…",
+      "range": "{start} – {end}",
+      "from": "Depuis le {start}",
+      "until": "Jusqu'au {end}",
+      "noDates": "Aucune date définie"
+    },
+    "opponents": {
+      "title": "Adversaires",
+      "create": "Nouvel adversaire",
+      "createTitle": "Nouvel adversaire",
+      "editTitle": "Modifier l'adversaire",
+      "emptyTitle": "Aucun adversaire",
+      "emptyDescription": "Enregistrez les équipes que vous allez affronter, même sans compte JogaBola.",
+      "emptyReadOnly": "Aucun administrateur du club n'a encore enregistré d'adversaire.",
+      "deleteTitle": "Supprimer l'adversaire ?",
+      "deleteDescription": "L'adversaire {name} sera supprimé. Les adversaires avec des matchs sont protégés.",
+      "name": "Nom",
+      "nameHint": "Entre 2 et 80 caractères.",
+      "namePlaceholder": "Nom de l'équipe adverse",
+      "cancel": "Annuler",
+      "save": "Enregistrer",
+      "saving": "Enregistrement…"
     }
   }
 }

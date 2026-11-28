@@ -221,5 +221,5 @@ export function tournamentOgDescription(
 
   const names = top.map(([name]) => name).join(", ");
   const plural = goals === 1 ? "golo" : "golos";
-  return `Artilheiro: ${names} (${goals} ${plural}) · ${base}`;
+  return `Melhor marcador: ${names} (${goals} ${plural}) · ${base}`;
 }

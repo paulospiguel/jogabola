@@ -19,7 +19,8 @@ import { cn } from "@/lib/utils";
 
 const REMOVE_ERROR_CODES = [
   "TEAM_NOT_FOUND",
-  "CANNOT_REMOVE_OWNER",
+  "FORBIDDEN",
+  "CANNOT_MODIFY_OWNER",
   "PLAYER_NOT_IN_TEAM",
 ] as const;
 

@@ -3,6 +3,7 @@
 import { format } from "date-fns";
 import { and, desc, eq, gte, inArray, lt } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
+import { getTranslations } from "next-intl/server";
 import { PAYMENT_STATUS, type PaymentStatus } from "@/constants/payments";
 import { db } from "@/db/client";
 import { queryEventByIdOrSlug, queryEvents } from "@/db/queries/events";
@@ -15,23 +16,17 @@ import {
   teams,
   user,
 } from "@/db/schema";
-import { getAuthUser, withAction } from "@/lib/action-helpers";
+import { getAuthUser } from "@/lib/action-helpers";
 import { trackServerEvent } from "@/lib/analytics-server";
+import { buildEventFormPaymentSettings } from "@/lib/event-payment-settings";
 import {
   generateRecurringOccurrences,
   type RecurrenceFrequency,
   validateEventRange,
 } from "@/lib/event-recurrence";
-import {
-  canManageTeam,
-  getAccessibleTeamIds,
-  userCanAccessTeam,
-} from "@/lib/team-access";
+import { payoutWriteAllowed } from "@/lib/payout-guard";
+import { can, canViewTeam, getAccessibleTeamIds } from "@/lib/team-authz";
 import { slugify } from "@/lib/utils";
-import {
-  createMatchReservationSchema,
-  createMatchSessionSchema,
-} from "@/schemas/match-sessions.schema";
 import type { EventStatus } from "@/types/events";
 
 function toEventStatus(status: string): EventStatus {
@@ -39,28 +34,6 @@ function toEventStatus(status: string): EventStatus {
   if (status === "cancelled" || status === "canceled") return "cancelled";
   return "scheduled";
 }
-
-export const createMatchSession = withAction(
-  createMatchSessionSchema,
-  async data => {
-    const [matchSession] = await db
-      .insert(matchSessions)
-      .values(data)
-      .returning();
-    return { success: true, data: matchSession };
-  },
-);
-
-export const createMatchReservation = withAction(
-  createMatchReservationSchema,
-  async data => {
-    const [reservation] = await db
-      .insert(matchReservations)
-      .values(data)
-      .returning();
-    return { success: true, data: reservation };
-  },
-);
 
 export async function createEvent(input: {
   title: string;
@@ -98,24 +71,53 @@ export async function createEvent(input: {
 
   let teamId = input.teamId ?? authUser.teamId ?? null;
   if (teamId) {
-    const canAccessTeam = await canManageTeam(authUser.id, teamId);
+    const canAccessTeam = await can(authUser.id, teamId, "events.manage");
     if (!canAccessTeam) {
       return { success: false as const, error: { code: "FORBIDDEN" } };
     }
   }
 
   if (!teamId) {
+    // Fallback: first accessible team where the user manages events. A
+    // roster-only team is skipped (never FORBIDDEN); with none, a team is
+    // auto-created below.
     const accessibleTeamIds = await getAccessibleTeamIds(authUser.id);
-    teamId = accessibleTeamIds[0] ?? null;
+    for (const candidateId of accessibleTeamIds) {
+      if (await can(authUser.id, candidateId, "events.manage")) {
+        teamId = candidateId;
+        break;
+      }
+    }
   }
 
   if (!teamId) {
-    const slug = `team-${authUser.id.slice(0, 8)}`;
+    // A user can own an auto-created team, transfer it away and need a new
+    // one later: the random suffix keeps the slug unique.
+    const suffix = crypto.randomUUID().replace(/-/g, "").slice(0, 6);
+    const slug = `team-${authUser.id.slice(0, 8).toLowerCase()}-${suffix}`;
+    const t = await getTranslations("arenaCreateTeam");
     const [created] = await db
       .insert(teams)
-      .values({ name: "Minha Equipa", slug, ownerId: authUser.id })
+      .values({ name: t("defaultTeamName"), slug, ownerId: authUser.id })
       .returning({ id: teams.id });
     teamId = created.id;
+  }
+
+  const writesPaymentSettings =
+    !!input.priceCents &&
+    input.priceCents > 0 &&
+    input.mbwayEnabled !== undefined;
+  if (
+    writesPaymentSettings &&
+    !(await payoutWriteAllowed(authUser.id, teamId, {
+      mbwayEnabled: input.mbwayEnabled,
+      mbwayPhone: input.mbwayPhone,
+    }))
+  ) {
+    return {
+      success: false as const,
+      error: { code: "PAYOUT_RECONFIGURE_REQUIRED" },
+    };
   }
 
   function buildSlug(startsAt: Date) {
@@ -223,16 +225,12 @@ export async function createEvent(input: {
       const res = await getTeamPaymentSettings({ teamId });
       if (res.success) existingSettings = res.data;
     }
-    await upsertTeamPaymentSettings({
-      teamId,
-      mbwayEnabled: input.mbwayEnabled,
-      mbwayPhone: input.mbwayPhone || "",
-      mbwayName: existingSettings?.mbwayName || "",
-      cashEnabled: existingSettings?.cashEnabled ?? true,
-      stripeEnabled: existingSettings?.stripeEnabled ?? false,
-      stripeAccountId: existingSettings?.stripeAccountId || undefined,
-      cashInstructions: existingSettings?.cashInstructions || undefined,
-    });
+    await upsertTeamPaymentSettings(
+      buildEventFormPaymentSettings(teamId, existingSettings, {
+        mbwayEnabled: input.mbwayEnabled,
+        mbwayPhone: input.mbwayPhone,
+      }),
+    );
   }
 
   const invitedPlayers = input.invitedPlayers ?? [];
@@ -321,9 +319,30 @@ export async function updateEvent(
     return { success: false as const, error: { code: "EVENT_NOT_FOUND" } };
   }
 
-  const canAccessTeam = await canManageTeam(authUser.id, existingEvent.teamId);
+  const canAccessTeam = await can(
+    authUser.id,
+    existingEvent.teamId,
+    "events.manage",
+  );
   if (!canAccessTeam) {
     return { success: false as const, error: { code: "FORBIDDEN" } };
+  }
+
+  const writesPaymentSettings =
+    input.priceCents !== undefined &&
+    input.priceCents > 0 &&
+    input.mbwayEnabled !== undefined;
+  if (
+    writesPaymentSettings &&
+    !(await payoutWriteAllowed(authUser.id, existingEvent.teamId, {
+      mbwayEnabled: input.mbwayEnabled,
+      mbwayPhone: input.mbwayPhone,
+    }))
+  ) {
+    return {
+      success: false as const,
+      error: { code: "PAYOUT_RECONFIGURE_REQUIRED" },
+    };
   }
 
   const [event] = await db
@@ -373,16 +392,12 @@ export async function updateEvent(
       });
       if (res.success) existingSettings = res.data;
     }
-    await upsertTeamPaymentSettings({
-      teamId: existingEvent.teamId,
-      mbwayEnabled: input.mbwayEnabled,
-      mbwayPhone: input.mbwayPhone || "",
-      mbwayName: existingSettings?.mbwayName || "",
-      cashEnabled: existingSettings?.cashEnabled ?? true,
-      stripeEnabled: existingSettings?.stripeEnabled ?? false,
-      stripeAccountId: existingSettings?.stripeAccountId || undefined,
-      cashInstructions: existingSettings?.cashInstructions || undefined,
-    });
+    await upsertTeamPaymentSettings(
+      buildEventFormPaymentSettings(existingEvent.teamId, existingSettings, {
+        mbwayEnabled: input.mbwayEnabled,
+        mbwayPhone: input.mbwayPhone,
+      }),
+    );
   }
 
   revalidatePath("/arena/events");
@@ -414,7 +429,7 @@ export async function getCalendarEvents(
   }
 
   if (authUser && resolvedTeamId) {
-    const canAccessTeam = await userCanAccessTeam(authUser.id, resolvedTeamId);
+    const canAccessTeam = await canViewTeam(authUser.id, resolvedTeamId);
     if (!canAccessTeam) {
       return { success: false as const, error: { code: "TEAM_NOT_FOUND" } };
     }
@@ -461,7 +476,7 @@ export async function getEvents(options?: {
   }
 
   if (authUser && resolvedTeamId) {
-    const canAccessTeam = await userCanAccessTeam(
+    const canAccessTeam = await canViewTeam(
       authUser.id,
       Number(resolvedTeamId),
     );
@@ -488,7 +503,7 @@ export async function getLastEventSquad(teamId: number) {
     return { success: false as const, error: { code: "UNAUTHORIZED" } };
   }
 
-  const canAccess = await userCanAccessTeam(authUser.id, teamId);
+  const canAccess = await canViewTeam(authUser.id, teamId);
   if (!canAccess) {
     return { success: false as const, error: { code: "TEAM_NOT_FOUND" } };
   }
@@ -622,7 +637,11 @@ export async function deleteEvent(eventId: number) {
     return { success: false as const, error: { code: "EVENT_NOT_FOUND" } };
   }
 
-  const canAccessTeam = await canManageTeam(authUser.id, existingEvent.teamId);
+  const canAccessTeam = await can(
+    authUser.id,
+    existingEvent.teamId,
+    "events.manage",
+  );
   if (!canAccessTeam) {
     return { success: false as const, error: { code: "FORBIDDEN" } };
   }
@@ -648,8 +667,8 @@ export async function deleteEvent(eventId: number) {
     const notificationsData = confirmedReservations.map(r => ({
       userId: r.playerId,
       type: "event_cancelled",
-      title: "Evento Cancelado/Excluído",
-      message: `O evento "${existingEvent.title}" foi excluído pelo organizador.`,
+      title: "Evento Cancelado/Eliminado",
+      message: `O evento "${existingEvent.title}" foi eliminado pelo organizador.`,
       metadata: { eventId, teamId: existingEvent.teamId },
     }));
 

@@ -2,7 +2,10 @@
 
 import { useQuery } from "@tanstack/react-query";
 import { getPlayerHistory } from "@/actions/attendance.actions";
-import { getAthleteProfile } from "@/actions/teams.actions";
+import {
+  type AthleteProfile,
+  getAthleteProfile,
+} from "@/actions/teams.actions";
 import { useTeams } from "@/hooks/use-teams";
 
 export function useAthleteProfile(playerId: string | string[]) {
@@ -11,13 +14,13 @@ export function useAthleteProfile(playerId: string | string[]) {
 
   const { data: profile, isLoading: profileLoading } = useQuery({
     queryKey: ["athlete-profile", id, activeTeamId],
-    queryFn: async () => {
+    queryFn: async (): Promise<AthleteProfile | null> => {
       if (!id || !activeTeamId) return null;
       const response = await getAthleteProfile({
         playerId: id,
         teamId: activeTeamId,
       });
-      return response.success ? response.data : null;
+      return response.success ? (response.data as AthleteProfile) : null;
     },
     enabled: !!id && !!activeTeamId,
   });

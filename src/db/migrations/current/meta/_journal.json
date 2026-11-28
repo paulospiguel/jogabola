@@ -8,6 +8,41 @@
       "when": 1795636879025,
       "tag": "0000_arena_baseline",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1795723663009,
+      "tag": "0001_team_staff",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1795793267862,
+      "tag": "0002_team_ownership_transfers",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1795838146737,
+      "tag": "0003_payout_reconfigure",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1795902000000,
+      "tag": "0004_club_calendar",
+      "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1795902060000,
+      "tag": "0005_club_names_case_insensitive",
+      "breakpoints": true
     }
   ]
 }

@@ -6,10 +6,12 @@ import { createEvent, updateEvent } from "@/actions/match-sessions.actions";
 import type { CreateEventFormState } from "@/components/arena/create-event-form-types";
 import { useSquad } from "@/hooks/use-squad";
 import { useTeamPaymentSettings } from "@/hooks/use-team-payment-settings";
+import { useTeams } from "@/hooks/use-teams";
 import {
   generateRecurringOccurrences,
   validateEventRange,
 } from "@/lib/event-recurrence";
+import { canManagePayments } from "@/lib/staff-ui";
 
 interface UseCreateEventFormOptions {
   teamId?: number;
@@ -42,6 +44,12 @@ export function useCreateEventForm({
   const t = useTranslations("arenaCreateEvent");
   const { players } = useSquad();
   const { settings } = useTeamPaymentSettings(teamId);
+  const { myTeams } = useTeams();
+  const paymentTeamId = eventToEdit?.teamId ?? teamId;
+  // Only the owner or payments.manage staff write team payment settings.
+  const canEditPaymentSettings = canManagePayments(
+    myTeams.find(team => team.id === paymentTeamId) ?? null,
+  );
 
   const [step, setStep] = useState(0);
 
@@ -198,6 +206,9 @@ export function useCreateEventForm({
   async function handleSend() {
     setSending(true);
     setError(null);
+    const paymentSettingsInput = canEditPaymentSettings
+      ? { mbwayEnabled: form.mbwayEnabled, mbwayPhone: form.mbwayPhone }
+      : {};
     const result = eventToEdit
       ? await updateEvent(eventToEdit.id, {
           title: form.title || t("noTitle"),
@@ -212,8 +223,7 @@ export function useCreateEventForm({
             : null,
           rosterOnly: form.rosterOnly,
           transferRequiresProof: form.transferRequiresProof,
-          mbwayEnabled: form.mbwayEnabled,
-          mbwayPhone: form.mbwayPhone,
+          ...paymentSettingsInput,
         })
       : await createEvent({
           title: form.title || t("noTitle"),
@@ -244,8 +254,7 @@ export function useCreateEventForm({
             : null,
           rosterOnly: form.rosterOnly,
           rosterPriorityHours: form.rosterPriorityHours,
-          mbwayEnabled: form.mbwayEnabled,
-          mbwayPhone: form.mbwayPhone,
+          ...paymentSettingsInput,
           transferRequiresProof: form.transferRequiresProof,
           invitedPlayers: rosterPlayers
             .filter(player => selectedPlayerIds.includes(player.id))

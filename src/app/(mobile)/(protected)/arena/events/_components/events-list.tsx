@@ -371,7 +371,8 @@ export function EventsList({ upcoming, past }: EventsListProps) {
   const [sheet, setSheet] = useState(false);
   const [activeIndex, setActiveIndex] = useState(0);
   const queryClient = useQueryClient();
-  const { activeTeamId, activeTeamCanManage } = useTeams();
+  const { activeTeamId, activeTeamCan } = useTeams();
+  const canCreateEvent = activeTeamCan("events.manage");
   const {
     events,
     isLoading: eventsLoading,
@@ -460,7 +461,7 @@ export function EventsList({ upcoming, past }: EventsListProps) {
               >
                 <Calendar size={18} strokeWidth={2} />
               </Link>
-              {activeTeamCanManage && (
+              {canCreateEvent && (
                 <Button
                   onClick={() => setSheet(true)}
                   className="press hidden h-11 items-center gap-1.5 rounded-xl bg-arena-primary px-4 text-xs font-black text-[#0B0F14] shadow-[0_0_24px_rgba(124,255,79,0.18)] transition-all hover:bg-arena-primary/95 md:flex"
@@ -505,12 +506,12 @@ export function EventsList({ upcoming, past }: EventsListProps) {
                     icon={Calendar}
                     title={t("empty.title")}
                     description={
-                      activeTeamCanManage
+                      canCreateEvent
                         ? t("empty.subtitle")
                         : t("hero.noEventsMemberDescription")
                     }
                     action={
-                      activeTeamCanManage ? (
+                      canCreateEvent ? (
                         <Cta
                           variant="primary"
                           size="sm"
@@ -529,7 +530,7 @@ export function EventsList({ upcoming, past }: EventsListProps) {
                   />
                 )}
 
-                {activeTeamCanManage && (
+                {canCreateEvent && (
                   <Cta
                     variant="primary"
                     size="md"

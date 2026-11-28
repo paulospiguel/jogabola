@@ -7,11 +7,6 @@ export const createPaymentSchema = z.object({
     .number()
     .int()
     .positive({ message: "VALIDATION_RESERVATION_REQUIRED" }),
-  amountCents: z
-    .number()
-    .int()
-    .positive({ message: "VALIDATION_AMOUNT_REQUIRED" }),
-  currency: z.string().length(3).default("EUR"),
   method: z.enum(PAYMENT_METHODS),
   guestAccessToken: z.string().optional(),
 });

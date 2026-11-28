@@ -43,6 +43,18 @@ The human remains responsible for decisions and outbound communication. Clear re
 
 Build the first cycle in the existing Next.js, Drizzle, and PostgreSQL application, with local development through Docker Compose and server-side text inference through OpenRouter. Prefer a vertical slice over new infrastructure. Defer a hosted worker, voice, and vector database until measured requirements justify them. The active implementation sequence and acceptance criteria live in `docs/superpowers/plans/2026-11-25-ai-club-os.md`.
 
+### Progressive plan model
+
+Clubs and solo organizers start free and grow only when operational complexity justifies it:
+
+- **Grátis (`free`)** — Entry tier for solo managers and casual groups replacing WhatsApp chaos (up to 3 teams, 25 athletes per team, 10 monthly events).
+- **Básico (`basic`)** — Regular weekly teams needing payment proofs, pending reminders, and full season history.
+- **Amador (`amateur`)** — Competitive amateur squads and small managers adding multiple teams, seasons, fixtures, and initial Secretary AI quota under human review.
+- **Profissional (`pro`)** — Multi-team amateur clubs and academies requiring centralized multi-team operations, expanded virtual staff quotas, and advanced seasonal reporting.
+- **Campeão (`champion`)** — Custom contact-sales tier for larger clubs and organizations seeking bespoke limits, assisted onboarding, and exclusive capabilities.
+
+Club data isolation, server-side authorization, and the AI action audit log are guardrails on every plan, never paid upsells. Paid tiers sell capacity, workflow, and AI quota.
+
 ## Brand Personality
 
 **Três palavras:** Eficiente. Desportivo. Sólido.

@@ -2,21 +2,15 @@
 
 import { and, asc, eq, isNull } from "drizzle-orm";
 import { db } from "@/db/client";
-import {
-  attendance,
-  eventMessages,
-  matchReservations,
-  matchSessions,
-  payments,
-  teams,
-  user,
-} from "@/db/schema";
+import { eventMessages, matchSessions, user } from "@/db/schema";
 import {
   EVENT_CHAT_MESSAGE_EVENT,
   eventChannelName,
   getAblyRest,
 } from "@/lib/ably";
 import { getAuthUser } from "@/lib/action-helpers";
+import { canParticipateInChat } from "@/lib/event-chat-access";
+import { can } from "@/lib/team-authz";
 
 export interface ChatMessage {
   id: number;
@@ -28,78 +22,17 @@ export interface ChatMessage {
   censoredAt?: string | null;
 }
 
-/** Access rule: the team captain (owner) always; otherwise the user must have
- * confirmed attendance AND (when the event requires payment) an approved
- * payment. Pending/unpaid/reserve see only the blurred teaser. */
-export async function canParticipateInChat(
+/** Chat moderation: team owner or staff with `events.manage` on the event team. */
+async function canModerateEventChat(
   eventId: number,
   userId: string,
 ): Promise<boolean> {
-  const authUser = await getAuthUser();
-  if (!authUser) return false;
-
-  const event = await db.query.matchSessions.findFirst({
-    columns: { teamId: true, paymentRequired: true },
-    where: eq(matchSessions.id, eventId),
-  });
-  if (!event) return false;
-
-  const team = await db.query.teams.findFirst({
-    columns: { ownerId: true },
-    where: eq(teams.id, event.teamId),
-  });
-  if (team?.ownerId === userId) return true;
-
-  const confirmed = await db
-    .select({ id: attendance.id })
-    .from(attendance)
-    .where(
-      and(
-        eq(attendance.matchSessionId, eventId),
-        eq(attendance.playerId, userId),
-        eq(attendance.status, "confirmed"),
-      ),
-    )
-    .limit(1);
-
-  if (confirmed.length === 0) return false;
-
-  // Free events: confirmed attendance is enough.
-  if (!event.paymentRequired) return true;
-
-  // Paid events: require an approved payment for this user's reservation.
-  const paid = await db
-    .select({ id: payments.id })
-    .from(payments)
-    .innerJoin(
-      matchReservations,
-      eq(payments.matchReservationId, matchReservations.id),
-    )
-    .where(
-      and(
-        eq(matchReservations.matchSessionId, eventId),
-        eq(matchReservations.playerId, userId),
-        eq(payments.status, "paid"),
-      ),
-    )
-    .limit(1);
-
-  return paid.length > 0;
-}
-
-/** Returns the teamId owner (captain) for a given event. */
-async function getEventCaptain(eventId: number): Promise<string | null> {
   const event = await db.query.matchSessions.findFirst({
     columns: { teamId: true },
     where: eq(matchSessions.id, eventId),
   });
-  if (!event) return null;
-
-  const team = await db.query.teams.findFirst({
-    columns: { ownerId: true },
-    where: eq(teams.id, event.teamId),
-  });
-  return team?.ownerId ?? null;
+  if (!event) return false;
+  return can(userId, event.teamId, "events.manage");
 }
 
 export async function getEventMessages(eventId: number) {
@@ -240,8 +173,7 @@ export async function censorMessage(messageId: number) {
     return { success: false as const, error: { code: "NOT_FOUND" } };
   }
 
-  const captainId = await getEventCaptain(msg.matchSessionId);
-  if (captainId !== authUser.id) {
+  if (!(await canModerateEventChat(msg.matchSessionId, authUser.id))) {
     return { success: false as const, error: { code: "FORBIDDEN" } };
   }
 
@@ -268,8 +200,7 @@ export async function uncensorMessage(messageId: number) {
     return { success: false as const, error: { code: "NOT_FOUND" } };
   }
 
-  const captainId = await getEventCaptain(msg.matchSessionId);
-  if (captainId !== authUser.id) {
+  if (!(await canModerateEventChat(msg.matchSessionId, authUser.id))) {
     return { success: false as const, error: { code: "FORBIDDEN" } };
   }
 

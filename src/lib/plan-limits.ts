@@ -5,22 +5,31 @@ import {
 
 export type { PlanTier };
 
-type LegacyPlanTier = "BASE" | "PRO" | "ELITE";
+type LegacyPlanTier = "BASE" | "PRO" | "ELITE" | "elite";
 type RawPlanTier = PlanTier | LegacyPlanTier | string | null | undefined;
 
 const PLAN_TIER_ALIASES: Record<string, PlanTier> = {
   BASE: "free",
   FREE: "free",
-  ELITE: "elite",
+  BASIC: "basic",
+  AMATEUR: "amateur",
   PRO: "pro",
+  ELITE: "champion",
+  CHAMPION: "champion",
   base: "free",
-  elite: "elite",
   free: "free",
+  basic: "basic",
+  amateur: "amateur",
   pro: "pro",
+  elite: "champion",
+  champion: "champion",
 };
 
 export function normalizePlanTier(planTier: RawPlanTier): PlanTier {
-  return PLAN_TIER_ALIASES[String(planTier ?? "free")] ?? "free";
+  const key = String(planTier ?? "free").trim();
+  return (
+    PLAN_TIER_ALIASES[key] ?? PLAN_TIER_ALIASES[key.toLowerCase()] ?? "free"
+  );
 }
 
 export function canCreateTeam(

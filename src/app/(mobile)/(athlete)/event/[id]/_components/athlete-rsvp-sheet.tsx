@@ -254,8 +254,6 @@ export function AthleteRsvpSheet({
     if (!reservationId || !event) return;
     const res = await createPayment({
       matchReservationId: reservationId,
-      amountCents: event.priceCents,
-      currency: event.currency,
       method,
       guestAccessToken,
     });

@@ -4,8 +4,10 @@ import {
   serial,
   text,
   timestamp,
+  unique,
   uniqueIndex,
 } from "drizzle-orm/pg-core";
+import { clubs } from "./clubs";
 import { user } from "./users";
 
 export const teams = pgTable(
@@ -18,6 +20,10 @@ export const teams = pgTable(
     description: text("description"),
     category: text("category"),
     homeGround: text("home_ground"),
+    // Optional club scope (ADR 0004). Null for existing teams.
+    clubId: integer("club_id").references(() => clubs.id, {
+      onDelete: "restrict",
+    }),
     ownerId: text("owner_id")
       .notNull()
       .references(() => user.id, { onDelete: "cascade" }),
@@ -26,6 +32,8 @@ export const teams = pgTable(
   },
   table => ({
     slugIdx: uniqueIndex("teams_slug_idx").on(table.slug),
+    // Target of the composite FK that keeps a fixture's team in its club.
+    idClubUnique: unique("teams_id_club_unique").on(table.id, table.clubId),
   }),
 );
 

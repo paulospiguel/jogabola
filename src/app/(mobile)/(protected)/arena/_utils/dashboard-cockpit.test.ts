@@ -7,12 +7,15 @@ import {
   selectSecondaryEvents,
 } from "./dashboard-cockpit";
 
+const OWNER = { isOwner: true, permissions: [] };
+const MEMBER = { isOwner: false, permissions: [] };
+
 describe("buildCockpitActions", () => {
   it("blocks cockpit actions when no team exists", () => {
     expect(
       buildCockpitActions({
         hasTeam: false,
-        canManageTeam: false,
+        access: MEMBER,
         activeEvent: null,
         squadCount: 0,
       }),
@@ -23,7 +26,7 @@ describe("buildCockpitActions", () => {
     expect(
       buildCockpitActions({
         hasTeam: true,
-        canManageTeam: true,
+        access: OWNER,
         activeEvent: null,
         squadCount: 0,
       }),
@@ -37,7 +40,7 @@ describe("buildCockpitActions", () => {
     expect(
       buildCockpitActions({
         hasTeam: true,
-        canManageTeam: false,
+        access: MEMBER,
         activeEvent: null,
         squadCount: 3,
       }),
@@ -57,7 +60,7 @@ describe("buildCockpitActions", () => {
     expect(
       buildCockpitActions({
         hasTeam: true,
-        canManageTeam: true,
+        access: OWNER,
         activeEvent,
         squadCount: 5,
       }),
@@ -71,7 +74,7 @@ describe("buildCockpitActions", () => {
     expect(
       buildCockpitActions({
         hasTeam: true,
-        canManageTeam: false,
+        access: MEMBER,
         activeEvent: null,
         squadCount: 0,
       }),
@@ -85,13 +88,50 @@ describe("buildCockpitActions", () => {
     expect(
       buildCockpitActions({
         hasTeam: true,
-        canManageTeam: true,
+        access: OWNER,
         activeEvent: null,
         squadCount: 1,
       }),
     ).toEqual({
       primary: { type: "create-event" },
       secondary: [],
+    });
+  });
+});
+
+describe("buildCockpitActions granular permissions", () => {
+  it("hides create-event and add-player from payments-only staff", () => {
+    const actions = buildCockpitActions({
+      hasTeam: true,
+      access: { isOwner: false, permissions: ["payments.manage"] },
+      activeEvent: null,
+      squadCount: 0,
+    });
+    expect(actions).toEqual({ primary: { type: "view-squad" }, secondary: [] });
+  });
+
+  it("offers create-event but not add-player to events-only staff", () => {
+    expect(
+      buildCockpitActions({
+        hasTeam: true,
+        access: { isOwner: false, permissions: ["events.manage"] },
+        activeEvent: null,
+        squadCount: 0,
+      }),
+    ).toEqual({ primary: { type: "create-event" }, secondary: [] });
+  });
+
+  it("offers add-player to roster-only staff with an empty squad", () => {
+    expect(
+      buildCockpitActions({
+        hasTeam: true,
+        access: { isOwner: false, permissions: ["roster.manage"] },
+        activeEvent: null,
+        squadCount: 0,
+      }),
+    ).toEqual({
+      primary: { type: "view-squad" },
+      secondary: [{ type: "add-player" }],
     });
   });
 });
@@ -223,7 +263,7 @@ describe("buildDashboardViewModel", () => {
   it("produces exactly one primary CTA and hides metrics/week/discover without a team event", () => {
     const viewModel = buildDashboardViewModel({
       hasTeam: true,
-      canManageTeam: true,
+      access: OWNER,
       events: [],
       squadCount: 0,
       now,
@@ -250,7 +290,7 @@ describe("buildDashboardViewModel", () => {
 
     const viewModel = buildDashboardViewModel({
       hasTeam: true,
-      canManageTeam: true,
+      access: OWNER,
       events: [active],
       squadCount: 5,
       now,
@@ -269,7 +309,7 @@ describe("buildDashboardViewModel", () => {
   it("sends a member without management permission to the squad", () => {
     const viewModel = buildDashboardViewModel({
       hasTeam: true,
-      canManageTeam: false,
+      access: MEMBER,
       events: [],
       squadCount: 3,
       now,
@@ -286,7 +326,7 @@ describe("buildDashboardViewModel", () => {
   it("does not offer add-player to a managed team that already has a squad", () => {
     const viewModel = buildDashboardViewModel({
       hasTeam: true,
-      canManageTeam: true,
+      access: OWNER,
       events: [],
       squadCount: 4,
       now,
@@ -314,7 +354,7 @@ describe("buildDashboardViewModel", () => {
 
     const withoutSecondary = buildDashboardViewModel({
       hasTeam: true,
-      canManageTeam: true,
+      access: OWNER,
       events: [active],
       squadCount: 1,
       now,
@@ -326,7 +366,7 @@ describe("buildDashboardViewModel", () => {
 
     const withSecondary = buildDashboardViewModel({
       hasTeam: true,
-      canManageTeam: true,
+      access: OWNER,
       events: [active, secondary],
       squadCount: 1,
       now,
@@ -345,7 +385,7 @@ describe("buildDashboardViewModel", () => {
   ])("shows discover only when the feature is active AND has content (feature=%s, content=%s -> %s)", (isDiscoverFeatureActive, hasDiscoverContent, expected) => {
     const viewModel = buildDashboardViewModel({
       hasTeam: true,
-      canManageTeam: true,
+      access: OWNER,
       events: [],
       squadCount: 1,
       now,
@@ -359,7 +399,7 @@ describe("buildDashboardViewModel", () => {
   it("returns null actions and hides every section when there is no team", () => {
     const viewModel = buildDashboardViewModel({
       hasTeam: false,
-      canManageTeam: false,
+      access: MEMBER,
       events: [],
       squadCount: 0,
       now,

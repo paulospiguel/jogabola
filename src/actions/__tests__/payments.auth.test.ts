@@ -25,13 +25,15 @@ vi.mock("@/db/client", () => ({
       matchReservations: { findFirst: mocks.reservationFindFirst },
       payments: { findFirst: mocks.paymentFindFirst },
     },
-    select: vi.fn(() => ({
-      from: vi.fn(() => ({
+    select: vi.fn(() => {
+      const chain = {
+        innerJoin: vi.fn(() => chain),
         where: vi.fn(() => ({
           limit: vi.fn(async () => mocks.selectResults.shift() ?? []),
         })),
-      })),
-    })),
+      };
+      return { from: vi.fn(() => chain) };
+    }),
     update: mocks.update,
   },
 }));
@@ -60,9 +62,13 @@ const { verifyPaymentProof } = await import(
 
 const paymentInput = {
   matchReservationId: 7,
-  amountCents: 1000,
-  currency: "EUR",
   method: "cash" as const,
+};
+
+const pricedSession = {
+  priceCents: 1000,
+  currency: "EUR",
+  transferRequiresProof: true,
 };
 
 beforeEach(() => {
@@ -95,6 +101,7 @@ describe("payment reservation authorization", () => {
       guestAccessToken: "valid-token",
     });
 
+    mocks.selectResults.push([pricedSession]);
     const result = await createPayment({
       ...paymentInput,
       guestAccessToken: "valid-token",
@@ -113,11 +120,55 @@ describe("payment reservation authorization", () => {
       playerId: "user-1",
       guestAccessToken: null,
     });
+    mocks.selectResults.push([pricedSession]);
 
     const result = await createPayment(paymentInput);
 
     expect(result.success).toBe(true);
     expect(mocks.reservationFindFirst).toHaveBeenCalled();
+  });
+
+  it("uses the callup price and ignores a client-supplied amount", async () => {
+    mocks.getSession.mockResolvedValue({
+      session: {},
+      user: { id: "user-1", name: "User", email: "user@example.com" },
+    });
+    mocks.reservationFindFirst.mockResolvedValue({
+      playerId: "user-1",
+      guestAccessToken: null,
+    });
+    mocks.selectResults.push([pricedSession]);
+
+    const result = await createPayment({
+      ...paymentInput,
+      amountCents: 1,
+      currency: "USD",
+    } as typeof paymentInput);
+
+    expect(result.success).toBe(true);
+    expect(mocks.values).toHaveBeenCalledWith(
+      expect.objectContaining({ amountCents: 1000, currency: "EUR" }),
+    );
+  });
+
+  it("refuses a payment for a free callup", async () => {
+    mocks.getSession.mockResolvedValue({
+      session: {},
+      user: { id: "user-1", name: "User", email: "user@example.com" },
+    });
+    mocks.reservationFindFirst.mockResolvedValue({
+      playerId: "user-1",
+      guestAccessToken: null,
+    });
+    mocks.selectResults.push([{ ...pricedSession, priceCents: 0 }]);
+
+    const result = await createPayment(paymentInput);
+
+    expect(result).toEqual({
+      success: false,
+      error: { code: "PAYMENT_NOT_REQUIRED" },
+    });
+    expect(mocks.insert).not.toHaveBeenCalled();
   });
 
   it("rejects submitPaymentProof from a different authenticated user", async () => {

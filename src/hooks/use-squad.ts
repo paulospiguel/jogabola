@@ -1,6 +1,7 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
+import type { StaffTitle } from "@/lib/staff-permissions";
 import { useTeams } from "./use-teams";
 
 export interface SquadPlayer {
@@ -18,6 +19,8 @@ export interface SquadPlayer {
   highlight?: boolean;
   isVerified?: boolean;
   image?: string | null;
+  /** Staff title when this athlete is also team staff. */
+  staffTitle?: StaffTitle | null;
 }
 
 export function useSquad() {

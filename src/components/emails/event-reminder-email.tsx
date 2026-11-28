@@ -41,7 +41,7 @@ export function EventReminderEmail({
       ? "Hoje!"
       : hoursUntil <= 24
         ? "Amanhã!"
-        : `Em ${Math.round(hoursUntil / 24)} dias`;
+        : `Dentro de ${Math.round(hoursUntil / 24)} dias`;
 
   return (
     <EmailLayout
@@ -188,7 +188,7 @@ export function EventReminderEmail({
           }}
         >
           Não podes comparecer? Acede ao evento e cancela a presença para
-          liberares a vaga para um colega.
+          libertares a vaga para um colega.
         </Text>
       </CardFooter>
     </EmailLayout>

@@ -1,66 +1,46 @@
 "use client";
 
-import { useQueryClient } from "@tanstack/react-query";
 import { Calendar, Clock, ShieldCheck } from "lucide-react";
 import { useParams, useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
-import { useState, useTransition } from "react";
-import { setCoCaptain } from "@/actions/teams.actions";
 import { JbAvatar } from "@/components/arena/avatar";
 import { ScreenHeader } from "@/components/arena/screen-header";
 import Loading from "@/components/loading";
 import { Button } from "@/components/ui/button";
 import { useAthleteProfile } from "@/hooks/use-athlete-profile";
 import { useTeams } from "@/hooks/use-teams";
-import { useSession } from "@/lib/auth-client";
+import { canRemoveFromRoster, getStaffAction } from "@/lib/staff-ui";
 import { AthleteHistoryRow } from "./_components/athlete-history-row";
 import { RemoveFromRosterDialog } from "./_components/remove-from-roster-dialog";
-
-const CO_CAPTAIN_ERROR_CODES = [
-  "FORBIDDEN",
-  "TEAM_NOT_FOUND",
-  "CANNOT_MODIFY_OWNER",
-  "PLAYER_NOT_IN_TEAM",
-];
+import { StaffAction } from "./_components/staff-action";
 
 export default function AthleteProfilePage() {
   const { id } = useParams();
   const router = useRouter();
   const t = useTranslations();
-  const { data: session } = useSession();
   const { activeTeamId, myTeams } = useTeams();
   const {
     profile: athlete,
     history,
     isLoading,
   } = useAthleteProfile(id as string);
-  const queryClient = useQueryClient();
-  const [isPending, startTransition] = useTransition();
-  const [roleError, setRoleError] = useState<string | null>(null);
 
-  const currentUserId = session?.user?.id;
   const activeTeam = myTeams.find(team => team.id === activeTeamId);
-  const isOwner = !!currentUserId && activeTeam?.ownerId === currentUserId;
-  const athleteRole = athlete?.role ?? "player";
-  const isCoCaptain = athleteRole === "manager";
-
-  const handleToggleCoCaptain = () => {
-    if (!activeTeamId || !athlete) return;
-    setRoleError(null);
-    startTransition(async () => {
-      const result = await setCoCaptain({
-        teamId: activeTeamId,
-        playerId: athlete.id.toString(),
-        makeCoCaptain: !isCoCaptain,
-      });
-      if (!result.success) {
-        setRoleError(result.error?.code ?? "UNKNOWN_ERROR");
-      } else {
-        queryClient.invalidateQueries({ queryKey: ["athlete-profile"] });
-        queryClient.invalidateQueries({ queryKey: ["squad"] });
-      }
-    });
-  };
+  const isOwner = activeTeam?.isOwner ?? false;
+  const staffTitle = athlete?.staffTitle ?? null;
+  const staffAction = athlete
+    ? getStaffAction(isOwner, {
+        isRegistered: Boolean(athlete.isVerified),
+        isTeamOwner: athlete.isTeamOwner,
+        staffTitle,
+      })
+    : null;
+  const showRemove = athlete
+    ? canRemoveFromRoster(activeTeam, {
+        isTeamOwner: athlete.isTeamOwner,
+        staffTitle,
+      })
+    : false;
 
   const tr = (key: string, values?: Record<string, string | number>) =>
     t(`arenaAthleteProfile.${key}`, values);
@@ -132,10 +112,12 @@ export default function AthleteProfilePage() {
                   OVR {athlete.selfRating.toFixed(1)}
                 </span>
               )}
-              {isCoCaptain && (
+              {(athlete.isTeamOwner || staffTitle) && (
                 <span className="inline-flex items-center gap-1 rounded-[6px] border border-arena-info/30 bg-arena-info/10 px-2 py-0.5 text-[11px] font-black uppercase tracking-wider text-arena-info">
                   <ShieldCheck size={10} strokeWidth={2.5} />
-                  {tr("roles.manager")}
+                  {athlete.isTeamOwner
+                    ? t("teamStaff.owner")
+                    : t(`teamStaff.titles.${staffTitle}`)}
                 </span>
               )}
               {!athlete.isVerified && (
@@ -208,68 +190,30 @@ export default function AthleteProfilePage() {
             )}
           </div>
 
-          {/* ── Co-captain toggle (owner only) ───────── */}
-          {isOwner && (
+          {/* ── Staff promote / demote (owner only) ──── */}
+          {staffAction && activeTeamId && (
             <div className="mt-8">
-              <button
-                type="button"
-                disabled={isPending}
-                onClick={handleToggleCoCaptain}
-                className="flex w-full items-center justify-between rounded-[14px] border border-arena-border bg-arena-surface px-4 py-3.5 transition-colors hover:bg-arena-surface-el disabled:opacity-50"
-              >
-                <div className="flex items-center gap-3">
-                  <span className="flex size-9 items-center justify-center rounded-[10px] bg-arena-info/10 border border-arena-info/20">
-                    <ShieldCheck
-                      size={16}
-                      className="text-arena-info"
-                      strokeWidth={2}
-                    />
-                  </span>
-                  <div className="text-left">
-                    <p className="text-[13px] font-semibold text-arena-text">
-                      {isCoCaptain
-                        ? tr("coCaptain.remove")
-                        : tr("coCaptain.promote")}
-                    </p>
-                    <p className="text-[11px] text-arena-text-muted">
-                      {isCoCaptain
-                        ? tr("coCaptain.removeDesc")
-                        : tr("coCaptain.promoteDesc")}
-                    </p>
-                  </div>
-                </div>
-                <span
-                  className={`text-[11px] font-bold px-2.5 py-1 rounded-full border ${isCoCaptain ? "border-arena-danger/30 bg-arena-danger/10 text-arena-danger" : "border-arena-info/30 bg-arena-info/10 text-arena-info"}`}
-                >
-                  {isCoCaptain
-                    ? tr("coCaptain.removeLabel")
-                    : tr("coCaptain.promoteLabel")}
-                </span>
-              </button>
-              {roleError && (
-                <p className="mt-2 text-[12px] text-arena-danger">
-                  {tr(
-                    `coCaptain.errors.${
-                      CO_CAPTAIN_ERROR_CODES.includes(roleError)
-                        ? roleError
-                        : "UNKNOWN_ERROR"
-                    }`,
-                  )}
-                </p>
-              )}
+              <StaffAction
+                action={staffAction}
+                teamId={activeTeamId}
+                userId={athlete.id.toString()}
+                name={athlete.name}
+              />
             </div>
           )}
 
-          {/* ── Remove action ─────────────────────────── */}
-          <div className="mt-8">
-            <RemoveFromRosterDialog
-              activeTeamId={activeTeamId}
-              playerId={athlete.id.toString()}
-              playerName={athlete.name}
-              onRemoved={() => router.push("/arena/squads")}
-              t={tr}
-            />
-          </div>
+          {/* ── Remove action (roster.manage, never the owner) ── */}
+          {showRemove && (
+            <div className="mt-8">
+              <RemoveFromRosterDialog
+                activeTeamId={activeTeamId}
+                playerId={athlete.id.toString()}
+                playerName={athlete.name}
+                onRemoved={() => router.push("/arena/squads")}
+                t={tr}
+              />
+            </div>
+          )}
         </div>
       </div>
     </div>

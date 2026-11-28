@@ -105,7 +105,7 @@ export function deriveDashboardQueryState<TEvent, TSquad>(
 }
 
 export function useDashboardData() {
-  const { activeTeamId, setActiveTeamId, myTeams, activeTeamCanManage } =
+  const { activeTeamId, setActiveTeamId, myTeams, activeTeam, activeTeamCan } =
     useTeams();
 
   const eventsQuery = useQuery({
@@ -192,7 +192,8 @@ export function useDashboardData() {
     activeTeamId,
     setActiveTeamId,
     myTeams,
-    activeTeamCanManage,
+    activeTeam,
+    activeTeamCan,
     events: eventsState.data,
     squad: squadState.data,
     eventsState,

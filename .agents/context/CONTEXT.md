@@ -4,22 +4,32 @@ Este documento define a linguagem ubíqua e as regras de negócio da plataforma 
 
 ## Glossário
 
+### Clubes e calendário competitivo
+
+Definidos pelos [ADR 0004](docs/adr/0004-competitive-calendar.md) e [ADR 0005](docs/adr/0005-club-calendar-authorization.md) (aceites em 2026-11-26).
+
+- **Clube** (`Club`): âmbito organizacional que agrega equipas, épocas, adversários e jogos. O isolamento entre clubes é obrigatório em todas as leituras e mutações no servidor. A ligação de uma equipa ao clube (`teams.club_id`) é opcional e começa vazia nas equipas existentes.
+- **Membro de clube** (`ClubMember`): vínculo único entre um utilizador e um clube, com papel `admin` (administrador: gere épocas e adversários e associa equipas) ou `member` (membro). Quem cria o clube fica como primeiro administrador. Ser membro do clube não dá, por si, acesso às equipas do clube.
+- **Época** (`Season`): período desportivo de um clube, com nome único no clube. Não pode ser removida enquanto houver jogos associados.
+- **Adversário** (`Opponent`): registo local do clube com nome próprio; pode representar uma equipa sem conta na aplicação. Não pode ser removido enquanto houver jogos associados.
+- **Jogo competitivo** (`Fixture`): jogo de uma equipa do clube, com época, adversário, nome da competição e início (`timestamptz`). Só o proprietário da equipa (`teams.owner_id`) que seja membro do clube o cria; um papel `owner` no plantel não substitui essa propriedade e o staff mantém apenas os privilégios recreativos (ADR 0006). Lê-o quem é membro do clube e tem vínculo à equipa (proprietário ou plantel). Uma equipa com jogos fica vinculada ao seu clube.
+- **Ligação jogo–convocatória** (`FixtureMatchSession`): associação opcional e deliberada entre um jogo e uma convocatória da mesma equipa; no máximo uma por jogo e uma por convocatória. Apagar a convocatória remove a ligação e conserva o jogo. Convocatórias e páginas de convidados não expõem dados competitivos.
+
 ### AI Club OS — conceitos em introdução
 
-Os conceitos seguintes orientam o produto. Os detalhes de schema e autorização só ficam fechados pelos ADRs previstos no plano AI Club OS; não presumir que estas entidades ou papéis já estão implementados.
+Os conceitos seguintes orientam o produto. Os detalhes técnicos de cada etapa ficam fechados pelos ADRs previstos no plano AI Club OS; não presumir que estas entidades ou papéis já estão implementados.
 
-- **Clube** (`Club`): âmbito organizacional que agrega equipas e dados privados. O isolamento entre clubes é obrigatório em todas as leituras e mutações no servidor.
-- **Época** (`Season`): período desportivo usado para organizar a actividade de um clube ou equipa.
-- **Jogo competitivo** (`Fixture`): jogo associado a uma competição, época e adversário. Deve coexistir com as convocatórias recreativas actuais; a associação ao modelo existente é incremental.
 - **Staff virtual** (`Virtual Staff`): capacidade de IA atribuída a um clube/equipa, com identidade, âmbito, permissões, orçamento e estado revogável próprios.
 - **Secretário** (`Secretary`): primeiro staff virtual em validação. Prepara pedidos de disponibilidade, interpreta respostas e destaca pendências; não decide por conta própria quando há ambiguidade.
 - **Proposta de acção** (`Action Proposal`): resultado tipado que o agente apresenta à aplicação. A aplicação valida identidade, autorização e âmbito antes de executar qualquer mutação.
 - **Execução de agente** (`Agent Run`): registo atribuível de uma tarefa, incluindo estado, acções, custo e resultado, para permitir auditoria e controlo de repetição.
 
 ### Organização & Logística
-- **Capitão / Organizador**: Utilizador responsável pela gestão de uma Equipa e criação de Convocatórias.
+- **Dono** (`teams.owner_id`): Utilizador único que detém a Equipa e gere tudo, incluindo staff, privilégios, transferência, eliminação e faturação. Não precisa de ser Atleta: entra no Plantel só se quiser. Substitui o antigo "Capitão / Organizador". Ver [ADR 0006](docs/adr/0006-team-staff-and-roster.md).
+- **Staff** (`team_staff`): Membro com cargo (`coach`, `director`, `finance`, `secretary`, `other`) e privilégios atribuídos pelo Dono. Vê tudo da Equipa e só altera o que os seus privilégios permitem. É promovido a partir do Plantel e pode ser Atleta ao mesmo tempo.
+- **Transferência de equipa** (`TeamOwnershipTransfer`): Pedido do Dono para passar a Equipa a um membro ou a um email. O destinatário aceita por link com token num prazo de 7 dias. O Dono antigo perde os privilégios e só fica no Plantel se já era Atleta.
 - **Equipa** (`Team`): Grupo estável de jogadores (ex: "Amigos do Bairro").
-- **Plantel** (`Roster`): Conjunto de Atletas associados a uma Equipa.
+- **Plantel** (`Roster`): Conjunto de Atletas associados a uma Equipa (`team_members`). Só atletas; a gestão vive em `teams.owner_id` e `team_staff`.
 - **Atleta**: Um utilizador ou convidado que faz parte do Plantel de uma Equipa.
 - **Convocatória** (`MatchSession`): Um evento desportivo (Jogo, Treino) com data, local e limite de vagas.
 - **Confirmação** (`Attendance` / `Reservation`): Ato de um Atleta garantir a sua vaga numa Convocatória.
@@ -37,7 +47,7 @@ Os conceitos seguintes orientam o produto. Os detalhes de schema e autorização
 
 ### Comunicação
 - **Mural de Avisos** (`EventNotice`): Feed de avisos do Capitão dentro de uma Convocatória (info/urgente/mudança de campo). Unidirecional: autor é o Organizador.
-- **Chat de Evento** (`EventMessage`): Conversa livre entre participantes de uma Convocatória — distinto do Mural. Apenas Atletas com presença confirmada (e o Capitão) podem escrever e ler. Entrega em tempo real via serviço gerido (Ably). Ver [ADR 0002](docs/adr/0002-ably-realtime-event-chat.md).
+- **Chat de Evento** (`EventMessage`): Conversa livre entre participantes de uma Convocatória — distinto do Mural. Apenas o Dono da equipa, o Staff com a permissão `events.manage` e os Atletas com presença confirmada podem escrever e ler. Entrega em tempo real via serviço gerido (Ably). Ver [ADR 0002](docs/adr/0002-ably-realtime-event-chat.md).
 - **Notificação de Sistema**: Alertas automáticos disparados pela plataforma (Abertura, Lembrete, Confirmação).
 - **Alerta do Capitão**: Notificação manual disparada pelo Organizador para apelar à ação (ex: "Chatear Pendentes").
 

@@ -4,6 +4,7 @@ import { getMyRating } from "@/actions/player-ratings.actions";
 import { db } from "@/db/client";
 import * as schema from "@/db/schema";
 import { getCachedSession } from "@/lib/get-session";
+import { listMyTeamSummaries } from "@/lib/team-summaries";
 import { ProfileContainer } from "./_components/profile-container";
 
 export default async function ArenaProfilePage() {
@@ -13,19 +14,10 @@ export default async function ArenaProfilePage() {
     redirect("/auth");
   }
 
-  // Fetch real team memberships for the authenticated user from the database
-  const memberships = await db
-    .select({
-      id: schema.teams.id,
-      name: schema.teams.name,
-      slug: schema.teams.slug,
-      location: schema.teams.location,
-      role: schema.teamMembers.role,
-    })
-    .from(schema.teamMembers)
-    .innerJoin(schema.teams, eq(schema.teamMembers.teamId, schema.teams.id))
-    .where(eq(schema.teamMembers.playerId, session.user.id))
-    .catch(() => []);
+  // Teams the user can view (owned ∪ staff ∪ roster) with their role.
+  const memberships = await listMyTeamSummaries(session.user.id).catch(
+    () => [],
+  );
 
   // Member count per team (single grouped query)
   const teamIds = memberships.map(m => m.id);
@@ -47,7 +39,10 @@ export default async function ArenaProfilePage() {
     name: m.name,
     slug: m.slug,
     location: m.location,
-    role: m.role,
+    role: m.membershipRole,
+    isAthlete: m.isAthlete,
+    isOwnerOrStaff: m.canManage,
+    // Roster (Plantel) rows only: owner/staff who don't play are not counted.
     memberCount: countByTeam.get(m.id) ?? 0,
   }));
 

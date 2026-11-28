@@ -8,7 +8,7 @@ import { getEventMessages } from "@/actions/event-chat.actions";
 import { getEvent } from "@/actions/match-sessions.actions";
 import { LockedTeamProvider } from "@/components/arena/locked-team-context";
 import { getCachedSession } from "@/lib/get-session";
-import { userCanAccessTeam, userIsTeamOwner } from "@/lib/team-access";
+import { can, canViewTeam } from "@/lib/team-authz";
 import { EventDetail } from "./_components/event-detail";
 
 interface Params {
@@ -51,7 +51,7 @@ export default async function ArenaEventDetailPage({ params }: Params) {
   const canChat = chatResult.success;
   const initialChatMessages = chatResult.success ? chatResult.data : [];
 
-  const canAccessTeam = await userCanAccessTeam(user.id, event.teamId);
+  const canAccessTeam = await canViewTeam(user.id, event.teamId);
   if (!canAccessTeam) {
     return (
       <div className="flex min-h-[60vh] items-center justify-center text-arena-text-muted">
@@ -60,8 +60,8 @@ export default async function ArenaEventDetailPage({ params }: Params) {
     );
   }
 
-  // Only the team owner (captain) can edit/manage the event
-  const canEdit = await userIsTeamOwner(user.id, event.teamId);
+  // Owner or staff with events.manage can edit/manage the event
+  const canEdit = await can(user.id, event.teamId, "events.manage");
 
   return (
     <div className="jb-page" style={{ paddingLeft: 0, paddingRight: 0 }}>

@@ -81,7 +81,11 @@ export default function Header() {
             />
           </div>
 
-          {!isHome && <Navbar className="hidden md:flex" />}
+          {isHome ? (
+            <HomeAnchorNav className="hidden md:flex" />
+          ) : (
+            <Navbar className="hidden md:flex" />
+          )}
         </div>
 
         <div className="flex items-center space-x-4">
@@ -165,7 +169,14 @@ export default function Header() {
                 </SheetTitle>
               </div>
 
-              {!isHome && (
+              {isHome ? (
+                <div className="flex-1 overflow-y-auto py-6">
+                  <HomeAnchorNav
+                    className="flex-col items-start space-y-2 text-base font-medium"
+                    onItemClick={() => setIsMenuOpen(false)}
+                  />
+                </div>
+              ) : (
                 <div className="flex-1 overflow-y-auto py-6">
                   <Navbar
                     className="flex-col items-start space-y-3 text-base font-medium"
@@ -340,6 +351,55 @@ const Navbar = ({
 
         return LinkComponent;
       })}
+    </nav>
+  );
+};
+
+const HOME_ANCHORS = [
+  { href: "#impacto", key: "impact" },
+  { href: "#produto", key: "product" },
+  { href: "#evolucao", key: "evolution" },
+  { href: "#planos", key: "plans" },
+] as const;
+
+const HomeAnchorNav = ({
+  className,
+  onItemClick,
+}: {
+  className?: string;
+  onItemClick?: () => void;
+}) => {
+  const t = useTranslations("homePage.nav");
+  const isMobile = className?.includes("flex-col");
+
+  return (
+    <nav
+      className={cn(
+        "flex items-center gap-1 text-sm font-medium text-arena-text-sec md:flex-row",
+        className,
+      )}
+    >
+      {HOME_ANCHORS.map(item =>
+        isMobile ? (
+          <SheetClose key={item.href} asChild>
+            <a
+              href={item.href}
+              onClick={onItemClick}
+              className="press flex w-full items-center rounded-2xl border border-transparent px-4 py-3 text-left text-arena-text-sec no-underline transition-colors hover:border-arena-border hover:bg-arena-surface hover:text-arena-text"
+            >
+              {t(item.key)}
+            </a>
+          </SheetClose>
+        ) : (
+          <a
+            key={item.href}
+            href={item.href}
+            className="press rounded-full px-3.5 py-2 text-arena-text-sec no-underline transition-colors hover:bg-arena-surface/70 hover:text-arena-text"
+          >
+            {t(item.key)}
+          </a>
+        ),
+      )}
     </nav>
   );
 };

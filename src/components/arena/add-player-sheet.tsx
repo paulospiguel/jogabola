@@ -3,6 +3,7 @@ import { Loader2, X } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useState } from "react";
 import { addPlayerToRoster } from "@/actions/teams.actions";
+import { addPlayerErrorKey } from "@/lib/staff-ui";
 import { cn } from "@/lib/utils";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
@@ -30,7 +31,6 @@ interface FormState {
   position: string;
   email: string;
   phone: string;
-  admin: boolean;
 }
 
 // Arena-flavoured overrides applied on top of the UI base components
@@ -50,13 +50,12 @@ export function AddPlayerSheet({
     position: "MID",
     email: "",
     phone: "",
-    admin: false,
   });
   const [saving, setSaving] = useState(false);
   const [done, setDone] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const set = (k: keyof FormState, v: string | boolean) =>
+  const set = (k: keyof FormState, v: string) =>
     setForm(f => ({ ...f, [k]: v }));
 
   const handleSave = async () => {
@@ -71,7 +70,6 @@ export function AddPlayerSheet({
       experience: "beginner",
       managerId,
       teamId,
-      admin: form.admin,
       phone: form.phone.trim(),
     });
 
@@ -81,7 +79,7 @@ export function AddPlayerSheet({
       setDone(true);
       setTimeout(onClose, 2000);
     } else {
-      setError(result.error.message ?? result.error.code);
+      setError(t(addPlayerErrorKey(result.error.code)));
     }
   };
 
@@ -214,34 +212,6 @@ export function AddPlayerSheet({
             type="tel"
             value={form.phone}
           />
-        </div>
-
-        {/* Administrator Toggle Switch */}
-        <div className="mb-6 flex items-center gap-3.5 rounded-xl border border-arena-border bg-[#151C26]/40 p-3.5">
-          <button
-            type="button"
-            role="switch"
-            aria-checked={form.admin}
-            onClick={() => set("admin", !form.admin)}
-            className={cn(
-              "relative h-[22px] w-10 shrink-0 rounded-full transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-arena-primary/30",
-              form.admin
-                ? "bg-arena-primary"
-                : "bg-[#1E293B] border border-arena-border",
-            )}
-          >
-            <span
-              className={cn(
-                "block size-[14px] rounded-full transition-transform duration-200 shadow-sm",
-                form.admin
-                  ? "translate-x-[22px] bg-arena-bg"
-                  : "translate-x-[3px] bg-arena-text-muted",
-              )}
-            />
-          </button>
-          <span className="text-sm font-semibold text-arena-text-sec select-none">
-            {t("labels.admin")}
-          </span>
         </div>
 
         {/* Error message */}

@@ -1,7 +1,7 @@
 "use server";
 
 import { randomUUID } from "node:crypto";
-import { eq } from "drizzle-orm";
+import { and, eq, sql } from "drizzle-orm";
 import { headers } from "next/headers";
 import { z } from "zod";
 import { PAYMENT_STATUS } from "@/constants/payments";
@@ -11,6 +11,7 @@ import {
   matchSessions,
   paymentProofs,
   payments,
+  teamStaff,
   teams,
   user,
 } from "@/db/schema";
@@ -22,7 +23,7 @@ import { notifyPaymentValidationRequired } from "@/lib/notifications";
 import { canActOnReservation } from "@/lib/reservation-access";
 import { getPresignedUploadUrl, getR2PublicUrl } from "@/lib/s3";
 import { classifyErrorSafely } from "@/lib/safe-error";
-import { canManageTeam } from "@/lib/team-access";
+import { can } from "@/lib/team-authz";
 import {
   requestPresignedUrlSchema,
   submitPaymentProofSchema,
@@ -65,7 +66,8 @@ export const submitPaymentProof = withAction(
     try {
       const [paymentRow] = await db
         .select({
-          managerId: teams.ownerId,
+          ownerId: teams.ownerId,
+          teamId: teams.id,
           athleteId: matchReservations.playerId,
           athleteName: user.name,
           eventTitle: matchSessions.title,
@@ -87,13 +89,31 @@ export const submitPaymentProof = withAction(
         .limit(1);
 
       if (paymentRow) {
-        await notifyPaymentValidationRequired({
-          managerId: paymentRow.managerId,
-          athleteName: paymentRow.athleteName ?? "Atleta",
-          eventTitle: paymentRow.eventTitle,
-          paymentId: data.paymentId,
-          eventId: paymentRow.eventId,
-        });
+        // Owner plus every staff member allowed to manage payments.
+        const paymentStaff = await db
+          .select({ userId: teamStaff.userId })
+          .from(teamStaff)
+          .where(
+            and(
+              eq(teamStaff.teamId, paymentRow.teamId),
+              sql`${teamStaff.permissions} @> ARRAY['payments.manage']::text[]`,
+            ),
+          );
+        const managerIds = new Set([
+          paymentRow.ownerId,
+          ...paymentStaff.map(row => row.userId),
+        ]);
+        await Promise.all(
+          Array.from(managerIds, managerId =>
+            notifyPaymentValidationRequired({
+              managerId,
+              athleteName: paymentRow.athleteName ?? "Atleta",
+              eventTitle: paymentRow.eventTitle,
+              paymentId: data.paymentId,
+              eventId: paymentRow.eventId,
+            }),
+          ),
+        );
         await trackServerEvent(paymentRow.athleteId, "payment_submitted", {
           payment_id: data.paymentId,
           event_id: paymentRow.eventId,
@@ -148,7 +168,7 @@ export const requestPresignedUrl = withAction(
         error: {
           code: "INVALID_FILE_TYPE",
           message:
-            "Tipo de ficheiro não permitido. Use JPEG, PNG, WebP, HEIC ou HEIF.",
+            "Tipo de ficheiro não permitido. Usa JPEG, PNG, WebP, HEIC ou HEIF.",
         },
       };
     }
@@ -252,9 +272,10 @@ export const requestPaymentProof = withAuthAction(
       return { success: false, error: { code: "PAYMENT_NOT_FOUND" } };
     }
 
-    const canAccessTeam = await canManageTeam(
+    const canAccessTeam = await can(
       currentUser.id,
       paymentRow.teamId,
+      "payments.manage",
     );
     if (!canAccessTeam) {
       return { success: false, error: { code: "FORBIDDEN" } };

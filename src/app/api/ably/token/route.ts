@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
-import { canParticipateInChat } from "@/actions/event-chat.actions";
 import { getAblyRest } from "@/lib/ably";
 import { getAuthUser } from "@/lib/action-helpers";
+import { canParticipateInChat } from "@/lib/event-chat-access";
 
 /** Issues a short-lived Ably token scoped to event chat channels.
  * Keeps ABLY_API_KEY server-side; the browser authenticates via this endpoint. */

@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { Hourglass, Star } from "lucide-react";
+import { Hourglass, ShieldCheck, Star } from "lucide-react";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
 import { JbAvatar } from "@/components/arena/avatar";
@@ -20,6 +20,7 @@ function getBadgeStatus(playerStatus: SquadPlayer["status"]): BadgeStatus {
 
 export function SquadPlayerRow({ player, index }: SquadPlayerRowProps) {
   const t = useTranslations("arenaSquad");
+  const tStaff = useTranslations("teamStaff");
   const statusKey = getBadgeStatus(player.status);
 
   return (
@@ -59,6 +60,16 @@ export function SquadPlayerRow({ player, index }: SquadPlayerRowProps) {
           </div>
 
           <div className="mt-0.5 flex flex-wrap items-center gap-1.5">
+            {player.staffTitle && (
+              <span
+                className="inline-flex items-center gap-1 rounded-[5px] border border-arena-info/30 bg-arena-info/10 px-1.5 py-0.5 text-[9px] font-black uppercase tracking-wider text-arena-info"
+                title={tStaff("badge")}
+              >
+                <ShieldCheck size={9} strokeWidth={2.2} aria-hidden="true" />
+                <span className="sr-only">{tStaff("badge")}: </span>
+                {tStaff(`titles.${player.staffTitle}`)}
+              </span>
+            )}
             {player.position && (
               <span className="rounded-[5px] border border-arena-border bg-arena-surface-el px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-arena-text-muted">
                 {player.position}

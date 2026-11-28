@@ -1,7 +1,8 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Plus, Users2 } from "lucide-react";
+import { Plus, ShieldCheck, Users2 } from "lucide-react";
+import Link from "next/link";
 import { useTranslations } from "next-intl";
 import { AddPlayerSheet } from "@/components/arena/add-player-sheet";
 import { Cta } from "@/components/arena/cta";
@@ -10,6 +11,7 @@ import {
   ArenaQueryError,
   deriveQueryViewState,
 } from "@/components/arena/query-state";
+import { useTeams } from "@/hooks/use-teams";
 import { useSquadClientState } from "../_hooks/use-squad-client-state";
 import { SquadEmailSheet } from "./squad-email-sheet";
 import { SquadFilterPills } from "./squad-filter-pills";
@@ -46,8 +48,14 @@ function SquadListSkeleton() {
 
 export function SquadClient({ userId }: { userId: string }) {
   const t = useTranslations("arenaSquad");
+  const tNav = useTranslations("arenaNav");
+  const { activeTeam } = useTeams();
+  // Presentation only: the staff page re-checks access server-side.
+  const showStaffLink = Boolean(
+    activeTeam && (activeTeam.isOwner || activeTeam.staffTitle !== null),
+  );
   const {
-    activeTeamCanManage,
+    canManageRoster,
     activeTeamId,
     closeGroupSheet,
     editingGroupId,
@@ -144,7 +152,17 @@ export function SquadClient({ userId }: { userId: string }) {
               {t("title")}
             </h1>
 
-            <div className="flex items-center gap-2"></div>
+            <div className="flex items-center gap-2">
+              {showStaffLink && (
+                <Link
+                  className="press inline-flex h-9 items-center gap-1.5 rounded-[10px] border border-arena-border bg-arena-surface px-3 text-xs font-semibold text-arena-text-sec transition-colors hover:bg-arena-surface-el hover:text-arena-text"
+                  href="/arena/staff"
+                >
+                  <ShieldCheck size={14} strokeWidth={2} />
+                  {tNav("staff")}
+                </Link>
+              )}
+            </div>
           </header>
 
           {/* Search Bar */}
@@ -187,7 +205,7 @@ export function SquadClient({ userId }: { userId: string }) {
                 title={t("empty.title")}
                 description={t("empty.subtitle")}
                 action={
-                  activeTeamCanManage ? (
+                  canManageRoster ? (
                     <Cta
                       variant="primary"
                       size="sm"
@@ -212,13 +230,15 @@ export function SquadClient({ userId }: { userId: string }) {
                     {t("search.noResults")}
                   </p>
                 </div>
-                <Cta
-                  variant="primary"
-                  size="sm"
-                  onClick={() => setShowAdd(true)}
-                >
-                  {t("actions.addPlayer")}
-                </Cta>
+                {canManageRoster && (
+                  <Cta
+                    variant="primary"
+                    size="sm"
+                    onClick={() => setShowAdd(true)}
+                  >
+                    {t("actions.addPlayer")}
+                  </Cta>
+                )}
               </div>
             ) : (
               <>
@@ -242,14 +262,16 @@ export function SquadClient({ userId }: { userId: string }) {
       </motion.div>
 
       {/* FAB */}
-      <button
-        onClick={() => setShowAdd(true)}
-        className="fixed bottom-[90px] right-6 z-[100] flex size-[52px] items-center justify-center rounded-full bg-arena-primary text-arena-bg shadow-[0_4px_20px_color-mix(in_srgb,var(--color-arena-primary)_33%,transparent)] transition-all hover:bg-arena-primary/90 active:scale-[0.97] md:hidden"
-        type="button"
-        aria-label={t("actions.add")}
-      >
-        <Plus size={22} strokeWidth={2.5} />
-      </button>
+      {canManageRoster && (
+        <button
+          onClick={() => setShowAdd(true)}
+          className="press fixed bottom-[90px] right-6 z-[100] flex size-[52px] items-center justify-center rounded-full bg-arena-primary text-arena-bg shadow-[0_4px_20px_color-mix(in_srgb,var(--color-arena-primary)_33%,transparent)] transition-all hover:bg-arena-primary/90 active:scale-[0.97] md:hidden"
+          type="button"
+          aria-label={t("actions.add")}
+        >
+          <Plus size={22} strokeWidth={2.5} />
+        </button>
+      )}
     </>
   );
 }

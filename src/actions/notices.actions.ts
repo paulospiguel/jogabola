@@ -6,7 +6,7 @@ import { db } from "@/db/client";
 import { matchSessions, user as userTable } from "@/db/schema";
 import { eventNotices } from "@/db/schema/notices";
 import { getAuthUser } from "@/lib/action-helpers";
-import { canManageTeam } from "@/lib/team-access";
+import { can } from "@/lib/team-authz";
 
 // eslint-disable-next-line server-auth-actions
 // eslint-disable-next-line react-doctor/server-auth-actions
@@ -52,7 +52,7 @@ export async function createEventNotice(input: {
     if (!event)
       return { success: false as const, error: "Evento não encontrado" };
 
-    const canManage = await canManageTeam(user.id, event.teamId);
+    const canManage = await can(user.id, event.teamId, "communication.manage");
     if (!canManage) return { success: false as const, error: "Sem permissão" };
 
     const [notice] = await db
@@ -94,7 +94,7 @@ export async function deleteEventNotice(noticeId: number) {
         columns: { teamId: true },
       });
       const canManage = event
-        ? await canManageTeam(user.id, event.teamId)
+        ? await can(user.id, event.teamId, "communication.manage")
         : false;
       if (!canManage)
         return { success: false as const, error: "Sem permissão" };

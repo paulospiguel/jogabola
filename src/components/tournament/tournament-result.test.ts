@@ -25,7 +25,7 @@ describe("buildTournamentMetadata", () => {
     expect(buildTournamentMetadata(fixture)).toEqual({
       title: "Leões venceu o Torneio · JogaBola",
       description:
-        "Artilheiro: Rui (3 golos) · 3 equipas · Torneio registado com o Cronómetro JogaBola — sem login.",
+        "Melhor marcador: Rui (3 golos) · 3 equipas · Torneio registado com o Cronómetro JogaBola — sem login.",
     });
   });
 
