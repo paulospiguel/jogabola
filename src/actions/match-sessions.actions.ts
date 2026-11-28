@@ -3,6 +3,7 @@
 import { format } from "date-fns";
 import { and, desc, eq, gte, inArray, lt } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
+import { getTranslations } from "next-intl/server";
 import { PAYMENT_STATUS, type PaymentStatus } from "@/constants/payments";
 import { db } from "@/db/client";
 import { queryEventByIdOrSlug, queryEvents } from "@/db/queries/events";
@@ -22,6 +23,7 @@ import {
   type RecurrenceFrequency,
   validateEventRange,
 } from "@/lib/event-recurrence";
+import { payoutWriteAllowed } from "@/lib/payout-guard";
 import { can, canViewTeam, getAccessibleTeamIds } from "@/lib/team-authz";
 import { slugify } from "@/lib/utils";
 import type { EventStatus } from "@/types/events";
@@ -88,12 +90,33 @@ export async function createEvent(input: {
   }
 
   if (!teamId) {
-    const slug = `team-${authUser.id.slice(0, 8)}`;
+    // A user can own an auto-created team, transfer it away and need a new
+    // one later: the random suffix keeps the slug unique.
+    const suffix = crypto.randomUUID().replace(/-/g, "").slice(0, 6);
+    const slug = `team-${authUser.id.slice(0, 8).toLowerCase()}-${suffix}`;
+    const t = await getTranslations("arenaCreateTeam");
     const [created] = await db
       .insert(teams)
-      .values({ name: "Minha Equipa", slug, ownerId: authUser.id })
+      .values({ name: t("defaultTeamName"), slug, ownerId: authUser.id })
       .returning({ id: teams.id });
     teamId = created.id;
+  }
+
+  const writesPaymentSettings =
+    !!input.priceCents &&
+    input.priceCents > 0 &&
+    input.mbwayEnabled !== undefined;
+  if (
+    writesPaymentSettings &&
+    !(await payoutWriteAllowed(authUser.id, teamId, {
+      mbwayEnabled: input.mbwayEnabled,
+      mbwayPhone: input.mbwayPhone,
+    }))
+  ) {
+    return {
+      success: false as const,
+      error: { code: "PAYOUT_RECONFIGURE_REQUIRED" },
+    };
   }
 
   function buildSlug(startsAt: Date) {
@@ -306,6 +329,23 @@ export async function updateEvent(
   );
   if (!canAccessTeam) {
     return { success: false as const, error: { code: "FORBIDDEN" } };
+  }
+
+  const writesPaymentSettings =
+    input.priceCents !== undefined &&
+    input.priceCents > 0 &&
+    input.mbwayEnabled !== undefined;
+  if (
+    writesPaymentSettings &&
+    !(await payoutWriteAllowed(authUser.id, existingEvent.teamId, {
+      mbwayEnabled: input.mbwayEnabled,
+      mbwayPhone: input.mbwayPhone,
+    }))
+  ) {
+    return {
+      success: false as const,
+      error: { code: "PAYOUT_RECONFIGURE_REQUIRED" },
+    };
   }
 
   const [event] = await db

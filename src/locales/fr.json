@@ -315,7 +315,8 @@
       "RANGE_END_BEFORE_START": "La date de fin doit être après la date de début.",
       "RANGE_TOO_LONG": "La plage ne peut pas dépasser 90 jours.",
       "VALIDATION_RECURRENCE_END_REQUIRED": "Choisissez jusqu'à quand l'événement se répète.",
-      "VALIDATION_RECURRENCE_AND_RANGE_EXCLUSIVE": "Un événement ne peut pas être à la fois récurrent et sur une plage de dates."
+      "VALIDATION_RECURRENCE_AND_RANGE_EXCLUSIVE": "Un événement ne peut pas être à la fois récurrent et sur une plage de dates.",
+      "PAYOUT_RECONFIGURE_REQUIRED": "Confirmez d'abord les coordonnées de paiement de l'équipe dans Paiements. D'ici là, MB WAY ne peut pas être activé."
     },
     "info": "Après avoir créé l'événement, vous pouvez ajouter des joueurs et gérer la convocation à partir de la page de l'événement.",
     "access": {
@@ -475,7 +476,8 @@
       "sub": "Vous pourrez changer cela plus tard dans votre profil.",
       "yes": "Oui, je veux jouer",
       "no": "Pas maintenant"
-    }
+    },
+    "defaultTeamName": "Mon équipe"
   },
   "arenaNoTeamModal": {
     "title": "Créez une équipe d'abord",
@@ -1105,6 +1107,11 @@
         "title": "Stripe — Carte",
         "description": "Paiement automatique par carte",
         "info": "L'intégration avec Stripe sera configurée via le tableau de bord de l'équipe. Contactez le support pour plus d'informations."
+      },
+      "payoutReconfigure": {
+        "title": "Confirmez les coordonnées de paiement de l'équipe",
+        "sub": "L'équipe a changé de propriétaire. Pour réactiver MB WAY ou le virement, saisissez à nouveau le numéro et le nom, ou l'IBAN et le titulaire. Stripe reste désactivé pour l'instant.",
+        "error": "Seul le propriétaire de l'équipe peut réactiver ce moyen, avec de nouvelles coordonnées (MB WAY : numéro et nom ; virement : IBAN et titulaire)."
       }
     },
     "methods": {

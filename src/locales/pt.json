@@ -315,7 +315,8 @@
       "RANGE_END_BEFORE_START": "A data de fim deve ser depois da data de início.",
       "RANGE_TOO_LONG": "O intervalo não pode ultrapassar 90 dias.",
       "VALIDATION_RECURRENCE_END_REQUIRED": "Escolhe até quando o evento se repete.",
-      "VALIDATION_RECURRENCE_AND_RANGE_EXCLUSIVE": "Um evento não pode ser recorrente e ter um intervalo de datas ao mesmo tempo."
+      "VALIDATION_RECURRENCE_AND_RANGE_EXCLUSIVE": "Um evento não pode ser recorrente e ter um intervalo de datas ao mesmo tempo.",
+      "PAYOUT_RECONFIGURE_REQUIRED": "Confirma primeiro os dados de pagamento da equipa em Pagamentos. Até lá, o MB WAY não pode ser ativado."
     },
     "info": "Após criar o evento, pode adicionar jogadores e gerir a convocatória a partir da página do evento.",
     "access": {
@@ -475,7 +476,8 @@
       "sub": "Podes mudar isto mais tarde no teu perfil.",
       "yes": "Sim, quero jogar",
       "no": "Agora não"
-    }
+    },
+    "defaultTeamName": "Minha Equipa"
   },
   "arenaNoTeamModal": {
     "title": "Cria uma equipa primeiro",
@@ -1032,6 +1034,11 @@
         "title": "Stripe — Cartão",
         "description": "Pagamento automático por cartão",
         "info": "A integração com Stripe será configurada através do painel de equipa. Contacta o suporte para mais informações."
+      },
+      "payoutReconfigure": {
+        "title": "Confirma os dados de pagamento da equipa",
+        "sub": "A equipa mudou de dono. Para voltares a ativar o MB WAY ou a transferência, introduz de novo o número e o nome, ou o IBAN e o titular. O Stripe fica desativado por agora.",
+        "error": "Só o dono da equipa pode reativar este método, com dados de pagamento novos (MB WAY: número e nome; transferência: IBAN e titular)."
       }
     },
     "methods": {

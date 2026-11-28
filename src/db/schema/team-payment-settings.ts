@@ -35,6 +35,10 @@ export const teamPaymentSettings = pgTable(
     transferIban: text("transfer_iban"),
     transferName: text("transfer_name"),
 
+    // Set when ownership changes: stored payout details stay but are masked
+    // and cannot be re-enabled until the new owner enters fresh ones.
+    payoutReconfigureRequiredAt: timestamp("payout_reconfigure_required_at"),
+
     createdAt: timestamp("created_at").defaultNow(),
     updatedAt: timestamp("updated_at").defaultNow(),
   },

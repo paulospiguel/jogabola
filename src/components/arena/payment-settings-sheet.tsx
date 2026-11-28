@@ -1,6 +1,6 @@
 "use client";
 
-import { Settings2 } from "lucide-react";
+import { AlertTriangle, Settings2 } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useState } from "react";
 import { upsertTeamPaymentSettings } from "@/actions/team-payment-settings.actions";
@@ -24,6 +24,8 @@ interface PaymentSettingsSheetProps {
     transferEnabled?: boolean;
     transferIban?: string;
     transferName?: string;
+    /** Set after an ownership transfer: details are masked until re-entered. */
+    payoutReconfigureRequired?: boolean;
   };
   onClose: () => void;
   onSaved?: () => void;
@@ -59,6 +61,9 @@ export function PaymentSettingsSheet({
   );
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
+  const [reconfigureRequired, setReconfigureRequired] = useState(
+    initial?.payoutReconfigureRequired ?? false,
+  );
 
   async function persist(
     overrides?: Partial<{
@@ -92,9 +97,15 @@ export function PaymentSettingsSheet({
     });
     setSaving(false);
     if (!res.success) {
-      setError(t("error"));
+      setError(
+        res.error.code === "PAYOUT_RECONFIGURE_REQUIRED"
+          ? t("payoutReconfigure.error")
+          : t("error"),
+      );
+      return false;
     }
-    return res.success;
+    setReconfigureRequired(res.data?.payoutReconfigureRequired ?? false);
+    return true;
   }
 
   async function handleToggle(type: PaymentMethodType, enabled: boolean) {
@@ -103,12 +114,20 @@ export function PaymentSettingsSheet({
     if (type === "cash") setCashEnabled(enabled);
     if (type === "transfer") setTransferEnabled(enabled);
 
-    await persist({
+    const ok = await persist({
       stripeEnabled: type === "stripe" ? enabled : stripeEnabled,
       mbwayEnabled: type === "mbway" ? enabled : mbwayEnabled,
       cashEnabled: type === "cash" ? enabled : cashEnabled,
       transferEnabled: type === "transfer" ? enabled : transferEnabled,
     });
+    if (!ok) {
+      // The server refused: show the toggle as it really is.
+      if (type === "stripe") setStripeEnabled(!enabled);
+      if (type === "mbway") setMbwayEnabled(!enabled);
+      if (type === "cash") setCashEnabled(!enabled);
+      if (type === "transfer") setTransferEnabled(!enabled);
+      return;
+    }
     onSaved?.();
   }
 
@@ -171,6 +190,25 @@ export function PaymentSettingsSheet({
     <>
       <BottomSheet title={t("title")} onClose={onClose}>
         <div className="flex flex-col gap-5 p-5 pb-8">
+          {reconfigureRequired && (
+            <div className="flex gap-2.5 rounded-[12px] border border-arena-warning/25 bg-arena-warning/5 px-3 py-2.5">
+              <AlertTriangle
+                aria-hidden="true"
+                className="mt-0.5 shrink-0 text-arena-warning"
+                size={15}
+                strokeWidth={2}
+              />
+              <div className="space-y-0.5">
+                <p className="text-[13px] font-semibold text-arena-text">
+                  {t("payoutReconfigure.title")}
+                </p>
+                <p className="text-[12px] leading-5 text-arena-text-sec">
+                  {t("payoutReconfigure.sub")}
+                </p>
+              </div>
+            </div>
+          )}
+
           {error && (
             <div className="rounded-[10px] bg-arena-danger/10 p-3 text-[13px] text-arena-danger">
               {error}

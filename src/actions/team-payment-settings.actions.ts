@@ -4,8 +4,12 @@ import { eq } from "drizzle-orm";
 import { z } from "zod";
 import { db } from "@/db/client";
 import { teamPaymentSettings } from "@/db/schema";
-import { withAuthAction } from "@/lib/action-helpers";
-import { can, canViewTeam } from "@/lib/team-authz";
+import { withAction, withAuthAction } from "@/lib/action-helpers";
+import {
+  decidePayoutUpdate,
+  maskPayoutSettings,
+} from "@/lib/payout-reconfigure";
+import { can, canViewTeam, isTeamOwner } from "@/lib/team-authz";
 import { upsertTeamPaymentSettingsSchema } from "@/schemas/payments.schema";
 import type { TeamPaymentConfig } from "@/types/payments";
 
@@ -22,19 +26,38 @@ export const upsertTeamPaymentSettings = withAuthAction(
     });
 
     if (existing) {
+      // After a transfer, only the new owner can re-enable online methods,
+      // and only with fresh details (ADR 0006).
+      const flagged = existing.payoutReconfigureRequiredAt != null;
+      const decision = decidePayoutUpdate({
+        flagged,
+        isOwner: flagged ? await isTeamOwner(user.id, data.teamId) : false,
+        payload: data,
+      });
+      if (!decision.allowed) {
+        return {
+          success: false,
+          error: { code: "PAYOUT_RECONFIGURE_REQUIRED" },
+        };
+      }
+
       const [updated] = await db
         .update(teamPaymentSettings)
-        .set({ ...data, updatedAt: new Date() })
+        .set({
+          ...decision.payload,
+          ...(decision.clearFlag && { payoutReconfigureRequiredAt: null }),
+          updatedAt: new Date(),
+        })
         .where(eq(teamPaymentSettings.teamId, data.teamId))
         .returning();
-      return { success: true as const, data: updated };
+      return { success: true as const, data: maskPayoutSettings(updated) };
     }
 
     const [created] = await db
       .insert(teamPaymentSettings)
       .values(data)
       .returning();
-    return { success: true as const, data: created };
+    return { success: true as const, data: maskPayoutSettings(created) };
   },
 );
 
@@ -49,11 +72,9 @@ export const getTeamPaymentSettings = withAuthAction(
     const settings = await db.query.teamPaymentSettings.findFirst({
       where: eq(teamPaymentSettings.teamId, teamId),
     });
-    return { success: true as const, data: settings ?? null };
+    return { success: true as const, data: maskPayoutSettings(settings) };
   },
 );
-
-import { withAction } from "@/lib/action-helpers";
 
 export const getPublicTeamPaymentSettings = withAction(
   z.object({ teamId: z.number() }),
@@ -61,7 +82,7 @@ export const getPublicTeamPaymentSettings = withAction(
     const settings = await db.query.teamPaymentSettings.findFirst({
       where: eq(teamPaymentSettings.teamId, teamId),
     });
-    return { success: true as const, data: settings ?? null };
+    return { success: true as const, data: maskPayoutSettings(settings) };
   },
 );
 
@@ -70,9 +91,11 @@ export const getPublicTeamPaymentSettings = withAction(
 export async function resolveTeamPaymentConfig(
   teamId: number,
 ): Promise<TeamPaymentConfig> {
-  const settings = await db.query.teamPaymentSettings.findFirst({
-    where: eq(teamPaymentSettings.teamId, teamId),
-  });
+  const settings = maskPayoutSettings(
+    await db.query.teamPaymentSettings.findFirst({
+      where: eq(teamPaymentSettings.teamId, teamId),
+    }),
+  );
 
   return {
     stripe: {

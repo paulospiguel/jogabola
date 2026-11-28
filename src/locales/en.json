@@ -315,7 +315,8 @@
       "RANGE_END_BEFORE_START": "The end date must be after the start date.",
       "RANGE_TOO_LONG": "The range can't be longer than 90 days.",
       "VALIDATION_RECURRENCE_END_REQUIRED": "Choose when the event stops repeating.",
-      "VALIDATION_RECURRENCE_AND_RANGE_EXCLUSIVE": "An event can't be both recurring and a date range at the same time."
+      "VALIDATION_RECURRENCE_AND_RANGE_EXCLUSIVE": "An event can't be both recurring and a date range at the same time.",
+      "PAYOUT_RECONFIGURE_REQUIRED": "First confirm the team's payment details in Payments. Until then, MB WAY can't be turned on."
     },
     "info": "After creating the event, you can add players and manage the squad call from the event page.",
     "access": {
@@ -475,7 +476,8 @@
       "sub": "You can change this later in your profile.",
       "yes": "Yes, I want to play",
       "no": "Not now"
-    }
+    },
+    "defaultTeamName": "My Team"
   },
   "arenaNoTeamModal": {
     "title": "Create a team first",
@@ -1047,6 +1049,11 @@
         "title": "Stripe — Card",
         "description": "Automatic card payment",
         "info": "Stripe integration will be configured through the team dashboard. Contact support for more info."
+      },
+      "payoutReconfigure": {
+        "title": "Confirm the team's payment details",
+        "sub": "The team has a new owner. To turn MB WAY or bank transfer back on, enter the number and name, or the IBAN and account holder, again. Stripe stays off for now.",
+        "error": "Only the team owner can turn this method back on, with new payment details (MB WAY: number and name; bank transfer: IBAN and account holder)."
       }
     },
     "methods": {

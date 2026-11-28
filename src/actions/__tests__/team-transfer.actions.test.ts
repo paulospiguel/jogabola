@@ -695,6 +695,7 @@ describe("acceptOwnershipTransfer", () => {
       mbwayEnabled: false,
       transferEnabled: false,
     });
+    expect(payments.payoutReconfigureRequiredAt).toBeInstanceOf(Date);
     expect(payments).not.toHaveProperty("cashEnabled");
     expect(payments).not.toHaveProperty("mbwayPhone");
     expect(payments).not.toHaveProperty("transferIban");

@@ -223,6 +223,8 @@ export default function PaymentsPage() {
                     settingsState.settings.transferIban ?? undefined,
                   transferName:
                     settingsState.settings.transferName ?? undefined,
+                  payoutReconfigureRequired:
+                    settingsState.settings.payoutReconfigureRequired,
                 }
               : undefined
           }

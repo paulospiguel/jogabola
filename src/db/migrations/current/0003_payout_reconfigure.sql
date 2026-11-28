@@ -1,0 +1,1 @@
+ALTER TABLE "team_payment_settings" ADD COLUMN "payout_reconfigure_required_at" timestamp;

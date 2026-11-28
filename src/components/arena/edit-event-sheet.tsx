@@ -171,7 +171,11 @@ export function EditEventSheet({ event, onClose }: EditEventSheetProps) {
       router.refresh();
       onClose();
     } else {
-      setError(tEvents("errorUpdating"));
+      setError(
+        res.error.code === "PAYOUT_RECONFIGURE_REQUIRED"
+          ? t("errors.PAYOUT_RECONFIGURE_REQUIRED")
+          : tEvents("errorUpdating"),
+      );
     }
   };
 

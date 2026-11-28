@@ -262,6 +262,14 @@ try {
       column => column.column_name === "recurrence_group_id",
     ),
   );
+  assert.ok(
+    canonical.columns.some(
+      column =>
+        column.table_name === "team_payment_settings" &&
+        column.column_name === "payout_reconfigure_required_at",
+    ),
+    "team_payment_settings.payout_reconfigure_required_at",
+  );
   for (const table of [
     "team_staff",
     "team_staff_events",

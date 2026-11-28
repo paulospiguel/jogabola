@@ -321,14 +321,15 @@ async function acceptTransfer(
           );
       }
 
-      // Online payment methods stay configured but inactive until the new
-      // owner reviews them. Cash is untouched.
+      // Online payment methods stay stored but inactive and masked until
+      // the new owner enters fresh details (ADR 0006). Cash is untouched.
       await tx
         .update(teamPaymentSettings)
         .set({
           stripeEnabled: false,
           mbwayEnabled: false,
           transferEnabled: false,
+          payoutReconfigureRequiredAt: now,
           updatedAt: now,
         })
         .where(eq(teamPaymentSettings.teamId, row.teamId));

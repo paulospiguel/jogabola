@@ -7,9 +7,20 @@ const mocks = vi.hoisted(() => ({
   getSession: vi.fn(),
   insert: vi.fn(),
   values: vi.fn(),
+  isTeamOwner: vi.fn(),
+  settingsFindFirst: vi.fn(),
 }));
 
-vi.mock("@/db/client", () => ({ db: { insert: mocks.insert } }));
+vi.mock("@/db/client", () => ({
+  db: {
+    insert: mocks.insert,
+    query: { teamPaymentSettings: { findFirst: mocks.settingsFindFirst } },
+  },
+}));
+vi.mock("next-intl/server", () => ({
+  getTranslations: async (namespace: string) => (key: string) =>
+    `${namespace}.${key}`,
+}));
 vi.mock("@/lib/auth", () => ({
   auth: { api: { getSession: mocks.getSession } },
 }));
@@ -18,6 +29,7 @@ vi.mock("next/cache", () => ({ revalidatePath: vi.fn() }));
 vi.mock("@/lib/team-authz", () => ({
   can: mocks.can,
   canViewTeam: vi.fn(),
+  isTeamOwner: mocks.isTeamOwner,
   getAccessibleTeamIds: mocks.getAccessibleTeamIds,
 }));
 vi.mock("@/lib/analytics-server", () => ({ trackServerEvent: vi.fn() }));
@@ -102,11 +114,61 @@ describe("createEvent team fallback", () => {
     expect(result.success).toBe(true);
     expect(mocks.values).toHaveBeenCalledWith(
       teams,
-      expect.objectContaining({ name: "Minha Equipa", ownerId: "user-1" }),
+      expect.objectContaining({
+        name: "arenaCreateTeam.defaultTeamName",
+        ownerId: "user-1",
+      }),
     );
     expect(mocks.values).toHaveBeenCalledWith(
       matchSessions,
       expect.objectContaining({ teamId: 99 }),
+    );
+  });
+});
+
+describe("createEvent auto-created team slug", () => {
+  it("adds a random suffix so a reused user prefix never collides", async () => {
+    mocks.getAccessibleTeamIds.mockResolvedValue([]);
+    mocks.can.mockResolvedValue(false);
+
+    await createEvent(input);
+    await createEvent(input);
+
+    const slugs = mocks.values.mock.calls
+      .filter(([table]) => table === teams)
+      .map(([, v]) => (v as { slug: string }).slug);
+    expect(slugs).toHaveLength(2);
+    for (const slug of slugs) expect(slug).toMatch(/^team-user-1-[a-z0-9]{6}$/);
+    expect(slugs[0]).not.toBe(slugs[1]);
+  });
+});
+
+describe("createEvent payout reconfiguration", () => {
+  const flagged = {
+    teamId: 5,
+    payoutReconfigureRequiredAt: new Date("2026-11-27T10:00:00Z"),
+  };
+
+  it("refuses enabling MB WAY from the event form while flagged", async () => {
+    mocks.can.mockResolvedValue(true);
+    mocks.isTeamOwner.mockResolvedValue(false);
+    mocks.settingsFindFirst.mockResolvedValue(flagged);
+
+    const result = await createEvent({
+      ...input,
+      teamId: 5,
+      priceCents: 500,
+      mbwayEnabled: true,
+      mbwayPhone: "912345678",
+    });
+
+    expect(result).toEqual({
+      success: false,
+      error: { code: "PAYOUT_RECONFIGURE_REQUIRED" },
+    });
+    expect(mocks.values).not.toHaveBeenCalledWith(
+      matchSessions,
+      expect.anything(),
     );
   });
 });
