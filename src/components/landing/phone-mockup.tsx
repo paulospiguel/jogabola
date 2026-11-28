@@ -1,17 +1,25 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import type { CSSProperties, ReactNode } from "react";
 
-export type PhoneScreen = "team" | "journey" | "create" | "convoca" | "paid";
+export type PhoneScreen =
+  | "team"
+  | "journey"
+  | "create"
+  | "convoca"
+  | "paid"
+  | "secretary"
+  | "timer";
 
-type PhoneMockupProps = {
+interface PhoneMockupProps {
   scale?: number;
   screen?: PhoneScreen;
   accent?: string;
   className?: string;
-};
+}
 
-const names = [
+const NAMES = [
   "Diogo F",
   "André C",
   "Tiago M",
@@ -35,6 +43,7 @@ export function PhoneMockup({
   accent = "#7CFF4F",
   className,
 }: PhoneMockupProps) {
+  const t = useTranslations("homePage.phoneMockup");
   const px = (value: number) => value * scale;
   const W = px(320);
   const H = px(660);
@@ -45,7 +54,7 @@ export function PhoneMockup({
     borderRadius: px(44),
     background: "#0B0F14",
     border: `${Math.max(1, px(1.5))}px solid #1B2430`,
-    boxShadow: `0 ${px(30)}px ${px(80)}px rgba(0,0,0,.55), inset 0 0 0 ${px(5)}px #06090D`,
+    boxShadow: `0 ${px(30)}px ${px(80)}px rgba(0,0,0,0.55), inset 0 0 0 ${px(5)}px #06090D`,
     padding: px(5),
     overflow: "hidden",
     position: "relative",
@@ -80,23 +89,40 @@ export function PhoneMockup({
   const Card = ({
     children,
     glow,
+    tone = "default",
   }: {
     children: ReactNode;
     glow?: boolean;
-  }) => (
-    <div
-      style={{
-        background: glow
-          ? `linear-gradient(135deg, ${accent}22, ${accent}05)`
-          : "#151C26",
-        border: `1px solid ${glow ? `${accent}44` : "#263244"}`,
-        borderRadius: px(14),
-        padding: px(12),
-      }}
-    >
-      {children}
-    </div>
-  );
+    tone?: "default" | "info" | "warning";
+  }) => {
+    const borderColor = glow
+      ? `${accent}44`
+      : tone === "info"
+        ? "rgba(56,189,248,0.38)"
+        : tone === "warning"
+          ? "rgba(245,158,11,0.38)"
+          : "#263244";
+    const bg = glow
+      ? `linear-gradient(135deg, ${accent}22, ${accent}05)`
+      : tone === "info"
+        ? "rgba(56,189,248,0.1)"
+        : tone === "warning"
+          ? "rgba(245,158,11,0.1)"
+          : "#151C26";
+
+    return (
+      <div
+        style={{
+          background: bg,
+          border: `1px solid ${borderColor}`,
+          borderRadius: px(14),
+          padding: px(12),
+        }}
+      >
+        {children}
+      </div>
+    );
+  };
 
   const StatusBar = () => (
     <div
@@ -194,7 +220,7 @@ export function PhoneMockup({
               textTransform: "uppercase",
             }}
           >
-            Equipa
+            {t("team.eyebrow")}
           </div>
           <div
             style={{
@@ -227,7 +253,7 @@ export function PhoneMockup({
             textTransform: "uppercase",
           }}
         >
-          Próximo jogo
+          {t("team.nextMatch")}
         </div>
         <div
           style={{
@@ -237,10 +263,10 @@ export function PhoneMockup({
             marginTop: px(6),
           }}
         >
-          Sábado · 21h
+          {t("team.matchTime")}
         </div>
         <div style={{ fontSize: px(11), color: "#A7B0BE", marginTop: px(2) }}>
-          Pavilhão Municipal · Campo 2
+          {t("team.venue")}
         </div>
         <div
           style={{
@@ -251,14 +277,14 @@ export function PhoneMockup({
           }}
         >
           <div style={{ display: "flex" }}>
-            {names.slice(0, 4).map((name, index) => (
+            {NAMES.slice(0, 4).map((name, index) => (
               <div key={name} style={{ marginLeft: index === 0 ? 0 : px(-7) }}>
                 <Avatar name={name} size={22} />
               </div>
             ))}
           </div>
           <div style={{ fontSize: px(11), fontWeight: 700 }}>
-            14 confirmados
+            {t("team.confirmedCount")}
           </div>
         </div>
       </Card>
@@ -271,9 +297,9 @@ export function PhoneMockup({
         }}
       >
         {[
-          ["14", "Confirmados", accent],
-          ["3", "Pendentes", "#F59E0B"],
-          ["11", "Pagos", "#F5F7FA"],
+          ["14", t("team.stats.confirmed"), accent],
+          ["3", t("team.stats.pending"), "#F59E0B"],
+          ["11", t("team.stats.paid"), "#F5F7FA"],
         ].map(([value, label, color]) => (
           <Card key={label}>
             <div
@@ -310,9 +336,9 @@ export function PhoneMockup({
             fontWeight: 800,
           }}
         >
-          <span>Plantel</span>
+          <span>{t("team.roster")}</span>
           <span style={{ color: "#6B7280", fontSize: px(10) }}>
-            22 jogadores
+            {t("team.playersCount")}
           </span>
         </div>
         {["Diogo Ferreira", "André Costa", "Ricardo Pinto", "Bruno Alves"].map(
@@ -331,7 +357,7 @@ export function PhoneMockup({
               <div style={{ flex: 1 }}>
                 <div style={{ fontSize: px(12), fontWeight: 700 }}>{name}</div>
                 <div style={{ fontSize: px(10), color: "#6B7280" }}>
-                  Jogador
+                  {t("team.athlete")}
                 </div>
               </div>
               <span
@@ -341,181 +367,12 @@ export function PhoneMockup({
                   fontWeight: 900,
                 }}
               >
-                {index === 2 ? "PEND" : "OK"}
+                {index === 2 ? t("team.pendingShort") : t("team.okShort")}
               </span>
             </div>
           ),
         )}
       </div>
-    </div>
-  );
-
-  const JourneyScreen = () => (
-    <div
-      style={{
-        padding: `0 ${px(18)}px`,
-        display: "flex",
-        flexDirection: "column",
-        gap: px(16),
-      }}
-    >
-      <div style={{ marginTop: px(16) }}>
-        <div
-          style={{
-            fontSize: px(10),
-            color: "#6B7280",
-            fontWeight: 800,
-            letterSpacing: 0.6,
-            textTransform: "uppercase",
-          }}
-        >
-          Bem-vindo ao
-        </div>
-        <div
-          style={{
-            fontFamily: "Sora, sans-serif",
-            fontSize: px(22),
-            fontWeight: 800,
-          }}
-        >
-          jogabola
-        </div>
-      </div>
-      <div style={{ fontSize: px(13), color: "#A7B0BE" }}>
-        Como vais usar a app?
-      </div>
-      {[
-        ["Sou Capitão", "Gerir equipa e jogos", true],
-        ["Sou Atleta", "Confirmar e jogar", false],
-      ].map(([title, text, selected]) => (
-        <div
-          key={String(title)}
-          style={{
-            background: selected
-              ? `linear-gradient(135deg, ${accent}1F, ${accent}05)`
-              : "#151C26",
-            border: selected ? `1.5px solid ${accent}` : "1px solid #263244",
-            borderRadius: px(16),
-            padding: px(14),
-            display: "flex",
-            gap: px(12),
-            alignItems: "center",
-          }}
-        >
-          <div
-            style={{
-              width: px(44),
-              height: px(44),
-              borderRadius: px(12),
-              background: selected ? accent : "#1B2430",
-            }}
-          />
-          <div>
-            <div style={{ fontSize: px(13), fontWeight: 800 }}>{title}</div>
-            <div
-              style={{ fontSize: px(10), color: "#A7B0BE", marginTop: px(2) }}
-            >
-              {text}
-            </div>
-          </div>
-        </div>
-      ))}
-      <div style={{ flex: 1 }} />
-      <button
-        type="button"
-        style={{
-          background: accent,
-          color: "#0B0F14",
-          border: "none",
-          padding: `${px(13)}px 0`,
-          borderRadius: px(12),
-          fontSize: px(13),
-          fontWeight: 900,
-          marginBottom: px(20),
-        }}
-      >
-        Continuar
-      </button>
-    </div>
-  );
-
-  const CreateScreen = () => (
-    <div
-      style={{
-        padding: `0 ${px(18)}px`,
-        display: "flex",
-        flexDirection: "column",
-        gap: px(12),
-      }}
-    >
-      <div style={{ marginTop: px(6), marginBottom: px(4) }}>
-        <div
-          style={{
-            fontSize: px(10),
-            color: "#6B7280",
-            fontWeight: 800,
-            letterSpacing: 0.6,
-            textTransform: "uppercase",
-          }}
-        >
-          Novo evento
-        </div>
-        <div
-          style={{
-            fontFamily: "Sora, sans-serif",
-            fontSize: px(18),
-            fontWeight: 800,
-          }}
-        >
-          Marca o jogo
-        </div>
-      </div>
-      {[
-        ["Data", "Sábado · 21:00"],
-        ["Local", "Pavilhão Municipal · Campo 2"],
-        ["Valor por jogador", "5,00 €"],
-        ["Vagas", "14"],
-      ].map(([label, value], index) => (
-        <Card key={label} glow={index === 0}>
-          <div
-            style={{
-              fontSize: px(9),
-              color: "#6B7280",
-              fontWeight: 800,
-              letterSpacing: 0.6,
-              textTransform: "uppercase",
-            }}
-          >
-            {label}
-          </div>
-          <div
-            style={{
-              fontSize: px(13),
-              fontWeight: 800,
-              marginTop: px(4),
-              color: index === 3 ? accent : "#F5F7FA",
-            }}
-          >
-            {value}
-          </div>
-        </Card>
-      ))}
-      <div style={{ flex: 1 }} />
-      <button
-        type="button"
-        style={{
-          background: accent,
-          color: "#0B0F14",
-          border: "none",
-          padding: `${px(13)}px 0`,
-          borderRadius: px(12),
-          fontSize: px(13),
-          fontWeight: 900,
-          marginBottom: px(20),
-        }}
-      >
-        Convocar plantel
-      </button>
     </div>
   );
 
@@ -538,7 +395,7 @@ export function PhoneMockup({
             textTransform: "uppercase",
           }}
         >
-          Convocatória
+          {t("convoca.eyebrow")}
         </div>
         <div
           style={{
@@ -547,7 +404,7 @@ export function PhoneMockup({
             fontWeight: 800,
           }}
         >
-          Sábado · 21h
+          {t("team.matchTime")}
         </div>
       </div>
       <Card glow>
@@ -558,7 +415,9 @@ export function PhoneMockup({
             alignItems: "baseline",
           }}
         >
-          <span style={{ fontSize: px(11), fontWeight: 800 }}>Confirmados</span>
+          <span style={{ fontSize: px(11), fontWeight: 800 }}>
+            {t("convoca.confirmed")}
+          </span>
           <span
             style={{
               fontFamily: "Sora, sans-serif",
@@ -573,7 +432,7 @@ export function PhoneMockup({
         <div
           style={{
             height: px(5),
-            background: "rgba(11,15,20,.5)",
+            background: "rgba(11,15,20,0.5)",
             borderRadius: 99,
             overflow: "hidden",
             marginTop: px(8),
@@ -593,10 +452,10 @@ export function PhoneMockup({
             marginBottom: px(10),
           }}
         >
-          Plantel · 14 confirmados
+          {t("convoca.squadLabel")}
         </div>
         <div style={{ display: "flex", flexWrap: "wrap", gap: px(6) }}>
-          {names.slice(0, 7).map(name => (
+          {NAMES.slice(0, 7).map(name => (
             <Avatar key={name} name={name} />
           ))}
           <div
@@ -628,13 +487,9 @@ export function PhoneMockup({
             marginBottom: px(8),
           }}
         >
-          Atividade · agora
+          {t("convoca.activityTitle")}
         </div>
-        {[
-          "Bruno A confirmou presença",
-          "Tiago M entrou na lista",
-          "Diogo F confirmou presença",
-        ].map(text => (
+        {(t.raw("convoca.activityItems") as string[]).map(text => (
           <div
             key={text}
             style={{
@@ -677,8 +532,8 @@ export function PhoneMockup({
       <div style={{ textAlign: "center", position: "relative" }}>
         <div
           style={{
-            width: px(80),
-            height: px(80),
+            width: px(76),
+            height: px(76),
             borderRadius: "50%",
             background: accent,
             margin: "0 auto",
@@ -687,7 +542,7 @@ export function PhoneMockup({
             alignItems: "center",
             justifyContent: "center",
             color: "#0B0F14",
-            fontSize: px(44),
+            fontSize: px(40),
             fontWeight: 900,
           }}
         >
@@ -696,34 +551,32 @@ export function PhoneMockup({
         <div
           style={{
             fontFamily: "Sora, sans-serif",
-            fontSize: px(22),
+            fontSize: px(20),
             fontWeight: 800,
-            marginTop: px(20),
+            marginTop: px(18),
           }}
         >
-          Pagamento concluído
+          {t("paid.title")}
         </div>
         <div
           style={{
-            fontSize: px(12),
+            fontSize: px(11),
             color: "#A7B0BE",
             marginTop: px(6),
             lineHeight: 1.4,
           }}
         >
-          5,00 € · Jogo de sábado
-          <br />
-          Comprovativo enviado ao capitão.
+          {t("paid.subtitle")}
         </div>
       </div>
-      <div style={{ marginTop: px(24) }}>
+      <div style={{ marginTop: px(22) }}>
         <Card>
           {[
-            ["De", "Bruno Alves"],
-            ["Para", "Os Lobos FC"],
-            ["Método", "MB Way"],
-            ["Total", "5,00 €"],
-          ].map(([label, value]) => (
+            [t("paid.from"), "Bruno Alves"],
+            [t("paid.to"), "Os Lobos FC"],
+            [t("paid.method"), "MB Way"],
+            [t("paid.total"), "5,00 €"],
+          ].map(([label, value], idx) => (
             <div
               key={label}
               style={{
@@ -736,7 +589,7 @@ export function PhoneMockup({
               <span style={{ color: "#6B7280" }}>{label}</span>
               <span
                 style={{
-                  color: label === "Total" ? accent : "#F5F7FA",
+                  color: idx === 3 ? accent : "#F5F7FA",
                   fontWeight: 800,
                 }}
               >
@@ -750,12 +603,263 @@ export function PhoneMockup({
     </div>
   );
 
+  const SecretaryScreen = () => (
+    <div
+      style={{
+        padding: `0 ${px(18)}px`,
+        display: "flex",
+        flexDirection: "column",
+        gap: px(11),
+      }}
+    >
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          marginTop: px(4),
+        }}
+      >
+        <div>
+          <div
+            style={{
+              fontSize: px(9),
+              color: "#38BDF8",
+              fontWeight: 800,
+              letterSpacing: 0.7,
+              textTransform: "uppercase",
+            }}
+          >
+            {t("secretary.eyebrow")}
+          </div>
+          <div
+            style={{
+              fontFamily: "Sora, sans-serif",
+              fontSize: px(18),
+              fontWeight: 800,
+            }}
+          >
+            {t("secretary.title")}
+          </div>
+        </div>
+        <span
+          style={{
+            fontSize: px(8),
+            fontWeight: 800,
+            color: accent,
+            background: `${accent}1A`,
+            border: `1px solid ${accent}44`,
+            borderRadius: px(6),
+            padding: `${px(3)}px ${px(7)}px`,
+            textTransform: "uppercase",
+          }}
+        >
+          {t("secretary.scopeBadge")}
+        </span>
+      </div>
+
+      <Card tone="info">
+        <div
+          style={{
+            fontSize: px(9),
+            color: "#38BDF8",
+            fontWeight: 800,
+            textTransform: "uppercase",
+          }}
+        >
+          {t("secretary.draftLabel")}
+        </div>
+        <div
+          style={{
+            fontSize: px(11),
+            color: "#F5F7FA",
+            marginTop: px(5),
+            lineHeight: 1.45,
+          }}
+        >
+          {t("secretary.draftText")}
+        </div>
+      </Card>
+
+      <Card>
+        <div
+          style={{
+            fontSize: px(9),
+            color: "#22C55E",
+            fontWeight: 800,
+            textTransform: "uppercase",
+          }}
+        >
+          {t("secretary.clearReplyLabel")}
+        </div>
+        <div style={{ fontSize: px(11), color: "#F5F7FA", marginTop: px(4) }}>
+          {t("secretary.clearReplyText")}
+        </div>
+      </Card>
+
+      <Card tone="warning">
+        <div
+          style={{
+            fontSize: px(9),
+            color: "#F59E0B",
+            fontWeight: 800,
+            textTransform: "uppercase",
+          }}
+        >
+          {t("secretary.ambiguousLabel")}
+        </div>
+        <div style={{ fontSize: px(11), color: "#F5F7FA", marginTop: px(4) }}>
+          {t("secretary.ambiguousText")}
+        </div>
+      </Card>
+
+      <div style={{ marginTop: px(6) }}>
+        <div
+          style={{
+            background: accent,
+            color: "#0B0F14",
+            borderRadius: px(11),
+            padding: `${px(11)}px ${px(12)}px`,
+            textAlign: "center",
+            fontSize: px(11),
+            fontWeight: 900,
+          }}
+        >
+          {t("secretary.approveCta")}
+        </div>
+      </div>
+    </div>
+  );
+
+  const TimerScreen = () => (
+    <div
+      style={{
+        padding: `0 ${px(18)}px`,
+        display: "flex",
+        flexDirection: "column",
+        gap: px(12),
+      }}
+    >
+      <div style={{ marginTop: px(4) }}>
+        <div
+          style={{
+            fontSize: px(9),
+            color: accent,
+            fontWeight: 800,
+            letterSpacing: 0.8,
+            textTransform: "uppercase",
+          }}
+        >
+          {t("timer.eyebrow")}
+        </div>
+        <div
+          style={{
+            fontFamily: "Sora, sans-serif",
+            fontSize: px(18),
+            fontWeight: 800,
+          }}
+        >
+          {t("timer.title")}
+        </div>
+      </div>
+      <Card glow>
+        <div style={{ textAlign: "center", padding: `${px(8)}px 0` }}>
+          <div
+            style={{
+              fontFamily: "Sora, sans-serif",
+              fontSize: px(38),
+              fontWeight: 800,
+              letterSpacing: -1,
+              color: accent,
+            }}
+          >
+            12:48
+          </div>
+          <div
+            style={{
+              marginTop: px(10),
+              display: "grid",
+              gridTemplateColumns: "1fr auto 1fr",
+              alignItems: "center",
+              gap: px(8),
+            }}
+          >
+            <div>
+              <div style={{ fontSize: px(10), color: "#A7B0BE" }}>
+                {t("timer.teamA")}
+              </div>
+              <div
+                style={{
+                  fontFamily: "Sora, sans-serif",
+                  fontSize: px(24),
+                  fontWeight: 800,
+                }}
+              >
+                3
+              </div>
+            </div>
+            <div
+              style={{ fontSize: px(11), color: "#6B7280", fontWeight: 800 }}
+            >
+              VS
+            </div>
+            <div>
+              <div style={{ fontSize: px(10), color: "#A7B0BE" }}>
+                {t("timer.teamB")}
+              </div>
+              <div
+                style={{
+                  fontFamily: "Sora, sans-serif",
+                  fontSize: px(24),
+                  fontWeight: 800,
+                }}
+              >
+                2
+              </div>
+            </div>
+          </div>
+        </div>
+      </Card>
+      <Card>
+        <div
+          style={{
+            fontSize: px(9),
+            color: "#6B7280",
+            fontWeight: 800,
+            textTransform: "uppercase",
+            marginBottom: px(6),
+          }}
+        >
+          {t("timer.timelineLabel")}
+        </div>
+        {(t.raw("timer.events") as string[]).map(item => (
+          <div
+            key={item}
+            style={{
+              fontSize: px(10),
+              color: "#A7B0BE",
+              padding: `${px(5)}px 0`,
+              borderBottom: "1px solid #1B2430",
+            }}
+          >
+            {item}
+          </div>
+        ))}
+      </Card>
+    </div>
+  );
+
+  const JourneyScreen = () => <TeamScreen />;
+  const CreateScreen = () => <ConvocaScreen />;
+
   const screens: Record<PhoneScreen, ReactNode> = {
     team: <TeamScreen />,
     journey: <JourneyScreen />,
     create: <CreateScreen />,
     convoca: <ConvocaScreen />,
     paid: <PaidScreen />,
+    secretary: <SecretaryScreen />,
+    timer: <TimerScreen />,
   };
 
   return (

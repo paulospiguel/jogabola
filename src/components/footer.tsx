@@ -31,7 +31,7 @@ export default function Footer({ className }: FooterProps) {
     {
       title: t("columns.product"),
       links: [
-        { label: t("links.features"), href: "/#funcionalidades" },
+        { label: t("links.features"), href: "/#produto" },
         { label: t("links.plans"), href: "/pricing" },
         { label: t("links.roadmap"), href: "/roadmap" },
         { label: t("links.timer"), href: "/timer" },
@@ -40,7 +40,7 @@ export default function Footer({ className }: FooterProps) {
     {
       title: t("columns.institutional"),
       links: [
-        { label: t("links.about"), href: "/#sobre" },
+        { label: t("links.about"), href: "/#impacto" },
         { label: t("links.contact"), href: "/contact" },
       ],
     },

@@ -67,8 +67,12 @@ const FILTERS: { key: SquadFilterKey; labelKey: string }[] = [
 ];
 
 function emailLimitFor(planTier: string) {
-  if (planTier === "elite") return Number.POSITIVE_INFINITY;
-  if (planTier === "pro") return 10;
+  if (planTier === "champion" || planTier === "elite") {
+    return Number.POSITIVE_INFINITY;
+  }
+  if (planTier === "pro") return 100;
+  if (planTier === "amateur") return 25;
+  if (planTier === "basic") return 10;
   return 3;
 }
 

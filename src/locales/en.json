@@ -420,11 +420,21 @@
       }
     },
     "typeOptions": {
-      "game": { "alt": "Match icon" },
-      "training": { "alt": "Training icon" },
-      "friendly": { "alt": "Friendly match icon" },
-      "meeting": { "alt": "Meeting icon" },
-      "other": { "alt": "Other event type icon" }
+      "game": {
+        "alt": "Match icon"
+      },
+      "training": {
+        "alt": "Training icon"
+      },
+      "friendly": {
+        "alt": "Friendly match icon"
+      },
+      "meeting": {
+        "alt": "Meeting icon"
+      },
+      "other": {
+        "alt": "Other event type icon"
+      }
     },
     "final": {
       "stepsInfo": "Players receive a notification and can confirm/decline directly.",
@@ -1748,13 +1758,13 @@
       "title": "Complete Features"
     },
     "hero": {
-      "badge": "BETA · Early access",
+      "badge": "AI CLUB OS · AMATEUR TEAMS",
       "titlePart1": "Your weekly game,",
       "titlePart2": "organized.",
       "titleHighlight": "No WhatsApp groups.",
       "titlePart3": "No confusion.",
       "titlePart4": "Your arena.",
-      "description": "No more WhatsApp chaos. Attendance, payments, and receipts in one place, for captains who take the weekly game seriously.",
+      "description": "First-division operational technology built for solo organizers, captains, and budget-conscious amateur clubs. Squad call-ups, pitch splits, club history, and an AI Secretary under your control — start free today.",
       "joinWaitlist": "Join the waiting list",
       "signIn": "Sign In",
       "goToArena": "Go to Arena",
@@ -1763,13 +1773,74 @@
       "headline": {
         "play": "Play",
         "more": "more.",
-        "organize": "Organize less."
+        "organize": "Organize less.",
+        "line1": "Pro-grade club",
+        "stroke": "ops.",
+        "accent": "For real teams."
       },
-      "secondaryCta": "Watch demo · 0:42",
+      "secondaryCta": "Watch demo",
       "tickerStrong": "+3 captains",
       "ticker": "joined the list in the last 24h",
       "badgeConfirmed": "14 confirmed",
-      "badgePaid": "11/14 players"
+      "badgePaid": "11/14 players",
+      "primaryCta": "Start for free",
+      "plansAnchor": "View plans →",
+      "proofStrip": [
+        "€0 to get started",
+        "< 2 min per call-up",
+        "Human-in-the-loop AI",
+        "Mobile & Desktop"
+      ],
+      "commandCard": {
+        "eyebrow": "Operations Center",
+        "clubName": "Os Lobos FC · Senior",
+        "liveTag": "Live",
+        "tabsAriaLabel": "Explore platform workspaces",
+        "tabs": {
+          "convocation": "Call-up",
+          "racha": "Split",
+          "secretary": "AI Secretary"
+        },
+        "convocation": {
+          "matchTitle": "Saturday · 21:00 · Pitch 2",
+          "matchMeta": "Municipal Sports Hall · Automatic waitlist active",
+          "statConfirmed": "Confirmed",
+          "statWaitlist": "Waitlist",
+          "statPending": "Pending",
+          "footerNote": "Squad member priority enforced automatically."
+        },
+        "racha": {
+          "collectedLabel": "Validated match total",
+          "rows": [
+            {
+              "name": "Diogo Ferreira",
+              "amount": "€5.00",
+              "status": "Paid",
+              "paid": true
+            },
+            {
+              "name": "Bruno Alves",
+              "amount": "€5.00",
+              "status": "Receipt OK",
+              "paid": true
+            },
+            {
+              "name": "Ricardo Pinto",
+              "amount": "€5.00",
+              "status": "Pending",
+              "paid": false
+            }
+          ]
+        },
+        "secretary": {
+          "agentLabel": "Virtual Staff · Secretary",
+          "scopeLabel": "Scope: Os Lobos FC",
+          "summary": "12 athletes confirmed availability for Saturday. 2 have not replied yet.",
+          "ambiguousTag": "Needs human confirmation",
+          "ambiguousDetail": "Tiago M replied «might arrive late» — attendance kept pending until clarified.",
+          "humanGate": "Draft ready · Review before sending to squad"
+        }
+      }
     },
     "momentumStrip": {
       "item1": "Game scheduled",
@@ -1893,12 +1964,12 @@
     "watchVideo": "Presentation video",
     "marquee": {
       "items": [
-        "No WhatsApp chaos",
-        "Call-ups in seconds",
-        "Stress-free payments",
-        "Receipts in the right place",
-        "Automatic waitlist",
-        "Lighter Saturdays"
+        "Call-ups in 1 minute",
+        "Frictionless pitch splits",
+        "Human-controlled AI Secretary",
+        "Live match timer & mini-tournaments",
+        "Season history preserved",
+        "Built for tight-budget clubs"
       ]
     },
     "how": {
@@ -2000,13 +2071,380 @@
       ]
     },
     "finalCta": {
-      "badge": "Early access · Limited spots",
-      "headline": "Be among the first",
-      "headlineAccent": "to play.",
-      "emailLabel": "Email",
-      "emailPlaceholder": "your-email@example.com",
-      "cta": "Join the list",
-      "link": "Already have access? Sign in"
+      "badge": "Start free · Scale on your terms",
+      "headline": "Your next match",
+      "headlineAccent": "starts organized.",
+      "emailLabel": "Email for updates and priority access",
+      "emailPlaceholder": "you@yourclub.com",
+      "cta": "Request priority access",
+      "link": "Already have access? Sign in",
+      "subtitle": "Launch your team in under two minutes on the Free plan, or talk to us about tailoring a Champion plan with exclusive club features.",
+      "startFreeCta": "Create free account",
+      "goToArena": "Open my Arena",
+      "championCta": "Talk about Champion"
+    },
+    "nav": {
+      "impact": "Impact",
+      "product": "Product",
+      "evolution": "Evolution",
+      "plans": "Plans"
+    },
+    "impact": {
+      "kicker": "Real impact",
+      "titlePrefix": "A tight budget shouldn't mean",
+      "titleAccent": "amateur chaos.",
+      "subtitle": "Pick your current setup and see what modern technology unlocks when you run a team without full-time admin staff.",
+      "selectorAriaLabel": "Select team or club profile",
+      "startCta": "Try free with my team",
+      "profiles": {
+        "solo": {
+          "tabLabel": "Solo Organizer",
+          "badge": "1 person runs it all",
+          "recommendedTier": "Starts on Free (€0)",
+          "headline": "Organize the weekly match without losing your evening on WhatsApp.",
+          "summary": "When you're the one booking the pitch, chasing 14 players, and fronting the rental cost, every saved minute matters.",
+          "beforeTitle": "Without JogaBola",
+          "beforeItems": [
+            "Copy-pasted lists edited 15 times in group chat.",
+            "Last-minute dropouts with no automatic waitlist.",
+            "Fronting pitch fees without clear tracking of who paid.",
+            "Zero record of attendance, goals, or regular commitment."
+          ],
+          "afterTitle": "With JogaBola",
+          "afterItems": [
+            "Single call-up link with automatic waitlist promotion.",
+            "Clear per-player split with receipt upload and tracking.",
+            "One-off guests join in seconds using just their email.",
+            "Pitch-side match timer and instant result sharing."
+          ],
+          "metrics": [
+            {
+              "value": "< 2m",
+              "label": "Setup match"
+            },
+            {
+              "value": "€0",
+              "label": "To start"
+            },
+            {
+              "value": "100%",
+              "label": "Clear splits"
+            }
+          ]
+        },
+        "weekly": {
+          "tabLabel": "Weekly Squad",
+          "badge": "15 to 35 athletes",
+          "recommendedTier": "Grows to Basic / Amateur",
+          "headline": "Turn a weekly kickabout into a squad with real identity.",
+          "summary": "Protect regular roster priority over guests, keep payments healthy, and build shared team history across the season.",
+          "beforeTitle": "Without JogaBola",
+          "beforeItems": [
+            "Outdated spreadsheets and buried payment screenshots.",
+            "Guests taking spots before core squad members reply.",
+            "Awkward payment reminders inside the social group chat.",
+            "Stats and team memories lost after every month."
+          ],
+          "afterTitle": "With JogaBola",
+          "afterItems": [
+            "Automatic roster priority window before opening to guests.",
+            "One-tap receipt validation and targeted pending nudges.",
+            "Real-time event chat scoped to confirmed participants.",
+            "Rankings, attendance ratings, and full seasonal archive."
+          ],
+          "metrics": [
+            {
+              "value": "-4h",
+              "label": "Saved / week"
+            },
+            {
+              "value": "3x",
+              "label": "Faster close"
+            },
+            {
+              "value": "∞",
+              "label": "Club memory"
+            }
+          ]
+        },
+        "district": {
+          "tabLabel": "Local Club",
+          "badge": "Multiple teams · Seasons",
+          "recommendedTier": "Amateur · Pro · Champion",
+          "headline": "Professional club structure at grassroots budgets.",
+          "summary": "Unite squads, seasons, competitive fixtures, and a scoped AI Secretary with strict server authorization — without hiring office staff.",
+          "beforeTitle": "Without JogaBola",
+          "beforeItems": [
+            "Coaches chasing availability across disconnected chat threads.",
+            "Club data scattered across personal phones.",
+            "No central view of attendance and match fees across squads.",
+            "Zero help preparing availability requests and spotting gaps."
+          ],
+          "afterTitle": "With JogaBola",
+          "afterItems": [
+            "Strict server-enforced club isolation and role permissions.",
+            "Seasons and competitive fixtures alongside recreational games.",
+            "AI Secretary parses athlete replies and flags ambiguity.",
+            "Mandatory human approval before messaging the squad."
+          ],
+          "metrics": [
+            {
+              "value": "100%",
+              "label": "Club isolation"
+            },
+            {
+              "value": "1 tap",
+              "label": "Revoke AI staff"
+            },
+            {
+              "value": "5",
+              "label": "Growth tiers"
+            }
+          ]
+        }
+      }
+    },
+    "productShowcase": {
+      "kicker": "Inside the Product",
+      "titlePrefix": "Know exactly what",
+      "titleAccent": "awaits you inside.",
+      "subtitle": "No vague buzzwords. Inspect the exact tools you'll use pitch-side on mobile and from desktop while planning your week.",
+      "tabsAriaLabel": "JogaBola platform modules",
+      "modules": {
+        "convocations": {
+          "tag": "Operations",
+          "title": "Call-ups & Attendance",
+          "subtitle": "Schedule a match with date, venue, spot cap, and squad priority. Confirmations and waitlist updates happen in real time.",
+          "highlights": [
+            "One-tap confirmation for roster players and frictionless guests.",
+            "Automatic waitlist fills empty spots the moment someone drops out.",
+            "Dedicated captain notice wall separate from live event chat."
+          ],
+          "outcomeLabel": "Average creation time",
+          "outcomeValue": "45 sec",
+          "ctaLabel": "Create your first call-up",
+          "ctaHref": "/auth"
+        },
+        "payments": {
+          "tag": "Finance",
+          "title": "Pitch Splits & Receipts",
+          "subtitle": "Split pitch costs transparently, collect payment proofs directly on the match event, and close the books without awkward chasing.",
+          "highlights": [
+            "Clear ledger of paid, receipt-under-review, and pending athletes.",
+            "Direct reminders for pending players without cluttering group chat.",
+            "Complete payment history preserved by event and season."
+          ],
+          "outcomeLabel": "Settlement speed",
+          "outcomeValue": "Same-day close",
+          "ctaLabel": "Organize splits free",
+          "ctaHref": "/auth"
+        },
+        "secretary": {
+          "tag": "AI Club OS",
+          "title": "Virtual AI Secretary",
+          "subtitle": "Your first virtual staff member. Drafts availability requests, interprets athlete replies, and surfaces unresolved confirmations.",
+          "highlights": [
+            "Unambiguous replies update attendance only via authorized actions.",
+            "Ambiguous replies ask for clarification — never guesses for you.",
+            "Captain reviews and approves every outbound squad message."
+          ],
+          "outcomeLabel": "Outbound control",
+          "outcomeValue": "100% human",
+          "ctaLabel": "See plans with AI Secretary",
+          "ctaHref": "#planos"
+        },
+        "timer": {
+          "tag": "Pitch-side",
+          "title": "Match Timer & Mini-Tournaments",
+          "subtitle": "Ready to use on the pitch right now. Track match time, log goals, balance teams, and run mini-tournaments with automatic standings.",
+          "highlights": [
+            "Works on mobile right away — even before creating an account.",
+            "Fast logging for goals, cards, and live match timeline.",
+            "Clean post-match summary ready to share with the whole squad."
+          ],
+          "outcomeLabel": "Instant access",
+          "outcomeValue": "Free now",
+          "ctaLabel": "Open match timer",
+          "ctaHref": "/timer"
+        },
+        "roster": {
+          "tag": "Identity",
+          "title": "Roster, Rankings & Seasons",
+          "subtitle": "Your team stops being a disposable chat thread and builds lasting identity: attendance, goals, ratings, and season history.",
+          "highlights": [
+            "Unified email identity preserves history from first guest match to regular.",
+            "Match reports, attendance streaks, and competitive squad rankings.",
+            "Designed to grow from weekly pickup group into a multi-team club."
+          ],
+          "outcomeLabel": "Data continuity",
+          "outcomeValue": "Full archive",
+          "ctaLabel": "Create my team",
+          "ctaHref": "/auth"
+        }
+      }
+    },
+    "evolution": {
+      "kicker": "Progress Roadmap",
+      "titlePrefix": "Start with one game.",
+      "titleAccent": "Grow into a club.",
+      "subtitle": "See how JogaBola scales alongside your ambition — keeping every attendance record, payment, and goal intact along the way.",
+      "stagesAriaLabel": "Club progression stages",
+      "orbitLabel": "Club growth radar",
+      "historyPreservedNote": "All recreational history stays intact whenever your club upgrades.",
+      "nextStageCta": "Next stage",
+      "comparePlansCta": "Compare all 5 plans",
+      "stages": [
+        {
+          "step": "STAGE 01",
+          "timeframe": "Day 1",
+          "title": "Solo Kickoff",
+          "tierBadge": "Free Plan",
+          "description": "Leave WhatsApp chaos behind in two minutes. Create your team, open a call-up, and share one clean link with your players.",
+          "unlocks": [
+            "Team & roster up to 25 athletes",
+            "Call-ups with automatic waitlist",
+            "Simple per-match pitch split tracking",
+            "Live match timer & mini-tournaments"
+          ],
+          "metricLabel": "Starting cost",
+          "metricValue": "€0 / month"
+        },
+        {
+          "step": "STAGE 02",
+          "timeframe": "Month 1",
+          "title": "Routine & Finance",
+          "tierBadge": "Basic Plan",
+          "description": "Your weekly game runs like clockwork. Validate receipts in one tap, reduce no-shows, and build permanent team history.",
+          "unlocks": [
+            "Centralized payment proof validation",
+            "Pending alerts & captain notice wall",
+            "Real-time event chat for confirmed players",
+            "Full match archive and squad rankings"
+          ],
+          "metricLabel": "Time reclaimed",
+          "metricValue": "~4 hours / week"
+        },
+        {
+          "step": "STAGE 03",
+          "timeframe": "Season 1",
+          "title": "Structured Club",
+          "tierBadge": "Amateur Plan",
+          "description": "Your operation levels up: multiple teams, organized seasons, competitive fixtures, and initial AI Secretary workflows under human review.",
+          "unlocks": [
+            "Up to 10 teams & 50 athletes per team",
+            "Seasons & competitive fixtures calendar",
+            "Balanced team generator & match reports",
+            "Initial AI Secretary quota with approvals"
+          ],
+          "metricLabel": "Active setup",
+          "metricValue": "Multi-team"
+        },
+        {
+          "step": "STAGE 04",
+          "timeframe": "Scale",
+          "title": "Full AI Club OS",
+          "tierBadge": "Pro & Champion",
+          "description": "Complete grassroots club or academy operations: virtual staff with scoped identity and budgets, strict isolation, and bespoke modules.",
+          "unlocks": [
+            "Strict server-side multi-club isolation",
+            "Expanded AI Secretary & full action audit trail",
+            "Advanced seasonal & attendance analytics",
+            "Assisted onboarding & exclusive Champion features"
+          ],
+          "metricLabel": "Governance",
+          "metricValue": "Amateur Enterprise"
+        }
+      ]
+    },
+    "guardrails": {
+      "kicker": "Trust & Governance",
+      "titlePrefix": "Smart technology.",
+      "titleAccent": "Captain stays in charge.",
+      "subtitle": "AI Club OS is engineered with operational discipline for real clubs: no black boxes, no accidental broadcasts, and no surprise bills.",
+      "items": [
+        {
+          "tag": "01 · Human Review",
+          "title": "You approve before anything sends",
+          "description": "The Secretary drafts messages and summarizes replies, but nothing reaches your squad without your review. Ambiguous replies ask for clarification."
+        },
+        {
+          "tag": "02 · Security",
+          "title": "Strict club-level isolation",
+          "description": "Every read and action verifies session, role, and scope on the server. Private club data is never visible to another organization."
+        },
+        {
+          "tag": "03 · Predictability",
+          "title": "Hard quotas & instant revocation",
+          "description": "Each virtual agent has its own identity, audit log, and spending cap. Pause or revoke access in one tap at any time."
+        },
+        {
+          "tag": "04 · Continuity",
+          "title": "History preserved forever",
+          "description": "Evolve from a casual Free-tier group into a structured club without losing past call-ups, goals, payments, or attendance streaks."
+        }
+      ]
+    },
+    "phoneMockup": {
+      "team": {
+        "eyebrow": "Team",
+        "nextMatch": "Next match",
+        "matchTime": "Saturday · 21:00",
+        "venue": "Municipal Hall · Pitch 2",
+        "confirmedCount": "14 confirmed",
+        "stats": {
+          "confirmed": "Confirmed",
+          "pending": "Pending",
+          "paid": "Paid"
+        },
+        "roster": "Roster",
+        "playersCount": "22 players",
+        "athlete": "Athlete",
+        "pendingShort": "PEND",
+        "okShort": "OK"
+      },
+      "convoca": {
+        "eyebrow": "Call-up",
+        "confirmed": "Confirmed",
+        "squadLabel": "Squad · 14 confirmed",
+        "activityTitle": "Activity · now",
+        "activityItems": [
+          "Bruno A confirmed attendance",
+          "Tiago M joined the waitlist",
+          "Diogo F confirmed attendance"
+        ]
+      },
+      "paid": {
+        "title": "Payment validated",
+        "subtitle": "€5.00 · Saturday match · Receipt archived.",
+        "from": "From",
+        "to": "To",
+        "method": "Method",
+        "total": "Total"
+      },
+      "secretary": {
+        "eyebrow": "AI Club OS",
+        "title": "AI Secretary",
+        "scopeBadge": "Review",
+        "draftLabel": "Prepared request",
+        "draftText": "«Saturday 21:00 at Pitch 2. Can you confirm by Friday 18:00?»",
+        "clearReplyLabel": "Updated via authorized action",
+        "clearReplyText": "Diogo F: «Count me in!» → Confirmed",
+        "ambiguousLabel": "Ambiguity flagged",
+        "ambiguousText": "Tiago M: «Depends on work» → Ask for clarification",
+        "approveCta": "Approve & send to squad"
+      },
+      "timer": {
+        "eyebrow": "Pitch-side",
+        "title": "Timer & Goals",
+        "teamA": "Bibs",
+        "teamB": "No bibs",
+        "timelineLabel": "Match timeline",
+        "events": [
+          "11' · Goal by Diogo F (3-2)",
+          "08' · Goal by Bruno A (2-2)",
+          "04' · Yellow card · Ricardo P"
+        ]
+      }
     }
   },
   "howItWorksPage": {
@@ -2305,10 +2743,22 @@
       "optional": "Optional"
     },
     "positions": {
-      "GK": { "label": "Goalkeeper", "hint": "You guard the goal" },
-      "DEF": { "label": "Defender", "hint": "You stop attacks" },
-      "MID": { "label": "Midfielder", "hint": "You link the play" },
-      "FWD": { "label": "Forward", "hint": "You score goals" }
+      "GK": {
+        "label": "Goalkeeper",
+        "hint": "You guard the goal"
+      },
+      "DEF": {
+        "label": "Defender",
+        "hint": "You stop attacks"
+      },
+      "MID": {
+        "label": "Midfielder",
+        "hint": "You link the play"
+      },
+      "FWD": {
+        "label": "Forward",
+        "hint": "You score goals"
+      }
     },
     "skill": {
       "eyebrow": "Skill"
@@ -3153,67 +3603,106 @@
     }
   },
   "pricingPage": {
-    "eyebrow": "Plans",
-    "title": "Pricing for every stage of your team",
-    "subtitle": "Start free, move to Pro when your weekly game gets serious, and talk to us when you need a full operation.",
-    "recommended": "Recommended",
+    "eyebrow": "Progressive plans",
+    "title": "Start free. Upgrade only as your club grows.",
+    "homeTitlePrefix": "Start free.",
+    "homeTitleAccent": "Grow at your pace.",
+    "subtitle": "From a solo captain running Thursday 7-a-side to a multi-squad club with virtual AI staff — pay only for what your team needs.",
+    "recommended": "Most popular",
+    "billing": {
+      "monthly": "Monthly",
+      "annual": "Annual"
+    },
     "limits": {
       "teams": "Teams",
-      "players": "Players",
+      "players": "Athletes",
       "events": "Events/mo"
     },
     "plans": {
       "free": {
-        "badge": "Start",
+        "badge": "Kickoff",
         "name": "Free",
-        "description": "For captains who want to leave WhatsApp chaos behind and organize their first games with less friction.",
+        "description": "For solo organizers and small groups leaving WhatsApp chaos behind today at zero cost.",
         "price": "€0",
-        "period": "/mo",
-        "cta": "Start free",
+        "period": "/month",
+        "cta": "Start for free",
+        "aiSummary": "",
         "features": [
-          "Up to 3 active teams",
-          "Up to 25 players per team",
-          "10 events per month",
-          "Attendance and waiting list",
-          "Basic payment tracking"
+          "Up to 3 active teams & 25 athletes per team",
+          "10 call-ups per month with automatic waitlist",
+          "Core attendance tracking & manual pitch split",
+          "Pitch-side match timer & mini-tournaments",
+          "Frictionless email guests with no account needed"
+        ]
+      },
+      "basic": {
+        "badge": "Routine",
+        "name": "Basic",
+        "description": "For regular weekly squads that need clean finances, payment proofs, and lasting team history.",
+        "price": "€4.99",
+        "period": "/month",
+        "cta": "Choose Basic",
+        "aiSummary": "",
+        "features": [
+          "Everything in Free",
+          "Receipt validation & pending payment nudges",
+          "Real-time event chat & captain notice wall",
+          "Full match archive, goals, and squad rankings",
+          "Configurable roster priority over guests"
+        ]
+      },
+      "amateur": {
+        "badge": "Competitive",
+        "name": "Amateur",
+        "description": "For structured teams and small managers running seasons, competitive fixtures, and initial AI Secretary workflows.",
+        "price": "€9.99",
+        "period": "/month",
+        "cta": "Choose Amateur",
+        "aiSummary": "Includes starter AI Secretary (human-reviewed)",
+        "features": [
+          "Everything in Basic",
+          "Seasons & competitive fixtures management",
+          "AI Secretary for availability & pending tracking",
+          "Balanced team generator & match reports",
+          "Co-captains & team-level permissions"
         ]
       },
       "pro": {
-        "badge": "Most used",
-        "name": "Pro",
-        "description": "For recurring organizers who need more teams, payments, and weekly control.",
-        "price": "€9",
-        "period": "/mo",
-        "cta": "Join the Pro waitlist",
+        "badge": "Clubs",
+        "name": "Professional",
+        "description": "For growing amateur clubs and academies running multiple squads with centralized operations and expanded virtual staff.",
+        "price": "€24.99",
+        "period": "/month",
+        "cta": "Choose Professional",
+        "aiSummary": "Expanded AI Secretary + action audit log",
         "features": [
-          "Up to 10 active teams",
-          "Up to 50 players per team",
-          "100 events per month",
-          "Payment proofs and validation",
-          "Advanced attendance management",
-          "Priority support"
+          "Everything in Amateur",
+          "Multi-team operations with strict club isolation",
+          "Expanded AI Secretary quota & cost guardrails",
+          "Advanced seasonal & attendance reporting",
+          "Priority support for coaches and club admins"
         ]
       },
-      "elite": {
-        "badge": "Clubs",
-        "name": "Elite",
-        "description": "For clubs, academies, and communities managing many games, squads, and operations.",
-        "price": "Custom",
-        "period": "",
-        "cta": "Talk to us",
+      "champion": {
+        "badge": "Exclusive · Custom",
+        "name": "Champion",
+        "description": "For ambitious clubs, academies, and grassroots leagues seeking exclusive features, bespoke limits, and dedicated partnership.",
+        "price": "Let's talk",
+        "period": "· custom proposal",
+        "cta": "Contact us",
+        "responseHint": "Direct response from the JogaBola team",
+        "aiSummary": "Bespoke virtual staff",
         "features": [
-          "Practically unlimited teams",
-          "Practically unlimited players",
-          "Practically unlimited events",
-          "Assisted onboarding",
-          "Setup for clubs and communities",
-          "Dedicated guidance"
+          "Custom team, roster, and monthly event capacity",
+          "Exclusive capabilities & early access to new AI modules",
+          "Assisted onboarding and historical data migration",
+          "Dedicated governance and permission architecture"
         ]
       }
     },
     "note": {
-      "title": "We are still in beta",
-      "description": "Pricing may evolve as we open more functionality. Early users will get priority access and initial conditions.",
+      "title": "Zero lock-in, full history preserved",
+      "description": "Start on Free right now. Early-adopter clubs receive preferred pricing on paid plans and keep 100% of their match history when upgrading.",
       "cta": "Questions? Talk to us"
     }
   },
