@@ -33,7 +33,7 @@ const nextConfig: NextConfig = {
 
   skipTrailingSlashRedirect: true,
 
-  allowedDevOrigins: ["192.168.1.152"],
+  allowedDevOrigins: ["127.0.0.1", "192.168.1.152"],
 
   async headers() {
     return [

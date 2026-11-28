@@ -7,6 +7,7 @@ import {
   ChevronsRight,
   Lock,
   type LucideIcon,
+  ScanLine,
   Shield,
   ShieldCheck,
   Timer,
@@ -71,6 +72,12 @@ const ITEMS = [
     icon: Wallet,
     labelKey: "payments",
     requiresTeam: true,
+  },
+  {
+    href: "/arena/simulator",
+    icon: ScanLine,
+    labelKey: "simulator",
+    requiresTeam: false,
   },
   {
     href: "/timer",
