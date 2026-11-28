@@ -1,6 +1,7 @@
 "use client";
 
-import { Calendar } from "lucide-react";
+import { Calendar, ScanLine } from "lucide-react";
+import Link from "next/link";
 import { useTranslations } from "next-intl";
 import { ArenaEmptyState } from "@/components/arena/empty-state";
 import { EVENT_STATUS } from "@/constants/event-status";
@@ -31,6 +32,7 @@ export function CalendarEvents({
   initialWeekStart,
 }: CalendarEventsProps) {
   const t = useTranslations("arenaCalendar");
+  const tNav = useTranslations("arenaNav");
   const {
     customRange,
     dfLocale,
@@ -71,6 +73,13 @@ export function CalendarEvents({
             <div className="jb-kicker">{t("hero.eyebrow")}</div>
             <h1 className="jb-title">{t("hero.title")}</h1>
           </div>
+          <Link
+            href="/arena/simulator"
+            className="press inline-flex min-h-11 items-center gap-2 rounded-lg border border-arena-border px-3 text-sm font-semibold"
+          >
+            <ScanLine size={16} aria-hidden="true" />
+            {tNav("simulator")}
+          </Link>
         </header>
 
         <CalendarControls

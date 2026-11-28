@@ -22,6 +22,7 @@ Apenas planos revistos, accionáveis e prontos para execução permanecem neste 
 
 | Estado | Data | Título | Dependências | Caminho actual |
 | --- | --- | --- | --- | --- |
+| Completed | 2026-11-26 | Simulador de Jogo 3D com dados fictícios | — | [Plano](../../archive/plans/completed/2026-11-26-match-simulator.md) |
 | Completed | 2026-07-11 | Verification baseline — vitest, CI, first tests | — | [Plano](../../archive/plans/completed/001-verification-baseline.md) |
 | Completed | 2026-07-11 | Auth/authz on payment, attendance and chat-token surfaces | 001 | [Plano](../../archive/plans/completed/002-server-action-auth-hardening.md) |
 | Completed | 2026-07-11 | Guest OTP rate limiting and lockout | 001; após 002 | [Plano](../../archive/plans/completed/003-guest-otp-rate-limiting.md) |
