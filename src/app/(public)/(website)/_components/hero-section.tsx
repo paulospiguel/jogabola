@@ -248,10 +248,10 @@ export function HeroSection() {
                         </p>
                         <div className="mt-3 h-2 overflow-hidden rounded-full bg-arena-surface">
                           <motion.div
-                            initial={{ width: "25%" }}
-                            animate={{ width: "100%" }}
+                            initial={{ scaleX: 0.25 }}
+                            animate={{ scaleX: 1 }}
                             transition={{ duration: 0.7, ease: "easeOut" }}
-                            className="h-full rounded-full bg-arena-primary"
+                            className="h-full w-full origin-left rounded-full bg-arena-primary"
                           />
                         </div>
                       </div>

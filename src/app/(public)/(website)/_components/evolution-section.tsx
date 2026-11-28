@@ -64,14 +64,12 @@ export function EvolutionSection() {
   useEffect(() => {
     if (!isAutoPlaying || prefersReducedMotion) return;
     const timer = window.setInterval(() => {
-      setActiveStage(prev => {
-        const next = (prev + 1) % stages.length;
-        setSelectedNodeId(getDefaultNodeForStage(next));
-        return next;
-      });
+      const next = (activeStage + 1) % stages.length;
+      setActiveStage(next);
+      setSelectedNodeId(getDefaultNodeForStage(next));
     }, AUTO_STEP_MS);
     return () => window.clearInterval(timer);
-  }, [isAutoPlaying, prefersReducedMotion, stages.length]);
+  }, [activeStage, isAutoPlaying, prefersReducedMotion, stages.length]);
 
   const current = stages[activeStage] ?? stages[0];
   const progressPercent = ((activeStage + 1) / stages.length) * 100;
@@ -120,8 +118,8 @@ export function EvolutionSection() {
       <div className="mt-8 sm:mt-10">
         <div className="relative mb-4 h-1.5 w-full overflow-hidden rounded-full bg-arena-surface sm:mb-5">
           <motion.div
-            className="h-full rounded-full bg-linear-to-r from-arena-primary via-arena-info to-arena-highlight"
-            animate={{ width: `${progressPercent}%` }}
+            className="h-full w-full origin-left rounded-full bg-linear-to-r from-arena-primary via-arena-info to-arena-highlight"
+            animate={{ scaleX: progressPercent / 100 }}
             transition={{
               duration: prefersReducedMotion ? 0 : 0.45,
               ease: [0.16, 1, 0.3, 1],

@@ -125,6 +125,7 @@ export default function Pitch3d({
     controls.maxPolarAngle = Math.PI * 0.48;
     camera.aspect =
       Math.max(1, host.clientWidth) / Math.max(1, host.clientHeight);
+    camera.updateProjectionMatrix();
 
     scene.add(new THREE.HemisphereLight(0xf0faff, 0x717251, 2.2));
     const sun = new THREE.DirectionalLight(0xfff2d8, 2);
