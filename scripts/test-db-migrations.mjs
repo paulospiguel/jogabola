@@ -603,7 +603,7 @@ try {
     "Historical Arena upgrade, repeat, data, constraints and legacy journal: passed.",
   );
   await assertClubCalendarConstraints(legacy.sql);
-  await assertRowsKept(legacy.sql, legacyRows);
+  await assertRowsKept(legacy.sql, expectStaffMigration(legacyRows));
   console.info("Club calendar constraints after the Arena upgrade: passed.");
 
   const conflict = await makeDatabase("conflict");
