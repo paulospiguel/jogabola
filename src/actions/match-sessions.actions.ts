@@ -18,6 +18,7 @@ import {
 } from "@/db/schema";
 import { getAuthUser } from "@/lib/action-helpers";
 import { trackServerEvent } from "@/lib/analytics-server";
+import { buildEventFormPaymentSettings } from "@/lib/event-payment-settings";
 import {
   generateRecurringOccurrences,
   type RecurrenceFrequency,
@@ -224,16 +225,12 @@ export async function createEvent(input: {
       const res = await getTeamPaymentSettings({ teamId });
       if (res.success) existingSettings = res.data;
     }
-    await upsertTeamPaymentSettings({
-      teamId,
-      mbwayEnabled: input.mbwayEnabled,
-      mbwayPhone: input.mbwayPhone || "",
-      mbwayName: existingSettings?.mbwayName || "",
-      cashEnabled: existingSettings?.cashEnabled ?? true,
-      stripeEnabled: existingSettings?.stripeEnabled ?? false,
-      stripeAccountId: existingSettings?.stripeAccountId || undefined,
-      cashInstructions: existingSettings?.cashInstructions || undefined,
-    });
+    await upsertTeamPaymentSettings(
+      buildEventFormPaymentSettings(teamId, existingSettings, {
+        mbwayEnabled: input.mbwayEnabled,
+        mbwayPhone: input.mbwayPhone,
+      }),
+    );
   }
 
   const invitedPlayers = input.invitedPlayers ?? [];
@@ -395,16 +392,12 @@ export async function updateEvent(
       });
       if (res.success) existingSettings = res.data;
     }
-    await upsertTeamPaymentSettings({
-      teamId: existingEvent.teamId,
-      mbwayEnabled: input.mbwayEnabled,
-      mbwayPhone: input.mbwayPhone || "",
-      mbwayName: existingSettings?.mbwayName || "",
-      cashEnabled: existingSettings?.cashEnabled ?? true,
-      stripeEnabled: existingSettings?.stripeEnabled ?? false,
-      stripeAccountId: existingSettings?.stripeAccountId || undefined,
-      cashInstructions: existingSettings?.cashInstructions || undefined,
-    });
+    await upsertTeamPaymentSettings(
+      buildEventFormPaymentSettings(existingEvent.teamId, existingSettings, {
+        mbwayEnabled: input.mbwayEnabled,
+        mbwayPhone: input.mbwayPhone,
+      }),
+    );
   }
 
   revalidatePath("/arena/events");

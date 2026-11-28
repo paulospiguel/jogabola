@@ -122,11 +122,12 @@ O aceite corre numa transação com bloqueio da linha do pedido:
 
 Regra de pagamentos depois da transferência (enquanto `payout_reconfigure_required_at` estiver marcado):
 
-- Todas as leituras que chegam ao cliente (`getTeamPaymentSettings`, `getPublicTeamPaymentSettings`, `resolveTeamPaymentConfig`) devolvem os dados de MB WAY, transferência e Stripe como `null` e os métodos desativados. Os dados do dono antigo nunca saem do servidor.
+- Todas as leituras que chegam ao cliente (`getTeamPaymentSettings`, `getPublicTeamPaymentSettings`, `resolveTeamPaymentConfig`) devolvem os dados de MB WAY, transferência e Stripe como `null` e os métodos desativados.
 - `upsertTeamPaymentSettings` e o formulário de evento recusam ativar MB WAY, transferência ou Stripe com `PAYOUT_RECONFIGURE_REQUIRED`. Só o dono (`isTeamOwner`) pode reativar, e só enviando dados novos desse método: número e nome para MB WAY, IBAN e titular para transferência. O staff com `payments.manage` não pode reativar nem escrever dados novos.
 - O Stripe fica desativado enquanto a marca existir, porque a app não tem fluxo Connect para obter uma conta nova.
-- Campos de dados vazios não apagam os valores guardados.
-- Uma gravação do dono com dados novos limpa a marca por inteiro. Os dados antigos de um método que o dono não reconfigurou continuam guardados e desativados.
+- Enquanto a marca existir, os dados antigos ficam guardados mas mascarados. Campos de dados vazios não os apagam.
+- A primeira gravação do dono com dados novos limpa a marca e apaga os dados antigos que essa gravação não substituiu: os métodos que não foram reenviados (MB WAY sem número e nome novos, transferência sem IBAN e titular novos) ficam desativados e sem dados, e a conta Stripe é sempre apagada.
+- O formulário de evento só altera o MB WAY (estado e, opcionalmente, o número). Mantém o estado dos outros métodos e não reescreve dados que não recebeu.
 
 Repetir o aceite é idempotente. A expiração é verificada na leitura e no aceite (`expires_at < now` passa a `expired`), sem worker. A transferência não altera o vínculo da equipa a um clube nem transfere a propriedade do clube.
 

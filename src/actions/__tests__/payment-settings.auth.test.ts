@@ -196,9 +196,55 @@ describe("payout reconfiguration after a transfer", () => {
         mbwayPhone: "911111111",
         mbwayName: "Novo Dono",
         payoutReconfigureRequiredAt: null,
+        transferEnabled: false,
+        transferIban: null,
+        transferName: null,
+        stripeEnabled: false,
+        stripeAccountId: null,
       }),
     );
     expect(mocks.isTeamOwner).toHaveBeenCalledWith("user-1", 7);
+  });
+
+  it("reads no stale IBAN or Stripe account after the owner's MB WAY save", async () => {
+    mocks.can.mockResolvedValue(true);
+    mocks.isTeamOwner.mockResolvedValue(true);
+    mocks.canViewTeam.mockResolvedValue(true);
+    // Simulated row store: the update applies `set` onto the flagged row.
+    let row: Record<string, unknown> = { ...flaggedRow };
+    mocks.settingsFindFirst.mockImplementation(async () => row);
+    mocks.update.mockReturnValue({
+      set: (values: Record<string, unknown>) => ({
+        where: () => ({
+          returning: async () => {
+            row = { ...row, ...values };
+            return [row];
+          },
+        }),
+      }),
+    });
+
+    const saved = await upsertTeamPaymentSettings({
+      teamId: 7,
+      mbwayEnabled: true,
+      mbwayPhone: "911111111",
+      mbwayName: "Novo Dono",
+    });
+    const read = await getTeamPaymentSettings({ teamId: 7 });
+
+    expect(saved.success).toBe(true);
+    expect(read.success).toBe(true);
+    if (!read.success) return;
+    expect(read.data).toMatchObject({
+      payoutReconfigureRequired: false,
+      mbwayPhone: "911111111",
+      transferIban: null,
+      transferName: null,
+      stripeAccountId: null,
+    });
+    expect(JSON.stringify(read)).not.toMatch(
+      /PT50000201231234567890154|acct_old|Antigo Dono/,
+    );
   });
 
   it("keeps the flag and stale details on a staff cash-only save", async () => {

@@ -147,7 +147,38 @@ describe("decidePayoutUpdate", () => {
         mbwayEnabled: true,
         mbwayPhone: "911111111",
         mbwayName: "Novo Dono",
+        // Stale details of methods not re-submitted are wiped on clear.
         transferEnabled: false,
+        transferIban: null,
+        transferName: null,
+        stripeEnabled: false,
+        stripeAccountId: null,
+      },
+    });
+  });
+
+  it("wipes stale MB WAY and Stripe when the owner refreshes only transfer", () => {
+    const decision = decidePayoutUpdate({
+      flagged: true,
+      isOwner: true,
+      payload: {
+        transferEnabled: true,
+        transferIban: "PT50000201231234567890999",
+        transferName: "Novo Dono",
+      },
+    });
+    expect(decision).toEqual({
+      allowed: true,
+      clearFlag: true,
+      payload: {
+        transferEnabled: true,
+        transferIban: "PT50000201231234567890999",
+        transferName: "Novo Dono",
+        mbwayEnabled: false,
+        mbwayPhone: null,
+        mbwayName: null,
+        stripeEnabled: false,
+        stripeAccountId: null,
       },
     });
   });

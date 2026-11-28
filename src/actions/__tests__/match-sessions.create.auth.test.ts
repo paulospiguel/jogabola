@@ -9,12 +9,20 @@ const mocks = vi.hoisted(() => ({
   values: vi.fn(),
   isTeamOwner: vi.fn(),
   settingsFindFirst: vi.fn(),
+  eventFindFirst: vi.fn(),
+  update: vi.fn(),
+  upsertTeamPaymentSettings: vi.fn(async () => ({ success: true })),
+  getTeamPaymentSettings: vi.fn(),
 }));
 
 vi.mock("@/db/client", () => ({
   db: {
     insert: mocks.insert,
-    query: { teamPaymentSettings: { findFirst: mocks.settingsFindFirst } },
+    update: mocks.update,
+    query: {
+      teamPaymentSettings: { findFirst: mocks.settingsFindFirst },
+      matchSessions: { findFirst: mocks.eventFindFirst },
+    },
   },
 }));
 vi.mock("next-intl/server", () => ({
@@ -33,9 +41,13 @@ vi.mock("@/lib/team-authz", () => ({
   getAccessibleTeamIds: mocks.getAccessibleTeamIds,
 }));
 vi.mock("@/lib/analytics-server", () => ({ trackServerEvent: vi.fn() }));
+vi.mock("@/actions/team-payment-settings.actions", () => ({
+  upsertTeamPaymentSettings: mocks.upsertTeamPaymentSettings,
+  getTeamPaymentSettings: mocks.getTeamPaymentSettings,
+}));
 
 const mod = await import("@/actions/match-sessions.actions");
-const { createEvent } = mod;
+const { createEvent, updateEvent } = mod;
 
 const startDate = new Date("2026-12-01T20:00:00Z");
 
@@ -170,6 +182,124 @@ describe("createEvent payout reconfiguration", () => {
       matchSessions,
       expect.anything(),
     );
+  });
+});
+
+describe("event form payment settings", () => {
+  const existing = {
+    teamId: 5,
+    stripeEnabled: false,
+    stripeAccountId: "acct_should_not_be_copied",
+    mbwayEnabled: true,
+    mbwayPhone: "912345678",
+    mbwayName: "Dono",
+    cashEnabled: true,
+    cashInstructions: "No campo",
+    transferEnabled: true,
+    transferIban: "PT50000201231234567890154",
+    transferName: "Dono",
+    payoutReconfigureRequired: false,
+  };
+
+  beforeEach(() => {
+    mocks.can.mockResolvedValue(true);
+    mocks.settingsFindFirst.mockResolvedValue({
+      teamId: 5,
+      payoutReconfigureRequiredAt: null,
+    });
+    mocks.getTeamPaymentSettings.mockResolvedValue({
+      success: true,
+      data: existing,
+    });
+  });
+
+  function lastUpsert() {
+    const calls = mocks.upsertTeamPaymentSettings.mock.calls as unknown[][];
+    return calls[calls.length - 1][0] as Record<string, unknown>;
+  }
+
+  function expectPreserved(payload: Record<string, unknown>) {
+    expect(payload).toMatchObject({
+      teamId: 5,
+      mbwayEnabled: true,
+      transferEnabled: true,
+      cashEnabled: true,
+      stripeEnabled: false,
+    });
+    // Unsupplied details are left out so stored values are kept.
+    for (const field of [
+      "mbwayPhone",
+      "mbwayName",
+      "transferIban",
+      "transferName",
+      "cashInstructions",
+      "stripeAccountId",
+    ]) {
+      expect(payload[field]).toBeUndefined();
+    }
+  }
+
+  it("createEvent keeps bank transfer on and MB WAY details", async () => {
+    await createEvent({
+      ...input,
+      teamId: 5,
+      priceCents: 500,
+      mbwayEnabled: true,
+    });
+    expectPreserved(lastUpsert());
+  });
+
+  it("updateEvent keeps bank transfer on and MB WAY details", async () => {
+    mocks.eventFindFirst.mockResolvedValue({ teamId: 5 });
+    mocks.update.mockReturnValue({
+      set: () => ({
+        where: () => ({
+          returning: async () => [
+            {
+              id: 1,
+              slug: "jogo",
+              teamId: 5,
+              title: "Jogo",
+              location: "Campo",
+              startsAt: startDate,
+              endsAt: null,
+              capacity: null,
+              priceCents: 500,
+              currency: "EUR",
+              paymentRequired: false,
+              paymentDeadlineHours: null,
+              rosterOnly: false,
+              rosterPriorityHours: 0,
+              status: "scheduled",
+              recurrence: "once",
+              recurrenceGroupId: null,
+              transferRequiresProof: true,
+              createdAt: startDate,
+              updatedAt: startDate,
+            },
+          ],
+        }),
+      }),
+    });
+
+    const result = await updateEvent(1, {
+      priceCents: 500,
+      mbwayEnabled: true,
+    });
+
+    expect(result.success).toBe(true);
+    expectPreserved(lastUpsert());
+  });
+
+  it("passes a phone typed in the form", async () => {
+    await createEvent({
+      ...input,
+      teamId: 5,
+      priceCents: 500,
+      mbwayEnabled: true,
+      mbwayPhone: "911111111",
+    });
+    expect(lastUpsert().mbwayPhone).toBe("911111111");
   });
 });
 

@@ -167,8 +167,10 @@ Estas correções são também o pré-requisito do ADR 0005.
   4. O dono antigo **não fica no staff**; a sua linha em `team_members` mantém-se só se já era atleta.
   5. **Pagamentos:** desliga `stripeEnabled`, `mbwayEnabled` e `transferEnabled` em `team_payment_settings` e marca `payout_reconfigure_required_at = now()`. Os dados ficam guardados mas inativos até o novo dono os reconfigurar; o dinheiro (`cashEnabled`) mantém-se. Os comprovativos pendentes passam a notificar o novo dono e o staff com `payments.manage`. Enquanto a marca existir:
      - todas as leituras que chegam ao cliente (`getTeamPaymentSettings`, `getPublicTeamPaymentSettings`, `resolveTeamPaymentConfig` e páginas de evento/pagamento) devolvem os dados de MB WAY, transferência e Stripe como `null` e os métodos desativados;
-     - `upsertTeamPaymentSettings` e o formulário de evento (`createEvent`/`updateEvent`) recusam ativar MB WAY, transferência ou Stripe com `PAYOUT_RECONFIGURE_REQUIRED`, exceto ao **dono** (`isTeamOwner`) que envie dados novos desse método (MB WAY: número e nome; transferência: IBAN e titular). O Stripe fica desativado enquanto a marca existir, porque não há fluxo Connect na app. Campos de dados vazios não apagam os valores guardados;
-     - uma gravação do dono com dados novos limpa a marca por inteiro;
+     - `upsertTeamPaymentSettings` e o formulário de evento (`createEvent`/`updateEvent`) recusam ativar MB WAY, transferência ou Stripe com `PAYOUT_RECONFIGURE_REQUIRED`, exceto ao **dono** (`isTeamOwner`) que envie dados novos desse método (MB WAY: número e nome; transferência: IBAN e titular). O Stripe fica desativado enquanto a marca existir, porque não há fluxo Connect na app;
+     - os dados antigos ficam guardados mas mascarados enquanto a marca existir; campos de dados vazios não os apagam;
+     - a primeira gravação do dono com dados novos limpa a marca e apaga os dados antigos que não substituiu: os métodos não reenviados ficam desativados e sem dados, e a conta Stripe é sempre apagada;
+     - o formulário de evento só altera o MB WAY; mantém o estado dos outros métodos e não reescreve dados que não recebeu;
      - a folha de definições mostra o aviso "Confirma os dados de pagamento da equipa" com os campos vazios.
   6. **Limite do plano:** se o destinatário já atingiu o limite de equipas do seu plano (`canCreateTeam` sobre as equipas de que é dono), o aceite é recusado com `TEAM_LIMIT_REACHED` e uma mensagem de upgrade. O pedido continua `pending` até expirar.
   7. `status = accepted`.
