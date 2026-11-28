@@ -27,8 +27,9 @@ vi.mock("@/lib/team-authz", () => ({
   isTeamOwner: mocks.isTeamOwner,
 }));
 
-const { getPublicTeamPaymentSettings } =
-  await import("@/actions/team-payment-settings.actions");
+const { getPublicTeamPaymentSettings } = await import(
+  "@/actions/team-payment-settings.actions"
+);
 
 const storedSettings = {
   id: 3,
