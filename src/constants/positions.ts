@@ -11,7 +11,7 @@ export interface PositionConfig {
 export const POSITIONS: Record<string, PositionConfig> = {
   goalkeeper: {
     value: "goalkeeper",
-    label: "Guarda-Redes",
+    label: "Guarda-redes",
     icon: Shield,
   },
   defender: {

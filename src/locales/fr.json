@@ -1807,7 +1807,7 @@
           "statConfirmed": "Confirmés",
           "statWaitlist": "Attente",
           "statPending": "En attente",
-          "footerNote": "Priorité de l'effectif appliquée automatiquement."
+          "footerNote": "La liste d'attente promeut le suivant automatiquement."
         },
         "racha": {
           "collectedLabel": "Total validé du match",
@@ -1964,7 +1964,7 @@
     "watchVideo": "Voir le vidéo",
     "marquee": {
       "items": [
-        "Convocations en 1 minute",
+        "Convocations en moins de 2 minutes",
         "Partage des frais sans friction",
         "Secrétaire IA sous contrôle humain",
         "Chronomètre et mini-tournois",
@@ -2113,13 +2113,13 @@
           "afterTitle": "Avec JogaBola",
           "afterItems": [
             "Lien unique de convocation avec liste d'attente automatique.",
-            "Partage clair par joueur avec envoi de justificatif.",
+            "Partage clair par joueur, avec le suivi de qui a payé.",
             "Invités inscrits en quelques secondes par email.",
             "Chronomètre au bord du terrain et partage du score."
           ],
           "metrics": [
             {
-              "value": "< 2m",
+              "value": "< 2 min",
               "label": "Créer match"
             },
             {
@@ -2220,8 +2220,8 @@
             "La liste d'attente remplace automatiquement chaque désistement.",
             "Mur d'annonces du capitaine distinct du chat de match."
           ],
-          "outcomeLabel": "Temps moyen de création",
-          "outcomeValue": "45 sec",
+          "outcomeLabel": "Pour ouvrir un match",
+          "outcomeValue": "< 2 min",
           "ctaLabel": "Créer ma première convocation",
           "ctaHref": "/auth"
         },
@@ -2337,24 +2337,121 @@
             "Quota initial de Secrétaire IA validé par humain"
           ],
           "metricLabel": "Organisation",
-          "metricValue": "Multi-équipes"
+          "metricValue": "Jusqu'à 10 équipes"
         },
         {
           "step": "ÉTAPE 04",
           "timeframe": "Échelle",
           "title": "AI Club OS Complet",
           "tierBadge": "Professionnel & Champion",
-          "description": "Gestion complète de club ou d'académie : staff virtuel avec identité et budget dédiés, isolation stricte et modules sur mesure.",
+          "description": "Gestion complète de club ou d'académie : staff virtuel avec identité et budget dédiés, quotas étendus et modules sur mesure.",
           "unlocks": [
-            "Isolation multi-clubs stricte côté serveur",
-            "Secrétaire IA étendu et journal d'audit complet",
+            "Pilotage centralisé de plusieurs effectifs",
+            "Quota étendu du Secrétaire IA et maîtrise des coûts",
             "Rapports avancés de saison et d'assiduité",
             "Onboarding accompagné et exclusivités Champion"
           ],
           "metricLabel": "Gouvernance",
           "metricValue": "Enterprise Amateur"
         }
-      ]
+      ],
+      "map": {
+        "layers": {
+          "core": "Socle",
+          "routine": "Opérations",
+          "club": "Club",
+          "ai": "AI Club OS"
+        },
+        "status": {
+          "active": "Actif",
+          "consolidated": "Consolidé",
+          "locked": "Étape {code}"
+        },
+        "controls": {
+          "autoPlay": "Simuler l’évolution",
+          "pause": "Pause",
+          "previousStage": "Étape précédente",
+          "nextStage": "Étape suivante",
+          "clickToExplore": "Cliquez sur un module pour l’inspecter"
+        },
+        "telemetry": {
+          "teams": "Équipes",
+          "athletes": "Joueurs / éq.",
+          "aiWorkflow": "Flux IA",
+          "humanControl": "Contrôle humain",
+          "teamsUpTo": "Jusqu’à {count}",
+          "teamsScale": "{count}+ / club",
+          "athletesPerTeam": "Jusqu’à {count}",
+          "athletesScale": "{count}+ / éq.",
+          "aiModes": {
+            "manual": "Gestion directe",
+            "alerts": "Alertes auto",
+            "secretary": "Secrétaire IA",
+            "fullOs": "Staff IA + Audit"
+          }
+        },
+        "inspector": {
+          "builtOn": "S’appuie sur :",
+          "flowsTo": "Alimente :"
+        },
+        "nodes": {
+          "roster": {
+            "title": "Effectif de Base",
+            "badge": "Jusqu’à 25 joueurs",
+            "summary": "Profils unifiés par e-mail pour titulaires et invités, préservant présences et statistiques dès le premier match."
+          },
+          "callup": {
+            "title": "Convocation",
+            "badge": "Lien unique · RSVP",
+            "summary": "Ouverture du match en quelques secondes avec plafond de places, priorité effectif et liste d’attente automatique."
+          },
+          "split": {
+            "title": "Partage Terrain",
+            "badge": "Par match",
+            "summary": "Calcul automatique de la part de chaque participant sans tableur ni comptes manuels en fin de rencontre."
+          },
+          "history": {
+            "title": "Archives & Classements",
+            "badge": "Buts et présences",
+            "summary": "Rapports d’après-match, assiduité, buts et notes accumulés automatiquement semaine après semaine."
+          },
+          "chat": {
+            "title": "Chat & Mur",
+            "badge": "Temps réel",
+            "summary": "Mur d’annonces de l’organisateur et chat temps réel dédié exclusivement aux joueurs confirmés."
+          },
+          "payments": {
+            "title": "Justificatifs",
+            "badge": "Validation en 1 clic",
+            "summary": "Envoi du reçu par le joueur, relances des retards et clôture financière transparente du match."
+          },
+          "multiteam": {
+            "title": "Plus d'Équipes",
+            "badge": "Jusqu’à 10 équipes",
+            "summary": "Regroupez seniors, U23 ou vétérans sous un même club sans mélanger les effectifs ni perdre l’historique."
+          },
+          "fixtures": {
+            "title": "Saisons & Rencontres",
+            "badge": "Calendrier compétitif",
+            "summary": "Saisons, adversaires et matchs officiels reliés de manière optionnelle aux convocations de l’équipe."
+          },
+          "staff": {
+            "title": "Staff Technique",
+            "badge": "Permissions par rôle",
+            "summary": "Coachs, dirigeants et trésoriers avec droits définis par le propriétaire et transfert sécurisé."
+          },
+          "secretary": {
+            "title": "Secrétaire IA",
+            "badge": "Validation humaine",
+            "summary": "Prépare les demandes de disponibilité, interprète les réponses et signale les ambiguïtés — jamais d’envoi sans validation."
+          },
+          "governance": {
+            "title": "Staff IA Étendu",
+            "badge": "Quotas et révocation",
+            "summary": "Identité dédiée par agent, quotas étendus, plafonds de coût et révocation immédiate."
+          }
+        }
+      }
     },
     "guardrails": {
       "kicker": "Confiance & Maîtrise",
@@ -2370,7 +2467,7 @@
         {
           "tag": "02 · Sécurité",
           "title": "Isolation stricte par club",
-          "description": "Chaque lecture et action vérifie session, rôle et périmètre côté serveur. Vos données privées restent invisibles aux autres clubs."
+          "description": "Chaque lecture et action vérifie session, rôle et périmètre côté serveur. Vos données privées restent invisibles aux autres clubs — dans tous les forfaits."
         },
         {
           "tag": "03 · Prévisibilité",
@@ -3608,7 +3705,7 @@
     "homeTitlePrefix": "Commencez gratuit.",
     "homeTitleAccent": "Grandissez à votre rythme.",
     "subtitle": "Du gestionnaire solo d'un match du jeudi au club multi-équipes équipé d'un staff virtuel IA — passez au palier supérieur au bon moment.",
-    "recommended": "Le plus choisi",
+    "recommended": "Recommandé",
     "billing": {
       "monthly": "Mensuel",
       "annual": "Annuel"
@@ -3632,7 +3729,7 @@
           "10 convocations par mois avec liste d'attente",
           "Suivi essentiel des présences et partage manuel",
           "Chronomètre de match et mini-tournois",
-          "Invités sans compte via simple email"
+          "Les invités confirment via le lien, sans créer de compte"
         ]
       },
       "basic": {
@@ -3641,7 +3738,7 @@
         "description": "Pour les équipes hebdomadaires souhaitant des finances claires, des justificatifs et un historique durable.",
         "price": "4,99€",
         "period": "/mois",
-        "cta": "Choisir Basique",
+        "cta": "Demander l'accès Basique",
         "aiSummary": "",
         "features": [
           "Tout l'essentiel de l'offre Gratuite",
@@ -3657,7 +3754,7 @@
         "description": "Pour les équipes structurées gérant saisons, matchs compétitifs et premiers flux avec le Secrétaire IA.",
         "price": "9,99€",
         "period": "/mois",
-        "cta": "Choisir Amateur",
+        "cta": "Demander l'accès Amateur",
         "aiSummary": "Inclut Secrétaire IA initial (validation humaine)",
         "features": [
           "Tout le contenu de l'offre Basique",
@@ -3673,11 +3770,11 @@
         "description": "Pour les clubs amateurs et académies multi-équipes ayant besoin d'un pilotage centralisé et d'un staff virtuel étendu.",
         "price": "24,99€",
         "period": "/mois",
-        "cta": "Choisir Professionnel",
-        "aiSummary": "Secrétaire IA étendu + journal d'audit",
+        "cta": "Demander l'accès Professionnel",
+        "aiSummary": "Quota étendu du Secrétaire IA",
         "features": [
           "Tout le contenu de l'offre Amateur",
-          "Pilotage multi-équipes avec isolation stricte du club",
+          "Pilotage multi-équipes centralisé au club",
           "Quota Secrétaire IA étendu et maîtrise des coûts",
           "Rapports avancés de saison et d'assiduité",
           "Support prioritaire pour coachs et dirigeants"
@@ -3881,7 +3978,7 @@
       "create": {
         "eyebrow": "ÉVÉNEMENTS",
         "title": "Planifiez des matchs facilement",
-        "subtitle": "Créez un événement en moins d'une minute"
+        "subtitle": "Créez un événement en moins de 2 minutes"
       },
       "paid": {
         "eyebrow": "PAIEMENTS",

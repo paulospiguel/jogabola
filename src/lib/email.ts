@@ -266,7 +266,7 @@ export async function sendEventReminder(
 ) {
   return send({
     to,
-    subject: `🏆 Lembrete: ${event.title} ${event.hoursUntil <= 24 ? "amanhã" : `em ${Math.round(event.hoursUntil / 24)} dias`}`,
+    subject: `🏆 Lembrete: ${event.title} ${event.hoursUntil <= 24 ? "amanhã" : `dentro de ${Math.round(event.hoursUntil / 24)} dias`}`,
     react: React.createElement(EventReminderEmail, {
       name,
       eventTitle: event.title,

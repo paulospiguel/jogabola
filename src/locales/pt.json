@@ -3,9 +3,9 @@
     "actions": {
       "createTournament": "Criar Torneio",
       "inviteFriends": "Convidar Amigos",
-      "newMatch": "Nova Partida",
+      "newMatch": "Novo Jogo",
       "quickActions": "⚡ Ações Rápidas",
-      "scheduleMatch": "Agendar Partida",
+      "scheduleMatch": "Marcar Jogo",
       "viewStats": "Ver Estatísticas"
     },
     "activity": {
@@ -32,9 +32,9 @@
         "favorite": "Favoritar",
         "favorited": "Favoritado",
         "follow": "Seguir",
-        "following": "Seguindo",
-        "join": "Participar do evento",
-        "loading": "Carregando evento...",
+        "following": "A seguir",
+        "join": "Participar no evento",
+        "loading": "A carregar evento...",
         "messageModal": {
           "cancel": "Cancelar",
           "description": "Envia uma mensagem ao organizador do evento",
@@ -55,44 +55,44 @@
       "viewAll": "Ver todos os eventos"
     },
     "header": {
-      "description": "Acompanha o ritmo da tua equipa, organiza partidas e mantém a comunidade sempre ativa.",
+      "description": "Acompanha o ritmo da tua equipa, organiza jogos e mantém o grupo sempre ativo.",
       "openMenu": "Abrir menu de navegação",
-      "quote": "Acompanha o desempenho dos teus jogadores, cria estatísticas detalhadas e monitoriza a performance da tua equipa.",
-      "searchPlaceholder": "Pesquisar partidas, jogadores ou estatísticas...",
+      "quote": "Acompanha o desempenho dos teus jogadores, cria estatísticas detalhadas e monitoriza o rendimento da tua equipa.",
+      "searchPlaceholder": "Pesquisar jogos, jogadores ou estatísticas...",
       "subtitle": "Central da Arena",
       "title": "Bem-vindo de volta à Arena ⚽"
     },
     "matches": {
       "status": {
-        "confirmed": "✓ Confirmada",
+        "confirmed": "✓ Confirmado",
         "pending": "⏳ Pendente"
       },
-      "title": "Próximas Partidas",
-      "viewAll": "Ver todas as partidas"
+      "title": "Próximos Jogos",
+      "viewAll": "Ver todos os jogos"
     },
     "notifications": {
       "ago1hour": "Há 1 hora",
       "ago2hours": "Há 2 horas",
       "ago5min": "Há 5 minutos",
-      "newMatch": "Nova partida disponível",
+      "newMatch": "Novo jogo disponível",
       "teamInvite": "Convite de equipa",
       "title": "Notificações",
       "tournamentStarting": "Torneio a começar"
     },
     "stats": {
       "activeTeams": "Equipas Ativas",
-      "matchesPlayed": "Partidas Jogadas",
+      "matchesPlayed": "Jogos Disputados",
       "thisWeek": "Esta semana",
-      "upcomingMatches": "Próximas Partidas",
-      "winRate": "Taxa de Vitória"
+      "upcomingMatches": "Próximos Jogos",
+      "winRate": "Taxa de Vitórias"
     },
     "userMenu": {
-      "myAccount": "Minha Conta"
+      "myAccount": "A Minha Conta"
     }
   },
   "authPage": {
-    "loginSubtitle": "Use sua conta verificada para acessar rapidamente suas partidas e estatísticas.",
-    "builtForChampions": "Construído para Campeões",
+    "loginSubtitle": "Usa a tua conta verificada para acederes rapidamente aos teus jogos e estatísticas.",
+    "builtForChampions": "Feito para Campeões",
     "title": "Entrar no JogaBola",
     "registerTitle": "Criar conta de atleta",
     "registerSubtitle": "Usa o teu email para criares uma conta verificada e voltares mais rápido nos próximos jogos.",
@@ -118,9 +118,9 @@
     "messages": {
       "codeSentTitle": "Código enviado",
       "codeSentDescription": "Enviámos um código para {email}.",
-      "loginSuccessTitle": "Login validado",
+      "loginSuccessTitle": "Sessão iniciada",
       "loginSuccessDescription": "A entrar no {destination}.",
-      "loginErrorTitle": "Erro no login",
+      "loginErrorTitle": "Erro ao iniciar sessão",
       "loginErrorDescription": "Não foi possível enviar o código.",
       "invalidCodeTitle": "Código inválido",
       "invalidCodeDescription": "Confirma o código e tenta outra vez.",
@@ -130,7 +130,7 @@
         "RESEND_API_KEY_INVALID": "A chave do Resend é inválida. Confirma RESEND_API_KEY.",
         "RESEND_FROM_INVALID": "O remetente de email está inválido. Corrige EMAIL_FROM.",
         "RESEND_DOMAIN_NOT_VERIFIED": "O domínio do remetente ainda não está verificado no Resend.",
-        "RESEND_DEV_DOMAIN_RESTRICTED": "O domínio resend.dev só envia para o email dono da conta Resend. Verifica um domínio próprio para enviar códigos.",
+        "RESEND_DEV_DOMAIN_RESTRICTED": "O domínio resend.dev só envia para o email titular da conta Resend. Verifica um domínio próprio para enviar códigos.",
         "EMAIL_SEND_FAILED": "Não foi possível enviar o código por email. Confirma o email ou tenta novamente."
       },
       "loginSuccessTransfer": "A abrir o pedido de transferência."
@@ -165,11 +165,11 @@
       "contact": "Contacto"
     },
     "analysis": {
-      "title": "Análise de Performance",
-      "evolution": "Evolução do Rating por Jogo",
+      "title": "Análise de Rendimento",
+      "evolution": "Evolução da Nota por Jogo",
       "periods": {
         "last10": "Últimos 10 jogos",
-        "season": "Temporada 2024"
+        "season": "Época 2024"
       }
     },
     "roles": {
@@ -186,10 +186,10 @@
     "chat": {
       "badge": "Em breve",
       "title": "Chat com atleta",
-      "description": "Esta conversa vai ficar disponível numa próxima versão. Por agora, usa o email no card do atleta para comunicar diretamente."
+      "description": "Esta conversa vai ficar disponível numa próxima versão. Por agora, usa o email na ficha do atleta para comunicar diretamente."
     },
     "notValidated": "Atleta não validado",
-    "notValidatedDesc": "Este atleta ainda não criou uma conta no Jogabola. As estatísticas e o perfil completo estarão disponíveis após a validação.",
+    "notValidatedDesc": "Este atleta ainda não criou uma conta no JogaBola. As estatísticas e o perfil completo estarão disponíveis após a validação.",
     "pendingValidation": "Validação pendente",
     "removeDialog": {
       "title": "Remover do plantel?",
@@ -247,7 +247,7 @@
     },
     "empty": "Sem eventos.",
     "emptyState": {
-      "description": "Crie um jogo, treino ou evento para a sua equipa.",
+      "description": "Cria um jogo, treino ou evento para a tua equipa.",
       "title": "Nenhum evento"
     },
     "hero": {
@@ -266,7 +266,7 @@
       "noEvents": "Nenhum evento",
       "prev": "Anterior",
       "rangePlaceholder": "Selecionar intervalo de datas",
-      "rangeHint": "Clique acima para escolher o período"
+      "rangeHint": "Clica acima para escolheres o período"
     },
     "status": {
       "cancelled": "Cancelado",
@@ -305,7 +305,7 @@
       "telegram": "Telegram",
       "shareMessage": "Convocatória: {title} — Confirma a tua presença:"
     },
-    "error": "Erro ao criar evento. Tente novamente.",
+    "error": "Erro ao criar evento. Tenta novamente.",
     "errors": {
       "FORBIDDEN": "Não tens permissão para criar um evento nesta equipa.",
       "UNAUTHORIZED": "Tens de iniciar sessão para criar um evento.",
@@ -318,7 +318,7 @@
       "VALIDATION_RECURRENCE_AND_RANGE_EXCLUSIVE": "Um evento não pode ser recorrente e ter um intervalo de datas ao mesmo tempo.",
       "PAYOUT_RECONFIGURE_REQUIRED": "Confirma primeiro os dados de pagamento da equipa em Pagamentos. Até lá, o MB WAY não pode ser ativado."
     },
-    "info": "Após criar o evento, pode adicionar jogadores e gerir a convocatória a partir da página do evento.",
+    "info": "Após criares o evento, podes adicionar jogadores e gerir a convocatória a partir da página do evento.",
     "access": {
       "rosterOnly": "Apenas Plantel",
       "rosterOnlyHint": "Só emails que pertencem ao plantel atual podem confirmar presença.",
@@ -345,10 +345,10 @@
       "time": "Hora",
       "location": "Local",
       "maxPlayers": "Máx. jogadores",
-      "recurrence": "Modalidade",
+      "recurrence": "Periodicidade",
       "fee": "Quota de participação",
-      "private": "Evento particular",
-      "privateSub": "Aberto a todos os convocados",
+      "private": "Evento privado",
+      "privateSub": "Aberto apenas aos convocados",
       "scheduleType": "Agendamento",
       "until": "Até",
       "repeatUntil": "Repete até",
@@ -363,14 +363,14 @@
       "section": "Pagamento",
       "price": "Valor (€)",
       "required": "Pagamento obrigatório",
-      "requiredHint": "Atletas devem pagar antes de confirmar",
+      "requiredHint": "Os atletas devem pagar antes de confirmar",
       "deadlineHours": "Prazo de pagamento",
       "deadlineHoursUnit": "h antes do jogo",
-      "acceptMbway": "Aceitar MBWay",
-      "acceptMbwayHint": "Permitir pagamento via MBWay",
-      "mbwayPhone": "Número de Telemóvel MBWay",
+      "acceptMbway": "Aceitar MB WAY",
+      "acceptMbwayHint": "Permitir pagamento via MB WAY",
+      "mbwayPhone": "Número de Telemóvel MB WAY",
       "transferRequiresProof": "Exigir comprovativo",
-      "transferRequiresProofHint": "Exigir upload do comprovativo de transferência",
+      "transferRequiresProofHint": "Exigir envio do comprovativo de transferência",
       "mbwayPhonePlaceholder": "Ex: 912345678"
     },
     "recurrence": {
@@ -403,7 +403,7 @@
     "successSubtitle": "Convocatória enviada com sucesso.",
     "types": {
       "challenge": {
-        "desc": "Desafie outras equipas",
+        "desc": "Desafia outras equipas",
         "label": "Desafio"
       },
       "game": {
@@ -437,7 +437,7 @@
       }
     },
     "final": {
-      "stepsInfo": "Os jogadores recebem notificação e podem confirmar/recusar diretamente.",
+      "stepsInfo": "Os jogadores recebem a notificação e podem confirmar ou recusar diretamente.",
       "sendCallup": "Enviar Convocatória",
       "successSent": "Convocatória enviada a <strongComponent>{count} jogadores</strongComponent>.",
       "selectedCount": "{count} selecionados",
@@ -471,12 +471,12 @@
       "homeGround": "Ex: Estádio Municipal"
     },
     "success": "Equipa {name} criada com sucesso!",
-    "successSubtitle": "Agora podes convidar jogadores e organizar partidas.",
+    "successSubtitle": "Agora podes convidar jogadores e organizar jogos.",
     "title": "Criar Nova Equipa",
     "errors": {
       "TEAM_NAME_ALREADY_EXISTS": "Já existe uma equipa com este nome.",
       "TEAM_SLUG_ALREADY_EXISTS": "Este identificador (slug) já está a ser utilizado por outra equipa.",
-      "TEAM_LIMIT_REACHED": "Atingiste o limite de {limit} equipas no plano gratuito. Faz upgrade para criar mais equipas.",
+      "TEAM_LIMIT_REACHED": "Atingiste o limite de {limit} equipas no plano gratuito. Atualiza o plano para criares mais equipas.",
       "generic": "Erro ao criar equipa."
     },
     "limitReachedTitle": "Limite do plano gratuito",
@@ -487,7 +487,7 @@
       "yes": "Sim, quero jogar",
       "no": "Agora não"
     },
-    "defaultTeamName": "Minha Equipa"
+    "defaultTeamName": "A Minha Equipa"
   },
   "arenaNoTeamModal": {
     "title": "Cria uma equipa primeiro",
@@ -570,7 +570,7 @@
     },
     "management": {
       "revokeTitle": "Revogar Presença?",
-      "revokeDescription": "Tens a certeza que desejas remover {name} da lista de participantes? Esta ação irá apagar o registo de presença.",
+      "revokeDescription": "Tens a certeza de que queres remover {name} da lista de participantes? Esta ação vai apagar o registo de presença.",
       "revokeConfirm": "Revogar",
       "blockTitle": "Bloquear Participante?",
       "blockDescription": "Ao bloquear {name}, o participante será removido e poderá ser aplicada uma multa de não comparência. Tens a certeza?",
@@ -590,7 +590,7 @@
     "locationMap": {
       "notFound": "Localização não encontrada",
       "placeholder": "Morada do local...",
-      "errorSaving": "Erro ao guardar. Tente novamente.",
+      "errorSaving": "Erro ao guardar. Tenta novamente.",
       "shareTitle": "Partilhar localização",
       "copyLink": "Copiar link",
       "copied": "Copiado!",
@@ -636,7 +636,7 @@
     "tabs": {
       "roster": "Convocatória",
       "location": "Local",
-      "lineup": "Escalação",
+      "lineup": "Onze inicial",
       "teams": "Equipas",
       "chat": "Chat"
     },
@@ -653,7 +653,7 @@
       "reservesStatus": "Reserva",
       "pendingStatus": "Pendente",
       "squadCount": "Plantel · {count}",
-      "missingAlert": "Falta {count, plural, =1 {# jogador} other {Faltam # jogadores}}",
+      "missingAlert": "{count, plural, =1 {Falta # jogador} other {Faltam # jogadores}}",
       "missingAlertSub": "para fechar o formato de {format} ({teamsCount} equipas)",
       "formatLabel": "Formato de Jogo",
       "teamsNumLabel": "Número de Equipas",
@@ -699,20 +699,20 @@
       "monthly": "Mensal"
     },
     "aiBalancer": {
-      "button": "Balanceamento IA ⚡",
-      "modalTitle": "Balanceamento de Equipas por IA",
+      "button": "Equilibrar Equipas ⚡",
+      "modalTitle": "Equilíbrio de Equipas por IA",
       "modalSubtitle": "Acesso Antecipado / Beta",
-      "pitchDescription": "Usa a nossa Inteligência Artificial para analisar o histórico e a pontuação dos atletas e criar equipas 100% equilibradas. Uma partida justa é uma partida melhor!",
+      "pitchDescription": "Usa a nossa Inteligência Artificial para analisar o histórico e as notas dos atletas e criar equipas 100% equilibradas. Um jogo equilibrado é um jogo melhor!",
       "guestPrompt": "Quantos convidados temos hoje?",
       "guestLabel": "Número de convidados (sem conta)",
       "fakePlayer": "Jogador Temp.",
       "fakePlayerDesc": "Sem histórico (convidado)",
       "fillWithFakes": "Completar com Temporários",
       "balanceAction": "Gerar Equipas",
-      "loading": "A analisar histórico e a equilibrar pesos...",
+      "loading": "A analisar histórico e a equilibrar níveis...",
       "teamA": "Equipa A",
       "teamB": "Equipa B",
-      "avgRating": "Rating Médio:"
+      "avgRating": "Nota Média:"
     },
     "titleJogo": "Detalhe do Jogo",
     "titleTreino": "Treino",
@@ -758,9 +758,9 @@
     },
     "title": "Eventos",
     "editInfo": "Editar Informações",
-    "statusLabel": "Status do Evento",
+    "statusLabel": "Estado do Evento",
     "eventNotFound": "Evento não encontrado",
-    "errorUpdating": "Erro ao atualizar evento. Tente novamente.",
+    "errorUpdating": "Erro ao atualizar evento. Tenta novamente.",
     "types": {
       "match": "Jogo",
       "training": "Treino"
@@ -773,9 +773,9 @@
     },
     "dangerZone": "Zona de Perigo",
     "deleteEvent": "Eliminar evento",
-    "deleteWarningTitle": "Tem a certeza?",
-    "deleteWarningDesc": "Esta ação não pode ser desfeita. Todos os jogadores confirmados serão notificados do cancelamento.",
-    "cannotDeletePaidEvent": "Este evento tem pagamentos associados. Por questões de integridade financeira, não é possível eliminá-lo. Deseja cancelar o evento em vez disso?",
+    "deleteWarningTitle": "Tens a certeza?",
+    "deleteWarningDesc": "Esta ação é irreversível. Todos os jogadores confirmados serão notificados do cancelamento.",
+    "cannotDeletePaidEvent": "Este evento tem pagamentos associados. Por questões de integridade financeira, não é possível eliminá-lo. Queres cancelar o evento em vez disso?",
     "cancelEventInstead": "Cancelar evento",
     "eventDeleted": "Evento eliminado com sucesso",
     "deleteError": "Erro ao eliminar o evento",
@@ -790,7 +790,7 @@
       "portrait": "Retrato do jogador {number}",
       "trigger": "Jogador {number} · {team}",
       "fictional": "Atleta fictício do simulador",
-      "time": "Instante da partida",
+      "time": "Instante do jogo",
       "team": "Equipa"
     },
     "title": "Simulador de Jogo 3D",
@@ -811,7 +811,7 @@
     "level": "Nível {level} de 5",
     "parameters": "Pressão {pressing}/100 · Passe {passing}/100",
     "lineup": "Titulares",
-    "formation": "Formação",
+    "formation": "Sistema tático",
     "position": "Posição",
     "slot": "Posição {number}",
     "keeper": "Guarda-redes",
@@ -858,7 +858,7 @@
       "conceded": "Remates sofridos"
     },
     "highlights": "Lances recentes",
-    "noHighlights": "Reproduz a partida para ver os primeiros lances.",
+    "noHighlights": "Reproduz o jogo para veres os primeiros lances.",
     "adjustment": "Posição ajustada para o jogador {number}",
     "events": {
       "goal": "Golo · {team}",
@@ -885,11 +885,11 @@
     "signOut": "Sair",
     "teamSwitcher": {
       "createTeam": "Criar uma equipa",
-      "myTeam": "Minha equipa",
+      "myTeam": "A minha equipa",
       "myTeams": "{count} equipas",
       "noTeam": "Sem equipa",
       "select": "Selecionar equipa",
-      "teamsLabel": "Minhas Equipas",
+      "teamsLabel": "As Minhas Equipas",
       "createNewTeam": "Criar nova equipa",
       "upgradePlan": "Atualizar plano",
       "lockedToTeam": "Equipa do evento"
@@ -913,11 +913,11 @@
         "week": "Semana",
         "year": "Ano"
       },
-      "title": "Performance Analytics"
+      "title": "Análise de Desempenho"
     },
     "billingHeader": {
-      "description": "Faz a gestão da tua subscrição, faz upgrade ou consulta faturas.",
-      "title": "Faturamento e Planos"
+      "description": "Gere a tua subscrição, atualiza o plano ou consulta faturas.",
+      "title": "Faturação e Planos"
     },
     "calendar": {
       "newEvent": "Novo evento",
@@ -925,7 +925,7 @@
       "noAppointmentsSub": "Cria eventos para treinos, jogos ou reuniões diretamente nesta data.",
       "scheduleNow": "Agendar agora",
       "scheduledEvents": "evento(s) agendados",
-      "seasonCalendar": "Calendário da temporada",
+      "seasonCalendar": "Calendário da época",
       "seasonCalendarSub": "Seleciona um dia para ver os eventos agendados ou clica num marcador para detalhes rápidos.",
       "smartSchedule": "Agenda inteligente",
       "subtitle": "Organiza treinos, jogos e reuniões num só lugar. Acompanha confirmações de presença, gere alterações e integra tudo com o Google Calendar para manter a equipa alinhada.",
@@ -946,7 +946,7 @@
     },
     "eyebrows": {
       "arena": "Arena",
-      "billing": "Faturamento",
+      "billing": "Faturação",
       "calendar": "Agenda",
       "club": "Clube",
       "events": "Eventos",
@@ -969,14 +969,14 @@
     },
     "mvp": {
       "rating": "Classificação",
-      "season": "Temporada",
-      "title": "Corrida MVP",
+      "season": "Época",
+      "title": "Corrida a Melhor Jogador",
       "viewLeaderboards": "Ver Tabelas →"
     },
     "quickActions": {
       "addPlayer": "Adicionar atleta",
       "announce": "Comunicar",
-      "assignKit": "Atribuir kit",
+      "assignKit": "Atribuir equipamento",
       "feesStatus": "Estado de quotas"
     },
     "stats": {
@@ -990,7 +990,7 @@
         "value": "Em 4h 22m"
       },
       "totalGoals": {
-        "detail": "Média de 2,4 por partida",
+        "detail": "Média de 2,4 por jogo",
         "title": "Golos marcados"
       },
       "winRatio": {
@@ -1031,9 +1031,9 @@
       "premium": "PREMIUM",
       "title": "Validação por IA",
       "subtitle": "Comprovativos verificados automaticamente",
-      "description": "A nossa IA analisa cada comprovativo de MBWay ou transferência: confirma o valor, o destinatário e o estado da transação — e pré-marca como pago para tu confirmares num clique.",
+      "description": "A nossa IA analisa cada comprovativo de MB WAY ou transferência: confirma o valor, o destinatário e o estado da transação — e pré-marca como pago para tu confirmares num clique.",
       "feature1": "Lê o valor, IBAN e referência",
-      "feature2": "Detecta tentativas de fraude",
+      "feature2": "Deteta tentativas de fraude",
       "feature3": "Pré-aprova em <3s",
       "cta": "Experimentar 7 dias grátis"
     },
@@ -1069,9 +1069,9 @@
     "configureBtn": "Configurar métodos",
     "stats": {
       "method": "Métodos ativos",
-      "methodValue": "MBWay · Numerário",
+      "methodValue": "MB WAY · Dinheiro",
       "proofs": "Comprovativos",
-      "proofsValue": "Upload ativo",
+      "proofsValue": "Envio ativo",
       "validation": "Pré-validação",
       "validationValue": "Preparada",
       "toValidate": "A validar",
@@ -1109,12 +1109,12 @@
       "noNumber": "Sem número",
       "soon": "Em breve",
       "mbway": {
-        "title": "MBWay",
+        "title": "MB WAY",
         "description": "Transferência manual por telemóvel",
         "phone": "Número de telemóvel",
         "name": "Nome do destinatário (opcional)",
         "placeholderName": "Ex: João Silva",
-        "errorPhone": "Insere o número de telemóvel para MBWay."
+        "errorPhone": "Insere o número de telemóvel para MB WAY."
       },
       "cash": {
         "title": "Dinheiro",
@@ -1143,8 +1143,8 @@
       }
     },
     "methods": {
-      "mbway": "MBWay",
-      "cash": "Numerário",
+      "mbway": "MB WAY",
+      "cash": "Dinheiro",
       "stripe": "Stripe",
       "transfer": "Transferência",
       "cashSub": "Presencial no jogo",
@@ -1157,7 +1157,7 @@
       "amount": "Valor",
       "method": "Método",
       "status": "Estado",
-      "risk": "Score",
+      "risk": "Risco",
       "viewProfile": "Ver Perfil",
       "viewDetail": "Ver Detalhes",
       "date": "Data e Hora",
@@ -1173,7 +1173,7 @@
       "proof": "Comprovativo de Pagamento",
       "proofAlt": "Comprovativo de Pagamento",
       "noProof": "Sem comprovativo enviado",
-      "noProofSub": "Aguarde pelo upload do atleta ou valide manualmente.",
+      "noProofSub": "Aguarda o envio do atleta ou valida manualmente.",
       "history": "Histórico do Atleta",
       "verify": "Validar manualmente",
       "requestProof": "Solicitar Comprovativo",
@@ -1201,8 +1201,8 @@
     },
     "actions": {
       "back": "Voltar à lista",
-      "download": "Download",
-      "uploadProof": "Carregar Comprovativos",
+      "download": "Descarregar",
+      "uploadProof": "Enviar Comprovativos",
       "setMethods": "Métodos de Pagamento",
       "autoValidate": "Auto-validação",
       "relevant": "Outras Ações",
@@ -1213,17 +1213,17 @@
       "ready": "Pronto",
       "validating": "A validar",
       "validated": "Validado",
-      "refunded": "Estornado",
+      "refunded": "Reembolsado",
       "credited": "Em Crédito"
     },
     "method": {
-      "manualMbway": "MBWay manual"
+      "manualMbway": "MB WAY manual"
     },
     "proofs": {
       "pending": "Comprovativo pendente",
       "validating": "Pago - aguarda validação"
     },
-    "markRefund": "Devolver (Estorno)",
+    "markRefund": "Devolver (Reembolso)",
     "markCredit": "Deixar em Crédito",
     "empty": {
       "errorTitle": "Não foi possível carregar os pagamentos",
@@ -1236,14 +1236,14 @@
     "reserve": "Reserva",
     "pending": "Pendente",
     "refused": "Recusado",
-    "highlight": "Highlight",
+    "highlight": "Destaque",
     "waiting": "Em espera",
     "validating": "A validar",
     "low": "Risco Baixo",
     "medium": "Risco Médio",
     "high": "Risco Alto",
-    "scoreIs": "Score de risco",
-    "refunded": "Estornado",
+    "scoreIs": "Nível de risco",
+    "refunded": "Reembolsado",
     "credited": "Em Crédito"
   },
   "arenaShared": {
@@ -1321,7 +1321,7 @@
       "NA": "Não definido"
     },
     "notValidated": "Jogador não validado",
-    "notValidatedDesc": "Este jogador ainda não criou a sua conta Jogabola. O perfil completo e as estatísticas estarão disponíveis após a validação.",
+    "notValidatedDesc": "Este jogador ainda não criou a sua conta JogaBola. O perfil completo e as estatísticas estarão disponíveis após a validação.",
     "pendingValidation": "Validação em espera",
     "empty": {
       "title": "Ainda não há jogadores no plantel",
@@ -1340,19 +1340,19 @@
     "close": "Fechar",
     "comingSoon": "Em breve",
     "comingSoonDescription": "Esta área está em desenvolvimento. Em breve terás acesso completo.",
-    "confirm": "Confirme",
+    "confirm": "Confirmar",
     "confirmAction": "Confirmar",
-    "confirmPassword": "Confirme a password",
-    "copyright": "Direitos autorais ©{year}. Todos os direitos reservados.",
+    "confirmPassword": "Confirma a palavra-passe",
+    "copyright": "Direitos de autor © {year}. Todos os direitos reservados.",
     "create": "Criar",
     "dark": "Escuro",
     "date": "Data",
     "dateTime": "Data e hora",
     "decline": "Recusar",
-    "delete": "Excluir",
-    "description": "Descriçao",
+    "delete": "Eliminar",
+    "description": "Descrição",
     "edit": "Editar",
-    "email": "E-mail",
+    "email": "Email",
     "error": "Erro",
     "finish": "Concluir",
     "goToStep": "Ir para o passo {number}",
@@ -1361,22 +1361,22 @@
     "hour": "Hora",
     "inDevelopment": "Em Desenvolvimento",
     "invalidDate": "Data inválida",
-    "join": "Juntando-se",
+    "join": "A juntar-se",
     "knowMore": "Saber mais",
     "light": "Claro",
     "loadError": "Erro ao carregar",
-    "loading": "Carregando",
+    "loading": "A carregar",
     "logo": "Logótipo",
     "manage": "Gerir",
-    "myAccount": "Minha Conta",
+    "myAccount": "A Minha Conta",
     "name": "Nome",
-    "next": "Próximo",
-    "nextSlide": "Próximo slide",
+    "next": "Seguinte",
+    "nextSlide": "Seguinte",
     "notFilled": "Não preenchido",
-    "previousSlide": "Slide anterior",
+    "previousSlide": "Anterior",
     "retry": "Tentar novamente",
     "selectDate": "Selecionar data",
-    "selectDates": "Selecione as datas",
+    "selectDates": "Seleciona as datas",
     "clear": "Limpar",
     "toggleSidebar": "Alternar barra lateral",
     "toggleTheme": "Alternar tema",
@@ -1387,8 +1387,8 @@
     "playerDescription": "Descrição do jogador",
     "playerJouneys": "Viagens dos jogadores",
     "playerJouneysStats": "Estatísticas da jornada do jogador",
-    "playerMatches": "Partidas de jogadores",
-    "playerMatchesStats": "Estatísticas da partida do jogador",
+    "playerMatches": "Jogos dos jogadores",
+    "playerMatchesStats": "Estatísticas de jogo do jogador",
     "playerName": "Nome do jogador",
     "playerRole": "Posição do jogador",
     "playerStats": "Estatísticas do jogador",
@@ -1400,19 +1400,19 @@
     "save": "Guardar",
     "search": "Pesquisar...",
     "searchCountry": "Pesquisar país...",
-    "season": "Temporada",
-    "selectCompetition": "Selecione uma competição",
-    "settings": "Configurações",
+    "season": "Época",
+    "selectCompetition": "Seleciona uma competição",
+    "settings": "Definições",
     "signOut": "Sair",
     "statistics": "Estatísticas",
     "success": "Sucesso",
     "system": "Sistema",
     "team": "Equipa",
     "teamDescription": "Descrição da equipa",
-    "teamJouneys": "Dias de equipa",
+    "teamJouneys": "Jornadas da equipa",
     "teamJouneysStats": "Estatísticas da jornada da equipa",
-    "teamMatches": "Saídas da equipa",
-    "teamMatchesStats": "Estatísticas da partida da equipa",
+    "teamMatches": "Jogos da equipa",
+    "teamMatchesStats": "Estatísticas de jogo da equipa",
     "teamName": "Nome da equipa",
     "teamPlayers": "Jogadores da equipa",
     "teamPlayersStats": "Estatísticas dos jogadores da equipa",
@@ -1420,7 +1420,7 @@
     "teamStats": "Estatísticas da equipa",
     "title": "Título",
     "positions": {
-      "GK": "Guarda-Redes",
+      "GK": "Guarda-redes",
       "CB": "Defesa",
       "DEF": "Defesa",
       "MID": "Médio",
@@ -1473,11 +1473,11 @@
   "dangerZone": {
     "delete": {
       "button": "Sim, Eliminar Permanentemente",
-      "confirmLabel": "Digita \"{clubName}\" para confirmar",
+      "confirmLabel": "Escreve \"{clubName}\" para confirmar",
       "description": "Esta ação removerá para sempre o clube, jogadores, agenda e todos os dados registados. Não é possível recuperar após confirmação.",
       "title": "Eliminar Clube"
     },
-    "description": "As ações nesta secção podem resultar na perda definitiva de dados estatísticos, jogadores, e histórico de plantel. Certifique-se de realizar backups e ter a certeza absoluta antes de proceder.",
+    "description": "As ações nesta secção podem causar a perda definitiva de estatísticas, jogadores e histórico do plantel. Garante que fazes cópias de segurança e tens a certeza absoluta antes de avançar.",
     "title": "Atenção: Ações Irreversíveis",
     "transfer": {
       "button": "Transferir Gestão",
@@ -1494,21 +1494,21 @@
       }
     },
     "filters": {
-      "selectLanguage": "Selecione um idioma",
-      "selectLevel": "Selecione o nível",
-      "selectPeriod": "Selecione o período"
+      "selectLanguage": "Seleciona um idioma",
+      "selectLevel": "Seleciona o nível",
+      "selectPeriod": "Seleciona o período"
     },
     "search": {
       "gameStyle": "Estilo de jogo",
       "location": "Localização",
-      "selectDates": "Selecione as datas",
+      "selectDates": "Seleciona as datas",
       "useCurrentLocation": "Usar localização atual"
     }
   },
   "eventSearch": {
     "advancedFilters": "Filtros avançados",
-    "dateRange": "Selecione as datas",
-    "description": "Pesquise partidas, treinos ou grupos perto de si. Filtre por localização, estilo de jogo ou intervalo de datas.",
+    "dateRange": "Seleciona as datas",
+    "description": "Pesquisa jogos, treinos ou grupos perto de ti. Filtra por localização, estilo de jogo ou intervalo de datas.",
     "endDate": "Data final",
     "filters": "Filtros",
     "gameStyle": "Estilo de jogo",
@@ -1520,39 +1520,39 @@
     "location": "Localização",
     "locationStatus": {
       "error": {
-        "description": "Ocorreu um erro ao obter a sua localização. Tente novamente.",
+        "description": "Ocorreu um erro ao obter a tua localização. Tenta novamente.",
         "title": "Erro de localização"
       },
       "permissionDenied": {
-        "description": "Permita o acesso à localização nas definições do navegador.",
+        "description": "Permite o acesso à localização nas definições do navegador.",
         "title": "Permissão negada"
       },
       "success": {
-        "description": "A sua localização atual foi definida com sucesso.",
+        "description": "A tua localização atual foi definida com sucesso.",
         "title": "Localização obtida"
       },
       "timeout": {
-        "description": "Tente novamente para obter a sua localização.",
+        "description": "Tenta novamente para obter a tua localização.",
         "title": "Tempo esgotado"
       },
       "unavailable": {
-        "description": "Verifique se o GPS está ativado.",
+        "description": "Verifica se o GPS está ativado.",
         "title": "Localização indisponível"
       },
       "unsupported": {
-        "description": "O seu navegador não suporta geolocalização.",
+        "description": "O teu navegador não suporta geolocalização.",
         "title": "Geolocalização não suportada"
       }
     },
     "search": "Pesquisar",
     "startDate": "Data inicial",
-    "title": "Encontre a sua próxima partida",
+    "title": "Encontra o teu próximo jogo",
     "useCurrentLocation": "Usar localização atual"
   },
   "experience": {
     "advanced": "Avançado",
     "beginner": "Iniciante",
-    "intermediate": "Intermediário",
+    "intermediate": "Intermédio",
     "professional": "Profissional"
   },
   "footer": {
@@ -1562,7 +1562,7 @@
       "product": "Produto"
     },
     "contact": "Contacto",
-    "copyright": "Direitos autorais © {year} {company}. Todos os direitos reservados.",
+    "copyright": "Direitos de autor © {year} {company}. Todos os direitos reservados.",
     "description": "Encontra a tua equipa ideal ou cria a tua própria, gere os teus atletas e participa em ligas lendárias!",
     "faq": "FAQ",
     "links": {
@@ -1587,13 +1587,13 @@
   "generalSettingsForm": {
     "email": "Email do Clube",
     "location": "Localidade Sede",
-    "nif": "NIF / Registro",
+    "nif": "NIF / Registo",
     "officialName": "Nome Oficial",
     "publicListing": "Listagem Pública",
-    "publicListingDescription": "Permite que o clube apareça nos resultados de pesquisa globais. Jogadores poderão visualizar a página e pedir para ingressar no plantel.",
+    "publicListingDescription": "Permite que o clube apareça nos resultados de pesquisa globais. Os jogadores poderão ver a página e pedir para entrar no plantel.",
     "save": "Guardar Alterações",
     "saved": "Guardado",
-    "saving": "Guardando..."
+    "saving": "A guardar..."
   },
   "goals": {
     "description": "Seleciona todos os objetivos que se aplicam a ti. Isto ajuda-nos a sugerir as melhores funcionalidades.",
@@ -1602,7 +1602,7 @@
       "compete": "Competir em torneios",
       "find-team": "Encontrar uma equipa",
       "have-fun": "Divertir-me",
-      "improve-skills": "Melhorar habilidades",
+      "improve-skills": "Melhorar a técnica",
       "make-friends": "Fazer novos amigos",
       "organize-games": "Organizar jogos",
       "stay-fit": "Manter-me em forma",
@@ -1613,19 +1613,19 @@
   "header": {
     "about": "Sobre nós",
     "arena": "Arena",
-    "fanZone": "Fan Zone",
-    "home": "Home",
+    "fanZone": "Zona de Adeptos",
+    "home": "Início",
     "howItWorks": "Como funciona",
     "launchJourney": "Começar Agora",
     "new": "Novo",
     "palco": "Palco",
     "plans": "Planos",
-    "playZone": "Play Zone",
+    "playZone": "Zona de Jogo",
     "signIn": "Entrar",
     "universo": "Universo"
   },
   "homePage": {
-    "appMockupAlt": "Mockup da app Jogabola",
+    "appMockupAlt": "Pré-visualização da app JogaBola",
     "createMyTeams": "Criar equipa",
     "cta": {
       "becomePartner": "Torna-te Parceiro",
@@ -1648,11 +1648,11 @@
       "subtitle": "Vê como é fácil gerir a tua equipa e alcançar a vitória",
       "title": "Demonstração da App"
     },
-    "description": "Monte a tua equipa, desafia os teus amigos e conquista a glória nos relvados. O campo chama-te. A vitória espera por ti!",
-    "downloadAppDescription": "Tem a experiência completa do Jogabola no teu telemóvel. Disponível para iOS e Android.",
+    "description": "Forma a tua equipa, desafia os teus amigos e conquista a glória nos relvados. O campo chama por ti. A vitória espera-te!",
+    "downloadAppDescription": "Tem a experiência completa do JogaBola no teu telemóvel. Disponível para iOS e Android.",
     "downloadAppTitle": "Descarrega a app e assume o controlo da tua Jornada!",
-    "downloadOnAppStore": "Baixar na App Store",
-    "downloadOnGooglePlay": "Baixar no Google Play",
+    "downloadOnAppStore": "Descarregar na App Store",
+    "downloadOnGooglePlay": "Descarregar no Google Play",
     "ecosystem_full_section": {
       "modules": {
         "engagement": {
@@ -1669,7 +1669,7 @@
           "title": "Saúde do Atleta"
         },
         "tactical": {
-          "description": "Desenha jogadas, organiza táticas e partilha vídeos de análise técnica com a tua comissão e atletas em tempo real.",
+          "description": "Desenha jogadas, organiza táticas e partilha vídeos de análise técnica com a tua equipa técnica e atletas em tempo real.",
           "title": "Planeamento Tático"
         }
       },
@@ -1702,7 +1702,7 @@
     "waitlistCta": {
       "badge": "ACESSO ANTECIPADO",
       "titlePart1": "Sê dos primeiros a",
-      "titlePart2": "organizar o teu jogo com o Jogabola.",
+      "titlePart2": "organizar o teu jogo com o JogaBola.",
       "subtitle": "Estamos em beta. Lista de espera aberta.",
       "cta": "Entrar na lista de espera",
       "alreadyHaveAccess": "Já tens acesso?",
@@ -1787,7 +1787,7 @@
           "statConfirmed": "Confirmados",
           "statWaitlist": "Espera",
           "statPending": "Pendentes",
-          "footerNote": "Prioridade de plantel aplicada automaticamente."
+          "footerNote": "Lista de espera promove o próximo automaticamente."
         },
         "racha": {
           "collectedLabel": "Total validado no jogo",
@@ -1825,7 +1825,7 @@
     "momentumStrip": {
       "item1": "Jogo marcado",
       "item2": "14 confirmados",
-      "item3": "Pagamentos a dia"
+      "item3": "Pagamentos em dia"
     },
     "problems": {
       "kicker": "O problema",
@@ -1843,14 +1843,14 @@
       "pain3": {
         "title": "\"Onde está o comprovativo?\"",
         "description": "Imagens enterradas no grupo. Impossível validar sem perder tempo.",
-        "resolution": "Upload e pré-validação automática"
+        "resolution": "Envio e pré-validação automática"
       },
       "titlePrefix": "Reconheces",
       "titleStroke": "isto?",
       "items": [
         {
           "title": "“Quem vem ao jogo?”",
-          "description": "Confirmações perdidas no scroll do WhatsApp. Nunca sabes quem aparece até apareceres.",
+          "description": "Confirmações perdidas no meio das mensagens do WhatsApp. Nunca sabes quem aparece até chegares ao campo.",
           "resolution": "Lista de presenças em tempo real, com reservas e fila de espera."
         },
         {
@@ -1861,7 +1861,7 @@
         {
           "title": "“Onde está o comprovativo?”",
           "description": "Imagens enterradas no grupo. Impossível validar sem perder a manhã do sábado.",
-          "resolution": "Upload e pré-validação automática. Tu validas ao toque."
+          "resolution": "Envio e pré-validação automática. Tu validas ao toque."
         }
       ]
     },
@@ -1909,16 +1909,16 @@
       },
       "makePartner": "Torna-te Nosso Parceiro",
       "subtitle": "Juntos, estamos a revolucionar o futebol amador com o apoio de marcas que acreditam na nossa visão.",
-      "title": "Nossos Parceiros"
+      "title": "Os Nossos Parceiros"
     },
     "sponsors": "Patrocinadores",
-    "startMyJourney": "Iniciar Minha Jornada",
+    "startMyJourney": "Começar o Meu Percurso",
     "stats": {
       "averageRating": "Avaliação média",
       "clubs": "Clubes",
       "players": "Jogadores",
       "rating": "Avaliação",
-      "title": "Jogabola em números"
+      "title": "JogaBola em números"
     },
     "testimonials": {
       "items": {
@@ -1940,11 +1940,11 @@
       },
       "title": "Jornadas de Sucesso"
     },
-    "title": "Pronto para montares a tua equipa dos sonhos?",
+    "title": "Pronto para formares a tua equipa de sonho?",
     "watchVideo": "Vídeo de apresentação",
     "marquee": {
       "items": [
-        "Convocatórias em 1 minuto",
+        "Convocatórias em menos de 2 minutos",
         "Racha sem constrangimento",
         "Secretário IA com controlo humano",
         "Cronómetro e mini-torneios",
@@ -2002,22 +2002,22 @@
       "body": "Um fluxo curto para abrir a equipa, marcar o jogo, convocar o plantel e fechar pagamentos sem sair da app.",
       "steps": [
         {
-          "label": "STEP 01",
+          "label": "PASSO 01",
           "title": "Escolhe o papel",
           "description": "Capitão ou atleta, cada pessoa entra no caminho certo."
         },
         {
-          "label": "STEP 02",
+          "label": "PASSO 02",
           "title": "Cria o evento",
           "description": "Data, local, valor e vagas ficam claros desde o início."
         },
         {
-          "label": "STEP 03",
+          "label": "PASSO 03",
           "title": "Convoca o plantel",
           "description": "Confirmações e lista de espera atualizadas em tempo real."
         },
         {
-          "label": "STEP 04",
+          "label": "PASSO 04",
           "title": "Fecha pagamentos",
           "description": "Comprovativo enviado, capitão informado e contas fechadas."
         }
@@ -2093,13 +2093,13 @@
           "afterTitle": "Com JogaBola",
           "afterItems": [
             "Link único de convocatória com lista de espera automática.",
-            "Racha dividido por jogador com envio de comprovativo.",
+            "Racha dividido por jogador, com registo de quem já pagou.",
             "Convidados entram em segundos só com email.",
             "Cronómetro à beira-campo e partilha imediata do resultado."
           ],
           "metrics": [
             {
-              "value": "< 2m",
+              "value": "< 2 min",
               "label": "Criar jogo"
             },
             {
@@ -2130,7 +2130,7 @@
             "Prioridade automática para membros do plantel antes de convidados.",
             "Validação de comprovativos e alertas de pendentes num clique.",
             "Chat de evento em tempo real apenas para confirmados.",
-            "Rankings, ratings e histórico completo da equipa."
+            "Rankings, notas e histórico completo da equipa."
           ],
           "metrics": [
             {
@@ -2200,8 +2200,8 @@
             "Lista de espera automática promove o próximo se alguém cancelar.",
             "Mural de avisos do capitão separado do chat livre do evento."
           ],
-          "outcomeLabel": "Tempo médio de abertura",
-          "outcomeValue": "45 seg",
+          "outcomeLabel": "Para abrir um jogo",
+          "outcomeValue": "< 2 min",
           "ctaLabel": "Criar primeira convocatória",
           "ctaHref": "/auth"
         },
@@ -2250,7 +2250,7 @@
         "roster": {
           "tag": "Identidade",
           "title": "Plantel, Rankings & Épocas",
-          "subtitle": "A tua equipa deixa de ser um chat passageiro e passa a ter memória coletiva: presenças, golos, ratings e evolução época após época.",
+          "subtitle": "A tua equipa deixa de ser um chat passageiro e passa a ter memória coletiva: presenças, golos, notas e evolução época após época.",
           "highlights": [
             "Perfil unificado por email que preserva histórico desde convidado a titular.",
             "Relatórios de jogo, assiduidade e rankings competitivos da equipa.",
@@ -2312,29 +2312,126 @@
           "description": "O projeto ganha dimensão: várias equipas, épocas organizadas, jogos competitivos e primeiros fluxos com o Secretário IA sob revisão humana.",
           "unlocks": [
             "Até 10 equipas e 50 atletas por equipa",
-            "Épocas e calendário competitivo (fixtures)",
+            "Épocas e calendário competitivo",
             "Equilíbrio inteligente de equipas",
             "Acesso inicial ao Secretário IA com quota"
           ],
           "metricLabel": "Estrutura ativa",
-          "metricValue": "Multi-equipa"
+          "metricValue": "Até 10 equipas"
         },
         {
           "step": "FASE 04",
           "timeframe": "Escala",
           "title": "AI Club OS Completo",
           "tierBadge": "Profissional & Campeão",
-          "description": "Operação completa de clube amador ou academia: staff virtual com identidade e orçamento próprios, isolamento total e módulos à medida.",
+          "description": "Operação completa de clube amador ou academia: staff virtual com identidade e orçamento próprios, quotas ampliadas e módulos à medida.",
           "unlocks": [
-            "Isolamento rigoroso multi-clube no servidor",
-            "Secretário IA ampliado e auditoria de ações",
+            "Operação centralizada de vários plantéis",
+            "Quota ampliada do Secretário IA e controlo de custos",
             "Relatórios avançados de época e plantel",
-            "Onboarding assistido e exclusividades no Campeão"
+            "Integração assistida e exclusividades no Campeão"
           ],
           "metricLabel": "Governação",
-          "metricValue": "Enterprise Amador"
+          "metricValue": "Clube Estruturado"
         }
-      ]
+      ],
+      "map": {
+        "layers": {
+          "core": "Núcleo",
+          "routine": "Operação",
+          "club": "Clube",
+          "ai": "AI Club OS"
+        },
+        "status": {
+          "active": "Ativo",
+          "consolidated": "Consolidado",
+          "locked": "Fase {code}"
+        },
+        "controls": {
+          "autoPlay": "Simular evolução",
+          "pause": "Pausar",
+          "previousStage": "Fase anterior",
+          "nextStage": "Fase seguinte",
+          "clickToExplore": "Clica num módulo para inspecionar"
+        },
+        "telemetry": {
+          "teams": "Equipas",
+          "athletes": "Atletas / equipa",
+          "aiWorkflow": "Fluxo IA",
+          "humanControl": "Controlo humano",
+          "teamsUpTo": "Até {count}",
+          "teamsScale": "{count}+ / clube",
+          "athletesPerTeam": "Até {count}",
+          "athletesScale": "{count}+ / eq.",
+          "aiModes": {
+            "manual": "Gestão direta",
+            "alerts": "Alertas auto",
+            "secretary": "Secretário IA",
+            "fullOs": "Staff IA + Auditoria"
+          }
+        },
+        "inspector": {
+          "builtOn": "Constrói sobre:",
+          "flowsTo": "Alimenta:"
+        },
+        "nodes": {
+          "roster": {
+            "title": "Plantel Base",
+            "badge": "Até 25 atletas",
+            "summary": "Registo único de atletas e convidados por email, preservando assiduidade e histórico desde o primeiro jogo."
+          },
+          "callup": {
+            "title": "Convocatória",
+            "badge": "Link único · RSVP",
+            "summary": "Abertura do jogo em segundos com limite de vagas, prioridade ao plantel e lista de espera automática."
+          },
+          "split": {
+            "title": "Racha Base",
+            "badge": "Divisão por jogo",
+            "summary": "Cálculo automático do valor por participante sem folhas de cálculo nem contas à mão no final do jogo."
+          },
+          "history": {
+            "title": "Histórico & Rankings",
+            "badge": "Golos e assiduidade",
+            "summary": "Relatórios pós-jogo, presenças, golos e notas acumulados automaticamente ao longo das semanas."
+          },
+          "chat": {
+            "title": "Chat & Mural",
+            "badge": "Tempo real",
+            "summary": "Mural unidirecional de avisos do organizador e chat em tempo real exclusivo para atletas confirmados."
+          },
+          "payments": {
+            "title": "Comprovativos",
+            "badge": "Validação em 1 toque",
+            "summary": "Envio de comprovativo pelo atleta, alertas para pendentes e fecho financeiro transparente do racha."
+          },
+          "multiteam": {
+            "title": "Mais Equipas",
+            "badge": "Até 10 equipas",
+            "summary": "Agrega seniores, sub-23 ou veteranos sob o mesmo clube sem misturar plantéis nem perder o historial anterior."
+          },
+          "fixtures": {
+            "title": "Épocas & Jogos",
+            "badge": "Calendário competitivo",
+            "summary": "Épocas, adversários e jogos competitivos ligados de forma opcional às convocatórias da mesma equipa."
+          },
+          "staff": {
+            "title": "Staff Técnico",
+            "badge": "Permissões por cargo",
+            "summary": "Treinadores, diretores e tesoureiros com privilégios definidos pelo dono da equipa e transferência segura."
+          },
+          "secretary": {
+            "title": "Secretário IA",
+            "badge": "Revisão humana",
+            "summary": "Prepara pedidos de disponibilidade, interpreta respostas e destaca pendentes — nunca envia sem revisão do responsável."
+          },
+          "governance": {
+            "title": "Staff IA Ampliado",
+            "badge": "Quotas e revogação",
+            "summary": "Identidade própria por agente, quotas ampliadas, limites de custo e revogação imediata."
+          }
+        }
+      }
     },
     "guardrails": {
       "kicker": "Arquitetura & Confiança",
@@ -2350,7 +2447,7 @@
         {
           "tag": "02 · Segurança",
           "title": "Isolamento total por clube",
-          "description": "Cada consulta e ação valida sessão, papel e âmbito no servidor. Os dados privados da tua equipa ou clube nunca são visíveis para outros clubes."
+          "description": "Cada consulta e ação valida sessão, papel e âmbito no servidor. Os dados privados da tua equipa ou clube nunca são visíveis para outros clubes — em todos os planos."
         },
         {
           "tag": "03 · Previsibilidade",
@@ -2440,15 +2537,15 @@
     "description": "Transformamos o futebol de base, amador e de bairro numa poderosa cadeia de talentos, bem-estar e saúde através de ferramentas inteligentes e acessíveis.",
     "features": {
       "analytics": {
-        "description": "Dados detalhados e insights que ajudam jogadores e equipas a melhorar continuamente o seu desempenho.",
-        "title": "Análise de Performance"
+        "description": "Dados detalhados e métricas que ajudam jogadores e equipas a melhorar continuamente o seu desempenho.",
+        "title": "Análise de Desempenho"
       },
       "connect": {
-        "description": "Unimos jogadores, treinadores, clubes e fãs numa plataforma única que fortalece o ecossistema do futebol amador.",
-        "title": "Conectar Comunidades"
+        "description": "Unimos jogadores, treinadores, clubes e adeptos numa plataforma única que fortalece o ecossistema do futebol amador.",
+        "title": "Ligar Comunidades"
       },
       "development": {
-        "description": "Identificamos e desenvolvemos talentos através de um sistema de scouting e formação personalizada.",
+        "description": "Identificamos e desenvolvemos talentos através de um sistema de observação e formação personalizada.",
         "title": "Desenvolvimento de Talentos"
       },
       "global": {
@@ -2470,7 +2567,7 @@
     },
     "mission": {
       "description": "Profissionalizar e democratizar o futebol amador, oferecendo ferramentas poderosas que transformam paixão em oportunidade, talento em carreira, e comunidades em ecossistemas prósperos de desenvolvimento desportivo.",
-      "title": "Nossa Missão"
+      "title": "A Nossa Missão"
     },
     "objectives": {
       "democratization": {
@@ -2478,10 +2575,10 @@
         "title": "Democratização"
       },
       "professionalization": {
-        "description": "Elevar os padrões de organização e gestão no futebol de base e amador.",
+        "description": "Elevar os padrões de organização e gestão no futebol de formação e amador.",
         "title": "Profissionalização"
       },
-      "title": "Nossos Objetivos",
+      "title": "Os Nossos Objetivos",
       "vision2030": {
         "description": "Ser a plataforma líder mundial na gestão e desenvolvimento do futebol amador, conectando milhões de jogadores e criando oportunidades em todos os continentes.",
         "title": "Visão 2030"
@@ -2506,7 +2603,7 @@
     "en": "Inglês",
     "es": "Espanhol",
     "fr": "Francês",
-    "placeholder": "Selecione um idioma",
+    "placeholder": "Escolhe o idioma",
     "pt": "Português"
   },
   "menu": {
@@ -2520,26 +2617,26 @@
     "ecosystem": "Recursos",
     "home": "Início",
     "howItWorks": "Como Funciona",
-    "marketplace": "Marketplace",
+    "marketplace": "Mercado",
     "privacy": "Privacidade",
     "privacyAndTerms": "Privacidade e Termos",
     "team": "Quem Somos",
     "terms": "Termos",
-    "timer": "Timer"
+    "timer": "Cronómetro"
   },
   "meta": {
     "description": "O melhor lugar para encontrares a tua equipa e jogar futebol.",
-    "title": "Joga Bola"
+    "title": "JogaBola"
   },
   "notFound": {
     "callVARButton": "VAR (IR PARA A PÁGINA INICIAL)",
-    "description": "O esquema tático falhou. A jogada foi interrompida pelo fiscal de linha porque o destino que procuras não foi encontrado no campo.",
+    "description": "O esquema tático falhou. A jogada foi interrompida pelo árbitro assistente porque o destino que procuras não foi encontrado em campo.",
     "footer": "JOGABOLA @ 2024 • TATICAMENTE PERDIDO",
-    "labelRefresh": "REFRESH",
+    "labelRefresh": "ATUALIZAR",
     "labelVAR": "VAR",
-    "mapButton": "MAP (VER MAPA DE)",
+    "mapButton": "MAPA (VER MAPA DE)",
     "offside404": "404_FORA_DE_JOGO",
-    "refreshButton": "REFRESH (REINICIAR PARTIDA)",
+    "refreshButton": "ATUALIZAR (REINICIAR JOGO)",
     "startRoute": "INÍCIO_ROTA",
     "status": {
       "impediment": "ESTADO: FORA DE JOGO",
@@ -2586,9 +2683,9 @@
     "deadlineHours": "Prazo (horas antes do jogo)",
     "reminderHours": "Lembrar (horas antes do prazo)",
     "policy": {
-      "label": "Se prazo expirar",
+      "label": "Se o prazo expirar",
       "notify": "Apenas notificar",
-      "cancel": "Cancelar reserva e liberar vaga"
+      "cancel": "Cancelar reserva e libertar vaga"
     },
     "deadline": {
       "label": "Prazo de pagamento",
@@ -2645,11 +2742,11 @@
       "description": "Esta área está em desenvolvimento. Em breve terás acesso completo ao painel de organização de eventos.",
       "title": "Em Desenvolvimento"
     },
-    "eyebrow": "Organizer",
+    "eyebrow": "Organizador",
     "hero": {
-      "description": "Centralize jogos, inscrições e locais com o mesmo shell operacional das restantes áreas protegidas.",
-      "eyebrow": "Orquestração de calendário",
-      "title": "Planeie competições com menos ruído"
+      "description": "Centraliza jogos, inscrições e locais com a mesma estrutura operacional das restantes áreas protegidas.",
+      "eyebrow": "Organização de calendário",
+      "title": "Planeia competições com menos ruído"
     },
     "newTournament": "Novo Torneio",
     "roadmap": {
@@ -2659,15 +2756,15 @@
     },
     "stats": {
       "activeTournaments": "Torneios Ativos",
-      "inProgress": "Em andamento",
+      "inProgress": "Em curso",
       "next30days": "Próximos 30 dias",
       "participants": "Participantes",
       "participantsThisMonth": "+42 este mês",
-      "registered": "Cadastrados",
+      "registered": "Registados",
       "scheduledEvents": "Eventos Marcados",
       "venues": "Locais"
     },
-    "subtitle": "Organize torneios e eventos",
+    "subtitle": "Organiza torneios e eventos",
     "title": "Área do Organizador"
   },
   "positions": {
@@ -2703,15 +2800,15 @@
   },
   "arenaSelfAssessment": {
     "card": {
-      "title": "Auto-avaliação",
-      "ratedSub": "{position} · usado no balanceamento",
-      "emptyTitle": "Vamos fazer a tua auto-avaliação",
-      "emptySub": "Define a tua posição e habilidades para equipas mais equilibradas."
+      "title": "Autoavaliação",
+      "ratedSub": "{position} · usado na divisão de equipas",
+      "emptyTitle": "Vamos fazer a tua autoavaliação",
+      "emptySub": "Define a tua posição e atributos para equipas mais equilibradas."
     },
     "intro": {
-      "eyebrow": "Auto-avaliação",
-      "title": "Vamos fazer a tua auto-avaliação",
-      "description": "Responde a algumas perguntas rápidas sobre a tua posição e habilidades. Usamos isto para equilibrar as equipas com IA — sê honesto.",
+      "eyebrow": "Autoavaliação",
+      "title": "Vamos fazer a tua autoavaliação",
+      "description": "Responde a algumas perguntas rápidas sobre a tua posição e atributos em campo. Usamos isto para equilibrar as equipas com IA — sê honesto.",
       "estimate": "Menos de 1 minuto"
     },
     "position": {
@@ -2741,7 +2838,7 @@
       }
     },
     "skill": {
-      "eyebrow": "Habilidade"
+      "eyebrow": "Atributo"
     },
     "skills": {
       "finishing": {
@@ -2817,12 +2914,12 @@
     "cards": {
       "account": "Conta",
       "mvpScope": "Âmbito MVP",
-      "mvpScopeDescription": "Este perfil guarda apenas identidade básica. Estatísticas avançadas, scouting e redes sociais ficam fora desta fase."
+      "mvpScopeDescription": "Este perfil guarda apenas identidade básica. Estatísticas avançadas, observação e redes sociais ficam fora desta fase."
     },
     "errors": {
       "PROFILE_NOT_FOUND": "Não foi possível encontrar o perfil.",
-      "PROFILE_UPDATE_FAILED": "Não foi possível actualizar o perfil.",
-      "UNAUTHORIZED": "Inicia sessão para actualizar o perfil.",
+      "PROFILE_UPDATE_FAILED": "Não foi possível atualizar o perfil.",
+      "UNAUTHORIZED": "Inicia sessão para atualizar o perfil.",
       "VALIDATION_ERROR": "Confirma os campos destacados.",
       "VALIDATION_IMAGE_URL_INVALID": "Usa um URL válido para a fotografia.",
       "VALIDATION_NAME_TOO_SHORT": "O nome deve ter pelo menos 2 caracteres."
@@ -2857,7 +2954,7 @@
       "title": "Dados públicos"
     },
     "header": {
-      "description": "Mantém os dados básicos da tua conta actualizados para equipas, jogos e pagamentos.",
+      "description": "Mantém os dados básicos da tua conta atualizados para equipas, jogos e pagamentos.",
       "eyebrow": "Perfil",
       "title": "O teu perfil"
     },
@@ -2875,7 +2972,7 @@
     },
     "stats": {
       "goals": "Golos",
-      "matches": "Partidas"
+      "matches": "Jogos"
     },
     "status": {
       "unverified": "Por verificar",
@@ -2885,7 +2982,7 @@
       "activities": "Atividades",
       "overview": "Visão geral",
       "settings": "Definições",
-      "teams": "Minhas equipas"
+      "teams": "As minhas equipas"
     },
     "dashboard": {
       "games": "Jogos",
@@ -2955,7 +3052,7 @@
       "currentSession": "Atual",
       "twoFactor": {
         "title": "Autenticação de Dois Fatores",
-        "description": "Configure um código PIN adicional de verificação para aumentar a proteção da sua conta."
+        "description": "Configura um código PIN adicional de verificação para reforçares a proteção da tua conta."
       }
     },
     "athleteToggle": "Sou atleta nesta equipa"
@@ -2964,16 +3061,16 @@
     "back": "Voltar",
     "eventTypes": {
       "grupo": "Grupo",
-      "partida": "Partida",
+      "partida": "Jogo",
       "treino": "Treino"
     },
     "loading": "A pesquisar eventos...",
     "noResults": "Sem resultados",
-    "noResultsDescription": "Tente ajustar os filtros de pesquisa",
+    "noResultsDescription": "Tenta ajustar os filtros de pesquisa",
     "organizedBy": "Organizado por",
     "participants": "participantes",
     "resultsFound": "{count} {count, plural, =1 {resultado encontrado} other {resultados encontrados}}",
-    "searchPrompt": "Refine a pesquisa por localização, data e estilo de jogo antes de abrir um evento.",
+    "searchPrompt": "Afina a pesquisa por localização, data e estilo de jogo antes de abrires um evento.",
     "title": "Resultados da pesquisa"
   },
   "settingsPage": {
@@ -3006,8 +3103,8 @@
     "activeUntil": "Ativo até {date}",
     "clubAdmin": "Administração do Clube",
     "clubPage": "Página do Clube",
-    "clubSettings": "Configurações do Clube",
-    "dashboard": "Dashboard",
+    "clubSettings": "Definições do Clube",
+    "dashboard": "Painel",
     "finances": "Finanças",
     "fixtures": "Calendário",
     "manageBilling": "Gerir Faturação",
@@ -3017,22 +3114,22 @@
   },
   "timer": {
     "auth": {
-      "login": "Login",
-      "loginFailed": "Falha no login. Tente novamente.",
-      "loginSync": "Login / Sincronizar",
+      "login": "Entrar",
+      "loginFailed": "Falha ao entrar. Tenta novamente.",
+      "loginSync": "Entrar / Sincronizar",
       "logout": "Sair",
-      "logoutConfirm": "Tem certeza que deseja sair?"
+      "logoutConfirm": "Tens a certeza de que queres sair?"
     },
     "controls": {
-      "finished": "Finalizado",
+      "finished": "Terminado",
       "pause": "Pausar",
       "start": "Iniciar"
     },
     "events": {
       "assignPlayer": "Atribuir Jogador",
-      "empty": "Nenhum evento registrado ainda.",
-      "hint": "Toque no tempo para editar • Toque na linha para jogador",
-      "title": "Eventos da Partida"
+      "empty": "Ainda não há lances registados.",
+      "hint": "Toca no tempo para editar · Toca na linha para atribuir jogador",
+      "title": "Lances do Jogo"
     },
     "match": {
       "controls": {
@@ -3081,12 +3178,12 @@
         "secondHalf": "2.ª Parte",
         "training": "Treino"
       },
-      "loop": "Loop",
-      "matchFormat": "Formato da Partida",
+      "loop": "Repetir",
+      "matchFormat": "Formato do Jogo",
       "modeDescriptions": {
-        "countDown": "Cronómetro conta regressivamente e toca um som.",
-        "countUp": "Cronómetro conta de 00:00.",
-        "loop": "Cronómetro regride, toca um som e reinicia. O utilizador deve iniciar a próxima parte manualmente."
+        "countDown": "Cronómetro em contagem decrescente que toca um som no fim.",
+        "countUp": "Cronómetro conta a partir de 00:00.",
+        "loop": "Cronómetro em contagem decrescente, toca um som e reinicia. O utilizador inicia a próxima parte manualmente."
       },
       "partDurations": "Duração das Partes (Minutos)",
       "progressive": "Progressivo",
@@ -3100,7 +3197,7 @@
       "testSound": "Testar Som",
       "timerEndSound": "Som de Fim",
       "timerMode": "Modo do Cronómetro",
-      "title": "Configurações da Partida"
+      "title": "Definições do Jogo"
     }
   },
   "timerShared": {
@@ -3124,7 +3221,7 @@
         "description": "Gere a tua equipa, marca jogos e convida atletas.",
         "features": [
           "Criar e gerir equipas",
-          "Agendar partidas e eventos",
+          "Marcar jogos e eventos",
           "Convidar e gerir atletas",
           "Controlar pagamentos"
         ],
@@ -3136,7 +3233,7 @@
         "features": [
           "Perfil de atleta",
           "Confirmar presença em jogos",
-          "Histórico de partidas",
+          "Histórico de jogos",
           "Ver estatísticas"
         ],
         "eyebrow": "Dentro de campo"
@@ -3144,12 +3241,12 @@
       "referee": {
         "eyebrow": "Jogo oficial",
         "title": "Árbitro",
-        "description": "Controla o jogo, valida ocorrências e mantém a partida organizada.",
+        "description": "Controla o jogo, regista ocorrências e mantém tudo organizado.",
         "features": [
           "Gerir cronómetro e resultado",
           "Registar cartões e ocorrências",
-          "Validar presenças no campo",
-          "Partilhar súmula do jogo"
+          "Validar presenças em campo",
+          "Partilhar ficha de jogo"
         ]
       },
       "fan": {
@@ -3182,7 +3279,7 @@
       "eyebrow": "Conta-nos mais",
       "header": "Conta-nos mais",
       "tagline": "2 perguntas rápidas para melhorar a tua experiência.",
-      "q1Label": "Qual é o teu principal objetivo com a JogaBola?",
+      "q1Label": "Qual é o teu principal objetivo com o JogaBola?",
       "q1Hint": "Seleciona até 3",
       "q2Label": "Como descreves a tua equipa hoje?",
       "skip": "Saltar por agora",
@@ -3211,7 +3308,7 @@
     "description": "Ações críticas para a gestão da tua conta.",
     "delete": {
       "title": "Eliminar Conta",
-      "description": "Elimina permanentemente a tua conta e todos os dados associados. Esta ação não pode ser desfeita.",
+      "description": "Elimina permanentemente a tua conta e todos os dados associados. Esta ação é irreversível.",
       "button": "Eliminar Conta",
       "confirm": {
         "title": "Tens a certeza absoluta?",
@@ -3227,12 +3324,12 @@
       "label": "Novo Email",
       "placeholder": "novo-email@exemplo.com",
       "confirm": {
-        "title": "Solicitar Transferência de Conta",
+        "title": "Pedir Transferência de Conta",
         "description": "Será enviado um email para o novo endereço para confirmar a transferência.",
         "cancel": "Cancelar",
-        "action": "Enviar Solicitação"
+        "action": "Enviar Pedido"
       },
-      "success": "Solicitação enviada! Por favor, verifica o novo email para confirmar."
+      "success": "Pedido enviado! Verifica o novo email para confirmar."
     }
   },
   "validation": {
@@ -3250,7 +3347,7 @@
     "VALIDATION_EMAIL_INVALID": "Email inválido.",
     "VALIDATION_EMAIL_REQUIRED": "O email é obrigatório.",
     "VALIDATION_LOCATION_REQUIRED": "A localização é obrigatória.",
-    "VALIDATION_MATCH_SESSION_REQUIRED": "A sessão da partida é obrigatória.",
+    "VALIDATION_MATCH_SESSION_REQUIRED": "A convocatória é obrigatória.",
     "VALIDATION_NAME_MIN": "O nome deve ter no mínimo 3 caracteres.",
     "VALIDATION_NAME_REQUIRED": "O nome é obrigatório.",
     "VALIDATION_NOTES_TOO_LONG": "As notas são demasiado longas (máx. 500 caracteres).",
@@ -3415,7 +3512,7 @@
       "action": "Cancelar presença",
       "keep": "Manter presença"
     },
-    "hasAccount": "Tens conta Jogabola? Entra para gerir a tua presença.",
+    "hasAccount": "Tens conta JogaBola? Entra para gerir a tua presença.",
     "login": "Entrar",
     "register": "Criar conta",
     "tabs": {
@@ -3486,7 +3583,7 @@
     "createFreeAccount": "Criar conta gratuita",
     "close": "Fechar",
     "cashInstructions": "Paga ao capitão no início do jogo.",
-    "paymentNotes": "Pagamento via MBWay confirmado pelo atleta",
+    "paymentNotes": "Pagamento via MB WAY confirmado pelo atleta",
     "paymentMethodCard": {
       "title": "Como queres pagar?",
       "noMethods": "Nenhum método de pagamento configurado pelo capitão.",
@@ -3510,7 +3607,7 @@
           "confirmMsg": "Pagamento confirmado — {amount}"
         },
         "mbway": {
-          "label": "MBWay",
+          "label": "MB WAY",
           "desc": "Transferência pelo telemóvel",
           "sendTo": "Envia para",
           "amount": "Valor",
@@ -3588,7 +3685,7 @@
     "homeTitlePrefix": "Começa grátis.",
     "homeTitleAccent": "Cresce ao teu ritmo.",
     "subtitle": "De um gestor solo num jogo de quinta-feira a um clube com vários plantéis e staff virtual IA — só sobes de plano quando precisares.",
-    "recommended": "Mais escolhido",
+    "recommended": "Recomendado",
     "billing": {
       "monthly": "Mensal",
       "annual": "Anual"
@@ -3612,7 +3709,7 @@
           "10 convocatórias por mês com lista de espera",
           "Registo base de presenças e racha manual",
           "Cronómetro de jogo e mini-torneios",
-          "Convidados sem conta via email"
+          "Convidados confirmam pelo link, sem criar conta"
         ]
       },
       "basic": {
@@ -3621,7 +3718,7 @@
         "description": "Para grupos semanais regulares que precisam de finanças organizadas, comprovativos e memória da equipa.",
         "price": "4,99€",
         "period": "/mês",
-        "cta": "Escolher Básico",
+        "cta": "Pedir acesso ao Básico",
         "aiSummary": "",
         "features": [
           "Tudo do plano Grátis",
@@ -3637,11 +3734,11 @@
         "description": "Para equipas estruturadas e pequenos gestores que gerem épocas, calendário competitivo e querem apoio do Secretário IA.",
         "price": "9,99€",
         "period": "/mês",
-        "cta": "Escolher Amador",
+        "cta": "Pedir acesso ao Amador",
         "aiSummary": "Inclui Secretário IA inicial (com revisão humana)",
         "features": [
           "Tudo do plano Básico",
-          "Épocas e jogos competitivos (fixtures)",
+          "Épocas e jogos competitivos",
           "Secretário IA para disponibilidade e pendentes",
           "Divisão equilibrada de equipas e relatórios de jogo",
           "Gestão de co-capitães e permissões por equipa"
@@ -3653,11 +3750,11 @@
         "description": "Para clubes amadores e academias com vários plantéis que precisam de operação centralizada e staff virtual ampliado.",
         "price": "24,99€",
         "period": "/mês",
-        "cta": "Escolher Profissional",
-        "aiSummary": "Secretário IA ampliado + auditoria de ações",
+        "cta": "Pedir acesso ao Profissional",
+        "aiSummary": "Quota ampliada do Secretário IA",
         "features": [
           "Tudo do plano Amador",
-          "Operação multi-equipa com isolamento por clube",
+          "Operação multi-equipa centralizada no clube",
           "Quota ampliada de Secretário IA e controlo de custos",
           "Relatórios avançados de época e assiduidade",
           "Suporte prioritário para treinadores e direção"
@@ -3675,7 +3772,7 @@
         "features": [
           "Equipas, plantéis e eventos à medida do clube",
           "Funcionalidades exclusivas e acesso antecipado a novos módulos IA",
-          "Onboarding assistido e migração de dados existentes",
+          "Integração assistida e migração de dados existentes",
           "Configuração dedicada de permissões e governança"
         ]
       }
@@ -3688,8 +3785,8 @@
   },
   "roadmapPage": {
     "eyebrow": "Transparência",
-    "title": "Roadmap do Projeto",
-    "subtitle": "Onde estamos e para onde vamos. Atualizado a cada sprint.",
+    "title": "Plano de Evolução",
+    "subtitle": "Onde estamos e para onde vamos. Atualizado a cada ciclo.",
     "legend": {
       "done": "Concluído",
       "inProgress": "Em progresso",
@@ -3707,7 +3804,7 @@
           "Criação e gestão de equipas",
           "Convocatórias e confirmação de presença",
           "Página pública do evento (atleta)",
-          "Pagamentos e upload de comprovativos",
+          "Pagamentos e envio de comprovativos",
           "Configuração de métodos de pagamento",
           "Calendário de eventos",
           "Perfil do atleta",
@@ -3716,19 +3813,19 @@
       },
       {
         "id": "freemium",
-        "label": "Freemium",
+        "label": "Planos Base",
         "period": "Q2 2026",
         "status": "inProgress",
         "items": [
-          "Plano Free (até 3 equipas, 10 eventos/mês)",
+          "Plano Grátis (até 3 equipas, 10 jogos/mês)",
           "Página de planos e preços",
-          "Upgrade para plano Pro",
-          "Infraestrutura de billing"
+          "Subida para o plano Pro",
+          "Infraestrutura de faturação"
         ]
       },
       {
         "id": "pro-features",
-        "label": "Pro Features",
+        "label": "Funcionalidades Pro",
         "period": "Q3 2026",
         "status": "planned",
         "items": [
@@ -3746,7 +3843,7 @@
         "status": "future",
         "items": [
           "Multi-torneio e ligas",
-          "Scouting e networking de atletas",
+          "Observação e ligação entre atletas",
           "Página pública do clube",
           "App móvel nativa (iOS + Android)",
           "API pública para parceiros"
@@ -3797,7 +3894,7 @@
     "confirm": "Confirmar pagamento",
     "methods": {
       "cash": "Dinheiro (presencial)",
-      "mbway": "MBWay",
+      "mbway": "MB WAY",
       "transfer": "Transferência bancária",
       "other": "Outro"
     },
@@ -3812,7 +3909,7 @@
       "caption": "Comprovativo enviado ao capitão."
     },
     "paid_unverified": {
-      "title": "Aguardando confirmação",
+      "title": "A aguardar confirmação",
       "subtitle": "{amount} · {eventTitle}",
       "caption": "O capitão vai validar o teu pagamento."
     },
@@ -3847,7 +3944,7 @@
       "submitError": "Erro ao registar comprovativo. Tenta novamente.",
       "successMessage": "Comprovativo enviado com sucesso!",
       "title": "Enviar comprovativo",
-      "imageAlt": "Preview do comprovativo",
+      "imageAlt": "Pré-visualização do comprovativo",
       "uploading": "A enviar...",
       "registering": "A registar...",
       "changeFile": "Clica para trocar o ficheiro",
@@ -3881,12 +3978,12 @@
       "create": {
         "eyebrow": "EVENTOS",
         "title": "Agenda jogos facilmente",
-        "subtitle": "Cria um evento em menos de 1 minuto"
+        "subtitle": "Cria um evento em menos de 2 minutos"
       },
       "paid": {
         "eyebrow": "PAGAMENTOS",
         "title": "Pagamentos integrados",
-        "subtitle": "MBWay, cartão ou numerário"
+        "subtitle": "MB WAY, cartão ou dinheiro"
       }
     },
     "outro": {
@@ -3900,7 +3997,7 @@
   "passkeyPrompt": {
     "title": "Ativar Passkey",
     "description": "Entra de forma instantânea da próxima vez — sem esperar por códigos no e-mail.",
-    "feature1Title": "Login num toque",
+    "feature1Title": "Entrada num toque",
     "feature1Sub": "FaceID, TouchID ou PIN",
     "feature2Title": "Mais seguro",
     "feature2Sub": "Sem palavras-passe nem códigos",
@@ -3937,11 +4034,11 @@
       "label": "Convidados",
       "edit": "Editar",
       "addTitle": "Adicionar convidados",
-      "addSub": "Pessoas sem conta no app",
+      "addSub": "Jogadores sem conta na app",
       "addSubMissing": "Completa as {count} vaga(s) com pessoal de fora",
       "addMore": "Adicionar mais convidados",
       "title": "Convidados",
-      "infoText": "Pessoas <strong>sem conta no app</strong> que vão jogar este jogo. Define um nível para a IA balancear melhor.",
+      "infoText": "Jogadores <strong>sem conta na app</strong> que vão jogar este jogo. Define um nível para a IA equilibrar melhor as equipas.",
       "cancel": "Cancelar",
       "save": "Guardar {count} convidados",
       "guestNumberPlaceholder": "Convidado {n}",
@@ -3961,21 +4058,21 @@
       }
     },
     "ai": {
-      "title": "Balanceamento IA",
+      "title": "Equilíbrio de Equipas IA",
       "sub": "Equipas justas em segundos",
       "cta": "Gerar {count} equipas",
       "ctaDisabled": "Faltam {count} para começar",
-      "generating": "A balancear equipas…",
-      "generatingDesc": "A analisar histórico, ratings e formato para criar uma partida justa."
+      "generating": "A equilibrar equipas…",
+      "generatingDesc": "A analisar histórico, notas e formato para criar um jogo equilibrado."
     },
     "result": {
       "title": "Equipas geradas",
-      "balanced": "IA balanceou {count} jogadores",
-      "diffLabel": "Diferença de rating:",
+      "balanced": "A IA equilibrou {count} jogadores",
+      "diffLabel": "Diferença de nota:",
       "balanced_ok": "Equilibrado",
       "balanced_ok_rough": "Razoável",
-      "avgRating": "Rating Méd.",
-      "rebalance": "Rebalancear",
+      "avgRating": "Nota Méd.",
+      "rebalance": "Reequilibrar",
       "adjust": "Ajustar",
       "swapInstructions": "Toca em 2 jogadores para trocar",
       "swapPick": "Escolhe jogador para trocar com {name}"
@@ -4048,7 +4145,7 @@
       "teamCount": "{count, plural, one {# equipa} other {# equipas}}",
       "currentPair": "{teamA} vs {teamB}",
       "emptyTitle": "Ainda não há torneios",
-      "emptyDescription": "Monta 3 a 6 equipas, define as regras e começa a jogar.",
+      "emptyDescription": "Cria 3 a 6 equipas, define as regras e começa a jogar.",
       "emptyCta": "Criar torneio",
       "deleteTournament": "Eliminar {name}",
       "confirmDeleteTournament": "Confirmar eliminação de {name}",
@@ -4099,7 +4196,7 @@
           "description": "Após duas vitórias, o vencedor descansa."
         }
       },
-      "matchDuration": "Tempo por partida",
+      "matchDuration": "Duração do jogo",
       "minutesSuffix": "min",
       "sound": "Som + vibração",
       "back": "Voltar",
@@ -4133,7 +4230,7 @@
       "endedDescription": "A classificação final está pronta.",
       "champion": {
         "title": "Campeão",
-        "topScorer": "Artilheiro",
+        "topScorer": "Melhor marcador",
         "share": "Partilhar",
         "copy": "Copiar link",
         "copied": "Copiado!",
@@ -4163,7 +4260,7 @@
       "points": "{count, plural, one {# pt} other {# pts}}",
       "score": "{goalsFor}-{goalsAgainst}",
       "scoreAria": "{goalsFor} golos marcados e {goalsAgainst} sofridos",
-      "topScorer": "Artilheiro",
+      "topScorer": "Melhor marcador",
       "goals": "{count, plural, one {# golo} other {# golos}}",
       "createMine": "Criar o meu torneio"
     },
@@ -4361,7 +4458,7 @@
       "TRANSFER_EXPIRED": "Este pedido de transferência expirou.",
       "TRANSFER_NOT_FOR_YOU": "Este pedido foi enviado para outra conta. Entra com o email que recebeu o convite.",
       "EMAIL_NOT_VERIFIED": "Confirma o teu email antes de aceitares a transferência.",
-      "TEAM_LIMIT_REACHED": "Chegaste ao limite de equipas do teu plano. Faz upgrade para aceitares esta equipa.",
+      "TEAM_LIMIT_REACHED": "Chegaste ao limite de equipas do teu plano. Atualiza o plano para aceitares esta equipa.",
       "CANNOT_TRANSFER_TO_SELF": "Não podes transferir a equipa para ti próprio.",
       "RECIPIENT_NOT_MEMBER": "Esta pessoa já não faz parte do plantel nem do staff.",
       "TEAM_NOT_FOUND": "Equipa não encontrada.",

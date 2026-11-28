@@ -667,8 +667,8 @@ export async function deleteEvent(eventId: number) {
     const notificationsData = confirmedReservations.map(r => ({
       userId: r.playerId,
       type: "event_cancelled",
-      title: "Evento Cancelado/Excluído",
-      message: `O evento "${existingEvent.title}" foi excluído pelo organizador.`,
+      title: "Evento Cancelado/Eliminado",
+      message: `O evento "${existingEvent.title}" foi eliminado pelo organizador.`,
       metadata: { eventId, teamId: existingEvent.teamId },
     }));
 

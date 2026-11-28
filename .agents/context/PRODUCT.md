@@ -50,8 +50,10 @@ Clubs and solo organizers start free and grow only when operational complexity j
 - **Grátis (`free`)** — Entry tier for solo managers and casual groups replacing WhatsApp chaos (up to 3 teams, 25 athletes per team, 10 monthly events).
 - **Básico (`basic`)** — Regular weekly teams needing payment proofs, pending reminders, and full season history.
 - **Amador (`amateur`)** — Competitive amateur squads and small managers adding multiple teams, seasons, fixtures, and initial Secretary AI quota under human review.
-- **Profissional (`pro`)** — Multi-team amateur clubs and academies requiring isolated club operations, expanded virtual staff quotas, and advanced seasonal reporting.
+- **Profissional (`pro`)** — Multi-team amateur clubs and academies requiring centralized multi-team operations, expanded virtual staff quotas, and advanced seasonal reporting.
 - **Campeão (`champion`)** — Custom contact-sales tier for larger clubs and organizations seeking bespoke limits, assisted onboarding, and exclusive capabilities.
+
+Club data isolation, server-side authorization, and the AI action audit log are guardrails on every plan, never paid upsells. Paid tiers sell capacity, workflow, and AI quota.
 
 ## Brand Personality
 

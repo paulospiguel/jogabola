@@ -362,7 +362,7 @@ describe("tournamentOgDescription", () => {
     expect(
       tournamentOgDescription(buildTournamentSharedResult(fixture())),
     ).toBe(
-      "Artilheiro: Rui, Zé (2 golos) · 3 equipas · Torneio registado com o Cronómetro JogaBola — sem login.",
+      "Melhor marcador: Rui, Zé (2 golos) · 3 equipas · Torneio registado com o Cronómetro JogaBola — sem login.",
     );
   });
 

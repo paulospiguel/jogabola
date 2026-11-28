@@ -1807,7 +1807,7 @@
           "statConfirmed": "Confirmed",
           "statWaitlist": "Waitlist",
           "statPending": "Pending",
-          "footerNote": "Squad member priority enforced automatically."
+          "footerNote": "Waitlist promotes the next player automatically."
         },
         "racha": {
           "collectedLabel": "Validated match total",
@@ -1964,7 +1964,7 @@
     "watchVideo": "Presentation video",
     "marquee": {
       "items": [
-        "Call-ups in 1 minute",
+        "Call-ups in under 2 minutes",
         "Frictionless pitch splits",
         "Human-controlled AI Secretary",
         "Live match timer & mini-tournaments",
@@ -2113,13 +2113,13 @@
           "afterTitle": "With JogaBola",
           "afterItems": [
             "Single call-up link with automatic waitlist promotion.",
-            "Clear per-player split with receipt upload and tracking.",
+            "Clear per-player split, with a record of who has paid.",
             "One-off guests join in seconds using just their email.",
             "Pitch-side match timer and instant result sharing."
           ],
           "metrics": [
             {
-              "value": "< 2m",
+              "value": "< 2 min",
               "label": "Setup match"
             },
             {
@@ -2220,8 +2220,8 @@
             "Automatic waitlist fills empty spots the moment someone drops out.",
             "Dedicated captain notice wall separate from live event chat."
           ],
-          "outcomeLabel": "Average creation time",
-          "outcomeValue": "45 sec",
+          "outcomeLabel": "To open a match",
+          "outcomeValue": "< 2 min",
           "ctaLabel": "Create your first call-up",
           "ctaHref": "/auth"
         },
@@ -2337,24 +2337,121 @@
             "Initial AI Secretary quota with approvals"
           ],
           "metricLabel": "Active setup",
-          "metricValue": "Multi-team"
+          "metricValue": "Up to 10 teams"
         },
         {
           "step": "STAGE 04",
           "timeframe": "Scale",
           "title": "Full AI Club OS",
           "tierBadge": "Pro & Champion",
-          "description": "Complete grassroots club or academy operations: virtual staff with scoped identity and budgets, strict isolation, and bespoke modules.",
+          "description": "Complete grassroots club or academy operations: virtual staff with scoped identity and budgets, expanded quotas, and bespoke modules.",
           "unlocks": [
-            "Strict server-side multi-club isolation",
-            "Expanded AI Secretary & full action audit trail",
+            "Centralised operations across squads",
+            "Expanded AI Secretary quota and cost control",
             "Advanced seasonal & attendance analytics",
             "Assisted onboarding & exclusive Champion features"
           ],
           "metricLabel": "Governance",
           "metricValue": "Amateur Enterprise"
         }
-      ]
+      ],
+      "map": {
+        "layers": {
+          "core": "Core",
+          "routine": "Operations",
+          "club": "Club",
+          "ai": "AI Club OS"
+        },
+        "status": {
+          "active": "Active",
+          "consolidated": "Consolidated",
+          "locked": "Stage {code}"
+        },
+        "controls": {
+          "autoPlay": "Play progression",
+          "pause": "Pause",
+          "previousStage": "Previous stage",
+          "nextStage": "Next stage",
+          "clickToExplore": "Click any module to inspect"
+        },
+        "telemetry": {
+          "teams": "Teams",
+          "athletes": "Athletes / team",
+          "aiWorkflow": "AI Workflow",
+          "humanControl": "Human control",
+          "teamsUpTo": "Up to {count}",
+          "teamsScale": "{count}+ / club",
+          "athletesPerTeam": "Up to {count}",
+          "athletesScale": "{count}+ / team",
+          "aiModes": {
+            "manual": "Direct ops",
+            "alerts": "Smart alerts",
+            "secretary": "AI Secretary",
+            "fullOs": "AI Staff + Audit"
+          }
+        },
+        "inspector": {
+          "builtOn": "Built on:",
+          "flowsTo": "Feeds into:"
+        },
+        "nodes": {
+          "roster": {
+            "title": "Core Roster",
+            "badge": "Up to 25 athletes",
+            "summary": "Unified email-based profiles for regulars and guests, keeping attendance and stats intact from day one."
+          },
+          "callup": {
+            "title": "Match Call-Up",
+            "badge": "Single link · RSVP",
+            "summary": "Launch a match in seconds with squad caps, roster priority windows, and an automatic waitlist."
+          },
+          "split": {
+            "title": "Pitch Split",
+            "badge": "Per-match ledger",
+            "summary": "Automatic per-player share calculation with zero spreadsheets or end-of-match guesswork."
+          },
+          "history": {
+            "title": "Archive & Rankings",
+            "badge": "Goals & attendance",
+            "summary": "Post-match reports, attendance streaks, goals, and ratings accumulated automatically every week."
+          },
+          "chat": {
+            "title": "Chat & Notice Wall",
+            "badge": "Real-time",
+            "summary": "One-way organizer notices paired with a dedicated real-time event chat for confirmed attendees."
+          },
+          "payments": {
+            "title": "Payment Proofs",
+            "badge": "One-tap validation",
+            "summary": "Athletes upload receipts, overdue reminders go out cleanly, and each match ledger closes transparently."
+          },
+          "multiteam": {
+            "title": "More Teams",
+            "badge": "Up to 10 teams",
+            "summary": "Group senior, U23, and veteran squads under one club umbrella without mixing rosters or losing history."
+          },
+          "fixtures": {
+            "title": "Seasons & Fixtures",
+            "badge": "Competitive calendar",
+            "summary": "Club seasons, opponents, and competitive fixtures optionally linked to the same team’s call-ups."
+          },
+          "staff": {
+            "title": "Coaching Staff",
+            "badge": "Role permissions",
+            "summary": "Coaches, directors, and finance roles with owner-defined permissions and safe ownership transfer."
+          },
+          "secretary": {
+            "title": "AI Secretary",
+            "badge": "Human-reviewed",
+            "summary": "Drafts availability requests, parses player replies, and surfaces blockers — never sends without organizer approval."
+          },
+          "governance": {
+            "title": "Expanded AI Staff",
+            "badge": "Quotas & revocation",
+            "summary": "Scoped identity per agent, expanded quotas, cost caps, and instant revocation."
+          }
+        }
+      }
     },
     "guardrails": {
       "kicker": "Trust & Governance",
@@ -2370,7 +2467,7 @@
         {
           "tag": "02 · Security",
           "title": "Strict club-level isolation",
-          "description": "Every read and action verifies session, role, and scope on the server. Private club data is never visible to another organization."
+          "description": "Every read and action verifies session, role, and scope on the server. Private club data is never visible to another organization — on every plan."
         },
         {
           "tag": "03 · Predictability",
@@ -3608,7 +3705,7 @@
     "homeTitlePrefix": "Start free.",
     "homeTitleAccent": "Grow at your pace.",
     "subtitle": "From a solo captain running Thursday 7-a-side to a multi-squad club with virtual AI staff — pay only for what your team needs.",
-    "recommended": "Most popular",
+    "recommended": "Recommended",
     "billing": {
       "monthly": "Monthly",
       "annual": "Annual"
@@ -3632,7 +3729,7 @@
           "10 call-ups per month with automatic waitlist",
           "Core attendance tracking & manual pitch split",
           "Pitch-side match timer & mini-tournaments",
-          "Frictionless email guests with no account needed"
+          "Guests confirm through the link, no account needed"
         ]
       },
       "basic": {
@@ -3641,7 +3738,7 @@
         "description": "For regular weekly squads that need clean finances, payment proofs, and lasting team history.",
         "price": "€4.99",
         "period": "/month",
-        "cta": "Choose Basic",
+        "cta": "Request Basic access",
         "aiSummary": "",
         "features": [
           "Everything in Free",
@@ -3657,7 +3754,7 @@
         "description": "For structured teams and small managers running seasons, competitive fixtures, and initial AI Secretary workflows.",
         "price": "€9.99",
         "period": "/month",
-        "cta": "Choose Amateur",
+        "cta": "Request Amateur access",
         "aiSummary": "Includes starter AI Secretary (human-reviewed)",
         "features": [
           "Everything in Basic",
@@ -3673,11 +3770,11 @@
         "description": "For growing amateur clubs and academies running multiple squads with centralized operations and expanded virtual staff.",
         "price": "€24.99",
         "period": "/month",
-        "cta": "Choose Professional",
-        "aiSummary": "Expanded AI Secretary + action audit log",
+        "cta": "Request Professional access",
+        "aiSummary": "Expanded AI Secretary quota",
         "features": [
           "Everything in Amateur",
-          "Multi-team operations with strict club isolation",
+          "Centralised multi-team club operations",
           "Expanded AI Secretary quota & cost guardrails",
           "Advanced seasonal & attendance reporting",
           "Priority support for coaches and club admins"
@@ -3881,7 +3978,7 @@
       "create": {
         "eyebrow": "EVENTS",
         "title": "Schedule games easily",
-        "subtitle": "Create an event in under 1 minute"
+        "subtitle": "Create an event in under 2 minutes"
       },
       "paid": {
         "eyebrow": "PAYMENTS",

@@ -38,7 +38,7 @@ export function AuthOtpEmail({ otp, email }: AuthOtpEmailProps) {
             lineHeight: 1.6,
           }}
         >
-          Usa este código para completar o teu login.
+          Usa este código para concluir o início de sessão.
           {email && (
             <>
               {" "}

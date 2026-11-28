@@ -168,7 +168,7 @@ export const requestPresignedUrl = withAction(
         error: {
           code: "INVALID_FILE_TYPE",
           message:
-            "Tipo de ficheiro não permitido. Use JPEG, PNG, WebP, HEIC ou HEIF.",
+            "Tipo de ficheiro não permitido. Usa JPEG, PNG, WebP, HEIC ou HEIF.",
         },
       };
     }

@@ -28,6 +28,8 @@ describe("public website production contract", () => {
     "src/app/(public)/(website)/_components/impact-section.tsx",
     "src/app/(public)/(website)/_components/product-showcase-section.tsx",
     "src/app/(public)/(website)/_components/evolution-section.tsx",
+    "src/app/(public)/(website)/_components/club-evolution-map.tsx",
+    "src/app/(public)/(website)/_components/club-evolution-connectors.tsx",
     "src/app/(public)/(website)/_components/plans-section.tsx",
     "src/app/(public)/(website)/_components/guardrails-section.tsx",
     "src/app/(public)/(website)/_components/final-cta-section.tsx",
