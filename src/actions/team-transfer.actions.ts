@@ -15,6 +15,7 @@ import {
 } from "@/db/schema";
 import { withAuthAction, withAuthQuery } from "@/lib/action-helpers";
 import { sendTeamTransferEmail } from "@/lib/email";
+import { isPreLaunchEligible } from "@/lib/launch-gate";
 import { canCreateTeam, normalizePlanTier } from "@/lib/plan-limits";
 import { type DbExecutor, recordStaffEvent } from "@/lib/staff-audit";
 import { getTeamAccess } from "@/lib/team-authz";
@@ -101,11 +102,15 @@ async function expireIfStale(
   return true;
 }
 
-/** Locks and expires each stale row; used by read paths. */
+/**
+ * Locks and expires each stale row; used by read paths. Rows are locked in
+ * ascending id order so concurrent callers can never deadlock.
+ */
 async function expireStaleRows(rows: TransferRow[]) {
   if (rows.length === 0) return;
+  const ordered = [...rows].sort((a, b) => a.id - b.id);
   await db.transaction(async tx => {
-    for (const stale of rows) {
+    for (const stale of ordered) {
       const [locked] = await tx
         .select()
         .from(T)
@@ -354,6 +359,44 @@ async function acceptTransfer(
   return outcome;
 }
 
+/**
+ * Before launch, only testers may become owners: same check as the
+ * `(protected)` layout, done outside the transaction (it calls Notion).
+ */
+async function acceptIfEligible(
+  where: SQL,
+  user: { id: string; email: string },
+): Promise<ActionResult<{ teamId: number }>> {
+  if (!(await isPreLaunchEligible(user.email))) {
+    return fail("RECIPIENT_NOT_ELIGIBLE");
+  }
+  return acceptTransfer(where, user.id);
+}
+
+/** Cancels a request whose email never left, so the owner can retry. */
+async function cancelAfterEmailFailure(
+  teamId: number,
+  transferId: number,
+  actorUserId: string,
+  subjectUserId: string | null,
+) {
+  await db.transaction(async tx => {
+    const cancelled = await tx
+      .update(T)
+      .set({ status: "cancelled", resolvedAt: new Date() })
+      .where(and(eq(T.id, transferId), eq(T.status, "pending")))
+      .returning({ id: T.id });
+    if (cancelled.length === 0) return;
+    await recordStaffEvent(tx, {
+      teamId,
+      actorUserId,
+      subjectUserId,
+      type: "ownership_transfer_cancelled",
+      payload: { transferId, reason: "email_failed" },
+    });
+  });
+}
+
 /** Decline core shared by the token and id paths. */
 async function declineTransfer(
   where: SQL,
@@ -427,6 +470,10 @@ export const requestOwnershipTransfer = withAuthAction(
       if (recipientEmail === normalizeEmail(user.email)) {
         return fail("CANNOT_TRANSFER_TO_SELF");
       }
+      // Before launch an outside email could never reach the app.
+      if (!(await isPreLaunchEligible(recipientEmail))) {
+        return fail("RECIPIENT_NOT_ELIGIBLE");
+      }
     }
 
     const token = randomBytes(32).toString("base64url");
@@ -484,12 +531,30 @@ export const requestOwnershipTransfer = withAuthAction(
     }
     if (!created.success) return created;
 
-    await sendTeamTransferEmail(recipientEmail, {
-      teamName: team.name,
-      fromName: user.name,
-      expiresAt,
-      token,
-    });
+    // Only the hash is stored: if the email does not leave, the link is
+    // lost, so the request is cancelled and the owner can send it again.
+    let sent = false;
+    try {
+      const delivery = await sendTeamTransferEmail(recipientEmail, {
+        teamName: team.name,
+        fromName: user.name,
+        expiresAt,
+        token,
+      });
+      sent = delivery.success;
+    } catch (error) {
+      console.error("[team-transfer] email send failed:", error);
+    }
+    if (!sent) {
+      await cancelAfterEmailFailure(
+        data.teamId,
+        created.data.transferId,
+        user.id,
+        toUserId,
+      );
+      refreshArena();
+      return fail("EMAIL_SEND_FAILED");
+    }
 
     refreshArena();
     return created;
@@ -544,12 +609,12 @@ export const cancelOwnershipTransfer = withAuthAction(
 export const acceptOwnershipTransfer = withAuthAction(
   transferTokenSchema,
   async (user, data) =>
-    acceptTransfer(eq(T.tokenHash, hashToken(data.token)), user.id),
+    acceptIfEligible(eq(T.tokenHash, hashToken(data.token)), user),
 );
 
 export const acceptOwnershipTransferById = withAuthAction(
   transferIdSchema,
-  async (user, data) => acceptTransfer(eq(T.id, data.transferId), user.id),
+  async (user, data) => acceptIfEligible(eq(T.id, data.transferId), user),
 );
 
 export const declineOwnershipTransfer = withAuthAction(

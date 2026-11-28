@@ -132,7 +132,8 @@
         "RESEND_DOMAIN_NOT_VERIFIED": "Le domaine de l'expéditeur n'est pas encore vérifié dans Resend.",
         "RESEND_DEV_DOMAIN_RESTRICTED": "Le domaine resend.dev envoie uniquement à l'email propriétaire du compte Resend. Vérifiez votre propre domaine pour envoyer des codes.",
         "EMAIL_SEND_FAILED": "Impossible d'envoyer le code par email. Vérifiez l'email ou réessayez."
-      }
+      },
+      "loginSuccessTransfer": "Ouverture de la demande de transfert."
     },
     "validation": {
       "invalidEmail": "Email invalide",
@@ -3719,7 +3720,7 @@
     },
     "page": {
       "kicker": "Transfert d'équipe",
-      "title": "Tu veux reprendre {team} ?",
+      "title": "Tu veux reprendre l'équipe {team} ?",
       "body": "{from} veut te confier la gestion de l'équipe {team}.",
       "expires": "Expire le {date}",
       "warning": "En acceptant, tu deviens propriétaire de l'équipe. Les moyens de paiement en ligne restent désactivés jusqu'à ce que tu les configures.",
@@ -3746,7 +3747,9 @@
           "title": "Demande expirée",
           "sub": "Cette demande a dépassé son délai. Demande au propriétaire d'en envoyer une nouvelle."
         }
-      }
+      },
+      "switchAccount": "Se connecter avec un autre compte",
+      "switchingAccount": "Déconnexion..."
     },
     "errors": {
       "FORBIDDEN": "Seul le propriétaire de l'équipe peut faire cela.",
@@ -3762,7 +3765,9 @@
       "TEAM_NOT_FOUND": "Équipe introuvable.",
       "VALIDATION_ERROR": "Vérifie les informations et réessaie.",
       "UNAUTHORIZED": "Ta session a expiré. Reconnecte-toi.",
-      "UNKNOWN": "Une erreur s'est produite. Réessaie."
+      "UNKNOWN": "Une erreur s'est produite. Réessaie.",
+      "RECIPIENT_NOT_ELIGIBLE": "Pendant la phase de test, seuls les comptes ayant accès à JogaBola peuvent recevoir une équipe.",
+      "EMAIL_SEND_FAILED": "Impossible d'envoyer l'email. La demande a été annulée ; réessaie."
     }
   }
 }

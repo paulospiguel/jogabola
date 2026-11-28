@@ -34,6 +34,7 @@ import {
 import { useToast } from "@/hooks/use-toast-custom";
 import {
   looksLikeEmail,
+  resolveRequestRecipient,
   type TransferCandidate,
   teamNameMatches,
   transferErrorKey,
@@ -273,22 +274,17 @@ function RequestPanel({
     onBusyChange(true);
     setError(null);
     try {
-      const recipient =
-        mode === "member" && selected
-          ? { toUserId: selected.userId }
-          : { toEmail: email.trim() };
+      const recipient = resolveRequestRecipient(mode, selected, email);
       const result = await requestOwnershipTransfer({
         teamId,
         confirmTeamName: confirmName,
-        ...recipient,
+        ...recipient.payload,
       });
       if (!result.success) {
         setError(t(transferErrorKey(result.error.code)));
         return;
       }
-      toast.success(
-        t("feedback.requested", { recipient: selected?.name ?? email.trim() }),
-      );
+      toast.success(t("feedback.requested", { recipient: recipient.label }));
       await onChanged();
     } catch {
       setError(t(transferErrorKey(undefined)));

@@ -19,6 +19,8 @@ const TRANSFER_ERROR_CODES = new Set([
   "TEAM_LIMIT_REACHED",
   "CANNOT_TRANSFER_TO_SELF",
   "RECIPIENT_NOT_MEMBER",
+  "RECIPIENT_NOT_ELIGIBLE",
+  "EMAIL_SEND_FAILED",
   "TEAM_NOT_FOUND",
   "VALIDATION_ERROR",
   "UNAUTHORIZED",
@@ -29,6 +31,36 @@ export function transferErrorKey(code: string | undefined): string {
   return code && TRANSFER_ERROR_CODES.has(code)
     ? `errors.${code}`
     : "errors.UNKNOWN";
+}
+
+/** Codes where the link was opened with the wrong (or unverified) account. */
+const SWITCH_ACCOUNT_CODES = new Set([
+  "TRANSFER_NOT_FOR_YOU",
+  "EMAIL_NOT_VERIFIED",
+]);
+
+/** Whether the landing should offer "sign in with another account". */
+export function canSwitchAccount(code: string): boolean {
+  return SWITCH_ACCOUNT_CODES.has(code);
+}
+
+/**
+ * Request payload and toast label for the chosen mode: the member picked in
+ * member mode, otherwise the typed email (even if a member was picked
+ * before switching modes).
+ */
+export function resolveRequestRecipient(
+  mode: "member" | "email",
+  selected: TransferCandidate | null,
+  email: string,
+):
+  | { payload: { toUserId: string }; label: string }
+  | { payload: { toEmail: string }; label: string } {
+  if (mode === "member" && selected) {
+    return { payload: { toUserId: selected.userId }, label: selected.name };
+  }
+  const toEmail = email.trim();
+  return { payload: { toEmail }, label: toEmail };
 }
 
 /**

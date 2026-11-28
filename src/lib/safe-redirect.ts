@@ -23,3 +23,12 @@ export function getSafeRedirectPath(
   }
   return value;
 }
+
+export type RedirectDestination = "arena" | "transfer" | "event";
+
+/** What the post-login toast should say the user is entering. */
+export function redirectDestination(path: string): RedirectDestination {
+  if (path === "/arena" || path.startsWith("/arena/")) return "arena";
+  if (path.startsWith("/transfer/")) return "transfer";
+  return "event";
+}

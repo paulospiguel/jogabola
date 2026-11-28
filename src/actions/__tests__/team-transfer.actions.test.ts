@@ -76,7 +76,10 @@ const mocks = vi.hoisted(() => {
     getTeamAccess: vi.fn(),
     getSession: vi.fn(),
     revalidatePath: vi.fn(),
-    sendTeamTransferEmail: vi.fn(async () => ({ success: true })),
+    sendTeamTransferEmail: vi.fn(
+      async (): Promise<{ success: boolean }> => ({ success: true }),
+    ),
+    isTesterEmail: vi.fn(async (_email: string) => true),
   };
 });
 
@@ -98,6 +101,7 @@ vi.mock("@/lib/team-authz", () => ({
 vi.mock("@/lib/email", () => ({
   sendTeamTransferEmail: mocks.sendTeamTransferEmail,
 }));
+vi.mock("@/lib/notion", () => ({ isTesterEmail: mocks.isTesterEmail }));
 
 const {
   acceptOwnershipTransfer,
@@ -211,6 +215,8 @@ const verified = (id: string, extra: Record<string, unknown> = {}) => ({
 
 beforeEach(() => {
   vi.clearAllMocks();
+  vi.unstubAllEnvs();
+  mocks.isTesterEmail.mockResolvedValue(true);
   mocks.ops.length = 0;
   for (const map of Object.values(mocks.results)) map.clear();
 });
@@ -441,6 +447,93 @@ describe("requestOwnershipTransfer", () => {
     ];
     expect(to).toBe("novo.dono@example.com");
   });
+});
+
+describe("requestOwnershipTransfer pre-launch gate", () => {
+  const emailInput = {
+    teamId: 7,
+    toEmail: "novo@example.com",
+    confirmTeamName: "Os Craques",
+  };
+  beforeEach(() => signIn("owner"));
+
+  it("refuses an email recipient who is not a tester before launch", async () => {
+    vi.stubEnv("APP_LAUNCHED", "false");
+    mocks.isTesterEmail.mockResolvedValue(false);
+    accessFor({ owner: ownerAccess });
+    queue("select", teams, [{ name: "Os Craques" }]);
+
+    const result = await requestOwnershipTransfer(emailInput);
+
+    expect(result).toEqual({
+      success: false,
+      error: { code: "RECIPIENT_NOT_ELIGIBLE" },
+    });
+    expect(mocks.isTesterEmail).toHaveBeenCalledWith("novo@example.com");
+    expect(mocks.transaction).not.toHaveBeenCalled();
+    expect(mocks.sendTeamTransferEmail).not.toHaveBeenCalled();
+  });
+
+  it("skips the tester check once the app is launched", async () => {
+    vi.stubEnv("APP_LAUNCHED", "true");
+    mocks.isTesterEmail.mockResolvedValue(false);
+    accessFor({ owner: ownerAccess });
+    queue("select", teams, [{ name: "Os Craques" }], [{ ownerId: "owner" }]);
+    queue("insert", T, [{ id: 5 }]);
+
+    const result = await requestOwnershipTransfer(emailInput);
+
+    expect(result.success).toBe(true);
+    expect(mocks.isTesterEmail).not.toHaveBeenCalled();
+  });
+});
+
+describe("requestOwnershipTransfer email failure", () => {
+  const emailInput = {
+    teamId: 7,
+    toEmail: "novo@example.com",
+    confirmTeamName: "Os Craques",
+  };
+  beforeEach(() => signIn("owner"));
+
+  for (const [label, impl] of [
+    ["returns success: false", async () => ({ success: false })],
+    [
+      "throws",
+      async () => {
+        throw new Error("smtp down");
+      },
+    ],
+  ] as const) {
+    it(`cancels the new request when the email ${label}`, async () => {
+      accessFor({ owner: ownerAccess });
+      queue("select", teams, [{ name: "Os Craques" }], [{ ownerId: "owner" }]);
+      queue("insert", T, [{ id: 5 }]);
+      queue("update", T, [{ id: 5 }]);
+      mocks.sendTeamTransferEmail.mockImplementationOnce(impl);
+
+      const result = await requestOwnershipTransfer(emailInput);
+
+      expect(result).toEqual({
+        success: false,
+        error: { code: "EMAIL_SEND_FAILED" },
+      });
+      const cancel = opsOf("update", T)[0];
+      expect(argOf(cancel, "set")).toMatchObject({ status: "cancelled" });
+      expect(whereTerms(cancel)).toEqual(
+        expect.arrayContaining([5, "pending"]),
+      );
+      expect(eventTypes()).toEqual([
+        "ownership_transfer_requested",
+        "ownership_transfer_cancelled",
+      ]);
+      const cancelEvent = argOf(opsOf("insert", teamStaffEvents)[1], "values");
+      expect(cancelEvent.payload).toMatchObject({
+        transferId: 5,
+        reason: "email_failed",
+      });
+    });
+  }
 });
 
 describe("cancelOwnershipTransfer", () => {
@@ -722,6 +815,27 @@ describe("acceptOwnershipTransfer", () => {
   });
 });
 
+describe("accept pre-launch gate", () => {
+  beforeEach(() => signIn("target"));
+
+  it("refuses a non-tester recipient before launch (token and id)", async () => {
+    vi.stubEnv("APP_LAUNCHED", "false");
+    mocks.isTesterEmail.mockResolvedValue(false);
+
+    const byToken = await acceptOwnershipTransfer({ token: TOKEN });
+    const byId = await acceptOwnershipTransferById({ transferId: 5 });
+
+    for (const result of [byToken, byId]) {
+      expect(result).toEqual({
+        success: false,
+        error: { code: "RECIPIENT_NOT_ELIGIBLE" },
+      });
+    }
+    expect(mocks.isTesterEmail).toHaveBeenCalledWith("target@example.com");
+    expect(mocks.transaction).not.toHaveBeenCalled();
+  });
+});
+
 describe("acceptOwnershipTransferById", () => {
   it("rejects a non-recipient", async () => {
     signIn("intruder");
@@ -880,6 +994,30 @@ describe("getPendingTransfer", () => {
 });
 
 describe("getMyIncomingTransfers", () => {
+  it("locks stale rows in ascending id order", async () => {
+    signIn("target");
+    const a = transferRow({ id: 9, teamId: 8, expiresAt: PAST });
+    const b = transferRow({ id: 6, teamId: 9, expiresAt: PAST });
+    queue("select", userTable, [verified("target")]);
+    queue(
+      "select",
+      T,
+      [
+        { transfer: a, teamName: "A", fromName: "X" },
+        { transfer: b, teamName: "B", fromName: "Y" },
+      ],
+      [b],
+      [a],
+    );
+
+    await getMyIncomingTransfers();
+
+    const locked = opsOf("select", T)
+      .filter(op => lockOf(op) === "update")
+      .map(op => whereTerms(op).find(v => typeof v === "number"));
+    expect(locked).toEqual([6, 9]);
+  });
+
   it("lists pending transfers and expires stale ones", async () => {
     signIn("target");
     const fresh = transferRow();

@@ -16,7 +16,7 @@ import { Logo } from "@/components/logo";
 import { APP } from "@/constants/app";
 import { useToast } from "@/hooks/use-toast-custom";
 import { signIn, useSession } from "@/lib/auth-client";
-import { getSafeRedirectPath } from "@/lib/safe-redirect";
+import { getSafeRedirectPath, redirectDestination } from "@/lib/safe-redirect";
 import { useAnalytics, useAnalyticsConsent } from "@/providers/analytics";
 import { AppVersion } from "./_components/app-version";
 
@@ -202,11 +202,14 @@ export default function LoginPage() {
         logEvent("login_completed", undefined, { method: "email_otp" });
       }
 
+      const destination = redirectDestination(callbackURL);
       toast.success(
         t("messages.loginSuccessTitle"),
-        t("messages.loginSuccessDescription", {
-          destination: callbackURL === "/arena" ? t("arena") : t("event"),
-        }),
+        destination === "transfer"
+          ? t("messages.loginSuccessTransfer")
+          : t("messages.loginSuccessDescription", {
+              destination: destination === "arena" ? t("arena") : t("event"),
+            }),
       );
     } catch (err: unknown) {
       const message =

@@ -10,6 +10,7 @@ import {
   CircleSlash,
   Clock,
   Loader2,
+  LogOut,
   type LucideIcon,
   Sparkles,
   X,
@@ -23,7 +24,10 @@ import {
 } from "@/actions/team-transfer.actions";
 import { Logo } from "@/components/logo";
 import { useTeams } from "@/hooks/use-teams";
+import { signOut } from "@/lib/auth-client";
+import { getSafeRedirectPath } from "@/lib/safe-redirect";
 import {
+  canSwitchAccount,
   INCOMING_TRANSFERS_QUERY_KEY,
   transferErrorKey,
 } from "@/lib/transfer-ui";
@@ -172,6 +176,7 @@ function LandingBody({
         <StateView
           icon={AlertTriangle}
           showUpgrade={view.code === "TEAM_LIMIT_REACHED"}
+          switchAccountToken={canSwitchAccount(view.code) ? token : undefined}
           sub={t(transferErrorKey(view.code))}
           title={t("page.errorTitle")}
           tone="danger"
@@ -322,15 +327,32 @@ function StateView({
   sub,
   tone,
   showUpgrade = false,
+  switchAccountToken,
 }: {
   icon: LucideIcon;
   title: string;
   sub: string;
   tone: keyof typeof TONES;
   showUpgrade?: boolean;
+  /** When set, offers signing out and back in to open this link again. */
+  switchAccountToken?: string;
 }) {
   const t = useTranslations("teamTransfer");
   const tCreate = useTranslations("arenaCreateTeam");
+  const [switching, setSwitching] = useState(false);
+
+  const handleSwitchAccount = async () => {
+    if (!switchAccountToken) return;
+    setSwitching(true);
+    const next = getSafeRedirectPath(
+      `/transfer/${encodeURIComponent(switchAccountToken)}`,
+    );
+    try {
+      await signOut();
+    } finally {
+      window.location.href = `/auth?next=${encodeURIComponent(next)}`;
+    }
+  };
 
   return (
     <div className="flex flex-col items-center gap-4 text-center">
@@ -354,8 +376,25 @@ function StateView({
             {tCreate("upgradeCta")}
           </Link>
         )}
+        {switchAccountToken && (
+          <button
+            className={primaryClass}
+            disabled={switching}
+            onClick={handleSwitchAccount}
+            type="button"
+          >
+            {switching ? (
+              <Loader2 className="animate-spin" size={16} />
+            ) : (
+              <LogOut size={16} strokeWidth={2.2} aria-hidden="true" />
+            )}
+            {switching ? t("page.switchingAccount") : t("page.switchAccount")}
+          </button>
+        )}
         <Link
-          className={showUpgrade ? secondaryClass : primaryClass}
+          className={
+            showUpgrade || switchAccountToken ? secondaryClass : primaryClass
+          }
           href="/arena"
         >
           {t("page.goArena")}

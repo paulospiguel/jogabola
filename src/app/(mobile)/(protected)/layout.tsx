@@ -1,6 +1,6 @@
 import { redirect } from "next/navigation";
 import { getCachedSession } from "@/lib/get-session";
-import { isTesterEmail } from "@/lib/notion";
+import { isPreLaunchEligible } from "@/lib/launch-gate";
 
 export default async function ProtectedLayout({
   children,
@@ -13,14 +13,8 @@ export default async function ProtectedLayout({
     redirect("/auth");
   }
 
-  const isLaunched = process.env.APP_LAUNCHED === "true";
-
-  if (!isLaunched) {
-    const email = session.user.email;
-    const isTester = await isTesterEmail(email);
-    if (!isTester) {
-      redirect("/waitlist");
-    }
+  if (!(await isPreLaunchEligible(session.user.email))) {
+    redirect("/waitlist");
   }
 
   return <>{children}</>;

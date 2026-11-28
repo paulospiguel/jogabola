@@ -1,7 +1,9 @@
 import { describe, expect, it } from "vitest";
 import {
   buildTransferCandidates,
+  canSwitchAccount,
   looksLikeEmail,
+  resolveRequestRecipient,
   teamNameMatches,
   transferErrorKey,
 } from "./transfer-ui";
@@ -18,6 +20,8 @@ describe("transferErrorKey", () => {
     "TEAM_LIMIT_REACHED",
     "CANNOT_TRANSFER_TO_SELF",
     "RECIPIENT_NOT_MEMBER",
+    "RECIPIENT_NOT_ELIGIBLE",
+    "EMAIL_SEND_FAILED",
   ])("maps %s to its own key", code => {
     expect(transferErrorKey(code)).toBe(`errors.${code}`);
   });
@@ -63,5 +67,34 @@ describe("looksLikeEmail", () => {
     expect(looksLikeEmail(" novo@dono.pt ")).toBe(true);
     expect(looksLikeEmail("novo@dono")).toBe(false);
     expect(looksLikeEmail("novo dono@x.pt")).toBe(false);
+  });
+});
+
+describe("canSwitchAccount", () => {
+  it("offers another account only for recipient mismatches", () => {
+    expect(canSwitchAccount("TRANSFER_NOT_FOR_YOU")).toBe(true);
+    expect(canSwitchAccount("EMAIL_NOT_VERIFIED")).toBe(true);
+    expect(canSwitchAccount("TRANSFER_EXPIRED")).toBe(false);
+    expect(canSwitchAccount("TEAM_LIMIT_REACHED")).toBe(false);
+  });
+});
+
+describe("resolveRequestRecipient", () => {
+  const ana = { userId: "u1", name: "Ana", image: null };
+
+  it("uses the selected member in member mode", () => {
+    expect(resolveRequestRecipient("member", ana, "x@example.com")).toEqual({
+      payload: { toUserId: "u1" },
+      label: "Ana",
+    });
+  });
+
+  it("uses the typed email in email mode even with a member selected", () => {
+    expect(
+      resolveRequestRecipient("email", ana, "  novo@example.com "),
+    ).toEqual({
+      payload: { toEmail: "novo@example.com" },
+      label: "novo@example.com",
+    });
   });
 });

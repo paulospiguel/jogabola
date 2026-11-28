@@ -132,7 +132,8 @@
         "RESEND_DOMAIN_NOT_VERIFIED": "El dominio del remitente aún no está verificado en Resend.",
         "RESEND_DEV_DOMAIN_RESTRICTED": "El dominio resend.dev solo envía al email propietario de la cuenta Resend. Verifica tu propio dominio para enviar códigos.",
         "EMAIL_SEND_FAILED": "No se pudo enviar el código por email. Comprueba el email o inténtalo de nuevo."
-      }
+      },
+      "loginSuccessTransfer": "Abriendo la solicitud de transferencia."
     },
     "validation": {
       "invalidEmail": "Email inválido",
@@ -3719,7 +3720,7 @@
     },
     "page": {
       "kicker": "Transferencia de equipo",
-      "title": "¿Quieres quedarte con {team}?",
+      "title": "¿Quieres quedarte con el equipo {team}?",
       "body": "{from} quiere pasarte la gestión del equipo {team}.",
       "expires": "Caduca el {date}",
       "warning": "Si aceptas, pasas a ser el dueño del equipo. Los métodos de pago online quedan desactivados hasta que los configures.",
@@ -3746,7 +3747,9 @@
           "title": "Solicitud caducada",
           "sub": "Esta solicitud pasó del plazo. Pide al dueño que envíe una nueva."
         }
-      }
+      },
+      "switchAccount": "Entrar con otra cuenta",
+      "switchingAccount": "Cerrando sesión..."
     },
     "errors": {
       "FORBIDDEN": "Solo el dueño del equipo puede hacer esto.",
@@ -3762,7 +3765,9 @@
       "TEAM_NOT_FOUND": "Equipo no encontrado.",
       "VALIDATION_ERROR": "Revisa los datos e inténtalo de nuevo.",
       "UNAUTHORIZED": "Tu sesión ha terminado. Vuelve a entrar.",
-      "UNKNOWN": "Algo salió mal. Inténtalo de nuevo."
+      "UNKNOWN": "Algo salió mal. Inténtalo de nuevo.",
+      "RECIPIENT_NOT_ELIGIBLE": "Durante la fase de pruebas, solo las cuentas con acceso a JogaBola pueden recibir un equipo.",
+      "EMAIL_SEND_FAILED": "No se pudo enviar el email. La solicitud se ha cancelado; inténtalo de nuevo."
     }
   }
 }

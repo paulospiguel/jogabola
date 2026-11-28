@@ -132,7 +132,8 @@
         "RESEND_DOMAIN_NOT_VERIFIED": "The sender domain is not verified in Resend yet.",
         "RESEND_DEV_DOMAIN_RESTRICTED": "The resend.dev domain only sends to the email that owns the Resend account. Verify your own domain to send codes.",
         "EMAIL_SEND_FAILED": "Could not send the code by email. Check the email or try again."
-      }
+      },
+      "loginSuccessTransfer": "Opening the transfer request."
     },
     "validation": {
       "invalidEmail": "Invalid email",
@@ -3746,7 +3747,9 @@
           "title": "Request expired",
           "sub": "This request is past its deadline. Ask the owner to send a new one."
         }
-      }
+      },
+      "switchAccount": "Sign in with another account",
+      "switchingAccount": "Signing out..."
     },
     "errors": {
       "FORBIDDEN": "Only the team owner can do this.",
@@ -3762,7 +3765,9 @@
       "TEAM_NOT_FOUND": "Team not found.",
       "VALIDATION_ERROR": "Check the details and try again.",
       "UNAUTHORIZED": "Your session has ended. Sign in again.",
-      "UNKNOWN": "Something went wrong. Try again."
+      "UNKNOWN": "Something went wrong. Try again.",
+      "RECIPIENT_NOT_ELIGIBLE": "During the testing phase, only accounts with JogaBola access can receive a team.",
+      "EMAIL_SEND_FAILED": "We couldn't send the email. The request was cancelled; try again."
     }
   }
 }

@@ -22,4 +22,16 @@ describe("TeamTransferEmail", () => {
     expect(html).toContain("Os &lt;Craques&gt;");
     expect(html).not.toContain("Os <Craques>");
   });
+
+  it("names the team with the word equipa (no bare article)", async () => {
+    const html = await render(
+      React.createElement(TeamTransferEmail, {
+        teamName: "FC Porto",
+        fromName: "Ana",
+        expiresAt: "4 de dezembro de 2026",
+        token: "t",
+      }),
+    );
+    expect(html).toMatch(/com a equipa (<!-- -->)?FC Porto/);
+  });
 });

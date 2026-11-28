@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { getSafeRedirectPath } from "./safe-redirect";
+import { getSafeRedirectPath, redirectDestination } from "./safe-redirect";
 
 describe("getSafeRedirectPath", () => {
   it("keeps same-origin relative paths", () => {
@@ -40,5 +40,13 @@ describe("getSafeRedirectPath", () => {
 
   it("uses the given fallback", () => {
     expect(getSafeRedirectPath("//evil.com", "/")).toBe("/");
+  });
+});
+
+describe("redirectDestination", () => {
+  it("classifies the post-login destination", () => {
+    expect(redirectDestination("/arena")).toBe("arena");
+    expect(redirectDestination("/transfer/abc")).toBe("transfer");
+    expect(redirectDestination("/event/12")).toBe("event");
   });
 });

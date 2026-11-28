@@ -36,7 +36,7 @@ export function TeamTransferEmail({
             lineHeight: 1.3,
           }}
         >
-          Queres ficar com a {teamName}?
+          Queres ficar com a equipa {teamName}?
         </Text>
         <Text
           style={{

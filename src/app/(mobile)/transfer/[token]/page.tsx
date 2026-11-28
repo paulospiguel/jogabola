@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import { getTransferByToken } from "@/actions/team-transfer.actions";
 import { getCachedSession } from "@/lib/get-session";
+import { isPreLaunchEligible } from "@/lib/launch-gate";
 import {
   TransferLanding,
   type TransferLandingInitial,
@@ -23,6 +24,12 @@ export default async function TransferPage({
   const session = await getCachedSession();
   if (!session) {
     redirect(`/auth?next=${encodeURIComponent(`/transfer/${token}`)}`);
+  }
+
+  // Same pre-launch gate as the (protected) layout: only testers can
+  // become owners before launch (accept re-checks server-side).
+  if (!(await isPreLaunchEligible(session.user.email))) {
+    redirect("/waitlist");
   }
 
   const result = await getTransferByToken({ token });
